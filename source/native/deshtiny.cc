@@ -1,13 +1,10 @@
 // This is the main function for the NATIVE version of this project.
 
-#include <iostream>
-#include "tools/Random.h"
-#include "../Hello.h"
+#include "../Simulation.h"
 
 int main()
 {
-  emp::Random random;
-  Hello h("Matthew", random);
-  std::cout << h.say() << std::endl;
+  Simulation simulation = Simulation(100, 0);
+  while(simulation.Step()){}
   return 0;
 }
