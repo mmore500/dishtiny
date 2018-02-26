@@ -9,7 +9,8 @@ namespace UI = emp::web;
 struct Interface {
   Simulation s;
 
-  UI::Document doc;
+  UI::Document viewer;        //< Div that contains the canvas viewer.
+  UI::Document button_dash;  //< Div that contains the button dashboard.
   UI::Canvas canvas;
 
   double min_resources0;
@@ -25,8 +26,9 @@ struct Interface {
 
   Interface()
     : s(100, 0)
-    , doc("emp_base")
-    , canvas(400,400)
+    , viewer("emp_viewer")
+    , button_dash("emp_button_dash")
+    , canvas(500,500)
     , min_resources0(0.0)
     , max_resources0(36.0)
     , ga_resources0(s, s.gs_resources[0], &min_resources0, &max_resources0, canvas)
@@ -36,11 +38,15 @@ struct Interface {
     , ga_taps0(s, s.gs_taps[0], NULL, NULL, canvas)
     , ga_taps1(s, s.gs_taps[1], NULL, NULL, canvas)
   {
-    doc << canvas;
-    doc << ga_resources0.anim.GetToggleButton("ga_resources0");
-    doc << ga_resources1.anim.GetToggleButton("ga_resources1");
-    doc << ga_taps0.anim.GetToggleButton("ga_taps0");
-    doc << ga_taps1.anim.GetToggleButton("ga_taps1");
+    viewer << canvas;
+    button_dash << ga_resources0.anim.GetToggleButton("ga_resources0");
+    button_dash << "&nbsp;&nbsp;&nbsp;" << "ga_resources0" << "<br />";
+    button_dash << ga_resources1.anim.GetToggleButton("ga_resources1");
+    button_dash << "&nbsp;&nbsp;&nbsp;" << "ga_resources1" << "<br />";
+    button_dash << ga_taps0.anim.GetToggleButton("ga_taps0");
+    button_dash << "&nbsp;&nbsp;&nbsp;" << "ga_taps0" << "<br />";
+    button_dash << ga_taps1.anim.GetToggleButton("ga_taps1");
+    button_dash << "&nbsp;&nbsp;&nbsp;" << "ga_taps1" << "<br />";
   }
 
 };
