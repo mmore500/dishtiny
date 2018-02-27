@@ -16,6 +16,7 @@ public:
   int cupdate;
   emp::vector<EventManager> event_managers;
   emp::vector<Grid<double>*> gs_resources;
+  emp::vector<Grid<double>*> gs_stockpiles;
   emp::vector<Grid<int>*> gs_channels;
   emp::vector<Grid<int>*> gs_signals;
   emp::vector<Grid<int>*> gs_sigbuffs;
@@ -33,15 +34,17 @@ public:
     for (i = 0; i < NLEV; i ++) {
       event_managers.push_back(EventManager(i));
       gs_resources.push_back(new Grid<double>(GRID_W, GRID_H, 0.0));
+      gs_stockpiles.push_back(new Grid<double>(GRID_W, GRID_H, 0.0));
       gs_channels.push_back(new Grid<int>(GRID_W, GRID_H, 0));
       gs_signals.push_back(new Grid<int>(GRID_W, GRID_H, READY));
       gs_sigbuffs.push_back(new Grid<int>(GRID_W, GRID_H, READY));
     }
 
-    // initialize channels
+    // initialize channels, stockpiles
     for (i = 0; i < NLEV; i ++) {
       for(j = 0; j < GRID_A; j ++) {
         gs_channels[i]->Set(j, init_ch(random));
+        gs_stockpiles[i]->Set(j, init_stockpile(random));
       }
     }
 
@@ -81,9 +84,19 @@ public:
       gs_sigbuffs[l] = gs_signals[l];
       gs_signals[l] = temp;
 
-
+      // seed new events, perform taps, update resource grid
       event_managers[l].Seed(cupdate, random);
       event_managers[l].UpdateGrid(gs_resources[l], gs_signals[l], cupdate);
+
+      // distribute resources to activated cells
+      for (int i = 0; i < GRID_A; i ++) {
+        int sigstate = (*gs_signals[l])(i);
+        if (sigstate == ACTIVATED) {
+          gs_stockpiles[l]->Incr(i, (*gs_resources[l])(i));
+          gs_stockpiles[l]->Incr(i, V_COST[l]);
+        }
+      }
+
     }
 
     return (++cupdate) < nupdate;

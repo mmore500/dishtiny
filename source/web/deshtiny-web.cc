@@ -31,6 +31,9 @@ struct Interface {
   GridAnimator<int> ga_channels0;
   GridAnimator<int> ga_channels1;
 
+  GridAnimator<double> ga_stockpiles0;
+  GridAnimator<double> ga_stockpiles1;
+
   Interface()
     : s(100, 0)
     , viewer("emp_viewer")
@@ -50,6 +53,8 @@ struct Interface {
     , max_ch(CH_MAX)
     , ga_channels0(s, s.gs_channels[0], &min_ch, &max_ch, canvas)
     , ga_channels1(s, s.gs_channels[1], &min_ch, &max_ch, canvas)
+    , ga_stockpiles0(s, s.gs_stockpiles[0], NULL, NULL, canvas)
+    , ga_stockpiles1(s, s.gs_stockpiles[1], NULL, NULL, canvas)
   {
     viewer << canvas;
     button_dash << ga_resources0.anim.GetToggleButton("ga_resources0");
@@ -82,6 +87,16 @@ struct Interface {
     button_dash << UI::Button([this]() { this->ga_channels1.DoFrame(); }, "Step");
     button_dash << "&nbsp;&nbsp;&nbsp;";
     button_dash << "ga_channels1" << "<br />";
+    button_dash << ga_stockpiles0.anim.GetToggleButton("ga_stockpiles0");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_stockpiles0.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "ga_stockpiles0" << "<br />";
+    button_dash << ga_stockpiles1.anim.GetToggleButton("ga_stockpiles1");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_stockpiles1.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "ga_stockpiles1" << "<br />";
   }
 
 };

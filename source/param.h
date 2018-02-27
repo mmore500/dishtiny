@@ -25,9 +25,7 @@ const double EVENT_PROBS_L2[] = {0.0002};
 const double *EVENT_PROBS[] = {EVENT_PROBS_L1, EVENT_PROBS_L2};
 
 #define VULNR_COST
-const double V_COST_L1[] = {-5.0};
-const double V_COST_L2[] = {-5.0};
-const double *V_COST[] = {V_COST_L1, V_COST_L2};
+const double V_COST[] = {-5.0, -5.0};
 
 //#define QUIES_COST
 //#define BASEL_COST
@@ -49,7 +47,7 @@ inline int change_ch(int cur, emp::Random& r) {
   return init_ch(r);
 }
 
-inline float init_resource(emp::Random& r) {
+inline double init_stockpile(emp::Random& r) {
   return REP_THRESH - 1;
 }
 
