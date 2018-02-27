@@ -29,7 +29,7 @@ public:
 
     ~Event() = default;
 
-  bool PlaceOnGrid(Grid<double> *resource_grid, Grid<bool> *tap_grid, int curtime) const {
+  bool PlaceOnGrid(Grid<double> *resource_grid, Grid<int> *signal_grid, int curtime) const {
     // return -1 if duration exceeded
     bool rval;
     int elapsetime = curtime - timestamp;
@@ -37,7 +37,7 @@ public:
       rval = false;
     } else if (elapsetime == 0) {
       resource_grid->Incr(x,y,val);
-      tap_grid->Set(x,y,true);
+      if ((*signal_grid)(x,y) == READY) signal_grid->Set(x,y,ACTIVATED);
       rval = true;
     } else {
       int i;
@@ -71,13 +71,12 @@ public:
     }
   }
 
-  void UpdateGrid(Grid<double> *resource_grid, Grid<bool> *tap_grid, int curtime) {
+  void UpdateGrid(Grid<double> *resource_grid, Grid<int> *signal_grid, int curtime) {
     resource_grid->reset();
-    tap_grid->reset();
 
     std::list<Event>::iterator it = lis.begin();
     while (it != lis.end()) {
-      if ((*it).PlaceOnGrid(resource_grid, tap_grid, curtime)) {
+      if ((*it).PlaceOnGrid(resource_grid, signal_grid, curtime)) {
         ++it;
       } else {
         it = lis.erase(it);
