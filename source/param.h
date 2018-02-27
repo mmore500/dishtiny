@@ -114,7 +114,7 @@ inline double mut_off_over(double cur, int lev, emp::Random& r) {
   return rval;
 }
 
-void bal_res_pool(double *vals) {
+inline void bal_res_pool(double *vals) {
   double s = 0.0;
   for (size_t i = 0; i < NLEV; i ++) {
     s += vals[i];

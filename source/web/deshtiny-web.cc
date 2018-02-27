@@ -31,8 +31,8 @@ struct Interface {
   GridAnimator<int> ga_channels0;
   GridAnimator<int> ga_channels1;
 
-  GridAnimator<double> ga_stockpiles0;
-  GridAnimator<double> ga_stockpiles1;
+  double min_stockpile;
+  GridAnimator<double> ga_stockpiles;
 
   double min_off_ch_cap;
   GridAnimator<double> ga_off_ch_caps0;
@@ -73,8 +73,8 @@ struct Interface {
     , max_ch(CH_MAX)
     , ga_channels0(s, s.gs_channels[0], &min_ch, &max_ch, canvas)
     , ga_channels1(s, s.gs_channels[1], &min_ch, &max_ch, canvas)
-    , ga_stockpiles0(s, s.gs_stockpiles[0], NULL, NULL, canvas)
-    , ga_stockpiles1(s, s.gs_stockpiles[1], NULL, NULL, canvas)
+    , min_stockpile(KILL_THRESH)
+    , ga_stockpiles(s, s.g_stockpiles, &min_stockpile, NULL, canvas)
     , min_off_ch_cap(0.0)
     , ga_off_ch_caps0(s, s.gs_off_ch_caps[0], &min_off_ch_cap, NULL, canvas)
     , ga_off_ch_caps1(s, s.gs_off_ch_caps[1], &min_off_ch_cap, NULL, canvas)
@@ -122,16 +122,11 @@ struct Interface {
     button_dash << UI::Button([this]() { this->ga_channels1.DoFrame(); }, "Step");
     button_dash << "&nbsp;&nbsp;&nbsp;";
     button_dash << "ga_channels1" << "<br />";
-    button_dash << ga_stockpiles0.anim.GetToggleButton("ga_stockpiles0");
+    button_dash << ga_stockpiles.anim.GetToggleButton("ga_stockpiles");
     button_dash << "&nbsp;&nbsp;&nbsp;";
-    button_dash << UI::Button([this]() { this->ga_stockpiles0.DoFrame(); }, "Step");
+    button_dash << UI::Button([this]() { this->ga_stockpiles.DoFrame(); }, "Step");
     button_dash << "&nbsp;&nbsp;&nbsp;";
-    button_dash << "ga_stockpiles0" << "<br />";
-    button_dash << ga_stockpiles1.anim.GetToggleButton("ga_stockpiles1");
-    button_dash << "&nbsp;&nbsp;&nbsp;";
-    button_dash << UI::Button([this]() { this->ga_stockpiles1.DoFrame(); }, "Step");
-    button_dash << "&nbsp;&nbsp;&nbsp;";
-    button_dash << "ga_stockpiles1" << "<br />";
+    button_dash << "ga_stockpiles" << "<br />";
     button_dash << ga_off_ch_caps0.anim.GetToggleButton("off_ch_caps0");
     button_dash << "&nbsp;&nbsp;&nbsp;";
     button_dash << UI::Button([this]() { this->ga_off_ch_caps0.DoFrame(); }, "Step");
