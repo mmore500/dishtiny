@@ -49,6 +49,14 @@ public:
     states[GetID(x,y)] += v;
   }
 
+  void Incr(size_t id, STATE_TYPE v) {
+    states[id] += v;
+  }
+
+  void Set(size_t id, STATE_TYPE v) {
+    states[id] = v;
+  }
+
   void Set(size_t x, size_t y, STATE_TYPE v) {
     states[GetID(x,y)] = v;
   }
