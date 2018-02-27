@@ -60,21 +60,23 @@ public:
           gs_sigbuffs[l]->Set(i, QUIESCENT_MAX);
           size_t x = gs_signals[l]->GetX(i);
           size_t y = gs_signals[l]->GetY(i);
-          if ((*gs_signals[l])(x,y+1) == READY) {
+          int cur_ch = (*gs_channels[l])(i);
+          if ((*gs_signals[l])(x,y+1) == READY && (*gs_channels[l])(x,y+1) == cur_ch) {
             gs_sigbuffs[l]->Set(x,y+1,ACTIVATED);
           }
-          if ((*gs_signals[l])(x,y-1) == READY) {
+          if ((*gs_signals[l])(x,y-1) == READY && (*gs_channels[l])(x,y-1) == cur_ch) {
             gs_sigbuffs[l]->Set(x,y-1,ACTIVATED);
           }
-          if ((*gs_signals[l])(x+1,y) == READY) {
+          if ((*gs_signals[l])(x+1,y) == READY && (*gs_channels[l])(x+1,y) == cur_ch) {
             gs_sigbuffs[l]->Set(x+1,y,ACTIVATED);
           }
-          if ((*gs_signals[l])(x-1,y) == READY) {
+          if ((*gs_signals[l])(x-1,y) == READY && (*gs_channels[l])(x-1,y) == cur_ch) {
             gs_sigbuffs[l]->Set(x-1,y,ACTIVATED);
           }
         }
       }
 
+      // swap buffer in
       Grid<int> *temp = gs_sigbuffs[l];
       gs_sigbuffs[l] = gs_signals[l];
       gs_signals[l] = temp;
