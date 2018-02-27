@@ -89,9 +89,15 @@ public:
     canvas.Clear();
 
     // Determine minimum, maximum value
-    auto minmax = std::minmax_element(std::begin(states), std::end(states));
-    STATE_TYPE minv = minp ? *minp : *(minmax.first);
-    STATE_TYPE maxv = maxp ? *maxp : *(minmax.first);
+    STATE_TYPE minv, maxv;
+    if (minp && maxp) {
+      minv = *minp;
+      maxv = *maxp;
+    } else {
+      auto minmax = std::minmax_element(std::begin(states), std::end(states));
+      minv = minp ? *minp : *(minmax.first);
+      maxv = maxp ? *maxp : *(minmax.first);
+    }
 
     // Calculate scaling factor
     STATE_TYPE diff = maxv - minv;
