@@ -3,6 +3,7 @@
 
 #include <limits>
 #include <numeric>
+#include <iostream>
 
 #include "tools/Random.h"
 
@@ -38,13 +39,13 @@ const double *V_COST[] = {V_COST_L1, V_COST_L2};
 #define REP_THRESH 8
 #define KILL_THRESH -11
 
-#define CH_MAX UINT_MAX
+#define CH_MAX 4194304
 
-inline float init_ch(emp::Random& r) {
-  return r.GetUInt(1,CH_MAX);
+inline int init_ch(emp::Random& r) {
+  return r.GetInt(1,CH_MAX);
 }
 
-inline float change_ch(size_t cur, emp::Random& r) {
+inline int change_ch(int cur, emp::Random& r) {
   return init_ch(r);
 }
 

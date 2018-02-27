@@ -24,6 +24,11 @@ struct Interface {
   GridAnimator<bool> ga_taps0;
   GridAnimator<bool> ga_taps1;
 
+  int min_ch;
+  int max_ch;
+  GridAnimator<int> ga_channels0;
+  GridAnimator<int> ga_channels1;
+
   Interface()
     : s(100, 0)
     , viewer("emp_viewer")
@@ -37,6 +42,10 @@ struct Interface {
     , ga_resources1(s, s.gs_resources[1], &min_resources1, &max_resources1, canvas)
     , ga_taps0(s, s.gs_taps[0], NULL, NULL, canvas)
     , ga_taps1(s, s.gs_taps[1], NULL, NULL, canvas)
+    , min_ch(0)
+    , max_ch(CH_MAX)
+    , ga_channels0(s, s.gs_channels[0], &min_ch, &max_ch, canvas)
+    , ga_channels1(s, s.gs_channels[1], &min_ch, &max_ch, canvas)
   {
     viewer << canvas;
     button_dash << ga_resources0.anim.GetToggleButton("ga_resources0");
@@ -47,6 +56,10 @@ struct Interface {
     button_dash << "&nbsp;&nbsp;&nbsp;" << "ga_taps0" << "<br />";
     button_dash << ga_taps1.anim.GetToggleButton("ga_taps1");
     button_dash << "&nbsp;&nbsp;&nbsp;" << "ga_taps1" << "<br />";
+    button_dash << ga_channels0.anim.GetToggleButton("ga_channels0");
+    button_dash << "&nbsp;&nbsp;&nbsp;" << "ga_channels0" << "<br />";
+    button_dash << ga_channels1.anim.GetToggleButton("ga_channels1");
+    button_dash << "&nbsp;&nbsp;&nbsp;" << "ga_channels1" << "<br />";
   }
 
 };

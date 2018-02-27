@@ -2,7 +2,6 @@
 #define MACRO_H
 
 #define DEAD 0
-#define ALIVE 1
 
 #define ACTIVATED -1
 #define READY 0
