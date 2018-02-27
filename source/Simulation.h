@@ -21,6 +21,12 @@ public:
   emp::vector<Grid<int>*> gs_signals;
   emp::vector<Grid<int>*> gs_sigbuffs;
 
+  emp::vector<Grid<double>*> gs_endowments;
+  emp::vector<Grid<double>*> gs_res_pools;
+  emp::vector<Grid<double>*> gs_off_overs;
+  emp::vector<Grid<double>*> gs_off_ch_caps;
+
+
 private:
   emp::Random random;
 
@@ -38,18 +44,76 @@ public:
       gs_channels.push_back(new Grid<int>(GRID_W, GRID_H, 0));
       gs_signals.push_back(new Grid<int>(GRID_W, GRID_H, READY));
       gs_sigbuffs.push_back(new Grid<int>(GRID_W, GRID_H, READY));
+
+      gs_endowments.push_back(new Grid<double>(GRID_W, GRID_H, 0.0));
+      gs_res_pools.push_back(new Grid<double>(GRID_W, GRID_H, 0.0));
+      gs_off_overs.push_back(new Grid<double>(GRID_W, GRID_H, 0.0));
+      gs_off_ch_caps.push_back(new Grid<double>(GRID_W, GRID_H, 0.0));
+
     }
+
 
     // initialize channels, stockpiles
     for (i = 0; i < NLEV; i ++) {
       for(j = 0; j < GRID_A; j ++) {
         gs_channels[i]->Set(j, init_ch(random));
         gs_stockpiles[i]->Set(j, init_stockpile(random));
+        gs_off_ch_caps[i]->Set(j, init_off_ch_cap(i, random));
+        gs_endowments[i]->Set(j, init_endowment(i, random));
+        gs_res_pools[i]->Set(j, init_res_pool(i, random));
+        gs_off_overs[i]->Set(j, init_off_over(i, random));
       }
     }
 
+    // there are one more required for these genotype characters
+    gs_endowments.push_back(new Grid<double>(GRID_W, GRID_H, 0.0));
+    gs_res_pools.push_back(new Grid<double>(GRID_W, GRID_H, 0.0));
+    for(j = 0; j < GRID_A; j ++) {
+      gs_endowments[NLEV]->Set(j, init_endowment(NLEV, random));
+      gs_res_pools[NLEV]->Set(j, init_res_pool(NLEV, random));
+    }
+
+
   }
   Simulation & operator=(const Simulation &) = default;
+
+  void inline reproduce(size_t parent, size_t dest, int newchannel[NLEV], double endowment) {
+    bool balance_res_pool = false;
+    for (size_t l = 0; l < NLEV; l ++) {
+      gs_channels[l]->Set(dest, newchannel[l]);
+      gs_stockpiles[l]->Incr(parent, -REP_THRESH -endowment);
+      gs_stockpiles[l]->Set(dest, endowment);
+
+      gs_endowments[l]->Set(dest, mut_endowment((*gs_endowments[l])(parent), l, random));
+
+      double par_val = (*gs_res_pools[l])(parent);
+      double off_val = mut_res_pool(par_val, l, random);
+      balance_res_pool |= (par_val != off_val);
+      gs_res_pools[l]->Set(dest, off_val);
+      gs_off_overs[l]->Set(dest, mut_off_over((*gs_off_overs[l])(parent), l, random));
+      gs_off_ch_caps[l]->Set(dest, mut_off_ch_cap((*gs_off_ch_caps[l])(parent), l, random));
+    }
+
+    gs_endowments[NLEV]->Set(dest, mut_endowment((*gs_endowments[NLEV])(parent), NLEV, random));
+
+    double par_val = (*gs_res_pools[NLEV])(parent);
+    double off_val = mut_res_pool(par_val, NLEV, random);
+    balance_res_pool |= (par_val != off_val);
+    gs_res_pools[NLEV]->Set(dest, mut_res_pool(off_val, NLEV, random));
+
+    // balance res_pool
+    if (balance_res_pool) {
+      double vals[NLEV + 1];
+      for (size_t l = 0; l < NLEV + 1; l ++) {
+        vals[l] = (*gs_res_pools[l])(dest);
+      }
+
+      bal_res_pool(vals);
+      for (size_t l = 0; l < NLEV + 1; l ++) {
+        gs_res_pools[l]->Set(dest, vals[l]);
+      }
+    }
+  }
 
   bool Step() {
     for (int l = 0; l < NLEV; l ++) {

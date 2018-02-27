@@ -58,13 +58,13 @@ inline double init_stockpile(emp::Random& r) {
 #define CULL_FREQ 2500
 
 // genotype
-#define PM_OFF_CH_CAP {0.0002, 0.0002}
+const double PM_OFF_CH_CAP[] {0.0002, 0.0002};
 
-#define PM_RES_POOL {0.0002, 0.0002, 0.0002}
+const double PM_RES_POOL[] {0.0002, 0.0002, 0.0002};
 
-#define PM_OFF_OVER {0.0002, 0.0002}
+const double PM_OFF_OVER[] {0.0002, 0.0002};
 
-#define PM_ENDOWMENT {0.0002, 0.0002}
+const double PM_ENDOWMENT[] {0.0002, 0.0002, 0.0002};
 
 inline double init_off_ch_cap(int lev, emp::Random& r) {
   return r.GetDouble(24.0);
@@ -78,42 +78,54 @@ inline double init_res_pool(int lev, emp::Random& r) {
   return r.GetDouble(1.0);
 }
 
-inline double init_share_fit(int lev, emp::Random& r) {
-  return r.GetDouble(1.0);
-}
-
 inline double init_off_over(int lev, emp::Random& r) {
   return r.GetDouble(1.0);
 }
 
 inline double mut_off_ch_cap(double cur, int lev, emp::Random& r) {
-  return cur + r.GetRandNormal(0.0, 2.0);
+  double rval = cur;
+  if (r.GetDouble() < PM_OFF_CH_CAP[lev]) {
+    rval = std::max(cur + r.GetRandNormal(0.0, 2.0), 0.0);
+  }
+  return rval;
 }
 
 inline double mut_endowment(double cur, int lev, emp::Random& r) {
-  return std::max(cur + r.GetRandNormal(0.0, 3.0), 0.0);
+  double rval = cur;
+  if (r.GetDouble() < PM_OFF_CH_CAP[lev]) {
+    rval = std::max(cur + r.GetRandNormal(0.0, 3.0), 0.0);
+  }
+  return rval;
 }
 
 inline double mut_res_pool(double cur, int lev, emp::Random& r) {
-  return std::max(cur + r.GetRandNormal(0.0, 0.2), 0.0);
+  double rval = cur;
+  if (r.GetDouble() < PM_OFF_CH_CAP[lev]) {
+    rval = std::max(cur + r.GetRandNormal(0.0, 0.2), 0.0);
+  }
+  return rval;
 }
 
 inline double mut_off_over(double cur, int lev, emp::Random& r) {
-  return std::min(std::max(cur + r.GetRandNormal(0.0, 0.2), 0.0), 1.0);
+  double rval = cur;
+  if (r.GetDouble() < PM_OFF_CH_CAP[lev]) {
+    rval = std::min(std::max(cur + r.GetRandNormal(0.0, 0.2), 0.0), 1.0);
+  }
+  return rval;
 }
 
-inline void balance_res_pool(emp::vector<double> vals) {
+void bal_res_pool(double *vals) {
   double s = 0.0;
-  for (emp::vector<double>::iterator it = vals.begin(); it != vals.end(); it ++) {
-    s += *it;
+  for (size_t i = 0; i < NLEV; i ++) {
+    s += vals[i];
   }
   if (s > 0) {
-    for (emp::vector<double>::iterator it = vals.begin(); it != vals.end(); it ++) {
-      *it /= s;
+    for (size_t i = 0; i < NLEV; i ++) {
+      vals[i] /= s;
     }
   } else {
-    for (emp::vector<double>::iterator it = vals.begin(); it != vals.end(); it ++) {
-      *it = 1.0 / vals.size();
+    for (size_t i = 0; i < NLEV; i ++) {
+      vals[i] = 1.0 / NLEV;
     }
   }
 }

@@ -34,6 +34,26 @@ struct Interface {
   GridAnimator<double> ga_stockpiles0;
   GridAnimator<double> ga_stockpiles1;
 
+  double min_off_ch_cap;
+  GridAnimator<double> ga_off_ch_caps0;
+  GridAnimator<double> ga_off_ch_caps1;
+
+  double min_endowment;
+  GridAnimator<double> ga_endowments0;
+  GridAnimator<double> ga_endowments1;
+  GridAnimator<double> ga_endowments2;
+
+  double min_res_pool;
+  GridAnimator<double> ga_res_pools0;
+  GridAnimator<double> ga_res_pools1;
+  GridAnimator<double> ga_res_pools2;
+
+  double min_off_over;
+  double max_off_over;
+  GridAnimator<double> ga_off_overs0;
+  GridAnimator<double> ga_off_overs1;
+
+
   Interface()
     : s(100, 0)
     , viewer("emp_viewer")
@@ -55,6 +75,21 @@ struct Interface {
     , ga_channels1(s, s.gs_channels[1], &min_ch, &max_ch, canvas)
     , ga_stockpiles0(s, s.gs_stockpiles[0], NULL, NULL, canvas)
     , ga_stockpiles1(s, s.gs_stockpiles[1], NULL, NULL, canvas)
+    , min_off_ch_cap(0.0)
+    , ga_off_ch_caps0(s, s.gs_off_ch_caps[0], &min_off_ch_cap, NULL, canvas)
+    , ga_off_ch_caps1(s, s.gs_off_ch_caps[1], &min_off_ch_cap, NULL, canvas)
+    , min_endowment(0.0)
+    , ga_endowments0(s, s.gs_endowments[0], &min_endowment, NULL, canvas)
+    , ga_endowments1(s, s.gs_endowments[1], &min_endowment, NULL, canvas)
+    , ga_endowments2(s, s.gs_endowments[2], &min_endowment, NULL, canvas)
+    , min_res_pool(0.0)
+    , ga_res_pools0(s, s.gs_res_pools[0], &min_res_pool, NULL, canvas)
+    , ga_res_pools1(s, s.gs_res_pools[1], &min_res_pool, NULL, canvas)
+    , ga_res_pools2(s, s.gs_res_pools[2], &min_res_pool, NULL, canvas)
+    , min_off_over(0.0)
+    , max_off_over(1.0)
+    , ga_off_overs0(s, s.gs_off_overs[0], &min_off_over, &max_off_over, canvas)
+    , ga_off_overs1(s, s.gs_off_overs[1], &min_off_over, &max_off_over, canvas)
   {
     viewer << canvas;
     button_dash << ga_resources0.anim.GetToggleButton("ga_resources0");
@@ -97,6 +132,56 @@ struct Interface {
     button_dash << UI::Button([this]() { this->ga_stockpiles1.DoFrame(); }, "Step");
     button_dash << "&nbsp;&nbsp;&nbsp;";
     button_dash << "ga_stockpiles1" << "<br />";
+    button_dash << ga_off_ch_caps0.anim.GetToggleButton("off_ch_caps0");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_off_ch_caps0.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "off_ch_caps0" << "<br />";
+    button_dash << ga_off_ch_caps1.anim.GetToggleButton("off_ch_caps1");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_off_ch_caps1.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "off_ch_caps1" << "<br />";
+    button_dash << ga_endowments0.anim.GetToggleButton("endowments0");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_endowments0.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "endowments0" << "<br />";
+    button_dash << ga_endowments1.anim.GetToggleButton("endowments1");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_endowments1.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "endowments1" << "<br />";
+    button_dash << ga_endowments2.anim.GetToggleButton("endowments2");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_endowments2.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "endowments2" << "<br />";
+    button_dash << ga_res_pools0.anim.GetToggleButton("res_pools0");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_res_pools0.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "res_pools0" << "<br />";
+    button_dash << ga_res_pools1.anim.GetToggleButton("res_pools1");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_res_pools1.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "res_pools1" << "<br />";
+    button_dash << ga_res_pools2.anim.GetToggleButton("res_pools2");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_res_pools2.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "res_pools2" << "<br />";
+    button_dash << ga_off_overs0.anim.GetToggleButton("off_overs0");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_off_overs0.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "off_overs0" << "<br />";
+    button_dash << ga_off_overs1.anim.GetToggleButton("off_overs1");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << UI::Button([this]() { this->ga_off_overs1.DoFrame(); }, "Step");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "off_overs1" << "<br />";
   }
 
 };

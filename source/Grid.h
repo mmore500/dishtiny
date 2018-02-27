@@ -104,7 +104,7 @@ public:
     } else {
       auto minmax = std::minmax_element(std::begin(states), std::end(states));
       minv = minp ? *minp : *(minmax.first);
-      maxv = maxp ? *maxp : *(minmax.first);
+      maxv = maxp ? *maxp : *(minmax.second);
     }
 
     // Calculate scaling factor
