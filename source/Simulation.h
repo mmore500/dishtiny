@@ -181,7 +181,7 @@ public:
     double par_val = (*gs_res_pools[NLEV])(parent);
     double off_val = mut_res_pool(par_val, NLEV, random);
     balance_res_pool |= (par_val != off_val);
-    gs_res_pools[NLEV]->Set(dest, mut_res_pool(off_val, NLEV, random));
+    gs_res_pools[NLEV]->Set(dest, off_val);
 
     // balance res_pool
     if (balance_res_pool) {
