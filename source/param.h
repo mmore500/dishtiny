@@ -30,8 +30,8 @@ const double V_COST[] = {-5.0, -5.0};
 //#define QUIES_COST
 //#define BASEL_COST
 
-#define GRID_H 60
-#define GRID_W 60
+#define GRID_H 100
+#define GRID_W 100
 #define GRID_A (GRID_H * GRID_W)
 
 #define REP_THRESH 8
