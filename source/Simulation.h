@@ -314,6 +314,10 @@ public:
   }
 
   inline double try_repr(size_t cell, double avail_resource) {
+    if ((*gs_channels[0])(cell) == DEAD) {
+      return 0.0;
+    }
+
     int off_dest = pick_off_dest(cell);
     if (off_dest == -1) {
       return 0.0;
@@ -379,7 +383,7 @@ public:
 
       // seed new events, perform taps, update resource grid
       event_managers[l].Seed(cupdate, random);
-      event_managers[l].UpdateGrid(gs_resources[l], gs_signals[l], cupdate);
+      event_managers[l].UpdateGrid(gs_resources[l], gs_signals[l], gs_channels[l], cupdate);
 
       // distribute resources to activated cells
       for (size_t i = 0; i < GRID_A; i ++) {
