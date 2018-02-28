@@ -4,7 +4,7 @@
 
 int main()
 {
-  Simulation simulation = Simulation(100, 0);
+  Simulation simulation = Simulation(1000, 0);
   while(simulation.Step()){}
   return 0;
 }

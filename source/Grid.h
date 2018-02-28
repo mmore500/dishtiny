@@ -124,9 +124,17 @@ public:
 
         // normalize and contain graphic intensity
         int val = ((state - minv) * 255) / diff;
-        val = std::min(std::max(0, val), 255);
-
-        const std::string & cur_color = emp::ColorRGB(val, val, val);
+        int v1,v2,v3;
+        if (state < minv || state > maxv) {
+          v1 = 255;
+          v2 = 0;
+          v3 = 0;
+        } else {
+          v1 = val;
+          v2 = val;
+          v3 = val;
+        }
+        const std::string & cur_color = emp::ColorRGB(v1, v2, v3);
         canvas.Rect(cur_x, cur_y, cell_w, cell_h, cur_color, line_color);
       }
     }

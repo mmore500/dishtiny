@@ -69,7 +69,7 @@ struct Interface {
     , max_sig(QUIESCENT_MAX)
     , ga_signals0(s, s.gs_signals[0], &min_sig, &max_sig, canvas)
     , ga_signals1(s, s.gs_signals[1], &min_sig, &max_sig, canvas)
-    , min_ch(0)
+    , min_ch(1)
     , max_ch(CH_MAX)
     , ga_channels0(s, s.gs_channels[0], &min_ch, &max_ch, canvas)
     , ga_channels1(s, s.gs_channels[1], &min_ch, &max_ch, canvas)
@@ -92,6 +92,9 @@ struct Interface {
     , ga_off_overs1(s, s.gs_off_overs[1], &min_off_over, &max_off_over, canvas)
   {
     viewer << canvas;
+    button_dash << UI::Button([this]() { this->s.Steps(1000); }, "Start");
+    button_dash << "&nbsp;&nbsp;&nbsp;";
+    button_dash << "run 1000 without animation" << "<br />";
     button_dash << ga_resources0.anim.GetToggleButton("ga_resources0");
     button_dash << "&nbsp;&nbsp;&nbsp;";
     button_dash << UI::Button([this]() { this->ga_resources0.DoFrame(); }, "Step");
