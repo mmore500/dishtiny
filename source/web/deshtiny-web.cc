@@ -13,6 +13,10 @@ struct Interface {
   UI::Document button_dash;  //< Div that contains the button dashboard.
   UI::Canvas canvas;
 
+  emp::vector<std::function<void()>> cbs;
+
+  GridAnimator<int> ga_nodraw;
+
   double min_resources0;
   double max_resources0;
   GridAnimator<double> ga_resources0;
@@ -60,43 +64,51 @@ struct Interface {
     , viewer("emp_viewer")
     , button_dash("emp_button_dash")
     , canvas(500,500)
+    , cbs()
+    , ga_nodraw(&s, NULL, NULL, NULL, NULL, &cbs)
     , min_resources0(0.0)
     , max_resources0(36.0)
-    , ga_resources0(s, s.gs_resources[0], &min_resources0, &max_resources0, canvas)
+    , ga_resources0(&s, s.gs_resources[0], &min_resources0, &max_resources0, &canvas, &cbs)
     , min_resources1(0.0)
     , max_resources1(36.0)
-    , ga_resources1(s, s.gs_resources[1], &min_resources1, &max_resources1, canvas)
+    , ga_resources1(&s, s.gs_resources[1], &min_resources1, &max_resources1, &canvas, &cbs)
     , min_sig(ACTIVATED)
     , max_sig(QUIESCENT_MAX)
-    , ga_signals0(s, s.gs_signals[0], &min_sig, &max_sig, canvas)
-    , ga_signals1(s, s.gs_signals[1], &min_sig, &max_sig, canvas)
+    , ga_signals0(&s, s.gs_signals[0], &min_sig, &max_sig, &canvas, &cbs)
+    , ga_signals1(&s, s.gs_signals[1], &min_sig, &max_sig, &canvas, &cbs)
     , min_ch(1)
     , max_ch(CH_MAX)
-    , ga_channels0(s, s.gs_channels[0], &min_ch, &max_ch, canvas)
-    , ga_channels1(s, s.gs_channels[1], &min_ch, &max_ch, canvas)
+    , ga_channels0(&s, s.gs_channels[0], &min_ch, &max_ch, &canvas, &cbs)
+    , ga_channels1(&s, s.gs_channels[1], &min_ch, &max_ch, &canvas, &cbs)
     , min_stockpile(KILL_THRESH)
-    , ga_stockpiles(s, s.g_stockpiles, &min_stockpile, NULL, canvas)
+    , ga_stockpiles(&s, s.g_stockpiles, &min_stockpile, NULL, &canvas, &cbs)
     , min_off_ch_cap(0.0)
-    , ga_off_ch_caps0(s, s.gs_off_ch_caps[0], &min_off_ch_cap, NULL, canvas)
-    , ga_off_ch_caps1(s, s.gs_off_ch_caps[1], &min_off_ch_cap, NULL, canvas)
+    , ga_off_ch_caps0(&s, s.gs_off_ch_caps[0], &min_off_ch_cap, NULL, &canvas, &cbs)
+    , ga_off_ch_caps1(&s, s.gs_off_ch_caps[1], &min_off_ch_cap, NULL, &canvas, &cbs)
     , min_endowment(0.0)
-    , ga_endowments0(s, s.gs_endowments[0], &min_endowment, NULL, canvas)
-    , ga_endowments1(s, s.gs_endowments[1], &min_endowment, NULL, canvas)
-    , ga_endowments2(s, s.gs_endowments[2], &min_endowment, NULL, canvas)
+    , ga_endowments0(&s, s.gs_endowments[0], &min_endowment, NULL, &canvas, &cbs)
+    , ga_endowments1(&s, s.gs_endowments[1], &min_endowment, NULL, &canvas, &cbs)
+    , ga_endowments2(&s, s.gs_endowments[2], &min_endowment, NULL, &canvas, &cbs)
     , min_res_pool(0.0)
     , max_res_pool(1.0)
-    , ga_res_pools0(s, s.gs_res_pools[0], &min_res_pool, &max_res_pool, canvas)
-    , ga_res_pools1(s, s.gs_res_pools[1], &min_res_pool, &max_res_pool, canvas)
-    , ga_res_pools2(s, s.gs_res_pools[2], &min_res_pool, &max_res_pool, canvas)
+    , ga_res_pools0(&s, s.gs_res_pools[0], &min_res_pool, &max_res_pool, &canvas, &cbs)
+    , ga_res_pools1(&s, s.gs_res_pools[1], &min_res_pool, &max_res_pool, &canvas, &cbs)
+    , ga_res_pools2(&s, s.gs_res_pools[2], &min_res_pool, &max_res_pool, &canvas, &cbs)
     , min_off_over(0.0)
     , max_off_over(1.0)
-    , ga_off_overs0(s, s.gs_off_overs[0], &min_off_over, &max_off_over, canvas)
-    , ga_off_overs1(s, s.gs_off_overs[1], &min_off_over, &max_off_over, canvas)
+    , ga_off_overs0(&s, s.gs_off_overs[0], &min_off_over, &max_off_over, &canvas, &cbs)
+    , ga_off_overs1(&s, s.gs_off_overs[1], &min_off_over, &max_off_over, &canvas, &cbs)
   {
     viewer << canvas;
-    button_dash << UI::Button([this]() { this->s.Steps(1000); }, "Start");
+    viewer << "<br />";
+    auto ud_text = viewer.AddText("ud_text");
+    ud_text << "Update: " << UI::Live(s.cupdate);
+    cbs.push_back([this](){ viewer.Text("ud_text").Redraw(); });
+    std::cout << typeid(ud_text).name();
+
+    button_dash << ga_nodraw.anim.GetToggleButton("ga_nodraw");
     button_dash << "&nbsp;&nbsp;&nbsp;";
-    button_dash << "run 1000 without animation" << "<br />";
+    button_dash << "run without animation" << "<br />";
     button_dash << ga_resources0.anim.GetToggleButton("ga_resources0");
     button_dash << "&nbsp;&nbsp;&nbsp;";
     button_dash << UI::Button([this]() { this->ga_resources0.DoFrame(); }, "Step");

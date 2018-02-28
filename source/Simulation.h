@@ -37,8 +37,8 @@ inline size_t count_foreigns(Grid<int> *g_channels, size_t cell) {
 
 class Simulation {
 public:
-  int nupdate;
-  int cupdate;
+  size_t nupdate;
+  size_t cupdate;
   emp::vector<EventManager> event_managers;
   emp::vector<Grid<double>*> gs_resources;
   Grid<double>* g_stockpiles;
