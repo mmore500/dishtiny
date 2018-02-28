@@ -44,6 +44,7 @@ struct Interface {
   GridAnimator<double> ga_endowments2;
 
   double min_res_pool;
+  double max_res_pool;
   GridAnimator<double> ga_res_pools0;
   GridAnimator<double> ga_res_pools1;
   GridAnimator<double> ga_res_pools2;
@@ -83,9 +84,10 @@ struct Interface {
     , ga_endowments1(s, s.gs_endowments[1], &min_endowment, NULL, canvas)
     , ga_endowments2(s, s.gs_endowments[2], &min_endowment, NULL, canvas)
     , min_res_pool(0.0)
-    , ga_res_pools0(s, s.gs_res_pools[0], &min_res_pool, NULL, canvas)
-    , ga_res_pools1(s, s.gs_res_pools[1], &min_res_pool, NULL, canvas)
-    , ga_res_pools2(s, s.gs_res_pools[2], &min_res_pool, NULL, canvas)
+    , max_res_pool(1.0)
+    , ga_res_pools0(s, s.gs_res_pools[0], &min_res_pool, &max_res_pool, canvas)
+    , ga_res_pools1(s, s.gs_res_pools[1], &min_res_pool, &max_res_pool, canvas)
+    , ga_res_pools2(s, s.gs_res_pools[2], &min_res_pool, &max_res_pool, canvas)
     , min_off_over(0.0)
     , max_off_over(1.0)
     , ga_off_overs0(s, s.gs_off_overs[0], &min_off_over, &max_off_over, canvas)
