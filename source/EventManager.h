@@ -57,17 +57,22 @@ public:
 class EventManager {
 private:
 
-  const int lev;
-  const int lev_size;
+  const size_t lev;
   std::list<Event> lis;
 
 public:
-  EventManager(int _lev) : lev(_lev), lev_size(EVENT_VALS_LENS[lev])
+  EventManager(size_t _lev) : lev(_lev)
   { ; }
 
-  void inline Seed(int t, emp::Random& r) {
-    for (int i = 0; i < lev_size; i ++) {
-      SeedEvent(i, t, r);
+  void inline Seed(size_t t, emp::Random& r) {
+    if (t % EVENT_RADII[lev] == 0) {
+        size_t bx = r.GetUInt(0,GRID_W);
+        size_t by = r.GetUInt(0,GRID_H);
+        for (size_t ix = 0; ix <= GRID_W - 2* EVENT_RADII[lev]; ix += (2 * EVENT_RADII[lev])) {
+          for (size_t iy = 0; iy <= GRID_H - 2 *EVENT_RADII[lev]; iy += (2 *EVENT_RADII[lev])) {
+            lis.push_back(Event(ix + bx, iy + by, t, EVENT_RADII[lev], EVENT_VALS[lev]));
+          }
+        }
     }
   }
 
@@ -85,15 +90,6 @@ public:
 
   }
 
-private:
-  void inline SeedEvent(int event, int t, emp::Random& r) {
-    uint32_t n = r.GetRandBinomial(GRID_A, EVENT_PROBS[lev][event]);
-    for (uint32_t i = 0; i < n; i ++) {
-      int ex = r.GetInt(GRID_W);
-      int ey = r.GetInt(GRID_H);
-      lis.push_back(Event(ex, ey, t, EVENT_RADII[lev][event], EVENT_VALS[lev][event]));
-    }
-  }
 
 };
 

@@ -375,6 +375,7 @@ public:
     }
   };
 
+  // TODO pick based on distance from centroid of channel
   inline void repr_pool(int ch, size_t lev) {
 
     emp::Shuffle(random, counts[lev][ch]);

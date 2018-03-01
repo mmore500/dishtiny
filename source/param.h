@@ -11,18 +11,9 @@
 
 #define NLEV 2
 
-const double EVENT_VALS_L1[] = {6.0};
-const double EVENT_VALS_L2[] = {6.0};
-const double *EVENT_VALS[] = {EVENT_VALS_L1, EVENT_VALS_L2};
-const int EVENT_VALS_LENS[] = {1, 1};
+const double EVENT_VALS[] = {6.0, 6.0};
 
-const int EVENT_RADII_L1[] = {4};
-const int EVENT_RADII_L2[] = {18};
-const int *EVENT_RADII[] = {EVENT_RADII_L1, EVENT_RADII_L2};
-
-const double EVENT_PROBS_L1[] = {0.0005};
-const double EVENT_PROBS_L2[] = {0.00002};
-const double *EVENT_PROBS[] = {EVENT_PROBS_L1, EVENT_PROBS_L2};
+const int EVENT_RADII[] = {4, 12};
 
 #define VULNR_COST
 const double V_COST[] = {-5.0, -5.0};
@@ -30,8 +21,8 @@ const double V_COST[] = {-5.0, -5.0};
 //#define QUIES_COST
 //#define BASEL_COST
 
-#define GRID_H 100
-#define GRID_W 100
+#define GRID_H 120
+#define GRID_W 120
 #define GRID_A (GRID_H * GRID_W)
 
 #define REP_THRESH 8
