@@ -17,11 +17,11 @@ const double *EVENT_VALS[] = {EVENT_VALS_L1, EVENT_VALS_L2};
 const int EVENT_VALS_LENS[] = {1, 1};
 
 const int EVENT_RADII_L1[] = {4};
-const int EVENT_RADII_L2[] = {9};
+const int EVENT_RADII_L2[] = {18};
 const int *EVENT_RADII[] = {EVENT_RADII_L1, EVENT_RADII_L2};
 
 const double EVENT_PROBS_L1[] = {0.0005};
-const double EVENT_PROBS_L2[] = {0.0002};
+const double EVENT_PROBS_L2[] = {0.00002};
 const double *EVENT_PROBS[] = {EVENT_PROBS_L1, EVENT_PROBS_L2};
 
 #define VULNR_COST
@@ -58,16 +58,16 @@ inline double init_stockpile(emp::Random& r) {
 #define CULL_FREQ 2500
 
 // genotype
-const double PM_OFF_CH_CAP[] {0.0002, 0.0002};
+const double PM_OFF_CH_CAP[] {0.00001, 0.00001};
 
-const double PM_RES_POOL[] {0.0002, 0.0002, 0.0002};
+const double PM_RES_POOL[] {0.00001, 0.00001, 0.00001};
 
-const double PM_OFF_OVER[] {0.0002, 0.0002};
+const double PM_OFF_OVER[] {0.00001, 0.00001};
 
-const double PM_ENDOWMENT[] {0.0002, 0.0002, 0.0002};
+const double PM_ENDOWMENT[] {0.00001, 0.00001, 0.00001};
 
 inline double init_off_ch_cap(int lev, emp::Random& r) {
-  return r.GetDouble(24.0);
+  return r.GetDouble(48.0);
 }
 
 inline double init_endowment(int lev, emp::Random& r) {
@@ -85,7 +85,7 @@ inline double init_off_over(int lev, emp::Random& r) {
 inline double mut_off_ch_cap(double cur, int lev, emp::Random& r) {
   double rval = cur;
   if (r.GetDouble() < PM_OFF_CH_CAP[lev]) {
-    rval = std::max(cur + r.GetRandNormal(0.0, 2.0), 0.0);
+    rval = std::max(cur + r.GetRandNormal(0.0, 24.0), 0.0);
   }
   return rval;
 }
@@ -93,7 +93,7 @@ inline double mut_off_ch_cap(double cur, int lev, emp::Random& r) {
 inline double mut_endowment(double cur, int lev, emp::Random& r) {
   double rval = cur;
   if (r.GetDouble() < PM_OFF_CH_CAP[lev]) {
-    rval = std::max(cur + r.GetRandNormal(0.0, 3.0), 0.0);
+    rval = std::max(cur + r.GetRandNormal(0.0, 10.0), 0.0);
   }
   return rval;
 }
