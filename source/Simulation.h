@@ -109,6 +109,23 @@ public:
       gs_endowments[NLEV]->Set(j, init_endowment(NLEV, random));
       gs_res_pools[NLEV]->Set(j, init_res_pool(NLEV, random));
       g_stockpiles->Set(j, init_stockpile(random));
+
+
+    }
+
+    for(size_t dest = 0; dest < GRID_A; dest ++) {
+
+      // balance resource pools
+      double vals[NLEV + 1];
+      for (size_t l = 0; l < NLEV + 1; l ++) {
+        vals[l] = (*gs_res_pools[l])(dest);
+      }
+
+      bal_res_pool(vals);
+      for (size_t l = 0; l < NLEV + 1; l ++) {
+        gs_res_pools[l]->Set(dest, vals[l]);
+      }
+
     }
 
 
