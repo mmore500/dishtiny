@@ -438,8 +438,8 @@ public:
       propagate_signals(l);
 
       // seed new events, perform taps, update resource grid
-      event_managers[l].Seed(cupdate, random);
-      event_managers[l].UpdateGrid(gs_resources[l], gs_signals[l], gs_channels[l], cupdate);
+      event_managers[l].Seed(cupdate, gs_signals[l], gs_channels[l], random);
+      event_managers[l].UpdateGrid(gs_resources[l], cupdate);
 
       // distribute resources to activated cells
       for (size_t i = 0; i < GRID_A; i ++) {
