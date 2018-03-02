@@ -68,8 +68,8 @@ public:
     if (t % EVENT_RADII[lev] == 0) {
         size_t bx = r.GetUInt(0,GRID_W);
         size_t by = r.GetUInt(0,GRID_H);
-        for (size_t ix = 0; ix <= GRID_W - 2* EVENT_RADII[lev]; ix += (2 * EVENT_RADII[lev])) {
-          for (size_t iy = 0; iy <= GRID_H - 2 *EVENT_RADII[lev]; iy += (2 *EVENT_RADII[lev])) {
+        for (int ix = 0; ix <= GRID_W - 2*EVENT_RADII[lev]; ix += (2 * EVENT_RADII[lev])) {
+          for (int iy = 0; iy <= GRID_H - 2*EVENT_RADII[lev]; iy += (2 * EVENT_RADII[lev])) {
             lis.push_back(Event(ix + bx, iy + by, t, EVENT_RADII[lev], EVENT_VALS[lev]));
           }
         }

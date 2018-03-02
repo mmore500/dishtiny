@@ -12,6 +12,7 @@
 #include "EventManager.h"
 #include "Grid.h"
 #include "param.h"
+#include "dist.h"
 
 inline size_t count_foreigns(Grid<int> *g_channels, size_t cell) {
   size_t count = 0;
@@ -132,14 +133,62 @@ public:
   }
   Simulation & operator=(const Simulation &) = default;
 
-  void inline kill_cell(size_t dest) {
+
+    struct less_than_key
+    {
+      Grid<int> *g_channels;
+      size_t centroid_x;
+      size_t centroid_y;
+
+      less_than_key(Grid<int> *_g_channels, size_t _cx, size_t _cy)
+      : g_channels(_g_channels)
+      , centroid_x(_cx)
+      , centroid_y(_cy)
+      { ; }
+
+      inline bool operator() (size_t idx1, size_t idx2)
+      {
+          size_t x1 = g_channels->GetX(idx1);
+          size_t y1 = g_channels->GetY(idx1);
+          size_t x2 = g_channels->GetX(idx2);
+          size_t y2 = g_channels->GetY(idx2);
+
+          size_t dist1 = calc_taxi_dist(x1, y1, centroid_x, centroid_y);
+          size_t dist2 = calc_taxi_dist(x2, y2, centroid_x, centroid_y);
+
+          return dist1 < dist2;
+      }
+    };
+
+  inline void sort_channel_count(size_t lev, int ch) {
+
+    // don't need to sort for size two or less
+    if ( counts[lev][ch].size() > 2 ) {
+      // calculate centroid x, y
+      size_t cx, cy;
+      std::tie(cx, cy) = calc_centroid(&counts[lev][ch], gs_channels[lev]);
+
+      // shuffle then sort to ensure random ordering within equivalent orgs
+      emp::Shuffle(random, counts[lev][ch]);
+      std::sort(
+        counts[lev][ch].begin(),
+        counts[lev][ch].end(),
+        less_than_key(gs_channels[lev], cx, cy)
+      );
+    }
+  }
+
+
+  inline void kill_cell(size_t dest) {
     for (size_t l = 0; l < NLEV; l ++) {
       int oldch = (*gs_channels[l])(dest);
 
-    counts[l][oldch].erase(std::remove( counts[l][oldch].begin(),   counts[l][oldch].end(), dest), counts[l][oldch].end());
-    if(counts[l][oldch].size() == 0) {
-        pools[l].erase(oldch);
-        counts[l].erase(oldch);
+      counts[l][oldch].erase(std::remove(counts[l][oldch].begin(),   counts[l][oldch].end(), dest), counts[l][oldch].end());
+      // sort_channel_count(l, oldch);
+
+      if(counts[l][oldch].size() == 0) {
+          pools[l].erase(oldch);
+          counts[l].erase(oldch);
       }
 
       gs_channels[l]->Set(dest, 0);
@@ -173,6 +222,8 @@ public:
     for (size_t l = 0; l < NLEV; l ++) {
 
       counts[l][newchannel[l]].push_back(dest);
+
+      // sort_channel_count(l, newchannel[l]);
 
       gs_channels[l]->Set(dest, newchannel[l]);
 
@@ -363,32 +414,19 @@ public:
   }
 
 
-  struct less_than_key
-  {
-    Grid<int> *g_channels;
-
-    less_than_key(Grid<int> *_g_channels) : g_channels(_g_channels) { ; }
-
-    inline bool operator() (size_t idx1, size_t idx2)
-    {
-        return count_foreigns(g_channels, idx1) < count_foreigns(g_channels, idx2);
-    }
-  };
-
-  // TODO pick based on distance from centroid of channel
   inline void repr_pool(int ch, size_t lev) {
 
-    emp::Shuffle(random, counts[lev][ch]);
-    std::sort(counts[lev][ch].begin(), counts[lev][ch].end(), less_than_key(gs_channels[lev]));
+    double res;
+    do {
 
-    for ( size_t i = 0; i < counts[lev][ch].size() && pools[lev][ch] >= REP_THRESH; i ++ ) {
+      res = 0.0;
+      for ( size_t i = 0; i < counts[lev][ch].size() && res == 0.0 && pools[lev][ch] >= REP_THRESH; i ++ ) {
 
-      double res;
-      do {
-        res = try_repr(counts[lev][ch][i], pools[lev][ch]);
-        pools[lev][ch] += res;
-      } while (res != 0.0) ;
-    }
+          res = try_repr(counts[lev][ch][i], pools[lev][ch]);
+          pools[lev][ch] += res;
+
+      }
+    } while (pools[lev][ch] >= REP_THRESH && counts[lev][ch].size() > 0 && res != 0.0);
 
   }
 
@@ -421,14 +459,25 @@ public:
       if ((*g_stockpiles)(i) <= KILL_THRESH) kill_cell(i);
     }
 
+    // individual reproduction
     for (size_t c = 0; c < GRID_A; c ++) {
       g_stockpiles->Incr(c, try_repr(c, (*g_stockpiles)(c)));
     }
 
     for (size_t lev = 0; lev < NLEV; lev ++) {
-      for (std::unordered_map<int,double>::iterator it=pools[lev].begin(); it != pools[lev].end(); ++it) {
-        repr_pool(it->first, lev);
+
+      emp::vector<int> temp;
+      for (auto it=pools[lev].begin(); it != pools[lev].end(); ++it) {
+        temp.push_back(it->first);
       }
+
+      // need this because reproducing during iteration
+      for (auto it=temp.begin(); it != temp.end(); ++it) {
+        if ( pools[lev].find(*it) != pools[lev].end() ) {
+          repr_pool(*it, lev);
+        }
+      }
+
     }
 
     std::cout << "update " << cupdate << std::endl;
