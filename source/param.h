@@ -100,7 +100,7 @@ inline double mut_res_pool(double cur, int lev, emp::Random& r) {
 inline double mut_off_over(double cur, int lev, emp::Random& r) {
   double rval = cur;
   if (r.GetDouble() < PM_OFF_CH_CAP[lev]) {
-    rval = std::min(std::max(cur + r.GetRandNormal(0.0, 0.2), 0.0), 1.0);
+    rval = init_off_over(lev, r);
   }
   return rval;
 }
