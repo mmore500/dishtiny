@@ -70,7 +70,7 @@ inline double init_res_pool(int lev, emp::Random& r) {
 }
 
 inline double init_off_over(int lev, emp::Random& r) {
-  return r.GetDouble(1.0);
+  return std::max(std::min(r.GetDouble(-0.5, 1.5), 1.0), 0.0);
 }
 
 inline double mut_off_ch_cap(double cur, int lev, emp::Random& r) {
