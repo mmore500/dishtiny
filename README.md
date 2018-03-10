@@ -1,4 +1,4 @@
-#  DEcentralized Selection for Hierarchical Transitions of INdividualitY
+#  DIstributed Selection for Hierarchical Transitions of INdividualitY
 
 ## Software Authorship
 

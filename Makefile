@@ -1,5 +1,5 @@
 # Project-specific settings
-PROJECT := deshtiny
+PROJECT := dishtiny
 EMP_DIR := ../../Empirical/source
 
 # Flags to use regardless of compiler
