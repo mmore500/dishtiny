@@ -15,7 +15,9 @@
 
 class StoreManager {
 private:
+  // each individual cell's resource stockpile
   Grid<double> stockpile;
+  // channel resource pools organized by level then by channel
   emp::vector<std::unordered_map<int,double>> pool;
   CustomConfig cconfig;
   const size_t NLEV;
@@ -43,14 +45,25 @@ public:
 
   }
 
+  /*
+   * Erase a pool -- resets resource accumulation and clears up memory.
+   */
   inline void ErasePool(size_t lev, int ch) {
     pool[lev].erase(ch);
   }
 
+  /*
+   * Set an individual's stockpile to zero.
+   */
   inline void EraseStockpile(size_t cell) {
     stockpile(cell) = 0.0;
   }
 
+  /*
+   * Pay a cost or accrue a benefit of amount amt split over a cell's channel
+   * resource pools and own stockpile. The split distribution is determined by
+   * the organism's genotype.
+   */
   inline void MultilevelTransaction(
     Organism& org,
     size_t cell,
@@ -66,7 +79,9 @@ public:
     }
   }
 
-  // redistribute negative pool values to individual stockpiles
+  /*
+   * Redistribute negative pool values to individual stockpiles.
+   */
   inline void SettlePools(ChannelManager& cm) {
     for (size_t lev = 0; lev < pool.size(); ++lev) {
       for (auto pl=pool[lev].begin(); pl != pool[lev].end(); ++pl) {
@@ -92,22 +107,39 @@ public:
     }
   }
 
+  /*
+   * Accessor function.
+   */
   inline double CheckStockpile(size_t cell) const {
     return stockpile.Get(cell);
   }
 
+  /*
+   * Accessor function.
+   */
   inline double CheckPool(size_t lev, int ch) {
     return pool[lev][ch];
   }
 
+  /*
+   * Perform a transaction with a cell's stockpile.
+   */
   inline void TransactStockpile(size_t cell, double amt) {
     stockpile(cell) += amt;
   }
 
+  /*
+   * Perform a transaction with a channel resource pool.
+   */
   inline void TransactPool(size_t lev, int ch, double amt) {
     pool[lev][ch] += amt;
   }
 
+  /*
+   * If cell in ACVTIVE state while resouce wave passing over, harvest the
+   * resource. Resource is stored across stockpile, channel pools through
+   * MultilevelTransaction.
+   */
   inline void Harvest(
     SignalManager& s,
     ResourceManager& r,
@@ -119,6 +151,10 @@ public:
     }
   }
 
+  /*
+   * If cell is in ACTIVE state, pay cost from stockpile, channel pools through
+   * MultilevelTransaction.
+   */
   inline void PayStateCost(
     SignalManager &s,
     ResourceManager &r,
@@ -130,6 +166,9 @@ public:
     }
   }
 
+  /*
+   * Kill cells with stockpile value at or below KILL_THRESH.
+   */
   inline void KillDebtors(emp::World<Organism>& w) {
     for (size_t cell = 0; cell < stockpile.GetArea(); ++cell) {
       if (CheckStockpile(cell) <= KILL_THRESH) {
@@ -140,10 +179,17 @@ public:
 
 private:
 
+  /*
+   * Initialize stockpile at beginning of simulation.
+   */
   inline double init_stockpile() const {
-    return REP_THRESH - 1;
+    return REP_THRESH - 0.1;
   }
 
+  /*
+   * If cell is in ACTIVE state, pay cost from stockpile, channel pools through
+   * MultilevelTransaction.
+   */
   inline void PayStateCostLev(
     size_t lev,
     SignalManager& s,
@@ -166,6 +212,11 @@ private:
       }
   }
 
+  /*
+   * If cell is in ACVTIVE state while resouce wave passing over, harvest the
+   * resource. Resource is stored across stockpile, channel pools through
+   * MultilevelTransaction.
+   */
   inline void HarvestLev(
     size_t lev,
     SignalManager& s,

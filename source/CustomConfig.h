@@ -12,7 +12,7 @@ public:
   const double CULL_PENALTY;
   const double PM_OFF_CH_CAP[2] {0.00001, 0.00001};
   const double PM_RES_POOL[3] {0.00001, 0.00001, 0.00001};
-  const double PM_OFF_OVER[3] {0.00001, 0.00001};
+  const double PM_AVOID_OVER[3] {0.00001, 0.00001};
   const double PM_ENDOWMENT[3] {0.00001, 0.00001, 0.00001};
 
   CustomConfig(DishtinyConfig & dconfig, GridSpec & spec)

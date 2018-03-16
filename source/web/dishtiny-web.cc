@@ -53,10 +53,10 @@ struct Interface {
   GridAnimator<double> ga_res_pools1;
   GridAnimator<double> ga_res_pools2;
 
-  double min_off_over;
-  double max_off_over;
-  GridAnimator<double> ga_off_overs0;
-  GridAnimator<double> ga_off_overs1;
+  double min_avoid_over;
+  double max_avoid_over;
+  GridAnimator<double> ga_avoid_overs0;
+  GridAnimator<double> ga_avoid_overs1;
 
 
   Interface()
@@ -94,10 +94,10 @@ struct Interface {
     , ga_res_pools0(&s, s.gs_res_pools[0], &min_res_pool, &max_res_pool, &canvas, &cbs)
     , ga_res_pools1(&s, s.gs_res_pools[1], &min_res_pool, &max_res_pool, &canvas, &cbs)
     , ga_res_pools2(&s, s.gs_res_pools[2], &min_res_pool, &max_res_pool, &canvas, &cbs)
-    , min_off_over(0.0)
-    , max_off_over(1.0)
-    , ga_off_overs0(&s, s.gs_off_overs[0], &min_off_over, &max_off_over, &canvas, &cbs)
-    , ga_off_overs1(&s, s.gs_off_overs[1], &min_off_over, &max_off_over, &canvas, &cbs)
+    , min_avoid_over(0.0)
+    , max_avoid_over(1.0)
+    , ga_avoid_overs0(&s, s.gs_avoid_overs[0], &min_avoid_over, &max_avoid_over, &canvas, &cbs)
+    , ga_avoid_overs1(&s, s.gs_avoid_overs[1], &min_avoid_over, &max_avoid_over, &canvas, &cbs)
   {
     viewer << canvas;
     viewer << "<br />";
@@ -184,16 +184,16 @@ struct Interface {
     button_dash << UI::Button([this]() { this->ga_res_pools2.DoFrame(); }, "Step");
     button_dash << "&nbsp;&nbsp;&nbsp;";
     button_dash << "res_pools2" << "<br />";
-    button_dash << ga_off_overs0.anim.GetToggleButton("off_overs0");
+    button_dash << ga_avoid_overs0.anim.GetToggleButton("avoid_overs0");
     button_dash << "&nbsp;&nbsp;&nbsp;";
-    button_dash << UI::Button([this]() { this->ga_off_overs0.DoFrame(); }, "Step");
+    button_dash << UI::Button([this]() { this->ga_avoid_overs0.DoFrame(); }, "Step");
     button_dash << "&nbsp;&nbsp;&nbsp;";
-    button_dash << "off_overs0" << "<br />";
-    button_dash << ga_off_overs1.anim.GetToggleButton("off_overs1");
+    button_dash << "avoid_overs0" << "<br />";
+    button_dash << ga_avoid_overs1.anim.GetToggleButton("avoid_overs1");
     button_dash << "&nbsp;&nbsp;&nbsp;";
-    button_dash << UI::Button([this]() { this->ga_off_overs1.DoFrame(); }, "Step");
+    button_dash << UI::Button([this]() { this->ga_avoid_overs1.DoFrame(); }, "Step");
     button_dash << "&nbsp;&nbsp;&nbsp;";
-    button_dash << "off_overs1" << "<br />";
+    button_dash << "avoid_overs1" << "<br />";
   }
 
 };

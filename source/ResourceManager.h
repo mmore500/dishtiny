@@ -17,10 +17,13 @@
 class ResourceManager {
 
 private:
-
+  // x coordinate at center of most recent wave seed
   emp::vector<size_t> seedx;
+  // y coordinate at center of most recent wave seed
   emp::vector<size_t> seedy;
+  // timestamp of most recent wave seed
   emp::vector<size_t> seedt;
+  // current resource wave distribution
   GridStack<double> resource;
 
   CustomConfig cconfig;
@@ -41,10 +44,16 @@ public:
   , cconfig(_cconfig)
   , rand(_r) { ; }
 
+  /*
+   * Accessor function.
+   */
   inline size_t const GetDepth() {
     return resource.GetDepth();
   }
 
+  /*
+   * Test if last seeded wave time exceeded, then seed a new wave if necessary.
+   */
   inline void TryReseed(
       size_t t,
       SignalManager& sig,
@@ -59,19 +68,28 @@ public:
     }
   }
 
+  /*
+   * Lay resource for tesselated diamond waves over all levels.
+   */
   inline void LayResource(size_t curtime) {
     // erase laid out resource from last update
     resource.Reset();
     for (size_t lev = 0; lev < resource.GetDepth(); ++lev) {
-      LayResource(lev, curtime - seedt[lev]);
+      LayResourceLev(lev, curtime - seedt[lev]);
     }
   }
 
+  /*
+   * Accessor function.
+   */
   inline double CheckResource(size_t lev, size_t cell) const {
     return resource.Get(lev, cell);
   }
 
 private:
+  /*
+   * Seed a new wave and tap cells at wave centers.
+   */
   void inline Reseed(
       size_t lev,
       size_t t,
@@ -80,21 +98,21 @@ private:
       emp::World<Organism>& w
     ) {
 
-    // draw new offset for diamonds
-
+    // randomly pick new offset for diamonds
     seedx[lev] = rand->GetUInt(0,resource.GetWidth());
     seedy[lev] = rand->GetUInt(0,resource.GetHeight());
     seedt[lev] = t;
 
-    // perform taps
-
+    // perform taps (wave centers tesselate over grid based on seed position)
     for (
       int ix = 0;
+      //TODO fix ugly casting
       ix <= ((int) resource.GetWidth()) - 2*cconfig.EVENT_RADII[lev];
       ix += (2 * cconfig.EVENT_RADII[lev])) {
 
       for (
         int iy = 0;
+        //TODO fix ugly casting
         iy <= ((int) resource.GetHeight()) - 2*cconfig.EVENT_RADII[lev];
         iy += (2 * cconfig.EVENT_RADII[lev])) {
 
@@ -105,16 +123,21 @@ private:
 
   }
 
-  // lay resource at a single level
-  inline void LayResource(size_t lev, int elapsetime) {
+  /*
+   * Lay resource for a tesselated diamond waves over a level
+   * given elapsed time.
+   */
+  inline void LayResourceLev(size_t lev, int elapsetime) {
 
     for (
       int ix = 0;
+      //TODO fix ugly casting
       ix <= ((int) resource.GetWidth()) - 2*cconfig.EVENT_RADII[lev];
       ix += (2 * cconfig.EVENT_RADII[lev])) {
 
       for (
         int iy = 0;
+        //TODO fix ugly casting
         iy <= ((int) resource.GetHeight()) - 2*cconfig.EVENT_RADII[lev];
         iy += (2 * cconfig.EVENT_RADII[lev])) {
 
@@ -124,32 +147,36 @@ private:
     }
   }
 
-  // lay resource at a single diamond
-  inline void LayDiamond(size_t lev, int ix, int iy, int elapsetime) {
+  /*
+   * Lay resource for a single diamond wave given elapsed time.
+   */
+  inline void LayDiamond(size_t lev, int x, int y, int elapsetime) {
 
+    // two cases: initial timestep (i.e. just a single dot)
+    // or later timesteps (i.e. a four-sided diamond)
     if (elapsetime == 0) {
-      resource(lev, seedx[lev]+ix, seedy[lev]+iy) += cconfig.EVENT_VALS[lev];
+      resource(lev, seedx[lev]+x, seedy[lev]+y) += cconfig.EVENT_VALS[lev];
     } else {
-      for (int i = 0; i < elapsetime; i ++) {
+      for (int i = 0; i < elapsetime; ++i) {
         resource(
           lev,
-          seedx[lev]+ix+i,
-          seedy[lev]+iy+elapsetime-i
+          seedx[lev]+x+i,
+          seedy[lev]+y+elapsetime-i
         ) += cconfig.EVENT_VALS[lev];
         resource(
           lev,
-          seedx[lev]+ix+elapsetime-i,
-          seedy[lev]+iy-i
+          seedx[lev]+x+elapsetime-i,
+          seedy[lev]+y-i
         ) += cconfig.EVENT_VALS[lev];
         resource(
           lev,
-          seedx[lev]+ix-i,
-          seedy[lev]+iy-elapsetime+i
+          seedx[lev]+x-i,
+          seedy[lev]+y-elapsetime+i
         ) += cconfig.EVENT_VALS[lev];
         resource(
           lev,
-          seedx[lev]+ix-elapsetime+i,
-          seedy[lev]+iy+i
+          seedx[lev]+x-elapsetime+i,
+          seedy[lev]+y+i
         ) += cconfig.EVENT_VALS[lev];
       }
     }

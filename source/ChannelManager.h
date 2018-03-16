@@ -19,8 +19,11 @@ private:
 
   GridStack<int> channel;
 
+  // 2D geometry helper
   GridSpec spec;
 
+  // for each level,
+  // a map between channel values and a list of cell IDs with that value
   emp::vector<std::unordered_map<int,emp::vector<size_t>>> census;
 
   emp::Ptr<emp::Random> rand;
@@ -29,7 +32,7 @@ private:
 
 public:
 
-  constexpr static int DEAD = 0;
+  const int DEAD = 0;
 
   ChannelManager(
     DishtinyConfig& dconfig,
@@ -48,48 +51,77 @@ public:
     }
   }
 
+  /*
+   * Take care of channel-cleanup actions for a killed cell. For each level,
+   * deregister cell from census and re-sort census vector and
+   * mark cell as DEAD. If it's the last cell of a channel, then delete that
+   * channel's entry in the census and in the resource pool.
+   */
   inline void Kill(
     size_t cell,
-    std::function<void(size_t lev, int ch)> erasepool,
-    std::function<void(size_t cell)> erasestockpile
+    std::function<void(size_t lev, int ch)> erasepool
   ) {
     for (size_t lev = 0; lev < channel.GetDepth(); ++lev) {
-      KillLev(lev, cell, erasepool, erasestockpile);
+      KillLev(lev, cell, erasepool);
     }
   }
 
+  /*
+   * Accessor function.
+   */
   inline int GetChannel(size_t lev, size_t cell) const {
     return channel.Get(lev, cell);
   }
 
+  /*
+   * Accessor function.
+   */
   inline int GetChannel(size_t lev, int x, int y) const {
     return channel.Get(lev, x, y);
   }
 
+  /*
+   * Accessor function.
+   */
   inline size_t GetCensusCount(size_t lev, int ch) {
     return census[lev][ch].size();
   }
 
+  /*
+   * Accessor function.
+   */
   inline size_t GetCensusCell(size_t lev, int ch, size_t memb) {
     return census[lev][ch][memb];
   }
 
+  /*
+   * Copy the cell IDs that have a particular channel into suppled vector.
+   */
   inline void CopyChannelList(size_t lev, emp::vector<int>& temp) const {
     for (auto it=census[lev].begin(); it != census[lev].end(); ++it) {
       temp.push_back(it->first);
     }
   }
 
+  /*
+   * Does the channel exist?
+   */
   inline bool ChannelExists(size_t lev, int ch) const {
     return census[lev].find(ch) != census[lev].end();
   }
 
+  /*
+   * Handle the channel-management aspect of reproduction.
+   */
   inline void Spawn(size_t cell, size_t off_dest, size_t off_level) {
     for (size_t lev = 0; lev < channel.GetDepth(); ++lev) {
 
-      // make sure that off_dest is dead
+      // check that off_dest's channel is marked as is dead
+      // killing it (if necessary) should have been taken care of elsewhere
       emp_assert(channel.Get(lev, off_dest) == DEAD);
 
+      // set spawned cell's channel to parent channel or new channel,
+      // respecting the hierarchical reproduction requested by off_level
       if (lev < off_level) {
         RegisterCh(lev, off_dest, ChangeCh(channel.Get(lev, cell)));
       } else {
@@ -113,11 +145,16 @@ private:
 
   }
 
+  /*
+   * Take care of channel-cleanup actions for a killed cell on a single level.
+   * Specificaly, deregister cell from census and re-sort census vector and
+   * mark cell as DEAD. If it's the last cell of a channel, then delete that
+   * channel's entry in the census and in the resource pool.
+   */
   inline void KillLev(
     size_t lev,
     size_t cell,
-    std::function<void(size_t lev, int ch)> erasepool,
-    std::function<void(size_t cell)> erasestockpile
+    std::function<void(size_t lev, int ch)> erasepool
   ) {
 
     int oldch = channel.Get(lev, cell);
@@ -141,14 +178,14 @@ private:
 
     }
 
-    // remove stockpile
-    erasestockpile(cell);
-
     // mark cell as dead
     channel(lev, cell) = DEAD;
 
   }
 
+  /*
+   * Helper struct for sorting census vector in order of proximity to centroid.
+   */
   struct less_than_key
   {
     const size_t centroid_x;
@@ -171,6 +208,10 @@ private:
     }
   };
 
+  /*
+   * Sort census vector (vector of cell IDs on particular channel) in order
+   * of proximity to that channel's centroid.
+   */
   inline void SortCensusVector(size_t lev, int ch) {
 
     emp_assert(census[lev].find(ch) != census[lev].end(), lev, ch);
@@ -192,11 +233,16 @@ private:
 
   }
 
-
+  /*
+   * Initialize a channel.
+   */
   inline int InitCh() {
     return rand->GetInt(1,CH_MAX);
   }
 
+  /*
+   * Change an existing channel.
+   */
   inline int ChangeCh(int cur) {
     return InitCh();
   }
