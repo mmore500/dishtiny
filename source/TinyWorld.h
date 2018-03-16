@@ -17,13 +17,11 @@
 #include "SignalManager.h"
 #include "StoreManager.h"
 
-class Simulation {
+class TinyWorld : public emp::World<Organism> {
 private:
   const size_t nupdate;
 
   emp::Random rand;
-
-  emp::World<Organism> world;
 
   GridSpec spec;
 
@@ -42,14 +40,13 @@ private:
   size_t birth_loc;
 
 public:
-  Simulation(
+  TinyWorld(
     int _nupdate,
     int seed,
     DishtinyConfig& dconfig,
     CustomConfig& cconfig)
   : nupdate(_nupdate)
   , rand(seed)
-  , world(rand)
   , spec(dconfig)
   , channel(dconfig, spec, &rand)
   , resource(dconfig, cconfig, spec, &rand)
@@ -68,22 +65,22 @@ public:
   /*
    * Take a single Update step. Return false if nupdate exceeded, else true.
    */
-  inline bool Step() {
-    std::cout << "update " << world.GetUpdate() << std::endl;
+  inline bool Update() {
+    std::cout << "update " << emp::World<Organism>::GetUpdate() << std::endl;
 
-    signal.Propagate(channel, world);
+    signal.Propagate(channel, *this);
 
-    resource.TryReseed(world.GetUpdate(), signal, channel, world);
+    resource.TryReseed(emp::World<Organism>::GetUpdate(), signal, channel, *this);
 
-    resource.LayResource(world.GetUpdate());
+    resource.LayResource(emp::World<Organism>::GetUpdate());
 
-    store.Harvest(signal, resource, channel, world);
+    store.Harvest(signal, resource, channel, *this);
 
-    store.PayStateCost(signal, resource, channel, world);
+    store.PayStateCost(signal, resource, channel, *this);
 
     store.SettlePools(channel);
 
-    store.KillDebtors(world);
+    store.KillDebtors(*this);
 
     // individual reproduction, paid for by own stockpile
     emp::Shuffle(rand, shuffler);
@@ -112,18 +109,18 @@ public:
 
     }
 
-    world.Update();
+    emp::World<Organism>::Update();
 
-    return (world.GetUpdate() < nupdate);
+    return (emp::World<Organism>::GetUpdate() < nupdate);
   }
 
   /*
    * Force the simulation to complete len steps at a time.
    */
-  inline bool Steps(size_t len) {
+  inline bool Update(size_t len) {
 
     bool res = false;
-    for (size_t i = 0; i < len; ++i) res = Step();
+    for (size_t i = 0; i < len; ++i) res = Update();
 
     return res;
 
@@ -133,7 +130,7 @@ public:
    * Run the simulation until nupdate exceeded.
    */
   inline void Run() {
-    while (Step());
+    while (Update());
   }
 
 private:
@@ -144,19 +141,19 @@ private:
    */
   inline void ReproduceCell(size_t parent, size_t dest, size_t off_level, double endowment) {
 
-    Organism *child = new Organism(world.GetOrg(parent));
+    Organism *child = new Organism(emp::World<Organism>::GetOrg(parent));
     child->DoMutations(rand);
 
     // takes care of killing trampled cell
     // birth_loc is hooked into DoBirth function through Lambda in this scope
     birth_loc = dest;
-    world.DoBirth(*child, parent);
+    emp::World<Organism>::DoBirth(*child, parent);
 
     // copy over channels on levels at and above off_level
     channel.Spawn(parent, dest, off_level);
 
     // give endowment
-    store.MultilevelTransaction(world.GetOrg(dest), dest, channel, endowment);
+    store.MultilevelTransaction(emp::World<Organism>::GetOrg(dest), dest, channel, endowment);
 
   }
 
@@ -173,9 +170,9 @@ private:
    */
   inline size_t pick_off_level(size_t cell, double avail_resource) {
 
-    emp_assert(world.IsOccupied(cell));
+    emp_assert(emp::World<Organism>::IsOccupied(cell));
 
-    const Organism& org = world.GetOrg(cell);
+    const Organism& org = emp::World<Organism>::GetOrg(cell);
 
     // check endowments and caps
     for (size_t tlev = 0; tlev < NLEV + 1; ++tlev) {
@@ -216,7 +213,7 @@ private:
     const size_t x = spec.GetX(cell);
     const size_t y = spec.GetY(cell);
 
-    const Organism& org = world.GetOrg(cell);
+    const Organism& org = emp::World<Organism>::GetOrg(cell);
 
     // at each level, decide if want to exclude cells that match own channel
     for (size_t lev = 0; lev < NLEV; ++lev) {
@@ -261,7 +258,7 @@ private:
    */
   inline double TryReproduceCell(size_t cell, double avail_resource) {
     // is the cell alive?
-    if (!world.IsOccupied(cell)) {
+    if (!emp::World<Organism>::IsOccupied(cell)) {
       return 0.0;
     }
 
@@ -280,7 +277,7 @@ private:
     }
 
     // from this point onwards, we're cleared for reproduction
-    double endow = world.GetOrg(cell).GetEndowment(off_level);
+    double endow = emp::World<Organism>::GetOrg(cell).GetEndowment(off_level);
 
     ReproduceCell(cell, off_dest, off_level, endow);
 
@@ -326,9 +323,9 @@ private:
    */
   inline void SetupWorld(DishtinyConfig& dconfig, CustomConfig& cconfig) {
     // this also sets the world to asynchronous mode
-    world.SetGrid(dconfig.GRID_W(), dconfig.GRID_H());
+    emp::World<Organism>::SetGrid(dconfig.GRID_W(), dconfig.GRID_H());
 
-    world.OnOrgDeath( [this](size_t pos) {
+    emp::World<Organism>::OnOrgDeath( [this](size_t pos) {
       // set channels to DEAD
       // if org was last of particular channel, remove that channel's res pool
       channel.Kill(
@@ -339,17 +336,17 @@ private:
       store.EraseStockpile(pos);
     } );
 
-    world.SetAddBirthFun(
+    emp::World<Organism>::SetAddBirthFun(
       [this](emp::Ptr<Organism> new_org, size_t parent_id) {
         // kill old organism if necessary, place new organism
-        world.AddOrgAt(new_org, birth_loc);
+        emp::World<Organism>::AddOrgAt(new_org, birth_loc);
         return birth_loc;
     } );
 
     // populate the world
     for (size_t cell = 0; cell < GRID_A; ++cell) {
       Organism *org = new Organism(&rand, dconfig, &cconfig);
-      world.InjectAt(*org, cell);
+      emp::World<Organism>::InjectAt(*org, cell);
     }
 
   }
