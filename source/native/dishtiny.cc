@@ -5,7 +5,6 @@
 #include "../GridSpec.h"
 #include "../TinyWorld.h"
 
-
 int main()
 {
 
@@ -13,7 +12,7 @@ int main()
   GridSpec spec = GridSpec(dconfig);
   CustomConfig cconfig = CustomConfig(dconfig, spec);
 
-  TinyWorld* simulation = new TinyWorld(1000, dconfig, cconfig);
-  simulation->Run();
+  TinyWorld simulation(1000, dconfig, cconfig);
+  simulation.Run();
   return 0;
 }

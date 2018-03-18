@@ -39,6 +39,25 @@ private:
 
   size_t birth_loc;
 
+  // for collecting genotype snapshots
+  using dnod_genotype_t = emp::DataNode<double,
+      emp::data::Current,
+      emp::data::Range, emp::data::Stats,
+      emp::data::Pull, emp::data::Log
+    >;
+
+  emp::vector<dnod_genotype_t> dns_endowment;
+  emp::vector<dnod_genotype_t> dns_res_pool;
+  emp::vector<dnod_genotype_t> dns_avoid_over;
+  emp::vector<dnod_genotype_t> dns_off_ch_cap;
+
+  // for tracking how often cells decline to reproduce due to
+  // avoiding placing offspring over neighboring cells on same channel
+  emp::DataNode<int,
+      emp::data::Current, emp::data::Range,
+      emp::data::Pull, emp::data::Log
+    > dn_repdecline;
+
 public:
   TinyWorld(
     int _nupdate,
@@ -59,7 +78,33 @@ public:
   {
     // configure world object
     SetupWorld(dconfig, cconfig);
+
+    // populate the world
+    for (size_t cell = 0; cell < GRID_A; ++cell) {
+      Organism *org = new Organism(&rand, dconfig, &cconfig);
+      emp::World<Organism>::InjectAt(*org, cell);
+    }
+
+    // setup data nodes and data files
+    SetupGenotypeData(dconfig);
+    SetupGenotypeFile(
+      "Genotypes_"
+      +std::to_string(dconfig.SEED())
+      +".csv"
+    ).SetTimingRepeat(dconfig.GDATA_FREQ());
+    SetupPhenotpypeData(dconfig);
+    SetupPhenotypeFile(
+      "Phenotypes_"
+      +std::to_string(dconfig.SEED())
+      +".csv"
+    ).SetTimingRepeat(dconfig.PDATA_FREQ());
   }
+
+  /*
+   * Had to write this to fix Segfault on destruction.
+   */
+
+  ~TinyWorld() { emp::World<Organism>::Clear(); }
 
   /*
    * Take a single Update step. Return false if nupdate exceeded, else true.
@@ -261,17 +306,19 @@ private:
       return 0.0;
     }
 
-    // did the cell pick a viable neighboring cell to place its offspring in?
-    size_t off_dest = pick_off_dest(cell);
-    if (off_dest == GRID_A) {
-      return 0.0;
-    }
-
     // did the cell pick a hierarchical level to reproduce on?
     // (this is where endowment requirements and channel size caps are checked)
     size_t off_level = pick_off_level(cell, avail_resource);
     // 0 thru NLEV are valid responses, NLEV + 1 returned on fail
     if (off_level == NLEV + 1) {
+      return 0.0;
+    }
+
+    // did the cell pick a viable neighboring cell to place its offspring in?
+    size_t off_dest = pick_off_dest(cell);
+    if (off_dest == GRID_A) {
+      // the cell declined to reproduce to avoid trampling channel-mates
+      dn_repdecline.Add(1);
       return 0.0;
     }
 
@@ -318,7 +365,7 @@ private:
   }
 
   /*
-   * Configure World object.
+   * Configure World.h stuff.
    */
   inline void SetupWorld(DishtinyConfig& dconfig, CustomConfig& cconfig) {
     // this also sets the world to asynchronous mode
@@ -342,11 +389,186 @@ private:
         return birth_loc;
     } );
 
-    // populate the world
-    for (size_t cell = 0; cell < GRID_A; ++cell) {
-      Organism *org = new Organism(&rand, dconfig, &cconfig);
-      emp::World<Organism>::InjectAt(*org, cell);
+  }
+
+  /*
+   * Setup our data file to collect genotypic information.
+   */
+  emp::World_file& SetupGenotypeFile(const std::string& filename) {
+    auto& file = SetupFile(filename);
+
+    file.AddVar(update, "update" , "Update");
+
+    for (size_t i = 0; i < dns_endowment.size(); ++i) {
+      file.AddMean(
+        dns_endowment[i],
+        "mean_endowment"+std::to_string(i),
+        "TODO"
+      );
     }
+
+    for (size_t i = 0; i < dns_res_pool.size(); ++i) {
+      file.AddMean(
+        dns_res_pool[i],
+        "mean_res_pool"+std::to_string(i),
+        "TODO"
+      );
+    }
+
+    for (size_t i = 0; i < dns_avoid_over.size(); ++i) {
+      file.AddMean(
+        dns_avoid_over[i],
+        "mean_avoid_over"+std::to_string(i),
+        "TODO"
+      );
+    }
+
+    for (size_t i = 0; i < dns_off_ch_cap.size(); ++i) {
+      file.AddMean(
+        dns_off_ch_cap[i],
+        "mean_off_ch_cap"+std::to_string(i),
+        "TODO"
+      );
+    }
+
+    file.PrintHeaderKeys();
+
+    return file;
+  }
+
+  /*
+   * Setup our data file to collect phenotypic information.
+   */
+  emp::World_file& SetupPhenotypeFile(const std::string& filename) {
+    auto& file = SetupFile(filename);
+
+    file.AddVar(update, "update" , "Update");
+
+    file.AddTotal(
+      dn_repdecline,
+      "total_repdecline",
+      "TODO"
+    );
+
+    file.PrintHeaderKeys();
+
+    return file;
+  }
+
+  /*
+   * Setup our data nodes to collect genotypic snapshots. During a run, data
+   * are added to these nodes through a DataPull registered to the OnUpdate
+   * signal.
+   */
+  void inline SetupGenotypeData(DishtinyConfig& dconfig) {
+    // example organism
+    Organism& examp = emp::World<Organism>::GetOrg(0);
+
+    const size_t gdata_freq = dconfig.GDATA_FREQ();
+
+    // setup data nodes
+    for (size_t i = 0; i < examp.GetEndowmentDepth(); ++i) {
+      dns_endowment.push_back(dnod_genotype_t());
+      dns_endowment[i].AddPullSet([this, i](){
+        emp::vector<double> res;
+        for(
+          auto it = emp::World<Organism>::begin();
+          it != emp::World<Organism>::end();
+          ++it
+        ) {
+          res.push_back((*it).GetEndowment(i));
+        }
+        return res;
+      });
+      OnUpdate([this, i, gdata_freq](size_t update){
+        if (update%gdata_freq == 0) {
+          dns_endowment[i].Reset();
+          dns_endowment[i].PullData();
+        }
+      });
+    }
+
+    for (size_t i = 0; i < examp.GetResPoolDepth(); ++i) {
+      dns_res_pool.push_back(dnod_genotype_t());
+      dns_res_pool[i].AddPullSet([this, i](){
+        emp::vector<double> res;
+        for(
+          auto it = emp::World<Organism>::begin();
+          it != emp::World<Organism>::end();
+          ++it
+        ) {
+          res.push_back((*it).GetResPool(i));
+        }
+        return res;
+      });
+      OnUpdate([this, i, gdata_freq](size_t update){
+        if (update%gdata_freq == 0) {
+          dns_res_pool[i].Reset();
+          dns_res_pool[i].PullData();
+        }
+      });
+    }
+
+    for (size_t i = 0; i < examp.GetAvoidOverDepth(); ++i) {
+      dns_avoid_over.push_back(dnod_genotype_t());
+      dns_avoid_over[i].AddPullSet([this, i](){
+        emp::vector<double> res;
+        for(
+          auto it = emp::World<Organism>::begin();
+          it != emp::World<Organism>::end();
+          ++it
+        ) {
+          res.push_back((*it).GetAvoidOver(i));
+        }
+        return res;
+      });
+      OnUpdate([this, i, gdata_freq](size_t update){
+        if (update%gdata_freq == 0) {
+          dns_avoid_over[i].Reset();
+          dns_avoid_over[i].PullData();
+        }
+      });
+    }
+
+    for (size_t i = 0; i < examp.GetOffChCapDepth(); ++i) {
+      dns_off_ch_cap.push_back(dnod_genotype_t());
+      dns_off_ch_cap[i].AddPullSet([this, i](){
+        emp::vector<double> res;
+        for(
+          auto it = emp::World<Organism>::begin();
+          it != emp::World<Organism>::end();
+          ++it
+        ) {
+          res.push_back((*it).GetOffChCap(i));
+        }
+        return res;
+      });
+      OnUpdate([this, i, gdata_freq](size_t update){
+        if (update%gdata_freq == 0) {
+          dns_off_ch_cap[i].Reset();
+          dns_off_ch_cap[i].PullData();
+        }
+      });
+    }
+
+  }
+
+  /*
+   * Setup our data nodes to monitor phenotypic events. During a run, these
+   * nodes are Reset through the OnUpdate signal. Data are added through the
+   * Add function when relevant events occur. (The Add function is called where
+   * event occurs.)
+   */
+  void inline SetupPhenotpypeData(DishtinyConfig& dconfig) {
+
+    const size_t pdata_freq = dconfig.PDATA_FREQ();
+
+    // setup data nodes
+    OnUpdate([this, pdata_freq](size_t update){
+      if (update%pdata_freq == 0) {
+        dn_repdecline.Reset();
+      }
+    });
 
   }
 
