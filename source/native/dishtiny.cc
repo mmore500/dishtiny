@@ -13,7 +13,7 @@ int main()
   GridSpec spec = GridSpec(dconfig);
   CustomConfig cconfig = CustomConfig(dconfig, spec);
 
-  TinyWorld* simulation = new TinyWorld(1000, 0, dconfig, cconfig);
+  TinyWorld* simulation = new TinyWorld(1000, dconfig, cconfig);
   simulation->Run();
   return 0;
 }

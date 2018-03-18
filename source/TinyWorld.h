@@ -42,11 +42,10 @@ private:
 public:
   TinyWorld(
     int _nupdate,
-    int seed,
     DishtinyConfig& dconfig,
     CustomConfig& cconfig)
   : nupdate(_nupdate)
-  , rand(seed)
+  , rand(dconfig.SEED())
   , spec(dconfig)
   , channel(dconfig, spec, &rand)
   , resource(dconfig, cconfig, spec, &rand)
