@@ -33,6 +33,7 @@ private:
   const size_t NLEV;
   const size_t GRID_A;
   const double REP_THRESH;
+  const size_t PUPDATE_FREQ;
 
   emp::vector<size_t> shuffler;
   emp::vector<size_t> neighborshuffler;
@@ -75,6 +76,7 @@ public:
   , NLEV(dconfig.NLEV())
   , GRID_A(dconfig.GRID_H()*dconfig.GRID_W())
   , REP_THRESH(dconfig.REP_THRESH())
+  , PUPDATE_FREQ(dconfig.PUPDATE_FREQ())
   , shuffler(emp::GetPermutation(rand, GRID_A))
   , neighborshuffler(emp::GetPermutation(rand, 4))
   {
@@ -112,7 +114,10 @@ public:
    * Take a single Update step. Return false if nupdate exceeded, else true.
    */
   inline bool Update() {
-    std::cout << "update " << emp::World<Organism>::GetUpdate() << std::endl;
+
+    if (emp::World<Organism>::GetUpdate() % PUPDATE_FREQ == 0) {
+      std::cout << "update " << emp::World<Organism>::GetUpdate() << std::endl;
+    }
 
     signal.Propagate(channel, *this);
 

@@ -17,4 +17,5 @@ EMP_BUILD_CONFIG(
   VALUE(CULL_FREQ, size_t, 2500, "How frequently should culling take place?"),
   VALUE(GDATA_FREQ, size_t, 100, "How frequently should we take genotype data?"),
   VALUE(PDATA_FREQ, size_t, 100, "How frequently should we take phenotype data?"),
+  VALUE(PUPDATE_FREQ, size_t, 100, "How frequently should we print the current update?"),
 )
