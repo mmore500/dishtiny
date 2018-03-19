@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <tuple>
+#include <utility>
 #include <iostream>
 
 #include "base/vector.h"
@@ -29,6 +30,9 @@ private:
   // a map between channel values and a list of cell IDs with that value
   emp::vector<std::unordered_map<int,emp::vector<size_t>>> census;
 
+  emp::vector<std::unordered_map<int,int>> xs_centroid;
+  emp::vector<std::unordered_map<int,int>> ys_centroid;
+
   emp::Ptr<emp::Random> rand;
 
 public:
@@ -41,6 +45,8 @@ public:
   , channel(DEAD, _spec, dconfig.NLEV())
   , spec(_spec)
   , census(dconfig.NLEV())
+  , xs_centroid(dconfig.NLEV())
+  , ys_centroid(dconfig.NLEV())
   , rand(_r) {
     // initialize channels
     for (size_t lev = 0; lev < channel.GetDepth(); ++lev) {
@@ -155,6 +161,22 @@ public:
     }
   }
 
+  /*
+   * Sort a vector of tuples of the form (cell_id, bool_flag)
+   * in ascending distance from a channel's centroid.
+   */
+  inline void SortByCentroids(
+      emp::vector<std::pair<size_t, bool>*>& vec,
+      size_t lev,
+      int ch
+    ) {
+    std::sort(
+      vec.begin(),
+      vec.end(),
+      less_than_key(xs_centroid[lev][ch], ys_centroid[lev][ch], spec)
+    );
+  }
+
 
 private:
 
@@ -231,6 +253,14 @@ private:
 
       return dist1 < dist2;
     }
+
+    // for sorting tuple of index, cell index
+    inline bool operator() (
+      std::pair<size_t, bool>* p1,
+      std::pair<size_t, bool>* p2
+    ) {
+      return (*this)(p1->first, p2->first);
+    }
   };
 
   /*
@@ -241,11 +271,15 @@ private:
 
     emp_assert(census[lev].find(ch) != census[lev].end(), lev, ch);
 
+    // calculate centroid x, y
+    size_t cx, cy;
+    std::tie(cx, cy) = spec.CalcCentroid(census[lev][ch]);
+
+    xs_centroid[lev][ch] = cx;
+    ys_centroid[lev][ch] = cy;
+
     // don't need to sort for size two or less
     if (census[lev][ch].size() > 2) {
-      // calculate centroid x, y
-      size_t cx, cy;
-      std::tie(cx, cy) = spec.CalcCentroid(census[lev][ch]);
 
       // shuffle then sort to ensure random ordering within equivalent orgs
       emp::Shuffle(*rand, census[lev][ch]);

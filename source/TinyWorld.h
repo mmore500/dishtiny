@@ -1,5 +1,6 @@
 #pragma once
 
+#include <utility>
 #include <iostream>
 
 #include "base/vector.h"
@@ -36,7 +37,7 @@ private:
   const size_t PUPDATE_FREQ;
 
   emp::vector<size_t> shuffler;
-  emp::vector<size_t> neighborshuffler;
+  emp::vector<std::pair<size_t, bool>*> neighborsorter;
 
   size_t birth_loc;
 
@@ -51,6 +52,7 @@ private:
   emp::vector<dnod_genotype_t> dns_res_pool;
   emp::vector<dnod_genotype_t> dns_avoid_over;
   emp::vector<dnod_genotype_t> dns_off_ch_cap;
+  emp::vector<dnod_genotype_t> dns_sort_off;
 
   // for tracking how often cells decline to reproduce due to
   // avoiding placing offspring over neighboring cells on same channel
@@ -78,8 +80,14 @@ public:
   , REP_THRESH(dconfig.REP_THRESH())
   , PUPDATE_FREQ(dconfig.PUPDATE_FREQ())
   , shuffler(emp::GetPermutation(rand, GRID_A))
-  , neighborshuffler(emp::GetPermutation(rand, 4))
+  , neighborsorter()
   {
+
+    // add one element for all four neighbors
+    for (size_t i = 0; i < 4; ++i) {
+      neighborsorter.push_back(new std::pair<size_t, bool>);
+    }
+
     // configure world object
     SetupWorld(dconfig, cconfig);
 
@@ -291,48 +299,48 @@ private:
    * Pick a neighboring cell to place offspring in. Return GRID_A (one past
    * maximum valid cell) on failure.
    */
-  inline size_t pick_off_dest(size_t cell) {
-    bool viable[4];
-    for (size_t n = 0; n < 4; ++n) {
-      viable[n] = true;
+  inline size_t pick_off_dest(size_t cell, size_t off_level) {
+
+    // initialize neighborsorter
+    for (size_t i = 0; i < neighborsorter.size(); ++i) {
+      neighborsorter[i]->second = true;
     }
 
     const size_t x = spec.GetX(cell);
     const size_t y = spec.GetY(cell);
 
-    const Organism& org = emp::World<Organism>::GetOrg(cell);
+    neighborsorter[0]->first = spec.GetID(x, y+1);
+    neighborsorter[1]->first = spec.GetID(x, y-1);
+    neighborsorter[2]->first = spec.GetID(x+1, y);
+    neighborsorter[3]->first = spec.GetID(x-1, y);
 
     // at each level, decide if want to exclude cells that match own channel
+
+    const Organism& org = emp::World<Organism>::GetOrg(cell);
+
     for (size_t lev = 0; lev < NLEV; ++lev) {
       if (org.GetAvoidOver(lev) > rand.GetDouble()) {
         int cur_ch = channel.GetChannel(lev, cell);
-
-        viable[0] &= (channel.GetChannel(lev,x,y+1) != cur_ch);
-        viable[1] &= (channel.GetChannel(lev,x,y-1) != cur_ch);
-        viable[2] &= (channel.GetChannel(lev,x+1,y) != cur_ch);
-        viable[3] &= (channel.GetChannel(lev,x-1,y) != cur_ch);
+        for (size_t i = 0; i < neighborsorter.size(); ++i) {
+          neighborsorter[i]->second
+            &= (channel.GetChannel(lev,neighborsorter[i]->first) != cur_ch);
+        }
       }
     }
 
-    // neighborshuffler is {0,1,2,3}
-    emp::Shuffle(rand, neighborshuffler);
+    emp::Shuffle(rand, neighborsorter);
+    if (off_level < NLEV && org.GetSortOff(off_level) > rand.GetDouble()) {
+      // if desired, sort neighbors to try to put in neighbor closest
+      // to center of off_level centroid first
+      channel.SortByCentroids(neighborsorter, off_level, channel.GetChannel(off_level, cell));
+    }
 
-    // proceed through neighbors in random order,
+    // proceed through neighbors in random (or perhaps sorted) order,
     // returning first index that is valid
-    for (size_t n = 0; n < 4; ++n) {
-      if(viable[neighborshuffler[n]]) {
-        switch(neighborshuffler[n]) {
-          case 0 :
-            return spec.GetID(x,y+1);
-          case 1 :
-            return spec.GetID(x,y-1);
-          case 2 :
-            return spec.GetID(x+1,y);
-          case 3 :
-            return spec.GetID(x-1,y);;
-        }
+    for (size_t i = 0; i < neighborsorter.size(); ++i) {
+      if (neighborsorter[i]->second) {
+        return neighborsorter[i]->first;
       }
-
     }
 
     // on failure, return one past maximum valid cell index
@@ -358,7 +366,7 @@ private:
     }
 
     // did the cell pick a viable neighboring cell to place its offspring in?
-    size_t off_dest = pick_off_dest(cell);
+    size_t off_dest = pick_off_dest(cell, off_level);
     if (off_dest == GRID_A) {
       // the cell declined to reproduce to avoid trampling channel-mates
       dn_repdecline.Add(1);
@@ -470,6 +478,14 @@ private:
       file.AddMean(
         dns_off_ch_cap[i],
         "mean_off_ch_cap"+std::to_string(i),
+        "TODO"
+      );
+    }
+
+    for (size_t i = 0; i < dns_sort_off.size(); ++i) {
+      file.AddMean(
+        dns_sort_off[i],
+        "mean_sort_off"+std::to_string(i),
         "TODO"
       );
     }
@@ -590,6 +606,27 @@ private:
         if (update%gdata_freq == 0) {
           dns_off_ch_cap[i].Reset();
           dns_off_ch_cap[i].PullData();
+        }
+      });
+    }
+
+    for (size_t i = 0; i < examp.GetSortOffDepth(); ++i) {
+      dns_sort_off.push_back(dnod_genotype_t());
+      dns_sort_off[i].AddPullSet([this, i](){
+        emp::vector<double> res;
+        for(
+          auto it = emp::World<Organism>::begin();
+          it != emp::World<Organism>::end();
+          ++it
+        ) {
+          res.push_back((*it).GetSortOff(i));
+        }
+        return res;
+      });
+      OnUpdate([this, i, gdata_freq](size_t update){
+        if (update%gdata_freq == 0) {
+          dns_sort_off[i].Reset();
+          dns_sort_off[i].PullData();
         }
       });
     }

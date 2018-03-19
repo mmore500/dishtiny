@@ -28,6 +28,8 @@ private:
   // ... how big can the population of same-channel cells on a particular level
   // get before I decide to reproduce on a higher hierarchical level?
   emp::vector<double> off_ch_caps;
+  // ... for a particular hierarchical level, should I prefer to place offspring close to the channel centroid?
+  emp::vector<double> sort_offs;
 
   // pointer for quick and efficient reproduction
   // (shared between all organisms)
@@ -43,6 +45,7 @@ public:
   , res_pools(dconfig.NLEV()+1)
   , avoid_overs(dconfig.NLEV())
   , off_ch_caps(dconfig.NLEV())
+  , sort_offs(dconfig.NLEV())
   , cconfig(_cconfig)
   {
     // initialize genetic information
@@ -51,6 +54,7 @@ public:
       endowments[lev] = init_endowment(lev);
       res_pools[lev] = init_res_pool(lev);
       avoid_overs[lev] = init_avoid_over(lev);
+      sort_offs[lev] = init_sort_off(lev);
     }
 
     // these genotypic characteristics have NLEV+1 values...
@@ -73,6 +77,7 @@ public:
   , res_pools(par.res_pools.size())
   , avoid_overs(par.avoid_overs.size())
   , off_ch_caps(par.off_ch_caps.size())
+  , sort_offs(par.sort_offs.size())
   , cconfig(par.cconfig)
   {
     // initialize genetic information from parent
@@ -90,6 +95,10 @@ public:
 
     for (size_t lev = 0; lev < off_ch_caps.size(); ++lev) {
       off_ch_caps[lev] = par.off_ch_caps[lev];
+    }
+
+    for (size_t lev = 0; lev < sort_offs.size(); ++lev) {
+      sort_offs[lev] = par.sort_offs[lev];
     }
 
   }
@@ -128,6 +137,10 @@ public:
 
     for (size_t lev = 0; lev < off_ch_caps.size(); ++lev) {
       off_ch_caps[lev] = mut_off_ch_cap(off_ch_caps[lev], lev);
+    }
+
+    for (size_t lev = 0; lev < sort_offs.size(); ++lev) {
+      sort_offs[lev] = mut_sort_off(sort_offs[lev], lev);
     }
 
     bal_res_pools();
@@ -180,6 +193,20 @@ public:
    */
   inline size_t GetAvoidOverDepth() const {
     return avoid_overs.size();
+  }
+
+  /*
+   * Accessor function.
+   */
+  inline double GetSortOff(size_t lev) const {
+    return sort_offs[lev];
+  }
+
+  /*
+   * Accessor function.
+   */
+  inline size_t GetSortOffDepth() const {
+    return sort_offs.size();
   }
 
   /*
@@ -246,6 +273,13 @@ private:
   }
 
   /*
+   * Initialization function.
+   */
+  inline double init_sort_off(size_t lev) {
+    return std::max(std::min(rand->GetDouble(-0.5, 1.5), 1.0), 0.0);
+  }
+
+  /*
    * Draw double from random generator. If it says mutate value, return mutated
    * value. Else, return original value.
    */
@@ -289,6 +323,18 @@ private:
     double rval = cur;
     if (rand->GetDouble() < cconfig->PM_AVOID_OVER[lev]) {
       rval = init_avoid_over(lev);
+    }
+    return rval;
+  }
+
+  /*
+   * Draw double from random generator. If it says mutate value, return mutated
+   * value. Else, return original value.
+   */
+  inline double mut_sort_off(double cur, size_t lev) {
+    double rval = cur;
+    if (rand->GetDouble() < cconfig->PM_SORT_OFF[lev]) {
+      rval = init_sort_off(lev);
     }
     return rval;
   }
