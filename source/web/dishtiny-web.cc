@@ -23,6 +23,7 @@ struct Interface {
 
   emp::vector<GridAnimator<int>*> gas_channelmanager;
   emp::vector<GridAnimator<double>*> gas_resourcemanager;
+  emp::vector<GridAnimator<int>*> gas_signalmanager;
 
   DishtinyConfig dconfig;
   GridSpec spec;
@@ -87,12 +88,20 @@ struct Interface {
       cbs_afterdraw
     );
 
+    world.MakeSignalAnimators(
+      gas_signalmanager,
+      canvas,
+      cbs_beforedraw,
+      cbs_afterdraw
+    );
+
     button_dash << fforward.GetToggleButton("FastForward");
     button_dash << "&nbsp;&nbsp;&nbsp;";
     button_dash << "run without animation" << "<br />";
 
     MakeControl(gas_channelmanager, "channels");
     MakeControl(gas_resourcemanager, "resources");
+    MakeControl(gas_signalmanager, "signals");
 
   }
 

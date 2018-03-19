@@ -73,6 +73,41 @@ public:
     return signal->Get(lev, cell) == ACTIVATED;
   }
 
+  /*
+   * Put Animators into a supplied vector.
+   */
+  void MakeAnimators(
+      emp::vector<GridAnimator<int>*>& dest,
+      emp::web::Canvas& c,
+      emp::vector<std::function<void()>>& cbs_beforedraw,
+      emp::vector<std::function<void()>>& cbs_afterdraw
+    ) {
+    for (size_t lev = 0; lev < signal->GetDepth(); ++lev) {
+      int *min_sig = new int;
+      *min_sig = 0;
+      int *max_sig = new int;
+      *max_sig = QUIESCENT_MAX;
+      dest.push_back(new GridAnimator<int>(
+          *signal,
+          lev,
+          min_sig,
+          max_sig,
+          c,
+          cbs_beforedraw,
+          cbs_afterdraw
+        ));
+      dest.push_back(new GridAnimator<int>(
+          *sigbuff,
+          lev,
+          min_sig,
+          max_sig,
+          c,
+          cbs_beforedraw,
+          cbs_afterdraw
+        ));
+    }
+  }
+
 private:
   /*
    * Set cell state to ACTIVATED.

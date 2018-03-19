@@ -208,6 +208,18 @@ public:
     return resource.MakeAnimators(dest, c, cbs_beforedraw, cbs_afterdraw);
   };
 
+  /*
+   * Make GridAnimators for each level and place them in supplied vector.
+   */
+  void MakeSignalAnimators(
+      emp::vector<GridAnimator<int>*>& dest,
+      emp::web::Canvas& c,
+      emp::vector<std::function<void()>>& cbs_beforedraw,
+      emp::vector<std::function<void()>>& cbs_afterdraw
+    ) {
+    return signal.MakeAnimators(dest, c, cbs_beforedraw, cbs_afterdraw);
+  };
+
 private:
   /*
    * Actually reproduce a cell.

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include "web/Canvas.h"
 #include "web/Animate.h"
 
@@ -82,6 +84,10 @@ public:
       maxv = maxp ? *maxp : *(minmax.second);
     }
 
+    std::cout << minv << std::endl;
+    std::cout << maxv << std::endl << std::endl;
+
+
     // Calculate scaling factor
     STATE_TYPE diff = maxv - minv;
     if (diff == 0) diff += 1;
@@ -100,10 +106,14 @@ public:
         // normalize and contain graphic intensity
         int val = ((state - minv) * 255) / diff;
         int v1,v2,v3;
-        if (state < minv || state > maxv) {
+        if (state < minv) {
           v1 = 255;
           v2 = 0;
           v3 = 0;
+        } else if (state > maxv) {
+          v1 = 0;
+          v2 = 0;
+          v3 = 255;
         } else {
           v1 = val;
           v2 = val;
