@@ -119,7 +119,9 @@ private:
     ) {
     if (cm.GetChannel(lev, x, y) == sendch) {
       // refer to function to process taps from events
-      TryTakeTap(lev, x, y, w);
+      if (signal->Get(lev, x, y) == READY && w.IsOccupied(signal->GetID(x, y))) {
+        (*sigbuff)(lev, x, y) = ACTIVATED;
+      }
     }
   }
 
