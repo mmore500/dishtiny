@@ -11,11 +11,14 @@
 #include "base/Ptr.h"
 
 #include "GridStack.h"
+#include "GridAnimator.h"
 #include "DishtinyConfig.h"
 #include "GridSpec.h"
 
 class ChannelManager {
 private:
+  const int CH_MAX;
+  const int DEAD;
 
   GridStack<int> channel;
 
@@ -28,21 +31,17 @@ private:
 
   emp::Ptr<emp::Random> rand;
 
-  const int CH_MAX;
-
 public:
-
-  const int DEAD = 0;
-
   ChannelManager(
     DishtinyConfig& dconfig,
     GridSpec& _spec,
     emp::Ptr<emp::Random> _r)
-  : channel(DEAD, _spec, dconfig.NLEV())
+  : CH_MAX(dconfig.CH_MAX())
+  , DEAD(0)
+  , channel(DEAD, _spec, dconfig.NLEV())
   , spec(_spec)
   , census(dconfig.NLEV())
-  , rand(_r)
-  , CH_MAX(dconfig.CH_MAX()) {
+  , rand(_r) {
     // initialize channels
     for (size_t lev = 0; lev < channel.GetDepth(); ++lev) {
       for (size_t cell = 0; cell < channel.GetArea(); ++cell) {
@@ -127,6 +126,32 @@ public:
       } else {
         RegisterCh(lev, off_dest, channel.Get(lev, cell));
       }
+    }
+  }
+
+  /*
+   * Put Animators into a supplied vector.
+   */
+  void MakeAnimators(
+      emp::vector<GridAnimator<int>*>& dest,
+      emp::web::Canvas& c,
+      emp::vector<std::function<void()>>& cbs_beforedraw,
+      emp::vector<std::function<void()>>& cbs_afterdraw
+    ) {
+    for (size_t lev = 0; lev < channel.GetDepth(); ++lev) {
+      int *min_ch = new int;
+      *min_ch = 1;
+      int *max_ch = new int;
+      *max_ch = CH_MAX;
+      dest.push_back(new GridAnimator<int>(
+          channel,
+          lev,
+          min_ch,
+          max_ch,
+          c,
+          cbs_beforedraw,
+          cbs_afterdraw
+        ));
     }
   }
 

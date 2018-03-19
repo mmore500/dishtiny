@@ -11,25 +11,27 @@
 
 class SignalManager {
 private:
+  const int ACTIVATED;
+  const int READY;
+  const int QUIESCENT_MAX;
+
+  const size_t NLEV;
+
   // current signal state
   GridStack<int>* signal;
   // next signal state
   GridStack<int>* sigbuff;
 
-  const size_t NLEV;
-
 public:
-  const int ACTIVATED = -1;
-  const int READY = 0;
-  const int QUIESCENT_MAX;
-
   SignalManager(
     DishtinyConfig& dconfig,
     GridSpec& spec)
-    : signal(new GridStack<int>(READY, spec, dconfig.NLEV()))
-    , sigbuff(new GridStack<int>(READY, spec, dconfig.NLEV()))
-    , NLEV(dconfig.NLEV())
+    : ACTIVATED(-1)
+    , READY(0)
     , QUIESCENT_MAX(dconfig.QUIESCENT_MAX())
+    , NLEV(dconfig.NLEV())
+    , signal(new GridStack<int>(READY, spec, dconfig.NLEV()))
+    , sigbuff(new GridStack<int>(READY, spec, dconfig.NLEV()))
     { ; }
 
   /*

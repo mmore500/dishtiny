@@ -1,5 +1,7 @@
 // This is the main function for the NATIVE version of this project.
 
+#include "tools/Random.h"
+
 #include "../CustomConfig.h"
 #include "../DishtinyConfig.h"
 #include "../GridSpec.h"
@@ -9,10 +11,11 @@ int main()
 {
 
   DishtinyConfig dconfig;
-  GridSpec spec = GridSpec(dconfig);
-  CustomConfig cconfig = CustomConfig(dconfig, spec);
+  GridSpec spec(dconfig);
+  CustomConfig cconfig(dconfig, spec);
+  emp::Random rand(dconfig.SEED());
 
-  TinyWorld simulation(1000, dconfig, cconfig);
-  simulation.Run();
+  TinyWorld world(1000, rand, dconfig, cconfig);
+  world.Run();
   return 0;
 }

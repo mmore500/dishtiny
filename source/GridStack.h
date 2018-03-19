@@ -41,6 +41,21 @@ public:
   inline size_t GetHeight() const { return spec.height; }
 
   /*
+   * Accessor function for const_iterator to a Grid.
+   */
+  inline typename
+  emp::vector<STATE_TYPE>::const_iterator Begin(size_t lev) const {
+    return grids[lev].Begin();
+  }
+  /*
+   * Accessor function for const_iterator to a Grid.
+   */
+  inline typename
+  emp::vector<STATE_TYPE>::const_iterator End(size_t lev) const {
+    return grids[lev].End();
+  }
+
+  /*
    * Accessor function.
    */
   inline size_t GetArea() const { return spec.area; }
@@ -104,5 +119,12 @@ public:
     return grids[lev].Get(id);
   }
 
+private:
+  /*
+   * Accessor function used by friend class GridAnimator.
+   */
+  Grid<STATE_TYPE>& GetGrid(size_t lev) {
+    return grids[lev];
+  }
 
 };

@@ -3,59 +3,53 @@
 #include "web/Canvas.h"
 #include "web/Animate.h"
 
-#include "Simulation.h"
 #include "Grid.h"
 
 template <typename STATE_TYPE>
-class GridAnimator {
+class GridAnimator : public emp::web::Animate {
 public:
 
-  Simulation *simulation;
-  Grid<STATE_TYPE> *grid;
+  GridStack<STATE_TYPE>& stack;
+  size_t lev;
   const STATE_TYPE *minp;
   const STATE_TYPE *maxp;
-  emp::web::Canvas *canvas;
-  emp::vector<std::function<void()>> *cbs;
-  emp::web::Animate anim;
+  emp::web::Canvas& canvas;
+  emp::vector<std::function<void()>>& cbs_beforedraw;
+  emp::vector<std::function<void()>>& cbs_afterdraw;
 
 public:
   GridAnimator(
-    Simulation *_s,
-    Grid<STATE_TYPE> *_g,
+    GridStack<STATE_TYPE>& _stack,
+    size_t _lev,
     STATE_TYPE *_minp,
     STATE_TYPE *_maxp,
-    emp::web::Canvas *_c,
-    emp::vector<std::function<void()>> *_cbs
-  )
-    : simulation(_s)
-    , grid(_g)
-    , minp(_minp)
-    , maxp(_maxp)
-    , canvas(_c)
-    , cbs(_cbs)
-    , anim([this](){ DoFrame(); }) { ; }
-
-  void DoFrame() {
-    simulation->Step();
-    if (grid && canvas) {
-      Draw(grid, *canvas, minp, maxp);
+    emp::web::Canvas& _canvas,
+    emp::vector<std::function<void()>>& _cbs_beforedraw,
+    emp::vector<std::function<void()>>& _cbs_afterdraw)
+  : emp::web::Animate([this](){
+    for (size_t i = 0; i < cbs_beforedraw.size(); ++i) {
+      cbs_beforedraw[i]();
     }
-    for ( size_t i = 0; i < cbs->size(); i++) {
-      (*cbs)[i]();
+    Draw(lev);
+    for (size_t i = 0; i < cbs_afterdraw.size(); ++i) {
+      cbs_afterdraw[i]();
     }
-  }
+  })
+  , stack(_stack)
+  , lev(_lev)
+  , minp(_minp)
+  , maxp(_maxp)
+  , canvas(_canvas)
+  , cbs_beforedraw(_cbs_beforedraw)
+  , cbs_afterdraw(_cbs_afterdraw) { ; }
 
-  /// Draw a state grid onto a canvas.
-  /// @param canvas The Canvas to draw on.
-  /// @param minp The value to associate with minimum graphic intensity.
-  /// @param maxp The value to associate with maximum graphic intensity. Pass a
-  /// @param color_map Mapping of values to the colors with which they should be associated.
-  /// @param line_color The background line color for the grid.
+  /*
+   * Draw a Grid from stored GridStack onto a canvas.
+   * @param lev The stack index to the Grid to be drawn.
+   * @param line_color The background line color for the grid.
+   */
   void const Draw(
-    Grid & grid,
-    emp::web::Canvas canvas,
-    const STATE_TYPE *minp,
-    const STATE_TYPE *maxp,
+    size_t lev,
     std::string line_color="black"
   )
   {
@@ -64,12 +58,12 @@ public:
     const size_t canvas_h = canvas.GetHeight();
 
     // Determine the cell width & height.
-    const size_t cell_w = canvas_w / this->GetWidth();
-    const size_t cell_h = canvas_h / this->GetHeight();
+    const size_t cell_w = canvas_w / stack.GetWidth();
+    const size_t cell_h = canvas_h / stack.GetHeight();
 
     // Determine the realized grid width and height on the canvas.
-    const size_t grid_w = cell_w * this->GetWidth();
-    const size_t grid_h = cell_h * this->GetHeight();
+    const size_t grid_w = cell_w * stack.GetWidth();
+    const size_t grid_h = cell_h * stack.GetHeight();
 
     // Center the grid on the canvas if there's extra room.
     const size_t offset_x = (canvas_w <= grid_w) ? 0 : (canvas_w - grid_w) / 2;
@@ -83,7 +77,7 @@ public:
       minv = *minp;
       maxv = *maxp;
     } else {
-      auto minmax = std::minmax_element(std::begin(grid), std::end(grid));
+      auto minmax = std::minmax_element(stack.Begin(lev), stack.End(lev));
       minv = minp ? *minp : *(minmax.first);
       maxv = maxp ? *maxp : *(minmax.second);
     }
@@ -97,11 +91,11 @@ public:
 
     // Fill out the grid!
     size_t id = 0;
-    for (size_t row = 0; row < grid.GetHeight(); row++) {
+    for (size_t row = 0; row < stack.GetHeight(); row++) {
       const size_t cur_y = offset_y + row*cell_h;
-      for (size_t col = 0; col < grid.GetWidth(); col++) {
+      for (size_t col = 0; col < stack.GetWidth(); col++) {
         const size_t cur_x = offset_x + col*cell_w;
-        const STATE_TYPE state = grid[id++];
+        const STATE_TYPE state = stack.Get(lev, id++);
 
         // normalize and contain graphic intensity
         int val = ((state - minv) * 255) / diff;

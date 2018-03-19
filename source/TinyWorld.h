@@ -61,10 +61,12 @@ private:
 public:
   TinyWorld(
     int _nupdate,
+    emp::Random& _rand,
     DishtinyConfig& dconfig,
     CustomConfig& cconfig)
-  : nupdate(_nupdate)
-  , rand(dconfig.SEED())
+  : emp::World<Organism>(_rand)
+  , nupdate(_nupdate)
+  , rand(_rand)
   , spec(dconfig)
   , channel(dconfig, spec, &rand)
   , resource(dconfig, cconfig, spec, &rand)
@@ -176,6 +178,18 @@ public:
   inline void Run() {
     while (Update());
   }
+
+  /*
+   * Make GridAnimators for each level and place them in supplied vector.
+   */
+  void MakeChannelAnimators(
+      emp::vector<GridAnimator<int>*>& dest,
+      emp::web::Canvas& c,
+      emp::vector<std::function<void()>>& cbs_beforedraw,
+      emp::vector<std::function<void()>>& cbs_afterdraw
+    ) {
+    return channel.MakeAnimators(dest, c, cbs_beforedraw, cbs_afterdraw);
+  };
 
 private:
   /*

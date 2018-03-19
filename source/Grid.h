@@ -14,7 +14,7 @@ private:
   GridSpec spec;
   // what do empty cells look like?
   STATE_TYPE empty;
-  
+
   emp::vector<STATE_TYPE> states;
 
 public:
@@ -35,6 +35,21 @@ public:
    * Accessor function.
    */
   inline size_t GetArea() const { return spec.GetArea(); }
+
+  /*
+   * Accessor function.
+   */
+  inline typename
+  emp::vector<STATE_TYPE>::const_iterator Begin() const {
+    return states.cbegin();
+  }
+  /*
+   * Accessor function.
+   */
+  inline typename
+  emp::vector<STATE_TYPE>::const_iterator End() const {
+    return states.cend();
+  }
 
   /*
    * Geometry helper function.
