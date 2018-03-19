@@ -86,6 +86,33 @@ public:
     return resource.Get(lev, cell);
   }
 
+  /*
+   * Put Animators into a supplied vector.
+   */
+  void MakeAnimators(
+      emp::vector<GridAnimator<double>*>& dest,
+      emp::web::Canvas& c,
+      emp::vector<std::function<void()>>& cbs_beforedraw,
+      emp::vector<std::function<void()>>& cbs_afterdraw
+    ) {
+    for (size_t lev = 0; lev < resource.GetDepth(); ++lev) {
+      double *min_res = new double;
+      *min_res = 0;
+      double *max_res = new double;
+      *max_res = cconfig.EVENT_VALS[lev];
+      dest.push_back(new GridAnimator<double>(
+          resource,
+          lev,
+          min_res,
+          max_res,
+          c,
+          cbs_beforedraw,
+          cbs_afterdraw
+        ));
+    }
+  }
+
+
 private:
   /*
    * Seed a new wave and tap cells at wave centers.
