@@ -35,6 +35,7 @@ private:
   const size_t GRID_A;
   const double REP_THRESH;
   const size_t PUPDATE_FREQ;
+  const double SUICIDE_EFF;
 
   emp::vector<size_t> shuffler;
   emp::vector<std::pair<size_t, bool>*> neighborsorter;
@@ -53,13 +54,21 @@ private:
   emp::vector<dnod_genotype_t> dns_avoid_over;
   emp::vector<dnod_genotype_t> dns_off_ch_cap;
   emp::vector<dnod_genotype_t> dns_sort_off;
-
+  dnod_genotype_t dn_damage_suicide;
   // for tracking how often cells decline to reproduce due to
   // avoiding placing offspring over neighboring cells on same channel
   emp::DataNode<int,
       emp::data::Current, emp::data::Range,
       emp::data::Pull, emp::data::Log
     > dn_repdecline;
+  emp::DataNode<int,
+      emp::data::Current, emp::data::Range,
+      emp::data::Pull, emp::data::Log
+    > dn_apoptosis;
+  emp::DataNode<int,
+      emp::data::Current, emp::data::Range,
+      emp::data::Pull, emp::data::Log
+    > dn_mutation;
 
 public:
   TinyWorld(
@@ -79,6 +88,7 @@ public:
   , GRID_A(dconfig.GRID_H()*dconfig.GRID_W())
   , REP_THRESH(dconfig.REP_THRESH())
   , PUPDATE_FREQ(dconfig.PUPDATE_FREQ())
+  , SUICIDE_EFF(dconfig.SUICIDE_EFF())
   , shuffler(emp::GetPermutation(rand, GRID_A))
   , neighborsorter()
   {
@@ -115,7 +125,6 @@ public:
   /*
    * Had to write this to fix Segfault on destruction.
    */
-
   ~TinyWorld() { emp::World<Organism>::Clear(); }
 
   /*
@@ -237,7 +246,7 @@ private:
   inline void ReproduceCell(size_t parent, size_t dest, size_t off_level, double endowment) {
 
     Organism *child = new Organism(emp::World<Organism>::GetOrg(parent));
-    child->DoMutations(rand);
+    bool mut = child->DoMutations(rand);
 
     // takes care of killing trampled cell
     // birth_loc is hooked into DoBirth function through Lambda in this scope
@@ -249,6 +258,17 @@ private:
 
     // give endowment
     store.MultilevelTransaction(emp::World<Organism>::GetOrg(dest), dest, channel, endowment);
+
+    // if suicide on damage triggered, do it and log it
+    if (mut) {
+      dn_mutation.Add(1);
+      if (rand.GetDouble() < child->GetDamageSuicide()
+          && rand.GetDouble() < SUICIDE_EFF
+        ) {
+          emp::World<Organism>::DoDeath(dest);
+          dn_apoptosis.Add(1);
+      }
+    }
 
   }
 
@@ -490,6 +510,12 @@ private:
       );
     }
 
+    file.AddMean(
+      dn_damage_suicide,
+      "mean_damage_suicide",
+      "TODO"
+    );
+
     file.PrintHeaderKeys();
 
     return file;
@@ -506,6 +532,18 @@ private:
     file.AddTotal(
       dn_repdecline,
       "total_repdecline",
+      "TODO"
+    );
+
+    file.AddTotal(
+      dn_apoptosis,
+      "total_apoptosis",
+      "TODO"
+    );
+
+    file.AddTotal(
+      dn_mutation,
+      "total_mutation",
       "TODO"
     );
 
@@ -631,6 +669,24 @@ private:
       });
     }
 
+    dn_damage_suicide.AddPullSet([this](){
+      emp::vector<double> res;
+      for(
+        auto it = emp::World<Organism>::begin();
+        it != emp::World<Organism>::end();
+        ++it
+      ) {
+        res.push_back((*it).GetDamageSuicide());
+      }
+      return res;
+    });
+    OnUpdate([this, gdata_freq](size_t update){
+      if (update%gdata_freq == 0) {
+        dn_damage_suicide.Reset();
+        dn_damage_suicide.PullData();
+      }
+    });
+
   }
 
   /*
@@ -643,10 +699,14 @@ private:
 
     const size_t pdata_freq = dconfig.PDATA_FREQ();
 
+    emp_assert(pdata_freq != 1);
+
     // setup data nodes
     OnUpdate([this, pdata_freq](size_t update){
-      if (update%pdata_freq == 0) {
+      if (update%pdata_freq == 1) {
         dn_repdecline.Reset();
+        dn_apoptosis.Reset();
+        dn_mutation.Reset();
       }
     });
 

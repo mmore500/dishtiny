@@ -15,7 +15,7 @@ int main()
   CustomConfig cconfig(dconfig, spec);
   emp::Random rand(dconfig.SEED());
 
-  TinyWorld world(1000, rand, dconfig, cconfig);
+  TinyWorld world(100000, rand, dconfig, cconfig);
   world.Run();
   return 0;
 }

@@ -34,6 +34,8 @@ private:
   emp::vector<double> off_ch_caps;
   // ... for a particular hierarchical level, should I prefer to place offspring close to the channel centroid?
   emp::vector<double> sort_offs;
+  // ... should I try to kill myself if I was mutated during reproduction?
+  double damage_suicide;
 
   // pointer for quick and efficient reproduction
   // (shared between all organisms)
@@ -50,6 +52,7 @@ public:
   , avoid_overs(dconfig.NLEV())
   , off_ch_caps(dconfig.NLEV())
   , sort_offs(dconfig.NLEV())
+  , damage_suicide(init_damage_suicide())
   , cconfig(_cconfig)
   {
     // initialize genetic information
@@ -82,6 +85,7 @@ public:
   , avoid_overs(par.avoid_overs.size())
   , off_ch_caps(par.off_ch_caps.size())
   , sort_offs(par.sort_offs.size())
+  , damage_suicide(par.damage_suicide)
   , cconfig(par.cconfig)
   {
     // initialize genetic information from parent
@@ -123,31 +127,39 @@ public:
 
   /*
    * Potentially mutate genetic information of this Organism. (Whether mutation
-   * is actually performed is determined by RNG results.)
+   * is actually performed is determined by RNG results.) Return true if
+   * muation occured else return false.
    */
-  inline void DoMutations(emp::Random& x) {
+  inline bool DoMutations(emp::Random& x) {
+
+    bool mutation_occured = false;
+
     // mutate genetic information
     for (size_t lev = 0; lev < endowments.size(); ++lev) {
-      endowments[lev] = mut_endowment(endowments[lev], lev);
+      mutation_occured |= mut_endowment( lev);
     }
 
     for (size_t lev = 0; lev < res_pools.size(); ++lev) {
-      res_pools[lev] = mut_res_pool(res_pools[lev], lev);
+      mutation_occured |= mut_res_pool(lev);
     }
 
     for (size_t lev = 0; lev < avoid_overs.size(); ++lev) {
-      avoid_overs[lev] = mut_avoid_over(avoid_overs[lev], lev);
+      mutation_occured |= mut_avoid_over(lev);
     }
 
     for (size_t lev = 0; lev < off_ch_caps.size(); ++lev) {
-      off_ch_caps[lev] = mut_off_ch_cap(off_ch_caps[lev], lev);
+      mutation_occured |= mut_off_ch_cap(lev);
     }
 
     for (size_t lev = 0; lev < sort_offs.size(); ++lev) {
-      sort_offs[lev] = mut_sort_off(sort_offs[lev], lev);
+      mutation_occured |= mut_sort_off(lev);
     }
 
+    mutation_occured |= mut_damage_suicide();
+
     bal_res_pools();
+
+    return mutation_occured;
 
   }
 
@@ -227,6 +239,13 @@ public:
     return off_ch_caps.size();
   }
 
+  /*
+   * Accessor function.
+   */
+  inline double GetDamageSuicide() const {
+    return damage_suicide;
+  }
+
 private:
   /*
    * Make sure res_pools elements sum to 1.
@@ -290,63 +309,94 @@ private:
   }
 
   /*
+   * Initialization function.
+   */
+  inline double init_damage_suicide() {
+    return std::max(std::min(rand->GetDouble(-0.5, 1.5), 1.0), 0.0);
+  }
+
+  /*
    * Draw double from random generator. If it says mutate value, return mutated
    * value. Else, return original value.
    */
-  inline double mut_off_ch_cap(double cur, size_t lev) {
-    double rval = cur;
+  inline bool mut_off_ch_cap(size_t lev) {
+    double cur = off_ch_caps[lev];
     if (rand->GetDouble() < cconfig->PM_OFF_CH_CAP[lev]) {
-      rval = std::max(cur + rand->GetRandNormal(0.0, 24.0), 0.0);
+      off_ch_caps[lev] = std::max(cur + rand->GetRandNormal(0.0, 24.0), 0.0);
+      return true;
+    } else {
+      return false;
     }
-    return rval;
   }
 
   /*
    * Draw double from random generator. If it says mutate value, return mutated
    * value. Else, return original value.
    */
-  inline double mut_endowment(double cur, size_t lev) {
-    double rval = cur;
+  inline bool mut_endowment(size_t lev) {
+    double cur = endowments[lev];
     if (rand->GetDouble() < cconfig->PM_ENDOWMENT[lev]) {
-      rval = std::max(cur + rand->GetRandNormal(0.0, 10.0), 0.0);
+      endowments[lev] = std::max(cur + rand->GetRandNormal(0.0, 10.0), 0.0);
+      return true;
+    } else {
+      return false;
     }
-    return rval;
   }
 
   /*
    * Draw double from random generator. If it says mutate value, return mutated
    * value. Else, return original value.
    */
-  inline double mut_res_pool(double cur, size_t lev) {
-    double rval = cur;
+  inline bool mut_res_pool(size_t lev) {
+    double cur = res_pools[lev];
     if (rand->GetDouble() < cconfig->PM_RES_POOL[lev]) {
-      rval = std::max(cur + rand->GetRandNormal(0.0, 0.2), 0.0);
+      res_pools[lev] = std::max(cur + rand->GetRandNormal(0.0, 0.2), 0.0);
+      return true;
+    } else {
+      return false;
     }
-    return rval;
   }
 
   /*
    * Draw double from random generator. If it says mutate value, return mutated
    * value. Else, return original value.
    */
-  inline double mut_avoid_over(double cur, size_t lev) {
-    double rval = cur;
+  inline bool mut_avoid_over(size_t lev) {
+
     if (rand->GetDouble() < cconfig->PM_AVOID_OVER[lev]) {
-      rval = init_avoid_over(lev);
+      avoid_overs[lev] = init_avoid_over(lev);
+      return true;
+    } else {
+      return false;
     }
-    return rval;
   }
 
   /*
    * Draw double from random generator. If it says mutate value, return mutated
    * value. Else, return original value.
    */
-  inline double mut_sort_off(double cur, size_t lev) {
-    double rval = cur;
+  inline bool mut_sort_off(size_t lev) {
+
     if (rand->GetDouble() < cconfig->PM_SORT_OFF[lev]) {
-      rval = init_sort_off(lev);
+      sort_offs[lev] = init_sort_off(lev);
+      return true;
+    } else {
+      return false;
     }
-    return rval;
+  }
+
+  /*
+   * Draw double from random generator. If it says mutate value, return mutated
+   * value. Else, return original value.
+   */
+  inline bool mut_damage_suicide() {
+
+    if (rand->GetDouble() < cconfig->PM_DAMAGE_SUICIDE) {
+      damage_suicide = init_damage_suicide();
+      return true;
+    } else {
+      return false;
+    }
   }
 
 };
