@@ -1,6 +1,10 @@
 #pragma once
 
+#include <numeric>
+#include <cmath>
+
 #include "base/vector.h"
+#include "base/assert.h"
 #include "tools/Random.h"
 
 #include "CustomConfig.h"
@@ -242,6 +246,12 @@ private:
         res_pools[i] = 1.0 / res_pools.size();
       }
     }
+
+    emp_assert(
+      std::abs(
+        std::accumulate(res_pools.begin(), res_pools.end(), 0.0) - 1
+      ) < 0.0001
+    );
   }
 
   /*
