@@ -83,21 +83,39 @@ struct Interface {
     button_dash << "&nbsp;&nbsp;&nbsp;";
     button_dash << "run without animation" << "<br />";
 
-    for (size_t lev = 0; lev < gas_channelmanager.size(); ++lev) {
-      button_dash << gas_channelmanager[lev]->GetToggleButton(
-          "togglechannels"
+    MakeControl(gas_channelmanager, "channels");
+
+  }
+
+private:
+  /*
+   * Place buttons to run and step vector of animators onto button_dash.
+   */
+  template<typename STATE_TYPE>
+  void MakeControl(
+      emp::vector<GridAnimator<STATE_TYPE>*>& gas,
+      std::string name
+    ) {
+
+    for (size_t lev = 0; lev < gas.size(); ++lev) {
+      button_dash << gas[lev]->GetToggleButton(
+          "toggle"
+          +name
           +std::to_string(lev)
         );
       button_dash << "&nbsp;&nbsp;&nbsp;";
-      button_dash << gas_channelmanager[lev]->GetStepButton(
-          "stepchannels"
+      button_dash << gas[lev]->GetStepButton(
+          "step"
+          +name
           +std::to_string(lev)
         );
       button_dash << "&nbsp;&nbsp;&nbsp;";
-      button_dash << "channels" + std::to_string(lev) << "<br />";
+      button_dash << name + std::to_string(lev) << "<br />";
 
     }
+
   }
+
 
 };
 
