@@ -212,6 +212,10 @@ private:
       erasepool(lev, oldch);
       // remove census list
       census[lev].erase(oldch);
+      // remove xs_centroid entry
+      xs_centroid[lev].erase(oldch);
+      // remove ys_centroid entry
+      ys_centroid[lev].erase(oldch);
 
     } else {
       // else just deregister from census
