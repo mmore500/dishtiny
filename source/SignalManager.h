@@ -18,9 +18,9 @@ private:
   const size_t NLEV;
 
   // current signal state
-  GridStack<int>* signal;
+  emp::Ptr<GridStack<int>> signal;
   // next signal state
-  GridStack<int>* sigbuff;
+  emp::Ptr<GridStack<int>> sigbuff;
 
 public:
   SignalManager(
@@ -60,7 +60,7 @@ public:
     }
 
     // swap buffer in
-    GridStack<int>* temp = sigbuff;
+    emp::Ptr<GridStack<int>> temp = sigbuff;
     sigbuff = signal;
     signal = temp;
 
@@ -77,15 +77,15 @@ public:
    * Put Animators into a supplied vector.
    */
   void MakeAnimators(
-      emp::vector<GridAnimator<int>*>& dest,
+      emp::vector<emp::Ptr<GridAnimator<int>>>& dest,
       emp::web::Canvas& c,
       emp::vector<std::function<void()>>& cbs_beforedraw,
       emp::vector<std::function<void()>>& cbs_afterdraw
     ) {
     for (size_t lev = 0; lev < signal->GetDepth(); ++lev) {
-      int *min_sig = new int;
+      emp::Ptr<int> min_sig = new int;
       *min_sig = 0;
-      int *max_sig = new int;
+      emp::Ptr<int> max_sig = new int;
       *max_sig = QUIESCENT_MAX;
       dest.push_back(new GridAnimator<int>(
           *signal,

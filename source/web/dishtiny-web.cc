@@ -21,9 +21,9 @@ struct Interface {
   emp::vector<std::function<void()>> cbs_beforedraw;
   emp::vector<std::function<void()>> cbs_afterdraw;
 
-  emp::vector<GridAnimator<int>*> gas_channelmanager;
-  emp::vector<GridAnimator<double>*> gas_resourcemanager;
-  emp::vector<GridAnimator<int>*> gas_signalmanager;
+  emp::vector<emp::Ptr<GridAnimator<int>>> gas_channelmanager;
+  emp::vector<emp::Ptr<GridAnimator<double>>> gas_resourcemanager;
+  emp::vector<emp::Ptr<GridAnimator<int>>> gas_signalmanager;
 
   DishtinyConfig dconfig;
   GridSpec spec;
@@ -111,7 +111,7 @@ private:
    */
   template<typename STATE_TYPE>
   void MakeControl(
-      emp::vector<GridAnimator<STATE_TYPE>*>& gas,
+      emp::vector<emp::Ptr<GridAnimator<STATE_TYPE>>>& gas,
       std::string name
     ) {
 

@@ -4,6 +4,7 @@
 
 #include "web/Canvas.h"
 #include "web/Animate.h"
+#include "base/Ptr.h"
 
 #include "Grid.h"
 
@@ -13,8 +14,8 @@ public:
 
   GridStack<STATE_TYPE>& stack;
   size_t lev;
-  const STATE_TYPE *minp;
-  const STATE_TYPE *maxp;
+  const emp::Ptr<STATE_TYPE> minp;
+  const emp::Ptr<STATE_TYPE> maxp;
   emp::web::Canvas& canvas;
   emp::vector<std::function<void()>>& cbs_beforedraw;
   emp::vector<std::function<void()>>& cbs_afterdraw;
@@ -23,8 +24,8 @@ public:
   GridAnimator(
     GridStack<STATE_TYPE>& _stack,
     size_t _lev,
-    STATE_TYPE *_minp,
-    STATE_TYPE *_maxp,
+    emp::Ptr<STATE_TYPE> _minp,
+    emp::Ptr<STATE_TYPE> _maxp,
     emp::web::Canvas& _canvas,
     emp::vector<std::function<void()>>& _cbs_beforedraw,
     emp::vector<std::function<void()>>& _cbs_afterdraw)

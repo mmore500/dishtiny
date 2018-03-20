@@ -96,7 +96,6 @@ public:
           // iterate over channel members
           for (size_t m = 0; m < cm.GetCensusCount(lev, pl->first); ++m) {
             // distribute to each agent its share of the negative pool value
-            // *memb is the cell ID
             stockpile(cm.GetCensusCell(lev, pl->first, m)) += amt_each;
           }
           // all negative value in the pool has been redistributed

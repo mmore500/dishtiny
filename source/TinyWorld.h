@@ -39,7 +39,7 @@ private:
   const int SEED;
 
   emp::vector<size_t> shuffler;
-  emp::vector<std::pair<size_t, bool>*> neighborsorter;
+  emp::vector<emp::Ptr<std::pair<size_t, bool>>> neighborsorter;
 
   size_t birth_loc;
 
@@ -109,7 +109,7 @@ public:
 
     // populate the world
     for (size_t cell = 0; cell < GRID_A; ++cell) {
-      Organism *org = new Organism(&rand, dconfig, &cconfig);
+      emp::Ptr<Organism> org = new Organism(&rand, dconfig, &cconfig);
       emp::World<Organism>::InjectAt(*org, cell);
     }
 
@@ -211,7 +211,7 @@ public:
    * Make GridAnimators for each level and place them in supplied vector.
    */
   void MakeChannelAnimators(
-      emp::vector<GridAnimator<int>*>& dest,
+      emp::vector<emp::Ptr<GridAnimator<int>>>& dest,
       emp::web::Canvas& c,
       emp::vector<std::function<void()>>& cbs_beforedraw,
       emp::vector<std::function<void()>>& cbs_afterdraw
@@ -223,7 +223,7 @@ public:
    * Make GridAnimators for each level and place them in supplied vector.
    */
   void MakeResourceAnimators(
-      emp::vector<GridAnimator<double>*>& dest,
+      emp::vector<emp::Ptr<GridAnimator<double>>>& dest,
       emp::web::Canvas& c,
       emp::vector<std::function<void()>>& cbs_beforedraw,
       emp::vector<std::function<void()>>& cbs_afterdraw
@@ -235,7 +235,7 @@ public:
    * Make GridAnimators for each level and place them in supplied vector.
    */
   void MakeSignalAnimators(
-      emp::vector<GridAnimator<int>*>& dest,
+      emp::vector<emp::Ptr<GridAnimator<int>>>& dest,
       emp::web::Canvas& c,
       emp::vector<std::function<void()>>& cbs_beforedraw,
       emp::vector<std::function<void()>>& cbs_afterdraw
@@ -255,7 +255,8 @@ private:
     dn_reproduce.Add(1);
 
     // do reproduction...
-    Organism *child = new Organism(emp::World<Organism>::GetOrg(parent));
+    emp::Ptr<Organism> child =
+      new Organism(emp::World<Organism>::GetOrg(parent));
     bool mut = child->DoMutations(rand);
 
     // takes care of killing trampled cell
@@ -362,7 +363,10 @@ private:
     if (off_level < NLEV && org.GetSortOff(off_level) > rand.GetDouble()) {
       // if desired, sort neighbors to try to put in neighbor closest
       // to center of off_level centroid first
-      channel.SortByCentroids(neighborsorter, off_level, channel.GetChannel(off_level, cell));
+      channel.SortByCentroids(
+        neighborsorter,
+        off_level,
+        channel.GetChannel(off_level, cell));
     }
 
     // proceed through neighbors in random (or perhaps sorted) order,

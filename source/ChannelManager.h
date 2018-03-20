@@ -139,15 +139,15 @@ public:
    * Put Animators into a supplied vector.
    */
   void MakeAnimators(
-      emp::vector<GridAnimator<int>*>& dest,
+      emp::vector<emp::Ptr<GridAnimator<int>>>& dest,
       emp::web::Canvas& c,
       emp::vector<std::function<void()>>& cbs_beforedraw,
       emp::vector<std::function<void()>>& cbs_afterdraw
     ) {
     for (size_t lev = 0; lev < channel.GetDepth(); ++lev) {
-      int *min_ch = new int;
+      emp::Ptr<int> min_ch = new int;
       *min_ch = 1;
-      int *max_ch = new int;
+      emp::Ptr<int> max_ch = new int;
       *max_ch = CH_MAX;
       dest.push_back(new GridAnimator<int>(
           channel,
@@ -166,7 +166,7 @@ public:
    * in ascending distance from a channel's centroid.
    */
   inline void SortByCentroids(
-      emp::vector<std::pair<size_t, bool>*>& vec,
+      emp::vector<emp::Ptr<std::pair<size_t, bool>>>& vec,
       size_t lev,
       int ch
     ) {
@@ -260,8 +260,8 @@ private:
 
     // for sorting tuple of index, cell index
     inline bool operator() (
-      std::pair<size_t, bool>* p1,
-      std::pair<size_t, bool>* p2
+      emp::Ptr<std::pair<size_t, bool>> p1,
+      emp::Ptr<std::pair<size_t, bool>> p2
     ) {
       return (*this)(p1->first, p2->first);
     }
