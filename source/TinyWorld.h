@@ -70,6 +70,10 @@ private:
       emp::data::Current, emp::data::Range,
       emp::data::Pull, emp::data::Log
     > dn_mutation;
+  emp::DataNode<int,
+      emp::data::Current, emp::data::Range,
+      emp::data::Pull, emp::data::Log
+    > dn_reproduce;
 
 public:
   TinyWorld(
@@ -247,6 +251,10 @@ private:
    */
   inline void ReproduceCell(size_t parent, size_t dest, size_t off_level, double endowment) {
 
+    // log reproduction...
+    dn_reproduce.Add(1);
+
+    // do reproduction...
     Organism *child = new Organism(emp::World<Organism>::GetOrg(parent));
     bool mut = child->DoMutations(rand);
 
@@ -553,6 +561,12 @@ private:
       "TODO"
     );
 
+    file.AddTotal(
+      dn_reproduce,
+      "total_reproduce",
+      "TODO"
+    );
+
     file.PrintHeaderKeys();
 
     return file;
@@ -713,6 +727,7 @@ private:
         dn_repdecline.Reset();
         dn_apoptosis.Reset();
         dn_mutation.Reset();
+        dn_reproduce.Reset();
       }
     });
 
