@@ -19,4 +19,5 @@ EMP_BUILD_CONFIG(
   VALUE(PDATA_FREQ, size_t, 2000, "How frequently should we take phenotype data?"),
   VALUE(PUPDATE_FREQ, size_t, 100, "How frequently should we print the current update?"),
   VALUE(SUICIDE_EFF, double, 0.8, "How frequently should suicide attempts succeed?"),
+  VALUE(RUN_LENGTH, size_t, 10000000, "How many updates should we run the experiment for?"),
 )
