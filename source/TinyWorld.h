@@ -36,6 +36,7 @@ private:
   const double REP_THRESH;
   const size_t PUPDATE_FREQ;
   const double SUICIDE_EFF;
+  const int SEED;
 
   emp::vector<size_t> shuffler;
   emp::vector<std::pair<size_t, bool>*> neighborsorter;
@@ -89,6 +90,7 @@ public:
   , REP_THRESH(dconfig.REP_THRESH())
   , PUPDATE_FREQ(dconfig.PUPDATE_FREQ())
   , SUICIDE_EFF(dconfig.SUICIDE_EFF())
+  , SEED(dconfig.SEED())
   , shuffler(emp::GetPermutation(rand, GRID_A))
   , neighborsorter()
   {
@@ -468,6 +470,8 @@ private:
   emp::World_file& SetupGenotypeFile(const std::string& filename) {
     auto& file = SetupFile(filename);
 
+    file.AddVar(SEED, "seed", "Random generator seed");
+
     file.AddVar(update, "update" , "Update");
 
     for (size_t i = 0; i < dns_endowment.size(); ++i) {
@@ -526,6 +530,8 @@ private:
    */
   emp::World_file& SetupPhenotypeFile(const std::string& filename) {
     auto& file = SetupFile(filename);
+
+    file.AddVar(SEED, "seed", "Random generator seed");
 
     file.AddVar(update, "update" , "Update");
 
