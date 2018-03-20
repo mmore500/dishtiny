@@ -120,7 +120,7 @@ public:
       +std::to_string(dconfig.SEED())
       +".csv"
     ).SetTimingRepeat(dconfig.GDATA_FREQ());
-    SetupPhenotpypeData(dconfig);
+
     SetupPhenotypeFile(
       "Phenotypes_"
       +std::to_string(dconfig.SEED())
@@ -550,25 +550,29 @@ private:
     file.AddTotal(
       dn_repdecline,
       "total_repdecline",
-      "TODO"
+      "TODO",
+      true
     );
 
     file.AddTotal(
       dn_apoptosis,
       "total_apoptosis",
-      "TODO"
+      "TODO",
+      true
     );
 
     file.AddTotal(
       dn_mutation,
       "total_mutation",
-      "TODO"
+      "TODO",
+      true
     );
 
     file.AddTotal(
       dn_reproduce,
       "total_reproduce",
-      "TODO"
+      "TODO",
+      true
     );
 
     file.PrintHeaderKeys();
@@ -708,30 +712,6 @@ private:
       if (update%gdata_freq == 0) {
         dn_damage_suicide.Reset();
         dn_damage_suicide.PullData();
-      }
-    });
-
-  }
-
-  /*
-   * Setup our data nodes to monitor phenotypic events. During a run, these
-   * nodes are Reset through the OnUpdate signal. Data are added through the
-   * Add function when relevant events occur. (The Add function is called where
-   * event occurs.)
-   */
-  void inline SetupPhenotpypeData(DishtinyConfig& dconfig) {
-
-    const size_t pdata_freq = dconfig.PDATA_FREQ();
-
-    emp_assert(pdata_freq != 1);
-
-    // setup data nodes
-    OnUpdate([this, pdata_freq](size_t update){
-      if (update%pdata_freq == 1) {
-        dn_repdecline.Reset();
-        dn_apoptosis.Reset();
-        dn_mutation.Reset();
-        dn_reproduce.Reset();
       }
     });
 
