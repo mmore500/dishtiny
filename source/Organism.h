@@ -112,14 +112,39 @@ public:
   }
 
   /*
-   * Equality determined by identity (via comparison of object addresses).
+   * Equality determined by content.
    */
   inline bool operator==(const Organism& other) const {
-    return (this == &other);
+
+    bool res = true;
+
+    for (size_t lev = 0; lev < endowments.size(); ++lev) {
+      res &= endowments[lev] == other.endowments[lev];
+    }
+
+    for (size_t lev = 0; lev < res_pools.size(); ++lev) {
+      res &= res_pools[lev] == other.res_pools[lev];
+    }
+
+    for (size_t lev = 0; lev < avoid_overs.size(); ++lev) {
+      res &= avoid_overs[lev] == other.avoid_overs[lev];
+    }
+
+    for (size_t lev = 0; lev < off_ch_caps.size(); ++lev) {
+      res &= off_ch_caps[lev] == other.off_ch_caps[lev];
+    }
+
+    for (size_t lev = 0; lev < sort_offs.size(); ++lev) {
+      res &= sort_offs[lev] == other.sort_offs[lev];
+    }
+
+    res &= damage_suicide == other.damage_suicide;
+
+    return res;
   }
 
   /*
-   * Equality determined by identity (via comparison of object addresses).
+   * Equality determined by content.
    */
   bool operator!=(const Organism& other) const {
     return !(operator==(other));
