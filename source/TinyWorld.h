@@ -470,7 +470,11 @@ private:
     emp::World<Organism>::SetAddBirthFun(
       [this](emp::Ptr<Organism> new_org, size_t parent_id) {
         // kill old organism if necessary, place new organism
-        emp::World<Organism>::AddOrgAt(new_org, birth_loc);
+        emp::World<Organism>::AddOrgAt(
+          new_org,
+          birth_loc,
+          emp::World<Organism>::genotypes[parent_id]
+        );
         return birth_loc;
     } );
 
