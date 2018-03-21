@@ -212,10 +212,13 @@ private:
       erasepool(lev, oldch);
       // remove census list
       census[lev].erase(oldch);
+      emp_assert(census[lev].count(oldch) == 0);
       // remove xs_centroid entry
       xs_centroid[lev].erase(oldch);
+      emp_assert(xs_centroid[lev].count(oldch) == 0);
       // remove ys_centroid entry
       ys_centroid[lev].erase(oldch);
+      emp_assert(ys_centroid[lev].count(oldch) == 0);
 
     } else {
       // else just deregister from census
@@ -224,8 +227,20 @@ private:
         census[lev][oldch].end(), cell),
         census[lev][oldch].end()
       );
+
+      // make sure that organism was actually deregistered
+      emp_assert(
+        std::find(census[lev][oldch].begin(), census[lev][oldch].end(), cell)
+        == census[lev][oldch].end()
+      );
       // re-sort census vector
       SortCensusVector(lev, oldch);
+
+      // make sure there aren't more unique channels than spaces
+      emp_assert(census[lev].size() <= channel.GetArea());
+      emp_assert(xs_centroid[lev].size() <= channel.GetArea());
+      emp_assert(ys_centroid[lev].size() <= channel.GetArea());
+
 
     }
 

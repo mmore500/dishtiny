@@ -50,6 +50,12 @@ public:
    */
   inline void ErasePool(size_t lev, int ch) {
     pool[lev].erase(ch);
+
+    // ensure pool properly removed
+    emp_assert(pool[lev].count(ch) == 0);
+
+    // ensure that we aren't accumulating more pools than possible
+    emp_assert(pool[lev].size() <= stockpile.GetArea());
   }
 
   /*
