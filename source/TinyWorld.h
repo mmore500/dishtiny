@@ -56,24 +56,23 @@ private:
   emp::vector<dnod_genotype_t> dns_off_ch_cap;
   emp::vector<dnod_genotype_t> dns_sort_off;
   dnod_genotype_t dn_damage_suicide;
+
+
+  using dnod_phenotype_t = emp::DataNode<int,
+      emp::data::Current, emp::data::Range,
+      emp::data::Pull, emp::data::Log
+    >;
   // for tracking how often cells decline to reproduce due to
   // avoiding placing offspring over neighboring cells on same channel
-  emp::DataNode<int,
-      emp::data::Current, emp::data::Range,
-      emp::data::Pull, emp::data::Log
-    > dn_repdecline;
-  emp::DataNode<int,
-      emp::data::Current, emp::data::Range,
-      emp::data::Pull, emp::data::Log
-    > dn_apoptosis;
-  emp::DataNode<int,
-      emp::data::Current, emp::data::Range,
-      emp::data::Pull, emp::data::Log
-    > dn_mutation;
-  emp::DataNode<int,
-      emp::data::Current, emp::data::Range,
-      emp::data::Pull, emp::data::Log
-    > dn_reproduce;
+  dnod_phenotype_t dn_repdecline;
+  // for tracking how often cells perform apoptosis
+  dnod_phenotype_t dn_apoptosis;
+  // for tracking how often mutations occur
+  dnod_phenotype_t dn_mutation;
+  // for tracking the number of cell reproductions
+  dnod_phenotype_t dn_reproduce;
+  // for tracking the number of new channel reproductions
+  emp::vector<dnod_phenotype_t> dns_channelrep;
 
 public:
   TinyWorld(
@@ -97,6 +96,7 @@ public:
   , SEED(dconfig.SEED())
   , shuffler(emp::GetPermutation(rand, GRID_A))
   , neighborsorter()
+  , dns_channelrep(dconfig.NLEV())
   {
 
     // add one element for all four neighbors
@@ -277,7 +277,7 @@ private:
     emp::World<Organism>::DoBirth(*child, parent);
 
     // copy over channels on levels at and above off_level
-    channel.Spawn(parent, dest, off_level);
+    channel.Spawn(parent, dest, off_level, dns_channelrep);
 
     // give endowment
     store.MultilevelTransaction(emp::World<Organism>::GetOrg(dest), dest, channel, endowment);
@@ -590,6 +590,15 @@ private:
       "TODO",
       true
     );
+
+    for (size_t i = 0; i < dns_channelrep.size(); ++i) {
+      file.AddTotal(
+        dns_channelrep[i],
+        "total_channelrep"+std::to_string(i),
+        "TODO",
+        true
+      );
+    }
 
     file.PrintHeaderKeys();
 

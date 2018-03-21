@@ -118,7 +118,15 @@ public:
   /*
    * Handle the channel-management aspect of reproduction.
    */
-  inline void Spawn(size_t cell, size_t off_dest, size_t off_level) {
+  inline void Spawn(
+      size_t cell,
+      size_t off_dest,
+      size_t off_level,
+      emp::vector<emp::DataNode<int,
+          emp::data::Current, emp::data::Range,
+          emp::data::Pull, emp::data::Log
+        >>& dns_channelrep
+    ) {
     for (size_t lev = 0; lev < channel.GetDepth(); ++lev) {
 
       // check that off_dest's channel is marked as is dead
@@ -129,6 +137,8 @@ public:
       // respecting the hierarchical reproduction requested by off_level
       if (lev < off_level) {
         RegisterCh(lev, off_dest, ChangeCh(channel.Get(lev, cell)));
+        // log it!
+        dns_channelrep[lev].Add(1);
       } else {
         RegisterCh(lev, off_dest, channel.Get(lev, cell));
       }
