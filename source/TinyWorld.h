@@ -114,6 +114,18 @@ public:
     }
 
     // setup data nodes and data files
+    emp::World<Organism>::SetupSystematicsFile(
+      "Systematics_"
+      +std::to_string(dconfig.SEED())
+      +".csv"
+    ).SetTimingRepeat(dconfig.GDATA_FREQ());
+
+    emp::World<Organism>::SetupPopulationFile(
+      "Population_"
+      +std::to_string(dconfig.SEED())
+      +".csv"
+    ).SetTimingRepeat(dconfig.PDATA_FREQ());
+
     SetupGenotypeData(dconfig);
     SetupGenotypeFile(
       "Genotypes_"
