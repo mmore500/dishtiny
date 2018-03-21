@@ -600,6 +600,14 @@ private:
       );
     }
 
+    for (size_t lev = 0; lev < NLEV; ++lev) {
+      file.AddFun<size_t>(
+          [this, lev](){ return channel.GetChannelCount(lev); },
+          "num_channels"+std::to_string(lev),
+          "TODO"
+        );
+    }
+
     file.PrintHeaderKeys();
 
     return file;

@@ -95,6 +95,14 @@ public:
   /*
    * Accessor function.
    */
+  inline size_t GetChannelCount(size_t lev) {
+    emp_assert(census[lev].size()<=channel.GetArea());
+    return census[lev].size();
+  }
+
+  /*
+   * Accessor function.
+   */
   inline size_t GetCensusCell(size_t lev, int ch, size_t memb) {
     return census[lev][ch][memb];
   }
