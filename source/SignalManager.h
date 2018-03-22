@@ -18,9 +18,9 @@ private:
   const size_t NLEV;
 
   // current signal state
-  emp::Ptr<GridStack<int>> signal;
+  GridStack<int>* signal;
   // next signal state
-  emp::Ptr<GridStack<int>> sigbuff;
+  GridStack<int>* sigbuff;
 
 public:
   SignalManager(
@@ -60,7 +60,7 @@ public:
     }
 
     // swap buffer in
-    emp::Ptr<GridStack<int>> temp = sigbuff;
+    GridStack<int>* temp = sigbuff;
     sigbuff = signal;
     signal = temp;
 
