@@ -150,6 +150,15 @@ public:
    */
   inline bool Update() {
 
+    // make sure that organisms are being tracked properly in the world
+    emp_assert([this](){
+      size_t count = 0;
+      for (size_t cell = 0; cell < GRID_A; ++cell) {
+        if (emp::World<Organism>::IsOccupied(cell)) ++count;
+      }
+      return count == emp::World<Organism>::GetNumOrgs();
+    }());
+
     if (emp::World<Organism>::GetUpdate() % PUPDATE_FREQ == 0) {
       std::cout << "update " << emp::World<Organism>::GetUpdate() << std::endl;
     }
