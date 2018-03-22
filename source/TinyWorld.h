@@ -104,8 +104,30 @@ public:
       neighborsorter.push_back(new std::pair<size_t, bool>);
     }
 
-    // configure world object
-    SetupWorld(dconfig, cconfig);
+    // this also sets the world to asynchronous mode
+    emp::World<Organism>::SetGrid(dconfig.GRID_W(), dconfig.GRID_H());
+
+    emp::World<Organism>::OnOrgDeath( [this](size_t pos) {
+      // set channels to DEAD
+      // if org was last of particular channel, remove that channel's res pool
+      channel.Kill(
+        pos,
+        [this](size_t lev, int ch){ store.ErasePool(lev, ch); }
+      );
+      // erase organism's resource stockpile
+      store.EraseStockpile(pos);
+    } );
+
+    emp::World<Organism>::SetAddBirthFun(
+      [this](emp::Ptr<Organism> new_org, size_t parent_id) {
+        // kill old organism if necessary, place new organism
+        emp::World<Organism>::AddOrgAt(
+          new_org,
+          birth_loc,
+          emp::World<Organism>::genotypes[parent_id]
+        );
+        return birth_loc;
+    } );
 
     // populate the world
     for (size_t cell = 0; cell < GRID_A; ++cell) {
@@ -486,37 +508,6 @@ private:
 
       }
     } while (store.CheckPool(lev, ch) >= REP_THRESH && channel.GetCensusCount(lev,ch) > 0 && res != 0.0);
-
-  }
-
-  /*
-   * Configure World.h stuff.
-   */
-  inline void SetupWorld(DishtinyConfig& dconfig, CustomConfig& cconfig) {
-    // this also sets the world to asynchronous mode
-    emp::World<Organism>::SetGrid(dconfig.GRID_W(), dconfig.GRID_H());
-
-    emp::World<Organism>::OnOrgDeath( [this](size_t pos) {
-      // set channels to DEAD
-      // if org was last of particular channel, remove that channel's res pool
-      channel.Kill(
-        pos,
-        [this](size_t lev, int ch){ store.ErasePool(lev, ch); }
-      );
-      // erase organism's resource stockpile
-      store.EraseStockpile(pos);
-    } );
-
-    emp::World<Organism>::SetAddBirthFun(
-      [this](emp::Ptr<Organism> new_org, size_t parent_id) {
-        // kill old organism if necessary, place new organism
-        emp::World<Organism>::AddOrgAt(
-          new_org,
-          birth_loc,
-          emp::World<Organism>::genotypes[parent_id]
-        );
-        return birth_loc;
-    } );
 
   }
 
