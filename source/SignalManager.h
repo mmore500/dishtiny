@@ -32,8 +32,8 @@ public:
     , READY(0)
     , QUIESCENT_MAX(dconfig.QUIESCENT_MAX())
     , NLEV(dconfig.NLEV())
-    , signal(new GridStack<int>(READY, spec, dconfig.NLEV()))
-    , sigbuff(new GridStack<int>(READY, spec, dconfig.NLEV()))
+    , signal(emp::NewPtr<GridStack<int>>(READY, spec, dconfig.NLEV()))
+    , sigbuff(emp::NewPtr<GridStack<int>>(READY, spec, dconfig.NLEV()))
     { ; }
 
   /*
@@ -82,11 +82,11 @@ public:
       emp::vector<std::function<void()>>& cbs_afterdraw
     ) {
     for (size_t lev = 0; lev < signal->GetDepth(); ++lev) {
-      emp::Ptr<int> min_sig = new int;
+      emp::Ptr<int> min_sig = emp::NewPtr<int>();
       *min_sig = 0;
-      emp::Ptr<int> max_sig = new int;
+      emp::Ptr<int> max_sig = emp::NewPtr<int>();
       *max_sig = QUIESCENT_MAX;
-      dest.push_back(new GridAnimator<int>(
+      dest.push_back(emp::NewPtr<GridAnimator<int>>(
           *signal,
           lev,
           min_sig,
@@ -95,7 +95,7 @@ public:
           cbs_beforedraw,
           cbs_afterdraw
         ));
-      dest.push_back(new GridAnimator<int>(
+      dest.push_back(emp::NewPtr<GridAnimator<int>>(
           *sigbuff,
           lev,
           min_sig,

@@ -101,7 +101,7 @@ public:
 
     // add one element for all four neighbors
     for (size_t i = 0; i < 4; ++i) {
-      neighborsorter.push_back(new std::pair<size_t, bool>);
+      neighborsorter.push_back(emp::NewPtr<std::pair<size_t, bool>>());
     }
 
     // this also sets the world to asynchronous mode
@@ -131,7 +131,7 @@ public:
 
     // populate the world
     for (size_t cell = 0; cell < GRID_A; ++cell) {
-      emp::Ptr<Organism> org = new Organism(&rand, dconfig, &cconfig);
+      emp::Ptr<Organism> org = emp::NewPtr<Organism>(&rand, dconfig, &cconfig);
       emp::World<Organism>::InjectAt(*org, cell);
     }
 
@@ -324,7 +324,7 @@ private:
 
     // do reproduction...
     emp::Ptr<Organism> child =
-      new Organism(emp::World<Organism>::GetOrg(parent));
+      emp::NewPtr<Organism>(emp::World<Organism>::GetOrg(parent));
     bool mut = child->DoMutations(rand);
 
     // takes care of killing trampled cell

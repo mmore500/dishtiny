@@ -163,11 +163,11 @@ public:
       emp::vector<std::function<void()>>& cbs_afterdraw
     ) {
     for (size_t lev = 0; lev < channel.GetDepth(); ++lev) {
-      emp::Ptr<int> min_ch = new int;
+      emp::Ptr<int> min_ch = emp::NewPtr<int>();
       *min_ch = 1;
-      emp::Ptr<int> max_ch = new int;
+      emp::Ptr<int> max_ch = emp::NewPtr<int>();
       *max_ch = CH_MAX;
-      dest.push_back(new GridAnimator<int>(
+      dest.push_back(emp::NewPtr<GridAnimator<int>>(
           channel,
           lev,
           min_ch,

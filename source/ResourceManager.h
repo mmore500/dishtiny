@@ -96,11 +96,11 @@ public:
       emp::vector<std::function<void()>>& cbs_afterdraw
     ) {
     for (size_t lev = 0; lev < resource.GetDepth(); ++lev) {
-      emp::Ptr<double> min_res = new double;
+      emp::Ptr<double> min_res = emp::NewPtr<double>();
       *min_res = 0;
-      emp::Ptr<double> max_res = new double;
+      emp::Ptr<double> max_res = emp::NewPtr<double>();
       *max_res = cconfig.EVENT_VALS[lev];
-      dest.push_back(new GridAnimator<double>(
+      dest.push_back(emp::NewPtr<GridAnimator<double>>(
           resource,
           lev,
           min_res,

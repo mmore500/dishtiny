@@ -27,7 +27,7 @@ public:
   , depth(_depth)
   {
     for (size_t i = 0; i < depth; ++i) {
-        grids.push_back(*(new Grid<STATE_TYPE>(_e, _spec)));
+      grids.push_back(*emp::NewPtr<Grid<STATE_TYPE>>(_e, _spec));
     }
   }
 
