@@ -131,8 +131,7 @@ public:
 
     // populate the world
     for (size_t cell = 0; cell < GRID_A; ++cell) {
-      emp::Ptr<Organism> org = emp::NewPtr<Organism>(&rand, dconfig, &cconfig);
-      emp::World<Organism>::InjectAt(*org, cell);
+      emp::World<Organism>::InjectAt(Organism(&rand, dconfig, &cconfig), cell);
     }
 
     // setup data nodes and data files
@@ -323,14 +322,13 @@ private:
     dn_reproduce.Add(1);
 
     // do reproduction...
-    emp::Ptr<Organism> child =
-      emp::NewPtr<Organism>(emp::World<Organism>::GetOrg(parent));
-    bool mut = child->DoMutations(rand);
+    Organism child = Organism(emp::World<Organism>::GetOrg(parent));
+    bool mut = child.DoMutations(rand);
 
     // takes care of killing trampled cell
     // birth_loc is hooked into DoBirth function through Lambda in this scope
     birth_loc = dest;
-    emp::World<Organism>::DoBirth(*child, parent);
+    emp::World<Organism>::DoBirth(child, parent);
 
     // copy over channels on levels at and above off_level
     channel.Spawn(parent, dest, off_level, dns_channelrep);
@@ -341,7 +339,7 @@ private:
     // if suicide on damage triggered, do it and log it
     if (mut) {
       dn_mutation.Add(1);
-      if (rand.GetDouble() < child->GetDamageSuicide()
+      if (rand.GetDouble() < child.GetDamageSuicide()
           && rand.GetDouble() < SUICIDE_EFF
         ) {
           emp::World<Organism>::DoDeath(dest);
