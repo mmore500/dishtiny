@@ -21,5 +21,5 @@ EMP_BUILD_CONFIG(
   VALUE(PUPDATE_FREQ, size_t, 100, "How frequently should we print the current update?"),
   VALUE(SUICIDE_EFF, double, 0.0, "How frequently should suicide attempts succeed?"),
   VALUE(RUN_LENGTH, size_t, 10000000, "How many updates should we run the experiment for?"),
-  VALUE(SYSTEMATICS, bool, false, "Should we keep systematics data?"),
+  VALUE(SYSTEMATICS, bool, true, "Should we keep systematics data?"),
 )
