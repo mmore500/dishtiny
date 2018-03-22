@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include "base/vector.h"
 #include "base/assert.h"
 #include "Evolve/World.h"
@@ -18,9 +20,9 @@ private:
   const size_t NLEV;
 
   // current signal state
-  GridStack<int>* signal;
+  emp::Ptr<GridStack<int>> signal;
   // next signal state
-  GridStack<int>* sigbuff;
+  emp::Ptr<GridStack<int>> sigbuff;
 
 public:
   SignalManager(
@@ -60,10 +62,7 @@ public:
     }
 
     // swap buffer in
-    GridStack<int>* temp = sigbuff;
-    sigbuff = signal;
-    signal = temp;
-
+    std::swap(signal, sigbuff);
   }
 
   /*
