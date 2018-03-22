@@ -12,7 +12,7 @@ private:
   // 2D grid geometry helper
   GridSpec spec;
   // store a 3D "stack" of grids
-  emp::vector<Grid<STATE_TYPE>> grids;
+  emp::vector<emp::Ptr<Grid<STATE_TYPE>>> grids;
 
   const size_t depth;
 
@@ -27,7 +27,7 @@ public:
   , depth(_depth)
   {
     for (size_t i = 0; i < depth; ++i) {
-      grids.push_back(*emp::NewPtr<Grid<STATE_TYPE>>(_e, _spec));
+      grids.push_back(emp::NewPtr<Grid<STATE_TYPE>>(_e, _spec));
     }
   }
 
@@ -45,14 +45,14 @@ public:
    */
   inline typename
   emp::vector<STATE_TYPE>::const_iterator Begin(size_t lev) const {
-    return grids[lev].Begin();
+    return grids[lev]->Begin();
   }
   /*
    * Accessor function for const_iterator to a Grid.
    */
   inline typename
   emp::vector<STATE_TYPE>::const_iterator End(size_t lev) const {
-    return grids[lev].End();
+    return grids[lev]->End();
   }
 
   /*
@@ -87,7 +87,7 @@ public:
    */
   void inline Reset() {
     for (auto it = grids.begin(); it != grids.end(); ++it) {
-      it->Reset();
+      (*it)->Reset();
     }
   }
 
@@ -95,28 +95,28 @@ public:
    * Accessor function (provides write access).
    */
   inline STATE_TYPE& operator()(size_t lev, int x, int y) {
-    return grids[lev](spec.GetID(x,y));
+    return grids[lev]->operator()(spec.GetID(x,y));
   }
 
   /*
    * Accessor function (provides write access).
    */
   inline STATE_TYPE& operator()(size_t lev, size_t id) {
-    return grids[lev](id);
+    return grids[lev]->operator()(id);
   }
 
   /*
    * Accessor function.
    */
   inline STATE_TYPE Get(size_t lev, int x, int y) const {
-    return grids[lev].Get(spec.GetID(x,y));
+    return grids[lev]->Get(spec.GetID(x,y));
   }
 
   /*
    * Accessor function.
    */
   inline STATE_TYPE Get(size_t lev, size_t id) const {
-    return grids[lev].Get(id);
+    return grids[lev]->Get(id);
   }
 
 private:
