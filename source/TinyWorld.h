@@ -194,6 +194,7 @@ public:
       // because reproduction occurs during iteration
       emp::vector<int> temp;
       channel.CopyChannelList(lev, temp);
+      emp::Shuffle(rand, temp);
 
       for (size_t memb = 0; memb < temp.size(); ++memb) {
         int ch = temp[memb];
