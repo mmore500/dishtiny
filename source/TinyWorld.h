@@ -80,7 +80,7 @@ public:
     emp::Random& _rand,
     DishtinyConfig& dconfig,
     CustomConfig& cconfig)
-  : emp::World<Organism>(_rand)
+  : emp::World<Organism>(_rand, "TinyWorld", (bool) dconfig.SYSTEMATICS())
   , nupdate(_nupdate)
   , rand(_rand)
   , spec(dconfig)
@@ -114,11 +114,13 @@ public:
     }
 
     // setup data nodes and data files
-    emp::World<Organism>::SetupSystematicsFile(
-      "Systematics_"
-      +std::to_string(dconfig.SEED())
-      +".csv"
-    ).SetTimingRepeat(dconfig.GDATA_FREQ());
+    if (dconfig.SYSTEMATICS()) {
+      emp::World<Organism>::SetupSystematicsFile(
+        "Systematics_"
+        +std::to_string(dconfig.SEED())
+        +".csv"
+      ).SetTimingRepeat(dconfig.GDATA_FREQ());
+    }
 
     emp::World<Organism>::SetupPopulationFile(
       "Population_"
