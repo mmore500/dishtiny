@@ -2,6 +2,8 @@
 
 #include <numeric>
 #include <cmath>
+#include <iostream>
+#include <string>
 
 #include "base/vector.h"
 #include "base/assert.h"
@@ -109,6 +111,127 @@ public:
       sort_offs[lev] = par.sort_offs[lev];
     }
 
+  }
+
+  /*
+   * Print the header of an organism entry.
+   */
+  template <typename T>
+  inline void PrintHeader(T& out) const {
+
+    const std::string sep = ",";
+
+    out << "seed";
+    out << sep;
+
+    out << "update";
+    out << sep;
+
+    for (size_t i = 0; i < endowments.size(); ++i) {
+      out << "endowment"+std::to_string(i);
+      out << sep;
+    }
+    for (size_t i = 0; i < res_pools.size(); ++i) {
+      out << "res_pool"+std::to_string(i);
+      out << sep;
+    }
+
+    for (size_t i = 0; i < avoid_overs.size(); ++i) {
+      out << "avoid_over"+std::to_string(i);
+      out << sep;
+    }
+
+    for (size_t i = 0; i < off_ch_caps.size(); ++i) {
+      out << "off_ch_cap"+std::to_string(i);
+      out << sep;
+    }
+
+    for (size_t i = 0; i < sort_offs.size(); ++i) {
+      out << "sort_off"+std::to_string(i);
+      out << sep;
+    }
+
+      out << "damage_suicide";
+  }
+
+  /*
+   * Print the organism.
+   */
+  void Print(std::ostream& os) const {
+
+    const std::string sep = ",";
+
+    for (size_t lev = 0; lev < endowments.size(); ++lev) {
+      os << endowments[lev];
+      os << sep;
+    }
+
+    for (size_t lev = 0; lev < res_pools.size(); ++lev) {
+      os << res_pools[lev];
+      os << sep;
+    }
+
+    for (size_t lev = 0; lev < avoid_overs.size(); ++lev) {
+      os << avoid_overs[lev];
+      os << sep;
+    }
+
+    for (size_t lev = 0; lev < off_ch_caps.size(); ++lev) {
+      os << off_ch_caps[lev];
+      os << sep;
+    }
+
+    for (size_t lev = 0; lev < sort_offs.size(); ++lev) {
+      os << sort_offs[lev];
+      os << sep;
+    }
+
+    os << damage_suicide;
+
+  }
+
+
+  /*
+   * Equality determined by content.
+   */
+  inline bool operator<(const Organism& other) const {
+
+
+    for (size_t lev = 0; lev < endowments.size(); ++lev) {
+      if (endowments[lev] != other.endowments[lev]) {
+        return endowments[lev] < other.endowments[lev];
+      }
+    }
+
+    for (size_t lev = 0; lev < res_pools.size(); ++lev) {
+      if (res_pools[lev] != other.res_pools[lev]) {
+        return res_pools[lev] < other.res_pools[lev];
+      }
+    }
+
+    for (size_t lev = 0; lev < avoid_overs.size(); ++lev) {
+      if (avoid_overs[lev] != other.avoid_overs[lev]) {
+        return avoid_overs[lev] < other.avoid_overs[lev];
+      }
+    }
+
+    for (size_t lev = 0; lev < off_ch_caps.size(); ++lev) {
+      if (off_ch_caps[lev] != other.off_ch_caps[lev]) {
+        return off_ch_caps[lev] < other.off_ch_caps[lev];
+      }
+    }
+
+    for (size_t lev = 0; lev < sort_offs.size(); ++lev) {
+      if (sort_offs[lev] != other.sort_offs[lev]) {
+        return sort_offs[lev] < other.sort_offs[lev];
+      }
+    }
+
+    if (damage_suicide != other.damage_suicide) {
+      return damage_suicide < other.damage_suicide;
+    }
+
+    return false;
   }
 
   /*

@@ -173,6 +173,12 @@ public:
       +".csv"
     ).SetTimingRepeat(dconfig.GDATA_FREQ());
 
+    SetupCensusFile(
+      "Census_"
+      +std::to_string(dconfig.SEED())
+      +".csv"
+    ).SetTimingRepeat(dconfig.CDATA_FREQ());
+
     SetupPhenotypeFile(
       "Phenotypes_"
       +std::to_string(dconfig.SEED())
@@ -573,6 +579,49 @@ private:
   }
 
   /*
+   * Setup our data file to collect a genotypic census.
+   */
+  emp::DataFile& SetupCensusFile(const std::string& filename) {
+
+    Organism& examp = emp::World<Organism>::GetOrg(0);
+
+    auto& file = SetupFile(filename);
+
+    file.SetupLine("","","");
+    // print header
+    file << "seed";
+    file << ",";
+    file << "update";
+    file << ",";
+    file << "count";
+    file << ",";
+    examp.PrintHeader(file);
+    file << "\n";
+
+    // this print function gets called intermittently
+    file.Add(
+      [this](std::ostream& os){
+        std::map<Organism,size_t> org_counts;
+        for (emp::Ptr<Organism> org : emp::World<Organism>::pop) {
+           if (org) org_counts[*org] = 0;  // Initialize needed entries
+        }
+        for (emp::Ptr<Organism> org : emp::World<Organism>::pop) {
+          if (org) org_counts[*org] += 1; // Count actual types.
+        }
+        for (auto x : org_counts) {
+          os << SEED << ",";
+          os << emp::World<Organism>::GetUpdate() << ",";
+          x.first.Print(os);
+          os << ",";
+          os << x.second << std::endl;
+        }
+
+      },"","");
+
+    return file;
+  }
+
+  /*
    * Setup our data file to collect phenotypic information.
    */
   emp::DataFile& SetupPhenotypeFile(const std::string& filename) {
@@ -642,6 +691,7 @@ private:
     Organism& examp = emp::World<Organism>::GetOrg(0);
 
     const size_t gdata_freq = dconfig.GDATA_FREQ();
+    const size_t cdata_freq = dconfig.CDATA_FREQ();
 
     // setup data nodes
     for (size_t i = 0; i < examp.GetEndowmentDepth(); ++i) {
@@ -657,8 +707,8 @@ private:
         }
         return res;
       });
-      OnUpdate([this, i, gdata_freq](size_t update){
-        if (update%gdata_freq == 0) {
+      OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
+        if (update%gdata_freq == 0 || update%cdata_freq == 0) {
           dns_endowment[i].Reset();
           dns_endowment[i].PullData();
         }
@@ -678,8 +728,8 @@ private:
         }
         return res;
       });
-      OnUpdate([this, i, gdata_freq](size_t update){
-        if (update%gdata_freq == 0) {
+      OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
+        if (update%gdata_freq == 0 || update%cdata_freq == 0) {
           dns_res_pool[i].Reset();
           dns_res_pool[i].PullData();
         }
@@ -699,8 +749,8 @@ private:
         }
         return res;
       });
-      OnUpdate([this, i, gdata_freq](size_t update){
-        if (update%gdata_freq == 0) {
+      OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
+        if (update%gdata_freq == 0 || update%cdata_freq == 0) {
           dns_avoid_over[i].Reset();
           dns_avoid_over[i].PullData();
         }
@@ -720,8 +770,8 @@ private:
         }
         return res;
       });
-      OnUpdate([this, i, gdata_freq](size_t update){
-        if (update%gdata_freq == 0) {
+      OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
+        if (update%gdata_freq == 0 || update%cdata_freq == 0) {
           dns_off_ch_cap[i].Reset();
           dns_off_ch_cap[i].PullData();
         }
@@ -741,8 +791,8 @@ private:
         }
         return res;
       });
-      OnUpdate([this, i, gdata_freq](size_t update){
-        if (update%gdata_freq == 0) {
+      OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
+        if (update%gdata_freq == 0 || update%cdata_freq == 0) {
           dns_sort_off[i].Reset();
           dns_sort_off[i].PullData();
         }
@@ -760,8 +810,8 @@ private:
       }
       return res;
     });
-    OnUpdate([this, gdata_freq](size_t update){
-      if (update%gdata_freq == 0) {
+    OnUpdate([this, gdata_freq, cdata_freq](size_t update){
+      if (update%gdata_freq == 0 || update%cdata_freq == 0) {
         dn_damage_suicide.Reset();
         dn_damage_suicide.PullData();
       }

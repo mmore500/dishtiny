@@ -16,6 +16,7 @@ EMP_BUILD_CONFIG(
   VALUE(CH_MAX, int, 4194304, "What is the maximum value of a channel identifier?"),
   VALUE(CULL_FREQ, size_t, 2500, "How frequently should culling take place?"),
   VALUE(GDATA_FREQ, size_t, 2000, "How frequently should we take genotype data?"),
+  VALUE(CDATA_FREQ, size_t, 250000, "How often should we record a census of all the genotypes in the population?"),
   VALUE(PDATA_FREQ, size_t, 2000, "How frequently should we take phenotype data?"),
   VALUE(PUPDATE_FREQ, size_t, 100, "How frequently should we print the current update?"),
   VALUE(SUICIDE_EFF, double, 0.8, "How frequently should suicide attempts succeed?"),
