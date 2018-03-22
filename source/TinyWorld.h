@@ -115,18 +115,34 @@ public:
 
     // setup data nodes and data files
     if (dconfig.SYSTEMATICS()) {
-      emp::World<Organism>::SetupSystematicsFile(
+      auto& sf = emp::World<Organism>::SetupSystematicsFile(
         "Systematics_"
         +std::to_string(dconfig.SEED())
-        +".csv"
-      ).SetTimingRepeat(dconfig.GDATA_FREQ());
+        +".csv",
+        false
+      );
+      sf.SetTimingRepeat(
+        dconfig.GDATA_FREQ()
+      );
+      sf.AddVar(
+        SEED, "seed", "Random generator seed"
+      );
+      sf.PrintHeaderKeys();
     }
 
-    emp::World<Organism>::SetupPopulationFile(
+    auto& pf = emp::World<Organism>::SetupPopulationFile(
       "Population_"
       +std::to_string(dconfig.SEED())
-      +".csv"
-    ).SetTimingRepeat(dconfig.PDATA_FREQ());
+      +".csv",
+      false
+    );
+    pf.SetTimingRepeat(
+      dconfig.PDATA_FREQ()
+    );
+    pf.AddVar(
+      SEED, "seed", "Random generator seed"
+    );
+    pf.PrintHeaderKeys();
 
     SetupGenotypeData(dconfig);
     SetupGenotypeFile(
@@ -507,7 +523,7 @@ private:
   /*
    * Setup our data file to collect genotypic information.
    */
-  emp::World_file& SetupGenotypeFile(const std::string& filename) {
+  emp::DataFile& SetupGenotypeFile(const std::string& filename) {
     auto& file = SetupFile(filename);
 
     file.AddVar(SEED, "seed", "Random generator seed");
@@ -568,7 +584,7 @@ private:
   /*
    * Setup our data file to collect phenotypic information.
    */
-  emp::World_file& SetupPhenotypeFile(const std::string& filename) {
+  emp::DataFile& SetupPhenotypeFile(const std::string& filename) {
     auto& file = SetupFile(filename);
 
     file.AddVar(SEED, "seed", "Random generator seed");
