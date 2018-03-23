@@ -519,11 +519,11 @@ private:
    * Setup our data file to collect genotypic information.
    */
   emp::DataFile& SetupGenotypeFile(const std::string& filename) {
-    auto& file = SetupFile(filename);
+    auto& file = emp::World<Organism>::SetupFile(filename);
 
     file.AddVar(SEED, "seed", "Random generator seed");
 
-    file.AddVar(update, "update" , "Update");
+    file.AddVar(emp::World<Organism>::update, "update" , "Update");
 
     for (size_t i = 0; i < dns_endowment.size(); ++i) {
       file.AddMean(
@@ -583,7 +583,7 @@ private:
 
     Organism& examp = emp::World<Organism>::GetOrg(0);
 
-    auto& file = SetupFile(filename);
+    auto& file = emp::World<Organism>::SetupFile(filename);
 
     file.SetupLine("","","");
     // print header
@@ -623,11 +623,11 @@ private:
    * Setup our data file to collect phenotypic information.
    */
   emp::DataFile& SetupPhenotypeFile(const std::string& filename) {
-    auto& file = SetupFile(filename);
+    auto& file = emp::World<Organism>::SetupFile(filename);
 
     file.AddVar(SEED, "seed", "Random generator seed");
 
-    file.AddVar(update, "update" , "Update");
+    file.AddVar(emp::World<Organism>::update, "update" , "Update");
 
     file.AddTotal(
       dn_repdecline,
@@ -705,7 +705,7 @@ private:
         }
         return res;
       });
-      OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
+      emp::World<Organism>::OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
         if (update%gdata_freq == 0 || update%cdata_freq == 0) {
           dns_endowment[i].Reset();
           dns_endowment[i].PullData();
@@ -726,7 +726,7 @@ private:
         }
         return res;
       });
-      OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
+      emp::World<Organism>::OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
         if (update%gdata_freq == 0 || update%cdata_freq == 0) {
           dns_res_pool[i].Reset();
           dns_res_pool[i].PullData();
@@ -747,7 +747,7 @@ private:
         }
         return res;
       });
-      OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
+      emp::World<Organism>::OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
         if (update%gdata_freq == 0 || update%cdata_freq == 0) {
           dns_avoid_over[i].Reset();
           dns_avoid_over[i].PullData();
@@ -768,7 +768,7 @@ private:
         }
         return res;
       });
-      OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
+      emp::World<Organism>::OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
         if (update%gdata_freq == 0 || update%cdata_freq == 0) {
           dns_off_ch_cap[i].Reset();
           dns_off_ch_cap[i].PullData();
@@ -789,7 +789,7 @@ private:
         }
         return res;
       });
-      OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
+      emp::World<Organism>::OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
         if (update%gdata_freq == 0 || update%cdata_freq == 0) {
           dns_sort_off[i].Reset();
           dns_sort_off[i].PullData();
@@ -808,7 +808,7 @@ private:
       }
       return res;
     });
-    OnUpdate([this, gdata_freq, cdata_freq](size_t update){
+    emp::World<Organism>::OnUpdate([this, gdata_freq, cdata_freq](size_t update){
       if (update%gdata_freq == 0 || update%cdata_freq == 0) {
         dn_damage_suicide.Reset();
         dn_damage_suicide.PullData();
