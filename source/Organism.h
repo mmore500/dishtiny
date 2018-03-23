@@ -37,7 +37,7 @@ private:
   // ... for a particular hierarchical level, should I prefer to place offspring close to the channel centroid?
   emp::vector<double> sort_offs;
   // ... should I try to kill myself if I was mutated during reproduction?
-  double damage_suicide;
+  emp::vector<double> damage_suicides;
 
   // pointer for quick and efficient reproduction
   // (shared between all organisms)
@@ -54,7 +54,7 @@ public:
   , avoid_overs(dconfig.NLEV())
   , off_ch_caps(dconfig.NLEV())
   , sort_offs(dconfig.NLEV())
-  , damage_suicide(init_damage_suicide())
+  , damage_suicides(dconfig.NLEV()+1)
   , cconfig(_cconfig)
   {
     // initialize genetic information
@@ -64,6 +64,7 @@ public:
       res_pools[lev] = init_res_pool(lev);
       avoid_overs[lev] = init_avoid_over(lev);
       sort_offs[lev] = init_sort_off(lev);
+      damage_suicides[lev] = init_damage_suicide(lev);
     }
 
     // these genotypic characteristics have NLEV+1 values...
@@ -71,6 +72,8 @@ public:
     endowments[dconfig.NLEV()] = init_endowment(dconfig.NLEV());
     // ... to share between own stockpile and resource pools over all levels
     res_pools[dconfig.NLEV()] = init_res_pool(dconfig.NLEV());
+    // ... when to kill yourself on genetic damage
+    damage_suicides[dconfig.NLEV()] = init_damage_suicide(dconfig.NLEV());
 
     // balance res_pools so values sum to 1
     bal_res_pools();
@@ -87,7 +90,7 @@ public:
   , avoid_overs(par.avoid_overs.size())
   , off_ch_caps(par.off_ch_caps.size())
   , sort_offs(par.sort_offs.size())
-  , damage_suicide(par.damage_suicide)
+  , damage_suicides(par.damage_suicides.size())
   , cconfig(par.cconfig)
   {
     // initialize genetic information from parent
@@ -109,6 +112,10 @@ public:
 
     for (size_t lev = 0; lev < sort_offs.size(); ++lev) {
       sort_offs[lev] = par.sort_offs[lev];
+    }
+
+    for (size_t lev = 0; lev < damage_suicides.size(); ++lev) {
+      damage_suicides[lev] = par.damage_suicides[lev];
     }
 
   }
@@ -151,7 +158,11 @@ public:
       out << sep;
     }
 
-      out << "damage_suicide";
+    for (size_t i = 0; i < damage_suicides.size(); ++i) {
+      out << "damage_suicide"+std::to_string(i);
+      if (i != damage_suicides.size() - 1) out << sep;
+    }
+
   }
 
   /*
@@ -186,7 +197,10 @@ public:
       os << sep;
     }
 
-    os << damage_suicide;
+    for (size_t lev = 0; lev < damage_suicides.size(); ++lev) {
+      os << damage_suicides[lev];
+      if (lev != damage_suicides.size() - 1) os << sep;
+    }
 
   }
 
@@ -227,8 +241,10 @@ public:
       }
     }
 
-    if (damage_suicide != other.damage_suicide) {
-      return damage_suicide < other.damage_suicide;
+    for (size_t lev = 0; lev < damage_suicides.size(); ++lev) {
+      if (damage_suicides[lev] != other.damage_suicides[lev]) {
+        return damage_suicides[lev] < other.damage_suicides[lev];
+      }
     }
 
     return false;
@@ -261,7 +277,9 @@ public:
       res &= sort_offs[lev] == other.sort_offs[lev];
     }
 
-    res &= damage_suicide == other.damage_suicide;
+    for (size_t lev = 0; lev < damage_suicides.size(); ++lev) {
+      res &= damage_suicides[lev] == other.damage_suicides[lev];
+    }
 
     return res;
   }
@@ -303,7 +321,9 @@ public:
       mutation_occured |= mut_sort_off(lev);
     }
 
-    mutation_occured |= mut_damage_suicide();
+    for (size_t lev = 0; lev < damage_suicides.size(); ++lev) {
+      mutation_occured |= mut_damage_suicide(lev);
+    }
 
     bal_res_pools();
 
@@ -390,8 +410,15 @@ public:
   /*
    * Accessor function.
    */
-  inline double GetDamageSuicide() const {
-    return damage_suicide;
+  inline double GetDamageSuicide(size_t lev) const {
+    return damage_suicides[lev];
+  }
+
+  /*
+   * Accessor function.
+   */
+  inline size_t GetDamageSuicideDepth() const {
+    return damage_suicides.size();
   }
 
 private:
@@ -459,7 +486,7 @@ private:
   /*
    * Initialization function.
    */
-  inline double init_damage_suicide() {
+  inline double init_damage_suicide(size_t lev) {
     return std::max(std::min(rand->GetDouble(-0.5, 1.5), 1.0), 0.0);
   }
 
@@ -537,10 +564,10 @@ private:
    * Draw double from random generator. If it says mutate value, return mutated
    * value. Else, return original value.
    */
-  inline bool mut_damage_suicide() {
+  inline bool mut_damage_suicide(size_t lev) {
 
-    if (rand->GetDouble() < cconfig->PM_DAMAGE_SUICIDE) {
-      damage_suicide = init_damage_suicide();
+    if (rand->GetDouble() < cconfig->PM_DAMAGE_SUICIDE[lev]) {
+      damage_suicides[lev] = init_damage_suicide(lev);
       return true;
     } else {
       return false;

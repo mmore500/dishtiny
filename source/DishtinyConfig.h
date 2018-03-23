@@ -19,7 +19,7 @@ EMP_BUILD_CONFIG(
   VALUE(CDATA_FREQ, size_t, 500000, "How often should we record a census of all the genotypes in the population and the channel distributions?"),
   VALUE(PDATA_FREQ, size_t, 10000, "How frequently should we take phenotype data?"),
   VALUE(PUPDATE_FREQ, size_t, 100, "How frequently should we print the current update?"),
-  VALUE(SUICIDE_EFF, double, 0.0, "How frequently should suicide attempts succeed?"),
+  VALUE(SUICIDE_EFF, double, 0.8, "How frequently should suicide attempts succeed?"),
   VALUE(RUN_LENGTH, size_t, 20000000, "How many updates should we run the experiment for?"),
   VALUE(SYSTEMATICS, bool, true, "Should we keep systematics data?"),
 )

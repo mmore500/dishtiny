@@ -56,7 +56,7 @@ private:
   emp::vector<dnod_genotype_t> dns_avoid_over;
   emp::vector<dnod_genotype_t> dns_off_ch_cap;
   emp::vector<dnod_genotype_t> dns_sort_off;
-  dnod_genotype_t dn_damage_suicide;
+  emp::vector<dnod_genotype_t> dns_damage_suicide;
 
 
   using dnod_phenotype_t = emp::DataNode<int,
@@ -370,7 +370,7 @@ private:
     // if suicide on damage triggered, do it and log it
     if (mut) {
       dn_mutation.Add(1);
-      if (rand.GetDouble() < child.GetDamageSuicide()
+      if (rand.GetDouble() < child.GetDamageSuicide(off_level)
           && rand.GetDouble() < SUICIDE_EFF
         ) {
           emp::World<Organism>::DoDeath(dest);
@@ -596,11 +596,13 @@ private:
       );
     }
 
-    file.AddMean(
-      dn_damage_suicide,
-      "mean_damage_suicide",
-      "TODO"
-    );
+    for (size_t i = 0; i < dns_damage_suicide.size(); ++i) {
+      file.AddMean(
+        dns_damage_suicide[i],
+        "mean_damage_suicide"+std::to_string(i),
+        "TODO"
+      );
+    }
 
     file.PrintHeaderKeys();
 
@@ -893,23 +895,27 @@ private:
       });
     }
 
-    dn_damage_suicide.AddPullSet([this](){
-      emp::vector<double> res;
-      for(
-        auto it = emp::World<Organism>::begin();
-        it != emp::World<Organism>::end();
-        ++it
-      ) {
-        res.push_back((*it).GetDamageSuicide());
-      }
-      return res;
-    });
-    emp::World<Organism>::OnUpdate([this, gdata_freq, cdata_freq](size_t update){
-      if (update%gdata_freq == 0 || update%cdata_freq == 0) {
-        dn_damage_suicide.Reset();
-        dn_damage_suicide.PullData();
-      }
-    });
+    for (size_t i = 0; i < examp.GetDamageSuicideDepth(); ++i) {
+      dns_damage_suicide.push_back(dnod_genotype_t());
+      dns_damage_suicide[i].AddPullSet([this, i](){
+        emp::vector<double> res;
+        for(
+          auto it = emp::World<Organism>::begin();
+          it != emp::World<Organism>::end();
+          ++it
+        ) {
+          res.push_back((*it).GetDamageSuicide(i));
+        }
+        return res;
+      });
+      emp::World<Organism>::OnUpdate([this, i, gdata_freq, cdata_freq](size_t update){
+        if (update%gdata_freq == 0 || update%cdata_freq == 0) {
+          dns_damage_suicide[i].Reset();
+          dns_damage_suicide[i].PullData();
+        }
+      });
+    }
+
 
   }
 
