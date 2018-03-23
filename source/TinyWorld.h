@@ -71,6 +71,16 @@ private:
   dnod_phenotype_t dn_mutation;
   // for tracking the number of cell reproductions
   dnod_phenotype_t dn_reproduce;
+  // for tracking the amount of resource collected
+  emp::DataNode<double,
+      emp::data::Current, emp::data::Range,
+      emp::data::Pull, emp::data::Log
+    > dn_resource;
+  // for tracking the amount of activation cost paid
+  emp::DataNode<double,
+      emp::data::Current, emp::data::Range,
+      emp::data::Pull, emp::data::Log
+    > dn_cost;
   // for tracking the number of new channel reproductions
   emp::vector<dnod_phenotype_t> dns_channelrep;
 
@@ -223,9 +233,9 @@ public:
 
     resource.LayResource(emp::World<Organism>::GetUpdate());
 
-    store.Harvest(signal, resource, channel, *this);
+    dn_resource.Add(store.Harvest(signal, resource, channel, *this));
 
-    store.PayStateCost(signal, resource, channel, *this);
+    dn_cost.Add(store.PayStateCost(signal, resource, channel, *this));
 
     store.SettlePools(channel);
 
@@ -726,6 +736,20 @@ private:
           "TODO"
         );
     }
+
+    file.AddTotal(
+      dn_resource,
+      "total_resource",
+      "TODO",
+      true
+    );
+
+    file.AddTotal(
+      dn_cost,
+      "total_cost",
+      "TODO",
+      true
+    );
 
     file.PrintHeaderKeys();
 

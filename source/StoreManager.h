@@ -144,31 +144,36 @@ public:
    * If cell in ACVTIVE state while resouce wave passing over, harvest the
    * resource. Resource is stored across stockpile, channel pools through
    * MultilevelTransaction.
+   * Returns the total amount harvested.
    */
-  inline void Harvest(
+  inline double Harvest(
     SignalManager& s,
     ResourceManager& r,
     ChannelManager& c,
     emp::World<Organism>& w
     ) {
+    double res = 0.0;
     for (size_t lev = 0; lev < pool.size(); ++lev) {
-      HarvestLev(lev, s, r, c, w);
+      res += HarvestLev(lev, s, r, c, w);
     }
+    return res;
   }
 
   /*
    * If cell is in ACTIVE state, pay cost from stockpile, channel pools through
    * MultilevelTransaction.
    */
-  inline void PayStateCost(
+  inline double PayStateCost(
     SignalManager &s,
     ResourceManager &r,
     ChannelManager &c,
     emp::World<Organism>& w
     ) {
+    double res = 0.0;
     for (size_t lev = 0; lev < pool.size(); ++lev) {
-      PayStateCostLev(lev, s, r, c, w);
+      res += PayStateCostLev(lev, s, r, c, w);
     }
+    return res;
   }
 
   /*
@@ -195,17 +200,19 @@ private:
    * If cell is in ACTIVE state, pay cost from stockpile, channel pools through
    * MultilevelTransaction.
    */
-  inline void PayStateCostLev(
+  inline double PayStateCostLev(
     size_t lev,
     SignalManager& s,
     ResourceManager& r,
     ChannelManager& c,
     emp::World<Organism>& w
     ) {
+      double res = 0.0;
       // make live cells pay a cost for being vulnerable
       for (size_t cell = 0; cell < stockpile.GetArea(); ++cell) {
         if (w.IsOccupied(cell)) {
         if (s.IsActivated(lev, cell)) {
+          res += cconfig.V_COST[lev];
           MultilevelTransaction(
             w.GetOrg(cell),
             cell,
@@ -215,23 +222,27 @@ private:
         }
         }
       }
+      return res;
   }
 
   /*
    * If cell is in ACVTIVE state while resouce wave passing over, harvest the
    * resource. Resource is stored across stockpile, channel pools through
    * MultilevelTransaction.
+   * Return the amount of resource absorbed.
    */
-  inline void HarvestLev(
+  inline double HarvestLev(
     size_t lev,
     SignalManager& s,
     ResourceManager& r,
     ChannelManager& c,
     emp::World<Organism>& w
     ) {
+    double res = 0.0;
     // distribute resources to activated cells
     for (size_t cell = 0; cell < stockpile.GetArea(); ++cell) {
       if (s.IsActivated(lev, cell) && w.IsOccupied(cell)) {
+        res += r.CheckResource(lev, cell);
         MultilevelTransaction(
           w.GetOrg(cell),
           cell,
@@ -240,6 +251,7 @@ private:
         );
       }
     }
+    return res;
   }
 
 };
