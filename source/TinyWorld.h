@@ -75,12 +75,17 @@ private:
   emp::DataNode<double,
       emp::data::Current, emp::data::Range,
       emp::data::Pull, emp::data::Log
-    > dn_resource;
+    > dn_resource_harvested;
   // for tracking the amount of activation cost paid
   emp::DataNode<double,
       emp::data::Current, emp::data::Range,
       emp::data::Pull, emp::data::Log
     > dn_cost;
+  // for tracking the amount of resource lost by death
+  emp::DataNode<double,
+      emp::data::Current, emp::data::Range,
+      emp::data::Pull, emp::data::Log
+    > dn_resource_lost;
   // for tracking the number of new channel reproductions
   emp::vector<dnod_phenotype_t> dns_channelrep;
 
@@ -122,12 +127,16 @@ public:
     emp::World<Organism>::OnOrgDeath( [this](size_t pos) {
       // set channels to DEAD
       // if org was last of particular channel, remove that channel's res pool
-      channel.Kill(
+      double res = channel.Kill(
         pos,
-        [this](size_t lev, int ch){ store.ErasePool(lev, ch); }
+        [this](size_t lev, int ch){ return store.ErasePool(lev, ch); }
       );
       // erase organism's resource stockpile
-      store.EraseStockpile(pos);
+      res += store.EraseStockpile(pos);
+
+      // store the total amount of resorce destroyed
+      dn_resource_lost.Add(-res);
+
     } );
 
     emp::World<Organism>::SetAddBirthFun(
@@ -233,7 +242,7 @@ public:
 
     resource.LayResource(emp::World<Organism>::GetUpdate());
 
-    dn_resource.Add(store.Harvest(signal, resource, channel, *this));
+    dn_resource_harvested.Add(store.Harvest(signal, resource, channel, *this));
 
     dn_cost.Add(store.PayStateCost(signal, resource, channel, *this));
 
@@ -738,8 +747,15 @@ private:
     }
 
     file.AddTotal(
-      dn_resource,
-      "total_resource",
+      dn_resource_harvested,
+      "total_resource_harvested",
+      "TODO",
+      true
+    );
+
+    file.AddTotal(
+      dn_resource_lost,
+      "total_resource_lost",
       "TODO",
       true
     );

@@ -47,8 +47,11 @@ public:
 
   /*
    * Erase a pool -- resets resource accumulation and clears up memory.
+   * Return the amount of resource erased.
    */
-  inline void ErasePool(size_t lev, int ch) {
+  inline double ErasePool(size_t lev, int ch) {
+    double res = pool[lev][ch];
+
     pool[lev].erase(ch);
 
     // ensure pool properly removed
@@ -56,13 +59,19 @@ public:
 
     // ensure that we aren't accumulating more pools than possible
     emp_assert(pool[lev].size() <= stockpile.GetArea());
+
+    return res;
   }
 
   /*
    * Set an individual's stockpile to zero.
+   * Return the amount of resource erased.
    */
-  inline void EraseStockpile(size_t cell) {
+  inline double EraseStockpile(size_t cell) {
+    double res = stockpile(cell);
     stockpile(cell) = 0.0;
+
+    return res;
   }
 
   /*

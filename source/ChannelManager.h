@@ -61,14 +61,17 @@ public:
    * deregister cell from census and re-sort census vector and
    * mark cell as DEAD. If it's the last cell of a channel, then delete that
    * channel's entry in the census and in the resource pool.
+   * Return the resource destroyed.
    */
-  inline void Kill(
+  inline double Kill(
     size_t cell,
-    std::function<void(size_t lev, int ch)> erasepool
+    std::function<double(size_t lev, int ch)> erasepool
   ) {
+    double res = 0.0;
     for (size_t lev = 0; lev < channel.GetDepth(); ++lev) {
-      KillLev(lev, cell, erasepool);
+      res += KillLev(lev, cell, erasepool);
     }
+    return res;
   }
 
   /*
@@ -215,19 +218,22 @@ private:
    * Specificaly, deregister cell from census and re-sort census vector and
    * mark cell as DEAD. If it's the last cell of a channel, then delete that
    * channel's entry in the census and in the resource pool.
+   * Return the amount of resource destroyed.
    */
-  inline void KillLev(
+  inline double KillLev(
     size_t lev,
     size_t cell,
-    std::function<void(size_t lev, int ch)> erasepool
+    std::function<double(size_t lev, int ch)> erasepool
   ) {
+
+    double res = 0.0;
 
     int oldch = channel.Get(lev, cell);
 
     // if last of particular channel,
     if (census[lev][oldch].size() == 1) {
       // remove resource pool
-      erasepool(lev, oldch);
+      res += erasepool(lev, oldch);
       // remove census list
       census[lev].erase(oldch);
       emp_assert(census[lev].count(oldch) == 0);
@@ -264,6 +270,8 @@ private:
 
     // mark cell as dead
     channel(lev, cell) = DEAD;
+
+    return res;
 
   }
 
