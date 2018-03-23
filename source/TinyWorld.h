@@ -74,6 +74,8 @@ private:
   // for tracking the number of new channel reproductions
   emp::vector<dnod_phenotype_t> dns_channelrep;
 
+  size_t channel_map_iterator;
+
 public:
   TinyWorld(
     int _nupdate,
@@ -183,6 +185,13 @@ public:
       +std::to_string(dconfig.SEED())
       +".csv"
     ).SetTimingRepeat(dconfig.PDATA_FREQ());
+
+    SetupChannelMapFile(
+      "ChannelMap_"
+      +std::to_string(dconfig.SEED())
+      +".csv",
+      dconfig
+    );
   }
 
   /*
@@ -615,6 +624,50 @@ private:
         }
 
       },"","");
+
+    return file;
+  }
+
+  /*
+   * Setup our data file to collect intermittent channel maps.
+   */
+  emp::DataFile& SetupChannelMapFile(
+    const std::string& filename,
+    DishtinyConfig& dconfig
+  ) {
+
+    auto& file = emp::World<Organism>::SetupFile(filename);
+    // we will write our own timing function and register it with OnUpdate
+    file.SetTiming([this](size_t update){ return false; });
+
+    const size_t cdata_freq = dconfig.CDATA_FREQ();
+
+    file.AddVar(SEED, "seed", "Random generator seed");
+
+    file.AddVar(emp::World<Organism>::update, "update" , "Update");
+
+    file.AddFun<int>([this](){
+      return spec.GetX(channel_map_iterator);
+    },"ch_x","TODO");
+
+    file.AddFun<int>([this](){
+      return spec.GetY(channel_map_iterator);
+    },"ch_y","TODO");
+
+    for (size_t lev = 0; lev < NLEV; ++lev) {
+      file.AddFun<int>([this, lev](){
+        return channel.GetChannel(lev, channel_map_iterator);
+      },"channel"+std::to_string(lev),"TODO");
+    }
+
+    emp::World<Organism>::OnUpdate([this, cdata_freq, &file](size_t update){
+      if (update%cdata_freq == 0) {
+        for (size_t cell = 0; cell < GRID_A; ++cell) {
+          channel_map_iterator = cell;
+          file.Update();
+        }
+      }
+    });
 
     return file;
   }
