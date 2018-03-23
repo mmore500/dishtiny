@@ -37,6 +37,7 @@ private:
   const size_t PUPDATE_FREQ;
   const double SUICIDE_EFF;
   const int SEED;
+  const bool ECOLOGICAL;
 
   emp::vector<size_t> shuffler;
   emp::vector<emp::Ptr<std::pair<size_t, bool>>> neighborsorter;
@@ -111,6 +112,7 @@ public:
   , PUPDATE_FREQ(dconfig.PUPDATE_FREQ())
   , SUICIDE_EFF(dconfig.SUICIDE_EFF())
   , SEED(dconfig.SEED())
+  , ECOLOGICAL(dconfig.ECOLOGICAL())
   , shuffler(emp::GetPermutation(rand, GRID_A))
   , neighborsorter()
   , dns_channelrep(dconfig.NLEV())
@@ -351,7 +353,8 @@ private:
 
     // do reproduction...
     Organism child = Organism(emp::World<Organism>::GetOrg(parent));
-    bool mut = child.DoMutations(rand);
+    bool mut = false;
+    if (!ECOLOGICAL) mut |= child.DoMutations(rand);
 
     // takes care of killing trampled cell
     // birth_loc is hooked into DoBirth function through Lambda in this scope

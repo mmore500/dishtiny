@@ -11,6 +11,7 @@ EMP_BUILD_CONFIG(
   VALUE(GRID_H, size_t, 120, "Height dimension of the grid"),
   VALUE(GRID_W, size_t, 120, "Width dimension of the grid"),
   VALUE(REP_THRESH, double, 8.0, "How much should replication cost?"),
+  VALUE(ECOLOGICAL, bool, false, "Should we run in ecological mode?"),
   VALUE(KILL_THRESH, double, -11.0, "What is the minimum resource level required to stay alive?"),
   VALUE(CH_MAX, int, 4194304, "What is the maximum value of a channel identifier?"),
   VALUE(CULL_FREQ, size_t, 2500, "How frequently should culling take place?"),
