@@ -624,9 +624,9 @@ private:
     file << ",";
     file << "update";
     file << ",";
-    file << "count";
-    file << ",";
     examp.PrintHeader(file);
+    file << ",";
+    file << "count";
     file << "\n";
 
     // this print function gets called intermittently
