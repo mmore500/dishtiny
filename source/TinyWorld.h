@@ -684,6 +684,8 @@ private:
       },"channel"+std::to_string(lev),"TODO");
     }
 
+    file.PrintHeaderKeys();
+
     emp::World<Organism>::OnUpdate([this, cdata_freq, &file](size_t update){
       if (update%cdata_freq == 0) {
         for (size_t cell = 0; cell < GRID_A; ++cell) {
