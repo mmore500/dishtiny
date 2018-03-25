@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "config/config.h"
 
 EMP_BUILD_CONFIG(
@@ -22,4 +24,7 @@ EMP_BUILD_CONFIG(
   VALUE(SUICIDE_EFF, double, 0.8, "How frequently should suicide attempts succeed?"),
   VALUE(RUN_LENGTH, size_t, 20000000, "How many updates should we run the experiment for?"),
   VALUE(SYSTEMATICS, bool, true, "Should we keep systematics data?"),
+  VALUE(SEED_POP, bool, false, "Should we seed the population?"),
+  VALUE(SEED_POP_FILENAME, std::string, "ConsolidatedChampions.csv", "Where should we look for the genotypes to seed our population with?"),
+  VALUE(SEED_POP_CLONECOUNT, size_t, 2, "How many clones of each champion genotype should we seed our population with?")
 )

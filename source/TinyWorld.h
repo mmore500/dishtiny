@@ -2,6 +2,7 @@
 
 #include <utility>
 #include <iostream>
+#include <math.h>
 
 #include "base/vector.h"
 #include "base/Ptr.h"
@@ -9,6 +10,7 @@
 #include "tools/random_utils.h"
 #include "Evolve/World.h"
 #include "base/assert.h"
+#include "tools/File.h"
 
 #include "ChannelManager.h"
 #include "CustomConfig.h"
@@ -153,10 +155,63 @@ public:
     } );
 
     // populate the world
-    for (size_t cell = 0; cell < GRID_A; ++cell) {
-      emp::World<Organism>::InjectAt(Organism(&rand, dconfig, &cconfig), cell);
-    }
+    if (dconfig.SEED_POP()) {
+      // open file with genotypes we want to seed
+      emp::File source = emp::File(dconfig.SEED_POP_FILENAME());
 
+      // first line is just the header keys
+      const size_t source_count = source.GetNumLines() - 1;
+      emp_assert(source_count > 0);
+      // we are seeding SEED_POP_CLONECOUNT orgs per genotype
+      const size_t n_seeded = source_count * dconfig.SEED_POP_CLONECOUNT();
+      emp_assert(n_seeded > 0);
+
+      // read in all the genotype strings
+      emp::vector<std::string> string_genotypes;
+      auto it = source.begin();
+      ++it; // first line is just the header keys
+      // last line is just an empty line
+      for (; it != source.end() - 1; ++it) {
+        // we want to seed multiple copies of each genotype
+        for (size_t r = 0; r < dconfig.SEED_POP_CLONECOUNT(); ++r) {
+          string_genotypes.push_back(*it);
+        }
+      }
+
+      // shuffle the order that we insert seeded genotypes
+      emp::Shuffle(rand, string_genotypes);
+
+      // how many to skip per insert along one grid dimension
+      size_t side_density = sqrt(GRID_A / n_seeded);
+
+      // seed the genotypes evenly throughout the space
+      auto sg = string_genotypes.begin();
+      for (
+        size_t x = 0;
+        x < spec.GetWidth() && sg != string_genotypes.end();
+        x += side_density
+      ) {
+        for (
+          size_t y = 0;
+          y < spec.GetHeight() && sg != string_genotypes.end();
+          y += side_density
+        ) {
+          emp::World<Organism>::InjectAt(
+              Organism(*sg, &rand, dconfig, &cconfig),
+              spec.GetID(x,y)
+            );
+          ++sg;
+        }
+      }
+    } else {
+      // generate a new set of random genotypes
+      for (size_t cell = 0; cell < GRID_A; ++cell) {
+        emp::World<Organism>::InjectAt(
+            Organism(&rand, dconfig, &cconfig),
+            cell
+          );
+      }
+    }
     // setup data nodes and data files
     if (dconfig.SYSTEMATICS()) {
       auto& sf = emp::World<Organism>::SetupSystematicsFile(

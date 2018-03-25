@@ -81,6 +81,61 @@ public:
   }
 
   /*
+   * Read in an organism from a string.
+   */
+
+  Organism(
+    std::string& in,
+    emp::Ptr<emp::Random> _r,
+    DishtinyConfig& dconfig,
+    emp::Ptr<CustomConfig> _cconfig)
+  : rand(_r)
+  , endowments(dconfig.NLEV()+1)
+  , res_pools(dconfig.NLEV()+1)
+  , avoid_overs(dconfig.NLEV())
+  , off_ch_caps(dconfig.NLEV())
+  , sort_offs(dconfig.NLEV())
+  , damage_suicides(dconfig.NLEV()+1)
+  , cconfig(_cconfig)
+  {
+
+    std::string str = in;
+
+    //seed
+    emp::string_pop(str, ",");
+
+    //update
+    emp::string_pop(str, ",");
+
+
+    // read in genetic information
+    for (size_t i = 0; i < endowments.size(); ++i) {
+      endowments[i]=std::stod(emp::string_pop(str, ","));
+    }
+
+    for (size_t i = 0; i < res_pools.size(); ++i) {
+      res_pools[i]=std::stod(emp::string_pop(str, ","));
+    }
+
+    for (size_t i = 0; i < avoid_overs.size(); ++i) {
+      avoid_overs[i]=std::stod(emp::string_pop(str, ","));
+    }
+
+    for (size_t i = 0; i < off_ch_caps.size(); ++i) {
+      off_ch_caps[i]=std::stod(emp::string_pop(str, ","));
+    }
+
+    for (size_t i = 0; i < sort_offs.size(); ++i) {
+      sort_offs[i]=std::stod(emp::string_pop(str, ","));
+    }
+
+    for (size_t i = 0; i < damage_suicides.size(); ++i) {
+      damage_suicides[i]=std::stod(emp::string_pop(str, ","));
+    }
+
+  }
+
+  /*
    * Make an exact copy of a parent Organism.
    */
   Organism(const Organism& par)
