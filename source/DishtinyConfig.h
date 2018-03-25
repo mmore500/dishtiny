@@ -6,7 +6,7 @@ EMP_BUILD_CONFIG(
   DishtinyConfig,
   GROUP(DEFAULT, "Default settings for DISHTINY"),
   VALUE(QUIESCENT_MAX, size_t, 4, "Length of quiescent period"),
-  VALUE(NLEV, size_t, 2, "Number hierarchical resource lebels"),
+  VALUE(NLEV, size_t, 2, "Number hierarchical resource levels"),
   VALUE(SEED, int, 0, "Random number seed (0 for based on time)"),
   VALUE(GRID_H, size_t, 120, "Height dimension of the grid"),
   VALUE(GRID_W, size_t, 120, "Width dimension of the grid"),
