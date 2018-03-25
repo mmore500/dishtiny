@@ -128,16 +128,11 @@ public:
 
     const std::string sep = ",";
 
-    out << "seed";
-    out << sep;
-
-    out << "update";
-    out << sep;
-
     for (size_t i = 0; i < endowments.size(); ++i) {
       out << "endowment"+std::to_string(i);
       out << sep;
     }
+
     for (size_t i = 0; i < res_pools.size(); ++i) {
       out << "res_pool"+std::to_string(i);
       out << sep;
