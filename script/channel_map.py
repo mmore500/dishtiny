@@ -16,7 +16,7 @@ res = pd.read_csv(sys.argv[1])
 
 # filter out just the target update
 if len(sys.argv) == 3:
-    update = sys.argv[2]
+    update = int(sys.argv[2])
 else:
     update = res['update'].max()
 
