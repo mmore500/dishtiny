@@ -160,7 +160,8 @@ public:
       emp::File source = emp::File(dconfig.SEED_POP_FILENAME());
 
       // first line is just the header keys
-      const size_t source_count = source.GetNumLines() - 1;
+      // last line is empty
+      const size_t source_count = source.GetNumLines() - 2;
       emp_assert(source_count > 0);
       // we are seeding SEED_POP_CLONECOUNT orgs per genotype
       const size_t n_seeded = source_count * dconfig.SEED_POP_CLONECOUNT();
@@ -200,6 +201,7 @@ public:
               Organism(*sg, &rand, dconfig, &cconfig),
               spec.GetID(x,y)
             );
+          channel.InitializeCell(spec.GetID(x,y));
           ++sg;
         }
       }
@@ -210,6 +212,7 @@ public:
             Organism(&rand, dconfig, &cconfig),
             cell
           );
+          channel.InitializeCell(cell);
       }
     }
     // setup data nodes and data files

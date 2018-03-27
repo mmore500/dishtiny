@@ -48,12 +48,19 @@ public:
   , xs_centroid(dconfig.NLEV())
   , ys_centroid(dconfig.NLEV())
   , rand(_r) {
-    // initialize channels
+    // initialize channels to DEAD
+    channel.Reset();
+  }
+
+  /*
+   * Initialize a cell for injection at the beginning of the world.
+   */
+  inline void InitializeCell(size_t cell) {
+
     for (size_t lev = 0; lev < channel.GetDepth(); ++lev) {
-      for (size_t cell = 0; cell < channel.GetArea(); ++cell) {
-        RegisterCh(lev, cell, InitCh());
-      }
+       RegisterCh(lev, cell, InitCh());
     }
+
   }
 
   /*
