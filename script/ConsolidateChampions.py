@@ -11,7 +11,7 @@ for f in glob.glob("Census_*.csv"):
     print(fil_count)
     res.append(fil_count)
 
-champs = pd.concat(res)
+champs = pd.concat(res, ignore_index=True)
 
 print(champs)
 
