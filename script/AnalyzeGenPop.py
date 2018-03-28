@@ -162,7 +162,7 @@ print(stats.pearsonr(
 
 ###############################################################################
 
-# CALCULATE MEAN GENEARTION TIME FOR DIFFERENT OUTCOMES
+# CALCULATE MEAN GENERATION TIME FOR DIFFERENT OUTCOMES
 
 ###############################################################################
 
@@ -240,6 +240,201 @@ print(np.mean(
                 (dfc['mean_res_pool2'] > dfc['mean_res_pool0']) &
                 (dfc['mean_res_pool2'] > dfc['mean_res_pool1'])
             ]['chan1_generation']
+    ))
+
+###############################################################################
+
+# INVESTIGATE POPULATION-GENOTYPE CORRELATIONS
+
+###############################################################################
+
+ax = sns.regplot(dfc['mean_res_pool1'],dfc['num_orgs'])
+lab = "First-level Resource Sharing and Cell Population Size"
+ax.set_title(lab)
+ax.set_xlabel("Population Mean $P_1$")
+ax.set_ylabel("Updates Per Cell Generation")
+
+plt.gcf().set_size_inches(7, 5)
+plt.savefig("mean_res_pool1_vs_num_orgs.pdf")
+plt.clf()
+
+print("Pearson Correlation, p value for mean %s:" % lab)
+print(stats.pearsonr(
+        dfc['mean_res_pool1'],
+        dfc['num_orgs']
+    ))
+
+###############################################################################
+
+ax = sns.regplot(dfc['mean_res_pool1'],dfc['num_channels0'])
+lab = "First-level Resource Sharing and Channel 0 Population Size"
+ax.set_title(lab)
+ax.set_xlabel("Population Mean $P_1$")
+ax.set_ylabel("Updates Per Channel 0 Generation")
+
+plt.gcf().set_size_inches(7, 5)
+plt.savefig("mean_res_pool1_vs_num_channels0.pdf")
+plt.clf()
+
+print("Pearson Correlation, p value for mean %s:" % lab)
+print(stats.pearsonr(
+        dfc['mean_res_pool1'],
+        dfc['num_channels0']
+    ))
+
+###############################################################################
+
+ax = sns.regplot(dfc['mean_res_pool1'],dfc['num_channels1'])
+lab = "First-level Resource Sharing and Channel 1 Population Size"
+ax.set_title(lab)
+ax.set_xlabel("Population Mean $P_1$")
+ax.set_ylabel("Updates Per Channel 1 Generation")
+
+plt.gcf().set_size_inches(7, 5)
+plt.savefig("mean_res_pool1_vs_num_channels1.pdf")
+plt.clf()
+
+print("Pearson Correlation, p value for mean %s:" % lab)
+print(stats.pearsonr(
+        dfc['mean_res_pool1'],
+        dfc['num_channels1']
+    ))
+
+
+###############################################################################
+
+ax = sns.regplot(dfc['mean_res_pool2'],dfc['num_orgs'])
+lab = "Second-level Resource Sharing and Cell Population Size"
+ax.set_title(lab)
+ax.set_xlabel("Population Mean $P_2$")
+ax.set_ylabel("Updates Per Cell Generation")
+
+plt.gcf().set_size_inches(7, 5)
+plt.savefig("mean_res_pool2_vs_num_orgs.pdf")
+plt.clf()
+
+print("Pearson Correlation, p value for mean %s:" % lab)
+print(stats.pearsonr(
+        dfc['mean_res_pool2'],
+        dfc['num_orgs']
+    ))
+
+###############################################################################
+
+ax = sns.regplot(dfc['mean_res_pool2'],dfc['num_channels0'])
+lab = "Second-level Resource Sharing and Channel 0 Population Size"
+ax.set_title(lab)
+ax.set_xlabel("Population Mean $P_2$")
+ax.set_ylabel("Updates Per Channel 0 Generation")
+
+plt.gcf().set_size_inches(7, 5)
+plt.savefig("mean_res_pool2_vs_num_channels0.pdf")
+plt.clf()
+
+print("Pearson Correlation, p value for mean %s:" % lab)
+print(stats.pearsonr(
+        dfc['mean_res_pool2'],
+        dfc['num_channels0']
+    ))
+
+###############################################################################
+
+ax = sns.regplot(dfc['mean_res_pool2'],dfc['num_channels1'])
+lab = "Second-level Resource Sharing and Channel 1 Population Size"
+ax.set_title(lab)
+ax.set_xlabel("Population Mean $P_2$")
+ax.set_ylabel("Updates Per Channel 1 Generation")
+
+plt.gcf().set_size_inches(7, 5)
+plt.savefig("mean_res_pool2_vs_num_channels1.pdf")
+plt.clf()
+
+print("Pearson Correlation, p value for mean %s:" % lab)
+print(stats.pearsonr(
+        dfc['mean_res_pool2'],
+        dfc['num_channels1']
+    ))
+
+###############################################################################
+
+# CALCULATE MEAN POPULATION SIZE FOR DIFFERENT OUTCOMES
+
+###############################################################################
+
+print("Mean Cell Population Size for Zero-Level Outcomes:")
+print(np.mean(
+        dfc[
+                (dfc['mean_res_pool0'] > dfc['mean_res_pool1']) &
+                (dfc['mean_res_pool0'] > dfc['mean_res_pool2'])
+            ]['num_orgs']
+    ))
+
+print("Mean Channel 0 Population Size for Zero-Level Outcomes:")
+print(np.mean(
+        dfc[
+                (dfc['mean_res_pool0'] > dfc['mean_res_pool1']) &
+                (dfc['mean_res_pool0'] > dfc['mean_res_pool2'])
+            ]['num_channels0']
+    ))
+
+print("Mean Channel 1 Population Size for Zero-Level Outcomes:")
+print(np.mean(
+        dfc[
+                (dfc['mean_res_pool0'] > dfc['mean_res_pool1']) &
+                (dfc['mean_res_pool0'] > dfc['mean_res_pool2'])
+            ]['num_channels1']
+    ))
+
+###############################################################################
+
+print("Mean Cell Population Size for First-Level Outcomes:")
+print(np.mean(
+        dfc[
+                (dfc['mean_res_pool1'] > dfc['mean_res_pool0']) &
+                (dfc['mean_res_pool1'] > dfc['mean_res_pool2'])
+            ]['num_orgs']
+    ))
+
+print("Mean Channel 0 Population Size for First-Level Outcomes:")
+print(np.mean(
+        dfc[
+                (dfc['mean_res_pool1'] > dfc['mean_res_pool0']) &
+                (dfc['mean_res_pool1'] > dfc['mean_res_pool2'])
+            ]['num_channels0']
+    ))
+
+print("Mean Channel 1 Population Size for First-Level Outcomes:")
+print(np.mean(
+        dfc[
+                (dfc['mean_res_pool1'] > dfc['mean_res_pool0']) &
+                (dfc['mean_res_pool1'] > dfc['mean_res_pool2'])
+            ]['num_channels1']
+    ))
+
+###############################################################################
+
+print("Mean Cell Population Size for Second-Level Outcomes:")
+print(np.mean(
+        dfc[
+                (dfc['mean_res_pool2'] > dfc['mean_res_pool0']) &
+                (dfc['mean_res_pool2'] > dfc['mean_res_pool1'])
+            ]['num_orgs']
+    ))
+
+print("Mean Channel 0 Population Size for Second-Level Outcomes:")
+print(np.mean(
+        dfc[
+                (dfc['mean_res_pool2'] > dfc['mean_res_pool0']) &
+                (dfc['mean_res_pool2'] > dfc['mean_res_pool1'])
+            ]['num_channels0']
+    ))
+
+print("Mean Channel 1 Population Size for Second-Level Outcomes:")
+print(np.mean(
+        dfc[
+                (dfc['mean_res_pool2'] > dfc['mean_res_pool0']) &
+                (dfc['mean_res_pool2'] > dfc['mean_res_pool1'])
+            ]['num_channels1']
     ))
 
 ###############################################################################
