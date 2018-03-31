@@ -39,7 +39,7 @@ print(stats.pearsonr(
 
 ################################################################################
 
-ax = sns.regplot(dfc['mean_res_pool1'],dfc['total_reproduce'])
+ax = sns.regplot(dfc['mean_res_pool2'],dfc['total_reproduce'])
 lab = "Second-level Resource Sharing and Net Reproduction Rate"
 ax.set_title(lab)
 ax.set_xlabel("Population Mean $P_2$")
