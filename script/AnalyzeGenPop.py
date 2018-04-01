@@ -32,6 +32,7 @@ dfc = fil_dfp.join(
 
 
 # CREATE NEW ROWS WITH cell, chan0, chan1 GENERATION LENGTH CALCULATED
+# how many updates between dfp recordings?
 pstep = np.sort(dfp['update'].unique())[1] - np.sort(dfp['update'].unique())[0]
 
 dfc['cell_generation'] = dfc.apply(
@@ -48,6 +49,28 @@ dfc['chan1_generation'] = dfc.apply(
         lambda row: row['num_channels1']*pstep/row['total_channelrep1'],
         axis=1
         )
+
+dfc['num_gens'] = dfc['total_reproduce'] / dfc['num_orgs']
+
+## PRINT DIAGNOSTIC INFORMATION
+print("Mean number cell generations per %d updates at update %d:"
+        % (pstep, dfp['update'].max())
+    )
+print(dfc['num_gens'].mean())
+print("Standard deviation number cell generations per %d updates at update %d:"
+        % (pstep, dfp['update'].max())
+    )
+print(dfc['num_gens'].std())
+
+print("Mean number cell generation length at update %d:"
+        % dfp['update'].max()
+    )
+print(dfc['cell_generation'].mean())
+print("Standard deviation cell generation length at update %d:"
+        % dfp['update'].max()
+    )
+print(dfc['cell_generation'].std())
+
 
 ###############################################################################
 
