@@ -9,6 +9,7 @@ CFLAGS_all := -Wall -Wno-unused-function -std=c++14 -I$(EMP_DIR)/
 CXX_nat := g++
 CFLAGS_nat := -O3 -DNDEBUG $(CFLAGS_all)
 CFLAGS_nat_debug := -g -pedantic -DEMP_TRACK_MEM $(CFLAGS_all)
+CFLAGS_nat_profile := -pg -pedantic -DNDEBUG $(CFLAGS_all)
 
 # Emscripten compiler information
 CXX_web := emcc
@@ -28,6 +29,9 @@ all: $(PROJECT) $(PROJECT).js
 
 debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
 debug:	$(PROJECT)
+
+profile:	CFLAGS_nat := $(CFLAGS_nat_profile)
+profile:	$(PROJECT)
 
 debug-web:	CFLAGS_web := $(CFLAGS_web_debug)
 debug-web:	$(PROJECT).js
