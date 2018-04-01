@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 import scipy.stats as stats
 import numpy as np
 
+from corboot import corboot
+
 # LOAD MEAN GENOTYPE, PHENOTYPE, POPULATION DATA
 # and filter to most recent update in each dataframe
 
@@ -63,11 +65,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool1_vs_cell_generation.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool1'],
-        dfc['cell_generation']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool1','cell_generation']])
 
 ###############################################################################
 
@@ -81,11 +80,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool1_vs_chan0_generation.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool1'],
-        dfc['chan0_generation']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool1','chan0_generation']])
 
 ###############################################################################
 
@@ -99,12 +95,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool1_vs_chan1_generation.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool1'],
-        dfc['chan1_generation']
-    ))
-
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool1','chan1_generation']])
 
 ###############################################################################
 
@@ -118,11 +110,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool2_vs_cell_generation.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool2'],
-        dfc['cell_generation']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool2','cell_generation']])
 
 ###############################################################################
 
@@ -136,11 +125,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool2_vs_chan0_generation.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool2'],
-        dfc['chan0_generation']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool2','chan0_generation']])
 
 ###############################################################################
 
@@ -154,11 +140,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool2_vs_chan1_generation.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool2'],
-        dfc['chan1_generation']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool2','chan1_generation']])
 
 ###############################################################################
 
@@ -258,11 +241,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool1_vs_num_orgs.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool1'],
-        dfc['num_orgs']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool1','num_orgs']])
 
 ###############################################################################
 
@@ -276,11 +256,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool1_vs_num_channels0.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool1'],
-        dfc['num_channels0']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool1','num_channels0']])
 
 ###############################################################################
 
@@ -294,12 +271,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool1_vs_num_channels1.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool1'],
-        dfc['num_channels1']
-    ))
-
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool1','num_channels1']])
 
 ###############################################################################
 
@@ -313,11 +286,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool2_vs_num_orgs.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool2'],
-        dfc['num_orgs']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool2','num_orgs']])
 
 ###############################################################################
 
@@ -331,11 +301,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool2_vs_num_channels0.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool2'],
-        dfc['num_channels0']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool2','num_channels0']])
 
 ###############################################################################
 
@@ -349,11 +316,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool2_vs_num_channels1.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool2'],
-        dfc['num_channels1']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool2','num_channels1']])
 
 ###############################################################################
 

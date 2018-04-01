@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 import scipy.stats as stats
 from tqdm import tqdm
 
+from corboot import corboot
+
 # LOAD CHAMPION GENOTYPE DATA
 
 # read in all census data
@@ -62,11 +64,8 @@ ax.set_ylabel("Dominant Genotype $M_0$")
 plt.savefig("champion_res_pool1_vs_champion_damage_suicide0.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for champion %s:" % lab)
-print(stats.pearsonr(
-        champions_df['res_pool1'],
-        champions_df['damage_suicide0']
-    ))
+print("Correlation Bootstrap for champion %s:" % lab)
+corboot(champions_df[['res_pool1','damage_suicide0']])
 
 ################################################################################
 
@@ -79,11 +78,8 @@ ax.set_ylabel("Dominant Genotype $M_0$")
 plt.savefig("champion_res_pool2_vs_champion_damage_suicide0.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for champion %s:" % lab)
-print(stats.pearsonr(
-        champions_df['res_pool2'],
-        champions_df['damage_suicide0']
-    ))
+print("Correlation Bootstrap for champion %s:" % lab)
+corboot(champions_df[['res_pool2','damage_suicide0']])
 
 ################################################################################
 
@@ -100,11 +96,8 @@ ax.set_ylabel("Population Mean $M_0$")
 plt.savefig("mean_res_pool1_vs_mean_damage_suicide0.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        means_df['mean_res_pool1'],
-        means_df['mean_damage_suicide0']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(means_df[['mean_res_pool1','mean_damage_suicide0']])
 
 ################################################################################
 
@@ -117,11 +110,8 @@ ax.set_ylabel("Population Mean $M_0$")
 plt.savefig("mean_res_pool2_vs_mean_damage_suicide0.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        means_df['mean_res_pool2'],
-        means_df['mean_damage_suicide0']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(means_df[['mean_res_pool2','mean_damage_suicide0']])
 
 ################################################################################
 
@@ -142,11 +132,8 @@ ax.set_ylabel("Dominant Genotype $E_1")
 plt.savefig("champion_res_pool1_vs_champion_endowment1.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for champion %s:" % lab)
-print(stats.pearsonr(
-        champions_df['res_pool1'],
-        champions_df['endowment1']
-    ))
+print("Correlation Bootstrap for champion %s:" % lab)
+corboot(champions_df[['res_pool1','endowment1']])
 
 ################################################################################
 
@@ -159,11 +146,8 @@ ax.set_xlabel("Dominant Genotype $E_1$")
 plt.savefig("champion_res_pool2_vs_champion_endowment1.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for champion %s:" % lab)
-print(stats.pearsonr(
-        champions_df['res_pool2'],
-        champions_df['endowment1']
-    ))
+print("Correlation Bootstrap for champion %s:" % lab)
+corboot(champions_df[['res_pool2','endowment1']])
 
 ################################################################################
 
@@ -176,11 +160,8 @@ ax.set_ylabel("Dominant Genotype $E_2$")
 plt.savefig("champion_res_pool1_vs_champion_endowment2.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for champion %s:" % lab)
-print(stats.pearsonr(
-        champions_df['res_pool1'],
-        champions_df['endowment2']
-    ))
+print("Correlation Bootstrap for champion %s:" % lab)
+corboot(champions_df[['res_pool1','endowment2']])
 
 ################################################################################
 
@@ -193,11 +174,8 @@ ax.set_ylabel("Dominant Genotype $E_2$")
 plt.savefig("champion_res_pool2_vs_champion_endowment2.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for champion %s:" % lab)
-print(stats.pearsonr(
-        champions_df['res_pool2'],
-        champions_df['endowment2']
-    ))
+print("Correlation Bootstrap for champion %s:" % lab)
+corboot(champions_df[['res_pool2','endowment2']])
 
 ################################################################################
 
@@ -214,11 +192,8 @@ ax.set_ylabel("Population Mean $E_1$")
 plt.savefig("mean_res_pool1_vs_mean_endowment1.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        means_df['mean_res_pool1'],
-        means_df['mean_endowment1']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(means_df[['mean_res_pool1','mean_endowment1']])
 
 ################################################################################
 
@@ -231,11 +206,8 @@ ax.set_ylabel("Population Mean $E_1$")
 plt.savefig("mean_res_pool2_vs_mean_endowment1.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        means_df['mean_res_pool2'],
-        means_df['mean_endowment1']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(means_df[['mean_res_pool2','mean_endowment1']])
 
 ################################################################################
 
@@ -248,11 +220,8 @@ ax.set_ylabel("Population Mean $E_2$")
 plt.savefig("mean_res_pool1_vs_mean_endowment2.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        means_df['mean_res_pool1'],
-        means_df['mean_endowment2']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(means_df[['mean_res_pool1','mean_endowment2']])
 
 ################################################################################
 
@@ -265,8 +234,5 @@ ax.set_ylabel("Population Mean $E_2$")
 plt.savefig("mean_res_pool2_vs_mean_endowment2.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        means_df['mean_res_pool2'],
-        means_df['mean_endowment2']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(means_df[['mean_res_pool2','mean_endowment2']])

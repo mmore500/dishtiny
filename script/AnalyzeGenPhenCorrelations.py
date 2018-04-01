@@ -4,6 +4,8 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 import scipy.stats as stats
 
+from corboot import corboot
+
 # LOAD MEAN GENOTYPE, PHENOTYPE DATA
 # and filter to most recent update in each dataframe
 
@@ -31,11 +33,8 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool1_vs_net_reproduction.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool1'],
-        dfc['total_reproduce']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool1','total_reproduce']])
 
 ################################################################################
 
@@ -49,8 +48,5 @@ plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool2_vs_net_reproduction.pdf")
 plt.clf()
 
-print("Pearson Correlation, p value for mean %s:" % lab)
-print(stats.pearsonr(
-        dfc['mean_res_pool2'],
-        dfc['total_reproduce']
-    ))
+print("Correlation Bootstrap for mean %s:" % lab)
+corboot(dfc[['mean_res_pool2','total_reproduce']])
