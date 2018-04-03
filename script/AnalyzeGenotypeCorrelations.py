@@ -56,10 +56,10 @@ means_df = df_in[
 ################################################################################
 
 ax = sns.regplot(champions_df['res_pool1'], champions_df['damage_suicide0'])
-lab = "First-level Resource Sharing and Zero-level Altruistic Suicide"
+lab = "Zeroth-level Resource Sharing and Cell-level Altruistic Suicide"
 ax.set_title(lab)
-ax.set_xlabel("Dominant Genotype $P_1$")
-ax.set_ylabel("Dominant Genotype $M_0$")
+ax.set_xlabel("Dominant Genotype $P_0$")
+ax.set_ylabel("Dominant Genotype $M_c$")
 
 plt.savefig("champion_res_pool1_vs_champion_damage_suicide0.pdf")
 plt.clf()
@@ -70,10 +70,10 @@ corboot(champions_df[['res_pool1','damage_suicide0']])
 ################################################################################
 
 ax = sns.regplot(champions_df['res_pool2'], champions_df['damage_suicide0'])
-lab = "Second-level Resource Sharing and Zero-level Altruistic Suicide"
+lab = "First-level Resource Sharing and Cell-level Altruistic Suicide"
 ax.set_title(lab)
-ax.set_xlabel("Dominant Genotype $P_2$")
-ax.set_ylabel("Dominant Genotype $M_0$")
+ax.set_xlabel("Dominant Genotype $P_1$")
+ax.set_ylabel("Dominant Genotype $M_c$")
 
 plt.savefig("champion_res_pool2_vs_champion_damage_suicide0.pdf")
 plt.clf()
@@ -88,10 +88,10 @@ corboot(champions_df[['res_pool2','damage_suicide0']])
 ################################################################################
 
 ax = sns.regplot(means_df['mean_res_pool1'], means_df['mean_damage_suicide0'])
-lab = "First-level Resource Sharing and Zero-level Altruistic Suicide"
+lab = "Zeroth-level Resource Sharing and Cell-level Altruistic Suicide"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_1$")
-ax.set_ylabel("Population Mean $M_0$")
+ax.set_xlabel("Population Mean $P_0$")
+ax.set_ylabel("Population Mean $M_c$")
 
 plt.savefig("mean_res_pool1_vs_mean_damage_suicide0.pdf")
 plt.clf()
@@ -102,10 +102,10 @@ corboot(means_df[['mean_res_pool1','mean_damage_suicide0']])
 ################################################################################
 
 ax = sns.regplot(means_df['mean_res_pool2'], means_df['mean_damage_suicide0'])
-lab = "Second-level Resource Sharing and Zero-level Altruistic Suicide"
+lab = "First-level Resource Sharing and Cell-level Altruistic Suicide"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_2$")
-ax.set_ylabel("Population Mean $M_0$")
+ax.set_xlabel("Population Mean $P_1$")
+ax.set_ylabel("Population Mean $M_c$")
 
 plt.savefig("mean_res_pool2_vs_mean_damage_suicide0.pdf")
 plt.clf()
@@ -124,10 +124,10 @@ corboot(means_df[['mean_res_pool2','mean_damage_suicide0']])
 ################################################################################
 
 ax = sns.regplot(champions_df['res_pool1'], champions_df['endowment1'])
-lab = "First-level Resource Sharing and First-level Offspring Endowment"
+lab = "Zeroth-level Resource Sharing and Zeroth-level Offspring Endowment"
 ax.set_title(lab)
-ax.set_xlabel("Dominant Genotype $P_1$")
-ax.set_ylabel("Dominant Genotype $E_1")
+ax.set_xlabel("Dominant Genotype $P_0$")
+ax.set_ylabel("Dominant Genotype $E_0")
 
 plt.savefig("champion_res_pool1_vs_champion_endowment1.pdf")
 plt.clf()
@@ -138,10 +138,10 @@ corboot(champions_df[['res_pool1','endowment1']])
 ################################################################################
 
 ax = sns.regplot(champions_df['res_pool2'], champions_df['endowment1'])
-lab = "Second-level Resource Sharing and First-level Offspring Endowment"
+lab = "First-level Resource Sharing and Zeroth-level Offspring Endowment"
 ax.set_title(lab)
-ax.set_ylabel("Dominant Genotype $P_2$")
-ax.set_xlabel("Dominant Genotype $E_1$")
+ax.set_ylabel("Dominant Genotype $P_1$")
+ax.set_xlabel("Dominant Genotype $E_0$")
 
 plt.savefig("champion_res_pool2_vs_champion_endowment1.pdf")
 plt.clf()
@@ -152,10 +152,10 @@ corboot(champions_df[['res_pool2','endowment1']])
 ################################################################################
 
 ax = sns.regplot(champions_df['res_pool1'], champions_df['endowment2'])
-lab = "First-level Resource Sharing and Second-level Offspring Endowment"
+lab = "Zeroth-level Resource Sharing and First-level Offspring Endowment"
 ax.set_title(lab)
-ax.set_xlabel("Dominant Genotype $P_1$")
-ax.set_ylabel("Dominant Genotype $E_2$")
+ax.set_xlabel("Dominant Genotype $P_0$")
+ax.set_ylabel("Dominant Genotype $E_1$")
 
 plt.savefig("champion_res_pool1_vs_champion_endowment2.pdf")
 plt.clf()
@@ -166,10 +166,10 @@ corboot(champions_df[['res_pool1','endowment2']])
 ################################################################################
 
 ax = sns.regplot(champions_df['res_pool2'], champions_df['endowment2'])
-lab = "Second-level Resource Sharing and Second-level Offspring Endowment"
+lab = "First-level Resource Sharing and First-level Offspring Endowment"
 ax.set_title(lab)
-ax.set_xlabel("Dominant Genotype $P_2$")
-ax.set_ylabel("Dominant Genotype $E_2$")
+ax.set_xlabel("Dominant Genotype $P_1$")
+ax.set_ylabel("Dominant Genotype $E_1$")
 
 plt.savefig("champion_res_pool2_vs_champion_endowment2.pdf")
 plt.clf()
@@ -184,10 +184,10 @@ corboot(champions_df[['res_pool2','endowment2']])
 ################################################################################
 
 ax = sns.regplot(means_df['mean_res_pool1'], means_df['mean_endowment1'])
-lab = "First-level Resource Sharing and First-level Offspring Endowment"
+lab = "Zeroth-level Resource Sharing and Zeroth-level Offspring Endowment"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_1$")
-ax.set_ylabel("Population Mean $E_1$")
+ax.set_xlabel("Population Mean $P_0$")
+ax.set_ylabel("Population Mean $E_0$")
 
 plt.savefig("mean_res_pool1_vs_mean_endowment1.pdf")
 plt.clf()
@@ -198,10 +198,10 @@ corboot(means_df[['mean_res_pool1','mean_endowment1']])
 ################################################################################
 
 ax = sns.regplot(means_df['mean_res_pool2'], means_df['mean_endowment1'])
-lab = "Second-level Resource Sharing and First-level Offspring Endowment"
+lab = "First-level Resource Sharing and Zeroth-level Offspring Endowment"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_2$")
-ax.set_ylabel("Population Mean $E_1$")
+ax.set_xlabel("Population Mean $P_1$")
+ax.set_ylabel("Population Mean $E_0$")
 
 plt.savefig("mean_res_pool2_vs_mean_endowment1.pdf")
 plt.clf()
@@ -212,10 +212,10 @@ corboot(means_df[['mean_res_pool2','mean_endowment1']])
 ################################################################################
 
 ax = sns.regplot(means_df['mean_res_pool1'], means_df['mean_endowment2'])
-lab = "First-level Resource Sharing and Second-level Offspring Endowment"
+lab = "Zeroth-level Resource Sharing and First-level Offspring Endowment"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_1$")
-ax.set_ylabel("Population Mean $E_2$")
+ax.set_xlabel("Population Mean $P_0$")
+ax.set_ylabel("Population Mean $E_1$")
 
 plt.savefig("mean_res_pool1_vs_mean_endowment2.pdf")
 plt.clf()
@@ -226,10 +226,10 @@ corboot(means_df[['mean_res_pool1','mean_endowment2']])
 ################################################################################
 
 ax = sns.regplot(means_df['mean_res_pool2'], means_df['mean_endowment2'])
-lab = "Second-level Resource Sharing and Second-level Offspring Endowment"
+lab = "First-level Resource Sharing and First-level Offspring Endowment"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_2$")
-ax.set_ylabel("Population Mean $E_2$")
+ax.set_xlabel("Population Mean $P_1$")
+ax.set_ylabel("Population Mean $E_1$")
 
 plt.savefig("mean_res_pool2_vs_mean_endowment2.pdf")
 plt.clf()

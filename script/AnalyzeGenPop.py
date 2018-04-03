@@ -79,9 +79,9 @@ print(dfc['cell_generation'].std())
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool1'],dfc['cell_generation'])
-lab = "First-level Resource Sharing and Cell Generation Length"
+lab = "Zeroth-level Resource Sharing and Cell Generation Length"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_1$")
+ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Cell Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -94,9 +94,9 @@ corboot(dfc[['mean_res_pool1','cell_generation']])
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool1'],dfc['chan0_generation'])
-lab = "First-level Resource Sharing and Channel 0 Generation Length"
+lab = "Zeroth-level Resource Sharing and Channel 0 Generation Length"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_1$")
+ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Channel 0 Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -109,9 +109,9 @@ corboot(dfc[['mean_res_pool1','chan0_generation']])
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool1'],dfc['chan1_generation'])
-lab = "First-level Resource Sharing and Channel 1 Generation Length"
+lab = "Zeroth-level Resource Sharing and Channel 1 Generation Length"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_1$")
+ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Channel 1 Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -124,9 +124,9 @@ corboot(dfc[['mean_res_pool1','chan1_generation']])
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool2'],dfc['cell_generation'])
-lab = "Second-level Resource Sharing and Cell Generation Length"
+lab = "First-level Resource Sharing and Cell Generation Length"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_2$")
+ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Cell Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -139,9 +139,9 @@ corboot(dfc[['mean_res_pool2','cell_generation']])
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool2'],dfc['chan0_generation'])
-lab = "Second-level Resource Sharing and Channel 0 Generation Length"
+lab = "First-level Resource Sharing and Channel 0 Generation Length"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_2$")
+ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Channel 0 Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -154,9 +154,9 @@ corboot(dfc[['mean_res_pool2','chan0_generation']])
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool2'],dfc['chan1_generation'])
-lab = "Second-level Resource Sharing and Channel 1 Generation Length"
+lab = "First-level Resource Sharing and Channel 1 Generation Length"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_2$")
+ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Channel 1 Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -172,7 +172,7 @@ corboot(dfc[['mean_res_pool2','chan1_generation']])
 
 ###############################################################################
 
-print("Mean Cell Generation Length for Zero-Level Outcomes:")
+print("Mean Cell Generation Length for Cell-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool0'] > dfc['mean_res_pool1']) &
@@ -180,7 +180,7 @@ print(np.mean(
             ]['cell_generation']
     ))
 
-print("Mean Channel 0 Generation Length for Zero-Level Outcomes:")
+print("Mean Channel 0 Generation Length for Cell-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool0'] > dfc['mean_res_pool1']) &
@@ -188,7 +188,7 @@ print(np.mean(
             ]['chan0_generation']
     ))
 
-print("Mean Channel 1 Generation Length for Zero-Level Outcomes:")
+print("Mean Channel 1 Generation Length for Cell-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool0'] > dfc['mean_res_pool1']) &
@@ -198,7 +198,7 @@ print(np.mean(
 
 ###############################################################################
 
-print("Mean Cell Generation Length for First-Level Outcomes:")
+print("Mean Cell Generation Length for Zeroth-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool1'] > dfc['mean_res_pool0']) &
@@ -206,7 +206,7 @@ print(np.mean(
             ]['cell_generation']
     ))
 
-print("Mean Channel 0 Generation Length for First-Level Outcomes:")
+print("Mean Channel 0 Generation Length for Zeroth-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool1'] > dfc['mean_res_pool0']) &
@@ -214,7 +214,7 @@ print(np.mean(
             ]['chan0_generation']
     ))
 
-print("Mean Channel 1 Generation Length for First-Level Outcomes:")
+print("Mean Channel 1 Generation Length for Zeroth-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool1'] > dfc['mean_res_pool0']) &
@@ -224,7 +224,7 @@ print(np.mean(
 
 ###############################################################################
 
-print("Mean Cell Generation Length for Second-Level Outcomes:")
+print("Mean Cell Generation Length for First-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool2'] > dfc['mean_res_pool0']) &
@@ -232,7 +232,7 @@ print(np.mean(
             ]['cell_generation']
     ))
 
-print("Mean Channel 0 Generation Length for Second-Level Outcomes:")
+print("Mean Channel 0 Generation Length for First-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool2'] > dfc['mean_res_pool0']) &
@@ -240,7 +240,7 @@ print(np.mean(
             ]['chan0_generation']
     ))
 
-print("Mean Channel 1 Generation Length for Second-Level Outcomes:")
+print("Mean Channel 1 Generation Length for First-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool2'] > dfc['mean_res_pool0']) &
@@ -255,9 +255,9 @@ print(np.mean(
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool1'],dfc['num_orgs'])
-lab = "First-level Resource Sharing and Cell Population Size"
+lab = "Zeroth-level Resource Sharing and Cell Population Size"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_1$")
+ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Cell Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -270,9 +270,9 @@ corboot(dfc[['mean_res_pool1','num_orgs']])
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool1'],dfc['num_channels0'])
-lab = "First-level Resource Sharing and Channel 0 Population Size"
+lab = "Zeroth-level Resource Sharing and Channel 0 Population Size"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_1$")
+ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Channel 0 Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -285,9 +285,9 @@ corboot(dfc[['mean_res_pool1','num_channels0']])
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool1'],dfc['num_channels1'])
-lab = "First-level Resource Sharing and Channel 1 Population Size"
+lab = "Zeroth-level Resource Sharing and Channel 1 Population Size"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_1$")
+ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Channel 1 Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -300,9 +300,9 @@ corboot(dfc[['mean_res_pool1','num_channels1']])
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool2'],dfc['num_orgs'])
-lab = "Second-level Resource Sharing and Cell Population Size"
+lab = "First-level Resource Sharing and Cell Population Size"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_2$")
+ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Cell Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -315,9 +315,9 @@ corboot(dfc[['mean_res_pool2','num_orgs']])
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool2'],dfc['num_channels0'])
-lab = "Second-level Resource Sharing and Channel 0 Population Size"
+lab = "First-level Resource Sharing and Channel 0 Population Size"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_2$")
+ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Channel 0 Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -330,9 +330,9 @@ corboot(dfc[['mean_res_pool2','num_channels0']])
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool2'],dfc['num_channels1'])
-lab = "Second-level Resource Sharing and Channel 1 Population Size"
+lab = "First-level Resource Sharing and Channel 1 Population Size"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_2$")
+ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Channel 1 Generation")
 
 plt.gcf().set_size_inches(7, 5)
@@ -348,7 +348,7 @@ corboot(dfc[['mean_res_pool2','num_channels1']])
 
 ###############################################################################
 
-print("Mean Cell Population Size for Zero-Level Outcomes:")
+print("Mean Cell Population Size for Cell-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool0'] > dfc['mean_res_pool1']) &
@@ -356,7 +356,7 @@ print(np.mean(
             ]['num_orgs']
     ))
 
-print("Mean Channel 0 Population Size for Zero-Level Outcomes:")
+print("Mean Channel 0 Population Size for Cell-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool0'] > dfc['mean_res_pool1']) &
@@ -364,7 +364,7 @@ print(np.mean(
             ]['num_channels0']
     ))
 
-print("Mean Channel 1 Population Size for Zero-Level Outcomes:")
+print("Mean Channel 1 Population Size for Cell-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool0'] > dfc['mean_res_pool1']) &
@@ -374,7 +374,7 @@ print(np.mean(
 
 ###############################################################################
 
-print("Mean Cell Population Size for First-Level Outcomes:")
+print("Mean Cell Population Size for Zeroth-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool1'] > dfc['mean_res_pool0']) &
@@ -382,7 +382,7 @@ print(np.mean(
             ]['num_orgs']
     ))
 
-print("Mean Channel 0 Population Size for First-Level Outcomes:")
+print("Mean Channel 0 Population Size for Zeroth-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool1'] > dfc['mean_res_pool0']) &
@@ -390,7 +390,7 @@ print(np.mean(
             ]['num_channels0']
     ))
 
-print("Mean Channel 1 Population Size for First-Level Outcomes:")
+print("Mean Channel 1 Population Size for Zeroth-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool1'] > dfc['mean_res_pool0']) &
@@ -400,7 +400,7 @@ print(np.mean(
 
 ###############################################################################
 
-print("Mean Cell Population Size for Second-Level Outcomes:")
+print("Mean Cell Population Size for First-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool2'] > dfc['mean_res_pool0']) &
@@ -408,7 +408,7 @@ print(np.mean(
             ]['num_orgs']
     ))
 
-print("Mean Channel 0 Population Size for Second-Level Outcomes:")
+print("Mean Channel 0 Population Size for First-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool2'] > dfc['mean_res_pool0']) &
@@ -416,7 +416,7 @@ print(np.mean(
             ]['num_channels0']
     ))
 
-print("Mean Channel 1 Population Size for Second-Level Outcomes:")
+print("Mean Channel 1 Population Size for First-level Outcomes:")
 print(np.mean(
         dfc[
                 (dfc['mean_res_pool2'] > dfc['mean_res_pool0']) &

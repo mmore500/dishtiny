@@ -24,9 +24,9 @@ dfc = fil_dfp.join(fil_dfg.set_index('seed').drop(columns=['update']), on='seed'
 ###############################################################################
 
 ax = sns.regplot(dfc['mean_res_pool1'],dfc['total_reproduce'])
-lab = "First-level Resource Sharing and Net Reproduction Rate"
+lab = "Zeroth-level Resource Sharing and Net Reproduction Rate"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_1$")
+ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Population Net Offspring per 10,000 Updates")
 
 plt.gcf().set_size_inches(7, 5)
@@ -39,9 +39,9 @@ corboot(dfc[['mean_res_pool1','total_reproduce']])
 ################################################################################
 
 ax = sns.regplot(dfc['mean_res_pool2'],dfc['total_reproduce'])
-lab = "Second-level Resource Sharing and Net Reproduction Rate"
+lab = "First-level Resource Sharing and Net Reproduction Rate"
 ax.set_title(lab)
-ax.set_xlabel("Population Mean $P_2$")
+ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Population Net Offspring per 10,000 Updates")
 
 plt.gcf().set_size_inches(7, 5)
