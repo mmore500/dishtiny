@@ -19,6 +19,7 @@ EMP_BUILD_CONFIG(
   VALUE(CULL_FREQ, size_t, 2500, "How frequently should culling take place?"),
   VALUE(GDATA_FREQ, size_t, 10000, "How frequently should we take genotype data?"),
   VALUE(CDATA_FREQ, size_t, 500000, "How often should we record a census of all the genotypes in the population and the channel distributions?"),
+  VALUE(CHANMAP_DUR, size_t, 1000, "Over how many updates should each channel map census record extend?"),
   VALUE(PDATA_FREQ, size_t, 10000, "How frequently should we take phenotype data?"),
   VALUE(PUPDATE_FREQ, size_t, 100, "How frequently should we print the current update?"),
   VALUE(SUICIDE_EFF, double, 0.8, "How frequently should suicide attempts succeed?"),
