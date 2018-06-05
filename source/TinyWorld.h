@@ -724,6 +724,7 @@ private:
 
     const size_t cdata_freq = dconfig.CDATA_FREQ();
     const size_t chanmap_dur = dconfig.CHANMAP_DUR();
+    const size_t chanmap_timelapse_freq = dconfig.CHANMAP_TIMELAPSE_FREQ();
 
     file.AddVar(SEED, "seed", "Random generator seed");
 
@@ -745,8 +746,8 @@ private:
 
     file.PrintHeaderKeys();
 
-    emp::World<Organism>::OnUpdate([this, cdata_freq, chanmap_dur, &file](size_t update){
-      if (update%cdata_freq < chanmap_dur) {
+    emp::World<Organism>::OnUpdate([this, cdata_freq, chanmap_dur, chanmap_timelapse_freq, &file](size_t update){
+      if (update%cdata_freq < chanmap_dur || update%chanmap_timelapse_freq == 0) {
         for (size_t cell = 0; cell < GRID_A; ++cell) {
           channel_map_iterator = cell;
           file.Update();
