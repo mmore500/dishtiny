@@ -123,6 +123,15 @@ private:
 
     for (size_t x = 0; x < signal->GetWidth(); ++x) {
       for (size_t y = 0; y < signal->GetHeight(); ++y) {
+
+        int state = signal->Get(lev,x,y);
+        (*sigbuff)(lev,x,y) = NextState(state);
+
+      }
+    }
+
+    for (size_t x = 0; x < signal->GetWidth(); ++x) {
+      for (size_t y = 0; y < signal->GetHeight(); ++y) {
         int state = signal->Get(lev,x,y);
 
         if (state == ACTIVATED) {
@@ -133,7 +142,6 @@ private:
           TryTakeWave(lev, x-1, y, sendch, cm, w);
         }
 
-        (*sigbuff)(lev,x,y) = NextState(state);
       }
     }
 
