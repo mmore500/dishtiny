@@ -100,7 +100,7 @@ public:
     emp::Random& _rand,
     DishtinyConfig& dconfig,
     CustomConfig& cconfig)
-  : emp::World<Organism>(_rand, "TinyWorld", (bool) dconfig.SYSTEMATICS())
+  : emp::World<Organism>(_rand, "TinyWorld")
   , nupdate(_nupdate)
   , rand(_rand)
   , spec(dconfig)
@@ -126,7 +126,7 @@ public:
     }
 
     // this also sets the world to asynchronous mode
-    emp::World<Organism>::SetGrid(dconfig.GRID_W(), dconfig.GRID_H());
+    emp::World<Organism>::SetPopStruct_Grid(dconfig.GRID_W(), dconfig.GRID_H());
 
     emp::World<Organism>::OnOrgDeath( [this](size_t pos) {
       // set channels to DEAD
@@ -144,12 +144,12 @@ public:
     } );
 
     emp::World<Organism>::SetAddBirthFun(
-      [this](emp::Ptr<Organism> new_org, size_t parent_id) {
+      [this](emp::Ptr<Organism> new_org, emp::WorldPosition parent_id) {
         // kill old organism if necessary, place new organism
         emp::World<Organism>::AddOrgAt(
           new_org,
           birth_loc,
-          emp::World<Organism>::genotypes[parent_id]
+          parent_id
         );
         return birth_loc;
     } );
@@ -218,6 +218,7 @@ public:
     // setup data nodes and data files
     if (dconfig.SYSTEMATICS()) {
       auto& sf = emp::World<Organism>::SetupSystematicsFile(
+        "main_systematics",
         "Systematics_"
         +std::to_string(dconfig.SEED())
         +".csv",
