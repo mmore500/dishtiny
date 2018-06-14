@@ -46,6 +46,8 @@ private:
 
   size_t birth_loc;
 
+  std::map<Organism,size_t> org_counts;
+
   // for collecting genotype snapshots
   using dnod_genotype_t = emp::DataNode<double,
       emp::data::Current,
@@ -117,6 +119,7 @@ public:
   , ECOLOGICAL(dconfig.ECOLOGICAL())
   , shuffler(emp::GetPermutation(rand, GRID_A))
   , neighborsorter()
+  , org_counts()
   , dns_channelrep(dconfig.NLEV())
   {
 
@@ -668,45 +671,115 @@ private:
     return file;
   }
 
+  void UpdateOrgCounts() {
+    org_counts.clear();
+    for (emp::Ptr<Organism> org : emp::World<Organism>::pop) {
+       if (org) org_counts[*org] = 0;  // Initialize needed entries
+    }
+    for (emp::Ptr<Organism> org : emp::World<Organism>::pop) {
+      if (org) org_counts[*org] += 1; // Count actual types.
+    }
+  }
+
   /*
    * Setup our data file to collect a genotypic census.
    */
   emp::DataFile& SetupCensusFile(const std::string& filename) {
 
-    Organism& examp = emp::World<Organism>::GetOrg(0);
+    emp::Ptr<emp::ContainerDataFile<std::map<Organism,size_t>>> fp = new emp::ContainerDataFile<std::map<Organism,size_t>>(filename);
 
-    auto& file = emp::World<Organism>::SetupFile(filename);
+    emp::ContainerDataFile<std::map<Organism,size_t>>& file = *fp;
 
-    file.SetupLine("","","");
-    // print header
-    file << "seed";
-    file << ",";
-    file << "update";
-    file << ",";
-    examp.PrintHeader(file);
-    file << ",";
-    file << "count";
-    file << "\n";
+    emp::World<Organism>::AddDataFile(fp);
 
-    // this print function gets called intermittently
-    file.Add(
-      [this](std::ostream& os){
-        std::map<Organism,size_t> org_counts;
-        for (emp::Ptr<Organism> org : emp::World<Organism>::pop) {
-           if (org) org_counts[*org] = 0;  // Initialize needed entries
-        }
-        for (emp::Ptr<Organism> org : emp::World<Organism>::pop) {
-          if (org) org_counts[*org] += 1; // Count actual types.
-        }
-        for (auto x : org_counts) {
-          os << SEED << ",";
-          os << emp::World<Organism>::GetUpdate() << ",";
-          x.first.Print(os);
-          os << ",";
-          os << x.second << std::endl;
-        }
+    file.SetUpdateContainerFun([this](){
+        UpdateOrgCounts();
+        return org_counts;
+      });
 
-      },"","");
+    file.AddVar(SEED, "seed", "Random generator seed");
+
+    file.AddVar(emp::World<Organism>::update, "update" , "Update");
+
+    for (size_t i = 0; i < NLEV+Organism::ENDOWMENT_DEPTH_ADJ; ++i) {
+      std::function<double(std::pair<const Organism, size_t>)> fun =
+        [i](std::pair<const Organism, size_t> x){
+          return x.first.GetEndowment(i);
+          };
+      file.AddContainerFun(
+        fun,
+        "endowment"+std::to_string(i),
+        "TODO"
+      );
+    }
+
+    for (size_t i = 0; i < NLEV+Organism::RESPOOL_DEPTH_ADJ; ++i) {
+      std::function<double(std::pair<const Organism, size_t>)> fun =
+        [i](std::pair<const Organism, size_t> x){
+          return x.first.GetResPool(i);
+          };
+      file.AddContainerFun(
+        fun,
+        "res_pool"+std::to_string(i),
+        "TODO"
+      );
+    }
+
+    for (size_t i = 0; i < NLEV+Organism::AVOIDOVER_DEPTH_ADJ; ++i) {
+      std::function<double(std::pair<const Organism, size_t>)> fun =
+        [i](std::pair<const Organism, size_t> x){
+          return x.first.GetAvoidOver(i);
+          };
+      file.AddContainerFun(
+        fun,
+        "avoid_over"+std::to_string(i),
+        "TODO"
+      );
+    }
+
+    for (size_t i = 0; i < NLEV+Organism::OFFCHCAP_DEPTH_ADJ; ++i) {
+      std::function<double(std::pair<const Organism, size_t>)> fun =
+        [i](std::pair<const Organism, size_t> x){
+          return x.first.GetOffChCap(i);
+          };
+      file.AddContainerFun(
+        fun,
+        "off_ch_cap"+std::to_string(i),
+        "TODO"
+      );
+    }
+
+    for (size_t i = 0; i < NLEV+Organism::SORTOFF_DEPTH_ADJ; ++i) {
+      std::function<double(std::pair<const Organism, size_t>)> fun =
+        [i](std::pair<const Organism, size_t> x){
+          return x.first.GetSortOff(i);
+          };
+      file.AddContainerFun(
+        fun,
+        "sort_off"+std::to_string(i),
+        "TODO"
+      );
+    }
+
+    for (size_t i = 0; i < NLEV+Organism::DAMAGESUICIDE_DEPTH_ADJ; ++i) {
+      std::function<double(std::pair<const Organism, size_t>)> fun =
+        [i](std::pair<const Organism, size_t> x){
+          return x.first.GetDamageSuicide(i);
+          };
+      file.AddContainerFun(
+        fun,
+        "damage_suicide"+std::to_string(i),
+        "TODO"
+      );
+    }
+
+    std::function<size_t(std::pair<const Organism, size_t>)> func =
+      [](std::pair<const Organism, size_t> x){return x.second;};
+    file.AddContainerFun(
+      func,
+      "count",
+      "TODO"
+    );
 
     return file;
   }
@@ -720,8 +793,6 @@ private:
   ) {
 
     auto& file = emp::World<Organism>::SetupFile(filename);
-    // we will write our own timing function and register it with OnUpdate
-    file.SetTiming([this](size_t update){ return false; });
 
     const size_t cdata_freq = dconfig.CDATA_FREQ();
     const size_t chanmap_dur = dconfig.CHANMAP_DUR();
@@ -747,8 +818,14 @@ private:
 
     file.PrintHeaderKeys();
 
+    // we will write our own timing function and register it with OnUpdate
+    file.SetTiming([this](size_t update){ return false; });
+
     emp::World<Organism>::OnUpdate([this, cdata_freq, chanmap_dur, chanmap_timelapse_freq, &file](size_t update){
-      if (update%cdata_freq < chanmap_dur || update%chanmap_timelapse_freq == 0) {
+      if (
+        (update%cdata_freq < chanmap_dur)
+        || (update%chanmap_timelapse_freq == 0)
+      ) {
         for (size_t cell = 0; cell < GRID_A; ++cell) {
           channel_map_iterator = cell;
           file.Update();

@@ -44,36 +44,43 @@ private:
   emp::Ptr<CustomConfig> cconfig;
 
 public:
+  const static int ENDOWMENT_DEPTH_ADJ = 1;
+  const static int RESPOOL_DEPTH_ADJ = 1;
+  const static int AVOIDOVER_DEPTH_ADJ = 0;
+  const static int OFFCHCAP_DEPTH_ADJ = 0;
+  const static int SORTOFF_DEPTH_ADJ = 0;
+  const static int DAMAGESUICIDE_DEPTH_ADJ = 1;
+
   Organism(
     emp::Ptr<emp::Random> _r,
     DishtinyConfig& dconfig,
     emp::Ptr<CustomConfig> _cconfig)
   : rand(_r)
-  , endowments(dconfig.NLEV()+1)
-  , res_pools(dconfig.NLEV()+1)
-  , avoid_overs(dconfig.NLEV())
-  , off_ch_caps(dconfig.NLEV())
-  , sort_offs(dconfig.NLEV())
-  , damage_suicides(dconfig.NLEV()+1)
+  , endowments(dconfig.NLEV()+ENDOWMENT_DEPTH_ADJ)
+  , res_pools(dconfig.NLEV()+RESPOOL_DEPTH_ADJ)
+  , avoid_overs(dconfig.NLEV()+AVOIDOVER_DEPTH_ADJ)
+  , off_ch_caps(dconfig.NLEV()+OFFCHCAP_DEPTH_ADJ)
+  , sort_offs(dconfig.NLEV()+SORTOFF_DEPTH_ADJ)
+  , damage_suicides(dconfig.NLEV()+DAMAGESUICIDE_DEPTH_ADJ)
   , cconfig(_cconfig)
   {
+
     // initialize genetic information
-    for (size_t lev = 0; lev < dconfig.NLEV(); ++lev) {
-      off_ch_caps[lev] = init_off_ch_cap(lev);
+    for (size_t lev = 0; lev < GetEndowmentDepth(); ++lev) {
       endowments[lev] = init_endowment(lev);
-      res_pools[lev] = init_res_pool(lev);
+    }
+    for (size_t lev = 0; lev < GetOffChCapDepth(); ++lev) {
+      off_ch_caps[lev] = init_off_ch_cap(lev);
+    }
+    for (size_t lev = 0; lev < GetAvoidOverDepth(); ++lev) {
       avoid_overs[lev] = init_avoid_over(lev);
+    }
+    for (size_t lev = 0; lev < GetSortOffDepth(); ++lev) {
       sort_offs[lev] = init_sort_off(lev);
+    }
+    for (size_t lev = 0; lev < GetDamageSuicideDepth(); ++lev) {
       damage_suicides[lev] = init_damage_suicide(lev);
     }
-
-    // these genotypic characteristics have NLEV+1 values...
-    // ... for endowments when changing none, some, or all channel values
-    endowments[dconfig.NLEV()] = init_endowment(dconfig.NLEV());
-    // ... to share between own stockpile and resource pools over all levels
-    res_pools[dconfig.NLEV()] = init_res_pool(dconfig.NLEV());
-    // ... when to kill yourself on genetic damage
-    damage_suicides[dconfig.NLEV()] = init_damage_suicide(dconfig.NLEV());
 
     // balance res_pools so values sum to 1
     bal_res_pools();
@@ -90,12 +97,12 @@ public:
     DishtinyConfig& dconfig,
     emp::Ptr<CustomConfig> _cconfig)
   : rand(_r)
-  , endowments(dconfig.NLEV()+1)
-  , res_pools(dconfig.NLEV()+1)
-  , avoid_overs(dconfig.NLEV())
-  , off_ch_caps(dconfig.NLEV())
-  , sort_offs(dconfig.NLEV())
-  , damage_suicides(dconfig.NLEV()+1)
+  , endowments(dconfig.NLEV()+ENDOWMENT_DEPTH_ADJ)
+  , res_pools(dconfig.NLEV()+RESPOOL_DEPTH_ADJ)
+  , avoid_overs(dconfig.NLEV()+AVOIDOVER_DEPTH_ADJ)
+  , off_ch_caps(dconfig.NLEV()+OFFCHCAP_DEPTH_ADJ)
+  , sort_offs(dconfig.NLEV()+SORTOFF_DEPTH_ADJ)
+  , damage_suicides(dconfig.NLEV()+DAMAGESUICIDE_DEPTH_ADJ)
   , cconfig(_cconfig)
   {
 
@@ -174,86 +181,6 @@ public:
     }
 
   }
-
-  /*
-   * Print the header of an organism entry.
-   */
-  template <typename T>
-  inline void PrintHeader(T& out) const {
-
-    const std::string sep = ",";
-
-    for (size_t i = 0; i < endowments.size(); ++i) {
-      out << "endowment"+std::to_string(i);
-      out << sep;
-    }
-
-    for (size_t i = 0; i < res_pools.size(); ++i) {
-      out << "res_pool"+std::to_string(i);
-      out << sep;
-    }
-
-    for (size_t i = 0; i < avoid_overs.size(); ++i) {
-      out << "avoid_over"+std::to_string(i);
-      out << sep;
-    }
-
-    for (size_t i = 0; i < off_ch_caps.size(); ++i) {
-      out << "off_ch_cap"+std::to_string(i);
-      out << sep;
-    }
-
-    for (size_t i = 0; i < sort_offs.size(); ++i) {
-      out << "sort_off"+std::to_string(i);
-      out << sep;
-    }
-
-    for (size_t i = 0; i < damage_suicides.size(); ++i) {
-      out << "damage_suicide"+std::to_string(i);
-      if (i != damage_suicides.size() - 1) out << sep;
-    }
-
-  }
-
-  /*
-   * Print the organism.
-   */
-  void Print(std::ostream& os) const {
-
-    const std::string sep = ",";
-
-    for (size_t lev = 0; lev < endowments.size(); ++lev) {
-      os << endowments[lev];
-      os << sep;
-    }
-
-    for (size_t lev = 0; lev < res_pools.size(); ++lev) {
-      os << res_pools[lev];
-      os << sep;
-    }
-
-    for (size_t lev = 0; lev < avoid_overs.size(); ++lev) {
-      os << avoid_overs[lev];
-      os << sep;
-    }
-
-    for (size_t lev = 0; lev < off_ch_caps.size(); ++lev) {
-      os << off_ch_caps[lev];
-      os << sep;
-    }
-
-    for (size_t lev = 0; lev < sort_offs.size(); ++lev) {
-      os << sort_offs[lev];
-      os << sep;
-    }
-
-    for (size_t lev = 0; lev < damage_suicides.size(); ++lev) {
-      os << damage_suicides[lev];
-      if (lev != damage_suicides.size() - 1) os << sep;
-    }
-
-  }
-
 
   /*
    * Equality determined by content.
