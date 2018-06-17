@@ -148,12 +148,6 @@ public:
 
     emp::World<Organism>::SetAddBirthFun(
       [this](emp::Ptr<Organism> new_org, emp::WorldPosition parent_id) {
-        // kill old organism if necessary, place new organism
-        emp::World<Organism>::AddOrgAt(
-          new_org,
-          birth_loc,
-          parent_id
-        );
         return birth_loc;
     } );
 
