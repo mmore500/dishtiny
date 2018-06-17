@@ -151,6 +151,14 @@ public:
         return birth_loc;
     } );
 
+    if (dconfig.SYSTEMATICS()) {
+      emp::Ptr<emp::Systematics<Organism,Organism>> sys
+        = new emp::Systematics<Organism,Organism>(
+          [](Organism & o){return o;}, true, true, false
+        );
+      emp::World<Organism>::AddSystematics(sys,"systematics");
+    }
+
     // populate the world
     if (dconfig.SEED_POP()) {
       // open file with genotypes we want to seed
@@ -209,18 +217,21 @@ public:
             Organism(&rand, dconfig, &cconfig),
             cell
           );
-          channel.InitializeCell(cell);
+        channel.InitializeCell(cell);
       }
     }
+
     // setup data nodes and data files
     if (dconfig.SYSTEMATICS()) {
+
       auto& sf = emp::World<Organism>::SetupSystematicsFile(
-        "main_systematics",
+        "systematics",
         "Systematics_"
         +std::to_string(dconfig.SEED())
         +".csv",
         false
       );
+
       sf.SetTimingRepeat(
         dconfig.GDATA_FREQ()
       );
@@ -228,6 +239,7 @@ public:
         SEED, "seed", "Random generator seed"
       );
       sf.PrintHeaderKeys();
+
     }
 
     auto& pf = emp::World<Organism>::SetupPopulationFile(
