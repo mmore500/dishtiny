@@ -366,6 +366,7 @@ public:
     while (Update());
   }
 
+#ifdef EMSCRIPTEN
   /*
    * Make GridAnimators for each level and place them in supplied vector.
    */
@@ -401,6 +402,7 @@ public:
     ) {
     return signal.MakeAnimators(dest, c, cbs_beforedraw, cbs_afterdraw);
   };
+#endif
 
 private:
   /*

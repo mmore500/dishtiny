@@ -14,6 +14,10 @@
 #include "SignalManager.h"
 #include "Organism.h"
 
+#ifdef EMSCRIPTEN
+#include "GridAnimator.h"
+#endif
+
 class ResourceManager {
 
 private:
@@ -86,6 +90,7 @@ public:
     return resource.Get(lev, cell);
   }
 
+#ifdef EMSCRIPTEN
   /*
    * Put Animators into a supplied vector.
    */
@@ -111,7 +116,7 @@ public:
         ));
     }
   }
-
+#endif
 
 private:
   /*

@@ -12,7 +12,9 @@
 #include "base/Ptr.h"
 
 #include "GridStack.h"
+#ifdef EMSCRIPTEN
 #include "GridAnimator.h"
+#endif
 #include "DishtinyConfig.h"
 #include "GridSpec.h"
 
@@ -163,6 +165,7 @@ public:
     }
   }
 
+#ifdef EMSCRIPTEN
   /*
    * Put Animators into a supplied vector.
    */
@@ -188,6 +191,7 @@ public:
         ));
     }
   }
+#endif
 
   /*
    * Sort a vector of tuples of the form (cell_id, bool_flag)

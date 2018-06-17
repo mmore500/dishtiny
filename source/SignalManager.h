@@ -10,6 +10,9 @@
 #include "GridStack.h"
 #include "DishtinyConfig.h"
 #include "Organism.h"
+#ifdef EMSCRIPTEN
+#include "GridAnimator.h"
+#endif
 
 class SignalManager {
 private:
@@ -72,6 +75,7 @@ public:
     return signal->Get(lev, cell) == ACTIVATED;
   }
 
+#ifdef EMSCRIPTEN
   /*
    * Put Animators into a supplied vector.
    */
@@ -106,6 +110,7 @@ public:
         ));
     }
   }
+#endif
 
 private:
   /*
