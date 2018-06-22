@@ -1,0 +1,10 @@
+set email mmore500@msu.edu
+set freq_email Crash
+set description dishtiny-viz
+set mem_request 4
+set walltime 1
+set beacon_priority y
+set config_dir /mnt/scratch/mmore500/dishtiny/config/viz__configs/{run}
+set dest_dir /mnt/scratch/mmore500/dishtiny/data/viz__data/{run}
+
+{frame} dishtiny-viz source /mnt/home/mmore500/myPy/bin/activate && python3 /mnt/home/mmore500/dishtiny/script/DrawChannelMap.py /mnt/scratch/mmore500/dishtiny/data/evolve__data/dishtiny-evolve_{run}/ChannelMap_{run}.csv .png $seed

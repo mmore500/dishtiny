@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 import pandas as pd
 from matplotlib import pyplot as plt
 import matplotlib.patches as patches
@@ -9,14 +11,27 @@ from pathlib import Path
 
 CH_MAX = 4194304
 
-assert 2 <= len(sys.argv) <= 3, \
-    "First argument is filename, optional second argument is target update."
+assert 3 <= len(sys.argv) <= 4, \
+    "First argument is filename, second argument is filetype, optional third argument is target update."
 
-res = pd.read_csv(sys.argv[1])
+res = None
+
+if len(sys.argv) == 4:
+    iter = pd.read_csv(sys.argv[1], chunksize=14400)
+    for chunk in iter:
+        if any(chunk['update'] == int(sys.argv[3])):
+            res = chunk
+            break
+
+else:
+    iter = pd.read_csv(sys.argv[1], chunksize=14400)
+    res = None
+    for res in iter:
+        pass
 
 # filter out just the target update
-if len(sys.argv) == 3:
-    update = int(sys.argv[2])
+if len(sys.argv) == 4:
+    update = int(sys.argv[3])
 else:
     update = res['update'].max()
 
@@ -68,7 +83,7 @@ for poly in flat_list:
 
 # save result
 plt.savefig(
-        str(Path(sys.argv[1]).with_suffix('')) # strip .csv suffix
+        Path(sys.argv[1]).stem
         + "_update" + str(update)
-        + ".pdf"
+        + sys.argv[2]
     )
