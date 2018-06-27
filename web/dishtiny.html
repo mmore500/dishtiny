@@ -7,9 +7,9 @@
 </head>
 <body>
 
-  <div class="jumbotron">
-    <h1 class="display-3">dishtiny</h1>
-    <p class="lead">An interactive viewer!</p>
+  <div class="jumbotron" style="padding-top: 2rem; padding-bottom: 1rem">
+    <h1 class="display-4">dishtiny</h1>
+    <p class="lead">project info: <a href="https://osf.io/ewvg8/">https://osf.io/ewvg8/</a></p>
   </div>
 
   <div class="container">
@@ -17,6 +17,9 @@
     <div class="row">
       <div class="col">
         <div class="card">
+          <div class="card-header">
+            Grid Viewer
+          </div>
           <div class="card-body">
             <div id="emp_viewer"></div>
           </div>
@@ -25,10 +28,32 @@
       <div class="col">
         <div class="card" id="button_dash_card">
           <div class="card-header">
-            Button Dashboard
+            Simulation Controls
           </div>
           <div class="card-body">
             <div id="emp_button_dash"></div>
+          </div>
+        </div>
+        <br />
+        <div class="card" id="note">
+          <div class="card-header">
+            Notes
+          </div>
+          <div class="card-body">
+
+            Channel IDs of empty (i.e., dead) tiles are color-coded red.
+            Live cells with identical Channel IDs are color-coded with identical (but arbitrary) grayscale values.
+
+            <br />
+            <br />
+
+            Signals data is double buffered.
+            Signals 1 and Signals 2 correspond to Level 1 signaling
+            while Signals 3 and Signals 4 correspond to Level 2 signaling.
+            Playing from just one buffer will render signal patterns at
+            just odd or just even updates.
+            To view consecutive updates, alternate stepping a pair of buffers.
+
           </div>
         </div>
       </div>

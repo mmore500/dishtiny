@@ -97,11 +97,11 @@ struct Interface {
 
     button_dash << fforward.GetToggleButton("FastForward");
     button_dash << "&nbsp;&nbsp;&nbsp;";
-    button_dash << "run without animation" << "<br />";
+    button_dash << "Run without Animation (Fast Forward)" << "<br />";
 
-    MakeControl(gas_channelmanager, "channels");
-    MakeControl(gas_resourcemanager, "resources");
-    MakeControl(gas_signalmanager, "signals");
+    MakeControl(gas_channelmanager, "Channel_IDs");
+    MakeControl(gas_resourcemanager, "Resources");
+    MakeControl(gas_signalmanager, "Signals");
 
   }
 
@@ -128,7 +128,7 @@ private:
           +std::to_string(lev)
         );
       button_dash << "&nbsp;&nbsp;&nbsp;";
-      button_dash << name + std::to_string(lev) << "<br />";
+      button_dash << name + " " + std::to_string(lev + 1) << "<br />";
 
     }
 
