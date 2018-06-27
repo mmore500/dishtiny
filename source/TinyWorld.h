@@ -827,7 +827,7 @@ private:
     file.PrintHeaderKeys();
 
     // we will write our own timing function and register it with OnUpdate
-    file.SetTiming([this](size_t update){ return false; });
+    file.SetTiming([](size_t update){ return false; });
 
     emp::World<Organism>::OnUpdate([this, cdata_freq, chanmap_dur, chanmap_timelapse_freq, &file](size_t update){
       if (
