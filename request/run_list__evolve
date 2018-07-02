@@ -7,4 +7,4 @@ set beacon_priority y
 set config_dir /mnt/scratch/mmore500/dishtiny/config/evolve__configs
 set dest_dir /mnt/scratch/mmore500/dishtiny/data/evolve__data
 
-1001..1050 dishtiny-evolve ./dishtiny -SEED $seed
+1001..1050 dishtiny-evolve module load GNU/6.3.0 && ./dishtiny -SEED $seed
