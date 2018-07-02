@@ -32,9 +32,9 @@ int main(int argc, char* argv[])
             << std::endl;
 
 
-  GridSpec spec(dconfig);
-  CustomConfig cconfig(dconfig, spec);
   emp::Random rand(dconfig.SEED());
+  GridSpec spec(dconfig, &rand);
+  CustomConfig cconfig(dconfig, spec);
 
   TinyWorld world(dconfig.RUN_LENGTH(), rand, dconfig, cconfig);
   world.Run();

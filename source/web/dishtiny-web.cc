@@ -26,9 +26,9 @@ struct Interface {
   emp::vector<emp::Ptr<GridAnimator<int>>> gas_signalmanager;
 
   DishtinyConfig dconfig;
-  GridSpec spec;
   CustomConfig cconfig;
   emp::Random rand;
+  GridSpec spec;
 
   TinyWorld world;
 
@@ -44,9 +44,9 @@ struct Interface {
     , cbs_afterdraw()
     , gas_channelmanager()
     , dconfig()
-    , spec(dconfig)
     , cconfig(dconfig, spec)
     , rand(dconfig.SEED())
+    , spec(dconfig, &rand)
     , world(1000, rand, dconfig, cconfig)
     , fforward([this](){
         // used to fast forward without drawing

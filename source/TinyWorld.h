@@ -105,7 +105,7 @@ public:
   : emp::World<Organism>(_rand, "TinyWorld")
   , nupdate(_nupdate)
   , rand(_rand)
-  , spec(dconfig)
+  , spec(dconfig, &rand)
   , channel(dconfig, spec, &rand)
   , resource(dconfig, cconfig, spec, &rand)
   , signal(dconfig, spec)

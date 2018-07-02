@@ -4,6 +4,8 @@
 #include <tuple>
 
 #include "base/vector.h"
+#include "tools/Random.h"
+#include "base/Ptr.h"
 
 #include "DishtinyConfig.h"
 
@@ -14,10 +16,14 @@ public:
   // how many cells are in the grid?
   const size_t area;
 
-  GridSpec(DishtinyConfig& config)
+  emp::Ptr<emp::Random> rand;
+
+
+  GridSpec(DishtinyConfig& config, emp::Ptr<emp::Random> _r)
   : height(config.GRID_H())
   , width(config.GRID_W())
   , area(config.GRID_H() * config.GRID_W())
+  , rand(_r)
   { ; }
 
   GridSpec(const GridSpec &) = default;
@@ -136,6 +142,18 @@ private:
   }
 
   /*
+   * Perform division with rounding, not truncation. In case of tie (i.e.,
+   * result mod 1 == 0.5) choose by coin flip.
+   */
+  inline size_t unbiased_divide(size_t dividend, size_t divisor) const {
+      if ((dividend % divisor) * 2 != divisor) {
+          return (dividend + (divisor / 2)) / divisor;
+      } else {
+          return (dividend + (divisor / 2)) / divisor - (rand->GetInt(2));
+      }
+  }
+
+  /*
    * Calculate shortest distance between points on single dimension of
    * toridal grid.
    */
@@ -154,7 +172,7 @@ private:
     for (size_t i = 0; i < zs.size(); i++) {
       sum += zs[i];
     }
-    return sum / zs.size();
+    return unbiased_divide(sum, zs.size());
   }
 
   /*
