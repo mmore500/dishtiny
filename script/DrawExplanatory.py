@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 # Generates the how-dishtiny-works schematic
 
@@ -16,6 +17,36 @@ gr = (72.5,1.0,0.18)
 bg = (0.9,0.2,0.6)
 y = (1.0,0.8,0.2)
 pp = (0.6,0.2,0.9)
+
+hatches0 = (
+    [(x,0) for x in range(7)]
+     + [(x,1) for x in range(7)]
+     + [(x,2) for x in range(7) if x != 3]
+     + [(x,3) for x in range(7) if x != 3]
+     + [(x,4) for x in range(7)]
+     + [(x,5) for x in range(7)]
+     + [(x,6) for x in range(7)]
+     )
+
+hatches1 = (
+    [(x,0) for x in range(7)]
+     + [(x,1) for x in range(7) if x != 3]
+     + [(x,2) for x in range(7) if x not in [2,3,4]]
+     + [(x,3) for x in range(7) if x not in [1,2,3,4,5]]
+     + [(x,4) for x in range(7) if x not in [2,3,4]]
+     + [(x,5) for x in range(7) if x != 3]
+     + [(x,6) for x in range(7)]
+     )
+
+hatches2 = (
+    [(x,0) for x in range(7) if x not in [3,4]]
+     + [(x,1) for x in range(7) if x not in [2,3,4]]
+     + []
+     + []
+     + [(x,4) for x in range(7) if x not in [1,2,3,4,5]]
+     + [(x,5) for x in range(7) if x not in [2,3,4]]
+     + [(x,6) for x in range(7) if x != 3]
+     )
 
 images_res = [
     [
@@ -256,7 +287,7 @@ ch_img_b = [
 
 ch_img_c = [
             [bl]+[bl]+[bl]+[gr]+[gr]+[bg]+[bg],
-            [bl]+[bl]+[gr]+[gr]+[gr]+[gr]+[bg],
+            [bl]+[bl]+[gr]+[gr]+[gr]+[bg]+[bg],
             [gr]+[gr]+[gr]+[gr]+[gr]+[gr]+[gr],
             [gr]+[gr]+[gr]+[gr]+[gr]+[gr]+[gr],
             [pp]+[gr]+[gr]+[gr]+[gr]+[gr]+[y ],
@@ -328,8 +359,12 @@ end_color_c = [
         ]
 
 
-def draw(im, ax):
+def draw(im, ax, hatches=[]):
     ax.imshow(im,extent=(0,7,7,0))
+
+    for hatch in hatches:
+        ax.add_patch(Rectangle(hatch,1,1, fill=True, color='whitesmoke'))
+        ax.add_patch(Rectangle(hatch,1,1, fill=False, color='gray', hatch='////'))
 
     major_ticks=[0,1,2,3,4,5,6,7]
 
@@ -361,19 +396,19 @@ for t, (im, ax) in enumerate(zip(images_res, r1[1:])):
     else: draw(im,ax)
 
 for t, (im, ax) in enumerate(zip(images_sig_a, r2[1:])):
-    if (t == 0): draw(im,ax).set_ylabel('signal', fontsize=16)
-    else: draw(im,ax)
+    if (t == 0): draw(im,ax,hatches=hatches0).set_ylabel('signal', fontsize=16)
+    else: draw(im,ax,hatches=hatches0)
 
 for t, (im, ax) in enumerate(zip(images_sig_b, r3[1:])):
-    if (t == 0): draw(im,ax).set_ylabel('signal', fontsize=16)
-    else: draw(im,ax)
+    if (t == 0): draw(im,ax,hatches=hatches1).set_ylabel('signal', fontsize=16)
+    else: draw(im,ax,hatches=hatches1)
 
 for t, (im, ax) in enumerate(zip(images_sig_c, r4[1:])):
     if (t == 0):
-        axe = draw(im,ax)
+        axe = draw(im,ax,hatches=hatches2)
         axe.set_ylabel('signal', fontsize=16)
         axe.set_xlabel('$t=%d$'%t, fontsize=24)
-    else: draw(im,ax).set_xlabel('$t=%d$'%t, fontsize=24)
+    else: draw(im,ax,hatches=hatches2).set_xlabel('$t=%d$'%t, fontsize=24)
 
 r1[-1].remove()
 
