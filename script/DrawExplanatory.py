@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+from tqdm import tqdm
 
 # Generates the how-dishtiny-works schematic
 
@@ -360,6 +361,7 @@ end_color_c = [
 
 
 def draw(im, ax, hatches=[]):
+    ax.axis('on')
     ax.imshow(im,extent=(0,7,7,0))
 
     for hatch in hatches:
@@ -381,9 +383,18 @@ def draw(im, ax, hatches=[]):
 
     return ax
 
+reveal = 0
+
 f, (r1, r2, r3, r4) = plt.subplots(4,9);
 
+for p in r1: p.axis('off')
+for p in r2: p.axis('off')
+for p in r3: p.axis('off')
+for p in r4: p.axis('off')
+
 r1[0].remove()
+
+plt.gcf().set_size_inches(24, 12)
 
 draw(ch_img_a, r2[0]).set_ylabel('a)    ', rotation=0, fontsize=24)
 draw(ch_img_b, r3[0]).set_ylabel('b)    ', rotation=0, fontsize=24)
@@ -391,26 +402,39 @@ axe = draw(ch_img_c, r4[0])
 axe.set_ylabel('c)    ', rotation=0, fontsize=24)
 axe.set_xlabel('channel\nlayout', fontsize=24)
 
-for t, (im, ax) in enumerate(zip(images_res, r1[1:])):
-    if (t == 0): draw(im,ax).set_ylabel('resource', fontsize=24)
-    else: draw(im,ax)
+plt.savefig('explanatory-'+str(reveal)+'.pdf',transparent=True)
+reveal += 1
 
-for t, (im, ax) in enumerate(zip(images_sig_a, r2[1:])):
-    if (t == 0): draw(im,ax,hatches=hatches0).set_ylabel('signal', fontsize=16)
-    else: draw(im,ax,hatches=hatches0)
+for i in tqdm(range(1,8)):
 
-for t, (im, ax) in enumerate(zip(images_sig_b, r3[1:])):
-    if (t == 0): draw(im,ax,hatches=hatches1).set_ylabel('signal', fontsize=16)
-    else: draw(im,ax,hatches=hatches1)
+    for t, (im, ax) in enumerate(zip(images_res, r1[1:])):
+        if i == t: break
+        if (t == 0): draw(im,ax).set_ylabel('resource', fontsize=24)
+        else: draw(im,ax)
 
-for t, (im, ax) in enumerate(zip(images_sig_c, r4[1:])):
-    if (t == 0):
-        axe = draw(im,ax,hatches=hatches2)
-        axe.set_ylabel('signal', fontsize=16)
-        axe.set_xlabel('$t=%d$'%t, fontsize=24)
-    else: draw(im,ax,hatches=hatches2).set_xlabel('$t=%d$'%t, fontsize=24)
+    for t, (im, ax) in enumerate(zip(images_sig_a, r2[1:])):
+        if i == t: break
+        if (t == 0): draw(im,ax,hatches=hatches0).set_ylabel('signal', fontsize=16)
+        else: draw(im,ax,hatches=hatches0)
+
+    for t, (im, ax) in enumerate(zip(images_sig_b, r3[1:])):
+        if i == t: break
+        if (t == 0): draw(im,ax,hatches=hatches1).set_ylabel('signal', fontsize=16)
+        else: draw(im,ax,hatches=hatches1)
+
+    for t, (im, ax) in enumerate(zip(images_sig_c, r4[1:])):
+        if i == t: break
+        if (t == 0):
+            axe = draw(im,ax,hatches=hatches2)
+            axe.set_ylabel('signal', fontsize=16)
+            axe.set_xlabel('$t=%d$'%t, fontsize=24)
+        else: draw(im,ax,hatches=hatches2).set_xlabel('$t=%d$'%t, fontsize=24)
+
+    plt.savefig('explanatory-'+str(reveal)+'.pdf',transparent=True)
+    reveal += 1
 
 r1[-1].remove()
+
 
 def drawmat(ax, state, color):
     draw(color, ax)
@@ -428,5 +452,7 @@ drawmat(r4[-1], end_state_c, end_color_c)
 
 r4[-1].set_xlabel('net harvest', fontsize=24)
 
-plt.gcf().set_size_inches(24, 12)
-plt.savefig('explanatory.pdf')
+plt.savefig('explanatory-'+str(reveal)+'.pdf',transparent=True)
+reveal += 1
+
+plt.savefig('explanatory.pdf',transparent=True)
