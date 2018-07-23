@@ -22,7 +22,7 @@ def draw(name, x_exclude=[], y_exclude=[]):
                 ch1/dim,
                 (ch0 + 0.25*dim)/(1.25*dim),
                 0 if ch1 == 0 else 1
-        ) + (0.0 if ch1 in x_exclude or ch0 in y_exclude else 1.0,) for ch0 in sample] for ch1 in tqdm(sample)]
+        ) for ch0 in sample] for ch1 in tqdm(sample)]
 
 
     plt.imshow(np.swapaxes(np.array(cmat), 1, 0),extent=(0,dim,dim,0))
@@ -33,15 +33,13 @@ def draw(name, x_exclude=[], y_exclude=[]):
             [[x,y], [x+1,y]],
             linewidth=1.0,
             edgecolor=('white'),
-            facecolor=None,
-            alpha=(0.0 if len(y_exclude) != 0 or x+1 in x_exclude or y+1 in y_exclude else 1.0)
+            facecolor=None
             ),
         patches.Polygon(
             np.array([[x,y], [x,y+1]]),
             linewidth=1.0,
             edgecolor=('black'),
-            facecolor=None,
-            alpha=(0.0 if len(x_exclude) != 0 or x+1 in x_exclude or y+1 in y_exclude else 1.0)
+            facecolor=None
             )
         ) for y in tqdm(range(len(sample)+1)) for x in range(len(sample)+1)]
 
@@ -50,6 +48,16 @@ def draw(name, x_exclude=[], y_exclude=[]):
     # draw borders
     for poly in flat_list:
         plt.gca().add_patch(poly)
+
+    hatchpatches = [
+        patches.Rectangle((ch1-1,ch0-1),1,1,fill=False,hatch='XXXXXXX')
+        for ch0 in sample for ch1 in tqdm(sample)
+        if ch1 in x_exclude or ch0 in y_exclude
+    ]
+
+    for p in hatchpatches:
+        plt.gca().add_patch(p)
+
 
     plt.gca().get_xaxis().set_ticks([])
     plt.gca().get_yaxis().set_ticks([])
