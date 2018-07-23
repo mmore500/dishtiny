@@ -1,6 +1,11 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from tqdm import tqdm
+import matplotlib
+import matplotlib.lines as mlines
+
+# open-type fonts
+matplotlib.rcParams['pdf.fonttype'] = 42
 
 # Generates the how-dishtiny-works schematic
 
@@ -366,6 +371,18 @@ def draw(im, ax, hatches=[]):
 
     for hatch in hatches:
         ax.add_patch(Rectangle(hatch,1,1, fill=True, color='whitesmoke'))
+
+        # for manual hatching
+        # ax.add_line(mlines.Line2D((hatch[0],hatch[0]+1), (hatch[1],hatch[1]+1), color='gray', linewidth=0.2))
+        #
+        # ax.add_line(mlines.Line2D((hatch[0]+0.25,hatch[0]+1), (hatch[1],hatch[1]+0.75), color='gray', linewidth=0.2))
+        # ax.add_line(mlines.Line2D((hatch[0]+0.5,hatch[0]+1), (hatch[1],hatch[1]+0.5), color='gray', linewidth=0.2))
+        # ax.add_line(mlines.Line2D((hatch[0]+0.75,hatch[0]+1), (hatch[1],hatch[1]+0.25), color='gray', linewidth=0.2))
+        #
+        # ax.add_line(mlines.Line2D((hatch[0],hatch[0]+0.75), (hatch[1]+0.25,hatch[1]+1), color='gray', linewidth=0.2))
+        # ax.add_line(mlines.Line2D((hatch[0],hatch[0]+0.5), (hatch[1]+0.5,hatch[1]+1), color='gray', linewidth=0.2))
+        # ax.add_line(mlines.Line2D((hatch[0],hatch[0]+0.25), (hatch[1]+0.75,hatch[1]+1), color='gray', linewidth=0.2))
+
         ax.add_patch(Rectangle(hatch,1,1, fill=False, color='gray', hatch='////'))
 
     major_ticks=[0,1,2,3,4,5,6,7]
@@ -383,7 +400,7 @@ def draw(im, ax, hatches=[]):
 
     return ax
 
-reveal = 0
+reveal = 1
 
 f, (r1, r2, r3, r4) = plt.subplots(4,9);
 
@@ -405,30 +422,30 @@ axe.set_xlabel('channel\nlayout', fontsize=24)
 plt.savefig('explanatory-'+str(reveal)+'.pdf',transparent=True)
 reveal += 1
 
-for i in tqdm(range(1,8)):
+for i in tqdm(range(8)):
 
     for t, (im, ax) in enumerate(zip(images_res, r1[1:])):
-        if i == t: break
-        if (t == 0): draw(im,ax).set_ylabel('resource', fontsize=24)
-        else: draw(im,ax)
+        if i == t:
+            if (t == 0): draw(im,ax).set_ylabel('resource', fontsize=24)
+            else: draw(im,ax)
 
     for t, (im, ax) in enumerate(zip(images_sig_a, r2[1:])):
-        if i == t: break
-        if (t == 0): draw(im,ax,hatches=hatches0).set_ylabel('signal', fontsize=16)
-        else: draw(im,ax,hatches=hatches0)
+        if i == t:
+            if (t == 0): draw(im,ax,hatches=hatches0).set_ylabel('signal', fontsize=16)
+            else: draw(im,ax,hatches=hatches0)
 
     for t, (im, ax) in enumerate(zip(images_sig_b, r3[1:])):
-        if i == t: break
-        if (t == 0): draw(im,ax,hatches=hatches1).set_ylabel('signal', fontsize=16)
-        else: draw(im,ax,hatches=hatches1)
+        if i == t:
+            if (t == 0): draw(im,ax,hatches=hatches1).set_ylabel('signal', fontsize=16)
+            else: draw(im,ax,hatches=hatches1)
 
     for t, (im, ax) in enumerate(zip(images_sig_c, r4[1:])):
-        if i == t: break
-        if (t == 0):
-            axe = draw(im,ax,hatches=hatches2)
-            axe.set_ylabel('signal', fontsize=16)
-            axe.set_xlabel('$t=%d$'%t, fontsize=24)
-        else: draw(im,ax,hatches=hatches2).set_xlabel('$t=%d$'%t, fontsize=24)
+        if i == t:
+            if (t == 0):
+                axe = draw(im,ax,hatches=hatches2)
+                axe.set_ylabel('signal', fontsize=16)
+                axe.set_xlabel('$t=%d$'%t, fontsize=24)
+            else: draw(im,ax,hatches=hatches2).set_xlabel('$t=%d$'%t, fontsize=24)
 
     plt.savefig('explanatory-'+str(reveal)+'.pdf',transparent=True)
     reveal += 1
