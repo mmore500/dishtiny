@@ -364,39 +364,52 @@ end_color_c = [
             [ w]+[ w]+[ w]+[rn]+[ w]+[ w]+[ w],
         ]
 
+sep_counter = 1
+sep_figs_axs = [plt.subplots() for __ in range(100)]
 
 def draw(im, ax, hatches=[]):
+    sep_fig, sep_ax = sep_figs_axs.pop()
+
+    sep_ax.axis('on')
     ax.axis('on')
+
+    sep_ax.imshow(im,extent=(0,7,7,0))
     ax.imshow(im,extent=(0,7,7,0))
 
     for hatch in hatches:
         ax.add_patch(Rectangle(hatch,1,1, fill=True, color='whitesmoke'))
-
-        # for manual hatching
-        # ax.add_line(mlines.Line2D((hatch[0],hatch[0]+1), (hatch[1],hatch[1]+1), color='gray', linewidth=0.2))
-        #
-        # ax.add_line(mlines.Line2D((hatch[0]+0.25,hatch[0]+1), (hatch[1],hatch[1]+0.75), color='gray', linewidth=0.2))
-        # ax.add_line(mlines.Line2D((hatch[0]+0.5,hatch[0]+1), (hatch[1],hatch[1]+0.5), color='gray', linewidth=0.2))
-        # ax.add_line(mlines.Line2D((hatch[0]+0.75,hatch[0]+1), (hatch[1],hatch[1]+0.25), color='gray', linewidth=0.2))
-        #
-        # ax.add_line(mlines.Line2D((hatch[0],hatch[0]+0.75), (hatch[1]+0.25,hatch[1]+1), color='gray', linewidth=0.2))
-        # ax.add_line(mlines.Line2D((hatch[0],hatch[0]+0.5), (hatch[1]+0.5,hatch[1]+1), color='gray', linewidth=0.2))
-        # ax.add_line(mlines.Line2D((hatch[0],hatch[0]+0.25), (hatch[1]+0.75,hatch[1]+1), color='gray', linewidth=0.2))
+        sep_ax.add_patch(Rectangle(hatch,1,1, fill=True, color='whitesmoke'))
 
         ax.add_patch(Rectangle(hatch,1,1, fill=False, color='gray', hatch='////'))
+        sep_ax.add_patch(Rectangle(hatch,1,1, fill=False, color='gray', hatch='////'))
 
     major_ticks=[0,1,2,3,4,5,6,7]
 
     ax.set_xticks(major_ticks)
+    sep_ax.set_xticks(major_ticks)
     ax.set_yticks(major_ticks)
+    sep_ax.set_yticks(major_ticks)
 
     # hide tickmarks
     for tic in ax.xaxis.get_major_ticks() + ax.yaxis.get_major_ticks():
         tic.tick1On = tic.tick2On = False
         tic.label1On = tic.label2On = False
+    for tic in sep_ax.xaxis.get_major_ticks() + sep_ax.yaxis.get_major_ticks():
+        tic.tick1On = tic.tick2On = False
+        tic.label1On = tic.label2On = False
 
     # Gridlines based on minor ticks
     ax.grid(which='Major',color='black', linestyle='-', linewidth=1)
+    sep_ax.grid(which='Major',color='black', linestyle='-', linewidth=1)
+
+    global sep_counter
+    sep_fig.savefig(
+        'explanatory_sep-'+str(sep_counter)+'.pdf',
+        transparent=True,
+        bbox_inches='tight',
+        pad_inches=0
+    )
+    sep_counter += 1
 
     return ax
 
