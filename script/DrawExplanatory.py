@@ -4,6 +4,8 @@ from tqdm import tqdm
 import matplotlib
 import matplotlib.lines as mlines
 
+drawHatch = True
+
 # open-type fonts
 matplotlib.rcParams['pdf.fonttype'] = 42
 
@@ -376,12 +378,13 @@ def draw(im, ax, hatches=[]):
     sep_ax.imshow(im,extent=(0,7,7,0))
     ax.imshow(im,extent=(0,7,7,0))
 
-    for hatch in hatches:
-        ax.add_patch(Rectangle(hatch,1,1, fill=True, color='whitesmoke'))
-        sep_ax.add_patch(Rectangle(hatch,1,1, fill=True, color='whitesmoke'))
+    if drawHatch:
+        for hatch in hatches:
+            ax.add_patch(Rectangle(hatch,1,1, fill=True, color='whitesmoke'))
+            sep_ax.add_patch(Rectangle(hatch,1,1, fill=True, color='whitesmoke'))
 
-        ax.add_patch(Rectangle(hatch,1,1, fill=False, color='gray', hatch='////'))
-        sep_ax.add_patch(Rectangle(hatch,1,1, fill=False, color='gray', hatch='////'))
+            ax.add_patch(Rectangle(hatch,1,1, fill=False, color='gray', hatch='////'))
+            sep_ax.add_patch(Rectangle(hatch,1,1, fill=False, color='gray', hatch='////'))
 
     major_ticks=[0,1,2,3,4,5,6,7]
 
