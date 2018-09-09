@@ -416,7 +416,6 @@ private:
         res_pools[i] /= s;
       }
     } else {
-      // std::cout << "foobar" << std::endl;
       for (size_t i = 0; i < res_pools.size(); ++i) {
         res_pools[i] = 1.0 / res_pools.size();
       }
