@@ -16,7 +16,7 @@ df_in = pd.concat(
 # filter for last update
 fil_upd = df_in[df_in['update'] == df_in['update'].max()].reset_index(drop=True)
 
-# loop through seeds to genotype for eadh with largest count
+# loop through seeds to genotype for each with largest count
 
 champions_list = []
 dominance_list = []
@@ -60,7 +60,7 @@ for __, row in champions_df.iterrows():
         ):
         count[2] += 1
     else:
-        assert True, "tie in genotype catergorization!"
+        print("WARNING: tie in genotype catergorization!")
 
 print("Count of zero, first, second level genotypes among champions:")
 print(count)
@@ -99,7 +99,7 @@ for __, row in means_df.iterrows():
         ):
         count[2] += 1
     else:
-        assert True, "tie in genotype catergorization!"
+        print("WARNING: tie in genotype catergorization!")
 
 print("Count of zero, first, second level outcomes by mean genotype:")
 print(count)
