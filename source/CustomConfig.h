@@ -6,7 +6,7 @@
 class CustomConfig {
 public:
   const double EVENT_VALS[2] = {6.0, 6.0};
-  const int EVENT_RADII[2] = {4, 12};
+  const int EVENT_RADII[2] = {8, 24};
   const double V_COST[2] = {-5.0, -5.0};
   const double CULL_TARGET;
   const double CULL_PENALTY;
