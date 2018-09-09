@@ -69,6 +69,9 @@ public:
     for (size_t lev = 0; lev < GetEndowmentDepth(); ++lev) {
       endowments[lev] = init_endowment(lev);
     }
+    for (size_t lev = 0; lev < GetResPoolDepth(); ++lev) {
+      res_pools[lev] = init_res_pool(lev);
+    }
     for (size_t lev = 0; lev < GetOffChCapDepth(); ++lev) {
       off_ch_caps[lev] = init_off_ch_cap(lev);
     }
@@ -413,6 +416,7 @@ private:
         res_pools[i] /= s;
       }
     } else {
+      // std::cout << "foobar" << std::endl;
       for (size_t i = 0; i < res_pools.size(); ++i) {
         res_pools[i] = 1.0 / res_pools.size();
       }
