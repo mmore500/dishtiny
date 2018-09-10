@@ -136,6 +136,15 @@ public:
   }
 
   /*
+   * Draw a randomly selected channel.
+   */
+  inline int DrawLottery(size_t lev) const {
+    size_t pos = rand->GetUInt(census[lev].size());
+    auto random_it = std::next(std::begin(census[lev]), pos);
+    return random_it->first;
+  }
+
+  /*
    * Handle the channel-management aspect of reproduction.
    */
   inline void Spawn(

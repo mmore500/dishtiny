@@ -263,4 +263,8 @@ private:
     return res;
   }
 
+  /*
+   * A high level channel pays the cull cost.
+   */
+
 };

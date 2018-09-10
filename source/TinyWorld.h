@@ -40,6 +40,10 @@ private:
   const double SUICIDE_EFF;
   const int SEED;
   const bool ECOLOGICAL;
+  const double CULL_TARGET;
+  const double CULL_PENALTY;
+  const size_t CULL_FREQ;
+  const size_t CULL_DELAY;
 
   emp::vector<size_t> shuffler;
   emp::vector<emp::Ptr<std::pair<size_t, bool>>> neighborsorter;
@@ -117,6 +121,10 @@ public:
   , SUICIDE_EFF(dconfig.SUICIDE_EFF())
   , SEED(dconfig.SEED())
   , ECOLOGICAL(dconfig.ECOLOGICAL())
+  , CULL_TARGET(dconfig.CULL_TARGET())
+  , CULL_PENALTY(cconfig.CULL_PENALTY)
+  , CULL_FREQ(dconfig.CULL_FREQ())
+  , CULL_DELAY(dconfig.CULL_DELAY())
   , shuffler(emp::GetPermutation(rand, GRID_A))
   , neighborsorter()
   , org_counts()
@@ -346,6 +354,23 @@ public:
         }
       }
 
+    }
+
+    // cull
+
+
+    if (
+      emp::World<Organism>::GetUpdate() % CULL_FREQ == 0 && emp::World<Organism>::GetUpdate() > CULL_DELAY
+    ) {
+      while (
+        ((double) this->GetNumOrgs()) / ((double) spec.GetArea())
+        > 1 - CULL_TARGET
+      ) {
+        int sel_ch = channel.DrawLottery(NLEV-1);
+        store.TransactPool(NLEV-1, sel_ch, CULL_PENALTY);
+        store.SettlePools(channel);
+        store.KillDebtors(*this);
+      }
     }
 
     emp::World<Organism>::Update();
