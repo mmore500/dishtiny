@@ -432,7 +432,7 @@ private:
    * Initialization function.
    */
   inline double init_off_ch_cap(size_t lev) {
-    return rand->GetDouble(48.0);
+    return rand->GetDouble(32.0) * (lev + 1) * (lev + 1);
   }
 
   /*
