@@ -446,7 +446,7 @@ private:
    * Initialization function.
    */
   inline double init_res_pool(size_t lev) {
-    return rand->GetDouble(1.0);
+    return std::max(std::min(rand->GetDouble(-1.0,2.0), 1.0), 0.0);
   }
 
   /*
