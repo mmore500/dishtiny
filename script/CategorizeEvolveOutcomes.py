@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 import scipy.stats as stats
 from tqdm import tqdm
 
+pd.set_option('display.max_columns',None)
+
 # CATEGORIZE OUTCOMES USING CHAMPION GENOTYPES
 
 # read in all census data
@@ -34,6 +36,7 @@ print("Dominance of champion for each trial:")
 print(dominance_list)
 
 champions_df = pd.concat(champions_list, ignore_index=True)
+print(champions_df)
 
 # iterate through rows of the champion genotype dataframe
 # and count how many are zero, first, second level genotypes
@@ -76,6 +79,7 @@ df_in = pd.concat(
 means_df = df_in[
         df_in['update'] == df_in['update'].max()
     ].reset_index(drop=True)
+print(means_df)
 
 # iterate through rows of the mean genotype dataframe
 # and count how many averages are zero, first, second level
