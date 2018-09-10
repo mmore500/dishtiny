@@ -505,7 +505,7 @@ private:
   inline bool mut_res_pool(size_t lev) {
     double cur = res_pools[lev];
     if (rand->GetDouble() < cconfig->PM_RES_POOL[lev]) {
-      res_pools[lev] = std::max(cur + rand->GetRandNormal(0.0, 0.2), 0.0);
+      res_pools[lev] = std::max(cur + rand->GetRandNormal(0.0, 1.0), 0.0);
       return true;
     } else {
       return false;
