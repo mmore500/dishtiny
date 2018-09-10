@@ -9,6 +9,9 @@ import numpy as np
 import sys
 from pathlib import Path
 
+# open-type fonts
+matplotlib.rcParams['pdf.fonttype'] = 42
+
 CH_MAX = 4194304
 
 assert 3 <= len(sys.argv) <= 4, \
@@ -86,4 +89,5 @@ plt.savefig(
         Path(sys.argv[1]).stem
         + "_update" + str(update)
         + sys.argv[2]
+        , transparent=True
     )
