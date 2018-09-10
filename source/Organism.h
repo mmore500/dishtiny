@@ -439,7 +439,7 @@ private:
    * Initialization function.
    */
   inline double init_endowment(size_t lev) {
-    return rand->GetDouble(3.0) * (lev+1) * (lev+1) * (lev+1) * (lev+1);
+    return rand->GetDouble(5.0) * (lev+1) * (lev+1) * (lev+1) * (lev+1);
   }
 
   /*
