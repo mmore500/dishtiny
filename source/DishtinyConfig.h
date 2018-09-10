@@ -24,7 +24,7 @@ EMP_BUILD_CONFIG(
   VALUE(PDATA_FREQ, size_t, 10000, "How frequently should we take phenotype data?"),
   VALUE(PUPDATE_FREQ, size_t, 100, "How frequently should we print the current update?"),
   VALUE(SUICIDE_EFF, double, 0.8, "How frequently should suicide attempts succeed?"),
-  VALUE(RUN_LENGTH, size_t, 12000000, "How many updates should we run the experiment for?"),
+  VALUE(RUN_LENGTH, size_t, 25000000, "How many updates should we run the experiment for?"),
   VALUE(SYSTEMATICS, bool, true, "Should we keep systematics data?"),
   VALUE(SEED_POP, bool, false, "Should we seed the population?"),
   VALUE(SEED_POP_FILENAME, std::string, "ConsolidatedChampions.csv", "Where should we look for the genotypes to seed our population with?"),
