@@ -17,7 +17,7 @@ EMP_BUILD_CONFIG(
   VALUE(ECOLOGICAL, bool, false, "Should we run in ecological mode?"),
   VALUE(KILL_THRESH, double, -11.0, "What is the minimum resource level required to stay alive?"),
   VALUE(CH_MAX, int, 4194304, "What is the maximum value of a channel identifier?"),
-  VALUE(CULL_FREQ, size_t, 25000, "How frequently should culling take place?"),
+  VALUE(CULL_FREQ, size_t, 50000, "How frequently should culling take place?"),
   VALUE(CULL_DELAY, size_t, 500000, "After when should the first cull take place?"),
   VALUE(GDATA_FREQ, size_t, 100000, "How frequently should we take genotype data?"),
   VALUE(CDATA_FREQ, size_t, 500000, "How often should we record a census of all the genotypes in the population and the channel distributions (as well as take other channel-related data)?"),
