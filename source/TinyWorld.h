@@ -123,7 +123,7 @@ public:
   , SEED(dconfig.SEED())
   , ECOLOGICAL(dconfig.ECOLOGICAL())
   , CULL_TARGET(dconfig.CULL_TARGET())
-  , CULL_PENALTY(cconfig.CULL_PENALTY)
+  , CULL_PENALTY(dconfig.CULL_PENALTY())
   , CULL_FREQ(dconfig.CULL_FREQ())
   , CULL_DELAY(dconfig.CULL_DELAY())
   , RAINYDAY_PROPORTION(dconfig.RAINYDAY_PROPORTION())
