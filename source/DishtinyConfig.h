@@ -30,5 +30,6 @@ EMP_BUILD_CONFIG(
   VALUE(SEED_POP, bool, false, "Should we seed the population?"),
   VALUE(SEED_POP_FILENAME, std::string, "ConsolidatedChampions.csv", "Where should we look for the genotypes to seed our population with?"),
   VALUE(SEED_POP_CLONECOUNT, size_t, 2, "How many clones of each champion genotype should we seed our population with?"),
-  VALUE(CULL_TARGET, double, 0.05, "What proportion of the population should a cull remove?")
+  VALUE(CULL_TARGET, double, 0.05, "What proportion of the population should a cull remove?"),
+  VALUE(RAINYDAY_PROPORTION, double, 2, "How much to have relative to endowment before reproducing and giving away one endowment?")
 )

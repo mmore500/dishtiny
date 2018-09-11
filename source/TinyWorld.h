@@ -44,6 +44,7 @@ private:
   const double CULL_PENALTY;
   const size_t CULL_FREQ;
   const size_t CULL_DELAY;
+  const double RAINYDAY_PROPORTION;
 
   emp::vector<size_t> shuffler;
   emp::vector<emp::Ptr<std::pair<size_t, bool>>> neighborsorter;
@@ -125,6 +126,7 @@ public:
   , CULL_PENALTY(cconfig.CULL_PENALTY)
   , CULL_FREQ(dconfig.CULL_FREQ())
   , CULL_DELAY(dconfig.CULL_DELAY())
+  , RAINYDAY_PROPORTION(dconfig.RAINYDAY_PROPORTION())
   , shuffler(emp::GetPermutation(rand, GRID_A))
   , neighborsorter()
   , org_counts()
@@ -505,7 +507,7 @@ private:
       }
 
       // check endowment
-      res &= (avail_resource >= org.GetEndowment(tlev) + REP_THRESH);
+      res &= (avail_resource >= RAINYDAY_PROPORTION * org.GetEndowment(tlev) + REP_THRESH);
 
       // choose lowest viable level for reproduction
       if (res) {
