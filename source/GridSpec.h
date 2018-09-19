@@ -15,6 +15,7 @@ public:
   const size_t width;
   // how many cells are in the grid?
   const size_t area;
+  const bool MOVING_CLUMPS;
 
   emp::Ptr<emp::Random> rand;
 
@@ -23,6 +24,7 @@ public:
   : height(config.GRID_H())
   , width(config.GRID_W())
   , area(config.GRID_H() * config.GRID_W())
+  , MOVING_CLUMPS(config.MOVING_CLUMPS())
   , rand(_r)
   { ; }
 
@@ -172,7 +174,10 @@ private:
     for (size_t i = 0; i < zs.size(); i++) {
       sum += zs[i];
     }
-    return unbiased_divide(sum, zs.size());
+    return (
+      MOVING_CLUMPS ?
+      sum / zs.size() : unbiased_divide(sum, zs.size())
+    );
   }
 
   /*

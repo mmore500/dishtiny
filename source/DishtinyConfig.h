@@ -33,5 +33,6 @@ EMP_BUILD_CONFIG(
   VALUE(SEED_POP_CLONECOUNT, size_t, 2, "How many clones of each champion genotype should we seed our population with?"),
   VALUE(CULL_TARGET, double, 0.05, "What proportion of the population should a cull remove?"),
   VALUE(CULL_PENALTY, double, -DBL_MAX, "What penalty should we inject into a channel pool?"),
-  VALUE(RAINYDAY_PROPORTION, double, 2, "How much to have relative to endowment before reproducing and giving away one endowment?")
+  VALUE(RAINYDAY_PROPORTION, double, 2, "How much to have relative to endowment before reproducing and giving away one endowment?"),  VALUE(MOVING_CLUMPS, bool, false, "Should we use truncated (instead of rounded) division to bias the placement of clump offspring?")
+
 )
