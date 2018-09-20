@@ -1,28 +1,30 @@
 import pandas as pd
 import sys
+from tqdm import tqdm
 
 assert len(sys.argv) >= 3, \
     "First argument is maximum update (inclusive), last arguments are filenames."
 
+
 for f in sys.argv[2:]:
 
-    print(f)
+    open(f + "_tr", 'w').close()
 
-    print("read")
+    print("start " + f)
 
-    chunks = []
+    last = None
     iter = pd.read_csv(f, chunksize=14400)
-    for chunk in iter:
-        chunks.append(chunk)
-        if all(chunk['update'] > int(sys.argv[1])):
+    header = True
+    for chunk in tqdm(iter):
+        last = chunk
+
+        if any(chunk['update'] > int(sys.argv[1])):
             break
 
-    print("process")
+        chunk.to_csv(f  + "_tr", header=header, mode='a', index=False)
+        header = False
 
-    df = pd.concat(chunks)
+    last = last[last['update'] <= int(sys.argv[1])]
+    last.to_csv(f + "_tr", header=header, mode='a', index=False)
 
-    df = df[df['update'] <= int(sys.argv[1])]
-
-    print("write")
-
-    df.to_csv(f +"_tr")
+    print("done " + f)
