@@ -33,12 +33,10 @@ def processChunk(chunk, header):
     global it0, maps0, maps_prev0, it1, maps1, maps_prev1
 
     # filter out non-uniformly spaced updates
-    if chunk.iloc[0]['update'] % 5552 != 0:
-        return
+    if chunk.iloc[0]['update'] % 5552 != 0: return True
 
-    # filter out non-uniformly spaced updates
-    if chunk.iloc[0]['update'] > int(sys.argv[2]):
-        return
+    # stop once upper bound hit
+    if chunk.iloc[0]['update'] > int(sys.argv[3]): return False
 
     # add for convenience
     chunk['count'] = 1
@@ -70,9 +68,10 @@ def processChunk(chunk, header):
 
     chunk.to_csv(sys.argv[1]  + "_cl", header=header, mode='a', index=False)
 
+    return True
 
 processChunk(last,True)
 for chunk in tqdm(iter):
-    processChunk(chunk,False)
+    if not processChunk(chunk,False): break
 
 print(sys.argv[1] + " done!")
