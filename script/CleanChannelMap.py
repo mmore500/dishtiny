@@ -8,6 +8,8 @@ from collections import defaultdict
 assert len(sys.argv) == 4, \
     "First argument is filename, second argument is start update, third argument is finish update."
 
+open(sys.argv[1] + "_cl", 'w').close()
+
 iter = pd.read_csv(sys.argv[1], chunksize=14400)
 last = None
 for chunk in iter:
