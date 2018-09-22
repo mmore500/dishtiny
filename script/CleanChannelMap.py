@@ -8,6 +8,7 @@ from collections import defaultdict
 assert len(sys.argv) == 4, \
     "First argument is filename, second argument is start update, third argument is finish update."
 
+# clear out any old, bad files
 open(sys.argv[1] + "_cl", 'w').close()
 
 iter = pd.read_csv(sys.argv[1], chunksize=14400)
@@ -29,8 +30,10 @@ next(it1)
 maps1 = defaultdict(lambda: next(it1))
 maps_prev1 = {}
 
-def processChunk(chunk, header):
-    global it0, maps0, maps_prev0, it1, maps1, maps_prev1
+header = True
+
+def processChunk(chunk):
+    global it0, maps0, maps_prev0, it1, maps1, maps_prev1, header
 
     # filter out non-uniformly spaced updates
     if chunk.iloc[0]['update'] % 5552 != 0: return True
@@ -67,11 +70,12 @@ def processChunk(chunk, header):
     maps1 = defaultdict(lambda: next(it1))
 
     chunk.to_csv(sys.argv[1]  + "_cl", header=header, mode='a', index=False)
+    header=False
 
     return True
 
-processChunk(last,True)
+processChunk(last)
 for chunk in tqdm(iter):
-    if not processChunk(chunk,False): break
+    if not processChunk(chunk): break
 
 print(sys.argv[1] + " done!")
