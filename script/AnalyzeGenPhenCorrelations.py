@@ -30,7 +30,7 @@ ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Population Net Offspring per 10,000 Updates")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool1_vs_net_reproduction.pdf")
+plt.savefig("mean_res_pool1_vs_net_reproduction.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -45,7 +45,7 @@ ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Population Net Offspring per 10,000 Updates")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool2_vs_net_reproduction.pdf")
+plt.savefig("mean_res_pool2_vs_net_reproduction.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)

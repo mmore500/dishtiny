@@ -63,7 +63,7 @@ ax.set_title(lab)
 ax.set_xlabel("Dominant Genotype $P_0$")
 ax.set_ylabel("Dominant Genotype $M_c$")
 
-plt.savefig("champion_res_pool1_vs_champion_damage_suicide0.pdf")
+plt.savefig("champion_res_pool1_vs_champion_damage_suicide0.pdf", transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for champion %s:" % lab)
@@ -77,7 +77,7 @@ ax.set_title(lab)
 ax.set_xlabel("Dominant Genotype $P_1$")
 ax.set_ylabel("Dominant Genotype $M_c$")
 
-plt.savefig("champion_res_pool2_vs_champion_damage_suicide0.pdf")
+plt.savefig("champion_res_pool2_vs_champion_damage_suicide0.pdf", transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for champion %s:" % lab)
@@ -95,7 +95,7 @@ ax.set_title(lab)
 ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Population Mean $M_c$")
 
-plt.savefig("mean_res_pool1_vs_mean_damage_suicide0.pdf")
+plt.savefig("mean_res_pool1_vs_mean_damage_suicide0.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -109,7 +109,7 @@ ax.set_title(lab)
 ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Population Mean $M_c$")
 
-plt.savefig("mean_res_pool2_vs_mean_damage_suicide0.pdf")
+plt.savefig("mean_res_pool2_vs_mean_damage_suicide0.pdf", transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -131,7 +131,7 @@ ax.set_title(lab)
 ax.set_xlabel("Dominant Genotype $P_0$")
 ax.set_ylabel("Dominant Genotype $E_0")
 
-plt.savefig("champion_res_pool1_vs_champion_endowment1.pdf")
+plt.savefig("champion_res_pool1_vs_champion_endowment1.pdf", transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for champion %s:" % lab)
@@ -145,7 +145,7 @@ ax.set_title(lab)
 ax.set_ylabel("Dominant Genotype $P_1$")
 ax.set_xlabel("Dominant Genotype $E_0$")
 
-plt.savefig("champion_res_pool2_vs_champion_endowment1.pdf")
+plt.savefig("champion_res_pool2_vs_champion_endowment1.pdf", transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for champion %s:" % lab)
@@ -159,7 +159,7 @@ ax.set_title(lab)
 ax.set_xlabel("Dominant Genotype $P_0$")
 ax.set_ylabel("Dominant Genotype $E_1$")
 
-plt.savefig("champion_res_pool1_vs_champion_endowment2.pdf")
+plt.savefig("champion_res_pool1_vs_champion_endowment2.pdf", transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for champion %s:" % lab)
@@ -173,7 +173,7 @@ ax.set_title(lab)
 ax.set_xlabel("Dominant Genotype $P_1$")
 ax.set_ylabel("Dominant Genotype $E_1$")
 
-plt.savefig("champion_res_pool2_vs_champion_endowment2.pdf")
+plt.savefig("champion_res_pool2_vs_champion_endowment2.pdf", transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for champion %s:" % lab)
@@ -191,7 +191,7 @@ ax.set_title(lab)
 ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Population Mean $E_0$")
 
-plt.savefig("mean_res_pool1_vs_mean_endowment1.pdf")
+plt.savefig("mean_res_pool1_vs_mean_endowment1.pdf", transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -205,7 +205,7 @@ ax.set_title(lab)
 ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Population Mean $E_0$")
 
-plt.savefig("mean_res_pool2_vs_mean_endowment1.pdf")
+plt.savefig("mean_res_pool2_vs_mean_endowment1.pdf", transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -219,7 +219,7 @@ ax.set_title(lab)
 ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Population Mean $E_1$")
 
-plt.savefig("mean_res_pool1_vs_mean_endowment2.pdf")
+plt.savefig("mean_res_pool1_vs_mean_endowment2.pdf", transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -233,7 +233,7 @@ ax.set_title(lab)
 ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Population Mean $E_1$")
 
-plt.savefig("mean_res_pool2_vs_mean_endowment2.pdf")
+plt.savefig("mean_res_pool2_vs_mean_endowment2.pdf", transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)

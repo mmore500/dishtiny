@@ -395,4 +395,4 @@ drawmat(r4[-1], end_state_c, end_color_c)
 r4[-1].set_xlabel('net harvest')
 
 plt.gcf().set_size_inches(24, 12)
-plt.savefig('explanatory.pdf')
+plt.savefig('explanatory.pdf',transparent=True)

@@ -85,7 +85,7 @@ ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Cell Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool1_vs_cell_generation.pdf")
+plt.savefig("mean_res_pool1_vs_cell_generation.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -100,7 +100,7 @@ ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Channel 0 Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool1_vs_chan0_generation.pdf")
+plt.savefig("mean_res_pool1_vs_chan0_generation.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -115,7 +115,7 @@ ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Channel 1 Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool1_vs_chan1_generation.pdf")
+plt.savefig("mean_res_pool1_vs_chan1_generation.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -130,7 +130,7 @@ ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Cell Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool2_vs_cell_generation.pdf")
+plt.savefig("mean_res_pool2_vs_cell_generation.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -145,7 +145,7 @@ ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Channel 0 Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool2_vs_chan0_generation.pdf")
+plt.savefig("mean_res_pool2_vs_chan0_generation.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -160,7 +160,7 @@ ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Channel 1 Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool2_vs_chan1_generation.pdf")
+plt.savefig("mean_res_pool2_vs_chan1_generation.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -261,7 +261,7 @@ ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Cell Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool1_vs_num_orgs.pdf")
+plt.savefig("mean_res_pool1_vs_num_orgs.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -276,7 +276,7 @@ ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Channel 0 Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool1_vs_num_channels0.pdf")
+plt.savefig("mean_res_pool1_vs_num_channels0.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -291,7 +291,7 @@ ax.set_xlabel("Population Mean $P_0$")
 ax.set_ylabel("Updates Per Channel 1 Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool1_vs_num_channels1.pdf")
+plt.savefig("mean_res_pool1_vs_num_channels1.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -306,7 +306,7 @@ ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Cell Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool2_vs_num_orgs.pdf")
+plt.savefig("mean_res_pool2_vs_num_orgs.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -321,7 +321,7 @@ ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Channel 0 Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool2_vs_num_channels0.pdf")
+plt.savefig("mean_res_pool2_vs_num_channels0.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
@@ -336,7 +336,7 @@ ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Updates Per Channel 1 Generation")
 
 plt.gcf().set_size_inches(7, 5)
-plt.savefig("mean_res_pool2_vs_num_channels1.pdf")
+plt.savefig("mean_res_pool2_vs_num_channels1.pdf",transparent=True)
 plt.clf()
 
 print("Correlation Bootstrap for mean %s:" % lab)
