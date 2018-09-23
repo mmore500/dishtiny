@@ -4,6 +4,7 @@ matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import seaborn as sns
 import pandas as pd
+import numpy as np
 
 # open-type fonts
 matplotlib.rcParams['pdf.fonttype'] = 42
@@ -24,3 +25,8 @@ for s in df['seed'].unique():
 sns.tsplot(df, time='ch1_max_cell_count', unit = "seed", value='cell_weighted_freq',title="Maximum Cell Counts of Level 2 Channels",xlabel="Cell Count",ylabel="Per-Cell Frequency")
 
 plt.savefig("level-1-channel-max-cell-count-cell-weighted-frequency.pdf",transparent=True)
+
+print("Level 1 Cell-Weighted Mean Max Cell Count")
+print(
+        np.average(df['ch1_max_cell_count'],weights=df['cell_weighted_freq'])
+    )

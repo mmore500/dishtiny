@@ -4,6 +4,7 @@ matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import seaborn as sns
 import pandas as pd
+import numpy as np
 
 # open-type fonts
 matplotlib.rcParams['pdf.fonttype'] = 42
@@ -24,3 +25,9 @@ for s in df['seed'].unique():
 sns.tsplot(df, time='ch0_dur', unit = "seed", value='cell_weighted_freq',title="Duration of Level 1 Channels",xlabel="Updates",ylab el="Per-Cell-Update Frequency")
 
 plt.savefig("level-0-channel-dur-cell-weighted-frequency.pdf",transparent=True)
+
+
+print("Level 0 Cell-Weighted Duration")
+print(
+        np.average(df['ch0_dur'],weights=df['cell_weighted_freq'])
+    )
