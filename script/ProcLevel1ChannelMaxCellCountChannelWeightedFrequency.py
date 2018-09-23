@@ -30,6 +30,6 @@ for ch1, c in tqdm(max_cell_counts.iteritems()):
 res = pd.DataFrame([{'ch1_max_cell_count' : k, 'channel_weighted_freq' : v, 'seed' : seed} for k,v in counter.items()])
 
 res.to_csv(
-        "level-1-channel-max-cell-count-channel-weighted-frequency_" + str(seed) + ".csv",
+        "level-1-channel-max-cell-count-channel-weighted-frequency_" + str(int(seed)) + ".csv",
         index=False
     )

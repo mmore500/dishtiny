@@ -29,6 +29,6 @@ for ch0, c in tqdm(durs.iteritems()):
 res = pd.DataFrame([{'ch0_dur' : k, 'cell_weighted_freq' : v, 'seed' : seed} for k,v in counter.items()])
 
 res.to_csv(
-        "level-0-channel-dur-cell-weighted-frequency_" + str(seed) + ".csv",
+        "level-0-channel-dur-cell-weighted-frequency_" + str(int(seed)) + ".csv",
         index=False
     )
