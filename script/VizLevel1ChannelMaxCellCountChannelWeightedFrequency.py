@@ -5,6 +5,9 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 import pandas as pd
 
+# open-type fonts
+matplotlib.rcParams['pdf.fonttype'] = 42
+
 res = []
 for f in glob.glob("level-1-channel-max-cell-count-channel-weighted-frequency_*.csv"):
     dfin = pd.read_csv(f)

@@ -9,6 +9,9 @@ from tqdm import tqdm
 
 from corboot import corboot
 
+# open-type fonts
+matplotlib.rcParams['pdf.fonttype'] = 42
+
 # LOAD CHAMPION GENOTYPE DATA
 
 # read in all census data

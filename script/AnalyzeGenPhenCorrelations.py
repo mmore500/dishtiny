@@ -6,6 +6,9 @@ import scipy.stats as stats
 
 from corboot import corboot
 
+# open-type fonts
+matplotlib.rcParams['pdf.fonttype'] = 42
+
 # LOAD MEAN GENOTYPE, PHENOTYPE DATA
 # and filter to most recent update in each dataframe
 

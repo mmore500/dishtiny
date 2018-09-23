@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 
+# open-type fonts
+matplotlib.rcParams['pdf.fonttype'] = 42
 
 # Make a 9x9 grid...
 nrows, ncols = 7,7
