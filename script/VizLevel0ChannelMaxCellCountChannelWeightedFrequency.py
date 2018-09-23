@@ -27,7 +27,13 @@ fig, ax = plt.subplots()
 # Set the scale of the y-axis
 ax.set(yscale="log")
 
-sns.tsplot(df, time='ch0_max_cell_count', unit = "seed", value='channel_weighted_freq',ax=ax,title="Maximum Cell Counts of Level 1 Channels",xlabel="Cell Count",ylabel="Log Per-Channel Frequency")
+ax = sns.tsplot(df, time='ch0_max_cell_count', unit = "seed", value='channel_weighted_freq',ax=ax)
+
+ax.set(
+        title="Maximum Cell Counts of Level 1 Channels",
+        xlabel="Cell Count",
+        ylabel="Log Per-Channel Frequency"
+    )
 
 plt.savefig("level-0-channel-max-cell-count-channel-weighted-frequency.pdf",transparent=True)
 

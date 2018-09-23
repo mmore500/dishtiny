@@ -22,7 +22,13 @@ for s in df['seed'].unique():
             df = df.append({'seed' : s, 'ch1_max_cell_count' : d, 'cell_weighted_freq' : 0}, ignore_index=True)
 
 
-sns.tsplot(df, time='ch1_max_cell_count', unit = "seed", value='cell_weighted_freq',title="Maximum Cell Counts of Level 2 Channels",xlabel="Cell Count",ylabel="Per-Cell Frequency")
+ax = sns.tsplot(df, time='ch1_max_cell_count', unit = "seed", value='cell_weighted_freq')
+
+ax.set(
+        title="Maximum Cell Counts of Level 2 Channels",
+        xlabel="Cell Count",
+        ylabel="Per-Cell Frequency"
+    )
 
 plt.savefig("level-1-channel-max-cell-count-cell-weighted-frequency.pdf",transparent=True)
 

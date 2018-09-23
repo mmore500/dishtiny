@@ -22,7 +22,13 @@ for s in df['seed'].unique():
             df = df.append({'seed' : s, 'ch1_dur' : d, 'cell_weighted_freq' : 0}, ignore_index=True)
 
 
-sns.tsplot(df, time='ch1_dur', unit = "seed", value='cell_weighted_freq',title="Duration of Level 2 Channels",xlabel="Updates",ylabel="Per-Cell-Update Frequency")
+ax = sns.tsplot(df, time='ch1_dur', unit = "seed", value='cell_weighted_freq')
+
+ax.set(
+        title="Duration of Level 2 Channels",
+        xlabel="Updates",
+        ylabel="Per-Cell-Update Frequency"
+    )
 
 plt.savefig("level-1-channel-dur-cell-weighted-frequency.pdf",transparent=True)
 
