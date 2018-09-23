@@ -1,5 +1,7 @@
 import glob
 import seaborn as sns
+import matplotlib
+matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 import pandas as pd
 
