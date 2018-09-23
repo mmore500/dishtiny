@@ -25,4 +25,4 @@ ax.set(xlabel="Channel 1 Maximum Cell Count", ylabel="Log Per-Channel 1 Frequenc
 
 sns.tsplot(df, time='ch1_max_cell_count', unit = "seed", value='channel_weighted_freq',ax=ax)
 
-plt.show()
+plt.savefig("level-1-channel-max-cell-count-channel-weighted-frequency.pdf")

@@ -20,4 +20,4 @@ for s in df['seed'].unique():
 
 sns.tsplot(df, time='ch1_dur', unit = "seed", value='cell_weighted_freq')
 
-plt.show()
+plt.savefig("level-1-channel-dur-cell-weighted-frequency.pdf")
