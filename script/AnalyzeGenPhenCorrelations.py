@@ -33,7 +33,7 @@ lab = "First-level Resource Sharing and Net Reproduction Rate"
 ax.set_title(lab)
 ax.set_xlabel("Population Mean $P_1$")
 ax.set_ylabel("Population Net Offspring per 10,000 Updates")
-ax.ticklabel_format(axis='y',style='sci')
+plt.ticklabel_format(axis='y',style='sci')
 
 plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool1_vs_net_reproduction.pdf",transparent=True)
@@ -49,7 +49,7 @@ lab = "Second-level Resource Sharing and Net Reproduction Rate"
 ax.set_title(lab)
 ax.set_xlabel("Population Mean $P_2$")
 ax.set_ylabel("Population Net Offspring per 10,000 Updates")
-ax.ticklabel_format(axis='y',style='sci')
+plt.ticklabel_format(axis='y',style='sci')
 
 plt.gcf().set_size_inches(7, 5)
 plt.savefig("mean_res_pool2_vs_net_reproduction.pdf",transparent=True)
