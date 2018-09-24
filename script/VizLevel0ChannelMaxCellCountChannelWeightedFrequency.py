@@ -34,7 +34,6 @@ ax.set(
         xlabel="Cell Count",
         ylabel="Log Per-Channel Frequency"
     )
-ax.ticklabel_format(axis='y',style='sci')
 
 plt.savefig("level-0-channel-max-cell-count-channel-weighted-frequency.pdf",transparent=True)
 
