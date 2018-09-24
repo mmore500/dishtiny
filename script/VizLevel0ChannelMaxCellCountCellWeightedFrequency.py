@@ -29,7 +29,8 @@ ax.set(
         xlabel="Cell Count",
         ylabel="Per-Cell Frequency"
     )
-plt.ticklabel_format(axis='y',style='sci')
+ax.ticklabel_format(axis='y',style='sci',scilimits=(0,0))
+
 
 plt.savefig("level-0-channel-max-cell-count-cell-weighted-frequency.pdf",transparent=True)
 
