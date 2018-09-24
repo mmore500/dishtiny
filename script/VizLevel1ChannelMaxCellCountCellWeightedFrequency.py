@@ -25,7 +25,7 @@ for s in df['seed'].unique():
 ax = sns.tsplot(df, time='ch1_max_cell_count', unit = "seed", value='cell_weighted_freq')
 
 ax.set(
-        title="Maximum Cell Counts of Level 2 Channels",
+        title="Maximum Cell Counts of Second-level Channels",
         xlabel="Cell Count",
         ylabel="Per-Cell Frequency"
     )

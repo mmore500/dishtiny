@@ -29,7 +29,7 @@ ax.set(yscale="log")
 sns.tsplot(df, time='ch1_dur', unit = "seed", value='channel_weighted_freq',ax=ax)
 
 ax.set(
-        title="Duration of Level 2 Channels",
+        title="Duration of Second-level Channels",
         xlabel="Updates",
         ylabel="Log Per-Channel Frequency"
     )

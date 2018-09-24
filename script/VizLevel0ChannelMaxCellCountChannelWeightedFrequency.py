@@ -30,7 +30,7 @@ ax.set(yscale="log")
 ax = sns.tsplot(df, time='ch0_max_cell_count', unit = "seed", value='channel_weighted_freq',ax=ax)
 
 ax.set(
-        title="Maximum Cell Counts of Level 1 Channels",
+        title="Maximum Cell Counts of First-level Channels",
         xlabel="Cell Count",
         ylabel="Log Per-Channel Frequency"
     )
