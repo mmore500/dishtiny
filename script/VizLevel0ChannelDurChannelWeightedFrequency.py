@@ -33,6 +33,7 @@ ax.set(
         xlabel="Updates",
         ylabel="Log Per-Channel Frequency"
     )
+ax.ticklabel_format(axis='y',style='sci')
 
 plt.savefig("level-0-channel-dur-channel-weighted-frequency.pdf",transparent=True)
 

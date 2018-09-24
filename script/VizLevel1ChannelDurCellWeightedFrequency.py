@@ -29,6 +29,7 @@ ax.set(
         xlabel="Updates",
         ylabel="Per-Cell-Update Frequency"
     )
+ax.ticklabel_format(axis='y',style='sci')
 
 plt.savefig("level-1-channel-dur-cell-weighted-frequency.pdf",transparent=True)
 
