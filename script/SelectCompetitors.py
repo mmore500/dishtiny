@@ -7,7 +7,7 @@ from tqdm import tqdm
 # LOAD MEAN GENOTYPE DATA
 
 res = pd.concat(
-        [pd.read_csv(f) for f in glob.glob("Genotypes_*.csv")],
+        [pd.read_csv(f,comment='#') for f in glob.glob("Genotypes_*.csv")],
         ignore_index=True
     )
 

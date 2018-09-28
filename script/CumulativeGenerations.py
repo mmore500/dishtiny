@@ -18,12 +18,12 @@ tqdm.pandas(tqdm())
 
 # open phenotypes, populations dtaframes and filter for target seed
 
-dfph = pd.concat([pd.read_csv(f) for f in glob.glob("Phenotypes_*.csv")], ignore_index=True)
+dfph = pd.concat([pd.read_csv(f,comment='#') for f in glob.glob("Phenotypes_*.csv")], ignore_index=True)
 
 if target_seed is not None:
     dfph = dfph[dfph['seed'] == target_seed]
 
-dfpo = pd.concat([pd.read_csv(f) for f in glob.glob("Population_*.csv")], ignore_index=True)
+dfpo = pd.concat([pd.read_csv(f,comment='#') for f in glob.glob("Population_*.csv")], ignore_index=True)
 
 if target_seed is not None:
     dfpo = dfpo[dfpo['seed'] == target_seed]

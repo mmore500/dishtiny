@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 
 res = []
 for f in glob.glob("Census_*.csv"):
-    dfin = pd.read_csv(f)
+    dfin = pd.read_csv(f,comment='#')
     fil_upd = dfin[dfin['update'] == dfin['update'].max()].reset_index(drop=True)
     fil_count = fil_upd.iloc[[fil_upd['count'].idxmax()]]
     print(fil_count)

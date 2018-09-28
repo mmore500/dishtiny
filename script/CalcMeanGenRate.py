@@ -7,9 +7,9 @@ import glob
 
 # open phenotype, population dataframes
 
-dfph = pd.concat([pd.read_csv(f) for f in glob.glob("Phenotypes_*.csv")], ignore_index=True)
+dfph = pd.concat([pd.read_csv(f,comment='#') for f in glob.glob("Phenotypes_*.csv")], ignore_index=True)
 
-dfpo = pd.concat([pd.read_csv(f) for f in glob.glob("Population_*.csv")], ignore_index=True)
+dfpo = pd.concat([pd.read_csv(f,comment='#') for f in glob.glob("Population_*.csv")], ignore_index=True)
 
 # merge phenotype, population dataframes
 

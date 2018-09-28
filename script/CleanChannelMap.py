@@ -11,7 +11,7 @@ assert len(sys.argv) == 4, \
 # clear out any old, bad files
 open(sys.argv[1] + "_cl", 'w').close()
 
-iter = pd.read_csv(sys.argv[1], chunksize=14400)
+iter = pd.read_csv(sys.argv[1], chunksize=14400,comment='#')
 last = None
 for chunk in iter:
     last = chunk

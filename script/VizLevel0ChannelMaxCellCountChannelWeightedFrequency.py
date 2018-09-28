@@ -11,7 +11,7 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 
 res = []
 for f in glob.glob("level-0-channel-max-cell-count-channel-weighted-frequency_*.csv"):
-    dfin = pd.read_csv(f)
+    dfin = pd.read_csv(f,comment='#')
     res.append(dfin)
 
 df = pd.concat(res, ignore_index=True)

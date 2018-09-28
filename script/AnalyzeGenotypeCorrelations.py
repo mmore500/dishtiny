@@ -16,7 +16,7 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 
 # read in all census data
 df_in = pd.concat(
-        [pd.read_csv(f) for f in glob.glob("Census_*.csv")],
+        [pd.read_csv(f,comment='#') for f in glob.glob("Census_*.csv")],
         ignore_index=True
     )
 
@@ -46,7 +46,7 @@ champions_df = pd.concat(champions_list, ignore_index=True)
 
 # read in all mean genotype data
 df_in = pd.concat(
-        [pd.read_csv(f) for f in glob.glob("Genotypes_*.csv")], ignore_index=True
+        [pd.read_csv(f,comment='#') for f in glob.glob("Genotypes_*.csv")], ignore_index=True
     )
 
 # filter for last update

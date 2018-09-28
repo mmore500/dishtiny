@@ -15,7 +15,7 @@ assert len(sys.argv) == 2, \
 counter = defaultdict(int)
 
 # import data (files created from CleanChannelMap.py)
-df = pd.read_csv(sys.argv[1])
+df = pd.read_csv(sys.argv[1],comment='#')
 
 seed = df.iloc[0]['seed']
 

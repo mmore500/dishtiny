@@ -20,14 +20,14 @@ assert 3 <= len(sys.argv) <= 4, \
 res = None
 
 if len(sys.argv) == 4:
-    iter = pd.read_csv(sys.argv[1], chunksize=14400)
+    iter = pd.read_csv(sys.argv[1], chunksize=14400,comment='#')
     for chunk in iter:
         if any(chunk['update'] == int(sys.argv[3])):
             res = chunk
             break
 
 else:
-    iter = pd.read_csv(sys.argv[1], chunksize=14400)
+    iter = pd.read_csv(sys.argv[1], chunksize=14400,comment='#')
     res = None
     for res in iter:
         pass

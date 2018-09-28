@@ -9,7 +9,7 @@ assert len(sys.argv) >= 3, \
 
 for f in sys.argv[2:]:
 
-    df = pd.read_csv(f)
+    df = pd.read_csv(f,comment='#')
 
     if df['update'].max() < int(sys.argv[1]):
         os.remove(f)
