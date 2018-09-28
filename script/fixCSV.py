@@ -8,6 +8,6 @@ for fname in sys.argv[1:]:
 
         comma_count = first_line.count(',')
 
-        comma_match = '^[^,]*' + ',[^,]*'*(comma_count-1)+'$'
+        comma_match = '^[^,]*' + ',[^,]*'*comma_count+'$'
 
         subprocess.call(['sed','-i','/'+comma_match+'/!s/^/#/',fname])
