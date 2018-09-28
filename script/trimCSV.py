@@ -1,12 +1,19 @@
 import pandas as pd
 import sys
 from tqdm import tqdm
+import os
 
 assert len(sys.argv) >= 3, \
     "First argument is maximum update (inclusive), last arguments are filenames."
 
 
 for f in sys.argv[2:]:
+
+    df = pd.read_csv(f)
+
+    if df['update'].max() < int(sys.argv[1]):
+        os.remove(f)
+        continue
 
     open(f + "_tr", 'w').close()
 
