@@ -1,7 +1,8 @@
 import subprocess
 import sys
+from tqdm import tqdm
 
-for fname in sys.argv[1:]:
+for fname in tqdm(sys.argv[1:]):
 
     with open(fname) as f:
         first_line = f.readline()
