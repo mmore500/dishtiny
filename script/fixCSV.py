@@ -11,3 +11,6 @@ for fname in sys.argv[1:]:
         comma_match = '^[^,]+' + ',[^,]+'*comma_count+'$'
 
         subprocess.call(['sed','-r','-i','/'+comma_match+'/!s/^/#/',fname])
+
+        # clear out null characters
+        subprocess.call(['sed', '-r', '-i', r's/\x0//g',fname])
