@@ -38,3 +38,7 @@ print("Level 0 Cell-Weighted Mean Max Cell Count")
 print(
         np.average(df['ch0_max_cell_count'],weights=df['cell_weighted_freq'])
     )
+print("+/-")
+print(
+        np.std(df['ch0_max_cell_count'],weights=df['cell_weighted_freq'])
+    )

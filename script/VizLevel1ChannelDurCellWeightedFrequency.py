@@ -37,3 +37,7 @@ print("Level 1 Cell-Weighted Duration")
 print(
         np.average(df['ch1_dur'],weights=df['cell_weighted_freq'])
     )
+print("+/-")
+print(
+        np.std(df['ch1_dur'],weights=df['cell_weighted_freq'])
+    )

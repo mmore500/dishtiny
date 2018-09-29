@@ -41,3 +41,7 @@ print("Level 1 Channel-Weighted Mean Max Cell Count")
 print(
         np.average(df['ch1_max_cell_count'],weights=df['channel_weighted_freq'])
     )
+print("+/-")
+print(
+        np.std(df['ch1_max_cell_count'],weights=df['channel_weighted_freq'])
+    )

@@ -40,3 +40,7 @@ print("Level 0 Channel-Weighted Duration")
 print(
         np.average(df['ch0_dur'],weights=df['channel_weighted_freq'])
     )
+print("+/-")
+print(
+        np.std(df['ch0_dur'],weights=df['channel_weighted_freq'])
+    )
