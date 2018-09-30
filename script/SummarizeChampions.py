@@ -49,9 +49,13 @@ print('pure_l1', len(pure_l1))
 for column in pure_l1:
     print(column,r(pure_l1[column].mean()),r(pure_l1[column].std()))
 
+print()
+
 print('l1', len(l1))
 for column in l1:
     print(column,r(l1[column].mean()),r(l1[column].std()))
+
+print()
 
 print('l2', len(l2))
 for column in l2:
