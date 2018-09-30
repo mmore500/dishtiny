@@ -43,7 +43,7 @@ l1 = champions_df[(champions_df['res_pool1'] != 1.0) & (champions_df['res_pool1'
 l2 = champions_df[(champions_df['res_pool1'] <= champions_df['res_pool2'])];
 
 def r(f):
-    return "{0:.2f}".format(round(f))
+    return "{0:.2f}".format(round(f,2))
 
 print('pure_l1', len(pure_l1))
 for column in pure_l1:
