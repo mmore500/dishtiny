@@ -36,11 +36,17 @@ ax.set(
 
 plt.savefig("level-0-channel-dur-channel-weighted-frequency.pdf",transparent=True)
 
+def weighted_avg_and_std(values, weights):
+    """
+    Return the weighted average and standard deviation.
+
+    values, weights -- Numpy ndarrays with the same shape.
+    """
+    average = np.average(values, weights=weights)
+    # Fast and numerically precise:
+    variance = np.average((values-average)**2, weights=weights)
+    return (average, np.sqrt(variance))
+
+
 print("Level 0 Channel-Weighted Duration")
-print(
-        np.average(df['ch0_dur'],weights=df['channel_weighted_freq'])
-    )
-print("+/-")
-print(
-        np.std(df['ch0_dur'],weights=df['channel_weighted_freq'])
-    )
+print(weighted_avg_and_std(df['ch0_dur'],df['channel_weighted_freq']))

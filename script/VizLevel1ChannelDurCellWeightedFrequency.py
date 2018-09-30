@@ -33,11 +33,17 @@ ax.ticklabel_format(axis='y',style='sci',scilimits=(0,0))
 
 plt.savefig("level-1-channel-dur-cell-weighted-frequency.pdf",transparent=True)
 
+def weighted_avg_and_std(values, weights):
+    """
+    Return the weighted average and standard deviation.
+
+    values, weights -- Numpy ndarrays with the same shape.
+    """
+    average = np.average(values, weights=weights)
+    # Fast and numerically precise:
+    variance = np.average((values-average)**2, weights=weights)
+    return (average, np.sqrt(variance))
+
+
 print("Level 1 Cell-Weighted Duration")
-print(
-        np.average(df['ch1_dur'],weights=df['cell_weighted_freq'])
-    )
-print("+/-")
-print(
-        np.std(df['ch1_dur'],weights=df['cell_weighted_freq'])
-    )
+print(weighted_avg_and_std(df['ch1_dur'],df['cell_weighted_freq']))

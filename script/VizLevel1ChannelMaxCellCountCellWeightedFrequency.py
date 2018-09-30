@@ -33,11 +33,17 @@ ax.ticklabel_format(axis='y',style='sci',scilimits=(0,0))
 
 plt.savefig("level-1-channel-max-cell-count-cell-weighted-frequency.pdf",transparent=True)
 
+def weighted_avg_and_std(values, weights):
+    """
+    Return the weighted average and standard deviation.
+
+    values, weights -- Numpy ndarrays with the same shape.
+    """
+    average = np.average(values, weights=weights)
+    # Fast and numerically precise:
+    variance = np.average((values-average)**2, weights=weights)
+    return (average, np.sqrt(variance))
+
+
 print("Level 1 Cell-Weighted Mean Max Cell Count")
-print(
-        np.average(df['ch1_max_cell_count'],weights=df['cell_weighted_freq'])
-    )
-print("+/-")
-print(
-        np.std(df['ch1_max_cell_count'],weights=df['cell_weighted_freq'])
-    )
+print(weighted_avg_and_std(df['ch1_max_cell_count'],df['cell_weighted_freq']))
