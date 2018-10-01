@@ -45,6 +45,7 @@ l2 = champions_df[(champions_df['res_pool1'] <= champions_df['res_pool2'])];
 def r(f):
     return "{0:.2f}".format(round(f,2))
 
+print('seeds', pure_l1['seed'])
 print('pure_l1', len(pure_l1))
 for column in pure_l1:
     print(column,r(pure_l1[column].mean()),r(pure_l1[column].std()))
@@ -52,12 +53,14 @@ for column in pure_l1:
 print()
 
 print('l1', len(l1))
+print('seeds', l1['seed'])
 for column in l1:
     print(column,r(l1[column].mean()),r(l1[column].std()))
 
 print()
 
 print('l2', len(l2))
+print('seeds', l2['seed'])
 for column in l2:
     print(column,r(l2[column].mean()),r(l2[column].std()))
 
