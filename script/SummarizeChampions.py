@@ -60,3 +60,9 @@ print()
 print('l2', len(l2))
 for column in l2:
     print(column,r(l2[column].mean()),r(l2[column].std()))
+
+print()
+
+print('champions_df', len(champions_df))
+for column in champions_df:
+    print(column,r(champions_df[column].mean()),r(champions_df[column].std()))
