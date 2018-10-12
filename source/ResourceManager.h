@@ -138,17 +138,15 @@ private:
     // perform taps (wave centers tesselate over grid based on seed position)
     for (
       int ix = 0;
-      //TODO fix ugly casting
-      ix <= ((int) resource.GetWidth()) - 2*cconfig.EVENT_RADII[lev];
-      ix += (2 * cconfig.EVENT_RADII[lev])) {
+      ix < (int) resource.GetWidth();
+      ix += 1) {
 
       for (
         int iy = 0;
-        //TODO fix ugly casting
-        iy <= ((int) resource.GetHeight()) - 2*cconfig.EVENT_RADII[lev];
-        iy += (2 * cconfig.EVENT_RADII[lev])) {
+        iy < (int) resource.GetHeight();
+        iy += 1) {
 
-          sig.TryTakeTap(lev, seedx[lev] + ix, seedy[lev] + iy, w);
+          sig.TryTakeTap(lev, ix, iy, w);
 
       }
     }
@@ -163,17 +161,15 @@ private:
 
     for (
       int ix = 0;
-      //TODO fix ugly casting
-      ix <= ((int) resource.GetWidth()) - 2*cconfig.EVENT_RADII[lev];
-      ix += (2 * cconfig.EVENT_RADII[lev])) {
+      ix < (int) resource.GetWidth();
+      ix += 1) {
 
       for (
         int iy = 0;
-        //TODO fix ugly casting
-        iy <= ((int) resource.GetHeight()) - 2*cconfig.EVENT_RADII[lev];
-        iy += (2 * cconfig.EVENT_RADII[lev])) {
+        iy < (int) resource.GetHeight();
+        iy += 1) {
 
-        LayDiamond(lev, ix, iy, elapsetime);
+        LayDiamond(lev, ix, iy, 0);
 
       }
     }
