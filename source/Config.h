@@ -3,8 +3,10 @@
 #include <string>
 
 #include "base/vector.h"
+#include "base/Ptr.h"
 #include "config/command_line.h"
 #include "config/ArgManager.h"
+#include "hardware/EventDrivenGP.h"
 
 #include "ConfigBase.h"
 #include "ConfigLevel.h"
@@ -12,7 +14,8 @@
 class Config : public ConfigBase {
 
 private:
-  emp::vector<ConfigLevel> clevs;
+
+  emp::vector<emp::Ptr<ConfigLevel>> clevs;
 
 public:
 
@@ -20,7 +23,7 @@ public:
 
   using base_hardware_t = emp::EventDrivenGP_AW<TAG_WIDTH>;
 
-  Config(emp::cl::ArgManager &args, std::string config_fname) {
+  Config(std::string config_fname, emp::cl::ArgManager args) {
 
     Read(config_fname);
 
@@ -31,18 +34,18 @@ public:
       exit(0);
 
     for (size_t l = 0; l < NLEV(); ++l) {
-      clevs.push_back(ConfigLevel());
+      clevs.push_back(new ConfigLevel());
 
       if (l == 1) {
-        clevs[l].Set("EVENT_RADIUS", "24.0");
+        clevs[l]->Set("EVENT_RADIUS", "24.0");
       }
-      clevs[l].Read(CONFIGLEVEL_BASENAME() + std::to_string(l) + CONFIGLEVEL_EXTENSION());
+      clevs[l]->Read(CONFIGLEVEL_BASENAME() + std::to_string(l) + CONFIGLEVEL_EXTENSION());
     }
 
   }
 
   ConfigLevel& Lev(size_t lev) {
-    return clevs[lev];
+    return *clevs[lev];
   }
 
   void WriteMe(std::ostream & out) {
@@ -50,7 +53,7 @@ public:
 
     for (size_t l = 0; l < clevs.size(); ++l) {
       std::cout << std::endl << "ConfigLevel" << l << std::endl;
-      clevs[l].Write(out);
+      clevs[l]->Write(out);
     }
 
   }

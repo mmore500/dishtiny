@@ -5,7 +5,7 @@
 #include "config/ArgManager.h"
 
 #include "../Config.h"
-// #include "../DishWorld.h"
+#include "../DishWorld.h"
 
 
 int main(int argc, char* argv[])
@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
             << std::endl;
 
 
-  // DishWorld world(cfg);
+  DishWorld world(cfg);
   // world.Run();
 
   return 0;

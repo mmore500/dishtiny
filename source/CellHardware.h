@@ -25,11 +25,11 @@ public:
     Config &cfg,
     Manager &man_,
     size_t pos_
-  ) : endowments(cfg.NLEV()+1)
-    , facing_set(cfg, *local_rng)
-    , pos(pos_)
+  ) : Config::base_hardware_t(Config::base_hardware_t::DefaultEventLib(), local_rng)
+    , endowments(cfg.NLEV()+1)
+    , facing_set(*local_rng, cfg)
     , man(man_)
-    , Config::base_hardware_t(Config::base_hardware_t::DefaultEventLib(), local_rng)
+    , pos(pos_)
   {
 
   }

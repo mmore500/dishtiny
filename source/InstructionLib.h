@@ -5,12 +5,12 @@
 #include "Cardi.h"
 #include "Config.h"
 
-template <HARDWARE_T_>
+template <typename HARDWARE_T_>
 class InstructionLib : public emp::InstLib<HARDWARE_T_> {
 
 public:
 
-  InstructionLibrary(
+  InstructionLib(
     Config &cfg
   ) : emp::InstLib<HARDWARE_T_>(HARDWARE_T_::DefaultInstLib())
   {
@@ -22,7 +22,7 @@ public:
     // InitInternalSensors(cfg);
 
     // InitExternalActions(cfg);
-
+    ;
   }
 
   // void InitInternalActions(Config &cfg) {

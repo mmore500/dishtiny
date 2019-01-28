@@ -15,10 +15,10 @@ struct Cardi {
   static constexpr int Dy[] { 1, -1, 0, 0 };
 
   // TODO spin to a random direction
-  static Dir Spin(emp::Random &rng) {
+  static size_t Spin(emp::Random &rng) {
     return rng.GetUInt(Dir::NumDirs);
   }
- scanf("%s\n", );
+
 };
 
 // constexpr Cardi::Dir Cardi::Opp[];

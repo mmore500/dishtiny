@@ -11,7 +11,7 @@ class FacingSet {
 private:
   emp::Random &local_rng;
 
-  emp::vector<Cardi::Dir> facings;
+  emp::vector<size_t> facings;
 
   size_t facing_reproduction;
   size_t facing_sendresource;
@@ -68,14 +68,8 @@ public:
 
   }
 
-  const Cardi::Dir Get(size_t which) {
-    if (which == GetAllFacings()) {
-
-    } else {
-      emp_assert(which < GetAllFacings());
-
-      emp_assert(false, "Not implemented!"); // TODO
-    }
+  const size_t Get(size_t which) {
+    return facings[which];
   }
 
   void Ccw(size_t which) {

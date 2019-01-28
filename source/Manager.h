@@ -58,14 +58,14 @@ public:
     /* ManagerWaves part two */
     for(size_t i = 0; i < size; ++i) {
       auto neigh_poses = GeometryHelper(cfg).CalcLocalNeighs(i);
-      emp::vector<emp::Ptr<ManagerWave>> res;
-      std::transform(
-        neigh_poses.begin(),
-        neigh_poses.end(),
-        res.begin(),
-        [this](size_t pos) { return mws[pos][l]; }
-      );
       for(size_t l = 0; l < cfg.NLEV(); ++l) {
+        emp::vector<emp::Ptr<ManagerWave>> res;
+        std::transform(
+          neigh_poses.begin(),
+          neigh_poses.end(),
+          res.begin(),
+          [this, l](size_t pos) { return mws[pos][l]; }
+        );
         mws[i][l]->SetNeighs(res);
       }
     }

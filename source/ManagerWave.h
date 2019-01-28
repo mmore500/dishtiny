@@ -26,7 +26,7 @@ private:
 
   ManagerChannel &mc;
   ManagerStockpile &ms;
-  emp::Ptr<emp::vector<emp::Ptr<const ManagerWave>>> neighs;
+  emp::Ptr<emp::vector<emp::Ptr<ManagerWave>>> neighs;
 
   size_t lev;
   size_t global_x;
@@ -45,7 +45,7 @@ private:
 
     /* if taking a signal from neighbor, increment it by one */
     /* only take a signal if it's less than signal radius */
-    return res > ready && res < cfg.SIGNAL_RADIUS() ? res + 1 : ready;
+    return res > ready && res < cfg.Lev(lev).SIGNAL_RADIUS() ? res + 1 : ready;
 
   }
 
@@ -81,8 +81,8 @@ public:
   , cfg(cfg_)
   { ; }
 
-  void SetNeighs(emp::vector<emp::Ptr<ManagerWave>> neighs_) {
-    neighs = new emp::vector<emp::Ptr<ManagerWave>>(neighs_);
+  void SetNeighs(emp::vector<emp::Ptr<ManagerWave>> n) {
+    neighs = new emp::vector<emp::Ptr<ManagerWave>>(n.begin(), n.end());
   }
 
   /* this should only be called on live cells */

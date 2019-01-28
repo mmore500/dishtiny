@@ -17,8 +17,6 @@ class DishWorld : public emp::World<Genome> {
 
 private:
 
-  friend class InstructionLib;
-
   Config &cfg;
 
   emp::vector<emp::Ptr<emp::Random>> global_rngs;
@@ -43,7 +41,7 @@ public:
     man = new Manager(local_rngs, global_rngs, cfg);
 
     for(size_t i = 0; i < GetSize(); ++i) {
-      Genome g(local_rngs[i]);
+      Genome g(*local_rngs[i], cfg);
       InjectAt(g, i);
     }
 

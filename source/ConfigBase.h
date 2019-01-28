@@ -1,12 +1,12 @@
 #pragma once
 
+#include <float.h>
 #include <string>
 
 #include "config/config.h"
 
 EMP_BUILD_CONFIG(
   ConfigBase,
-
   GROUP(DEFAULT, "Default settings for DISHTINY"),
   VALUE(QUIESCENT_MAX, size_t, 4, "Length of quiescent period"),
   VALUE(NLEV, size_t, 2, "Number hierarchical resource levels"),
@@ -34,32 +34,31 @@ EMP_BUILD_CONFIG(
   VALUE(CULL_TARGET, double, 0.05, "What proportion of the population should a cull remove?"),
   VALUE(CULL_PENALTY, double, -DBL_MAX, "What penalty should we inject into a channel pool?"),
   VALUE(RAINYDAY_PROPORTION, double, 2, "How much to have relative to endowment before reproducing and giving away one endowment?"),
-  VALUE(HARDWARE_STEPS, size_t, 100, "How many hardware steps to run per update?")
-
-  GROUP(SGP_PROGRAM_GROUP, "SignalGP program Settings"),
-  VALUE(SGP_PROG_MAX_FUNC_CNT, size_t, 8, "Used for generating SGP programs. How many functions do we generate?"),
-  VALUE(SGP_PROG_MIN_FUNC_CNT, size_t, 1, "Used for generating SGP programs. How many functions do we generate?"),
-  VALUE(SGP_PROG_MAX_FUNC_LEN, size_t, 8, ".."),
-  VALUE(SGP_PROG_MIN_FUNC_LEN, size_t, 1, ".."),
-  VALUE(SGP_PROG_MAX_TOTAL_LEN, size_t, 256, "Maximum length of SGP programs."),
-  GROUP(SGP_HARDWARE_GROUP, "SignalGP Hardware Settings"),
-  VALUE(SGP_ENVIRONMENT_SIGNALS, bool, true, "Can environment signals trigger functions?"),
-  VALUE(SGP_ACTIVE_SENSORS, bool, true, "Do agents have function active sensors?"),
-  VALUE(SGP_HW_MAX_CORES, size_t, 16, "Max number of hardware cores; i.e., max number of simultaneous threads of execution hardware will support."),
-  VALUE(SGP_HW_MAX_CALL_DEPTH, size_t, 128, "Max call depth of hardware unit"),
-  VALUE(SGP_HW_MIN_BIND_THRESH, double, 0.0, "Hardware minimum referencing threshold"),
-  GROUP(SGP_MUTATION_GROUP, "SignalGP Mutation Settings"),
-  VALUE(SGP__PROG_MAX_ARG_VAL, int, 16, "Maximum argument value for instructions."),
-  VALUE(SGP__PER_BIT__TAG_BFLIP_RATE, double, 0.005, "Per-bit mutation rate of tag bit flips."),
-  VALUE(SGP__PER_INST__SUB_RATE, double, 0.005, "Per-instruction/argument subsitution rate."),
-  VALUE(SGP__PER_INST__INS_RATE, double, 0.005, "Per-instruction insertion mutation rate."),
-  VALUE(SGP__PER_INST__DEL_RATE, double, 0.005, "Per-instruction deletion mutation rate."),
-  VALUE(SGP__PER_FUNC__SLIP_RATE, double, 0.05, "Per-function rate of slip mutations."),
-  VALUE(SGP__PER_FUNC__FUNC_DUP_RATE, double, 0.05, "Per-function rate of function duplications."),
-  VALUE(SGP__PER_FUNC__FUNC_DEL_RATE, double, 0.05, "Per-function rate of function deletions."),
-
+  VALUE(HARDWARE_STEPS, size_t, 100, "How many hardware steps to run per update?"),
+  GROUP(PROGRAM_GROUP, "SignalGP program Settings"),
+  VALUE(PROGRAM_MAX_FUN_CNT, size_t, 8, "Used for generating SGP programs. How many functions do we generate?"),
+  VALUE(PROGRAM_MIN_FUN_CNT, size_t, 1, "Used for generating SGP programs. How many functions do we generate?"),
+  VALUE(PROGRAM_MAX_FUN_LEN, size_t, 8, ".."),
+  VALUE(PROGRAM_MIN_FUN_LEN, size_t, 1, ".."),
+  VALUE(PROGRAM_MAX_TOTAL_LEN, size_t, 256, "Maximum length of SGP programs."),
+  GROUP(HARDWARE_GROUP, "SignalGP Hardware Settings"),
+  VALUE(ENVIRONMENT_SIGNALS, bool, true, "Can environment signals trigger functions?"),
+  VALUE(ACTIVE_SENSORS, bool, true, "Do agents have function active sensors?"),
+  VALUE(HW_MAX_CORES, size_t, 16, "Max number of hardware cores; i.e., max number of simultaneous threads of execution hardware will support."),
+  VALUE(HW_MAX_CALL_DEPTH, size_t, 128, "Max call depth of hardware unit"),
+  VALUE(HW_MIN_BIND_THRESH, double, 0.0, "Hardware minimum referencing threshold"),
+  GROUP(MUTATION_GROUP, "SignalGP Mutation Settings"),
+  VALUE(PROGRAM_MIN_ARG_VAL, int, 0, "Maximum argument value for instructions."),
+  VALUE(PROGRAM_MAX_ARG_VAL, int, 16, "Maximum argument value for instructions."),
+  VALUE(TAG_BIT_FLIP__PER_BIT, double, 0.005, "Per-bit mutation rate of tag bit flips."),
+  VALUE(INST_SUB__PER_INST, double, 0.005, "Per-instruction/argument subsitution rate."),
+  VALUE(ARG_SUB__PER_ARG, double, 0.005, "Per-instruction/argument subsitution rate."),
+  VALUE(INST_INS__PER_INST, double, 0.005, "Per-instruction insertion mutation rate."),
+  VALUE(INST_DEL__PER_INST, double, 0.005, "Per-instruction deletion mutation rate."),
+  VALUE(SLIP__PER_FUNC, double, 0.05, "Per-function rate of slip mutations."),
+  VALUE(FUNC_DUP__PER_FUNC, double, 0.05, "Per-function rate of function duplications."),
+  VALUE(FUNC_DEL__PER_FUNC, double, 0.05, "Per-function rate of function deletions."),
   GROUP(LOGISTICS, "logistics"),
-  VALUE(CONFIGLEVEL_BASENAME, std::string, "ConfigL", "Base filename")
+  VALUE(CONFIGLEVEL_BASENAME, std::string, "ConfigL", "Base filename"),
   VALUE(CONFIGLEVEL_EXTENSION, std::string, "ConfigL", ".cfg")
-
 )
