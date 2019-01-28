@@ -24,53 +24,49 @@ public:
     emp::vector<emp::Ptr<emp::Random>> &local_rngs,
     emp::vector<emp::Ptr<emp::Random>> &global_rngs,
     Config &cfg
-  ) : {
+  ) : mws(GeometryHelper(cfg).GetLocalSize()) {
 
     const size_t size = GeometryHelper(cfg).GetLocalSize();
 
     for(size_t i = 0; i < size; ++i) {
       mcs.push_back(
-        new ManagerChannel(/*TODO*/)
+        new ManagerChannel(cfg, *local_rngs[i])
       );
-    }
-
-    for(size_t i = 0; i < size; ++i) {
       mps.push_back(
-        new ManagerPriority(/*TODO*/)
+        new ManagerPriority(*local_rngs[i])
       );
-    }
-
-    for(size_t i = 0; i < size; ++i) {
       mss.push_back(
-        new ManagerStockpile(/*TODO*/)
+        new ManagerStockpile(cfg)
       );
     }
 
+    /* ManagerWaves part one */
     for(size_t i = 0; i < size; ++i) {
-      mws.push_back();
-
       for(size_t l = 0; l < cfg.NLEV(); ++l) {
         mws[i].push_back(
           new ManagerWave(
-            mcs[i],
-            mss[i],
+            *mcs[i],
+            *mss[i],
             l,
             i,
-            global_rngs[i],
+            *global_rngs[i],
             cfg
         ));
       }
     }
 
+    /* ManagerWaves part two */
     for(size_t i = 0; i < size; ++i) {
       auto neigh_poses = GeometryHelper(cfg).CalcLocalNeighs(i);
-
+      emp::vector<emp::Ptr<ManagerWave>> res;
+      std::transform(
+        neigh_poses.begin(),
+        neigh_poses.end(),
+        res.begin(),
+        [this](size_t pos) { return mws[pos][l]; }
+      );
       for(size_t l = 0; l < cfg.NLEV(); ++l) {
-        mws[i][l].SetNeighs(std::transform(
-          neigh_poses.begin(),
-          neigh_poses.end(),
-          [this](size_t pos) { return mws[pos][l]; }
-        ));
+        mws[i][l]->SetNeighs(res);
       }
     }
 

@@ -21,16 +21,15 @@ private:
 public:
 
   CellHardware(
-    emp::Random &local_rng,
+    emp::Ptr<emp::Random> local_rng,
     Config &cfg,
     Manager &man_,
     size_t pos_
-  ) :
-    , endowments(cfg.NLEV()+1)
-    , facing_set(cfg)
+  ) : endowments(cfg.NLEV()+1)
+    , facing_set(cfg, *local_rng)
     , pos(pos_)
     , man(man_)
-    , base_hardware_t(inst_lib, emp::base_hardware_t::DefaultEventLib(), &local_rng)
+    , Config::base_hardware_t(Config::base_hardware_t::DefaultEventLib(), local_rng)
   {
 
   }
@@ -43,7 +42,7 @@ public:
     return facing_set;
   }
 
-  Manage& GetManager() {
+  Manager& GetManager() {
     return man;
   }
 

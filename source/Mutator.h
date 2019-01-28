@@ -7,7 +7,7 @@
 class Mutator : emp::SignalGPMutator<Config::TAG_WIDTH> {
 
   public:
-    Mutator(Config &cfg) : {
+    Mutator(Config &cfg) {
       // Setup SignalGP mutations.
       this->SetProgMinFuncCnt(cfg.PROGRAM_MIN_FUN_CNT());
       this->SetProgMaxFuncCnt(cfg.PROGRAM_MAX_FUN_CNT());

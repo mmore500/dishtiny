@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <float.h>
 
 #include "config/config.h"
 

@@ -4,7 +4,7 @@
 #include "tools/Random.h"
 
 #include "Cardi.h"
-#include "DishtinyConfig.h"
+#include "Config.h"
 
 class FacingSet {
 
@@ -21,23 +21,23 @@ private:
 public:
   FacingSet(
     emp::Random &local_rng_,
-    DishtinyConfig &config
+    Config &cfg
   ) : local_rng(local_rng_) {
 
     facing_reproduction = facings.size();
-    for(size_t j = 0; j < config.NLEV() + 1; ++j) {
-      facings.push_back(Cardi::Dir);
+    for(size_t j = 0; j < cfg.NLEV() + 1; ++j) {
+      facings.push_back(Cardi::Spin(local_rng));
     }
 
     facing_sendresource = facings.size();
-    facings.push_back(Cardi::Dir);
+    facings.push_back(Cardi::Spin(local_rng));
 
     facing_sendmessage = facings.size();
-    facings.push_back(Cardi::Dir);
+    facings.push_back(Cardi::Spin(local_rng));
 
     facing_channelsensor = facings.size();
-    for(size_t j = 0; j < config.NLEV() + 1; ++j) {
-      facings.push_back(Cardi::Dir);
+    for(size_t j = 0; j < cfg.NLEV() + 1; ++j) {
+      facings.push_back(Cardi::Spin(local_rng));
     }
 
   }
@@ -60,7 +60,7 @@ public:
   }
   /* accessor function */
   const size_t GetChannelSensor() {
-    return facing_ChannelSensor;
+    return facing_channelsensor;
   }
   /* accessor function */
   const size_t GetAllFacings() {
@@ -72,51 +72,53 @@ public:
     if (which == GetAllFacings()) {
 
     } else {
-      emp::assert(which < GetAllFacings());
+      emp_assert(which < GetAllFacings());
 
-      emp::assert(false, "Not implemented!"); // TODO
+      emp_assert(false, "Not implemented!"); // TODO
     }
   }
 
   void Ccw(size_t which) {
     if (which == GetAllFacings()) {
-      for(size_t i = 0; i < self.size(); ++i) {
-        self->Ccw(i);
+      for(size_t i = 0; i < facings.size(); ++i) {
+        Ccw(i);
       }
     } else {
-      emp::assert(which < self.size());
-      emp::assert(false, "Not implemented!"); // TODO
+      emp_assert(which < self.size());
+      emp_assert(false, "Not implemented!"); // TODO
     }
   }
 
   void Cw(size_t which) {
     if (which == GetAllFacings()) {
-      for(size_t i = 0; i < self.size(); ++i) {
-        self->Cw(i);
+      for(size_t i = 0; i < facings.size(); ++i) {
+        Cw(i);
       }
     } else {
-      emp::assert(which < self.size());
-      emp::assert(false, "Not implemented!"); // TODO
+      emp_assert(which < facings.size());
+      emp_assert(false, "Not implemented!"); // TODO
     }
   }
 
   void Unify(size_t which) {
     /* point all facings towards the desired facing */
     //TODO
-    for(size_t i = 0; i < self.size(); ++i) {
-      Cardi::Dir rand = gen rand;
-      self[i] = rand;
+    for(size_t i = 0; i < facings.size(); ++i) {
+      emp_assert(false, "Not implemented!"); // TODO
+      // Cardi::Dir rand = gen rand;
+      // self[i] = rand;
     }
   }
 
   void Spin(size_t which) {
     if (which == GetAllFacings()) {
-      for(size_t i = 0; i < self.size(); ++i) {
+      for(size_t i = 0; i < facings.size(); ++i) {
+        emp_assert(false, "Not implemented!"); // TODO
         // TODO
       }
     } else {
-      emp::assert(which < self.size());
-      emp::assert(false, "Not implemented!"); // TODO
+      emp_assert(which < facings.size());
+      emp_assert(false, "Not implemented!"); // TODO
     }
   }
 };

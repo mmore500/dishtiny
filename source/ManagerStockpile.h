@@ -6,11 +6,15 @@
 
 class ManagerStockpile {
 
+private:
+
   double resource;
 
   double next_resource;
 
   double contrib_resource;
+
+public:
 
   ManagerStockpile(
     Config &cfg
@@ -19,7 +23,7 @@ class ManagerStockpile {
   { ; }
 
   double RequestResourceAmt(double amt){
-    emp::assert(amt >= 0);
+    emp_assert(amt >= 0);
     if (resource > 0) {
       double actual = std::min(resource, amt);
       resource -= actual;
@@ -31,7 +35,7 @@ class ManagerStockpile {
   }
 
   double RequestResourceFrac(double frac){
-    emp::assert(frac >= 0 && frac <= 1);
+    emp_assert(frac >= 0 && frac <= 1);
     if (resource > 0 ) {
       double amt = resource * frac;
       resource -= amt;
@@ -46,12 +50,12 @@ class ManagerStockpile {
   }
 
   void ExternalContribute(double amt) {
-    emp::assert(amt >= 0));
+    emp_assert(amt >= 0);
     contrib_resource += amt;
   }
 
   void ResolveExternalContributions() {
-    cur_resource += contrib_resource;
+    resource += contrib_resource;
     contrib_resource = 0;
   }
 

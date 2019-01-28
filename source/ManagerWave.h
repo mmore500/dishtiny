@@ -37,7 +37,7 @@ private:
   size_t IncomingWave() {
 
     int res = ready;
-    for (n : neighs) {
+    for (auto n : *neighs) {
       if (mc.CheckMatch(n->mc, lev)) {
         res = std::max(res, n->state);
       }
@@ -52,7 +52,7 @@ private:
   size_t IncomingSeed() {
 
     /* when this is called we know we're in the ready state */
-    size_t event_size = cfg.Lev(lev).EVENT_RADIUS*2;
+    size_t event_size = cfg.Lev(lev).EVENT_RADIUS()*2;
 
     size_t seed_x = global_rng.GetUInt(0,event_size);
     size_t seed_y = global_rng.GetUInt(0,event_size);
@@ -81,8 +81,8 @@ public:
   , cfg(cfg_)
   { ; }
 
-  void SetNeighs(emp::vector<emp::Ptr<const ManagerWave>> neighs_) {
-    neighs = new emp::vector<emp::Ptr<const ManagerWave>>(neighs_);
+  void SetNeighs(emp::vector<emp::Ptr<ManagerWave>> neighs_) {
+    neighs = new emp::vector<emp::Ptr<ManagerWave>>(neighs_);
   }
 
   /* this should only be called on live cells */

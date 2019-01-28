@@ -1,7 +1,7 @@
 #pragma once
 
 #include "base/assert.h"
-#include "tools/vector.h"
+#include "base/vector.h"
 #include "tools/math.h"
 
 #include "Config.h"
@@ -44,9 +44,9 @@ public:
     emp::vector<size_t> res;
 
     for(size_t d = 0; d < Cardi::NumDirs; ++d) {
-      neighs[i]->push_back(GetLocalPos(
-          ((int)GetLocalX(i)) + Cardi::Dx[d],
-          ((int)GetLocalY(i)) + Cardi::Dy[d]
+      res.push_back(GetLocalPos(
+          ((int)GetLocalX(pos)) + Cardi::Dx[d],
+          ((int)GetLocalY(pos)) + Cardi::Dy[d]
         ));
     }
 
