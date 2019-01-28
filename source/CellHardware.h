@@ -3,32 +3,34 @@
 #include "hardware/EventDrivenGP.h"
 
 #include "Cardi.h"
+#include "Config.h"
 #include "FacingSet.h"
+#include "Manager.h"
 
-static constexpr size_t TAG_WIDTH = 16;
 
-using base_hardware_t = public emp::EventDrivenGP_AW<TAG_WIDTH>;
-
-class CellHardware : public base_hardware_t {
+class CellHardware : public Config::base_hardware_t {
 
 private:
 
   emp::vector<double> endowments;
-  FacingSet facings;
+  FacingSet facing_set;
+  Manager &man;
 
-  size_t pos;
+  const size_t pos;
 
 public:
 
   CellHardware(
-    emp::Random *rng,
-    emp::DishtinyConfig &config,
+    emp::Random &local_rng,
+    Config &cfg,
+    Manager &man_,
     size_t pos_
   ) :
-    , endowments(config.NLEV()+1)
-    , FacingSet(config)
+    , endowments(cfg.NLEV()+1)
+    , facing_set(cfg)
     , pos(pos_)
-    , base_hardware_t(inst_lib, emp::base_hardware_t::DefaultEventLib(), rng)
+    , man(man_)
+    , base_hardware_t(inst_lib, emp::base_hardware_t::DefaultEventLib(), &local_rng)
   {
 
   }
@@ -37,12 +39,12 @@ public:
     return pos;
   }
 
-  FacingSet& GetFacing() {
-    return facings;
+  FacingSet& GetFacingSet() {
+    return facing_set;
   }
 
-  Tile& GetTile() {
-    return tile;
+  Manage& GetManager() {
+    return man;
   }
 
 };

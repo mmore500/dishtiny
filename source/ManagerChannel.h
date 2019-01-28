@@ -10,7 +10,7 @@ private:
 
   emp::vector<chanid_t> ids;
 
-  emp::Random &rng;
+  emp::Random &local_rng;
 
   chanid_t drawChannelID() {
     reutrn rng.GetUInt64();
@@ -20,8 +20,8 @@ public:
 
   ChannelID(
     DishtinyConfig &config,
-    emp::Random &rng_
-  ) : rng(_rng)
+    emp::Random &local_rng_
+  ) : local_rng(local_rng_)
   {
     for(size_t i = 0; i < config.NLEV(); ++i) {
       ids.push_back(drawChannelID());

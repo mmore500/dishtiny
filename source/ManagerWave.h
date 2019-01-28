@@ -2,8 +2,10 @@
 
 #include "base/Ptr.h"
 #include "base/vector.h"
+#include "tools/Random.h"
 
 #include "Config.h"
+#include "GeometryHelper.h"
 
 class ManagerWave {
 
@@ -19,11 +21,10 @@ private:
 
   int next_state;
 
-  emp::vector<emp::Ptr<const ManagerWave>> nieghs;
 
   ManagerChannel &mc;
-
   ManagerStockpile &ms;
+  emp::Ptr<emp::vector<emp::Ptr<const ManagerWave>>> neighs;
 
   size_t lev;
   size_t global_x;
@@ -52,8 +53,8 @@ private:
     size_t seed_y = global_rng.GetUInt(0,cfg.Lev(lev).EVENT_RADIUS*2);
 
     return (
-      (global_x  % cfg.Lev(lev).EVENT_RADIUS*2 == seed_x)
-      && (global_y % cfg.Lev(lev).EVENT_RADIUS*2 == seed_y)
+      (global_x  % (cfg.Lev(lev).EVENT_RADIUS*2) == seed_x)
+      && (global_y % (cfg.Lev(lev).EVENT_RADIUS*2) == seed_y)
     );
 
   }
@@ -63,22 +64,26 @@ public:
     ManagerChannel &mc_,
     ManagerStockpile &ms_,
     size_t lev_,
-    size_t global_x_,
-    size_t global_y_,
-    CustomConfig &c
-  ) : global_rng(c.SEED())
+    size_t pos,
+    emp::Random &global_rng_,
+    Config &cfg_
+  ) : global_rng(global_rng_)
   , state(ready)
   , mc(mc_)
   , ms(ms_)
   , lev(lev_)
-  , global_x(global_x_)
-  , global_y(global_y_)
-  , config(config)
+  , global_x(GeometryHelper(cfg_).GetGlobalX(pos))
+  , global_y(GeometryHelper(cfg_).GetGlobalY(pos))
+  , cfg(cfg_)
   { ; }
 
-  void CalcNext() {
+  void SetNeighs(emp::vector<emp::Ptr<const ManagerWave>> neighs_) {
+    neighs = new emp::vector<emp::Ptr<const ManagerWave>>();
+    *neighs = neighs_;
+  }
 
-    //TODO add seed code here
+  /* this should only be called on live cells */
+  void CalcNext() {
 
     if (state > 0) {
       /* e.g., if active */
@@ -87,17 +92,25 @@ public:
       /* e.g., if recovering from quiescent */
       next_state = state + 1;
     } else /* e.g., if ready */
-      /* TODO */
+      /* TODO incorporate IncomingSeed */
       next_state = Incoming();
     }
   }
 
+  /* this should only be called on live cells */
   void ApplyNext() {
+    /* TODO actually apply the resource */
     state = next_state;
   }
 
-  void Seed() {
-    if (state == ready) state = active;
+  /* for when a cell dies */
+  void Kill() {
+    if (state > ready) state = ready;
+  }
+
+  /* accessor function */
+  const int GetState() {
+    return state;
   }
 
 };

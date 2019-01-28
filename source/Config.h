@@ -36,6 +36,10 @@ public:
 
   }
 
+  static constexpr size_t TAG_WIDTH = 16;
+
+  using base_hardware_t = emp::EventDrivenGP_AW<Config.TAG_WIDTH>;
+
   ConfigLevel& Lev(size_t lev) {
     return clevs[lev];
   }
@@ -49,4 +53,4 @@ public:
     }
 
   }
-}
+};

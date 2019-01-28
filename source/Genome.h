@@ -3,25 +3,27 @@
 #include "hardware/EventDrivenGP.h"
 #include "tools/Random.h"
 
+#include "CellHardware.h"
+
 struct Genome {
 
-  emp::EventDrivenGP_AW<TODO>::Program program;
+  using program_t = CellHardware::Program program;
 
-  emp::Random &rng;
+  emp::Random &local_rng;
 
-  Genome(const program_t & _p, emp::Random &rng_)
+  Genome(const program_t & _p, emp::Random &local_rng_)
   : program(_p)
-  , rng(rng_)
+  , local_rng(local_rng_)
   { ; }
 
-  Genome(emp::Random &rng_)
+  Genome(emp::Random &local_rng_, Config &cfg)
   : Genome(emp::GenRandSignalGPProgram(
-        rng_,
-        inst_lib,
-        config.PROGRAM_MIN_FUN_CNT(), config.PROGRAM_MAX_FUN_CNT(),
-        config.PROGRAM_MIN_FUN_LEN(), config.PROGRAM_MAX_FUN_LEN(),
-        config.PROGRAM_MIN_ARG_VAL(), config.PROGRAM_MAX_ARG_VAL()
-      ), rng_)
+        local_rng_,
+        inst_lib /*TODO*/,
+        cfg.PROGRAM_MIN_FUN_CNT(), cfg.PROGRAM_MAX_FUN_CNT(),
+        cfg.PROGRAM_MIN_FUN_LEN(), cfg.PROGRAM_MAX_FUN_LEN(),
+        cfg.PROGRAM_MIN_ARG_VAL(), cfg.PROGRAM_MAX_ARG_VAL()
+      ), local_rng_)
   { ; }
 
 };

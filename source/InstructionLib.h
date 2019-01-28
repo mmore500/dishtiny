@@ -225,4 +225,4 @@ class InstructionLib : public emp::InstLib<HARDWARE_T_>(HARDWARE_T_::DefaultInst
       }
 
     }
-}
+};

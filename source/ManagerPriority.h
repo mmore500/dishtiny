@@ -8,13 +8,13 @@
 class ManagerPriority {
 
 private:
-  emp::Random &rng;
+  emp::Random &local_rng;
   emp::vector<Cardi::Dir> priority_order;
   size_t cur_max_priority;
 
 public:
-  ManagerPriority(emp::Random &rng_)
-  : rng(rng_)
+  ManagerPriority(emp::Random &local_rng_)
+  : local_rng(local_rng_)
   , last_shuffled(-1)
   {
     for(Cardi::Dir d = 0; d < Cardi::Dir::NumDirs; ++d) {
