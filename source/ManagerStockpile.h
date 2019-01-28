@@ -1,5 +1,7 @@
 #pragma once
 
+#include "base/assert.h"
+
 #include "Config.h"
 
 class ManagerStockpile {
@@ -39,12 +41,19 @@ class ManagerStockpile {
     }
   }
 
-  void ResolveRequests() {
+  void InternalApplyHarvest(double amt) {
+    resource += amt;
+  }
+
+  void ExternalContribute(double amt) {
+    emp::assert(amt >= 0));
+    contrib_resource += amt;
+  }
+
+  void ResolveExternalContributions() {
     cur_resource += contrib_resource;
     contrib_resource = 0;
   }
-
-  // TODO serialize and deserialiae
 
 
 };

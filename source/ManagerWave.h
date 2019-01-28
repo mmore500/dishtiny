@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include "base/Ptr.h"
 #include "base/vector.h"
 #include "tools/Random.h"
@@ -42,20 +44,22 @@ private:
     }
 
     /* if taking a signal from neighbor, increment it by one */
-    return res > 0 ? res + 1 : res;
+    /* only take a signal if it's less than signal radius */
+    return res > ready && res < cfg.SIGNAL_RADIUS() ? res + 1 : ready;
 
   }
 
-  bool IncomingSeed() {
+  size_t IncomingSeed() {
 
     /* when this is called we know we're in the ready state */
-    size_t seed_x = global_rng.GetUInt(0,cfg.Lev(lev).EVENT_RADIUS*2);
-    size_t seed_y = global_rng.GetUInt(0,cfg.Lev(lev).EVENT_RADIUS*2);
+    size_t event_size = cfg.Lev(lev).EVENT_RADIUS*2;
+
+    size_t seed_x = global_rng.GetUInt(0,event_size);
+    size_t seed_y = global_rng.GetUInt(0,event_size);
 
     return (
-      (global_x  % (cfg.Lev(lev).EVENT_RADIUS*2) == seed_x)
-      && (global_y % (cfg.Lev(lev).EVENT_RADIUS*2) == seed_y)
-    );
+      (global_x % event_size == seed_x) && (global_y % event_size == seed_y)
+    ) ? active : ready;
 
   }
 
@@ -78,8 +82,7 @@ public:
   { ; }
 
   void SetNeighs(emp::vector<emp::Ptr<const ManagerWave>> neighs_) {
-    neighs = new emp::vector<emp::Ptr<const ManagerWave>>();
-    *neighs = neighs_;
+    neighs = new emp::vector<emp::Ptr<const ManagerWave>>(neighs_);
   }
 
   /* this should only be called on live cells */
@@ -91,15 +94,29 @@ public:
     } else if (state < 0) {
       /* e.g., if recovering from quiescent */
       next_state = state + 1;
-    } else /* e.g., if ready */
-      /* TODO incorporate IncomingSeed */
-      next_state = Incoming();
+    } else /* e.g., if ready */ {
+      next_state = std::max(IncomingWave(),IncomingSeed());
     }
+
+  }
+
+  void HarvestResource() {
+
+    /* e.g., if active */
+    if (state > 0) {
+      double amt = cfg.Lev(lev).ACTIVATION_COST();
+
+      if (state <= cfg.Lev(lev).EVENT_RADIUS()) {
+        amt += cfg.Lev(lev).HARVEST_VALUE();
+      }
+
+      ms.InternalApplyHarvest(amt);
+    }
+
   }
 
   /* this should only be called on live cells */
-  void ApplyNext() {
-    /* TODO actually apply the resource */
+  void ResolveNext() {
     state = next_state;
   }
 

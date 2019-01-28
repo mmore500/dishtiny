@@ -58,15 +58,31 @@ public:
     SetAutoMutate();
 
     OnUpdate([this](size_t upd){
-      // reset pms
+      Pre();
+      for(size_t i = 0; i < GetSize(); ++i) {
+        if (IsOccupied(i)) cpus[i].Process(cfg.HARDWARE_STEPS());
+      }
+      Post();
     });
-
-    void SetupManagers() {
-
-
-    }
 
   }
 
+  void Pre() {
+    for(size_t i = 0; i < GetSize(); ++i) {
+      if (IsOccupied(i)) {
+        man.Wave(i).CalcNext();
+        man.Wave(i).HarvestResource();
+      }
+    }
+  }
+
+  void Post() {
+    for(size_t i = 0; i < GetSize(); ++i) {
+      if (IsOccupied(i)) {
+        man.Priority(i).Reset();
+        man.Stockpile(i).ResolveExternalContributions();
+        man.Wave(i).ResolveNext();
+      }
+    }
 
 };

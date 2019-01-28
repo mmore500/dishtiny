@@ -35,6 +35,7 @@ EMP_BUILD_CONFIG(
   VALUE(CULL_TARGET, double, 0.05, "What proportion of the population should a cull remove?"),
   VALUE(CULL_PENALTY, double, -DBL_MAX, "What penalty should we inject into a channel pool?"),
   VALUE(RAINYDAY_PROPORTION, double, 2, "How much to have relative to endowment before reproducing and giving away one endowment?"),
+  VALUE(HARDWARE_STEPS, size_t, 100, "How many hardware steps to run per update?")
 
   GROUP(SGP_PROGRAM_GROUP, "SignalGP program Settings"),
   VALUE(SGP_PROG_MAX_FUNC_CNT, size_t, 8, "Used for generating SGP programs. How many functions do we generate?"),
