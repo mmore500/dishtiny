@@ -4,7 +4,7 @@
 
 #include "Config.h"
 
-class Mutator : emp::SignalGPMutator<Config::TAG_WIDTH> {
+class Mutator : public emp::SignalGPMutator<Config::TAG_WIDTH> {
 
   public:
     Mutator(Config &cfg) {

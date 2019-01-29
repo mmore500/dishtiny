@@ -82,7 +82,7 @@ public:
   { ; }
 
   void SetNeighs(emp::vector<emp::Ptr<ManagerWave>> n) {
-    neighs = new emp::vector<emp::Ptr<ManagerWave>>(n.begin(), n.end());
+    neighs = emp::NewPtr<emp::vector<emp::Ptr<ManagerWave>>>(n.begin(), n.end());
   }
 
   /* this should only be called on live cells */

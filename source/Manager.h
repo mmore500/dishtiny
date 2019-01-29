@@ -30,13 +30,13 @@ public:
 
     for(size_t i = 0; i < size; ++i) {
       mcs.push_back(
-        new ManagerChannel(cfg, *local_rngs[i])
+        emp::NewPtr<ManagerChannel>(cfg, *local_rngs[i])
       );
       mps.push_back(
-        new ManagerPriority(*local_rngs[i])
+        emp::NewPtr<ManagerPriority>(*local_rngs[i])
       );
       mss.push_back(
-        new ManagerStockpile(cfg)
+        emp::NewPtr<ManagerStockpile>(cfg)
       );
     }
 
@@ -44,7 +44,7 @@ public:
     for(size_t i = 0; i < size; ++i) {
       for(size_t l = 0; l < cfg.NLEV(); ++l) {
         mws[i].push_back(
-          new ManagerWave(
+          emp::NewPtr<ManagerWave>(
             *mcs[i],
             *mss[i],
             l,
@@ -59,7 +59,7 @@ public:
     for(size_t i = 0; i < size; ++i) {
       auto neigh_poses = GeometryHelper(cfg).CalcLocalNeighs(i);
       for(size_t l = 0; l < cfg.NLEV(); ++l) {
-        emp::vector<emp::Ptr<ManagerWave>> res;
+        emp::vector<emp::Ptr<ManagerWave>> res(neigh_poses.size());
         std::transform(
           neigh_poses.begin(),
           neigh_poses.end(),

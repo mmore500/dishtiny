@@ -21,6 +21,7 @@ public:
 
   static constexpr size_t TAG_WIDTH = 16;
 
+  using chanid_t = uint64_t;
   using base_hardware_t = emp::EventDrivenGP_AW<TAG_WIDTH>;
 
   Config(std::string config_fname, emp::cl::ArgManager args) {
@@ -34,7 +35,7 @@ public:
       exit(0);
 
     for (size_t l = 0; l < NLEV(); ++l) {
-      clevs.push_back(new ConfigLevel());
+      clevs.push_back(emp::NewPtr<ConfigLevel>());
 
       if (l == 1) {
         clevs[l]->Set("EVENT_RADIUS", "24.0");

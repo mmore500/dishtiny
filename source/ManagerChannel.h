@@ -2,19 +2,18 @@
 
 #include "tools/Random.h"
 
+#include "ChannelPack.h"
 #include "Config.h"
 
 class ManagerChannel {
 
-using chanid_t = uint64_t;
-
 private:
 
-  emp::vector<chanid_t> ids;
+  ChannelPack ids;
 
   emp::Random &local_rng;
 
-  chanid_t drawChannelID() {
+  Config::chanid_t drawChannelID() {
     return local_rng.GetUInt64();
   }
 
@@ -30,7 +29,7 @@ public:
     }
   }
 
-  const chanid_t GetID(size_t lev) {
+  const Config::chanid_t GetID(size_t lev) {
     return ids[lev];
   }
 
@@ -39,12 +38,12 @@ public:
   }
 
   /* perform a certain level of reproduction */
-  void Inherit(ManagerChannel &parent, size_t lev) {
+  void Inherit(ChannelPack &parent, size_t lev) {
     for(size_t i = 0; i < ids.size(); ++i) {
       if(i < lev) {
         ids[i] = drawChannelID();
       } else {
-        ids[i] = parent.GetID(i);
+        ids[i] = parent[i];
       }
     }
   }

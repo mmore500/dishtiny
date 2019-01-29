@@ -4,6 +4,7 @@
 #include "base/vector.h"
 #include "tools/math.h"
 
+#include "Cardi.h"
 #include "Config.h"
 
 class GeometryHelper {

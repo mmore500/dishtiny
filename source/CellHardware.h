@@ -5,8 +5,9 @@
 #include "Cardi.h"
 #include "Config.h"
 #include "FacingSet.h"
-#include "Manager.h"
 
+//forward declaration
+class Manager;
 
 class CellHardware : public Config::base_hardware_t {
 
@@ -31,7 +32,14 @@ public:
     , man(man_)
     , pos(pos_)
   {
+    Reset();
+  }
 
+  void Reset() {
+    /* TODO why does this make everything run so fast */
+    // std::fill(endowments.begin(), endowments.end(), 0);
+    // facing_set.Spin(facing_set.GetAllFacings());
+    // Config::base_hardware_t::Reset();
   }
 
   const size_t GetPos() {

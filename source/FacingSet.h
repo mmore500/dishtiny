@@ -78,7 +78,7 @@ public:
         Ccw(i);
       }
     } else {
-      emp_assert(which < self.size());
+      emp_assert(which < facings.size());
       emp_assert(false, "Not implemented!"); // TODO
     }
   }
@@ -107,12 +107,11 @@ public:
   void Spin(size_t which) {
     if (which == GetAllFacings()) {
       for(size_t i = 0; i < facings.size(); ++i) {
-        emp_assert(false, "Not implemented!"); // TODO
-        // TODO
+        Spin(i);
       }
     } else {
       emp_assert(which < facings.size());
-      emp_assert(false, "Not implemented!"); // TODO
+      facings[which] = Cardi::Spin(local_rng);
     }
   }
 };

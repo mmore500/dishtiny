@@ -24,7 +24,10 @@ int main(int argc, char* argv[])
 
 
   DishWorld world(cfg);
-  // world.Run();
+  for(size_t ud = 0; ud < cfg.RUN_LENGTH(); ++ud) {
+    std::cout << "Update: " << ud << std::endl;
+    world.Update();
+  }
 
   return 0;
 }

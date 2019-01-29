@@ -5,6 +5,7 @@
 #include "base/vector.h"
 #include "Evolve/World.h"
 #include "tools/Random.h"
+#include "tools/hash_utils.h"
 
 #include "Cardi.h"
 #include "CellHardware.h"
@@ -29,25 +30,20 @@ private:
 public:
   DishWorld(Config &cfg_, size_t uid_offset=0)
   : cfg(cfg_), mut(cfg_) {
-    SetPopStruct_Grid(cfg.GRID_W(), cfg.GRID_H(), false);
+    SetPopStruct_Grid(cfg.GRID_W(), cfg.GRID_H(), true);
 
     for(size_t i = 0; i < GetSize(); ++i) {
       local_rngs.push_back(
-        new emp::Random(emp::szudzik_hash(cfg.SEED(),i+uid_offset))
+        emp::NewPtr<emp::Random>(emp::szudzik_hash(cfg.SEED(),i+uid_offset))
       );
-      global_rngs.push_back(new emp::Random(cfg.SEED()));
+      global_rngs.push_back(emp::NewPtr<emp::Random>(cfg.SEED()));
     }
 
     man = new Manager(local_rngs, global_rngs, cfg);
 
     for(size_t i = 0; i < GetSize(); ++i) {
-      Genome g(*local_rngs[i], cfg);
-      InjectAt(g, i);
-    }
-
-    for(size_t i = 0; i < GetSize(); ++i) {
       cpus.push_back(
-        new CellHardware(
+        emp::NewPtr<CellHardware>(
           local_rngs[i],
           cfg,
           *man,
@@ -56,13 +52,26 @@ public:
       );
     }
 
-    // TOOD will need to do this manually
-    // SetMutFun([this](Genome &g, emp::Random&r){
-    //   // must use TILE rng, not global rng
-    //   return mut.ApplyMutations(g.program,);
-    // });
-    //
-    // SetAutoMutate();
+    for(size_t i = 0; i < GetSize(); ++i) {
+      Genome g(*local_rngs[i], cfg);
+      InjectAt(g, emp::WorldPosition(i,1));
+    }
+
+    OnOffspringReady(
+      [this](Genome& g, size_t pos){
+        return mut.ApplyMutations(g.program,*local_rngs[pos]);
+      }
+    );
+
+    OnOrgDeath([this](size_t pos){
+      // emp_assert(cpus[pos]);
+      // cpus[pos]->Reset();
+    });
+
+    OnPlacement([this](size_t pos){
+      cpus[pos]->Reset();
+      cpus[pos]->SetProgram(GetOrg(pos).program);
+    });
 
     OnUpdate([this](size_t upd){
       Pre();
@@ -86,12 +95,17 @@ public:
   void Mid() {
     for(size_t i = 0; i < GetSize(); ++i) {
       if (IsOccupied(i)) cpus[i]->Process(cfg.HARDWARE_STEPS());
-      // need to put a program on the cpu
     }
   }
 
   void Post() {
     for(size_t i = 0; i < GetSize(); ++i) {
+      auto optional_tup = man->Priority(i).QueryPendingGenome();
+      if(optional_tup) {
+        auto [ g, chanpack, rep_lev, par_pos ] = *(optional_tup);
+        AddOrgAt(g, i, par_pos);
+        man->Channel(i).Inherit(chanpack,rep_lev);
+      }
       if (IsOccupied(i)) {
         man->Priority(i).Reset();
         man->Stockpile(i).ResolveExternalContributions();
