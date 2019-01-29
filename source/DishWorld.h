@@ -8,7 +8,7 @@
 #include "tools/hash_utils.h"
 
 #include "Cardi.h"
-#include "CellHardware.h"
+#include "CellFrame.h"
 #include "Config.h"
 #include "Genome.h"
 #include "Manager.h"
@@ -22,7 +22,7 @@ private:
 
   emp::vector<emp::Ptr<emp::Random>> global_rngs;
   emp::vector<emp::Ptr<emp::Random>> local_rngs;
-  emp::vector<emp::Ptr<CellHardware>> cpus;
+  emp::vector<emp::Ptr<Config::hardware_t>> cpus;
 
   Mutator mut;
   emp::Ptr<Manager> man;
@@ -42,14 +42,13 @@ public:
     man = new Manager(local_rngs, global_rngs, cfg);
 
     for(size_t i = 0; i < GetSize(); ++i) {
-      cpus.push_back(
-        emp::NewPtr<CellHardware>(
-          local_rngs[i],
-          cfg,
-          *man,
-          i
-        )
-      );
+      cpus.push_back(emp::NewPtr<Config::hardware_t>());
+      cpus[i]->PushTrait(emp::NewPtr<CellFrame>(
+        local_rngs[i],
+        cfg,
+        *man,
+        i
+      ));
     }
 
     for(size_t i = 0; i < GetSize(); ++i) {

@@ -11,6 +11,8 @@
 #include "ConfigBase.h"
 #include "ConfigLevel.h"
 
+class CellFrame;
+
 class Config : public ConfigBase {
 
 private:
@@ -21,8 +23,10 @@ public:
 
   static constexpr size_t TAG_WIDTH = 16;
 
+  using TRAIT_TYPE = emp::Ptr<CellFrame>;
   using chanid_t = uint64_t;
-  using base_hardware_t = emp::EventDrivenGP_AW<TAG_WIDTH>;
+  using hardware_t = emp::EventDrivenGP_AW<TAG_WIDTH, TRAIT_TYPE>;
+  using program_t = hardware_t::program_t;
 
   Config(std::string config_fname, emp::cl::ArgManager args) {
 

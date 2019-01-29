@@ -6,12 +6,13 @@
 #include "tools/Random.h"
 
 #include "Config.h"
-#include "CellHardware.h"
+#include "CellFrame.h"
 #include "InstructionLibrary.h"
 
 struct Genome {
 
-  using program_t = CellHardware::program_t;
+  using hardware_t = Config::hardware_t;
+  using program_t = Config::program_t;
 
   program_t program;
 
@@ -20,7 +21,7 @@ struct Genome {
   { ; }
 
   Genome(emp::Random &local_rng, Config &cfg)
-  : Genome(emp::GenRandSignalGPProgram(
+  : Genome(emp::GenRandSignalGPProgram<Config::TAG_WIDTH,Config::TRAIT_TYPE>(
         local_rng,
         InstructionLibrary::Make(cfg),
         cfg.PROGRAM_MIN_FUN_CNT(), cfg.PROGRAM_MAX_FUN_CNT(),

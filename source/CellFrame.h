@@ -1,6 +1,6 @@
 #pragma once
 
-#include "hardware/EventDrivenGP.h"
+#include "tools/Random.h"
 
 #include "Cardi.h"
 #include "Config.h"
@@ -9,27 +9,28 @@
 //forward declaration
 class Manager;
 
-class CellHardware : public Config::base_hardware_t {
+class CellFrame {
 
 private:
 
   emp::vector<double> endowments;
   FacingSet facing_set;
   Manager &man;
+  emp::Random &local_rng;
 
   const size_t pos;
 
 public:
 
-  CellHardware(
-    emp::Ptr<emp::Random> local_rng,
+  CellFrame(
+    emp::Ptr<emp::Random> local_rng_,
     Config &cfg,
     Manager &man_,
     size_t pos_
-  ) : Config::base_hardware_t(Config::base_hardware_t::DefaultEventLib(), local_rng)
-    , endowments(cfg.NLEV()+1)
-    , facing_set(*local_rng, cfg)
+  ) : endowments(cfg.NLEV()+1)
+    , facing_set(*local_rng_, cfg)
     , man(man_)
+    , local_rng(*local_rng_)
     , pos(pos_)
   {
     Reset();
@@ -37,9 +38,8 @@ public:
 
   void Reset() {
     /* TODO why does this make everything run so fast */
-    // std::fill(endowments.begin(), endowments.end(), 0);
-    // facing_set.Spin(facing_set.GetAllFacings());
-    // Config::base_hardware_t::Reset();
+    std::fill(endowments.begin(), endowments.end(), 0);
+    facing_set.Spin(facing_set.GetAllFacings());
   }
 
   const size_t GetPos() {
