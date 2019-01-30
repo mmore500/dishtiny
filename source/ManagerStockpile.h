@@ -14,12 +14,15 @@ private:
 
   double contrib_resource;
 
+  Config &cfg;
+
 public:
 
   ManagerStockpile(
-    Config &cfg
-  ) : resource(cfg.START_RESOURCE())
+    Config &cfg_
+  ) : resource(cfg_.START_RESOURCE())
   , contrib_resource(0)
+  , cfg(cfg_)
   { ; }
 
   double QueryResource(){
@@ -66,6 +69,16 @@ public:
   void Apoptosis() {
     // negative infinity
     resource = -1.0/0.0;
+  }
+
+  bool IsBankrupt() {
+    return cfg.KILL_THRESH() >= resource;
+  }
+
+  void Reset() {
+    resource = 0.0;
+    next_resource = 0.0;
+    contrib_resource = 0.0;
   }
 
 };

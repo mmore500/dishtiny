@@ -54,7 +54,7 @@ public:
 
     for(size_t i = 0; i < GetSize(); ++i) {
       Genome g(*local_rngs[i], InstructionLibrary::Make(
-        [this](size_t pos){ return (bool) GetOrgPtr(pos); },
+        [this](size_t pos){ return IsOccupied(pos); },
         cfg
       ), cfg);
       InjectAt(g, emp::WorldPosition(i,1));
@@ -68,11 +68,13 @@ public:
 
     OnOrgDeath([this](size_t pos){
       // emp_assert(cpus[pos]);
-      // cpus[pos]->Reset();
+      cpus[pos]->ResetProgram();
     });
 
     OnPlacement([this](size_t pos){
-      cpus[pos]->Reset();
+      man->Stockpile(pos).Reset();
+      // cpus[pos]->ResetHardware();
+      cpus[pos]->GetTrait(0)->Reset();
       cpus[pos]->SetProgram(GetOrg(pos).program);
     });
 
@@ -113,6 +115,7 @@ public:
         man->Priority(i).Reset();
         man->Stockpile(i).ResolveExternalContributions();
         for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
+        if (man->Stockpile(i).IsBankrupt()) DoDeath(i);
       }
     }
   }
