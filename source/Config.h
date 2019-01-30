@@ -27,6 +27,7 @@ public:
   using chanid_t = uint64_t;
   using hardware_t = emp::EventDrivenGP_AW<TAG_WIDTH, TRAIT_TYPE>;
   using program_t = hardware_t::program_t;
+  using inst_lib_t = emp::InstLib<hardware_t>;
 
   Config(std::string config_fname, emp::cl::ArgManager args) {
 

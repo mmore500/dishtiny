@@ -6,8 +6,6 @@
 #include "tools/Random.h"
 
 #include "Config.h"
-#include "CellFrame.h"
-#include "InstructionLibrary.h"
 
 struct Genome {
 
@@ -18,19 +16,15 @@ struct Genome {
 
   Genome(const program_t & _p)
   : program(_p)
-  { ; }
+  { emp_assert(program.GetSize()); }
 
-  Genome(emp::Random &local_rng, Config &cfg)
+  Genome(emp::Random &local_rng, Config::inst_lib_t inst_lib, Config &cfg)
   : Genome(emp::GenRandSignalGPProgram<Config::TAG_WIDTH,Config::TRAIT_TYPE>(
         local_rng,
-        InstructionLibrary::Make(cfg),
+        inst_lib,
         cfg.PROGRAM_MIN_FUN_CNT(), cfg.PROGRAM_MAX_FUN_CNT(),
         cfg.PROGRAM_MIN_FUN_LEN(), cfg.PROGRAM_MAX_FUN_LEN(),
         cfg.PROGRAM_MIN_ARG_VAL(), cfg.PROGRAM_MAX_ARG_VAL()
-    )) {
-
-    emp_assert(program.GetSize());
-
-  }
+    )) { emp_assert(program.GetSize()); }
 
 };

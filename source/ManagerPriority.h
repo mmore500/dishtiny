@@ -10,6 +10,7 @@
 #include "tools/random_utils.h"
 
 #include "ChannelPack.h"
+#include "SirePack.h"
 
 class Genome;
 
@@ -20,12 +21,11 @@ private:
   emp::vector<size_t> priority_order;
 
   size_t cur_max_priority;
-  emp::Ptr<Genome> g;
+  emp::Ptr<Genome> gen;
   ChannelPack cp;
-  size_t par_pos;
-  size_t rep_lev;
+  SirePack sp;
 
-  bool TakesPriority(Cardi::Dir dir) {
+  bool TakesPriority(size_t dir) {
 
     size_t i;
 
@@ -51,26 +51,24 @@ public:
   void Reset() {
     emp::Shuffle(local_rng, priority_order);
     cur_max_priority = Cardi::Dir::NumDirs;
-    g = nullptr;
+    gen = nullptr;
   }
 
   void ProcessSire(
-    Cardi::Dir d,
-    Genome &parent_genome,
-    ChannelPack &parent_cp,
-    size_t rep_lev_,
-    size_t par_pos_
+    Config::program_t &parent_program,
+    ChannelPack parent_cp,
+    SirePack sire_pack
   ){
-    if (TakesPriority(d)) {
-      par_pos = par_pos_;
-      rep_lev = rep_lev_;
-      g = emp::NewPtr<Genome>(parent_genome);
+    if (TakesPriority(sire_pack.dir)) {
+      sp = sire_pack;
+      gen = emp::NewPtr<Genome>(parent_program);
       cp = parent_cp;
     }
   }
 
-  std::optional<std::tuple<emp::Ptr<Genome>,ChannelPack,size_t,size_t>> QueryPendingGenome() {
-    return g ? std::make_optional(std::make_tuple(g,cp,rep_lev,par_pos)) : std::nullopt;
+  std::optional<std::tuple<emp::Ptr<Genome>,ChannelPack,SirePack>>
+  QueryPendingGenome() {
+    return gen ? std::make_optional(std::make_tuple(gen,cp,sp)) : std::nullopt;
   }
 
 };

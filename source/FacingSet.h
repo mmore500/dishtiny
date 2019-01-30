@@ -47,20 +47,20 @@ public:
     return facings.size() + 1;
   }
   /* accessor function */
-  const size_t GetReproduction() {
-    return facing_reproduction;
+  const size_t GetReproduction(size_t i) {
+    return Get(facing_reproduction+i);
   }
   /* accessor function */
   const size_t GetSendResource() {
-    return facing_sendresource;
+    return Get(facing_sendresource);
   }
   /* accessor function */
   const size_t GetSendMessage() {
-    return facing_sendmessage;
+    return Get(facing_sendmessage);
   }
   /* accessor function */
-  const size_t GetChannelSensor() {
-    return facing_channelsensor;
+  const size_t GetChannelSensor(size_t i) {
+    return Get(facing_channelsensor+i);
   }
   /* accessor function */
   const size_t GetAllFacings() {

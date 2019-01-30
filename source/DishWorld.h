@@ -11,6 +11,7 @@
 #include "CellFrame.h"
 #include "Config.h"
 #include "Genome.h"
+#include "InstructionLibrary.h"
 #include "Manager.h"
 #include "Mutator.h"
 
@@ -52,7 +53,7 @@ public:
     }
 
     for(size_t i = 0; i < GetSize(); ++i) {
-      Genome g(*local_rngs[i], cfg);
+      Genome g(*local_rngs[i], InstructionLibrary::Make(cfg), cfg);
       InjectAt(g, emp::WorldPosition(i,1));
     }
 
@@ -101,9 +102,9 @@ public:
     for(size_t i = 0; i < GetSize(); ++i) {
       auto optional_tup = man->Priority(i).QueryPendingGenome();
       if(optional_tup) {
-        auto [ g, chanpack, rep_lev, par_pos ] = *(optional_tup);
-        AddOrgAt(g, i, par_pos);
-        man->Channel(i).Inherit(chanpack,rep_lev);
+        auto [ prog, chanpack, sirepack ] = *(optional_tup);
+        AddOrgAt(prog, i, sirepack.par_pos);
+        man->Channel(i).Inherit(chanpack,sirepack.rep_lev);
       }
       if (IsOccupied(i)) {
         man->Priority(i).Reset();

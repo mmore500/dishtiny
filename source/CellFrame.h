@@ -5,6 +5,7 @@
 #include "Cardi.h"
 #include "Config.h"
 #include "FacingSet.h"
+#include "GeometryHelper.h"
 
 //forward declaration
 class Manager;
@@ -18,6 +19,7 @@ private:
   Manager &man;
   emp::Random &local_rng;
 
+  emp::vector<size_t> neighs;
   const size_t pos;
 
 public:
@@ -31,6 +33,7 @@ public:
     , facing_set(*local_rng_, cfg)
     , man(man_)
     , local_rng(*local_rng_)
+    , neighs(GeometryHelper(cfg).CalcLocalNeighs(pos))
     , pos(pos_)
   {
     Reset();
@@ -52,6 +55,14 @@ public:
 
   Manager& GetManager() {
     return man;
+  }
+
+  const size_t GetNeigh(size_t dir) {
+    return neighs[dir];
+  }
+
+  const double GetEndowment(size_t which) {
+    return endowments[which];
   }
 
 };

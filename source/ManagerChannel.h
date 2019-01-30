@@ -33,6 +33,10 @@ public:
     return ids[lev];
   }
 
+  ChannelPack GetIDs() {
+    return ids;
+  }
+
   bool CheckMatch( ManagerChannel &other, size_t lev) {
     return GetID(lev) == other.GetID(lev);
   }

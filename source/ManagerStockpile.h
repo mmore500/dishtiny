@@ -22,6 +22,10 @@ public:
   , contrib_resource(0)
   { ; }
 
+  double QueryResource(){
+    return resource;
+  }
+
   double RequestResourceAmt(double amt){
     emp_assert(amt >= 0);
     if (resource > 0) {
@@ -59,5 +63,9 @@ public:
     contrib_resource = 0;
   }
 
+  void Apoptosis() {
+    // negative infinity
+    resource = -1.0/0.0;
+  }
 
 };
