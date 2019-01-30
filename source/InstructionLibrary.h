@@ -62,10 +62,17 @@ public:
     //   * different granularities (measured in multiples of one reproduction)
     for(size_t i = 0; i < cfg.NLEV() + 1; ++i) {
       il.AddInst(
-        "AdjustEndowment-Lev" + emp::to_string(i),
-        [i](hardware_t & hw, const inst_t & inst){
-          state_t & state = hw.GetCurState();
-          emp_assert(false, "Not implemented."); // TODO
+        "IncreaseEndowment-Lev" + emp::to_string(i),
+        [i, &cfg](hardware_t & hw, const inst_t & inst){
+          CellFrame &fr = *hw.GetTrait(0);
+          fr.AdjEndowment(cfg.REP_THRESH(), i);
+        }
+      );
+      il.AddInst(
+        "DecreaseEndowment-Lev" + emp::to_string(i),
+        [i, &cfg](hardware_t & hw, const inst_t & inst){
+          CellFrame &fr = *hw.GetTrait(0);
+          fr.AdjEndowment(-cfg.REP_THRESH(), i);
         }
       );
     }
@@ -112,32 +119,32 @@ public:
     // general purpose messaging TODO
     // e.g., https://github.com/amlalejini/GECCO-2018-Evolving-Event-driven-Programs-with-SignalGP/blob/master/experiments/election/source/Experiment.h
     /* TODO make a way to filter messages to exclude messages from other ChannelIDs */
-    il.AddInst(
-      "SendMsg",
-      [](hardware_t & hw, const inst_t & inst){
-        state_t & state = hw.GetCurState();
-        emp_assert(false, "Not implemented."); // TODO
-        // hw.TriggerEvent("SendMessage", inst.affinity, state.output_mem);
-      },
-      0,
-      "Send output memory as message event to faced neighbor.", emp::ScopeType::BASIC,
-      0,
-      {"affinity"}
-    );
-
-    il.AddInst(
-      "BroadcastMsg",
-      [](hardware_t & hw, const inst_t & inst){
-        state_t & state = hw.GetCurState();
-        emp_assert(false, "Not implemented."); // TODO
-        // hw.TriggerEvent("BroadcastMessage", inst.affinity, state.output_mem);
-      },
-      0,
-      "Broadcast output memory as message event.",
-      emp::ScopeType::BASIC,
-      0,
-      {"affinity"}
-      );
+    // il.AddInst(
+    //   "SendMsg",
+    //   [](hardware_t & hw, const inst_t & inst){
+    //     state_t & state = hw.GetCurState();
+    //     emp_assert(false, "Not implemented."); // TODO
+    //     // hw.TriggerEvent("SendMessage", inst.affinity, state.output_mem);
+    //   },
+    //   0,
+    //   "Send output memory as message event to faced neighbor.", emp::ScopeType::BASIC,
+    //   0,
+    //   {"affinity"}
+    // );
+    //
+    // il.AddInst(
+    //   "BroadcastMsg",
+    //   [](hardware_t & hw, const inst_t & inst){
+    //     state_t & state = hw.GetCurState();
+    //     emp_assert(false, "Not implemented."); // TODO
+    //     // hw.TriggerEvent("BroadcastMessage", inst.affinity, state.output_mem);
+    //   },
+    //   0,
+    //   "Broadcast output memory as message event.",
+    //   emp::ScopeType::BASIC,
+    //   0,
+    //   {"affinity"}
+    // );
 
     for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
       il.AddInst(
@@ -187,13 +194,148 @@ public:
         man.Stockpile(pos).Apoptosis();
 
       },
-      1,
+      0,
       "TODO"
     );
 
   }
 
-  static inst_lib_t & Make(Config &cfg) {
+  static void InitInternalSensors(inst_lib_t &il, Config &cfg) {
+    il.AddInst(
+      "QueryOwnStockpile",
+      [](hardware_t & hw, const inst_t & inst){
+
+        CellFrame &fr = *hw.GetTrait(0);
+
+        Manager &man = fr.GetManager();
+        size_t pos = fr.GetPos();
+        double amt = man.Stockpile(pos).QueryResource();
+
+        state_t & state = hw.GetCurState();
+
+        state.SetLocal(inst.args[0], amt);
+
+      },
+      1,
+      "TODO"
+    );
+
+    for (size_t i = 0; i < cfg.NLEV() + 1; ++i) {
+      il.AddInst(
+        "QueryOwnEndowment-Lev" + emp::to_string(i),
+        [i](hardware_t & hw, const inst_t & inst){
+
+          CellFrame &fr = *hw.GetTrait(0);
+
+          double amt = fr.GetEndowment(i);
+
+          state_t & state = hw.GetCurState();
+
+          state.SetLocal(inst.args[0], amt);
+
+        },
+        1,
+       "TODO"
+      );
+    }
+
+  }
+
+  static void InitExternalSensors(
+    inst_lib_t &il,
+    std::function<bool(size_t)> is_live,
+    Config &cfg
+  ) {
+    // sensor functions
+    for (size_t i = 0; i < cfg.NLEV(); ++i) {
+      il.AddInst(
+        "QueryFacingChannelKin-Lev" + emp::to_string(i),
+        [i, is_live](hardware_t & hw, const inst_t & inst){
+          state_t & state = hw.GetCurState();
+
+          CellFrame &fr = *hw.GetTrait(0);
+
+          size_t dir = fr.GetFacingSet().GetNeighborSensor();
+          size_t neigh = fr.GetNeigh(dir);
+
+          bool live = is_live(neigh);
+          state.SetLocal(inst.args[0], live);
+
+          if(live) {
+            Manager &man = fr.GetManager();
+            size_t pos = fr.GetPos();
+            bool match = man.Channel(pos).CheckMatch(man.Channel(neigh), i);
+            state.SetLocal(inst.args[1], match);
+          }
+        },
+        2,
+        "TODO"
+      );
+    }
+
+    // get the raw channel of who is next door
+    // potentially useful for aggregate count of distinct neighbors
+    for (size_t i = 0; i < cfg.NLEV(); ++i) {
+      il.AddInst(
+        "QueryFacingChannel-Lev" + emp::to_string(i),
+        [i, is_live](hardware_t & hw, const inst_t & inst){
+          state_t & state = hw.GetCurState();
+
+          CellFrame &fr = *hw.GetTrait(0);
+
+          size_t dir = fr.GetFacingSet().GetNeighborSensor();
+          size_t neigh = fr.GetNeigh(dir);
+
+          bool live = is_live(neigh);
+          state.SetLocal(inst.args[0], live);
+
+          if(live) {
+            Manager &man = fr.GetManager();
+            Config::chanid_t chanid = man.Channel(neigh).GetID(i);
+            state.SetLocal(inst.args[1], chanid);
+          }
+        },
+        2,
+        "TODO"
+      );
+    }
+
+    il.AddInst(
+      "QueryFacingStockpile",
+      [is_live](hardware_t & hw, const inst_t & inst){
+        state_t & state = hw.GetCurState();
+
+        CellFrame &fr = *hw.GetTrait(0);
+
+        size_t dir = fr.GetFacingSet().GetNeighborSensor();
+        size_t neigh = fr.GetNeigh(dir);
+
+        bool live = is_live(neigh);
+        state.SetLocal(inst.args[0], live);
+
+        if(live) {
+          Manager &man = fr.GetManager();
+          double amt = man.Stockpile(neigh).QueryResource();
+          state.SetLocal(inst.args[1], amt);
+        }
+      },
+      2,
+      "TODO"
+    );
+
+    // /* TODO how to query own facing, e.g., to turn to respond to a message but then to reset your facing how you were */
+    //
+    // emp::Random temp_r;
+    // FacingSet temp(temp_r, cfg);
+    //
+    // for(size_t i = 0; i < temp.GetNumFacings(); ++i) {
+    //
+    //
+    // }
+
+  }
+
+  static inst_lib_t & Make(std::function<bool(size_t)> is_live, Config &cfg) {
 
     static inst_lib_t il;
 
@@ -203,95 +345,16 @@ public:
 
       InitInternalActions(il, cfg);
 
+      InitInternalSensors(il, cfg);
+
       InitExternalActions(il, cfg);
-      //
-      // InitInternalSensors(il, cfg);
-      //
-      // InitExternalActions(il, cfg);
+
+      InitExternalSensors(il, is_live, cfg);
 
     }
 
     return il;
 
   }
-
-    // void InitInternalSensors(inst_lib_t &il, Config &cfg) {
-    //   this->AddInst(
-    //     "QueryOwnStockpile" + emp::to_string(i),
-    //     [](hardware_t & hw, const inst_t & inst){
-    //       state_t & state = hw.GetCurState();
-    //       assert(false, "Not implemented."); // TODO
-    //       // state.SetLocal(inst.args[0], this->env_state==i);
-    //     }
-    //   );
-    //
-    //   for (int i = 0; i < NLEV + 1; ++i) {
-    //     this->AddInst(
-    //       "QueryOwnEndowment-Lev" + emp::to_string(i),
-    //       [](hardware_t & hw, const inst_t & inst){
-    //         state_t & state = hw.GetCurState();
-    //         assert(false, "Not implemented."); // TODO
-    //         // state.SetLocal(inst.args[0], this->env_state==i);
-    //       },
-    //       1,
-    //       "Sense if current environment state is " + emp::to_string(i)"
-    //     );
-    //   }
-    // }
-    //
-    // void InitExternalSensors(inst_lib_t &il, Config &cfg) {
-    //   // sensor functions
-    //   for (int i = 0; i < NLEV; ++i) {
-    //     this->AddInst(
-    //       "QueryFacingChannelKin-Lev" + emp::to_string(i),
-    //       [](hardware_t & hw, const inst_t & inst){
-    //         state_t & state = hw.GetCurState();
-    //         assert(false, "Not implemented."); // TODO
-    //         // state.SetLocal(inst.args[0], this->env_state==i);
-    //       },
-    //       1,
-    //       "Sense if current environment state is " + emp::to_string(i)"
-    //     );
-    //   }
-    //
-    //   // get the raw channel of who is next door
-    //   // potentially useful for aggregate count of distinct neighbors
-    //   for (int i = 0; i < NLEV; ++i) {
-    //     this->AddInst(
-    //       "QueryFacingChannel-Lev" + emp::to_string(i),
-    //       [](hardware_t & hw, const inst_t & inst){
-    //         state_t & state = hw.GetCurState();
-    //         assert(false, "Not implemented."); // TODO
-    //         // state.SetLocal(inst.args[0], this->env_state==i);
-    //       },
-    //       1,
-    //       "Sense if current environment state is " + emp::to_string(i)"
-    //     );
-    //   }
-    //
-    //   this->AddInst(
-    //     "QueryFacingLive" + emp::to_string(i),
-    //     [](hardware_t & hw, const inst_t & inst){
-    //       state_t & state = hw.GetCurState();
-    //       assert(false, "Not implemented."); // TODO
-    //       // state.SetLocal(inst.args[0], this->env_state==i);
-    //     },
-    //     1,
-    //     "Sense if current environment state is " + emp::to_string(i)"
-    //   );
-    //
-    //   this->AddInst(
-    //     "QueryFacingStockpile" + emp::to_string(i),
-    //     [](hardware_t & hw, const inst_t & inst){
-    //       state_t & state = hw.GetCurState();
-    //       assert(false, "Not implemented."); // TODO
-    //       // state.SetLocal(inst.args[0], this->env_state==i);
-    //     },
-    //     1,
-    //     "Sense if current environment state is " + emp::to_string(i)"
-    //   );
-    //   /* TODO how to query own facing, e.g., to turn to respond to a message but then to reset your facing how you were */
-    //
-    // }
 
 };

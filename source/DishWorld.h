@@ -53,7 +53,10 @@ public:
     }
 
     for(size_t i = 0; i < GetSize(); ++i) {
-      Genome g(*local_rngs[i], InstructionLibrary::Make(cfg), cfg);
+      Genome g(*local_rngs[i], InstructionLibrary::Make(
+        [this](size_t pos){ return (bool) GetOrgPtr(pos); },
+        cfg
+      ), cfg);
       InjectAt(g, emp::WorldPosition(i,1));
     }
 

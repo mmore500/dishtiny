@@ -16,7 +16,7 @@ private:
   size_t facing_reproduction;
   size_t facing_sendresource;
   size_t facing_sendmessage;
-  size_t facing_channelsensor;
+  size_t facing_neighborsensor;
 
 public:
   FacingSet(
@@ -35,10 +35,8 @@ public:
     facing_sendmessage = facings.size();
     facings.push_back(Cardi::Spin(local_rng));
 
-    facing_channelsensor = facings.size();
-    for(size_t j = 0; j < cfg.NLEV() + 1; ++j) {
-      facings.push_back(Cardi::Spin(local_rng));
-    }
+    facing_neighborsensor = facings.size();
+    facings.push_back(Cardi::Spin(local_rng));
 
   }
 
@@ -59,9 +57,11 @@ public:
     return Get(facing_sendmessage);
   }
   /* accessor function */
-  const size_t GetChannelSensor(size_t i) {
-    return Get(facing_channelsensor+i);
+  // TODO also used to check resource in other cell
+  const size_t GetNeighborSensor() {
+    return Get(facing_neighborsensor);
   }
+
   /* accessor function */
   const size_t GetAllFacings() {
     return facings.size();

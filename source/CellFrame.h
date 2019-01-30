@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include "tools/Random.h"
 
 #include "Cardi.h"
@@ -63,6 +65,12 @@ public:
 
   const double GetEndowment(size_t which) {
     return endowments[which];
+  }
+
+  void AdjEndowment(double amt, size_t which) {
+    endowments[which] += amt;
+    endowments[which] = std::max(endowments[which],0.0);
+    emp_assert(endowments[which] >= 0);
   }
 
 };
