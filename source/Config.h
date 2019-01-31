@@ -19,6 +19,19 @@ private:
 
   emp::vector<emp::Ptr<ConfigLevel>> clevs;
 
+  void init() {
+    for (size_t l = 0; l < NLEV(); ++l) {
+
+      clevs.push_back(emp::NewPtr<ConfigLevel>());
+
+      if (l == 1) {
+        clevs[l]->Set("EVENT_RADIUS", "24.0");
+      }
+      clevs[l]->Read(CONFIGLEVEL_BASENAME() + std::to_string(l) + CONFIGLEVEL_EXTENSION());
+
+    }
+  }
+
 public:
 
   static constexpr size_t TAG_WIDTH = 16;
@@ -28,6 +41,10 @@ public:
   using hardware_t = emp::EventDrivenGP_AW<TAG_WIDTH, TRAIT_TYPE>;
   using program_t = hardware_t::program_t;
   using inst_lib_t = emp::InstLib<hardware_t>;
+
+  Config() {
+    init();
+  }
 
   Config(std::string config_fname, emp::cl::ArgManager args) {
 
@@ -39,14 +56,7 @@ public:
     if (args.TestUnknown() == false)
       exit(0);
 
-    for (size_t l = 0; l < NLEV(); ++l) {
-      clevs.push_back(emp::NewPtr<ConfigLevel>());
-
-      if (l == 1) {
-        clevs[l]->Set("EVENT_RADIUS", "24.0");
-      }
-      clevs[l]->Read(CONFIGLEVEL_BASENAME() + std::to_string(l) + CONFIGLEVEL_EXTENSION());
-    }
+    init();
 
   }
 

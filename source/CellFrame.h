@@ -35,7 +35,7 @@ public:
     , facing_set(*local_rng_, cfg)
     , man(man_)
     , local_rng(*local_rng_)
-    , neighs(GeometryHelper(cfg).CalcLocalNeighs(pos))
+    , neighs(GeometryHelper(cfg).CalcLocalNeighs(pos_))
     , pos(pos_)
   {
     Reset();

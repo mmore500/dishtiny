@@ -19,7 +19,7 @@ public:
   using inst_t = inst_lib_t::inst_t;
   using state_t = hardware_t::State;
 
-  static void InitInternalActions(inst_lib_t &il, Config &cfg) {
+  static void InitInternalActions(inst_lib_t il, Config &cfg) {
     // * facings
     //   * set random facing
     //   * rotate facing CW/CCW
@@ -250,7 +250,7 @@ public:
     for (size_t i = 0; i < cfg.NLEV(); ++i) {
       il.AddInst(
         "QueryFacingChannelKin-Lev" + emp::to_string(i),
-        [i, is_live](hardware_t & hw, const inst_t & inst){
+        [i, &is_live](hardware_t & hw, const inst_t & inst){
           state_t & state = hw.GetCurState();
 
           CellFrame &fr = *hw.GetTrait(0);
@@ -278,7 +278,7 @@ public:
     for (size_t i = 0; i < cfg.NLEV(); ++i) {
       il.AddInst(
         "QueryFacingChannel-Lev" + emp::to_string(i),
-        [i, is_live](hardware_t & hw, const inst_t & inst){
+        [i, &is_live](hardware_t & hw, const inst_t & inst){
           state_t & state = hw.GetCurState();
 
           CellFrame &fr = *hw.GetTrait(0);
@@ -302,7 +302,7 @@ public:
 
     il.AddInst(
       "QueryFacingStockpile",
-      [is_live](hardware_t & hw, const inst_t & inst){
+      [&is_live](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
 
         CellFrame &fr = *hw.GetTrait(0);
@@ -352,6 +352,8 @@ public:
       InitExternalSensors(il, is_live, cfg);
 
     }
+
+    emp_assert(il.GetSize());
 
     return il;
 

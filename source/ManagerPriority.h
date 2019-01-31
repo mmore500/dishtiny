@@ -1,7 +1,7 @@
 #pragma once
 
 #include <algorithm>
-#include <optional>
+#include <experimental/optional>
 #include <tuple>
 
 #include "base/Ptr.h"
@@ -10,9 +10,8 @@
 #include "tools/random_utils.h"
 
 #include "ChannelPack.h"
+#include "Genome.h"
 #include "SirePack.h"
-
-class Genome;
 
 class ManagerPriority {
 
@@ -66,9 +65,9 @@ public:
     }
   }
 
-  std::optional<std::tuple<emp::Ptr<Genome>,ChannelPack,SirePack>>
+  std::experimental::optional<std::tuple<emp::Ptr<Genome>,ChannelPack,SirePack>>
   QueryPendingGenome() {
-    return gen ? std::make_optional(std::make_tuple(gen,cp,sp)) : std::nullopt;
+    return gen ? std::experimental::make_optional(std::make_tuple(gen,cp,sp)) : std::experimental::nullopt;
   }
 
 };

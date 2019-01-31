@@ -1,5 +1,6 @@
 #pragma once
 
+#include <tuple>
 #include <utility>
 
 #include "base/vector.h"
@@ -15,9 +16,13 @@
 #include "Manager.h"
 #include "Mutator.h"
 
+class WebInterface;
+
 class DishWorld : public emp::World<Genome> {
 
 private:
+
+  friend class WebInterface;
 
   Config &cfg;
 
@@ -31,7 +36,7 @@ private:
 public:
   DishWorld(Config &cfg_, size_t uid_offset=0)
   : cfg(cfg_), mut(cfg_) {
-    SetPopStruct_Grid(cfg.GRID_W(), cfg.GRID_H(), true);
+    SetPopStruct_Grid(cfg.GRID_W(), cfg.GRID_H());
 
     for(size_t i = 0; i < GetSize(); ++i) {
       local_rngs.push_back(
@@ -52,14 +57,6 @@ public:
       ));
     }
 
-    for(size_t i = 0; i < GetSize(); ++i) {
-      Genome g(*local_rngs[i], InstructionLibrary::Make(
-        [this](size_t pos){ return IsOccupied(pos); },
-        cfg
-      ), cfg);
-      InjectAt(g, emp::WorldPosition(i,1));
-    }
-
     OnOffspringReady(
       [this](Genome& g, size_t pos){
         return mut.ApplyMutations(g.program,*local_rngs[pos]);
@@ -73,9 +70,11 @@ public:
 
     OnPlacement([this](size_t pos){
       man->Stockpile(pos).Reset();
-      // cpus[pos]->ResetHardware();
+      cpus[pos]->ResetHardware();
+      emp_assert(!cpus[pos]->GetProgram().GetSize());
       cpus[pos]->GetTrait(0)->Reset();
       cpus[pos]->SetProgram(GetOrg(pos).program);
+      emp_assert(cpus[pos]->GetProgram().GetSize());
     });
 
     OnUpdate([this](size_t upd){
@@ -84,9 +83,19 @@ public:
       Post();
     });
 
+    for(size_t i = 0; i < GetSize(); ++i) {
+      Genome g(*local_rngs[i], InstructionLibrary::Make(
+        [this](size_t pos){ return IsOccupied(pos); },
+        cfg
+      ), cfg);
+      InjectAt(g, emp::WorldPosition(i));
+      emp_assert(GetOrg(i).program.GetSize());
+    }
+
   }
 
   void Pre() {
+    std::cout << "Pre " << std::endl;
     for(size_t i = 0; i < GetSize(); ++i) {
       if (IsOccupied(i)) {
         for(size_t l = 0; l < cfg.NLEV(); ++l) {
@@ -98,16 +107,22 @@ public:
   }
 
   void Mid() {
+    std::cout << "Mid " << std::endl;
     for(size_t i = 0; i < GetSize(); ++i) {
       if (IsOccupied(i)) cpus[i]->Process(cfg.HARDWARE_STEPS());
     }
   }
 
   void Post() {
+    std::cout << "Post " << std::endl;
     for(size_t i = 0; i < GetSize(); ++i) {
       auto optional_tup = man->Priority(i).QueryPendingGenome();
       if(optional_tup) {
-        auto [ prog, chanpack, sirepack ] = *(optional_tup);
+        emp::Ptr<Genome> prog;
+        ChannelPack chanpack;
+        SirePack sirepack;
+        std::tie(prog, chanpack, sirepack) = *(optional_tup);
+
         AddOrgAt(prog, i, sirepack.par_pos);
         man->Channel(i).Inherit(chanpack,sirepack.rep_lev);
       }
