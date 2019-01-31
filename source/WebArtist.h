@@ -12,7 +12,7 @@ class WebArtist {
 
 private:
 
-  UI::Canvas &canvas;
+  UI::Canvas canvas;
 
   std::function<std::experimental::optional<T>(size_t)> getter;
   std::function<std::string(std::experimental::optional<T>)> renderer;
@@ -24,17 +24,17 @@ private:
 public:
 
   WebArtist(
-    UI::Canvas &canvas_,
+    UI::Document viewer,
     std::function<std::experimental::optional<T>(size_t)> getter_,
     std::function<std::string(std::experimental::optional<T>)> renderer_,
     Config &cfg_,
     std::string line_color_="black"
-  ) : canvas(canvas_)
+  ) : canvas(500,500)
   , getter(getter_)
   , renderer(renderer_)
   , line_color(line_color_)
   , cfg(cfg_)
-  { ; }
+  { viewer << canvas; }
 
   void Redraw() {
 

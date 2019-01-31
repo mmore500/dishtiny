@@ -151,6 +151,8 @@ public:
         "TryReproduce-Lev" + emp::to_string(i),
         [i, &cfg](hardware_t & hw, const inst_t & inst){
 
+          std::cout << "try reproduce " << std::endl;
+
           CellFrame &fr = *hw.GetTrait(0);
 
           Manager &man = fr.GetManager();
@@ -160,6 +162,8 @@ public:
           double req = endow + cfg.REP_THRESH();
 
           if(req >= man.Stockpile(pos).QueryResource()) {
+
+            std::cout << "going for it " << std::endl;
 
             man.Stockpile(pos).RequestResourceAmt(req);
 
@@ -335,7 +339,7 @@ public:
 
   }
 
-  static inst_lib_t & Make(std::function<bool(size_t)> is_live, Config &cfg) {
+  static const inst_lib_t & Make(std::function<bool(size_t)> is_live, Config &cfg) {
 
     static inst_lib_t il;
 
@@ -350,6 +354,8 @@ public:
       InitExternalActions(il, cfg);
 
       InitExternalSensors(il, is_live, cfg);
+
+      std::cout << "Instruction Library Size: " << il.GetSize() << std::endl;
 
     }
 

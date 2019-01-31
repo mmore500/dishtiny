@@ -89,13 +89,13 @@ public:
         cfg
       ), cfg);
       InjectAt(g, emp::WorldPosition(i));
+      if (i == 0) g.program.PrintProgram();
       emp_assert(GetOrg(i).program.GetSize());
     }
 
   }
 
   void Pre() {
-    std::cout << "Pre " << std::endl;
     for(size_t i = 0; i < GetSize(); ++i) {
       if (IsOccupied(i)) {
         for(size_t l = 0; l < cfg.NLEV(); ++l) {
@@ -107,14 +107,13 @@ public:
   }
 
   void Mid() {
-    std::cout << "Mid " << std::endl;
     for(size_t i = 0; i < GetSize(); ++i) {
+      emp_assert(cpus[i]->GetProgram().GetSize());
       if (IsOccupied(i)) cpus[i]->Process(cfg.HARDWARE_STEPS());
     }
   }
 
   void Post() {
-    std::cout << "Post " << std::endl;
     for(size_t i = 0; i < GetSize(); ++i) {
       auto optional_tup = man->Priority(i).QueryPendingGenome();
       if(optional_tup) {

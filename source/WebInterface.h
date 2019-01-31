@@ -17,11 +17,12 @@ class WebInterface : public UI::Animate {
 
   UI::Document viewer;        //< Div that contains the canvas viewer.
   UI::Document button_dash;  //< Div that contains the button dashboard.
-  UI::Canvas canvas;
 
   DishWorld w;
 
   WebArtist<ChannelPack> channel;
+  emp::vector<WebArtist<int>> wave;
+  // WebArtist<double> stockpile;
 
 
 public:
@@ -29,30 +30,49 @@ public:
   WebInterface()
     : viewer("emp_viewer")
     , button_dash("emp_button_dash")
-    , canvas(500,500)
     , w(cfg)
     , channel(
-        canvas,
+        viewer,
         [this](size_t i){
           return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Channel(i).GetIDs()) : std::experimental::nullopt;
         },
         [](std::experimental::optional<ChannelPack> cp) {
-          return cp ? emp::ColorHSL((*cp)[0]%360,emp::Mod((*cp)[1],50.0),60.0): emp::ColorRGB(0.0,0.0,0.0);
+          return cp ?
+          emp::ColorHSV(emp::Mod((*cp)[1],360.0),emp::Mod((*cp)[0],0.95),1.0)
+          : emp::ColorRGB(0.0,0.0,0.0);
         },
         cfg
     ) {
 
-    viewer << canvas;
-    viewer << "<br />";
+    for (size_t l = 0; l < cfg.NLEV(); ++l) {
+      wave.emplace_back(
+          viewer,
+          [this, l](size_t i){
+            return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Wave(i,l).GetState()) : std::experimental::nullopt;
+          },
+          [](std::experimental::optional<int> cp) {
+            if (cp) {
+              if (*cp > 0) {
+                return emp::ColorRGB(0,255,0);
+              } else if (*cp < 0) {
+                return emp::ColorRGB(255,0,0);
+              } else {
+                return emp::ColorRGB(255,255,255);
+              }
+            } else {
+              return emp::ColorRGB(0,0,0);
+            }
+          },
+          cfg
+      );
+    }
 
     auto ud_text = viewer.AddText("ud_text");
     ud_text << "Update: " << UI::Live(w.update);
 
-    viewer << UI::Button(
+    button_dash << UI::Button(
       [this](){
-        std::cout << "pre button" << std::endl;
         w.Update();
-        std::cout << "post button" << std::endl;
         Redraw();
       },
       "update"
@@ -61,9 +81,9 @@ public:
   }
 
   void Redraw() {
-    std::cout << "Web Interface redraw" << std::endl;
     viewer.Text("ud_text").Redraw();
     channel.Redraw();
+    for(auto w : wave) w.Redraw();
   }
 
 };

@@ -18,7 +18,7 @@ struct Genome {
   : program(_p)
   { emp_assert(program.GetSize()); }
 
-  Genome(emp::Random &local_rng, Config::inst_lib_t inst_lib, Config &cfg)
+  Genome(emp::Random &local_rng, const Config::inst_lib_t &inst_lib, Config &cfg)
   : Genome(emp::GenRandSignalGPProgram<Config::TAG_WIDTH,Config::TRAIT_TYPE>(
         local_rng,
         inst_lib,
