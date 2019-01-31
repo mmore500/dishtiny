@@ -38,7 +38,7 @@ public:
         },
         [](std::experimental::optional<ChannelPack> cp) {
           return cp ?
-          emp::ColorHSV(emp::Mod((*cp)[1],360.0),emp::Mod((*cp)[0],0.95),1.0)
+          emp::ColorHSV(emp::Mod((*cp)[1],360.0),emp::Mod((*cp)[0],0.6)+0.4,1.0)
           : emp::ColorRGB(0.0,0.0,0.0);
         },
         cfg

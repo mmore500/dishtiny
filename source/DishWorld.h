@@ -109,7 +109,10 @@ public:
   void Mid() {
     for(size_t i = 0; i < GetSize(); ++i) {
       emp_assert(cpus[i]->GetProgram().GetSize());
-      if (IsOccupied(i)) cpus[i]->Process(cfg.HARDWARE_STEPS());
+      if (IsOccupied(i)) {
+        cpus[i]->CallMain();
+        cpus[i]->Process(cfg.HARDWARE_STEPS());
+      }
     }
   }
 
