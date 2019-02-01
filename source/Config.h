@@ -25,7 +25,7 @@ private:
       clevs.push_back(emp::NewPtr<ConfigLevel>());
 
       if (l == 1) {
-        clevs[l]->Set("EVENT_RADIUS", "24.0");
+        clevs[l]->Set("EVENT_RADIUS", "8.0");
       }
       clevs[l]->Read(CONFIGLEVEL_BASENAME() + std::to_string(l) + CONFIGLEVEL_EXTENSION());
 

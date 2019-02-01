@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <experimental/optional>
 #include <string>
 
@@ -22,8 +23,7 @@ class WebInterface : public UI::Animate {
 
   WebArtist<ChannelPack> channel;
   emp::vector<WebArtist<int>> wave;
-  // WebArtist<double> stockpile;
-
+  WebArtist<double> stockpile;
 
 public:
 
@@ -32,16 +32,29 @@ public:
     , button_dash("emp_button_dash")
     , w(cfg)
     , channel(
-        viewer,
-        [this](size_t i){
-          return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Channel(i).GetIDs()) : std::experimental::nullopt;
-        },
-        [](std::experimental::optional<ChannelPack> cp) {
-          return cp ?
-          emp::ColorHSV(emp::Mod((*cp)[1],360.0),emp::Mod((*cp)[0],0.6)+0.4,1.0)
-          : emp::ColorRGB(0.0,0.0,0.0);
-        },
-        cfg
+      viewer,
+      [this](size_t i){
+        return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Channel(i).GetIDs()) : std::experimental::nullopt;
+      },
+      [](std::experimental::optional<ChannelPack> cp) {
+        return cp ?
+        emp::ColorHSV(emp::Mod((*cp)[1],360.0),emp::Mod((*cp)[0],0.6)+0.4,1.0)
+        : emp::ColorRGB(0.0,0.0,0.0);
+      },
+      cfg
+    ), stockpile(
+      viewer,
+      [this](size_t i){
+        return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Stockpile(i).QueryResource()) : std::experimental::nullopt;
+      },
+      [](std::experimental::optional<double> amt) {
+        if (amt) {
+          return *amt > 0 ? emp::ColorRGB(0,std::min(255.0,(*amt)*70),0) : emp::ColorRGB(std::min(255.0,-(*amt)*70),0,0);
+        } else {
+          return emp::ColorRGB(0,0,0);
+        }
+      },
+      cfg
     ) {
 
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
@@ -50,12 +63,14 @@ public:
           [this, l](size_t i){
             return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Wave(i,l).GetState()) : std::experimental::nullopt;
           },
-          [](std::experimental::optional<int> cp) {
+          [this, l](std::experimental::optional<int> cp) {
             if (cp) {
-              if (*cp > 0) {
+              if (*cp > 0 && *cp < cfg.Lev(l).EVENT_RADIUS()) {
                 return emp::ColorRGB(0,255,0);
-              } else if (*cp < 0) {
+              } else if (*cp > 0) {
                 return emp::ColorRGB(255,0,0);
+              } else if (*cp < 0) {
+                return emp::ColorRGB(0,0,255);
               } else {
                 return emp::ColorRGB(255,255,255);
               }
@@ -83,6 +98,7 @@ public:
   void Redraw() {
     viewer.Text("ud_text").Redraw();
     channel.Redraw();
+    stockpile.Redraw();
     for(auto w : wave) w.Redraw();
   }
 
