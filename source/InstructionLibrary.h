@@ -194,7 +194,7 @@ public:
           double endow = fr.GetEndowment(i);
           double req = endow + cfg.REP_THRESH();
 
-          if(req >= man.Stockpile(pos).QueryResource()) {
+          if(req <= man.Stockpile(pos).QueryResource()) {
 
             man.Stockpile(pos).RequestResourceAmt(req);
 

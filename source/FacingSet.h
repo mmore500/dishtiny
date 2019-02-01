@@ -78,8 +78,7 @@ public:
         Ccw(i);
       }
     } else {
-      emp_assert(which < facings.size());
-      emp_assert(false, "Not implemented!"); // TODO
+      facings[which] = Cardi::Ccw[facings[which]];
     }
   }
 
@@ -89,18 +88,19 @@ public:
         Cw(i);
       }
     } else {
-      emp_assert(which < facings.size());
-      emp_assert(false, "Not implemented!"); // TODO
+      facings[which] = Cardi::Cw[facings[which]];
     }
   }
 
   void Unify(size_t which) {
     /* point all facings towards the desired facing */
-    //TODO
-    for(size_t i = 0; i < facings.size(); ++i) {
-      emp_assert(false, "Not implemented!"); // TODO
-      // Cardi::Dir rand = gen rand;
-      // self[i] = rand;
+    if (which == GetAllFacings()) {
+      Spin(0);
+      Unify(0);
+    } else {
+      for(size_t i = 0; i < facings.size(); ++i) {
+        facings[i] = facings[which];
+      }
     }
   }
 
@@ -110,7 +110,6 @@ public:
         Spin(i);
       }
     } else {
-      emp_assert(which < facings.size());
       facings[which] = Cardi::Spin(local_rng);
     }
   }

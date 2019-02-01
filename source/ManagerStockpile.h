@@ -10,8 +10,6 @@ private:
 
   double resource;
 
-  double next_resource;
-
   double contrib_resource;
 
   Config &cfg;
@@ -25,7 +23,7 @@ public:
   , cfg(cfg_)
   { ; }
 
-  double QueryResource(){
+  double QueryResource() const {
     return resource;
   }
 
@@ -38,7 +36,6 @@ public:
     } else {
       return 0;
     }
-    return resource;
   }
 
   double RequestResourceFrac(double frac){
@@ -77,7 +74,6 @@ public:
 
   void Reset() {
     resource = 0.0;
-    next_resource = 0.0;
     contrib_resource = 0.0;
   }
 

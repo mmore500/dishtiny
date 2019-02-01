@@ -13,7 +13,7 @@ class ManagerWave {
 
 static const int active = 1;
 static const int ready = 0;
-static const int quiescent = -7;
+static const int quiescent = -3;
 
 private:
 
@@ -49,7 +49,10 @@ private:
 
   }
 
-  size_t IncomingSeed() {
+  size_t IncomingSeed(size_t update) {
+
+    // only put out seeds at intervals
+    if (update % (cfg.Lev(lev).EVENT_RADIUS() + 1)) return ready;
 
     /* when this is called we know we're in the ready state */
     size_t event_size = cfg.Lev(lev).EVENT_RADIUS()*2;
@@ -86,7 +89,7 @@ public:
   }
 
   /* this should only be called on live cells */
-  void CalcNext() {
+  void CalcNext(size_t update) {
 
     if (state > 0) {
       /* e.g., if active */
@@ -95,7 +98,7 @@ public:
       /* e.g., if recovering from quiescent */
       next_state = state + 1;
     } else /* e.g., if ready */ {
-      next_state = std::max(IncomingWave(),IncomingSeed());
+      next_state = std::max(IncomingWave(),IncomingSeed(update));
     }
 
   }

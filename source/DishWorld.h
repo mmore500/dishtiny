@@ -100,7 +100,7 @@ public:
     for(size_t i = 0; i < GetSize(); ++i) {
       if (IsOccupied(i)) {
         for(size_t l = 0; l < cfg.NLEV(); ++l) {
-          man->Wave(i,l).CalcNext();
+          man->Wave(i,l).CalcNext(GetUpdate());
           man->Wave(i,l).HarvestResource();
         }
       }
