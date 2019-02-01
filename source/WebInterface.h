@@ -96,12 +96,16 @@ public:
 
     button_dash << UI::Button(
       [this](){
-        w.Update();
-        Redraw();
       },
-      "update"
+      "Step"
     );
+    button_dash << GetToggleButton("Animate");
 
+  }
+
+  void DoFrame() {
+    w.Update();
+    Redraw();
   }
 
   void Redraw() {

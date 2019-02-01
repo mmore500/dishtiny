@@ -18,7 +18,5 @@ int main(int argc, char* argv[])
 
   i.Redraw();
 
-  std::cout << "exiting" << std::endl;
-
   return 0;
 }
