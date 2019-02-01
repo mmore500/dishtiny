@@ -19,7 +19,42 @@ public:
   using inst_t = inst_lib_t::inst_t;
   using state_t = hardware_t::State;
 
-  static void InitInternalActions(inst_lib_t il, Config &cfg) {
+  static void InitDefault(inst_lib_t &il) {
+
+    il.AddInst("Inc", Config::hardware_t::Inst_Inc, 1, "Increment value in local memory Arg1");
+    il.AddInst("Dec", Config::hardware_t::Inst_Dec, 1, "Decrement value in local memory Arg1");
+    il.AddInst("Not", Config::hardware_t::Inst_Not, 1, "Logically toggle value in local memory Arg1");
+    il.AddInst("Add", Config::hardware_t::Inst_Add, 3, "Local memory: Arg3 = Arg1 + Arg2");
+    il.AddInst("Sub", Config::hardware_t::Inst_Sub, 3, "Local memory: Arg3 = Arg1 - Arg2");
+    il.AddInst("Mult", Config::hardware_t::Inst_Mult, 3, "Local memory: Arg3 = Arg1 * Arg2");
+    il.AddInst("Div", Config::hardware_t::Inst_Div, 3, "Local memory: Arg3 = Arg1 / Arg2");
+    il.AddInst("Mod", Config::hardware_t::Inst_Mod, 3, "Local memory: Arg3 = Arg1 % Arg2");
+    il.AddInst("TestEqu", Config::hardware_t::Inst_TestEqu, 3, "Local memory: Arg3 = (Arg1 == Arg2)");
+    il.AddInst("TestNEqu", Config::hardware_t::Inst_TestNEqu, 3, "Local memory: Arg3 = (Arg1 != Arg2)");
+    il.AddInst("TestLess", Config::hardware_t::Inst_TestLess, 3, "Local memory: Arg3 = (Arg1 < Arg2)");
+    il.AddInst("If", Config::hardware_t::Inst_If, 1, "Local memory: If Arg1 != 0, proceed; else, skip block.", emp::ScopeType::BASIC, 0, {"block_def"});
+    il.AddInst("While", Config::hardware_t::Inst_While, 1, "Local memory: If Arg1 != 0, loop; else, skip block.", emp::ScopeType::BASIC, 0, {"block_def"});
+    il.AddInst("Countdown", Config::hardware_t::Inst_Countdown, 1, "Local memory: Countdown Arg1 to zero.", emp::ScopeType::BASIC, 0, {"block_def"});
+    il.AddInst("Close", Config::hardware_t::Inst_Close, 0, "Close current block if there is a block to close.", emp::ScopeType::BASIC, 0, {"block_close"});
+    il.AddInst("Break", Config::hardware_t::Inst_Break, 0, "Break out of current block.");
+    il.AddInst("Call", Config::hardware_t::Inst_Call, 0, "Call function that best matches call affinity.", emp::ScopeType::BASIC, 0, {"affinity"});
+    il.AddInst("Return", Config::hardware_t::Inst_Return, 0, "Return from current function if possible.");
+    il.AddInst("SetMem", Config::hardware_t::Inst_SetMem, 2, "Local memory: Arg1 = numerical value of Arg2");
+    il.AddInst("CopyMem", Config::hardware_t::Inst_CopyMem, 2, "Local memory: Arg1 = Arg2");
+    il.AddInst("SwapMem", Config::hardware_t::Inst_SwapMem, 2, "Local memory: Swap values of Arg1 and Arg2.");
+    il.AddInst("Input", Config::hardware_t::Inst_Input, 2, "Input memory Arg1 => Local memory Arg2.");
+    il.AddInst("Output", Config::hardware_t::Inst_Output, 2, "Local memory Arg1 => Output memory Arg2.");
+    il.AddInst("Commit", Config::hardware_t::Inst_Commit, 2, "Local memory Arg1 => Shared memory Arg2.");
+    il.AddInst("Pull", Config::hardware_t::Inst_Pull, 2, "Shared memory Arg1 => Shared memory Arg2.");
+    il.AddInst("BroadcastMsg", Config::hardware_t::Inst_BroadcastMsg, 0, "Broadcast output memory as message event.", emp::ScopeType::BASIC, 0, {"affinity"});
+    il.AddInst("SendMsg", Config::hardware_t::Inst_SendMsg, 0, "Send output memory as message event.", emp::ScopeType::BASIC, 0, {"affinity"});
+    il.AddInst("Fork", Config::hardware_t::Inst_Fork, 0, "Fork a new thread, using tag-based referencing to determine which function to call on the new thread.", emp::ScopeType::BASIC, 0, {"affinity"});
+    il.AddInst("Terminate", Config::hardware_t::Inst_Terminate, 0, "Terminate current thread.");
+    il.AddInst("Nop", Config::hardware_t::Inst_Nop, 0, "No operation.");
+
+  }
+
+  static void InitInternalActions(inst_lib_t &il, Config &cfg) {
     // * facings
     //   * set random facing
     //   * rotate facing CW/CCW
@@ -151,8 +186,6 @@ public:
         "TryReproduce-Lev" + emp::to_string(i),
         [i, &cfg](hardware_t & hw, const inst_t & inst){
 
-          std::cout << "try reproduce " << std::endl;
-
           CellFrame &fr = *hw.GetTrait(0);
 
           Manager &man = fr.GetManager();
@@ -162,8 +195,6 @@ public:
           double req = endow + cfg.REP_THRESH();
 
           if(req >= man.Stockpile(pos).QueryResource()) {
-
-            std::cout << "going for it " << std::endl;
 
             man.Stockpile(pos).RequestResourceAmt(req);
 
@@ -189,6 +220,8 @@ public:
     il.AddInst(
       "DoApoptosis",
       [](hardware_t & hw, const inst_t & inst){
+
+        std::cout << "apoptosis" << std::endl;
 
         CellFrame &fr = *hw.GetTrait(0);
 
@@ -250,11 +283,12 @@ public:
     std::function<bool(size_t)> is_live,
     Config &cfg
   ) {
+
     // sensor functions
     for (size_t i = 0; i < cfg.NLEV(); ++i) {
       il.AddInst(
         "QueryFacingChannelKin-Lev" + emp::to_string(i),
-        [i, &is_live](hardware_t & hw, const inst_t & inst){
+        [i, is_live](hardware_t & hw, const inst_t & inst){
           state_t & state = hw.GetCurState();
 
           CellFrame &fr = *hw.GetTrait(0);
@@ -282,7 +316,7 @@ public:
     for (size_t i = 0; i < cfg.NLEV(); ++i) {
       il.AddInst(
         "QueryFacingChannel-Lev" + emp::to_string(i),
-        [i, &is_live](hardware_t & hw, const inst_t & inst){
+        [i, is_live](hardware_t & hw, const inst_t & inst){
           state_t & state = hw.GetCurState();
 
           CellFrame &fr = *hw.GetTrait(0);
@@ -306,7 +340,7 @@ public:
 
     il.AddInst(
       "QueryFacingStockpile",
-      [&is_live](hardware_t & hw, const inst_t & inst){
+      [is_live](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
 
         CellFrame &fr = *hw.GetTrait(0);
@@ -345,7 +379,7 @@ public:
 
     if (il.GetSize() == 0) {
 
-      il = *hardware_t::DefaultInstLib();
+      InitDefault(il);
 
       InitInternalActions(il, cfg);
 

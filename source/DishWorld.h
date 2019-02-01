@@ -7,6 +7,7 @@
 #include "Evolve/World.h"
 #include "tools/Random.h"
 #include "tools/hash_utils.h"
+#include "tools/BitSet.h"
 
 #include "Cardi.h"
 #include "CellFrame.h"
@@ -108,9 +109,14 @@ public:
 
   void Mid() {
     for(size_t i = 0; i < GetSize(); ++i) {
-      emp_assert(cpus[i]->GetProgram().GetSize());
       if (IsOccupied(i)) {
-        cpus[i]->CallMain();
+        emp_assert(cpus[i]->GetProgram().GetSize());
+        cpus[i]->SpawnCore(
+          Config::hardware_t::affinity_t(),
+          0.5,
+          {},
+          false
+        );
         cpus[i]->Process(cfg.HARDWARE_STEPS());
       }
     }
