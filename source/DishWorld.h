@@ -133,6 +133,7 @@ public:
 
         AddOrgAt(prog, i, sirepack.par_pos);
         man->Channel(i).Inherit(chanpack,sirepack.rep_lev);
+        man->Stockpile(i).InternalApplyHarvest(sirepack.endowment);
       }
       if (IsOccupied(i)) {
         man->Priority(i).Reset();

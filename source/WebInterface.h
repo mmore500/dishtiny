@@ -47,12 +47,21 @@ public:
       [this](size_t i){
         return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Stockpile(i).QueryResource()) : std::experimental::nullopt;
       },
-      [](std::experimental::optional<double> amt) {
+      [this](std::experimental::optional<double> amt) {
         if (amt) {
-          return *amt > 0 ? emp::ColorRGB(0,std::min(255.0,(*amt)*70),0) : emp::ColorRGB(std::min(255.0,-(*amt)*70),0,0);
-        } else {
-          return emp::ColorRGB(0,0,0);
-        }
+          if (*amt > cfg.REP_THRESH()) return emp::ColorRGB(
+              std::min(255.0,(*amt - cfg.REP_THRESH())*25),
+              255,
+              0
+            );
+          else if (*amt > 0) return emp::ColorRGB(0,0,255);
+          else if (*amt == 0) return emp::ColorRGB(255,255,255);
+          else return emp::ColorRGB(
+              255,
+              255-std::min(255.0,(*amt)*255.0/cfg.KILL_THRESH()),
+              255-std::min(255.0,(*amt)*255.0/cfg.KILL_THRESH())
+            );
+        } else return emp::ColorRGB(0,0,0);
       },
       cfg
     ) {
