@@ -40,7 +40,6 @@ public:
   }
 
   void Reset() {
-    /* TODO why does this make everything run so fast */
     facing_set.Spin(facing_set.GetAllFacings());
   }
 
