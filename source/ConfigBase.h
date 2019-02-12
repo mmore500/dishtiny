@@ -7,6 +7,7 @@
 
 EMP_BUILD_CONFIG(
   ConfigBase,
+
   GROUP(DEFAULT, "Default settings for DISHTINY"),
   VALUE(QUIESCENT_MAX, size_t, 4, "Length of quiescent period"),
   VALUE(NLEV, size_t, 2, "Number hierarchical resource levels"),
@@ -34,18 +35,21 @@ EMP_BUILD_CONFIG(
   VALUE(CULL_TARGET, double, 0.05, "What proportion of the population should a cull remove?"),
   VALUE(CULL_PENALTY, double, -DBL_MAX, "What penalty should we inject into a channel pool?"),
   VALUE(HARDWARE_STEPS, size_t, 100, "How many hardware steps to run per update?"),
+
   GROUP(PROGRAM_GROUP, "SignalGP program Settings"),
   VALUE(PROGRAM_MAX_FUN_CNT, size_t, 8, "Used for generating SGP programs. How many functions do we generate?"),
   VALUE(PROGRAM_MIN_FUN_CNT, size_t, 1, "Used for generating SGP programs. How many functions do we generate?"),
   VALUE(PROGRAM_MAX_FUN_LEN, size_t, 8, ".."),
   VALUE(PROGRAM_MIN_FUN_LEN, size_t, 1, ".."),
   VALUE(PROGRAM_MAX_TOTAL_LEN, size_t, 256, "Maximum length of SGP programs."),
+
   GROUP(HARDWARE_GROUP, "SignalGP Hardware Settings"),
   VALUE(ENVIRONMENT_SIGNALS, bool, true, "Can environment signals trigger functions?"),
   VALUE(ACTIVE_SENSORS, bool, true, "Do agents have function active sensors?"),
   VALUE(HW_MAX_CORES, size_t, 16, "Max number of hardware cores; i.e., max number of simultaneous threads of execution hardware will support."),
   VALUE(HW_MAX_CALL_DEPTH, size_t, 128, "Max call depth of hardware unit"),
   VALUE(HW_MIN_BIND_THRESH, double, 0.0, "Hardware minimum referencing threshold"),
+
   GROUP(MUTATION_GROUP, "SignalGP Mutation Settings"),
   VALUE(PROGRAM_MIN_ARG_VAL, int, 0, "Maximum argument value for instructions."),
   VALUE(PROGRAM_MAX_ARG_VAL, int, 16, "Maximum argument value for instructions."),
@@ -57,6 +61,7 @@ EMP_BUILD_CONFIG(
   VALUE(SLIP__PER_FUNC, double, 0.05, "Per-function rate of slip mutations."),
   VALUE(FUNC_DUP__PER_FUNC, double, 0.05, "Per-function rate of function duplications."),
   VALUE(FUNC_DEL__PER_FUNC, double, 0.05, "Per-function rate of function deletions."),
+
   GROUP(LOGISTICS, "logistics"),
   VALUE(CONFIGLEVEL_BASENAME, std::string, "ConfigL", "Base filename"),
   VALUE(CONFIGLEVEL_EXTENSION, std::string, ".cfg", "Filename extension")
