@@ -16,7 +16,6 @@ class CellFrame {
 
 private:
 
-  emp::vector<double> endowments;
   FacingSet facing_set;
   Manager &man;
   emp::Random &local_rng;
@@ -31,8 +30,7 @@ public:
     Config &cfg,
     Manager &man_,
     size_t pos_
-  ) : endowments(cfg.NLEV()+1)
-    , facing_set(*local_rng_, cfg)
+  ) : facing_set(*local_rng_, cfg)
     , man(man_)
     , local_rng(*local_rng_)
     , neighs(GeometryHelper(cfg).CalcLocalNeighs(pos_))
@@ -43,7 +41,6 @@ public:
 
   void Reset() {
     /* TODO why does this make everything run so fast */
-    std::fill(endowments.begin(), endowments.end(), 0);
     facing_set.Spin(facing_set.GetAllFacings());
   }
 
@@ -61,16 +58,6 @@ public:
 
   const size_t GetNeigh(size_t dir) {
     return neighs[dir];
-  }
-
-  const double GetEndowment(size_t which) {
-    return endowments[which];
-  }
-
-  void AdjEndowment(double amt, size_t which) {
-    endowments[which] += amt;
-    endowments[which] = std::max(endowments[which],0.0);
-    emp_assert(endowments[which] >= 0);
   }
 
 };

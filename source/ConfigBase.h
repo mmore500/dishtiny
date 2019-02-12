@@ -33,7 +33,6 @@ EMP_BUILD_CONFIG(
   VALUE(SEED_POP_CLONECOUNT, size_t, 2, "How many clones of each champion genotype should we seed our population with?"),
   VALUE(CULL_TARGET, double, 0.05, "What proportion of the population should a cull remove?"),
   VALUE(CULL_PENALTY, double, -DBL_MAX, "What penalty should we inject into a channel pool?"),
-  VALUE(RAINYDAY_PROPORTION, double, 2, "How much to have relative to endowment before reproducing and giving away one endowment?"),
   VALUE(HARDWARE_STEPS, size_t, 100, "How many hardware steps to run per update?"),
   GROUP(PROGRAM_GROUP, "SignalGP program Settings"),
   VALUE(PROGRAM_MAX_FUN_CNT, size_t, 8, "Used for generating SGP programs. How many functions do we generate?"),

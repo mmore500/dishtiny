@@ -93,25 +93,6 @@ public:
       );
     }
 
-    // * adjust endowment(s)
-    //   * different granularities (measured in multiples of one reproduction)
-    for(size_t i = 0; i < cfg.NLEV() + 1; ++i) {
-      il.AddInst(
-        "IncreaseEndowment-Lev" + emp::to_string(i),
-        [i, &cfg](hardware_t & hw, const inst_t & inst){
-          CellFrame &fr = *hw.GetTrait(0);
-          fr.AdjEndowment(cfg.REP_THRESH(), i);
-        }
-      );
-      il.AddInst(
-        "DecreaseEndowment-Lev" + emp::to_string(i),
-        [i, &cfg](hardware_t & hw, const inst_t & inst){
-          CellFrame &fr = *hw.GetTrait(0);
-          fr.AdjEndowment(-cfg.REP_THRESH(), i);
-        }
-      );
-    }
-
   }
 
   static void InitExternalActions(inst_lib_t &il, Config &cfg) {
@@ -191,12 +172,9 @@ public:
           Manager &man = fr.GetManager();
           size_t pos = fr.GetPos();
 
-          double endow = fr.GetEndowment(i);
-          double req = endow + cfg.REP_THRESH();
+          if(cfg.REP_THRESH() <= man.Stockpile(pos).QueryResource()) {
 
-          if(req <= man.Stockpile(pos).QueryResource()) {
-
-            man.Stockpile(pos).RequestResourceAmt(req);
+            man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
 
             size_t dir = fr.GetFacingSet().GetReproduction(i);
             auto cp = man.Channel(pos).GetIDs();
@@ -206,8 +184,7 @@ public:
                 cp,
                 { pos,   /* size_t par_pos,*/
                   dir,   /* size_t dir, */
-                  i,     /* size_t rep_lev, */
-                  endow  /* double endowment */
+                  i     /* size_t rep_lev, */
                 }
               );
 
@@ -256,25 +233,6 @@ public:
       1,
       "TODO"
     );
-
-    for (size_t i = 0; i < cfg.NLEV() + 1; ++i) {
-      il.AddInst(
-        "QueryOwnEndowment-Lev" + emp::to_string(i),
-        [i](hardware_t & hw, const inst_t & inst){
-
-          CellFrame &fr = *hw.GetTrait(0);
-
-          double amt = fr.GetEndowment(i);
-
-          state_t & state = hw.GetCurState();
-
-          state.SetLocal(inst.args[0], amt);
-
-        },
-        1,
-       "TODO"
-      );
-    }
 
   }
 
