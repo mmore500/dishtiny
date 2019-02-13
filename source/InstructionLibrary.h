@@ -82,7 +82,7 @@ public:
 
     for(size_t i = 0; i < temp.GetNumFacings(); ++i) {
       il.AddInst(
-        "Spin-Facing" /*+ emp::to_string(i)*/,
+        "Spin-Facing" + emp::to_string(i),
         [i](hardware_t & hw, const inst_t & inst){
           CellFrame &fr = *hw.GetTrait(0);
           fr.GetFacingSet().Spin(i);
