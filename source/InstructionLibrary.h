@@ -48,8 +48,6 @@ public:
     il.AddInst("Output", Config::hardware_t::Inst_Output, 2, "Local memory Arg1 => Output memory Arg2.");
     il.AddInst("Commit", Config::hardware_t::Inst_Commit, 2, "Local memory Arg1 => Shared memory Arg2.");
     il.AddInst("Pull", Config::hardware_t::Inst_Pull, 2, "Shared memory Arg1 => Shared memory Arg2.");
-    il.AddInst("BroadcastMsg", Config::hardware_t::Inst_BroadcastMsg, 0, "Broadcast output memory as message event.", emp::ScopeType::BASIC, 0, {"affinity"});
-    il.AddInst("SendMsg", Config::hardware_t::Inst_SendMsg, 0, "Send output memory as message event.", emp::ScopeType::BASIC, 0, {"affinity"});
     il.AddInst("Fork", Config::hardware_t::Inst_Fork, 0, "Fork a new thread, using tag-based referencing to determine which function to call on the new thread.", emp::ScopeType::BASIC, 0, {"affinity"});
     il.AddInst("Terminate", Config::hardware_t::Inst_Terminate, 0, "Terminate current thread.");
     il.AddInst("Nop", Config::hardware_t::Inst_Nop, 0, "No operation.");

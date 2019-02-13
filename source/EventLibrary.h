@@ -22,13 +22,6 @@ public:
         hw.SpawnCore(event.affinity, hw.GetMinBindThresh(), event.msg);
       };
 
-
-      el.AddEvent(
-        "Message",
-        Config::hardware_t::HandleEvent_Message,
-        "Event for exchanging messages (agent-agent, world-agent, etc.)"
-      );
-
       el.AddEvent(
         "SendMessage",
         handle_message,
