@@ -49,6 +49,7 @@ EMP_BUILD_CONFIG(
   VALUE(HW_MAX_CORES, size_t, 16, "Max number of hardware cores; i.e., max number of simultaneous threads of execution hardware will support."),
   VALUE(HW_MAX_CALL_DEPTH, size_t, 128, "Max call depth of hardware unit"),
   VALUE(HW_MIN_BIND_THRESH, double, 0.0, "Hardware minimum referencing threshold"),
+  VALUE(INBOX_CAPACITY, size_t, 128, "Capacity of a cell's inbox."),
 
   GROUP(MUTATION_GROUP, "SignalGP Mutation Settings"),
   VALUE(PROGRAM_MIN_ARG_VAL, int, 0, "Maximum argument value for instructions."),

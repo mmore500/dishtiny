@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "base/assert.h"
 #include "tools/Random.h"
 #include "tools/string_utils.h"
@@ -61,6 +63,22 @@ public:
     //   * and then do it for all facings
     emp::Random temp_r;
     FacingSet temp(temp_r, cfg);
+
+    il.AddInst(
+      "ActivateInbox",
+      [](hardware_t &hw, const inst_t &inst){
+        CellFrame &fr = *hw.GetTrait(0);
+        fr.SetInboxActivity(fr.GetFacingSet().GetSendMessage(), true);
+      }
+    );
+
+    il.AddInst(
+      "DeactivateInbox",
+      [](hardware_t &hw, const inst_t &inst){
+        CellFrame &fr = *hw.GetTrait(0);
+        fr.SetInboxActivity(fr.GetFacingSet().GetSendMessage(), false);
+      }
+    );
 
     for(size_t i = 0; i < temp.GetNumFacings(); ++i) {
       il.AddInst(
@@ -135,32 +153,21 @@ public:
     // general purpose messaging TODO
     // e.g., https://github.com/amlalejini/GECCO-2018-Evolving-Event-driven-Programs-with-SignalGP/blob/master/experiments/election/source/Experiment.h
     /* TODO make a way to filter messages to exclude messages from other ChannelIDs */
-    // il.AddInst(
-    //   "SendMsg",
-    //   [](hardware_t & hw, const inst_t & inst){
-    //     state_t & state = hw.GetCurState();
-    //     emp_assert(false, "Not implemented."); // TODO
-    //     // hw.TriggerEvent("SendMessage", inst.affinity, state.output_mem);
-    //   },
-    //   0,
-    //   "Send output memory as message event to faced neighbor.", emp::ScopeType::BASIC,
-    //   0,
-    //   {"affinity"}
-    // );
-    //
-    // il.AddInst(
-    //   "BroadcastMsg",
-    //   [](hardware_t & hw, const inst_t & inst){
-    //     state_t & state = hw.GetCurState();
-    //     emp_assert(false, "Not implemented."); // TODO
-    //     // hw.TriggerEvent("BroadcastMessage", inst.affinity, state.output_mem);
-    //   },
-    //   0,
-    //   "Broadcast output memory as message event.",
-    //   emp::ScopeType::BASIC,
-    //   0,
-    //   {"affinity"}
-    // );
+    il.AddInst(
+      "SendMsg",
+      [](hardware_t & hw, const inst_t & inst){
+        state_t & state = hw.GetCurState();
+        hw.TriggerEvent("SendMessage", inst.affinity, state.output_mem);
+      }
+    );
+
+    il.AddInst(
+      "BroadcastMsg",
+      [](hardware_t & hw, const inst_t & inst){
+        state_t & state = hw.GetCurState();
+        hw.TriggerEvent("BroadcastMessage", inst.affinity, state.output_mem);
+      }
+    );
 
     for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
       il.AddInst(

@@ -14,6 +14,7 @@
 #include "Config.h"
 #include "Genome.h"
 #include "InstructionLibrary.h"
+#include "EventLibrary.h"
 #include "Manager.h"
 #include "Mutator.h"
 
@@ -49,7 +50,14 @@ public:
     man = new Manager(local_rngs, global_rngs, cfg);
 
     for(size_t i = 0; i < GetSize(); ++i) {
-      cpus.push_back(emp::NewPtr<Config::hardware_t>());
+      cpus.push_back(emp::NewPtr<Config::hardware_t>(
+        &InstructionLibrary::Make(
+          [this](size_t pos){ return IsOccupied(pos); },
+          cfg
+        ),
+        EventLibrary::Make(cfg),
+        local_rngs[i]
+      ));
       cpus[i]->PushTrait(emp::NewPtr<CellFrame>(
         local_rngs[i],
         cfg,
@@ -76,6 +84,7 @@ public:
       cpus[pos]->GetTrait(0)->Reset();
       cpus[pos]->SetProgram(GetOrg(pos).program);
       emp_assert(cpus[pos]->GetProgram().GetSize());
+      man->Inbox(pos).ClearInboxes();
     });
 
     OnUpdate([this](size_t upd){
@@ -99,6 +108,12 @@ public:
   void Pre() {
     for(size_t i = 0; i < GetSize(); ++i) {
       if (IsOccupied(i)) {
+        man->Inbox(i).QueueMessages(
+          *cpus[i],
+          [this, i](size_t pos){
+            return cpus[i]->GetTrait(0)->CheckInboxActivity(pos);
+          }
+        );
         for(size_t l = 0; l < cfg.NLEV(); ++l) {
           man->Wave(i,l).CalcNext(GetUpdate());
           man->Wave(i,l).HarvestResource();

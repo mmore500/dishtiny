@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <deque>
 
 #include "base/vector.h"
 #include "base/Ptr.h"
@@ -41,6 +42,9 @@ public:
   using hardware_t = emp::EventDrivenGP_AW<TAG_WIDTH, TRAIT_TYPE>;
   using program_t = hardware_t::program_t;
   using inst_lib_t = emp::InstLib<hardware_t>;
+  using event_lib_t = emp::EventLib<hardware_t>;
+  using event_t = hardware_t::event_t;
+  using inbox_t = std::deque<event_t>;
 
   Config() {
     init();
