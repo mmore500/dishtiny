@@ -156,7 +156,12 @@ public:
       [](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
         hw.TriggerEvent("SendMessage", inst.affinity, state.output_mem);
-      }
+      },
+      0,
+      "Send a single message to a target.",
+      emp::ScopeType::BASIC,
+      0,
+      {"affinity"}
     );
 
     il.AddInst(
@@ -164,7 +169,12 @@ public:
       [](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
         hw.TriggerEvent("BroadcastMessage", inst.affinity, state.output_mem);
-      }
+      },
+      0,
+      "Send a message to all neighbors.",
+      emp::ScopeType::BASIC,
+      0,
+      {"affinity"}
     );
 
     for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
