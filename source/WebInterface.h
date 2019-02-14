@@ -101,8 +101,7 @@ public:
     ud_text << "Update: " << UI::Live(w.update);
 
     button_dash << UI::Button(
-      [this](){
-      },
+      [this](){ DoFrame(); },
       "Step"
     );
     button_dash << GetToggleButton("Animate");
