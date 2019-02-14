@@ -16,7 +16,6 @@ class WebInterface : public UI::Animate {
 
   Config cfg;
 
-  UI::Document viewer;        //< Div that contains the canvas viewer.
   UI::Document button_dash;  //< Div that contains the button dashboard.
 
   DishWorld w;
@@ -28,11 +27,10 @@ class WebInterface : public UI::Animate {
 public:
 
   WebInterface()
-    : viewer("emp_viewer")
-    , button_dash("emp_button_dash")
+    : button_dash("emp_button_dash")
     , w(cfg)
     , channel(
-      viewer,
+      UI::Document("channel_viewer"),
       [this](size_t i){
         return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Channel(i).GetIDs()) : std::experimental::nullopt;
       },
@@ -43,7 +41,7 @@ public:
       },
       cfg
     ), stockpile(
-      viewer,
+      UI::Document("stockpile_viewer"),
       [this](size_t i){
         return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Stockpile(i).QueryResource()) : std::experimental::nullopt;
       },
@@ -66,9 +64,10 @@ public:
       cfg
     ) {
 
+    UI::Document wv("wave_viewer");
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
       wave.emplace_back(
-          viewer,
+          wv,
           [this, l](size_t i){
             return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Wave(i,l).GetState()) : std::experimental::nullopt;
           },
@@ -91,7 +90,7 @@ public:
       );
     }
 
-    auto ud_text = viewer.AddText("ud_text");
+    auto ud_text = button_dash.AddText("ud_text");
     ud_text << "Update: " << UI::Live(w.update);
 
     button_dash << UI::Button(
@@ -109,7 +108,7 @@ public:
   }
 
   void Redraw() {
-    viewer.Text("ud_text").Redraw();
+    button_dash.Text("ud_text").Redraw();
     channel.Redraw();
     stockpile.Redraw();
     for(auto w : wave) w.Redraw();
