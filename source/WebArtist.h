@@ -28,7 +28,7 @@ public:
     std::function<std::experimental::optional<T>(size_t)> getter_,
     std::function<std::string(std::experimental::optional<T>)> renderer_,
     Config &cfg_,
-    std::string line_color_="black"
+    std::string line_color_="gray"
   ) : canvas(500,500)
   , getter(getter_)
   , renderer(renderer_)
