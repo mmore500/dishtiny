@@ -24,7 +24,7 @@ private:
 public:
 
   WebArtist(
-    UI::Document viewer,
+    UI::Document &viewer,
     std::function<std::experimental::optional<T>(size_t)> getter_,
     std::function<std::string(std::experimental::optional<T>)> renderer_,
     Config &cfg_,

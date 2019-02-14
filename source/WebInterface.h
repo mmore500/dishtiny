@@ -20,17 +20,25 @@ class WebInterface : public UI::Animate {
 
   DishWorld w;
 
+  UI::Document channel_viewer;
+  UI::Document wave_viewer;
+  UI::Document stockpile_viewer;
   WebArtist<ChannelPack> channel;
   emp::vector<WebArtist<int>> wave;
   WebArtist<double> stockpile;
+
+  bool render;
 
 public:
 
   WebInterface()
     : button_dash("emp_button_dash")
     , w(cfg)
+    , channel_viewer("channel_viewer")
+    , wave_viewer("wave_viewer")
+    , stockpile_viewer("stockpile_viewer")
     , channel(
-      UI::Document("channel_viewer"),
+      channel_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Channel(i).GetIDs()) : std::experimental::nullopt;
       },
@@ -41,7 +49,7 @@ public:
       },
       cfg
     ), stockpile(
-      UI::Document("stockpile_viewer"),
+      stockpile_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Stockpile(i).QueryResource()) : std::experimental::nullopt;
       },
@@ -64,10 +72,9 @@ public:
       cfg
     ), render(true) {
 
-    UI::Document wv("wave_viewer");
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
       wave.emplace_back(
-          wv,
+          wave_viewer,
           [this, l](size_t i){
             return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Wave(i,l).GetState()) : std::experimental::nullopt;
           },
