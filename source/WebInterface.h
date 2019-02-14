@@ -29,6 +29,14 @@ class WebInterface : public UI::Animate {
 
   bool render;
 
+  std::string ChannelColor(ChannelPack &cp) {
+    return emp::ColorHSV(
+      emp::Mod(cp[1],360.0),
+      emp::Mod(cp[0],0.6)+0.4,
+      1.0
+    );
+  }
+
 public:
 
   WebInterface()
@@ -42,12 +50,16 @@ public:
       [this](size_t i){
         return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Channel(i).GetIDs()) : std::experimental::nullopt;
       },
-      [](std::experimental::optional<ChannelPack> cp) {
-        return cp ?
-        emp::ColorHSV(emp::Mod((*cp)[1],360.0),emp::Mod((*cp)[0],0.6)+0.4,1.0)
-        : emp::ColorRGB(0.0,0.0,0.0);
+      [this](std::experimental::optional<ChannelPack> cp) {
+        return cp ? ChannelColor(*cp) : "black";
       },
-      cfg
+      cfg,
+      [this](std::experimental::optional<ChannelPack> cp1, std::experimental::optional<ChannelPack> cp2) -> std::string {
+        if (!cp1 || !cp2) return "black";
+        else if ((*cp1)[0] == (*cp2)[0]) return ChannelColor(*cp1);
+        else if ((*cp1)[1] == (*cp2)[1]) return "white";
+        else return "black";
+      }
     ), stockpile(
       stockpile_viewer,
       [this](size_t i){

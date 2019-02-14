@@ -4,6 +4,7 @@
 
 #include "web/Animate.h"
 #include "web/Canvas.h"
+#include "web/color_map.h"
 
 namespace UI = emp::web;
 
@@ -17,7 +18,7 @@ private:
   std::function<std::experimental::optional<T>(size_t)> getter;
   std::function<std::string(std::experimental::optional<T>)> renderer;
 
-  std::string line_color;
+  std::function<std::string(std::experimental::optional<T>,std::experimental::optional<T>)> divider;
 
   Config &cfg;
 
@@ -28,11 +29,11 @@ public:
     std::function<std::experimental::optional<T>(size_t)> getter_,
     std::function<std::string(std::experimental::optional<T>)> renderer_,
     Config &cfg_,
-    std::string line_color_="gray"
+    std::function<std::string(std::experimental::optional<T>,std::experimental::optional<T>)> divider_=[](std::experimental::optional<T>,std::experimental::optional<T>){ return "gray"; }
   ) : canvas(500,500)
   , getter(getter_)
   , renderer(renderer_)
-  , line_color(line_color_)
+  , divider(divider_)
   , cfg(cfg_)
   { viewer << canvas; }
 
@@ -67,17 +68,58 @@ public:
 
     GeometryHelper helper(cfg);
 
+    auto GridXToCanvasX = [cell_w, offset_x](size_t grid_x){
+      return grid_x*cell_w+offset_x;
+    };
+    auto GridYToCanvasY = [cell_h, offset_y](size_t grid_y){
+      return grid_y*cell_h+offset_y;
+    };
+
+
     // Fill out the grid!
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
 
       canvas.Rect(
-        helper.GetLocalX(i)*cell_w+offset_x,
-        helper.GetLocalY(i)*cell_h+offset_y,
+        GridXToCanvasX(helper.GetLocalX(i)),
+        GridYToCanvasY(helper.GetLocalY(i)),
         cell_w,
         cell_h,
         renderer(getter(i)),
-        line_color
+        renderer(getter(i))
       );
+
+    }
+
+    for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
+
+        canvas.Rect(
+          GridXToCanvasX(helper.GetLocalX(i)+1),
+          GridYToCanvasY(helper.GetLocalY(i)),
+          0,
+          cell_h,
+          emp::ColorRGB(0,0,0,0),
+          divider(
+            getter(i),
+            getter(helper.GetLocalPos(
+              helper.GetLocalX(i)+1,
+              helper.GetLocalY(i)
+            ))
+          )
+        );
+        canvas.Rect(
+          GridXToCanvasX(helper.GetLocalX(i)),
+          GridYToCanvasY(helper.GetLocalY(i)+1),
+          cell_w,
+          0,
+          emp::ColorRGB(0,0,0,0),
+          divider(
+            getter(i),
+            getter(helper.GetLocalPos(
+              helper.GetLocalX(i),
+              helper.GetLocalY(i)+1
+            ))
+          )
+        );
 
     }
 
