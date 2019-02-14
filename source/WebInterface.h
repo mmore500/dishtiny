@@ -62,7 +62,7 @@ public:
         } else return emp::ColorRGB(0,0,0);
       },
       cfg
-    ) {
+    ), render(true) {
 
     UI::Document wv("wave_viewer");
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
@@ -99,6 +99,10 @@ public:
       "Step"
     );
     button_dash << GetToggleButton("Animate");
+    button_dash << UI::Button(
+        [this](){ render = !render; },
+        "Toggle Render"
+      );
 
   }
 
@@ -109,9 +113,11 @@ public:
 
   void Redraw() {
     button_dash.Text("ud_text").Redraw();
-    channel.Redraw();
-    stockpile.Redraw();
-    for(auto w : wave) w.Redraw();
+    if (render) {
+      channel.Redraw();
+      stockpile.Redraw();
+      for(auto &w : wave) w.Redraw();
+    }
   }
 
 };
