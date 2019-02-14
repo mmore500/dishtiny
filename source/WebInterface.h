@@ -65,7 +65,7 @@ public:
       [this](size_t i){
         return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Stockpile(i).QueryResource()) : std::experimental::nullopt;
       },
-      [this](std::experimental::optional<double> amt) {
+      [this](std::experimental::optional<double> amt) -> std::string {
         if (amt) {
           if (*amt > cfg.REP_THRESH()) return emp::ColorRGB(
               std::min(255.0,(*amt - cfg.REP_THRESH())*25),
@@ -73,7 +73,7 @@ public:
               0
             );
           else if (*amt > 0) return emp::ColorRGB(0,0,255);
-          else if (*amt == 0) return emp::ColorRGB(255,255,255);
+          else if (*amt == 0) return "white";
           else return emp::ColorRGB(
               255,
               255-std::min(255.0,(*amt)*255.0/cfg.KILL_THRESH()),
@@ -90,7 +90,7 @@ public:
           [this, l](size_t i){
             return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Wave(i,l).GetState()) : std::experimental::nullopt;
           },
-          [this, l](std::experimental::optional<int> cp) {
+          [this, l](std::experimental::optional<int> cp) -> std::string {
             if (cp) {
               if (*cp > 0 && *cp < cfg.Lev(l).EVENT_RADIUS()) {
                 return emp::ColorRGB(0,255,0);
@@ -99,10 +99,10 @@ public:
               } else if (*cp < 0) {
                 return emp::ColorRGB(0,0,255);
               } else {
-                return emp::ColorRGB(255,255,255);
+                return "white";
               }
             } else {
-              return emp::ColorRGB(0,0,0);
+              return "black";
             }
           },
           cfg
