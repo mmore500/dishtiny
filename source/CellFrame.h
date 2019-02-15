@@ -29,6 +29,9 @@ private:
 
   size_t msgdir;
 
+  emp::Ptr<emp::vector<bool>> repr_pause_cur;
+  emp::Ptr<emp::vector<bool>> repr_pause_nxt;
+
 public:
 
   CellFrame(
@@ -42,13 +45,33 @@ public:
     , neighs(GeometryHelper(cfg).CalcLocalNeighs(pos_))
     , pos(pos_)
     , inbox_active()
+    , repr_pause_cur(emp::NewPtr<emp::vector<bool>>(cfg.NLEV()+1))
+    , repr_pause_nxt(emp::NewPtr<emp::vector<bool>>(cfg.NLEV()+1, true))
   {
     Reset();
+  }
+
+  ~CellFrame() {
+    repr_pause_cur.Delete();
+    repr_pause_nxt.Delete();
   }
 
   void Reset() {
     facing = Cardi::Spin(local_rng);
     emp::vector<bool>(Cardi::Dir::NumDirs).swap(inbox_active);
+    std::fill(repr_pause_cur->begin(), repr_pause_cur->end(), false);
+    std::fill(repr_pause_nxt->begin(), repr_pause_nxt->end(), true);
+  }
+
+  void ReprPauseSetup() {
+    std::fill(repr_pause_cur->begin(), repr_pause_cur->end(), false);
+    std::swap(repr_pause_cur, repr_pause_nxt);
+  }
+
+  void PauseRepr(size_t lev) { (*repr_pause_nxt)[lev] = true; }
+
+  bool IsReprPaused(size_t lev) {
+    return repr_pause_cur->at(lev) || repr_pause_nxt->at(lev);
   }
 
   const size_t GetPos() {

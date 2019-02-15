@@ -134,6 +134,7 @@ public:
     for(size_t i = 0; i < GetSize(); ++i) {
       if (IsOccupied(i)) {
         emp_assert(cpus[i]->GetProgram().GetSize());
+        frames[i]->ReprPauseSetup();
         cpus[i]->SpawnCore(
           Config::hardware_t::affinity_t(),
           0.5,

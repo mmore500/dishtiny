@@ -68,6 +68,22 @@ public:
 
   static void InitInternalActions(inst_lib_t &il, Config &cfg) {
 
+    for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
+      il.AddInst(
+        "PauseRepr-Lev" + emp::to_string(i),
+        [i, &cfg](hardware_t & hw, const inst_t & inst){
+
+          CellFrame &fr = *hw.GetTrait(0);
+
+          fr.PauseRepr(i);
+
+        },
+        0,
+        "TODO"
+      );
+    }
+
+
     il.AddInst(
       "ActivateInbox",
       [](hardware_t &hw, const inst_t &inst){
@@ -174,7 +190,9 @@ public:
           Manager &man = fr.GetManager();
           size_t pos = fr.GetPos();
 
-          if(cfg.REP_THRESH() <= man.Stockpile(pos).QueryResource()) {
+          if( !fr.IsReprPaused(i) &&
+            cfg.REP_THRESH() <= man.Stockpile(pos).QueryResource()
+          ) {
 
             man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
 
