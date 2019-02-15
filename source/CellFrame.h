@@ -8,7 +8,6 @@
 
 #include "Cardi.h"
 #include "Config.h"
-#include "FacingSet.h"
 #include "GeometryHelper.h"
 
 //forward declaration
@@ -18,7 +17,7 @@ class CellFrame {
 
 private:
 
-  FacingSet facing_set;
+  size_t facing;
   Manager &man;
   emp::Random &local_rng;
 
@@ -28,6 +27,8 @@ private:
   // arranged by incoming direction
   emp::vector<bool> inbox_active;
 
+  size_t msgdir;
+
 public:
 
   CellFrame(
@@ -35,7 +36,7 @@ public:
     Config &cfg,
     Manager &man_,
     size_t pos_
-  ) : facing_set(*local_rng_, cfg)
+  ) : facing(Cardi::Spin(*local_rng_))
     , man(man_)
     , local_rng(*local_rng_)
     , neighs(GeometryHelper(cfg).CalcLocalNeighs(pos_))
@@ -46,7 +47,7 @@ public:
   }
 
   void Reset() {
-    facing_set.Spin(facing_set.GetAllFacings());
+    facing = Cardi::Spin(local_rng);
     emp::vector<bool>(Cardi::Dir::NumDirs).swap(inbox_active);
   }
 
@@ -54,8 +55,20 @@ public:
     return pos;
   }
 
-  FacingSet& GetFacingSet() {
-    return facing_set;
+  size_t GetFacing() {
+    return facing;
+  }
+
+  void SetFacing(size_t new_facing) {
+    facing = new_facing;
+  }
+
+  size_t GetMsgDir() {
+    return msgdir;
+  }
+
+  void SetMsgDir(size_t new_dir) {
+    msgdir = new_dir;
   }
 
   Manager& GetManager() {

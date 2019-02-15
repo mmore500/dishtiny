@@ -41,7 +41,7 @@ public:
 
           CellFrame &fr = *hw.GetTrait(0);
           Manager &man = fr.GetManager();
-          const size_t outgoing_dir = fr.GetFacingSet().GetSendMessage();
+          const size_t outgoing_dir = fr.GetMsgDir();
           const size_t dest = fr.GetNeigh(outgoing_dir);
 
           man.Inbox(dest).TakeMessage(event, Cardi::Opp[outgoing_dir]);

@@ -14,6 +14,11 @@
 
 class InstructionLibrary {
 
+private:
+  static size_t CalcDir(CellFrame &fr, double regval) {
+    return emp::Mod(fr.GetFacing()+(int)regval,(int)Cardi::NumDirs);
+  }
+
 public:
 
   using hardware_t = Config::hardware_t;
@@ -62,59 +67,28 @@ public:
   }
 
   static void InitInternalActions(inst_lib_t &il, Config &cfg) {
-    // * facings
-    //   * set random facing
-    //   * rotate facing CW/CCW
-    //   * and then do it for all facings
-    emp::Random temp_r;
-    FacingSet temp(temp_r, cfg);
 
     il.AddInst(
       "ActivateInbox",
       [](hardware_t &hw, const inst_t &inst){
         CellFrame &fr = *hw.GetTrait(0);
-        fr.SetInboxActivity(fr.GetFacingSet().GetSendMessage(), true);
-      }
+        const state_t & state = hw.GetCurState();
+        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        fr.SetInboxActivity(dir, true);
+      },
+      1
     );
 
     il.AddInst(
       "DeactivateInbox",
       [](hardware_t &hw, const inst_t &inst){
         CellFrame &fr = *hw.GetTrait(0);
-        fr.SetInboxActivity(fr.GetFacingSet().GetSendMessage(), false);
-      }
+        const state_t & state = hw.GetCurState();
+        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        fr.SetInboxActivity(dir, false);
+      },
+      1
     );
-
-    for(size_t i = 0; i < temp.GetNumFacings(); ++i) {
-      il.AddInst(
-        "Spin-Facing" + emp::to_string(i),
-        [i](hardware_t & hw, const inst_t & inst){
-          CellFrame &fr = *hw.GetTrait(0);
-          fr.GetFacingSet().Spin(i);
-        }
-      );
-      il.AddInst(
-        "TurnCw-Facing" + emp::to_string(i),
-        [i](hardware_t & hw, const inst_t & inst){
-          CellFrame &fr = *hw.GetTrait(0);
-          fr.GetFacingSet().Cw(i);
-        }
-      );
-      il.AddInst(
-        "TurnCcw-Facing" + emp::to_string(i),
-        [i](hardware_t & hw, const inst_t & inst){
-          CellFrame &fr = *hw.GetTrait(0);
-          fr.GetFacingSet().Ccw(i);
-        }
-      );
-      il.AddInst(
-        "Unify-Facing" + emp::to_string(i),
-        [i](hardware_t & hw, const inst_t & inst){
-          CellFrame &fr = *hw.GetTrait(0);
-          fr.GetFacingSet().Unify(i);
-        }
-      );
-    }
 
   }
 
@@ -131,11 +105,14 @@ public:
 
         double amt = man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
 
-        size_t neigh = fr.GetNeigh(fr.GetFacingSet().GetSendResource());
+        const state_t & state = hw.GetCurState();
+        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        size_t neigh = fr.GetNeigh(dir);
 
         man.Stockpile(neigh).ExternalContribute(amt);
 
-      }
+      },
+      1
     );
 
     il.AddInst(
@@ -149,22 +126,25 @@ public:
 
         double amt = man.Stockpile(pos).RequestResourceFrac(0.5);
 
-        size_t neigh = fr.GetNeigh(fr.GetFacingSet().GetSendResource());
+        const state_t & state = hw.GetCurState();
+        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        size_t neigh = fr.GetNeigh(dir);
 
         man.Stockpile(neigh).ExternalContribute(amt);
-      }
+      },
+      1
     );
 
-    // general purpose messaging TODO
-    // e.g., https://github.com/amlalejini/GECCO-2018-Evolving-Event-driven-Programs-with-SignalGP/blob/master/experiments/election/source/Experiment.h
-    /* TODO make a way to filter messages to exclude messages from other ChannelIDs */
     il.AddInst(
       "SendMsg",
       [](hardware_t & hw, const inst_t & inst){
+        CellFrame &fr = *hw.GetTrait(0);
         state_t & state = hw.GetCurState();
+        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        fr.SetMsgDir(dir);
         hw.TriggerEvent("SendMessage", inst.affinity, state.output_mem);
       },
-      0,
+      1,
       "Send a single message to a target.",
       emp::ScopeType::BASIC,
       0,
@@ -198,7 +178,9 @@ public:
 
             man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
 
-            size_t dir = fr.GetFacingSet().GetReproduction(i);
+            const state_t & state = hw.GetCurState();
+
+            size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
             auto cp = man.Channel(pos).GetIDs();
 
             man.Priority(fr.GetNeigh(dir)).ProcessSire(
@@ -212,7 +194,8 @@ public:
 
           }
 
-        }
+        },
+        1
       );
     }
 
@@ -273,20 +256,20 @@ public:
 
           CellFrame &fr = *hw.GetTrait(0);
 
-          size_t dir = fr.GetFacingSet().GetNeighborSensor();
+          size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
           size_t neigh = fr.GetNeigh(dir);
 
           bool live = is_live(neigh);
-          state.SetLocal(inst.args[0], live);
+          state.SetLocal(inst.args[1], live);
 
           if(live) {
             Manager &man = fr.GetManager();
             size_t pos = fr.GetPos();
             bool match = man.Channel(pos).CheckMatch(man.Channel(neigh), i);
-            state.SetLocal(inst.args[1], match);
+            state.SetLocal(inst.args[2], match);
           }
         },
-        2,
+        3,
         "TODO"
       );
     }
@@ -301,19 +284,19 @@ public:
 
           CellFrame &fr = *hw.GetTrait(0);
 
-          size_t dir = fr.GetFacingSet().GetNeighborSensor();
+          size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
           size_t neigh = fr.GetNeigh(dir);
 
           bool live = is_live(neigh);
-          state.SetLocal(inst.args[0], live);
+          state.SetLocal(inst.args[1], live);
 
           if(live) {
             Manager &man = fr.GetManager();
             Config::chanid_t chanid = man.Channel(neigh).GetID(i);
-            state.SetLocal(inst.args[1], chanid);
+            state.SetLocal(inst.args[2], chanid);
           }
         },
-        2,
+        3,
         "TODO"
       );
     }
@@ -325,31 +308,21 @@ public:
 
         CellFrame &fr = *hw.GetTrait(0);
 
-        size_t dir = fr.GetFacingSet().GetNeighborSensor();
+        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
         size_t neigh = fr.GetNeigh(dir);
 
         bool live = is_live(neigh);
-        state.SetLocal(inst.args[0], live);
+        state.SetLocal(inst.args[1], live);
 
         if(live) {
           Manager &man = fr.GetManager();
           double amt = man.Stockpile(neigh).QueryResource();
-          state.SetLocal(inst.args[1], amt);
+          state.SetLocal(inst.args[2], amt);
         }
       },
-      2,
+      3,
       "TODO"
     );
-
-    // /* TODO how to query own facing, e.g., to turn to respond to a message but then to reset your facing how you were */
-    //
-    // emp::Random temp_r;
-    // FacingSet temp(temp_r, cfg);
-    //
-    // for(size_t i = 0; i < temp.GetNumFacings(); ++i) {
-    //
-    //
-    // }
 
   }
 
