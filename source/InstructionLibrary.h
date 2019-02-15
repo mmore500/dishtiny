@@ -331,17 +331,19 @@ public:
           size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
           size_t neigh = fr.GetNeigh(dir);
 
-          bool live = is_live(neigh);
-          state.SetLocal(inst.args[1], live);
+          bool match;
 
-          if(live) {
+          if(is_live(neigh)) {
             Manager &man = fr.GetManager();
             size_t pos = fr.GetPos();
-            bool match = man.Channel(pos).CheckMatch(man.Channel(neigh), i);
-            state.SetLocal(inst.args[2], match);
+            match = man.Channel(pos).CheckMatch(man.Channel(neigh), i);
+          } else {
+            match = false;
           }
+
+          state.SetLocal(inst.args[1], match);
         },
-        3,
+        2,
         "TODO"
       );
     }
@@ -359,16 +361,15 @@ public:
           size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
           size_t neigh = fr.GetNeigh(dir);
 
-          bool live = is_live(neigh);
-          state.SetLocal(inst.args[1], live);
-
-          if(live) {
+          if(is_live(neigh)) {
             Manager &man = fr.GetManager();
             Config::chanid_t chanid = man.Channel(neigh).GetID(i);
-            state.SetLocal(inst.args[2], chanid);
+            state.SetLocal(inst.args[1], chanid);
+          } else {
+            state.SetLocal(inst.args[1], false);
           }
         },
-        3,
+        2,
         "TODO"
       );
     }
@@ -383,16 +384,15 @@ public:
         size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
         size_t neigh = fr.GetNeigh(dir);
 
-        bool live = is_live(neigh);
-        state.SetLocal(inst.args[1], live);
-
-        if(live) {
+        if(is_live(neigh)) {
           Manager &man = fr.GetManager();
           double amt = man.Stockpile(neigh).QueryResource();
-          state.SetLocal(inst.args[2], amt);
+          state.SetLocal(inst.args[1], amt);
+        } else {
+          state.SetLocal(inst.args[1], false);
         }
       },
-      3,
+      2,
       "TODO"
     );
 
