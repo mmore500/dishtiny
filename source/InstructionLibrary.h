@@ -92,7 +92,8 @@ public:
         size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
         fr.SetInboxActivity(dir, true);
       },
-      1
+      1,
+      "TODO"
     );
 
     il.AddInst(
@@ -103,7 +104,8 @@ public:
         size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
         fr.SetInboxActivity(dir, false);
       },
-      1
+      1,
+      "TODO"
     );
 
   }
@@ -128,7 +130,8 @@ public:
         man.Stockpile(neigh).ExternalContribute(amt);
 
       },
-      1
+      1,
+      "TODO"
     );
 
     il.AddInst(
@@ -148,7 +151,8 @@ public:
 
         man.Stockpile(neigh).ExternalContribute(amt);
       },
-      1
+      1,
+      "TODO"
     );
 
     il.AddInst(
@@ -213,7 +217,8 @@ public:
           }
 
         },
-        1
+        1,
+        "TODO"
       );
     }
 
