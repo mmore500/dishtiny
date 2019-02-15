@@ -79,6 +79,7 @@ public:
     OnPlacement([this](size_t pos){
       man->Stockpile(pos).Reset();
       cpus[pos]->ResetHardware();
+      cpus[pos]->ResetProgram();
       emp_assert(!cpus[pos]->GetProgram().GetSize());
       cpus[pos]->GetTrait(0)->Reset();
       cpus[pos]->SetProgram(GetOrg(pos).program);
