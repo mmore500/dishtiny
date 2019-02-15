@@ -6,6 +6,7 @@
 
 #include "Config.h"
 #include "ManagerChannel.h"
+#include "ManagerFamily.h"
 #include "ManagerInbox.h"
 #include "ManagerPriority.h"
 #include "ManagerStockpile.h"
@@ -15,6 +16,7 @@ class Manager {
 
 private:
   emp::vector<emp::Ptr<ManagerChannel>> mcs;
+  emp::vector<emp::Ptr<ManagerFamily>> mfs;
   emp::vector<emp::Ptr<ManagerInbox>> mis;
   emp::vector<emp::Ptr<ManagerPriority>> mps;
   emp::vector<emp::Ptr<ManagerStockpile>> mss;
@@ -33,6 +35,9 @@ public:
     for(size_t i = 0; i < size; ++i) {
       mcs.push_back(
         emp::NewPtr<ManagerChannel>(cfg, *local_rngs[i])
+      );
+      mfs.push_back(
+        emp::NewPtr<ManagerFamily>()
       );
       mis.push_back(
         emp::NewPtr<ManagerInbox>(cfg, *local_rngs[i])
@@ -79,6 +84,7 @@ public:
 
   ~Manager() {
     for (auto &ptr : mcs) ptr.Delete();
+    for (auto &ptr : mfs) ptr.Delete();
     for (auto &ptr : mis) ptr.Delete();
     for (auto &ptr : mps) ptr.Delete();
     for (auto &ptr : mss) ptr.Delete();
@@ -87,6 +93,10 @@ public:
 
   ManagerChannel& Channel(size_t pos) {
     return *mcs[pos];
+  }
+
+  ManagerFamily& Family(size_t pos) {
+    return *mfs[pos];
   }
 
   ManagerInbox& Inbox(size_t pos) {

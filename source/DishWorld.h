@@ -156,6 +156,9 @@ public:
 
         AddOrgAt(prog, i, sirepack.par_pos);
         man->Channel(i).Inherit(chanpack,sirepack.rep_lev);
+        man->Family(i).Reset();
+        man->Family(i).SetParentPos(sirepack.par_pos);
+        man->Family(sirepack.par_pos).AddChildPos(i);
         frames[i]->SpinFacing();
       }
       if (IsOccupied(i)) {

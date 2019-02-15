@@ -247,7 +247,79 @@ public:
     Config &cfg
   ) {
 
-    // sensor functions
+    il.AddInst(
+      "QueryIsLive",
+      [is_live](hardware_t & hw, const inst_t & inst){
+        state_t & state = hw.GetCurState();
+
+        CellFrame &fr = *hw.GetTrait(0);
+
+        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        size_t neigh = fr.GetNeigh(dir);
+
+        bool live = is_live(neigh);
+        state.SetLocal(inst.args[1], live);
+      },
+      2,
+      "TODO"
+    );
+
+    il.AddInst(
+      "QueryIsChild",
+      [is_live](hardware_t & hw, const inst_t & inst){
+        state_t & state = hw.GetCurState();
+
+        CellFrame &fr = *hw.GetTrait(0);
+
+        const size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        const size_t neigh = fr.GetNeigh(dir);
+
+        bool match = true;
+
+        if(is_live(neigh)) {
+          Manager &man = fr.GetManager();
+          size_t pos = fr.GetPos();
+          match &= man.Family(pos).HasChildPos(neigh);
+          match &= man.Family(neigh).IsParentPos(pos);
+        } else {
+          match = false;
+        }
+
+        state.SetLocal(inst.args[1], match);
+
+      },
+      2,
+      "TODO"
+    );
+
+    il.AddInst(
+      "QueryIsChild",
+      [is_live](hardware_t & hw, const inst_t & inst){
+        state_t & state = hw.GetCurState();
+
+        CellFrame &fr = *hw.GetTrait(0);
+
+        const size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        const size_t neigh = fr.GetNeigh(dir);
+
+        bool match = true;
+
+        if(is_live(neigh)) {
+          Manager &man = fr.GetManager();
+          size_t pos = fr.GetPos();
+          match &= man.Family(pos).IsParentPos(neigh);
+          match &= man.Family(neigh).HasChildPos(pos);
+        } else {
+          match = false;
+        }
+
+        state.SetLocal(inst.args[1], match);
+
+      },
+      2,
+      "TODO"
+    );
+
     for (size_t i = 0; i < cfg.NLEV(); ++i) {
       il.AddInst(
         "QueryFacingChannelKin-Lev" + emp::to_string(i),
