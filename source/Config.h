@@ -31,6 +31,10 @@ private:
       clevs[l]->Read(CONFIGLEVEL_BASENAME() + std::to_string(l) + CONFIGLEVEL_EXTENSION());
 
     }
+
+    // check conditions on settings
+    emp_assert(SEED() > 0);
+
   }
 
 public:
