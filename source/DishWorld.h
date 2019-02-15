@@ -119,7 +119,7 @@ public:
         man->Inbox(i).QueueMessages(
           *cpus[i],
           [this, i](size_t pos){
-            return cpus[i]->GetTrait(0)->CheckInboxActivity(pos);
+            return frames[i]->CheckInboxActivity(pos);
           }
         );
         for(size_t l = 0; l < cfg.NLEV(); ++l) {
