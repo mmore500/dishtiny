@@ -61,7 +61,7 @@ public:
     if (TakesPriority(sire_pack.dir)) {
       sp = sire_pack;
       if (gen) gen.Delete();
-      gen = emp::NewPtr<Genome>(parent_program);
+      gen.New(parent_program);
       cp = parent_cp;
     }
   }
