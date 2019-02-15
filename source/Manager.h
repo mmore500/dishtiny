@@ -77,6 +77,14 @@ public:
 
   }
 
+  ~Manager() {
+    for (auto &ptr : mcs) ptr.Delete();
+    for (auto &ptr : mis) ptr.Delete();
+    for (auto &ptr : mps) ptr.Delete();
+    for (auto &ptr : mss) ptr.Delete();
+    for (auto &vec : mws) for (auto &ptr : vec) ptr.Delete();
+  }
+
   ManagerChannel& Channel(size_t pos) {
     return *mcs[pos];
   }

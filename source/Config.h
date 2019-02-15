@@ -64,6 +64,10 @@ public:
 
   }
 
+  ~Config() {
+    for (auto &ptr : clevs) ptr.Delete();
+  }
+
   ConfigLevel& Lev(size_t lev) {
     return *clevs[lev];
   }

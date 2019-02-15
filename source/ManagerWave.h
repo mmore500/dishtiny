@@ -84,6 +84,10 @@ public:
   , cfg(cfg_)
   { ; }
 
+  ~ManagerWave() {
+    if (neighs) neighs.Delete();
+  }
+
   void SetNeighs(emp::vector<emp::Ptr<ManagerWave>> n) {
     neighs = emp::NewPtr<emp::vector<emp::Ptr<ManagerWave>>>(n.begin(), n.end());
   }

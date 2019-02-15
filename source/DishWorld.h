@@ -31,6 +31,7 @@ private:
   emp::vector<emp::Ptr<emp::Random>> global_rngs;
   emp::vector<emp::Ptr<emp::Random>> local_rngs;
   emp::vector<emp::Ptr<Config::hardware_t>> cpus;
+  emp::vector<emp::Ptr<CellFrame>> frames;
 
   Mutator mut;
   emp::Ptr<Manager> man;
@@ -47,7 +48,7 @@ public:
       global_rngs.push_back(emp::NewPtr<emp::Random>(cfg.SEED()));
     }
 
-    man = new Manager(local_rngs, global_rngs, cfg);
+    man = emp::NewPtr<Manager>(local_rngs, global_rngs, cfg);
 
     for(size_t i = 0; i < GetSize(); ++i) {
       cpus.push_back(emp::NewPtr<Config::hardware_t>(
@@ -58,12 +59,13 @@ public:
         EventLibrary::Make(cfg),
         local_rngs[i]
       ));
-      cpus[i]->PushTrait(emp::NewPtr<CellFrame>(
+      frames.push_back(emp::NewPtr<CellFrame>(
         local_rngs[i],
         cfg,
         *man,
         i
       ));
+      cpus[i]->PushTrait(frames[i]);
     }
 
     OnOffspringReady(
@@ -72,10 +74,7 @@ public:
       }
     );
 
-    OnOrgDeath([this](size_t pos){
-      // emp_assert(cpus[pos]);
-      cpus[pos]->ResetProgram();
-    });
+    OnOrgDeath([this](size_t pos){ ; });
 
     OnPlacement([this](size_t pos){
       man->Stockpile(pos).Reset();
@@ -103,6 +102,14 @@ public:
       emp_assert(GetOrg(i).program.GetSize());
     }
 
+  }
+
+  ~DishWorld() {
+    for (auto &ptr : global_rngs) ptr.Delete();
+    for (auto &ptr : local_rngs) ptr.Delete();
+    for (auto &ptr : cpus) { ptr.Delete(); }
+    for (auto &ptr : frames) ptr.Delete();
+    man.Delete();
   }
 
   void Pre() {
