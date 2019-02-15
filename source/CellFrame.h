@@ -63,6 +63,10 @@ public:
     facing = new_facing;
   }
 
+  void SpinFacing() {
+    SetFacing(Cardi::Spin(local_rng));
+  }
+
   size_t GetMsgDir() {
     return msgdir;
   }

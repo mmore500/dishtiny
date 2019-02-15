@@ -156,7 +156,7 @@ public:
 
         AddOrgAt(prog, i, sirepack.par_pos);
         man->Channel(i).Inherit(chanpack,sirepack.rep_lev);
-        frames[i]->SetFacing(Cardi::Opp[sirepack.dir]);
+        frames[i]->SpinFacing();
       }
       if (IsOccupied(i)) {
         man->Priority(i).Reset();
