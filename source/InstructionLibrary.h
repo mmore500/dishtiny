@@ -141,7 +141,7 @@ public:
         Manager &man = fr.GetManager();
         size_t pos = fr.GetPos();
 
-        double amt = man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
+        double amt = man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH()/2);
 
         const state_t & state = hw.GetCurState();
         size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
