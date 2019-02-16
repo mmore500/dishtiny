@@ -21,7 +21,6 @@ private:
 
   size_t cur_max_priority;
   emp::Ptr<Genome> gen;
-  ChannelPack cp;
   SirePack sp;
 
   bool TakesPriority(size_t dir) {
@@ -54,21 +53,19 @@ public:
   }
 
   void ProcessSire(
-    Config::program_t &parent_program,
-    ChannelPack parent_cp,
-    SirePack sire_pack
+    SirePack sire_pack,
+    Config::program_t &parent_program
   ){
     if (TakesPriority(sire_pack.dir)) {
       sp = sire_pack;
       if (gen) gen.Delete();
       gen.New(parent_program);
-      cp = parent_cp;
     }
   }
 
-  std::experimental::optional<std::tuple<emp::Ptr<Genome>,ChannelPack,SirePack>>
+  std::experimental::optional<std::tuple<emp::Ptr<Genome>,SirePack>>
   QueryPendingGenome() {
-    return gen ? std::experimental::make_optional(std::make_tuple(gen,cp,sp)) : std::experimental::nullopt;
+    return gen ? std::experimental::make_optional(std::make_tuple(gen,sp)) : std::experimental::nullopt;
   }
 
 };

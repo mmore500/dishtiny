@@ -150,13 +150,12 @@ public:
     for(size_t i = 0; i < GetSize(); ++i) {
       auto optional_tup = man->Priority(i).QueryPendingGenome();
       if(optional_tup) {
-        emp::Ptr<Genome> prog;
-        ChannelPack chanpack;
         SirePack sirepack;
-        std::tie(prog, chanpack, sirepack) = *(optional_tup);
+        emp::Ptr<Genome> prog;
+        std::tie(prog, sirepack) = *(optional_tup);
 
         AddOrgAt(prog, i, sirepack.par_pos);
-        man->Channel(i).Inherit(chanpack,sirepack.rep_lev);
+        man->Channel(i).Inherit(sirepack.chanpack,sirepack.channel_gens,sirepack.rep_lev);
         man->Family(i).Reset();
         man->Family(i).SetParentPos(sirepack.par_pos);
         man->Family(sirepack.par_pos).AddChildPos(i);

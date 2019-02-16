@@ -226,12 +226,13 @@ public:
             auto cp = *man.Channel(pos).GetIDs();
 
             man.Priority(fr.GetNeigh(dir)).ProcessSire(
-                hw.GetProgram(),
-                cp,
                 { pos,   /* size_t par_pos,*/
                   dir,   /* size_t dir, */
-                  i     /* size_t rep_lev, */
-                }
+                  i,     /* size_t rep_lev, */
+                  man.Channel(pos).GetGenCounter(),
+                  cp
+                },
+                hw.GetProgram()
               );
 
           }
@@ -295,6 +296,27 @@ public:
       1,
       "TODO"
     );
+
+    for(size_t l = 0; l < cfg.NLEV(); ++l) {
+      il.AddInst(
+        "QueryChannelGen-Lev"+emp::to_string(l),
+        [l](hardware_t & hw, const inst_t & inst){
+
+          CellFrame &fr = *hw.GetTrait(0);
+
+          Manager &man = fr.GetManager();
+          size_t pos = fr.GetPos();
+          size_t gen = man.Channel(pos).GetGeneration(l);
+
+          state_t & state = hw.GetCurState();
+
+          state.SetLocal(inst.args[0], gen);
+
+        },
+        1,
+        "TODO"
+      );
+    }
 
   }
 

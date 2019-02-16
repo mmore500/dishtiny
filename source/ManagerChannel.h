@@ -17,6 +17,8 @@ private:
 
   Config & cfg;
 
+  emp::vector<size_t> gen_counter;
+
   Config::chanid_t drawChannelID() {
     return local_rng.GetUInt64();
   }
@@ -29,6 +31,7 @@ public:
   ) : ids(ChannelPack())
   , local_rng(local_rng_)
   , cfg(cfg_)
+  , gen_counter(cfg_.NLEV())
   {
     for(size_t i = 0; i < cfg.NLEV(); ++i) {
       ids->push_back(drawChannelID());
@@ -43,20 +46,30 @@ public:
 
   void ClearIDs() { ids = std::experimental::nullopt; }
 
+  size_t GetGeneration(size_t lev) const { return gen_counter[lev]; }
+
+  const emp::vector<size_t>& GetGenCounter() const { return gen_counter; }
+
   bool CheckMatch(ManagerChannel &other, size_t lev) {
     return GetID(lev) && other.GetID(lev) ? *GetID(lev) == *other.GetID(lev) : false;
   }
 
   /* perform a certain level of reproduction */
-  void Inherit(ChannelPack &parent, size_t lev) {
+  void Inherit(
+    ChannelPack &parent,
+    const emp::vector<size_t> & parent_gen_counter,
+    size_t lev
+  ) {
 
     if (!ids) ids = std::experimental::optional<ChannelPack>{ChannelPack(cfg.NLEV())};
 
-    for(size_t i = 0; i < ids->size(); ++i) {
+    for(size_t i = 0; i < cfg.NLEV(); ++i) {
       if(i < lev) {
         (*ids)[i] = drawChannelID();
+        gen_counter[i] = 0;
       } else {
         (*ids)[i] = parent[i];
+        gen_counter[i] = parent_gen_counter[i] + 1;
       }
     }
   }
