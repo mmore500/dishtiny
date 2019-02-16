@@ -117,6 +117,18 @@ public:
     );
 
     il.AddInst(
+      "ActivateAllInboxes",
+      [](hardware_t &hw, const inst_t &inst){
+        CellFrame &fr = *hw.GetTrait(0);
+        for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+          fr.SetInboxActivity(dir, true);
+        }
+      },
+      0,
+      "TODO"
+    );
+
+    il.AddInst(
       "DeactivateInbox",
       [](hardware_t &hw, const inst_t &inst){
         CellFrame &fr = *hw.GetTrait(0);
