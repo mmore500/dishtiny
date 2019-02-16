@@ -101,6 +101,7 @@ public:
       InjectAt(g, emp::WorldPosition(i));
       if (i == 0) g.program.PrintProgram();
       emp_assert(GetOrg(i).program.GetSize());
+      man->Stockpile(i).InternalApplyHarvest(cfg.START_RESOURCE());
     }
 
   }

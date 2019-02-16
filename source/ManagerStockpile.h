@@ -18,10 +18,8 @@ public:
 
   ManagerStockpile(
     Config &cfg_
-  ) : resource(cfg_.START_RESOURCE())
-  , contrib_resource(0)
-  , cfg(cfg_)
-  { ; }
+  ) : cfg(cfg_)
+  { Reset(); }
 
   double QueryResource() const {
     return resource;
