@@ -61,11 +61,6 @@ public:
     contrib_resource = 0;
   }
 
-  void Apoptosis() {
-    // negative infinity
-    resource = -1.0/0.0;
-  }
-
   bool IsBankrupt() {
     return cfg.KILL_THRESH() >= resource;
   }

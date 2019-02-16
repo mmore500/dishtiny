@@ -4,4 +4,4 @@
 
 #include "Config.h"
 
-class ChannelPack : public emp::vector<Config::chanid_t> { };
+using ChannelPack = emp::vector<Config::chanid_t>;

@@ -223,7 +223,7 @@ public:
             const state_t & state = hw.GetCurState();
 
             size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
-            auto cp = man.Channel(pos).GetIDs();
+            auto cp = *man.Channel(pos).GetIDs();
 
             man.Priority(fr.GetNeigh(dir)).ProcessSire(
                 hw.GetProgram(),
@@ -243,7 +243,7 @@ public:
     }
 
     il.AddInst(
-      "DoApoptosis",
+      "DoApoptosisComplete",
       [](hardware_t & hw, const inst_t & inst){
 
         CellFrame &fr = *hw.GetTrait(0);
@@ -251,7 +251,23 @@ public:
         Manager &man = fr.GetManager();
         size_t pos = fr.GetPos();
 
-        man.Stockpile(pos).Apoptosis();
+        man.Apoptosis(pos).MarkComplete();
+
+      },
+      0,
+      "TODO"
+    );
+
+    il.AddInst(
+      "DoApoptosisPartial",
+      [](hardware_t & hw, const inst_t & inst){
+
+        CellFrame &fr = *hw.GetTrait(0);
+
+        Manager &man = fr.GetManager();
+        size_t pos = fr.GetPos();
+
+        man.Apoptosis(pos).MarkPartial();
 
       },
       0,
@@ -404,8 +420,8 @@ public:
 
           if(is_live(neigh)) {
             Manager &man = fr.GetManager();
-            Config::chanid_t chanid = man.Channel(neigh).GetID(i);
-            state.SetLocal(inst.args[1], chanid);
+            auto chanid = man.Channel(neigh).GetID(i);
+            if(chanid) state.SetLocal(inst.args[1], *chanid);
           } else {
             state.SetLocal(inst.args[1], false);
           }

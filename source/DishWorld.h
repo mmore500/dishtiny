@@ -115,6 +115,10 @@ public:
 
   void Pre() {
     for(size_t i = 0; i < GetSize(); ++i) {
+      for(size_t l = 0; l < cfg.NLEV(); ++l) {
+        man->Wave(i,l).CalcNext(GetUpdate());
+        if (IsOccupied(i)) man->Wave(i,l).HarvestResource();
+      }
       if (IsOccupied(i)) {
         man->Inbox(i).QueueMessages(
           *cpus[i],
@@ -122,10 +126,6 @@ public:
             return frames[i]->CheckInboxActivity(pos);
           }
         );
-        for(size_t l = 0; l < cfg.NLEV(); ++l) {
-          man->Wave(i,l).CalcNext(GetUpdate());
-          man->Wave(i,l).HarvestResource();
-        }
       }
     }
   }
@@ -166,7 +166,14 @@ public:
         man->Priority(i).Reset();
         man->Stockpile(i).ResolveExternalContributions();
         for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
-        if (man->Stockpile(i).IsBankrupt()) DoDeath(i);
+        if (man->Stockpile(i).IsBankrupt()
+            || man->Apoptosis(i).IsMarked()) {
+          DoDeath(i);
+          if (!man->Apoptosis(i).IsMarkedPartial()) {
+            man->Channel(i).ClearIDs();
+          }
+        }
+        man->Apoptosis(i).Reset();
       }
     }
   }

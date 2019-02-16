@@ -48,7 +48,7 @@ public:
     , channel(
       channel_viewer,
       [this](size_t i){
-        return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Channel(i).GetIDs()) : std::experimental::nullopt;
+        return w.man->Channel(i).GetIDs();
       },
       [this](std::experimental::optional<ChannelPack> cp) {
         return cp ? ChannelColor(*cp) : "black";

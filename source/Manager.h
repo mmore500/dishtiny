@@ -5,6 +5,7 @@
 #include "tools/Random.h"
 
 #include "Config.h"
+#include "ManagerApoptosis.h"
 #include "ManagerChannel.h"
 #include "ManagerFamily.h"
 #include "ManagerInbox.h"
@@ -15,6 +16,7 @@
 class Manager {
 
 private:
+  emp::vector<emp::Ptr<ManagerApoptosis>> mas;
   emp::vector<emp::Ptr<ManagerChannel>> mcs;
   emp::vector<emp::Ptr<ManagerFamily>> mfs;
   emp::vector<emp::Ptr<ManagerInbox>> mis;
@@ -33,6 +35,9 @@ public:
     const size_t size = GeometryHelper(cfg).GetLocalSize();
 
     for(size_t i = 0; i < size; ++i) {
+      mas.push_back(
+        emp::NewPtr<ManagerApoptosis>()
+      );
       mcs.push_back(
         emp::NewPtr<ManagerChannel>(cfg, *local_rngs[i])
       );
@@ -83,12 +88,17 @@ public:
   }
 
   ~Manager() {
+    for (auto &ptr : mas) ptr.Delete();
     for (auto &ptr : mcs) ptr.Delete();
     for (auto &ptr : mfs) ptr.Delete();
     for (auto &ptr : mis) ptr.Delete();
     for (auto &ptr : mps) ptr.Delete();
     for (auto &ptr : mss) ptr.Delete();
     for (auto &vec : mws) for (auto &ptr : vec) ptr.Delete();
+  }
+
+  ManagerApoptosis& Apoptosis(size_t pos) {
+    return *mas[pos];
   }
 
   ManagerChannel& Channel(size_t pos) {
