@@ -29,6 +29,8 @@ private:
 
   size_t msgdir;
 
+  double stockpile_reserve;
+
   emp::Ptr<emp::vector<bool>> repr_pause_cur;
   emp::Ptr<emp::vector<bool>> repr_pause_nxt;
 
@@ -45,6 +47,7 @@ public:
     , neighs(GeometryHelper(cfg).CalcLocalNeighs(pos_))
     , pos(pos_)
     , inbox_active()
+    , stockpile_reserve(0)
     , repr_pause_cur(emp::NewPtr<emp::vector<bool>>(cfg.NLEV()+1))
     , repr_pause_nxt(emp::NewPtr<emp::vector<bool>>(cfg.NLEV()+1, true))
   {
@@ -59,8 +62,15 @@ public:
   void Reset() {
     facing = Cardi::Spin(local_rng);
     emp::vector<bool>(Cardi::Dir::NumDirs).swap(inbox_active);
+    stockpile_reserve = 0;
     std::fill(repr_pause_cur->begin(), repr_pause_cur->end(), false);
     std::fill(repr_pause_nxt->begin(), repr_pause_nxt->end(), true);
+  }
+
+  double CheckStockpileReserve() const { return stockpile_reserve; }
+
+  void AdjustStockpileReserve(double amt) {
+    stockpile_reserve = std::max(0.0,stockpile_reserve+amt);
   }
 
   void ReprPauseSetup() {

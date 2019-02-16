@@ -68,6 +68,26 @@ public:
 
   static void InitInternalActions(inst_lib_t &il, Config &cfg) {
 
+    il.AddInst(
+      "IncrStockpileReserve",
+      [&cfg](hardware_t & hw, const inst_t & inst){
+        CellFrame &fr = *hw.GetTrait(0);
+        fr.AdjustStockpileReserve(cfg.REP_THRESH()/2);
+      },
+      0,
+      "TODO"
+    );
+
+    il.AddInst(
+      "DecrStockpileReserve",
+      [&cfg](hardware_t & hw, const inst_t & inst){
+        CellFrame &fr = *hw.GetTrait(0);
+        fr.AdjustStockpileReserve(-cfg.REP_THRESH()/2);
+      },
+      0,
+      "TODO"
+    );
+
     for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
       il.AddInst(
         "PauseRepr-Lev" + emp::to_string(i),
@@ -195,7 +215,7 @@ public:
           size_t pos = fr.GetPos();
 
           if( !fr.IsReprPaused(i) &&
-            cfg.REP_THRESH() <= man.Stockpile(pos).QueryResource()
+            cfg.REP_THRESH()+ fr.CheckStockpileReserve() <= man.Stockpile(pos).QueryResource()
           ) {
 
             man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
