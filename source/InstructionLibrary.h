@@ -246,8 +246,6 @@ public:
       "DoApoptosis",
       [](hardware_t & hw, const inst_t & inst){
 
-        std::cout << "apoptosis" << std::endl;
-
         CellFrame &fr = *hw.GetTrait(0);
 
         Manager &man = fr.GetManager();

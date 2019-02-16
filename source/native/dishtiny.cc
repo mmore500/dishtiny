@@ -28,6 +28,8 @@ int main(int argc, char* argv[])
     std::cout << "Update: " << ud << std::endl;
     world.Update();
   }
+  // so that our computations won't get optimized away
+  std::cout << world.GetNumOrgs() << std::endl;
 
   return 0;
 }
