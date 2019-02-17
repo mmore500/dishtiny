@@ -17,7 +17,7 @@ static const int quiescent = -3;
 
 private:
 
-  emp::Random global_rng;
+  emp::Random &global_rng;
 
   int state;
 
@@ -95,6 +95,9 @@ public:
   /* this should only be called on live cells */
   void CalcNext(size_t update) {
 
+    // this must be called every update to keep global rngs in sync
+    const size_t incoming_seed = IncomingSeed(update);
+
     if (state > 0) {
       /* e.g., if active */
       next_state = quiescent;
@@ -102,8 +105,6 @@ public:
       /* e.g., if recovering from quiescent */
       next_state = state + 1;
     } else /* e.g., if ready */ {
-      // this must be called every update to keep global rngs in sync
-      const size_t incoming_seed = IncomingSeed(update);
       next_state = mc.GetIDs() ? std::max(IncomingWave(),incoming_seed) : ready;
     }
 
