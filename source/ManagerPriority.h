@@ -49,6 +49,8 @@ public:
   void Reset() {
     emp::Shuffle(local_rng, priority_order);
     cur_max_priority = Cardi::Dir::NumDirs;
+    // gen has been handed off to the population!
+    // we can't delete, but can remove our reference here
     gen = nullptr;
   }
 
