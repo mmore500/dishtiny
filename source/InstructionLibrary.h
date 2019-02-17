@@ -216,39 +216,43 @@ public:
       {"affinity"}
     );
 
+
+    std::function<void(hardware_t &, double, size_t)> trl;
+    trl = [&trl, &cfg](hardware_t & hw, const double arg, const size_t lev){
+
+      CellFrame &fr = *hw.GetTrait(0);
+
+      Manager &man = fr.GetManager();
+      const size_t pos = fr.GetPos();
+
+      if( fr.IsReprPaused(lev)
+        || cfg.REP_THRESH() + fr.CheckStockpileReserve() > man.Stockpile(pos).QueryResource()
+      ) {
+        return;
+      } else if (lev > 0 && man.Channel(pos).IsExpired(lev)) {
+        trl(hw, arg, lev-1);
+      } else {
+        man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
+
+        const size_t dir = CalcDir(fr,arg);
+        man.Priority(fr.GetNeigh(dir)).ProcessSire(
+            { pos,
+              dir,
+              lev,
+              man.Channel(pos).GetGenCounter(),
+              *man.Channel(pos).GetIDs()
+            },
+            hw.GetProgram()
+          );
+      }
+    };
+
     for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
       il.AddInst(
         "TryReproduce-Lev" + emp::to_string(i),
-        [i, &cfg](hardware_t & hw, const inst_t & inst){
-
-          CellFrame &fr = *hw.GetTrait(0);
-
-          Manager &man = fr.GetManager();
-          size_t pos = fr.GetPos();
-
-          if( !fr.IsReprPaused(i) &&
-            cfg.REP_THRESH()+ fr.CheckStockpileReserve() <= man.Stockpile(pos).QueryResource()
-          ) {
-
-            man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
-
-            const state_t & state = hw.GetCurState();
-
-            size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
-            auto cp = *man.Channel(pos).GetIDs();
-
-            man.Priority(fr.GetNeigh(dir)).ProcessSire(
-                { pos,   /* size_t par_pos,*/
-                  dir,   /* size_t dir, */
-                  i,     /* size_t rep_lev, */
-                  man.Channel(pos).GetGenCounter(),
-                  cp
-                },
-                hw.GetProgram()
-              );
-
-          }
-
+        [i, trl, &cfg](hardware_t & hw, const inst_t & inst){
+          const state_t & state = hw.GetCurState();
+          trl(hw,state.GetLocal(inst.args[0]), i);
         },
         1,
         "TODO"

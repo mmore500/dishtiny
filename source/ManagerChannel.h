@@ -50,6 +50,21 @@ public:
 
   const emp::vector<size_t>& GetGenCounter() const { return gen_counter; }
 
+  // same replev used for Inherit
+  bool IsExpired(size_t replev) const {
+
+    bool expired = false;
+
+    for(size_t i = cfg.NLEV()-replev; i < cfg.NLEV(); ++i) {
+
+      const size_t lim = cfg.Lev(i).EVENT_RADIUS() * cfg.Lev(i).EVENT_RADIUS();
+
+      expired |= GetGeneration(i) > lim;
+    }
+
+    return expired;
+  }
+
   bool CheckMatch(ManagerChannel &other, size_t lev) {
     return GetID(lev) && other.GetID(lev) ? *GetID(lev) == *other.GetID(lev) : false;
   }
