@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 
   DishWorld world(cfg);
   for(size_t ud = 0; ud < cfg.RUN_LENGTH(); ++ud) {
-    std::cout << "Update: " << ud << std::endl;
+    if (ud % 100 == 0) std::cout << "Update: " << ud << std::endl;
     world.Update();
   }
   // so that our computations won't get optimized away
