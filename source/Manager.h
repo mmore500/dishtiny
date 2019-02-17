@@ -29,7 +29,7 @@ public:
   Manager(
     emp::vector<emp::Ptr<emp::Random>> &local_rngs,
     emp::vector<emp::Ptr<emp::Random>> &global_rngs,
-    Config &cfg
+    const Config &cfg
   ) : mws(GeometryHelper(cfg).GetLocalSize()) {
 
     const size_t size = GeometryHelper(cfg).GetLocalSize();

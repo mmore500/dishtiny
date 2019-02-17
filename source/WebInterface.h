@@ -14,7 +14,7 @@ namespace UI = emp::web;
 
 class WebInterface : public UI::Animate {
 
-  Config cfg;
+  const Config cfg;
 
   UI::Document button_dash;  //< Div that contains the button dashboard.
 

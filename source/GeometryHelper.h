@@ -11,21 +11,21 @@ class GeometryHelper {
 
 private:
 
-  Config &cfg;
+  const Config &cfg;
 
 public:
 
-  GeometryHelper(Config &cfg_): cfg(cfg_) { ; }
+  GeometryHelper(const Config &cfg_): cfg(cfg_) { ; }
 
   /*
    * Local geometry helper function.
    */
-  inline size_t GetLocalX(size_t pos) const { return pos % cfg.GRID_W(); }
+  inline size_t GetLocalX(const size_t pos) const { return pos % cfg.GRID_W(); }
 
   /*
    * Local geometry helper function.
    */
-  inline size_t GetLocalY(size_t pos) const { return pos / cfg.GRID_W(); }
+  inline size_t GetLocalY(const size_t pos) const { return pos / cfg.GRID_W(); }
 
 
   /*
@@ -36,11 +36,11 @@ public:
   /*
    * Local eometry helper function.
    */
-  inline size_t GetLocalPos(int x, int y) const {
+  inline size_t GetLocalPos(const int x, const int y) const {
     return emp::Mod(y, cfg.GRID_H()) * cfg.GRID_W() + emp::Mod(x, cfg.GRID_W());
   }
 
-  emp::vector<size_t> CalcLocalNeighs(size_t pos) {
+  emp::vector<size_t> CalcLocalNeighs(const size_t pos) const {
 
     emp::vector<size_t> res;
 
@@ -58,7 +58,7 @@ public:
   /*
    * Global geometry helper function.
    */
-  inline size_t GetGlobalX(size_t pos) const {
+  inline size_t GetGlobalX(const size_t pos) const {
     /* TODO change this for MPI implementation */
     return GetLocalX(pos);
   }
@@ -66,7 +66,7 @@ public:
   /*
    * Global geometry helper function.
    */
-  inline size_t GetGlobalY(size_t pos) const {
+  inline size_t GetGlobalY(const size_t pos) const {
     /* TODO change this for MPI implementation */
     return GetLocalY(pos);
   }
@@ -74,7 +74,7 @@ public:
   /*
    * Global eometry helper function.
    */
-  inline size_t GetGlobalPos(int x, int y) const {
+  inline size_t GetGlobalPos(const int x, const int y) const {
     /* TODO change this for MPI implementation */
     return GetLocalPos(x,y);
   }

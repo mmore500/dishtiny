@@ -73,7 +73,7 @@ public:
     for (auto &ptr : clevs) ptr.Delete();
   }
 
-  ConfigLevel& Lev(size_t lev) {
+  const ConfigLevel& Lev(const size_t lev) const {
     return *clevs[lev];
   }
 

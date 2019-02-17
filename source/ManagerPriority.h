@@ -23,13 +23,13 @@ private:
   emp::Ptr<Genome> gen;
   SirePack sp;
 
-  bool TakesPriority(size_t dir) {
+  bool TakesPriority(const size_t dir) {
 
     size_t i;
 
     for(i = 0; priority_order[i] != dir; ++i);
 
-    bool retval = (i <= cur_max_priority);
+    const bool retval = (i <= cur_max_priority);
 
     cur_max_priority = std::min(i,cur_max_priority);
 
@@ -64,7 +64,7 @@ public:
   }
 
   std::experimental::optional<std::tuple<emp::Ptr<Genome>,SirePack>>
-  QueryPendingGenome() {
+  QueryPendingGenome() const {
     return gen ? std::experimental::make_optional(std::make_tuple(gen,sp)) : std::experimental::nullopt;
   }
 

@@ -20,7 +20,7 @@ private:
 
   std::function<std::string(std::experimental::optional<T>,std::experimental::optional<T>)> divider;
 
-  Config &cfg;
+  const Config &cfg;
 
 public:
 
@@ -28,7 +28,7 @@ public:
     UI::Document &viewer,
     std::function<std::experimental::optional<T>(size_t)> getter_,
     std::function<std::string(std::experimental::optional<T>)> renderer_,
-    Config &cfg_,
+    const Config &cfg_,
     std::function<std::string(std::experimental::optional<T>,std::experimental::optional<T>)> divider_=[](std::experimental::optional<T>,std::experimental::optional<T>){ return "gray"; }
   ) : canvas(500,500)
   , getter(getter_)
@@ -68,10 +68,10 @@ public:
 
     GeometryHelper helper(cfg);
 
-    auto GridXToCanvasX = [cell_w, offset_x](size_t grid_x){
+    const auto GridXToCanvasX = [cell_w, offset_x](size_t grid_x){
       return grid_x*cell_w+offset_x;
     };
-    auto GridYToCanvasY = [cell_h, offset_y](size_t grid_y){
+    const auto GridYToCanvasY = [cell_h, offset_y](size_t grid_y){
       return grid_y*cell_h+offset_y;
     };
 

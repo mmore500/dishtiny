@@ -18,10 +18,10 @@ private:
 
   emp::Random &local_rng;
 
-  Config &cfg;
+  const Config &cfg;
 
-  std::experimental::optional<Config::event_t> GetMsg(size_t box) {
-    auto res = inboxes[box].empty() ?
+  std::experimental::optional<Config::event_t> GetMsg(const size_t box) {
+    const auto res = inboxes[box].empty() ?
       std::experimental::nullopt :
       std::experimental::optional<Config::event_t>(inboxes[box].front());
 
@@ -32,11 +32,11 @@ private:
 
 public:
 
-  ManagerInbox(Config &cfg_, emp::Random &local_rng_)
+  ManagerInbox(const Config &cfg_, emp::Random &local_rng_)
     : inboxes(Cardi::Dir::NumDirs), local_rng(local_rng_), cfg(cfg_) { ; }
 
 
-  void TakeMessage(const Config::event_t & event, size_t incoming_direction) {
+  void TakeMessage(const Config::event_t & event, const size_t incoming_direction) {
 
     // Make room for new message in inbox. Remove oldest first.
     while (inboxes[incoming_direction].size() >= cfg.INBOX_CAPACITY())
@@ -69,7 +69,7 @@ public:
       auto it = dirsl.begin();
       while(it != dirsl.end()) {
 
-        auto opt_msg = GetMsg(*it);
+        const auto opt_msg = GetMsg(*it);
 
         if (opt_msg) {
           hw.QueueEvent(*opt_msg);

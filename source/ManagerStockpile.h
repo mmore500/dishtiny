@@ -12,12 +12,12 @@ private:
 
   double contrib_resource;
 
-  Config &cfg;
+  const Config &cfg;
 
 public:
 
   ManagerStockpile(
-    Config &cfg_
+    const Config &cfg_
   ) : cfg(cfg_)
   { Reset(); }
 
@@ -25,7 +25,7 @@ public:
     return resource;
   }
 
-  double RequestResourceAmt(double amt){
+  double RequestResourceAmt(const double amt) {
     emp_assert(amt >= 0);
     if (resource > 0) {
       double actual = std::min(resource, amt);
@@ -36,7 +36,7 @@ public:
     }
   }
 
-  double RequestResourceFrac(double frac){
+  double RequestResourceFrac(const double frac) {
     emp_assert(frac >= 0 && frac <= 1);
     if (resource > 0 ) {
       double amt = resource * frac;
@@ -47,11 +47,11 @@ public:
     }
   }
 
-  void InternalApplyHarvest(double amt) {
+  void InternalApplyHarvest(const double amt) {
     resource += amt;
   }
 
-  void ExternalContribute(double amt) {
+  void ExternalContribute(const double amt) {
     emp_assert(amt >= 0);
     contrib_resource += amt;
   }
@@ -61,7 +61,7 @@ public:
     contrib_resource = 0;
   }
 
-  bool IsBankrupt() {
+  bool IsBankrupt() const {
     return cfg.KILL_THRESH() >= resource;
   }
 

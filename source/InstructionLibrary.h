@@ -15,7 +15,7 @@
 class InstructionLibrary {
 
 private:
-  static size_t CalcDir(CellFrame &fr, double regval) {
+  static size_t CalcDir(const CellFrame &fr, const double regval) {
     return emp::Mod(fr.GetFacing()+(int)regval,(int)Cardi::NumDirs);
   }
 
@@ -66,7 +66,7 @@ public:
     );
   }
 
-  static void InitInternalActions(inst_lib_t &il, Config &cfg) {
+  static void InitInternalActions(inst_lib_t &il, const Config &cfg) {
 
     il.AddInst(
       "IncrStockpileReserve",
@@ -109,7 +109,7 @@ public:
       [](hardware_t &hw, const inst_t &inst){
         CellFrame &fr = *hw.GetTrait(0);
         const state_t & state = hw.GetCurState();
-        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        const size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
         fr.SetInboxActivity(dir, true);
       },
       1,
@@ -133,7 +133,7 @@ public:
       [](hardware_t &hw, const inst_t &inst){
         CellFrame &fr = *hw.GetTrait(0);
         const state_t & state = hw.GetCurState();
-        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        const size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
         fr.SetInboxActivity(dir, false);
       },
       1,
@@ -142,7 +142,7 @@ public:
 
   }
 
-  static void InitExternalActions(inst_lib_t &il, Config &cfg) {
+  static void InitExternalActions(inst_lib_t &il, const Config &cfg) {
 
     il.AddInst(
       "SendUnitResource",
@@ -151,13 +151,13 @@ public:
         CellFrame &fr = *hw.GetTrait(0);
 
         Manager &man = fr.GetManager();
-        size_t pos = fr.GetPos();
+        const size_t pos = fr.GetPos();
 
-        double amt = man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH()/2);
+        const double amt = man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH()/2);
 
         const state_t & state = hw.GetCurState();
-        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
-        size_t neigh = fr.GetNeigh(dir);
+        const size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        const size_t neigh = fr.GetNeigh(dir);
 
         man.Stockpile(neigh).ExternalContribute(amt);
 
@@ -173,13 +173,13 @@ public:
         CellFrame &fr = *hw.GetTrait(0);
 
         Manager &man = fr.GetManager();
-        size_t pos = fr.GetPos();
+        const size_t pos = fr.GetPos();
 
-        double amt = man.Stockpile(pos).RequestResourceFrac(0.5);
+        const double amt = man.Stockpile(pos).RequestResourceFrac(0.5);
 
         const state_t & state = hw.GetCurState();
-        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
-        size_t neigh = fr.GetNeigh(dir);
+        const size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        const size_t neigh = fr.GetNeigh(dir);
 
         man.Stockpile(neigh).ExternalContribute(amt);
       },
@@ -191,8 +191,8 @@ public:
       "SendMsg",
       [](hardware_t & hw, const inst_t & inst){
         CellFrame &fr = *hw.GetTrait(0);
-        state_t & state = hw.GetCurState();
-        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        const state_t & state = hw.GetCurState();
+        const size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
         fr.SetMsgDir(dir);
         hw.TriggerEvent("SendMessage", inst.affinity, state.output_mem);
       },
@@ -206,7 +206,7 @@ public:
     il.AddInst(
       "BroadcastMsg",
       [](hardware_t & hw, const inst_t & inst){
-        state_t & state = hw.GetCurState();
+        const state_t & state = hw.GetCurState();
         hw.TriggerEvent("BroadcastMessage", inst.affinity, state.output_mem);
       },
       0,
@@ -217,7 +217,7 @@ public:
     );
 
 
-    std::function<void(hardware_t &, double, size_t)> trl;
+    std::function<void(hardware_t &, const double, const size_t)> trl;
     trl = [&trl, &cfg](hardware_t & hw, const double arg, const size_t lev){
 
       CellFrame &fr = *hw.GetTrait(0);
@@ -235,15 +235,15 @@ public:
         man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
 
         const size_t dir = CalcDir(fr,arg);
-        man.Priority(fr.GetNeigh(dir)).ProcessSire(
-            { pos,
-              dir,
-              lev,
-              man.Channel(pos).GetGenCounter(),
-              *man.Channel(pos).GetIDs()
-            },
-            hw.GetProgram()
-          );
+        man.Priority(fr.GetNeigh(dir)).ProcessSire({
+            pos,
+            dir,
+            lev,
+            man.Channel(pos).GetGenCounter(),
+            *man.Channel(pos).GetIDs()
+          },
+          hw.GetProgram()
+        );
       }
     };
 
@@ -266,7 +266,7 @@ public:
         CellFrame &fr = *hw.GetTrait(0);
 
         Manager &man = fr.GetManager();
-        size_t pos = fr.GetPos();
+        const size_t pos = fr.GetPos();
 
         man.Apoptosis(pos).MarkComplete();
 
@@ -282,7 +282,7 @@ public:
         CellFrame &fr = *hw.GetTrait(0);
 
         Manager &man = fr.GetManager();
-        size_t pos = fr.GetPos();
+        const size_t pos = fr.GetPos();
 
         man.Apoptosis(pos).MarkPartial();
 
@@ -293,7 +293,7 @@ public:
 
   }
 
-  static void InitInternalSensors(inst_lib_t &il, Config &cfg) {
+  static void InitInternalSensors(inst_lib_t &il, const Config &cfg) {
     il.AddInst(
       "QueryOwnStockpile",
       [](hardware_t & hw, const inst_t & inst){
@@ -301,8 +301,8 @@ public:
         CellFrame &fr = *hw.GetTrait(0);
 
         Manager &man = fr.GetManager();
-        size_t pos = fr.GetPos();
-        double amt = man.Stockpile(pos).QueryResource();
+        const size_t pos = fr.GetPos();
+        const double amt = man.Stockpile(pos).QueryResource();
 
         state_t & state = hw.GetCurState();
 
@@ -321,8 +321,8 @@ public:
           CellFrame &fr = *hw.GetTrait(0);
 
           Manager &man = fr.GetManager();
-          size_t pos = fr.GetPos();
-          size_t gen = man.Channel(pos).GetGeneration(l);
+          const size_t pos = fr.GetPos();
+          const size_t gen = man.Channel(pos).GetGeneration(l);
 
           state_t & state = hw.GetCurState();
 
@@ -339,7 +339,7 @@ public:
   static void InitExternalSensors(
     inst_lib_t &il,
     std::function<bool(size_t)> is_live,
-    Config &cfg
+    const Config &cfg
   ) {
 
     il.AddInst(
@@ -349,11 +349,10 @@ public:
 
         CellFrame &fr = *hw.GetTrait(0);
 
-        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
-        size_t neigh = fr.GetNeigh(dir);
+        const size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        const size_t neigh = fr.GetNeigh(dir);
 
-        bool live = is_live(neigh);
-        state.SetLocal(inst.args[1], live);
+        state.SetLocal(inst.args[1], is_live(neigh));
       },
       2,
       "TODO"
@@ -423,17 +422,15 @@ public:
 
           CellFrame &fr = *hw.GetTrait(0);
 
-          size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
-          size_t neigh = fr.GetNeigh(dir);
+          const size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+          const size_t neigh = fr.GetNeigh(dir);
 
-          bool match;
+          bool match = false;
 
           if(is_live(neigh)) {
             Manager &man = fr.GetManager();
             size_t pos = fr.GetPos();
             match = man.Channel(pos).CheckMatch(man.Channel(neigh), i);
-          } else {
-            match = false;
           }
 
           state.SetLocal(inst.args[1], match);
@@ -453,8 +450,8 @@ public:
 
           CellFrame &fr = *hw.GetTrait(0);
 
-          size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
-          size_t neigh = fr.GetNeigh(dir);
+          const size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+          const size_t neigh = fr.GetNeigh(dir);
 
           if(is_live(neigh)) {
             Manager &man = fr.GetManager();
@@ -476,12 +473,12 @@ public:
 
         CellFrame &fr = *hw.GetTrait(0);
 
-        size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
-        size_t neigh = fr.GetNeigh(dir);
+        const size_t dir = CalcDir(fr,state.GetLocal(inst.args[0]));
+        const size_t neigh = fr.GetNeigh(dir);
 
         if(is_live(neigh)) {
           Manager &man = fr.GetManager();
-          double amt = man.Stockpile(neigh).QueryResource();
+          const double amt = man.Stockpile(neigh).QueryResource();
           state.SetLocal(inst.args[1], amt);
         } else {
           state.SetLocal(inst.args[1], false);
@@ -493,7 +490,7 @@ public:
 
   }
 
-  static const inst_lib_t & Make(std::function<bool(size_t)> is_live, Config &cfg) {
+  static const inst_lib_t & Make(std::function<bool(size_t)> is_live, const Config &cfg) {
 
     static inst_lib_t il;
 

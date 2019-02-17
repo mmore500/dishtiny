@@ -12,7 +12,7 @@ public:
   using event_lib_t = Config::event_lib_t;
   using event_t = event_lib_t::event_t;
 
-  static const emp::Ptr<event_lib_t> Make(Config &cfg) {
+  static const emp::Ptr<event_lib_t> Make(const Config &cfg) {
 
     static event_lib_t el;
 

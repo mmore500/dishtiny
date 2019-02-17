@@ -26,7 +26,7 @@ private:
 
   friend class WebInterface;
 
-  Config &cfg;
+  const Config &cfg;
 
   emp::vector<emp::Ptr<emp::Random>> global_rngs;
   emp::vector<emp::Ptr<emp::Random>> local_rngs;
@@ -37,7 +37,7 @@ private:
   emp::Ptr<Manager> man;
 
 public:
-  DishWorld(Config &cfg_, size_t uid_offset=0)
+  DishWorld(const Config &cfg_, size_t uid_offset=0)
   : cfg(cfg_), mut(cfg_) {
     SetPopStruct_Grid(cfg.GRID_W(), cfg.GRID_H());
 

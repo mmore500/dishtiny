@@ -24,20 +24,20 @@ private:
   int next_state;
 
 
-  ManagerChannel &mc;
+  const ManagerChannel &mc;
   ManagerStockpile &ms;
   emp::Ptr<emp::vector<emp::Ptr<ManagerWave>>> neighs;
 
-  size_t lev;
-  size_t global_x;
-  size_t global_y;
+  const size_t lev;
+  const size_t global_x;
+  const size_t global_y;
 
-  Config &cfg;
+  const Config &cfg;
 
-  size_t IncomingWave() {
+  size_t IncomingWave() const {
 
     int res = ready;
-    for (auto n : *neighs) {
+    for (const auto &n : *neighs) {
       if (mc.CheckMatch(n->mc, lev)) {
         res = std::max(res, n->state);
       }
@@ -49,16 +49,16 @@ private:
 
   }
 
-  size_t IncomingSeed(size_t update) {
+  size_t IncomingSeed(const size_t update) const {
 
     // only put out seeds at intervals
     if (update % (cfg.Lev(lev).EVENT_RADIUS() + 1)) return ready;
 
     /* when this is called we know we're in the ready state */
-    size_t event_size = cfg.Lev(lev).EVENT_RADIUS()*2;
+    const size_t event_size = cfg.Lev(lev).EVENT_RADIUS()*2;
 
-    size_t seed_x = global_rng.GetUInt(0,event_size);
-    size_t seed_y = global_rng.GetUInt(0,event_size);
+    const size_t seed_x = global_rng.GetUInt(0,event_size);
+    const size_t seed_y = global_rng.GetUInt(0,event_size);
 
     return (
       (global_x % event_size == seed_x) && (global_y % event_size == seed_y)
@@ -68,12 +68,12 @@ private:
 
 public:
   ManagerWave(
-    ManagerChannel &mc_,
+    const ManagerChannel &mc_,
     ManagerStockpile &ms_,
-    size_t lev_,
-    size_t pos,
+    const size_t lev_,
+    const size_t pos,
     emp::Random &global_rng_,
-    Config &cfg_
+    const Config &cfg_
   ) : global_rng(global_rng_)
   , state(ready)
   , mc(mc_)
@@ -88,12 +88,12 @@ public:
     if (neighs) neighs.Delete();
   }
 
-  void SetNeighs(emp::vector<emp::Ptr<ManagerWave>> n) {
-    neighs = emp::NewPtr<emp::vector<emp::Ptr<ManagerWave>>>(n.begin(), n.end());
+  void SetNeighs(const emp::vector<emp::Ptr<ManagerWave>> n) {
+    neighs = emp::NewPtr<emp::vector<emp::Ptr<ManagerWave>>>(n.cbegin(), n.cend());
   }
 
   /* this should only be called on live cells */
-  void CalcNext(size_t update) {
+  void CalcNext(const size_t update) {
 
     // this must be called every update to keep global rngs in sync
     const size_t incoming_seed = IncomingSeed(update);
@@ -136,7 +136,7 @@ public:
   }
 
   /* accessor function */
-  const int GetState() {
+  int GetState() const {
     return state;
   }
 

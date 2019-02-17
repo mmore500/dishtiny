@@ -15,7 +15,7 @@ private:
 
   emp::Random &local_rng;
 
-  Config & cfg;
+  const Config &cfg;
 
   emp::vector<size_t> gen_counter;
 
@@ -26,7 +26,7 @@ private:
 public:
 
   ManagerChannel(
-    Config &cfg_,
+    const Config &cfg_,
     emp::Random &local_rng_
   ) : ids(ChannelPack())
   , local_rng(local_rng_)
@@ -38,11 +38,11 @@ public:
     }
   }
 
-  const std::experimental::optional<Config::chanid_t> GetID(size_t lev) {
+  const std::experimental::optional<Config::chanid_t> GetID(const size_t lev) const {
     return ids ? std::experimental::optional<Config::chanid_t>((*ids)[lev]) : std::experimental::nullopt;
   }
 
-  std::experimental::optional<ChannelPack> GetIDs() { return ids; }
+  std::experimental::optional<ChannelPack> GetIDs() const { return ids; }
 
   void ClearIDs() { ids = std::experimental::nullopt; }
 
@@ -51,7 +51,7 @@ public:
   const emp::vector<size_t>& GetGenCounter() const { return gen_counter; }
 
   // same replev used for Inherit
-  bool IsExpired(size_t replev) const {
+  bool IsExpired(const size_t replev) const {
 
     bool expired = false;
 
@@ -65,15 +65,15 @@ public:
     return expired;
   }
 
-  bool CheckMatch(ManagerChannel &other, size_t lev) {
+  bool CheckMatch(const ManagerChannel &other, const size_t lev) const {
     return GetID(lev) && other.GetID(lev) ? *GetID(lev) == *other.GetID(lev) : false;
   }
 
   /* perform a certain level of reproduction */
   void Inherit(
-    ChannelPack &parent,
+    const ChannelPack &parent,
     const emp::vector<size_t> & parent_gen_counter,
-    size_t lev
+    const size_t lev
   ) {
 
     if (!ids) ids = std::experimental::optional<ChannelPack>{ChannelPack(cfg.NLEV())};
