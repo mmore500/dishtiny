@@ -15,16 +15,48 @@
 class InstructionLibrary {
 
 private:
-  static size_t CalcDir(const CellFrame &fr, const double regval) {
-    return emp::Mod(fr.GetFacing()+(int)regval,(int)Cardi::NumDirs);
-  }
-
-public:
 
   using hardware_t = Config::hardware_t;
   using inst_lib_t = Config::inst_lib_t;
   using inst_t = inst_lib_t::inst_t;
   using state_t = hardware_t::State;
+
+  static size_t CalcDir(const CellFrame &fr, const double regval) {
+    return emp::Mod(fr.GetFacing()+(int)regval,(int)Cardi::NumDirs);
+  }
+
+  static void TRL(hardware_t & hw, const double arg, const size_t lev, const Config &cfg){
+
+    CellFrame &fr = *hw.GetTrait(0);
+
+    Manager &man = fr.GetManager();
+    const size_t pos = fr.GetPos();
+
+    if( fr.IsReprPaused(lev)
+      || cfg.REP_THRESH() + fr.CheckStockpileReserve() > man.Stockpile(pos).QueryResource()
+    ) {
+      return;
+    } else if (man.Channel(pos).IsExpired(lev)) {
+      TRL(hw, arg, lev+1, cfg);
+    } else {
+      man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
+
+      const size_t dir = CalcDir(fr,arg);
+      man.Priority(fr.GetNeigh(dir)).ProcessSire({
+          pos,
+          dir,
+          lev,
+          man.Channel(pos).GetGenCounter(),
+          *man.Channel(pos).GetIDs()
+        },
+        hw.GetProgram()
+      );
+    }
+
+  }
+
+
+public:
 
   static void InitDefault(inst_lib_t &il) {
 
@@ -216,43 +248,12 @@ public:
       {"affinity"}
     );
 
-
-    std::function<void(hardware_t &, const double, const size_t)> trl;
-    trl = [&trl, &cfg](hardware_t & hw, const double arg, const size_t lev){
-
-      CellFrame &fr = *hw.GetTrait(0);
-
-      Manager &man = fr.GetManager();
-      const size_t pos = fr.GetPos();
-
-      if( fr.IsReprPaused(lev)
-        || cfg.REP_THRESH() + fr.CheckStockpileReserve() > man.Stockpile(pos).QueryResource()
-      ) {
-        return;
-      } else if (lev > 0 && man.Channel(pos).IsExpired(lev)) {
-        trl(hw, arg, lev-1);
-      } else {
-        man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
-
-        const size_t dir = CalcDir(fr,arg);
-        man.Priority(fr.GetNeigh(dir)).ProcessSire({
-            pos,
-            dir,
-            lev,
-            man.Channel(pos).GetGenCounter(),
-            *man.Channel(pos).GetIDs()
-          },
-          hw.GetProgram()
-        );
-      }
-    };
-
     for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
       il.AddInst(
         "TryReproduce-Lev" + emp::to_string(i),
-        [i, trl, &cfg](hardware_t & hw, const inst_t & inst){
+        [i, &cfg](hardware_t & hw, const inst_t & inst){
           const state_t & state = hw.GetCurState();
-          trl(hw,state.GetLocal(inst.args[0]), i);
+          TRL(hw, state.GetLocal(inst.args[0]), i, cfg);
         },
         1,
         "TODO"

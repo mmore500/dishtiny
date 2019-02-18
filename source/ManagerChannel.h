@@ -55,7 +55,7 @@ public:
 
     bool expired = false;
 
-    for(size_t i = cfg.NLEV()-replev; i < cfg.NLEV(); ++i) {
+    for(size_t i = replev; i < cfg.NLEV(); ++i) {
 
       const size_t lim = cfg.Lev(i).EVENT_RADIUS() * cfg.Lev(i).EVENT_RADIUS();
 
@@ -69,17 +69,22 @@ public:
     return GetID(lev) && other.GetID(lev) ? *GetID(lev) == *other.GetID(lev) : false;
   }
 
+  // to be called on the parent
+  void LogReprGen(const size_t replev) {
+    for(size_t i = replev; i < cfg.NLEV(); ++i) gen_counter[i]++;
+  }
+
   /* perform a certain level of reproduction */
   void Inherit(
     const ChannelPack &parent,
     const emp::vector<size_t> & parent_gen_counter,
-    const size_t lev
+    const size_t replev
   ) {
 
     if (!ids) ids = std::experimental::optional<ChannelPack>{ChannelPack(cfg.NLEV())};
 
     for(size_t i = 0; i < cfg.NLEV(); ++i) {
-      if(i < lev) {
+      if(i < replev) {
         (*ids)[i] = drawChannelID();
         gen_counter[i] = 0;
       } else {

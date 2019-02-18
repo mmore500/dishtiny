@@ -159,6 +159,7 @@ public:
         man->Family(i).Reset();
         man->Family(i).SetParentPos(sirepack.par_pos);
         man->Family(sirepack.par_pos).AddChildPos(i);
+        man->Channel(sirepack.par_pos).LogReprGen(sirepack.rep_lev);
         frames[i]->SpinFacing();
       }
       if (IsOccupied(i)) {
