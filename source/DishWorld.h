@@ -85,6 +85,7 @@ public:
       cpus[pos]->SetProgram(GetOrg(pos).program);
       emp_assert(cpus[pos]->GetProgram().GetSize());
       man->Inbox(pos).ClearInboxes();
+      frames[pos]->SpinFacing();
     });
 
     OnUpdate([this](size_t upd){
@@ -160,7 +161,6 @@ public:
         man->Family(i).SetParentPos(sirepack.par_pos);
         man->Family(sirepack.par_pos).AddChildPos(i);
         man->Channel(sirepack.par_pos).LogReprGen(sirepack.rep_lev);
-        frames[i]->SpinFacing();
       }
       if (IsOccupied(i)) {
         man->Priority(i).Reset();
