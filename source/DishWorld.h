@@ -161,10 +161,13 @@ public:
           sirepack.channel_gens,
           sirepack.rep_lev
         );
-        man->Family(i).Reset();
+        man->Family(i).Reset(GetUpdate());
         man->Family(i).SetParentPos(sirepack.par_pos);
-        man->Family(sirepack.par_pos).AddChildPos(i);
-        man->Channel(sirepack.par_pos).LogReprGen(sirepack.rep_lev);
+        // check that parent hasn't been overwritten by a different birth
+        if(man->Family(sirepack.par_pos).GetBirthUpdate() != GetUpdate()) {
+          man->Family(sirepack.par_pos).AddChildPos(i);
+          man->Channel(sirepack.par_pos).LogReprGen(sirepack.rep_lev);
+        }
       }
       if (IsOccupied(i)) {
         man->Priority(i).Reset();
