@@ -13,8 +13,8 @@
 #include "FrameCell.h"
 #include "Config.h"
 #include "Genome.h"
-#include "InstructionLibrary.h"
-#include "EventLibrary.h"
+#include "LibraryEvent.h"
+#include "LibraryInstruction.h"
 #include "Manager.h"
 #include "Mutator.h"
 
@@ -42,11 +42,11 @@ public:
   DishWorld(const Config &cfg_, size_t uid_offset=0)
   : cfg(cfg_)
   , mut(cfg_)
-  , inst_lib(InstructionLibrary::Make(
+  , inst_lib(LibraryInstruction::Make(
       [this](const size_t pos){ return IsOccupied(pos); },
       cfg
     ))
-  , event_lib(EventLibrary::Make(cfg))
+  , event_lib(LibraryEvent::Make(cfg))
   {
     SetPopStruct_Grid(cfg.GRID_W(), cfg.GRID_H());
 

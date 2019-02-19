@@ -3,8 +3,9 @@
 #include "base/Ptr.h"
 
 #include "Config.h"
+#include "Manager.h"
 
-class EventLibrary {
+class LibraryEvent {
 
 public:
 
