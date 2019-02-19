@@ -510,6 +510,31 @@ public:
         2,
         "TODO"
       );
+      il.AddInst(
+        "QueryIsMyPropagule-Lev" + emp::to_string(i),
+        [i, is_live](hardware_t & hw, const inst_t & inst){
+          state_t & state = hw.GetCurState();
+
+          FrameHardware &fh = *hw.GetTrait(0);
+
+          const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+          const size_t neigh = fh.Cell().GetNeigh(dir);
+
+          bool match = false;
+
+          if(is_live(neigh)) {
+            Manager &man = fh.Cell().Man();
+            size_t pos = fh.Cell().GetPos();
+            match = !man.Channel(pos).CheckMatch(man.Channel(neigh), i);
+            match &= man.Family(pos).HasChildPos(neigh);
+            match &= man.Family(neigh).IsParentPos(pos);
+          }
+
+          state.SetLocal(inst.args[1], match);
+        },
+        2,
+        "TODO"
+      );
     }
 
     // get the raw channel of who is next door
