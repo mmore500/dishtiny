@@ -108,13 +108,18 @@ public:
 
   void Pre() {
     for (size_t i = 0; i < GetSize(); ++i) {
+
+      for(size_t l = 0; l < cfg.NLEV(); ++l) {
+        man->Wave(i,l).CalcNext(GetUpdate());
+      }
+
       if (IsOccupied(i)) {
         for(size_t l = 0; l < cfg.NLEV(); ++l) {
-          man->Wave(i,l).CalcNext(GetUpdate());
           man->Wave(i,l).HarvestResource();
         }
         frames[i]->QueueMessages(man->Inbox(i).GetInboxes());
       }
+
     }
   }
 
@@ -148,6 +153,7 @@ public:
           man->Channel(sirepack.par_pos).LogReprGen(sirepack.rep_lev);
         }
       } else if (IsOccupied(i)) {
+        // this block doesn't get run if a cell was just born here
         man->Stockpile(i).ResolveExternalContributions();
         if (man->Stockpile(i).IsBankrupt()
             || man->Apoptosis(i).IsMarked()) {
@@ -158,7 +164,10 @@ public:
         }
       }
 
-      for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
+      if (IsOccupied(i)) {
+        for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
+      }
+
       man->Priority(i).Reset();
       man->Apoptosis(i).Reset();
 
