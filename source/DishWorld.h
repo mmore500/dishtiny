@@ -164,9 +164,8 @@ public:
         }
       }
 
-      if (IsOccupied(i)) {
-        for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
-      }
+      // dead cells with no channels have nullopt so no transmission will occur
+      for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
 
       man->Priority(i).Reset();
       man->Apoptosis(i).Reset();
