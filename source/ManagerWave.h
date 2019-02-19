@@ -26,7 +26,7 @@ private:
 
   const ManagerChannel &mc;
   ManagerStockpile &ms;
-  emp::Ptr<emp::vector<emp::Ptr<ManagerWave>>> neighs;
+  emp::Ptr<const emp::vector<emp::Ptr<ManagerWave>>> neighs;
 
   const size_t lev;
   const size_t global_x;
