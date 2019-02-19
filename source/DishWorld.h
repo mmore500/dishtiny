@@ -10,7 +10,7 @@
 #include "tools/BitSet.h"
 
 #include "Cardi.h"
-#include "CellFrame.h"
+#include "FrameCell.h"
 #include "Config.h"
 #include "Genome.h"
 #include "InstructionLibrary.h"
@@ -30,15 +30,24 @@ private:
 
   emp::vector<emp::Ptr<emp::Random>> global_rngs;
   emp::vector<emp::Ptr<emp::Random>> local_rngs;
-  emp::vector<emp::Ptr<Config::hardware_t>> cpus;
-  emp::vector<emp::Ptr<CellFrame>> frames;
+  emp::vector<emp::Ptr<FrameCell>> frames;
 
   Mutator mut;
   emp::Ptr<Manager> man;
 
+  const Config::inst_lib_t &inst_lib;
+  const Config::event_lib_t &event_lib;
+
 public:
   DishWorld(const Config &cfg_, size_t uid_offset=0)
-  : cfg(cfg_), mut(cfg_) {
+  : cfg(cfg_)
+  , mut(cfg_)
+  , inst_lib(InstructionLibrary::Make(
+      [this](const size_t pos){ return IsOccupied(pos); },
+      cfg
+    ))
+  , event_lib(EventLibrary::Make(cfg))
+  {
     SetPopStruct_Grid(cfg.GRID_W(), cfg.GRID_H());
 
     for(size_t i = 0; i < GetSize(); ++i) {
@@ -51,41 +60,25 @@ public:
     man = emp::NewPtr<Manager>(local_rngs, global_rngs, cfg);
 
     for(size_t i = 0; i < GetSize(); ++i) {
-      cpus.push_back(emp::NewPtr<Config::hardware_t>(
-        &InstructionLibrary::Make(
-          [this](size_t pos){ return IsOccupied(pos); },
-          cfg
-        ),
-        EventLibrary::Make(cfg),
-        local_rngs[i]
-      ));
-      frames.push_back(emp::NewPtr<CellFrame>(
-        local_rngs[i],
+      frames.push_back(emp::NewPtr<FrameCell>(
+        *local_rngs[i],
         cfg,
         *man,
-        i
+        i,
+        inst_lib,
+        event_lib
       ));
-      cpus[i]->PushTrait(frames[i]);
     }
 
-    OnOffspringReady(
-      [this](Genome& g, size_t pos){
-        return mut.ApplyMutations(g.program,*local_rngs[pos]);
-      }
-    );
+    // OnOffspringReady([](){;}});
+    // OnOrgDeath([](){;});
 
-    OnOrgDeath([this](size_t pos){ ; });
-
-    OnPlacement([this](size_t pos){
+    OnPlacement([this](const size_t pos){
       man->Stockpile(pos).Reset();
-      cpus[pos]->ResetHardware();
-      cpus[pos]->ResetProgram();
-      emp_assert(!cpus[pos]->GetProgram().GetSize());
-      cpus[pos]->GetTrait(0)->Reset();
-      cpus[pos]->SetProgram(GetOrg(pos).program);
-      emp_assert(cpus[pos]->GetProgram().GetSize());
+      frames[pos]->Reset();
+      mut.ApplyMutations(GetOrg(pos).program,*local_rngs[pos]);
+      frames[pos]->SetProgram(GetOrg(pos).program);
       man->Inbox(pos).ClearInboxes();
-      frames[pos]->SpinFacing();
     });
 
     OnUpdate([this](size_t upd){
@@ -95,10 +88,10 @@ public:
     });
 
     for(size_t i = 0; i < GetSize(); ++i) {
-      Genome g(*local_rngs[i], InstructionLibrary::Make(
-        [this](size_t pos){ return IsOccupied(pos); },
-        cfg
-      ), cfg);
+      Genome g(
+        *local_rngs[i],
+        inst_lib,
+        cfg);
       InjectAt(g, emp::WorldPosition(i));
       emp_assert(GetOrg(i).program.GetSize());
       man->Stockpile(i).InternalApplyHarvest(cfg.START_RESOURCE());
@@ -109,47 +102,33 @@ public:
   ~DishWorld() {
     for (auto &ptr : global_rngs) ptr.Delete();
     for (auto &ptr : local_rngs) ptr.Delete();
-    for (auto &ptr : cpus) { ptr.Delete(); }
     for (auto &ptr : frames) ptr.Delete();
     man.Delete();
   }
 
   void Pre() {
-    for(size_t i = 0; i < GetSize(); ++i) {
-      for(size_t l = 0; l < cfg.NLEV(); ++l) {
-        man->Wave(i,l).CalcNext(GetUpdate());
-        if (IsOccupied(i)) man->Wave(i,l).HarvestResource();
-      }
+    for (size_t i = 0; i < GetSize(); ++i) {
       if (IsOccupied(i)) {
-        man->Inbox(i).QueueMessages(
-          *cpus[i],
-          [this, i](size_t pos){
-            return frames[i]->CheckInboxActivity(pos);
-          }
-        );
+        for(size_t l = 0; l < cfg.NLEV(); ++l) {
+          man->Wave(i,l).CalcNext(GetUpdate());
+          man->Wave(i,l).HarvestResource();
+        }
+        frames[i]->QueueMessages(man->Inbox(i).GetInboxes());
       }
     }
   }
 
   void Mid() {
     for(size_t i = 0; i < GetSize(); ++i) {
-      if (IsOccupied(i)) {
-        emp_assert(cpus[i]->GetProgram().GetSize());
-        frames[i]->ReprPauseSetup();
-        cpus[i]->SpawnCore(
-          Config::hardware_t::affinity_t(),
-          0.5,
-          {},
-          false
-        );
-        cpus[i]->Process(cfg.HARDWARE_STEPS());
-      }
+      if (IsOccupied(i)) frames[i]->Process();
     }
   }
 
   void Post() {
     for(size_t i = 0; i < GetSize(); ++i) {
+
       const auto optional_tup = man->Priority(i).QueryPendingGenome();
+
       if(optional_tup) {
         SirePack sirepack;
         emp::Ptr<Genome> prog;
@@ -168,11 +147,8 @@ public:
           man->Family(sirepack.par_pos).AddChildPos(i);
           man->Channel(sirepack.par_pos).LogReprGen(sirepack.rep_lev);
         }
-      }
-      if (IsOccupied(i)) {
-        man->Priority(i).Reset();
+      } else if (IsOccupied(i)) {
         man->Stockpile(i).ResolveExternalContributions();
-        for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
         if (man->Stockpile(i).IsBankrupt()
             || man->Apoptosis(i).IsMarked()) {
           DoDeath(i);
@@ -180,8 +156,12 @@ public:
             man->Channel(i).ClearIDs();
           }
         }
-        man->Apoptosis(i).Reset();
       }
+
+      for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
+      man->Priority(i).Reset();
+      man->Apoptosis(i).Reset();
+
     }
   }
 

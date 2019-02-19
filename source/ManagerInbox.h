@@ -16,25 +16,21 @@ private:
   // arranged by incoming direction
   emp::vector<Config::inbox_t> inboxes;
 
-  emp::Random &local_rng;
-
   const Config &cfg;
-
-  std::experimental::optional<Config::event_t> GetMsg(const size_t box) {
-    const auto res = inboxes[box].empty() ?
-      std::experimental::nullopt :
-      std::experimental::optional<Config::event_t>(inboxes[box].front());
-
-    if (!inboxes[box].empty()) inboxes[box].pop_front();
-
-    return res;
-  }
 
 public:
 
-  ManagerInbox(const Config &cfg_, emp::Random &local_rng_)
-    : inboxes(Cardi::Dir::NumDirs), local_rng(local_rng_), cfg(cfg_) { ; }
+  ManagerInbox(const Config &cfg_)
+    : inboxes(Cardi::Dir::NumDirs), cfg(cfg_) { ; }
 
+
+  emp::vector<Config::inbox_t>& GetInboxes() {
+    return inboxes;
+  }
+
+  void ClearInboxes() {
+    for(auto &in : inboxes) in.clear();
+  }
 
   void TakeMessage(const Config::event_t & event, const size_t incoming_direction) {
 
@@ -45,43 +41,5 @@ public:
     inboxes[incoming_direction].emplace_back(event);
 
   }
-
-  void ClearInboxes() {
-    for(auto &in : inboxes) in.clear();
-  }
-
-
-  void QueueMessages(
-    Config::hardware_t &hw,
-    std::function<bool(size_t)> check_active
-  ){
-
-    emp::vector<size_t> dirsv;
-    for(size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
-      if(check_active(d)) dirsv.push_back(d);
-    }
-    emp::Shuffle(local_rng, dirsv);
-
-    std::list<size_t> dirsl(dirsv.cbegin(),dirsv.cend());
-
-    while(dirsl.size()) {
-
-      auto it = dirsl.begin();
-      while(it != dirsl.end()) {
-
-        const auto opt_msg = GetMsg(*it);
-
-        if (opt_msg) {
-          hw.QueueEvent(*opt_msg);
-          ++it;
-        } else it = dirsl.erase(it);
-
-      }
-
-    }
-    // clear out non-active inboxes, too
-    ClearInboxes();
-  }
-
 
 };

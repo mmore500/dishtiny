@@ -12,7 +12,7 @@ public:
   using event_lib_t = Config::event_lib_t;
   using event_t = event_lib_t::event_t;
 
-  static const emp::Ptr<event_lib_t> Make(const Config &cfg) {
+  static const event_lib_t& Make(const Config &cfg) {
 
     static event_lib_t el;
 
@@ -23,40 +23,38 @@ public:
       };
 
       el.AddEvent(
-        "SendMessage",
+        "SendMsgExternal",
         handle_message,
         "Send message event."
       );
 
       el.AddEvent(
-        "BroadcastMessage",
+        "SendMsgInternal",
         handle_message,
-        "Broadcast message event."
+        "Send message event."
       );
 
-
       el.RegisterDispatchFun(
-        "SendMessage",
+        "SendMsgExternal",
         [](hardware_t & hw, const event_t & event) {
 
-          CellFrame &fr = *hw.GetTrait(0);
-          Manager &man = fr.GetManager();
-          const size_t outgoing_dir = fr.GetMsgDir();
-          const size_t dest = fr.GetNeigh(outgoing_dir);
+          FrameHardware &fh = *hw.GetTrait(0);
+          Manager &man = fh.Cell().Man();
+          const size_t outgoing_dir = fh.GetMsgDir();
+          const size_t dest = fh.Cell().GetNeigh(outgoing_dir);
 
           man.Inbox(dest).TakeMessage(event, Cardi::Opp[outgoing_dir]);
         }
       );
 
       el.RegisterDispatchFun(
-        "BroadcastMessage",
-        [](hardware_t &hw, const event_t &event) {
-          CellFrame &fr = *hw.GetTrait(0);
-          Manager &man = fr.GetManager();
+        "SendMsgInternal",
+        [](hardware_t & hw, const event_t & event) {
 
-          for(size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
-            man.Inbox(fr.GetNeigh(d)).TakeMessage(event, Cardi::Opp[d]);
-          }
+          FrameHardware &fh = *hw.GetTrait(0);
+          const size_t dir = fh.GetMsgDir();
+
+          fh.Cell().GetFrameHardware(dir).QueueMessage(event);
         }
       );
 
@@ -64,7 +62,7 @@ public:
 
     }
 
-    return &el;
+    return el;
 
   }
 

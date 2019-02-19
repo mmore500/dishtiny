@@ -45,7 +45,7 @@ public:
         emp::NewPtr<ManagerFamily>()
       );
       mis.push_back(
-        emp::NewPtr<ManagerInbox>(cfg, *local_rngs[i])
+        emp::NewPtr<ManagerInbox>(cfg)
       );
       mps.push_back(
         emp::NewPtr<ManagerPriority>(*local_rngs[i])
