@@ -11,9 +11,8 @@
 #include "FrameHardware.h"
 #include "Config.h"
 #include "GeometryHelper.h"
-#include "Manager.h"
 
-class InstructionLibrary {
+class LibraryInstruction {
 
 private:
 
@@ -432,10 +431,7 @@ public:
     );
 
     il.AddInst(
-<<<<<<< Updated upstream
       "QueryIsChild",
-=======
-      "QueryIsMyPropagule",
       [is_live](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
 
@@ -464,7 +460,6 @@ public:
 
     il.AddInst(
       "QueryIsParent",
->>>>>>> Stashed changes
       [is_live](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
 
