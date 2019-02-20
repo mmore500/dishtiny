@@ -469,13 +469,10 @@ public:
           const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
           const size_t neigh = fh.Cell().GetNeigh(dir);
 
-          bool match = false;
-
-          if(is_live(neigh)) {
-            Manager &man = fh.Cell().Man();
-            size_t pos = fh.Cell().GetPos();
-            match = man.Channel(pos).CheckMatch(man.Channel(neigh), i);
-          }
+          // should be able to sense partial apoptosis tiles
+          Manager &man = fh.Cell().Man();
+          const size_t pos = fh.Cell().GetPos();
+          const bool match = man.Channel(pos).CheckMatch(man.Channel(neigh), i);
 
           state.SetLocal(inst.args[1], match);
         },
