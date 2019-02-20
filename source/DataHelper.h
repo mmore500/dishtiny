@@ -51,12 +51,19 @@ public:
 
     git_version_attribute.write(H5::StrType(0, H5T_VARIABLE), git_version_data);
 
+    file.createGroup("/Population");
+    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      file.createGroup("/Channel_"+emp::to_string(lev));
+    }
+    file.createGroup("/Stockpile");
 
     file.flush(H5F_SCOPE_LOCAL);
 
     dw.OnUpdate([this](size_t _){
       if(dw.GetUpdate() % cfg.SNAPSHOT_FREQUENCY() == 0) {
-        Census();
+        Population();
+        for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
+        Stockpile();
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -66,15 +73,15 @@ public:
 
 private:
 
-  void Census() {
+  void Population() {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static H5::DataSpace sid(2,dims);
-    static H5::StrType tid(0, H5T_VARIABLE);
-    static H5::Group group(file.createGroup("/Census"));
+    static const H5::StrType tid(0, H5T_VARIABLE);
 
     H5::DataSet ds = file.createDataSet(
-      "/Census/update_"+emp::to_string(dw.GetUpdate()), tid, sid
+      "/Population/update_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
     );
 
     const char *data[dw.GetSize()];
@@ -97,30 +104,23 @@ private:
 
   }
 
-  void Channel() {
+  void Channel(const size_t lev) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static H5::DataSpace sid(2,dims);
-    static H5::StrType tid(0, H5T_VARIABLE);
-    static H5::Group group(file.createGroup("/Census"));
+    static const auto tid = H5::PredType::STD_U64BE;
 
     H5::DataSet ds = file.createDataSet(
-      "/Census/update_"+emp::to_string(dw.GetUpdate()), tid, sid
+      "/Channel_"+emp::to_string(lev)+"/update_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
     );
 
-    const char *data[dw.GetSize()];
-
-    std::ostringstream buffers[dw.GetSize()];
-    std::string strings[dw.GetSize()];
+    Config::chanid_t data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
 
-      if(dw.IsOccupied(i)) {
-        Genome & g = dw.GetOrg(i);
-        g.program.PrintProgramFull(buffers[i]);
-        strings[i] = buffers[i].str();
-      }
-      data[i] = strings[i].c_str();
+      const auto res = dw.man->Channel(i).GetID(lev);
+      data[i] = res ? *res : 0;
 
     }
 
@@ -131,27 +131,22 @@ private:
   void Stockpile() {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static H5::DataSpace sid(2,dims);
-    static H5::StrType tid(0, H5T_VARIABLE);
-    static H5::Group group(file.createGroup("/Census"));
+    static const auto tid = H5::PredType::NATIVE_DOUBLE;
 
     H5::DataSet ds = file.createDataSet(
-      "/Census/update_"+emp::to_string(dw.GetUpdate()), tid, sid
+      "/Stockpile/update_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
     );
 
-    const char *data[dw.GetSize()];
+    double data[dw.GetSize()];
 
     std::ostringstream buffers[dw.GetSize()];
     std::string strings[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
 
-      if(dw.IsOccupied(i)) {
-        Genome & g = dw.GetOrg(i);
-        g.program.PrintProgramFull(buffers[i]);
-        strings[i] = buffers[i].str();
-      }
-      data[i] = strings[i].c_str();
+      data[i] = dw.man->Stockpile(i).QueryResource();
 
     }
 
