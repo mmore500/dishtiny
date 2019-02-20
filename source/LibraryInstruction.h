@@ -416,7 +416,7 @@ public:
 
         if(is_live(neigh)) {
           Manager &man = fh.Cell().Man();
-          size_t pos = fh.Cell().GetPos();
+          const size_t pos = fh.Cell().GetPos();
           match &= man.Family(pos).HasChildPos(neigh);
           match &= man.Family(neigh).IsParentPos(pos);
         } else {
@@ -444,7 +444,7 @@ public:
 
         if(is_live(neigh)) {
           Manager &man = fh.Cell().Man();
-          size_t pos = fh.Cell().GetPos();
+          const size_t pos = fh.Cell().GetPos();
           match &= man.Family(pos).IsParentPos(neigh);
           match &= man.Family(neigh).HasChildPos(pos);
         } else {
@@ -493,7 +493,7 @@ public:
 
           if(is_live(neigh)) {
             Manager &man = fh.Cell().Man();
-            size_t pos = fh.Cell().GetPos();
+            const size_t pos = fh.Cell().GetPos();
             match = !man.Channel(pos).CheckMatch(man.Channel(neigh), i);
             match &= man.Family(pos).HasChildPos(neigh);
             match &= man.Family(neigh).IsParentPos(pos);
