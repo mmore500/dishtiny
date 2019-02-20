@@ -403,6 +403,24 @@ public:
     );
 
     il.AddInst(
+      "QueryIsOccupied",
+      [](hardware_t & hw, const inst_t & inst){
+        state_t & state = hw.GetCurState();
+
+        FrameHardware &fh = *hw.GetTrait(0);
+
+        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+        const size_t neigh = fh.Cell().GetNeigh(dir);
+        Manager &man = fh.Cell().Man();
+        const bool is_occupied = (bool) man.Channel(neigh).GetIDs();
+
+        state.SetLocal(inst.args[1], is_occupied);
+      },
+      2,
+      "TODO"
+    );
+
+    il.AddInst(
       "QueryIsChild",
       [is_live](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
