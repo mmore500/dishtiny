@@ -1,5 +1,8 @@
 #pragma once
 
+#define STRINGIFY(s) IFY(s)
+#define IFY(s) #s
+
 #include <string>
 #include <deque>
 
