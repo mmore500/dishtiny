@@ -7,7 +7,7 @@ GIT_VERSION := $(shell git describe --dirty --always)
 CFLAGS_all := -std=c++14 -Wall -Wno-unused-function -I$(EMP_DIR)/ -DGIT_VERSION=\"$(GIT_VERSION)\"
 
 # Native compiler information
-CXX_nat := g++
+CXX_nat := h5c++
 CFLAGS_nat := -O3 -DNDEBUG $(CFLAGS_all)
 CFLAGS_nat_debug := -g -fsanitize=address -fsanitize=undefined -pedantic -DEMP_TRACK_MEM $(CFLAGS_all)
 CFLAGS_nat_profile := -pg -pedantic -DNDEBUG $(CFLAGS_all)
