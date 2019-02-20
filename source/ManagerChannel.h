@@ -57,7 +57,7 @@ public:
 
     for(size_t i = replev; i < cfg.NLEV(); ++i) {
 
-      const size_t lim = cfg.Lev(i).EVENT_RADIUS() * cfg.Lev(i).EVENT_RADIUS();
+      const size_t lim = cfg.Lev(i).EVENT_RADIUS() * 4;
 
       expired |= GetGeneration(i) > lim;
     }

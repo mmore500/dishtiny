@@ -222,7 +222,7 @@ public:
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
 
-        const double amt = man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH()/2);
+        const double amt = man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH()/25);
 
         const state_t & state = hw.GetCurState();
         const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
@@ -244,7 +244,7 @@ public:
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
 
-        const double amt = man.Stockpile(pos).RequestResourceFrac(0.5);
+        const double amt = man.Stockpile(pos).RequestResourceFrac(0.04);
 
         const state_t & state = hw.GetCurState();
         const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
