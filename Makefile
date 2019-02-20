@@ -1,9 +1,10 @@
 # Project-specific settings
 PROJECT := dishtiny
 EMP_DIR := ../Empirical/source
+GIT_VERSION := $(shell git describe --dirty --always)
 
 # Flags to use regardless of compiler
-CFLAGS_all := -std=c++14 -Wall -Wno-unused-function -I$(EMP_DIR)/
+CFLAGS_all := -std=c++14 -Wall -Wno-unused-function -I$(EMP_DIR)/ -DGIT_VERSION=\"$(GIT_VERSION)\"
 
 # Native compiler information
 CXX_nat := g++

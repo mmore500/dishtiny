@@ -109,6 +109,9 @@ public:
       );
     }
 
+    auto version_text = button_dash.AddText("version_text");
+    version_text << GIT_VERSION;
+
     auto ud_text = button_dash.AddText("ud_text");
     ud_text << "Update: " << UI::Live(w.update);
 
