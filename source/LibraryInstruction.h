@@ -479,7 +479,7 @@ public:
     for (size_t i = 0; i < cfg.NLEV(); ++i) {
       il.AddInst(
         "QueryFacingChannelKin-Lev" + emp::to_string(i),
-        [i, is_live](hardware_t & hw, const inst_t & inst){
+        [i](hardware_t & hw, const inst_t & inst){
           state_t & state = hw.GetCurState();
 
           FrameHardware &fh = *hw.GetTrait(0);
