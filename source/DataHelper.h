@@ -29,15 +29,15 @@ public:
   , file(emp::to_string(cfg.SEED())+".h5", H5F_ACC_TRUNC)
   {
 
-    InitAttributes();
-    InitReference();
-
     file.createGroup("/Population");
     for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       file.createGroup("/Channel_"+emp::to_string(lev));
     }
     file.createGroup("/Stockpile");
     file.createGroup("/Live");
+
+    InitAttributes();
+    InitReference();
 
     file.flush(H5F_SCOPE_LOCAL);
 
@@ -78,6 +78,17 @@ private:
     const char *git_version_data[] = {STRINGIFY(GIT_VERSION_)};
 
     git_version_attribute.write(H5::StrType(0, H5T_VARIABLE), git_version_data);
+
+    const hsize_t live_key_dims[] = { 1 };
+    H5::DataSpace live_key_dataspace(1, live_key_dims);
+
+    H5::Attribute live_key_attribute = file.openGroup("/Live").createAttribute(
+      "KEY", H5::StrType(0, H5T_VARIABLE), live_key_dataspace
+    );
+
+    const char *live_key_data[] = {"0: dead, 1: live"};
+
+    live_key_attribute.write(H5::StrType(0, H5T_VARIABLE), live_key_data);
   }
 
   void InitReference() {
