@@ -62,19 +62,45 @@
         </div>
         <div class="card-body">
 
-          Channel IDs of empty (i.e., dead) tiles are color-coded red.
-          Live cells with identical Channel IDs are color-coded with identical (but arbitrary) grayscale values.
-
+          Each viewer depicts alternate information about the state of the same toroidal grid, where each tile can support a single cell-like organism.
+          Each cell-like organism is controlled by a SignalGP program.
           <br />
           <br />
-
-          Signals data is double buffered.
-          Signals 1 and Signals 2 correspond to Level 1 signaling
-          while Signals 3 and Signals 4 correspond to Level 2 signaling.
-          Playing from just one buffer will render signal patterns at
-          just odd or just even updates.
-          To view consecutive updates, alternate stepping a pair of buffers.
-
+          Cell-like organisms can cooperate to collect resource, which allows them to reproduce into adjacent tiles.
+          Two distinct levels of cooperation, which are hierarchically nested, exist.
+          That is, several low-level groups can unite into a single high-level cooperating group.
+          Group membership is hereditarily defined and fixed at birth, with hierarchal nesting strictly enforced;
+          a daughter cell can take membership within both its parent's high- and low-level groups, just its parent's high-level group (starting a new low-level group), or neither its parent's high- or low-level group (starting new high- and low-level gorups).
+          Black grid tiles are empty.
+          In the "Channel Viewer", low-level groups are coded by color saturation (divided by white lines) and high-level groups are coded by color hue (divided by black lines).
+          <br />
+          <br />
+          The "Stockpile Viewer" depicts the resource that each cell-like organism has accumulated.
+          Black grid tiles are dead cells.
+          Red indicates a resource defecit (which, if it becomes too extreme, will result in that cell's death).
+          White indicates zero resource.
+          Blue indicates positive resource, but below the threshold required for reproduction.
+          Green indicates an amount of resource equal to the cost of a single reproduction.
+          Yellow indicates an amount of resource greater than the cost of a single reproduction.
+          <br />
+          <br />
+          The "Wave Viewer" depicts the resource-collection task that cell groups cooperate to perform.
+          Two grid views are depicted: one for each distinct level of cooperation.
+          Green and red colorings both indicate an active state.
+          Activation propigates outward in cooperating groups from an environmentally-triggered seed.
+          Activation within a certain radius of the seed is beneficial, while ativation beyond that radius is harfmul.
+          Cells in the green state gain resource.
+          Cells in the red state lose resource.
+          White cells are in the ready state, meaning they can be activated by adjacent cooperating cells.
+          Blue indicates a quiescent state, meaning they cannot be activated by adjacent cooperating cells.
+          Black cells are empty.
+          <br />
+          <br />
+          To run the simulation, press "Start."
+          This will render each step of the simulation on the viewers, which is computationally intensive.
+          To make the simulation run more quickly, you may temporarily disable rendering using the "Toggle Render" button.
+          When you're ready to re-activate rendering to check on the state of the simulation, hit the "Toggle Render" button again.
+          For the viewers to render, the simulation will need to run for at least a single step (e.g., via "Start" or "Step").
         </div>
       </div>
     </div>
