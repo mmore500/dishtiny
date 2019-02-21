@@ -32,8 +32,9 @@ private:
         clevs[l]->Set("EVENT_RADIUS", "12");
         clevs[l]->Set("SIGNAL_RADIUS", "36");
       }
+      #ifndef EMSCRIPTEN
       clevs[l]->Read(CONFIGLEVEL_BASENAME() + std::to_string(l) + CONFIGLEVEL_EXTENSION());
-
+      #endif
     }
 
     // check conditions on settings
