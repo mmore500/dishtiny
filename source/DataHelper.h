@@ -59,7 +59,7 @@ private:
     H5::DataSpace seed_dataspace(1, seed_dims);
 
     H5::Attribute seed_attribute = file.createAttribute(
-      "SEED", H5::PredType::STD_I32BE, seed_dataspace
+      "SEED", H5::PredType::NATIVE_INT, seed_dataspace
     );
 
     const int seed_data[] = {cfg.SEED()};
@@ -146,7 +146,7 @@ private:
   void Channel(const size_t lev) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::STD_U64BE;
+    static const auto tid = H5::PredType::NATIVE_UINT64;
 
     H5::DataSet ds = file.createDataSet(
       "/Channel_"+emp::to_string(lev)+"/update_"+emp::to_string(dw.GetUpdate()),
@@ -179,9 +179,6 @@ private:
     );
 
     double data[dw.GetSize()];
-
-    std::ostringstream buffers[dw.GetSize()];
-    std::string strings[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
 
