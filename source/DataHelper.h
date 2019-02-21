@@ -36,6 +36,10 @@ public:
     file.createGroup("/Stockpile");
     file.createGroup("/Live");
     file.createGroup("/Apoptosis");
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      file.createGroup("/InboxActivation_"+emp::to_string(dir));
+      file.createGroup("/InboxTraffic_"+emp::to_string(dir));
+    }
 
     InitAttributes();
     InitReference();
@@ -49,6 +53,10 @@ public:
         Stockpile();
         Live();
         Apoptosis();
+        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+          InboxActivation(dir);
+          InboxTraffic(dir);
+        }
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -256,6 +264,50 @@ private:
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Apoptosis(i).GetState();
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void InboxActivation(size_t dir) {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_INT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/InboxActivation_" + emp::to_string(dir)
+        + "/update_" + emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    int data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.frames[i]->GetFrameHardware(dir).CheckInboxActivity();
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void InboxTraffic(size_t dir) {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_UINT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/InboxTraffic_" + emp::to_string(dir)
+        + "/update_" + emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    int data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Inbox(i).GetTraffic(dir);
     }
 
     ds.write((void*)data, tid);
