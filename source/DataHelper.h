@@ -233,9 +233,6 @@ private:
 
     int data[dw.GetSize()];
 
-    std::ostringstream buffers[dw.GetSize()];
-    std::string strings[dw.GetSize()];
-
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.IsOccupied(i);
     }
