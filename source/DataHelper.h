@@ -29,27 +29,8 @@ public:
   , file(emp::to_string(cfg.SEED())+".h5", H5F_ACC_TRUNC)
   {
 
-    const hsize_t seed_dims[] = { 1 };
-    H5::DataSpace seed_dataspace(1, seed_dims);
-
-    H5::Attribute seed_attribute = file.createAttribute(
-      "SEED", H5::PredType::STD_I32BE, seed_dataspace
-    );
-
-    const int seed_data[] = {cfg.SEED()};
-
-    seed_attribute.write(H5::PredType::NATIVE_INT, seed_data);
-
-    const hsize_t git_version_dims[] = { 1 };
-    H5::DataSpace git_version_dataspace(1, git_version_dims);
-
-    H5::Attribute git_version_attribute = file.createAttribute(
-      "GIT_VERSION", H5::StrType(0, H5T_VARIABLE), git_version_dataspace
-    );
-
-    const char *git_version_data[] = {STRINGIFY(GIT_VERSION_)};
-
-    git_version_attribute.write(H5::StrType(0, H5T_VARIABLE), git_version_data);
+    InitAttributes();
+    InitReference();
 
     file.createGroup("/Population");
     for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
@@ -72,6 +53,64 @@ public:
   ~DataHelper() { file.close(); }
 
 private:
+
+  void InitAttributes() {
+    const hsize_t seed_dims[] = { 1 };
+    H5::DataSpace seed_dataspace(1, seed_dims);
+
+    H5::Attribute seed_attribute = file.createAttribute(
+      "SEED", H5::PredType::STD_I32BE, seed_dataspace
+    );
+
+    const int seed_data[] = {cfg.SEED()};
+
+    seed_attribute.write(H5::PredType::NATIVE_INT, seed_data);
+
+    const hsize_t git_version_dims[] = { 1 };
+    H5::DataSpace git_version_dataspace(1, git_version_dims);
+
+    H5::Attribute git_version_attribute = file.createAttribute(
+      "GIT_VERSION", H5::StrType(0, H5T_VARIABLE), git_version_dataspace
+    );
+
+    const char *git_version_data[] = {STRINGIFY(GIT_VERSION_)};
+
+    git_version_attribute.write(H5::StrType(0, H5T_VARIABLE), git_version_data);
+  }
+
+  void InitReference() {
+
+    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    const auto tid = H5::PredType::NATIVE_INT;
+
+    H5::DataSet ds_idx = file.createDataSet(
+      "/ref_idx",
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    int data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) data[i] = i;
+
+    ds_idx.write((void*)data, tid);
+
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+
+      H5::DataSet ds_dir = file.createDataSet(
+        "/ref_dir_" + emp::to_string(dir),
+        tid,
+        H5::DataSpace(2,dims)
+      );
+
+      for (size_t i = 0; i < dw.GetSize(); ++i) {
+        data[i] = GeometryHelper(cfg).CalcLocalNeighs(i)[dir];
+      }
+      ds_dir.write((void*)data, tid);
+
+    }
+
+  }
 
   void Population() {
 
