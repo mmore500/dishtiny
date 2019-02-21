@@ -9,6 +9,7 @@ CFLAGS_all := -std=c++14 -Wall -Wno-unused-function -I$(EMP_DIR)/ -DGIT_VERSION_
 # Native compiler information
 CXX_nat := h5c++
 CFLAGS_nat := -O3 -DNDEBUG $(CFLAGS_all)
+CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
 CFLAGS_nat_debug := -g -fsanitize=address -fsanitize=undefined -pedantic -DEMP_TRACK_MEM $(CFLAGS_all)
 CFLAGS_nat_profile := -pg -pedantic -DNDEBUG $(CFLAGS_all)
 
@@ -27,6 +28,10 @@ default: $(PROJECT)
 native: $(PROJECT)
 web: $(PROJECT).js
 all: $(PROJECT) $(PROJECT).js
+
+ndata: CXX_nat := g++
+ndata: CFLAGS_nat := $(CFLAGS_nat_ndata)
+ndata: $(PROJECT)
 
 debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
 debug:	$(PROJECT)

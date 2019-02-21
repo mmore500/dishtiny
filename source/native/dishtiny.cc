@@ -6,7 +6,9 @@
 
 #include "../Config.h"
 #include "../DishWorld.h"
+#ifndef NDATA
 #include "../DataHelper.h"
+#endif
 
 int main(int argc, char* argv[])
 {
@@ -24,7 +26,9 @@ int main(int argc, char* argv[])
 
 
   DishWorld world(cfg);
+  #ifndef NDATA
   DataHelper datahelper(world, cfg);
+  #endif
 
   for(size_t ud = 0; ud < cfg.RUN_LENGTH(); ++ud) {
     if (ud % 100 == 0) std::cout << "Update: " << ud << std::endl;

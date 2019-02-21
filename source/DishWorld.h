@@ -26,7 +26,7 @@ private:
 
   friend class WebInterface;
   friend class DataHelper;
-  
+
   const Config &cfg;
 
   emp::vector<emp::Ptr<emp::Random>> global_rngs;
