@@ -37,6 +37,7 @@ public:
       file.createGroup("/Channel_"+emp::to_string(lev));
     }
     file.createGroup("/Stockpile");
+    file.createGroup("/Live");
 
     file.flush(H5F_SCOPE_LOCAL);
 
@@ -45,6 +46,7 @@ public:
         Population();
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
         Stockpile();
+        Live();
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -184,6 +186,30 @@ private:
 
       data[i] = dw.man->Stockpile(i).QueryResource();
 
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void Live() {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_INT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/Live/update_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    int data[dw.GetSize()];
+
+    std::ostringstream buffers[dw.GetSize()];
+    std::string strings[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.IsOccupied(i);
     }
 
     ds.write((void*)data, tid);
