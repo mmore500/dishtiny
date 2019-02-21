@@ -35,6 +35,7 @@ public:
     }
     file.createGroup("/Stockpile");
     file.createGroup("/Live");
+    file.createGroup("/Apoptosis");
 
     InitAttributes();
     InitReference();
@@ -47,6 +48,7 @@ public:
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
         Stockpile();
         Live();
+        Apoptosis();
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -89,6 +91,21 @@ private:
     const char *live_key_data[] = {"0: dead, 1: live"};
 
     live_key_attribute.write(H5::StrType(0, H5T_VARIABLE), live_key_data);
+
+    const hsize_t apoptosis_key_dims[] = { 1 };
+    H5::DataSpace apoptosis_key_dataspace(1, apoptosis_key_dims);
+
+    H5::Attribute apoptosis_key_attribute = file.openGroup(
+      "/Apoptosis"
+    ).createAttribute(
+      "KEY", H5::StrType(0, H5T_VARIABLE), apoptosis_key_dataspace
+    );
+
+    const char *apoptosis_key_data[] = {"0: none, 1: partial, 2: complete"};
+
+    apoptosis_key_attribute.write(
+      H5::StrType(0, H5T_VARIABLE), apoptosis_key_data
+    );
   }
 
   void InitReference() {
@@ -221,6 +238,27 @@ private:
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.IsOccupied(i);
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void Apoptosis() {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_INT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/Apoptosis/update_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    int data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Apoptosis(i).GetState();
     }
 
     ds.write((void*)data, tid);

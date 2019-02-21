@@ -110,6 +110,9 @@ public:
   void Pre() {
     for (size_t i = 0; i < GetSize(); ++i) {
 
+      man->Priority(i).Reset();
+      man->Apoptosis(i).Reset();
+
       for(size_t l = 0; l < cfg.NLEV(); ++l) {
         man->Wave(i,l).CalcNext(GetUpdate());
       }
@@ -167,9 +170,6 @@ public:
 
       // dead cells with no channels have nullopt so no transmission will occur
       for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
-
-      man->Priority(i).Reset();
-      man->Apoptosis(i).Reset();
 
     }
   }

@@ -26,4 +26,6 @@ public:
 
   void MarkPartial() { state = partial; }
 
+  int GetState() { return state; }
+
 };
