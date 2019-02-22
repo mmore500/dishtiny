@@ -46,6 +46,17 @@ public:
       file.createGroup("/InboxTraffic/dir_"+emp::to_string(dir));
     }
 
+    file.createGroup("/RepCount");
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      file.createGroup("/RepCount/dir_"+emp::to_string(dir));
+      for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
+        file.createGroup(
+          "/RepCount/dir_"+emp::to_string(dir)
+            + "/replev_"+emp::to_string(replev)
+        );
+      }
+    }
+
     InitAttributes();
     InitReference();
 
@@ -61,6 +72,11 @@ public:
         for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
           InboxActivation(dir);
           InboxTraffic(dir);
+        }
+        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+          for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
+            RepCount(dir,replev);
+          }
         }
         file.flush(H5F_SCOPE_LOCAL);
       }
@@ -338,6 +354,29 @@ private:
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Inbox(i).GetTraffic(dir);
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void RepCount(const size_t dir, const size_t replev) {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_UINT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/RepCount/dir_" + emp::to_string(dir)
+        + "/replev_" + emp::to_string(replev)
+        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    size_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Priority(i).GetCount(dir,replev);
     }
 
     ds.write((void*)data, tid);

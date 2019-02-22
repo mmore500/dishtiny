@@ -147,14 +147,14 @@ public:
         man->Channel(i).Inherit(
           sirepack.chanpack,
           sirepack.channel_gens,
-          sirepack.rep_lev
+          sirepack.replev
         );
         man->Family(i).Reset(GetUpdate());
         man->Family(i).SetParentPos(sirepack.par_pos);
         // check that parent hasn't been overwritten by a different birth
         if(man->Family(sirepack.par_pos).GetBirthUpdate() != GetUpdate()) {
           man->Family(sirepack.par_pos).AddChildPos(i);
-          man->Channel(sirepack.par_pos).LogReprGen(sirepack.rep_lev);
+          man->Channel(sirepack.par_pos).LogReprGen(sirepack.replev);
         }
       } else if (IsOccupied(i)) {
         // this block doesn't get run if a cell was just born here
