@@ -36,7 +36,7 @@ EMP_BUILD_CONFIG(
   VALUE(INBOX_CAPACITY, size_t, 128, "Capacity of a cell's inbox."),
 
   GROUP(MUTATION_GROUP, "SignalGP Mutation Settings"),
-  VALUE(ECOLOGICAL, bool, false, "Should we run in ecological mode?; TODO unimplemented"),
+  VALUE(MUTATION_RATE, double, 0.02, "What percentage of reproductions should be subject to mutations at all?"),
   VALUE(PROGRAM_MIN_ARG_VAL, int, 0, "Maximum argument value for instructions."),
   VALUE(PROGRAM_MAX_ARG_VAL, int, 16, "Maximum argument value for instructions."),
   VALUE(TAG_BIT_FLIP__PER_BIT, double, 0.005, "Per-bit mutation rate of tag bit flips."),

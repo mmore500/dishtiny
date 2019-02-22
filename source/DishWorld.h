@@ -77,7 +77,9 @@ public:
     OnPlacement([this](const size_t pos){
       man->Stockpile(pos).Reset();
       frames[pos]->Reset();
-      mut.ApplyMutations(GetOrg(pos).program,*local_rngs[pos]);
+      if(local_rngs[pos]->GetDouble() < cfg.MUTATION_RATE()) {
+        mut.ApplyMutations(GetOrg(pos).program,*local_rngs[pos]);
+      }
       frames[pos]->SetProgram(GetOrg(pos).program);
       man->Inbox(pos).ClearInboxes();
     });
