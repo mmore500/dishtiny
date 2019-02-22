@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <time.h>
 
 #include "H5Cpp.h"
 
@@ -77,6 +78,17 @@ private:
     const int seed_data[] = {cfg.SEED()};
 
     seed_attribute.write(H5::PredType::NATIVE_INT, seed_data);
+
+    const hsize_t timestamp_dims[] = { 1 };
+    H5::DataSpace timestamp_dataspace(1, timestamp_dims);
+
+    H5::Attribute timestamp_attribute = file.createAttribute(
+      "START_TIMESTAMP", H5::PredType::NATIVE_INT, timestamp_dataspace
+    );
+
+    const long timestamp_data[] = {time(0)};
+
+    timestamp_attribute.write(H5::PredType::NATIVE_LONG, timestamp_data);
 
     const hsize_t git_version_dims[] = { 1 };
     H5::DataSpace git_version_dataspace(1, git_version_dims);
