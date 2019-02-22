@@ -114,6 +114,20 @@ private:
     apoptosis_key_attribute.write(
       H5::StrType(0, H5T_VARIABLE), apoptosis_key_data
     );
+
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      const hsize_t inbox_activation_key_dims[] = { 1 };
+      H5::DataSpace inbox_activation_key_dataspace(1, inbox_activation_key_dims);
+
+      H5::Attribute inbox_activation_key_attribute = file.openGroup("/InboxActivation_"+emp::to_string(dir)).createAttribute(
+        "KEY", H5::StrType(0, H5T_VARIABLE), inbox_activation_key_dataspace
+      );
+
+      const char *inbox_activation_key_data[] = {"0: off, 1: on"};
+
+      inbox_activation_key_attribute.write(H5::StrType(0, H5T_VARIABLE), inbox_activation_key_data);
+    }
+
   }
 
   void InitReference() {
