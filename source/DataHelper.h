@@ -284,7 +284,7 @@ private:
 
   }
 
-  void InboxActivation(size_t dir) {
+  void InboxActivation(const size_t dir) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
     static const auto tid = H5::PredType::NATIVE_INT;
@@ -306,7 +306,7 @@ private:
 
   }
 
-  void InboxTraffic(size_t dir) {
+  void InboxTraffic(const size_t dir) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
     static const auto tid = H5::PredType::NATIVE_UINT;
