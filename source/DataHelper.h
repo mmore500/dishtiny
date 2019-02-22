@@ -31,15 +31,19 @@ public:
   {
 
     file.createGroup("/Population");
+    file.createGroup("/Index");
+    file.createGroup("/Channel");
     for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      file.createGroup("/Channel_"+emp::to_string(lev));
+      file.createGroup("/Channel/lev_"+emp::to_string(lev));
     }
     file.createGroup("/Stockpile");
     file.createGroup("/Live");
     file.createGroup("/Apoptosis");
+    file.createGroup("/InboxActivation");
+    file.createGroup("/InboxTraffic");
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/InboxActivation_"+emp::to_string(dir));
-      file.createGroup("/InboxTraffic_"+emp::to_string(dir));
+      file.createGroup("/InboxActivation/dir_"+emp::to_string(dir));
+      file.createGroup("/InboxTraffic/dir_"+emp::to_string(dir));
     }
 
     InitAttributes();
@@ -131,7 +135,7 @@ private:
       const hsize_t inbox_activation_key_dims[] = { 1 };
       H5::DataSpace inbox_activation_key_dataspace(1, inbox_activation_key_dims);
 
-      H5::Attribute inbox_activation_key_attribute = file.openGroup("/InboxActivation_"+emp::to_string(dir)).createAttribute(
+      H5::Attribute inbox_activation_key_attribute = file.openGroup("/InboxActivation/dir_"+emp::to_string(dir)).createAttribute(
         "KEY", H5::StrType(0, H5T_VARIABLE), inbox_activation_key_dataspace
       );
 
@@ -148,7 +152,7 @@ private:
     const auto tid = H5::PredType::NATIVE_INT;
 
     H5::DataSet ds_idx = file.createDataSet(
-      "/ref_idx",
+      "/Index/own",
       tid,
       H5::DataSpace(2,dims)
     );
@@ -162,7 +166,7 @@ private:
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
 
       H5::DataSet ds_dir = file.createDataSet(
-        "/ref_dir_" + emp::to_string(dir),
+        "/Index/dir_" + emp::to_string(dir),
         tid,
         H5::DataSpace(2,dims)
       );
@@ -182,7 +186,7 @@ private:
     static const H5::StrType tid(0, H5T_VARIABLE);
 
     H5::DataSet ds = file.createDataSet(
-      "/Population/update_"+emp::to_string(dw.GetUpdate()),
+      "/Population/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
       H5::DataSpace(2,dims)
     );
@@ -213,7 +217,7 @@ private:
     static const auto tid = H5::PredType::NATIVE_UINT64;
 
     H5::DataSet ds = file.createDataSet(
-      "/Channel_"+emp::to_string(lev)+"/update_"+emp::to_string(dw.GetUpdate()),
+      "/Channel/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
       H5::DataSpace(2,dims)
     );
@@ -237,7 +241,7 @@ private:
     static const auto tid = H5::PredType::NATIVE_DOUBLE;
 
     H5::DataSet ds = file.createDataSet(
-      "/Stockpile/update_"+emp::to_string(dw.GetUpdate()),
+      "/Stockpile/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
       H5::DataSpace(2,dims)
     );
@@ -260,7 +264,7 @@ private:
     static const auto tid = H5::PredType::NATIVE_INT;
 
     H5::DataSet ds = file.createDataSet(
-      "/Live/update_"+emp::to_string(dw.GetUpdate()),
+      "/Live/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
       H5::DataSpace(2,dims)
     );
@@ -281,7 +285,7 @@ private:
     static const auto tid = H5::PredType::NATIVE_INT;
 
     H5::DataSet ds = file.createDataSet(
-      "/Apoptosis/update_"+emp::to_string(dw.GetUpdate()),
+      "/Apoptosis/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
       H5::DataSpace(2,dims)
     );
@@ -302,8 +306,8 @@ private:
     static const auto tid = H5::PredType::NATIVE_INT;
 
     H5::DataSet ds = file.createDataSet(
-      "/InboxActivation_" + emp::to_string(dir)
-        + "/update_" + emp::to_string(dw.GetUpdate()),
+      "/InboxActivation/dir_" + emp::to_string(dir)
+        + "/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
       H5::DataSpace(2,dims)
     );
@@ -324,8 +328,8 @@ private:
     static const auto tid = H5::PredType::NATIVE_UINT;
 
     H5::DataSet ds = file.createDataSet(
-      "/InboxTraffic_" + emp::to_string(dir)
-        + "/update_" + emp::to_string(dw.GetUpdate()),
+      "/InboxTraffic/dir_" + emp::to_string(dir)
+        + "/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
       H5::DataSpace(2,dims)
     );
