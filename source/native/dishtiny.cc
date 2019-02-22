@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
   #endif
 
   for(size_t ud = 0; ud < cfg.RUN_LENGTH(); ++ud) {
-    if (ud % 100 == 0) std::cout << "Update: " << ud << std::endl;
+    if (ud % 20 == 0) std::cout << "Update: " << ud << std::endl;
     world.Update();
   }
   // so that our computations won't get optimized away
