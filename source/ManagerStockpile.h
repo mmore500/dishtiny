@@ -8,17 +8,18 @@ class ManagerStockpile {
 
 private:
 
+  const Config &cfg;
+
   double resource;
 
-  double contrib_resource;
-
-  const Config &cfg;
+  emp::vector<double> contrib_resource;
 
 public:
 
   ManagerStockpile(
     const Config &cfg_
   ) : cfg(cfg_)
+  , contrib_resource(Cardi::Dir::NumDirs)
   { Reset(); }
 
   double QueryResource() const {
@@ -51,14 +52,20 @@ public:
     resource += amt;
   }
 
-  void ExternalContribute(const double amt) {
+  void ExternalContribute(const double amt, const size_t incoming_dir) {
     emp_assert(amt >= 0);
-    contrib_resource += amt;
+    contrib_resource[incoming_dir] += amt;
+  }
+
+  double QueryExternalContribute(const size_t incoming_dir) {
+    return contrib_resource[incoming_dir];
   }
 
   void ResolveExternalContributions() {
-    resource += contrib_resource;
-    contrib_resource = 0;
+    for(size_t dir = 0; dir < contrib_resource.size(); ++dir) {
+      resource += contrib_resource[dir];
+      contrib_resource[dir] = 0.0;
+    }
   }
 
   bool IsBankrupt() const {
@@ -67,7 +74,9 @@ public:
 
   void Reset() {
     resource = 0.0;
-    contrib_resource = 0.0;
+    for(size_t dir = 0; dir < contrib_resource.size(); ++dir) {
+      contrib_resource[dir] = 0.0;
+    }
   }
 
 };

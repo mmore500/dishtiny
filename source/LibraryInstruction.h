@@ -228,7 +228,7 @@ public:
         const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
-        man.Stockpile(neigh).ExternalContribute(amt);
+        man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
       },
       1,
       "TODO"
@@ -249,7 +249,7 @@ public:
         const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
-        man.Stockpile(neigh).ExternalContribute(amt);
+        man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
       },
       1,
       "TODO"

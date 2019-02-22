@@ -56,6 +56,11 @@ public:
         );
       }
     }
+    file.createGroup("/ResourceContributed/");
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      file.createGroup("/ResourceContributed/dir_"+emp::to_string(dir));
+    }
+
 
     InitAttributes();
     InitReference();
@@ -77,6 +82,9 @@ public:
           for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
             RepCount(dir,replev);
           }
+        }
+        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+          ResourceContributed(dir);
         }
         file.flush(H5F_SCOPE_LOCAL);
       }
@@ -377,6 +385,28 @@ private:
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Priority(i).GetCount(dir,replev);
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void ResourceContributed(const size_t dir) {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_DOUBLE;
+
+    H5::DataSet ds = file.createDataSet(
+      "/ResourceContributed/dir_" + emp::to_string(dir)
+        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    double data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Stockpile(i).QueryExternalContribute(dir);
     }
 
     ds.write((void*)data, tid);

@@ -153,6 +153,7 @@ public:
       }
 
       if (IsOccupied(i)) {
+        man->Stockpile(i).ResolveExternalContributions();
         for(size_t l = 0; l < cfg.NLEV(); ++l) {
           man->Wave(i,l).HarvestResource();
         }
@@ -193,7 +194,6 @@ public:
         }
       } else if (IsOccupied(i)) {
         // this block doesn't get run if a cell was just born here
-        man->Stockpile(i).ResolveExternalContributions();
         if (man->Stockpile(i).IsBankrupt()
             || man->Apoptosis(i).IsMarked()) {
           DoDeath(i);
