@@ -30,4 +30,8 @@ struct Genome {
         cfg.PROGRAM_MIN_ARG_VAL(), cfg.PROGRAM_MAX_ARG_VAL()
     )) { emp_assert(program.GetSize()); }
 
+    bool operator!=(const Genome& other) const {
+      return program != other.program;
+    }
+
 };

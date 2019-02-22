@@ -62,8 +62,8 @@ public:
 
     file.flush(H5F_SCOPE_LOCAL);
 
-    dw.OnUpdate([this](size_t _){
-      if(dw.GetUpdate() % cfg.SNAPSHOT_FREQUENCY() == 0) {
+    dw.OnUpdate([this](const size_t update){
+      if(cfg.TimingFun(update)) {
         Population();
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
         Stockpile();

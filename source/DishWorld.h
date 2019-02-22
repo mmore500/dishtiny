@@ -88,6 +88,8 @@ public:
       Post();
     });
 
+    InitSystematics();
+
     for(size_t i = 0; i < GetSize(); ++i) {
       Genome g(
         *local_rngs[i],
@@ -105,6 +107,37 @@ public:
     for (auto &ptr : local_rngs) ptr.Delete();
     for (auto &ptr : frames) ptr.Delete();
     man.Delete();
+  }
+
+  void InitSystematics() {
+
+    #ifndef EMSCRIPTEN
+    if (cfg.SYSTEMATICS()) {
+
+      AddSystematics(
+        emp::NewPtr<emp::Systematics<Genome,Genome>>(
+          [](Genome & o){return o;},
+          true,
+          true,
+          false
+        ),
+        "systematics"
+      );
+
+      auto& sf = SetupSystematicsFile(
+        "systematics",
+        "Systematics_" + std::to_string(cfg.SEED()) + ".csv",
+        false
+      );
+
+      sf.SetTiming([this](const size_t upd){ return cfg.TimingFun(upd); });
+      sf.AddVar(cfg.SEED(), "seed", "Random generator seed");
+      sf.AddVar(STRINGIFY(GIT_VERSION_), "GIT_VERSION", "Software version");
+      sf.PrintHeaderKeys();
+
+    }
+    #endif
+
   }
 
   void Pre() {
