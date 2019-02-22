@@ -214,29 +214,7 @@ public:
   static void InitExternalActions(inst_lib_t &il, const Config &cfg) {
 
     il.AddInst(
-      "SendUnitResource",
-      [&cfg](hardware_t & hw, const inst_t & inst){
-
-        FrameHardware &fh = *hw.GetTrait(0);
-
-        Manager &man = fh.Cell().Man();
-        const size_t pos = fh.Cell().GetPos();
-
-        const double amt = man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH()/25);
-
-        const state_t & state = hw.GetCurState();
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
-        const size_t neigh = fh.Cell().GetNeigh(dir);
-
-        man.Stockpile(neigh).ExternalContribute(amt);
-
-      },
-      1,
-      "TODO"
-    );
-
-    il.AddInst(
-      "SendHalfResource",
+      "SendBigFracResource",
       [](hardware_t & hw, const inst_t & inst){
 
         FrameHardware &fh = *hw.GetTrait(0);
@@ -244,7 +222,28 @@ public:
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
 
-        const double amt = man.Stockpile(pos).RequestResourceFrac(0.04);
+        const double amt = man.Stockpile(pos).RequestResourceFrac(0.5);
+
+        const state_t & state = hw.GetCurState();
+        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+        const size_t neigh = fh.Cell().GetNeigh(dir);
+
+        man.Stockpile(neigh).ExternalContribute(amt);
+      },
+      1,
+      "TODO"
+    );
+
+    il.AddInst(
+      "SendSmallFracResource",
+      [](hardware_t & hw, const inst_t & inst){
+
+        FrameHardware &fh = *hw.GetTrait(0);
+
+        Manager &man = fh.Cell().Man();
+        const size_t pos = fh.Cell().GetPos();
+
+        const double amt = man.Stockpile(pos).RequestResourceFrac(0.02);
 
         const state_t & state = hw.GetCurState();
         const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
