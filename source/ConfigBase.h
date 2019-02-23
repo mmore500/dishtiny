@@ -27,7 +27,7 @@ EMP_BUILD_CONFIG(
   VALUE(PROGRAM_MAX_TOTAL_LEN, size_t, 256, "Maximum length of SGP programs."),
 
   GROUP(HARDWARE_GROUP, "SignalGP Hardware Settings"),
-  VALUE(HARDWARE_STEPS, size_t, 25, "How many hardware steps to run per update?"),
+  VALUE(HARDWARE_STEPS, size_t, 40, "How many hardware steps to run per update?"),
   VALUE(ENVIRONMENT_SIGNALS, bool, true, "Can environment signals trigger functions?"),
   VALUE(ACTIVE_SENSORS, bool, true, "Do agents have function active sensors?"),
   VALUE(HW_MAX_CORES, size_t, 16, "Max number of hardware cores; i.e., max number of simultaneous threads of execution hardware will support."),
