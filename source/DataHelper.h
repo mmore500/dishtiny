@@ -60,6 +60,10 @@ public:
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       file.createGroup("/ResourceContributed/dir_"+emp::to_string(dir));
     }
+    file.createGroup("/ResourceHarvested/");
+    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      file.createGroup("/ResourceHarvested/lev_"+emp::to_string(lev));
+    }
 
 
     InitAttributes();
@@ -86,6 +90,7 @@ public:
         for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
           ResourceContributed(dir);
         }
+        for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ResourceHarvested(lev);
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -412,5 +417,31 @@ private:
     ds.write((void*)data, tid);
 
   }
+
+  void ResourceHarvested(const size_t lev) {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_DOUBLE;
+
+    H5::DataSet ds = file.createDataSet(
+      "/ResourceHarvested/lev_" + emp::to_string(lev)
+        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    double data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Wave(i,lev).GetLastHarvest();
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  // TODO
+  // harvest
+
 
 };
