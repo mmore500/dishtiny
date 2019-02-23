@@ -18,6 +18,7 @@ class WebInterface : public UI::Animate {
 
   UI::Document button_dash;  //< Div that contains the button dashboard.
   UI::Document systematics_dash;  //< Div that contains the systematics info.
+  UI::Document dominant_viewer;
 
   DishWorld w;
 
@@ -45,6 +46,7 @@ public:
   WebInterface()
     : button_dash("emp_button_dash")
     , systematics_dash("emp_systematics_dash")
+    , dominant_viewer("dominant_viewer")
     , w(cfg)
     , channel_viewer("channel_viewer")
     , wave_viewer("wave_viewer")
@@ -166,6 +168,30 @@ public:
       return w.GetSystematics("systematics")->GetMRCADepth();
     });
 
+    auto dom_text = dominant_viewer.AddText("dom_text");
+    dom_text << UI::Live([this](){
+
+      std::map<Genome, size_t> counts;
+
+      for(size_t pos = 0; pos < w.GetSize(); ++pos) {
+        if (w.IsOccupied(pos)) counts[w.GetOrg(pos)] ++;
+      }
+
+      using pair_type = decltype(counts)::value_type;
+      auto pr = std::max_element(
+        std::begin(counts),
+        std::end(counts),
+        [](const pair_type & p1, const pair_type & p2) {
+          return p1.second < p2.second;
+        }
+      );
+
+      std::ostringstream buffer;
+      pr->first.program.PrintProgram(buffer);
+
+      return "COUNT:" + emp::to_string(pr->second) + "\n\n" + buffer.str();
+    });
+
   }
 
   void DoFrame() {
@@ -177,6 +203,7 @@ public:
     button_dash.Text("ud_text").Redraw();
     systematics_dash.Text("sys_text").Redraw();
     if (render) {
+      dominant_viewer.Text("dom_text").Redraw();
       channel.Redraw();
       stockpile.Redraw();
       contribution.Redraw();

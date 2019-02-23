@@ -34,4 +34,8 @@ struct Genome {
       return program != other.program;
     }
 
+    bool operator<(const Genome& other) const {
+      return program < other.program;
+    }
+
 };
