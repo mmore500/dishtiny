@@ -187,6 +187,7 @@ public:
         );
         man->Family(i).Reset(GetUpdate());
         man->Family(i).SetParentPos(sirepack.par_pos);
+        man->Family(i).SetPrevChan(sirepack.prev_chan);
         // check that parent hasn't been overwritten by a different birth
         if(man->Family(sirepack.par_pos).GetBirthUpdate() != GetUpdate()) {
           man->Family(sirepack.par_pos).AddChildPos(i);

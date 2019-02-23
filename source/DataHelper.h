@@ -64,6 +64,7 @@ public:
     for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       file.createGroup("/ResourceHarvested/lev_"+emp::to_string(lev));
     }
+    file.createGroup("/PrevChan/");
 
 
     InitAttributes();
@@ -91,6 +92,7 @@ public:
           ResourceContributed(dir);
         }
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ResourceHarvested(lev);
+        PrevChan();
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -440,8 +442,28 @@ private:
 
   }
 
-  // TODO
-  // harvest
+  void PrevChan() {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_UINT64;
+
+    H5::DataSet ds = file.createDataSet(
+      "/PrevChan/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    Config::chanid_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+
+      data[i] = dw.man->Family(i).GetPrevChan();
+
+    }
+
+    ds.write((void*)data, tid);
+
+  }
 
 
 };

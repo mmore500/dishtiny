@@ -13,5 +13,6 @@ struct SirePack {
   size_t replev;
   emp::vector<size_t> channel_gens;
   ChannelPack chanpack;
+  Config::chanid_t prev_chan;
 
 };
