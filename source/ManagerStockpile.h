@@ -1,5 +1,7 @@
 #pragma once
 
+#include <numeric>
+
 #include "base/assert.h"
 
 #include "Config.h"
@@ -57,8 +59,14 @@ public:
     contrib_resource[incoming_dir] += amt;
   }
 
-  double QueryExternalContribute(const size_t incoming_dir) {
+  double QueryExternalContribute(const size_t incoming_dir) const {
     return contrib_resource[incoming_dir];
+  }
+
+  double QueryTotalContribute() const {
+    return std::accumulate(
+      contrib_resource.begin(),contrib_resource.end(), 0.0
+    );
   }
 
   void ResolveExternalContributions() {

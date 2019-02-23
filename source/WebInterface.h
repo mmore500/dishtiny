@@ -23,9 +23,11 @@ class WebInterface : public UI::Animate {
   UI::Document channel_viewer;
   UI::Document wave_viewer;
   UI::Document stockpile_viewer;
+  UI::Document contribution_viewer;
   WebArtist<ChannelPack> channel;
   emp::vector<WebArtist<int>> wave;
   WebArtist<double> stockpile;
+  WebArtist<double> contribution;
 
   bool render;
 
@@ -45,6 +47,7 @@ public:
     , channel_viewer("channel_viewer")
     , wave_viewer("wave_viewer")
     , stockpile_viewer("stockpile_viewer")
+    , contribution_viewer("contribution_viewer")
     , channel(
       channel_viewer,
       [this](size_t i){
@@ -84,6 +87,24 @@ public:
               255-std::min(255.0,(*amt)*255.0/cfg.KILL_THRESH())
             );
         } else return emp::ColorRGB(0,0,0);
+      },
+      cfg
+    ), contribution(
+      contribution_viewer,
+      [this](size_t i){
+        return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Stockpile(i).QueryTotalContribute()) : std::experimental::nullopt;
+      },
+      [this](std::experimental::optional<double> amt) -> std::string {
+        if (amt) {
+          if (*amt > cfg.REP_THRESH()) return "yellow";
+          else if (*amt > 0) return emp::ColorHSV(
+            240.0-180.0*(*amt)/cfg.REP_THRESH(),
+            1.0,
+            1.0
+          );
+          else if (*amt == 0) return "white";
+          else return "red";
+        } else return "black";
       },
       cfg
     ), render(true) {
@@ -141,6 +162,7 @@ public:
     if (render) {
       channel.Redraw();
       stockpile.Redraw();
+      contribution.Redraw();
       for(auto &w : wave) w.Redraw();
     }
   }

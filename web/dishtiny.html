@@ -37,6 +37,16 @@
     <div class="col-md-auto">
       <div class="card">
         <div class="card-header">
+          Contribution Viewer
+        </div>
+        <div class="card-body">
+          <div id="contribution_viewer"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-auto">
+      <div class="card">
+        <div class="card-header">
           Wave Viewer
         </div>
         <div class="card-body">
@@ -82,6 +92,12 @@
           Blue indicates positive resource, but below the threshold required for reproduction.
           Green indicates an amount of resource equal to the cost of a single reproduction.
           Yellow indicates an amount of resource greater than the cost of a single reproduction.
+          <br />
+          <br />
+          The "Contribution Viewer" depicts the amount of resource has received from neighbors during the previous update.
+          Black grid tiles are dead cells.
+          White indicates zero resource was received.
+          Blue indicates a small amount of resource was received, green indicates a medium amount of resource was received, and yellow indicates a large amount of resource was received.
           <br />
           <br />
           The "Wave Viewer" depicts the resource-collection task that cell groups cooperate to perform.
