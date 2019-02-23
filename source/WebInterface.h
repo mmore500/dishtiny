@@ -72,7 +72,11 @@ public:
               255,
               0
             );
-          else if (*amt > 0) return emp::ColorRGB(0,0,255);
+          else if (*amt > 0) return emp::ColorHSV(
+            240,
+            (*amt/ cfg.REP_THRESH()),
+            1.0
+          );
           else if (*amt == 0) return "white";
           else return emp::ColorRGB(
               255,
