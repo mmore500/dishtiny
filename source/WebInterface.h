@@ -17,6 +17,7 @@ class WebInterface : public UI::Animate {
   const Config cfg;
 
   UI::Document button_dash;  //< Div that contains the button dashboard.
+  UI::Document systematics_dash;  //< Div that contains the systematics info.
 
   DishWorld w;
 
@@ -43,6 +44,7 @@ public:
 
   WebInterface()
     : button_dash("emp_button_dash")
+    , systematics_dash("emp_systematics_dash")
     , w(cfg)
     , channel_viewer("channel_viewer")
     , wave_viewer("wave_viewer")
@@ -138,7 +140,7 @@ public:
     version_text << STRINGIFY(GIT_VERSION_);
 
     auto ud_text = button_dash.AddText("ud_text");
-    ud_text << "Update: " << UI::Live(w.update);
+    ud_text << "Update: " << UI::Live([this](){ return w.GetUpdate(); });
 
     button_dash << UI::Button(
       [this](){ DoFrame(); },
@@ -150,6 +152,20 @@ public:
         "Toggle Render"
       );
 
+    auto sys_text = systematics_dash.AddText("sys_text");
+    sys_text << " Num Unique Orgs: " << UI::Live([this](){
+      return w.GetSystematics("systematics")->GetNumActive();
+    });
+    sys_text << " Ave Depth: " << UI::Live([this](){
+      return w.GetSystematics("systematics")->GetAveDepth();
+    });
+    sys_text << " Num Roots: " << UI::Live([this](){
+      return w.GetSystematics("systematics")->GetNumRoots();
+    });
+    sys_text << " MRCA Depth: " << UI::Live([this](){
+      return w.GetSystematics("systematics")->GetMRCADepth();
+    });
+
   }
 
   void DoFrame() {
@@ -159,6 +175,7 @@ public:
 
   void Redraw() {
     button_dash.Text("ud_text").Redraw();
+    systematics_dash.Text("sys_text").Redraw();
     if (render) {
       channel.Redraw();
       stockpile.Redraw();

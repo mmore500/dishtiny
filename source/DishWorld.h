@@ -113,7 +113,6 @@ public:
 
   void InitSystematics() {
 
-    #ifndef EMSCRIPTEN
     if (cfg.SYSTEMATICS()) {
 
       AddSystematics(
@@ -126,6 +125,7 @@ public:
         "systematics"
       );
 
+      #ifndef EMSCRIPTEN
       auto& sf = SetupSystematicsFile(
         "systematics",
         "Systematics_" + std::to_string(cfg.SEED()) + ".csv",
@@ -136,9 +136,9 @@ public:
       sf.AddVar(cfg.SEED(), "seed", "Random generator seed");
       sf.AddVar(STRINGIFY(GIT_VERSION_), "GIT_VERSION", "Software version");
       sf.PrintHeaderKeys();
+      #endif
 
     }
-    #endif
 
   }
 
