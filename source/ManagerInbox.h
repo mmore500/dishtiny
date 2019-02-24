@@ -42,4 +42,9 @@ public:
 
   }
 
+  size_t GetTraffic(size_t dir) const {
+    return inboxes[dir].size();
+  }
+
+
 };

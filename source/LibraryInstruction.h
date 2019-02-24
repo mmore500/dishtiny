@@ -47,7 +47,8 @@ private:
           dir,
           lev,
           man.Channel(pos).GetGenCounter(),
-          *man.Channel(pos).GetIDs()
+          *man.Channel(pos).GetIDs(),
+          lev < cfg.NLEV() ? man.Family(pos).GetPrevChan() : *man.Channel(pos).GetID(cfg.NLEV() - 1)
         },
         hw.GetProgram()
       );
@@ -214,29 +215,7 @@ public:
   static void InitExternalActions(inst_lib_t &il, const Config &cfg) {
 
     il.AddInst(
-      "SendUnitResource",
-      [&cfg](hardware_t & hw, const inst_t & inst){
-
-        FrameHardware &fh = *hw.GetTrait(0);
-
-        Manager &man = fh.Cell().Man();
-        const size_t pos = fh.Cell().GetPos();
-
-        const double amt = man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH()/25);
-
-        const state_t & state = hw.GetCurState();
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
-        const size_t neigh = fh.Cell().GetNeigh(dir);
-
-        man.Stockpile(neigh).ExternalContribute(amt);
-
-      },
-      1,
-      "TODO"
-    );
-
-    il.AddInst(
-      "SendHalfResource",
+      "SendBigFracResource",
       [](hardware_t & hw, const inst_t & inst){
 
         FrameHardware &fh = *hw.GetTrait(0);
@@ -244,13 +223,34 @@ public:
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
 
-        const double amt = man.Stockpile(pos).RequestResourceFrac(0.04);
+        const double amt = man.Stockpile(pos).RequestResourceFrac(0.5);
 
         const state_t & state = hw.GetCurState();
         const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
-        man.Stockpile(neigh).ExternalContribute(amt);
+        man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
+      },
+      1,
+      "TODO"
+    );
+
+    il.AddInst(
+      "SendSmallFracResource",
+      [](hardware_t & hw, const inst_t & inst){
+
+        FrameHardware &fh = *hw.GetTrait(0);
+
+        Manager &man = fh.Cell().Man();
+        const size_t pos = fh.Cell().GetPos();
+
+        const double amt = man.Stockpile(pos).RequestResourceFrac(0.02);
+
+        const state_t & state = hw.GetCurState();
+        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+        const size_t neigh = fh.Cell().GetNeigh(dir);
+
+        man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
       },
       1,
       "TODO"
@@ -523,6 +523,54 @@ public:
         "TODO"
       );
     }
+
+    il.AddInst(
+      "QueryIsMyPropagule-PrevChan",
+      [is_live, &cfg](hardware_t & hw, const inst_t & inst){
+        state_t & state = hw.GetCurState();
+
+        FrameHardware &fh = *hw.GetTrait(0);
+
+        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+        const size_t neigh = fh.Cell().GetNeigh(dir);
+
+        bool match = false;
+
+        if(is_live(neigh)) {
+          Manager &man = fh.Cell().Man();
+          const size_t pos = fh.Cell().GetPos();
+          match &= man.Family(neigh).GetPrevChan() == *man.Channel(pos).GetID(cfg.NLEV()-1);
+        }
+
+        state.SetLocal(inst.args[1], match);
+      },
+      2,
+      "TODO"
+    );
+
+    il.AddInst(
+      "QueryIsMyParent-PrevChan",
+      [is_live, &cfg](hardware_t & hw, const inst_t & inst){
+        state_t & state = hw.GetCurState();
+
+        FrameHardware &fh = *hw.GetTrait(0);
+
+        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+        const size_t neigh = fh.Cell().GetNeigh(dir);
+
+        bool match = false;
+
+        if(is_live(neigh)) {
+          Manager &man = fh.Cell().Man();
+          const size_t pos = fh.Cell().GetPos();
+          match &= man.Family(pos).GetPrevChan() == *man.Channel(neigh).GetID(cfg.NLEV()-1);
+        }
+
+        state.SetLocal(inst.args[1], match);
+      },
+      2,
+      "TODO"
+    );
 
     // get the raw channel of who is next door
     // potentially useful for aggregate count of distinct neighbors

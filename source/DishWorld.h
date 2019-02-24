@@ -77,7 +77,9 @@ public:
     OnPlacement([this](const size_t pos){
       man->Stockpile(pos).Reset();
       frames[pos]->Reset();
-      mut.ApplyMutations(GetOrg(pos).program,*local_rngs[pos]);
+      if(local_rngs[pos]->GetDouble() < cfg.MUTATION_RATE()) {
+        mut.ApplyMutations(GetOrg(pos).program,*local_rngs[pos]);
+      }
       frames[pos]->SetProgram(GetOrg(pos).program);
       man->Inbox(pos).ClearInboxes();
     });
@@ -87,6 +89,8 @@ public:
       Mid();
       Post();
     });
+
+    InitSystematics();
 
     for(size_t i = 0; i < GetSize(); ++i) {
       Genome g(
@@ -107,14 +111,49 @@ public:
     man.Delete();
   }
 
+  void InitSystematics() {
+
+    if (cfg.SYSTEMATICS()) {
+
+      AddSystematics(
+        emp::NewPtr<emp::Systematics<Genome,Genome>>(
+          [](Genome & o){return o;},
+          true,
+          true,
+          false
+        ),
+        "systematics"
+      );
+
+      #ifndef EMSCRIPTEN
+      auto& sf = SetupSystematicsFile(
+        "systematics",
+        "Systematics_" + std::to_string(cfg.SEED()) + ".csv",
+        false
+      );
+
+      sf.SetTiming([this](const size_t upd){ return cfg.TimingFun(upd); });
+      sf.AddVar(cfg.SEED(), "seed", "Random generator seed");
+      sf.AddVar(STRINGIFY(GIT_VERSION_), "GIT_VERSION", "Software version");
+      sf.PrintHeaderKeys();
+      #endif
+
+    }
+
+  }
+
   void Pre() {
     for (size_t i = 0; i < GetSize(); ++i) {
+
+      man->Priority(i).Reset();
+      man->Apoptosis(i).Reset();
 
       for(size_t l = 0; l < cfg.NLEV(); ++l) {
         man->Wave(i,l).CalcNext(GetUpdate());
       }
 
       if (IsOccupied(i)) {
+        man->Stockpile(i).ResolveExternalContributions();
         for(size_t l = 0; l < cfg.NLEV(); ++l) {
           man->Wave(i,l).HarvestResource();
         }
@@ -144,18 +183,18 @@ public:
         man->Channel(i).Inherit(
           sirepack.chanpack,
           sirepack.channel_gens,
-          sirepack.rep_lev
+          sirepack.replev
         );
         man->Family(i).Reset(GetUpdate());
         man->Family(i).SetParentPos(sirepack.par_pos);
+        man->Family(i).SetPrevChan(sirepack.prev_chan);
         // check that parent hasn't been overwritten by a different birth
         if(man->Family(sirepack.par_pos).GetBirthUpdate() != GetUpdate()) {
           man->Family(sirepack.par_pos).AddChildPos(i);
-          man->Channel(sirepack.par_pos).LogReprGen(sirepack.rep_lev);
+          man->Channel(sirepack.par_pos).LogReprGen(sirepack.replev);
         }
       } else if (IsOccupied(i)) {
         // this block doesn't get run if a cell was just born here
-        man->Stockpile(i).ResolveExternalContributions();
         if (man->Stockpile(i).IsBankrupt()
             || man->Apoptosis(i).IsMarked()) {
           DoDeath(i);
@@ -167,9 +206,6 @@ public:
 
       // dead cells with no channels have nullopt so no transmission will occur
       for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
-
-      man->Priority(i).Reset();
-      man->Apoptosis(i).Reset();
 
     }
   }

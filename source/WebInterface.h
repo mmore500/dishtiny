@@ -17,15 +17,19 @@ class WebInterface : public UI::Animate {
   const Config cfg;
 
   UI::Document button_dash;  //< Div that contains the button dashboard.
+  UI::Document systematics_dash;  //< Div that contains the systematics info.
+  UI::Document dominant_viewer;
 
   DishWorld w;
 
   UI::Document channel_viewer;
   UI::Document wave_viewer;
   UI::Document stockpile_viewer;
+  UI::Document contribution_viewer;
   WebArtist<ChannelPack> channel;
   emp::vector<WebArtist<int>> wave;
   WebArtist<double> stockpile;
+  WebArtist<double> contribution;
 
   bool render;
 
@@ -41,10 +45,13 @@ public:
 
   WebInterface()
     : button_dash("emp_button_dash")
+    , systematics_dash("emp_systematics_dash")
+    , dominant_viewer("dominant_viewer")
     , w(cfg)
     , channel_viewer("channel_viewer")
     , wave_viewer("wave_viewer")
     , stockpile_viewer("stockpile_viewer")
+    , contribution_viewer("contribution_viewer")
     , channel(
       channel_viewer,
       [this](size_t i){
@@ -72,7 +79,11 @@ public:
               255,
               0
             );
-          else if (*amt > 0) return emp::ColorRGB(0,0,255);
+          else if (*amt > 0) return emp::ColorHSV(
+            240,
+            (*amt/ cfg.REP_THRESH()),
+            1.0
+          );
           else if (*amt == 0) return "white";
           else return emp::ColorRGB(
               255,
@@ -80,6 +91,24 @@ public:
               255-std::min(255.0,(*amt)*255.0/cfg.KILL_THRESH())
             );
         } else return emp::ColorRGB(0,0,0);
+      },
+      cfg
+    ), contribution(
+      contribution_viewer,
+      [this](size_t i){
+        return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Stockpile(i).QueryTotalContribute()) : std::experimental::nullopt;
+      },
+      [this](std::experimental::optional<double> amt) -> std::string {
+        if (amt) {
+          if (*amt > cfg.REP_THRESH()) return "yellow";
+          else if (*amt > 0) return emp::ColorHSV(
+            240.0-180.0*(*amt)/cfg.REP_THRESH(),
+            1.0,
+            1.0
+          );
+          else if (*amt == 0) return "white";
+          else return "red";
+        } else return "black";
       },
       cfg
     ), render(true) {
@@ -113,7 +142,7 @@ public:
     version_text << STRINGIFY(GIT_VERSION_);
 
     auto ud_text = button_dash.AddText("ud_text");
-    ud_text << "Update: " << UI::Live(w.update);
+    ud_text << "Update: " << UI::Live([this](){ return w.GetUpdate(); });
 
     button_dash << UI::Button(
       [this](){ DoFrame(); },
@@ -125,6 +154,44 @@ public:
         "Toggle Render"
       );
 
+    auto sys_text = systematics_dash.AddText("sys_text");
+    sys_text << " Num Unique Orgs: " << UI::Live([this](){
+      return w.GetSystematics("systematics")->GetNumActive();
+    });
+    sys_text << " Ave Depth: " << UI::Live([this](){
+      return w.GetSystematics("systematics")->GetAveDepth();
+    });
+    sys_text << " Num Roots: " << UI::Live([this](){
+      return w.GetSystematics("systematics")->GetNumRoots();
+    });
+    sys_text << " MRCA Depth: " << UI::Live([this](){
+      return w.GetSystematics("systematics")->GetMRCADepth();
+    });
+
+    auto dom_text = dominant_viewer.AddText("dom_text");
+    dom_text << UI::Live([this](){
+
+      std::map<Genome, size_t> counts;
+
+      for(size_t pos = 0; pos < w.GetSize(); ++pos) {
+        if (w.IsOccupied(pos)) counts[w.GetOrg(pos)] ++;
+      }
+
+      using pair_type = decltype(counts)::value_type;
+      auto pr = std::max_element(
+        std::begin(counts),
+        std::end(counts),
+        [](const pair_type & p1, const pair_type & p2) {
+          return p1.second < p2.second;
+        }
+      );
+
+      std::ostringstream buffer;
+      pr->first.program.PrintProgram(buffer);
+
+      return "COUNT:" + emp::to_string(pr->second) + "\n\n" + buffer.str();
+    });
+
   }
 
   void DoFrame() {
@@ -134,9 +201,12 @@ public:
 
   void Redraw() {
     button_dash.Text("ud_text").Redraw();
+    systematics_dash.Text("sys_text").Redraw();
     if (render) {
+      dominant_viewer.Text("dom_text").Redraw();
       channel.Redraw();
       stockpile.Redraw();
+      contribution.Redraw();
       for(auto &w : wave) w.Redraw();
     }
   }

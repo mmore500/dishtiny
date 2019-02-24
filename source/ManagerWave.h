@@ -23,6 +23,7 @@ private:
 
   int next_state;
 
+  double last_harvest;
 
   const ManagerChannel &mc;
   ManagerStockpile &ms;
@@ -112,6 +113,8 @@ public:
 
   void HarvestResource() {
 
+    last_harvest = 0.0;
+
     /* e.g., if active */
     if (state > 0) {
       double amt = cfg.Lev(lev).ACTIVATION_COST();
@@ -120,9 +123,16 @@ public:
         amt += cfg.Lev(lev).HARVEST_VALUE();
       }
 
+      last_harvest = amt;
+
       ms.InternalApplyHarvest(amt);
     }
 
+  }
+
+  /* for data collection, not for simulation */
+  double GetLastHarvest() const {
+    return last_harvest;
   }
 
   /* this should only be called on live cells */

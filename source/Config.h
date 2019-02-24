@@ -90,4 +90,9 @@ public:
     }
 
   }
+
+  bool TimingFun(const size_t update) const {
+    return update % SNAPSHOT_FREQUENCY() < SNAPSHOT_LENGTH();
+  }
+
 };
