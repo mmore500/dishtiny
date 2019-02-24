@@ -10,6 +10,13 @@
 #include "../DataHelper.h"
 #endif
 
+#include "../Config.cpp"
+#include "../DishWorld.cpp"
+#include "../FrameHardware.cpp"
+#include "../FrameCell.cpp"
+#include "../Manager.cpp"
+
+
 int main(int argc, char* argv[])
 {
 

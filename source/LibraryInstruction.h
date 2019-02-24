@@ -7,7 +7,6 @@
 #include "tools/string_utils.h"
 #include "hardware/InstLib.h"
 
-#include "FrameCell.h"
 #include "FrameHardware.h"
 #include "Config.h"
 #include "GeometryHelper.h"
@@ -20,10 +19,6 @@ private:
   using inst_lib_t = Config::inst_lib_t;
   using inst_t = inst_lib_t::inst_t;
   using state_t = hardware_t::State;
-
-  static size_t CalcDir(const FrameHardware &fh, const double regval) {
-    return emp::Mod(fh.GetFacing()+(int)regval,(int)Cardi::NumDirs);
-  }
 
   static void TRL(hardware_t & hw, const double arg, const size_t lev, const Config &cfg){
 
@@ -41,7 +36,7 @@ private:
     } else {
       man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
 
-      const size_t dir = CalcDir(fh,arg);
+      const size_t dir = fh.CalcDir(arg);
       man.Priority(fh.Cell().GetNeigh(dir)).ProcessSire({
           pos,
           dir,
@@ -106,7 +101,7 @@ public:
       [](hardware_t & hw, const inst_t & inst){
         FrameHardware &fh = *hw.GetTrait(0);
         const state_t & state = hw.GetCurState();
-        const size_t dir = CalcDir(fh, state.GetLocal(inst.args[0]));
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         fh.SetMsgDir(dir);
         hw.TriggerEvent("SendMsgInternal", inst.affinity, state.output_mem);
       },
@@ -142,7 +137,7 @@ public:
         FrameHardware &fh = *hw.GetTrait(0);
 
         const state_t & state = hw.GetCurState();
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
 
         fh.Cell().GetFrameHardware(dir).AdjustStockpileReserve(
           cfg.REP_THRESH()/2
@@ -158,7 +153,7 @@ public:
         FrameHardware &fh = *hw.GetTrait(0);
 
         const state_t & state = hw.GetCurState();
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
 
         fh.Cell().GetFrameHardware(dir).AdjustStockpileReserve(
           -cfg.REP_THRESH()/2
@@ -176,7 +171,7 @@ public:
           FrameHardware &fh = *hw.GetTrait(0);
 
           const state_t & state = hw.GetCurState();
-          const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+          const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
 
           fh.Cell().GetFrameHardware(dir).PauseRepr(i);
 
@@ -191,7 +186,7 @@ public:
       [](hardware_t &hw, const inst_t &inst){
         FrameHardware &fh = *hw.GetTrait(0);
         const state_t & state = hw.GetCurState();
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         fh.Cell().GetFrameHardware(dir).SetInboxActivity(true);
       },
       1,
@@ -203,7 +198,7 @@ public:
       [](hardware_t &hw, const inst_t &inst){
         FrameHardware &fh = *hw.GetTrait(0);
         const state_t & state = hw.GetCurState();
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         fh.Cell().GetFrameHardware(dir).SetInboxActivity(false);
       },
       1,
@@ -219,14 +214,16 @@ public:
       [](hardware_t & hw, const inst_t & inst){
 
         FrameHardware &fh = *hw.GetTrait(0);
+        const state_t & state = hw.GetCurState();
+
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+        if(!fh.IsLive(dir)) return;
 
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
 
         const double amt = man.Stockpile(pos).RequestResourceFrac(0.5);
 
-        const state_t & state = hw.GetCurState();
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
         man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
@@ -240,14 +237,16 @@ public:
       [](hardware_t & hw, const inst_t & inst){
 
         FrameHardware &fh = *hw.GetTrait(0);
+        const state_t & state = hw.GetCurState();
+
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+        if(!fh.IsLive(dir)) return;
 
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
 
         const double amt = man.Stockpile(pos).RequestResourceFrac(0.02);
 
-        const state_t & state = hw.GetCurState();
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
         man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
@@ -261,7 +260,7 @@ public:
       [](hardware_t & hw, const inst_t & inst){
         FrameHardware &fh = *hw.GetTrait(0);
         const state_t & state = hw.GetCurState();
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         fh.SetMsgDir(dir);
         hw.TriggerEvent("SendMsgExternal", inst.affinity, state.output_mem);
       },
@@ -380,23 +379,20 @@ public:
 
   }
 
-  static void InitExternalSensors(
-    inst_lib_t &il,
-    std::function<bool(size_t)> is_live,
-    const Config &cfg
-  ) {
+  static void InitExternalSensors(inst_lib_t &il, const Config &cfg) {
 
     il.AddInst(
       "QueryIsLive",
-      [is_live](hardware_t & hw, const inst_t & inst){
-        state_t & state = hw.GetCurState();
+      [](hardware_t & hw, const inst_t & inst){
 
+        state_t & state = hw.GetCurState();
         FrameHardware &fh = *hw.GetTrait(0);
 
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
-        const size_t neigh = fh.Cell().GetNeigh(dir);
+        state.SetLocal(
+          inst.args[1],
+          fh.IsLive(state.GetLocal(inst.args[0]))
+        );
 
-        state.SetLocal(inst.args[1], is_live(neigh));
       },
       2,
       "TODO"
@@ -405,43 +401,14 @@ public:
     il.AddInst(
       "QueryIsOccupied",
       [](hardware_t & hw, const inst_t & inst){
-        state_t & state = hw.GetCurState();
 
+        state_t & state = hw.GetCurState();
         FrameHardware &fh = *hw.GetTrait(0);
 
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
-        const size_t neigh = fh.Cell().GetNeigh(dir);
-        Manager &man = fh.Cell().Man();
-        const bool is_occupied = (bool) man.Channel(neigh).GetIDs();
-
-        state.SetLocal(inst.args[1], is_occupied);
-      },
-      2,
-      "TODO"
-    );
-
-    il.AddInst(
-      "QueryIsChild",
-      [is_live](hardware_t & hw, const inst_t & inst){
-        state_t & state = hw.GetCurState();
-
-        FrameHardware &fh = *hw.GetTrait(0);
-
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
-        const size_t neigh = fh.Cell().GetNeigh(dir);
-
-        bool match = true;
-
-        if(is_live(neigh)) {
-          Manager &man = fh.Cell().Man();
-          const size_t pos = fh.Cell().GetPos();
-          match &= man.Family(pos).HasChildPos(neigh);
-          match &= man.Family(neigh).IsParentPos(pos);
-        } else {
-          match = false;
-        }
-
-        state.SetLocal(inst.args[1], match);
+        state.SetLocal(
+          inst.args[1],
+          fh.IsOccupied(state.GetLocal(inst.args[0]))
+        );
 
       },
       2,
@@ -449,75 +416,52 @@ public:
     );
 
     il.AddInst(
-      "QueryIsParent",
-      [is_live](hardware_t & hw, const inst_t & inst){
-        state_t & state = hw.GetCurState();
+      "QueryIsCellChild",
+      [](hardware_t & hw, const inst_t & inst){
 
+        state_t & state = hw.GetCurState();
         FrameHardware &fh = *hw.GetTrait(0);
 
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
-        const size_t neigh = fh.Cell().GetNeigh(dir);
-
-        bool match = true;
-
-        if(is_live(neigh)) {
-          Manager &man = fh.Cell().Man();
-          const size_t pos = fh.Cell().GetPos();
-          match &= man.Family(pos).IsParentPos(neigh);
-          match &= man.Family(neigh).HasChildPos(pos);
-        } else {
-          match = false;
-        }
-
-        state.SetLocal(inst.args[1], match);
+        state.SetLocal(
+          inst.args[1],
+          fh.IsCellChild(state.GetLocal(inst.args[0]))
+        );
 
       },
       2,
       "TODO"
     );
 
-    for (size_t i = 0; i < cfg.NLEV(); ++i) {
-      il.AddInst(
-        "QueryFacingChannelKin-Lev" + emp::to_string(i),
-        [i](hardware_t & hw, const inst_t & inst){
-          state_t & state = hw.GetCurState();
+    il.AddInst(
+      "QueryIsCellParent",
+      [](hardware_t & hw, const inst_t & inst){
 
+        state_t & state = hw.GetCurState();
+        FrameHardware &fh = *hw.GetTrait(0);
+
+        state.SetLocal(
+          inst.args[1],
+          fh.IsCellParent(state.GetLocal(inst.args[0]))
+        );
+
+      },
+      2,
+      "TODO"
+    );
+
+    for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      il.AddInst(
+        "QueryFacingChannelMate-Lev" + emp::to_string(lev),
+        [lev](hardware_t & hw, const inst_t & inst){
+
+          state_t & state = hw.GetCurState();
           FrameHardware &fh = *hw.GetTrait(0);
 
-          const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
-          const size_t neigh = fh.Cell().GetNeigh(dir);
+          state.SetLocal(
+            inst.args[1],
+            fh.IsChannelMate(lev, state.GetLocal(inst.args[0]))
+          );
 
-          // should be able to sense partial apoptosis tiles
-          Manager &man = fh.Cell().Man();
-          const size_t pos = fh.Cell().GetPos();
-          const bool match = man.Channel(pos).CheckMatch(man.Channel(neigh), i);
-
-          state.SetLocal(inst.args[1], match);
-        },
-        2,
-        "TODO"
-      );
-      il.AddInst(
-        "QueryIsMyPropagule-Lev" + emp::to_string(i),
-        [i, is_live](hardware_t & hw, const inst_t & inst){
-          state_t & state = hw.GetCurState();
-
-          FrameHardware &fh = *hw.GetTrait(0);
-
-          const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
-          const size_t neigh = fh.Cell().GetNeigh(dir);
-
-          bool match = false;
-
-          if(is_live(neigh)) {
-            Manager &man = fh.Cell().Man();
-            const size_t pos = fh.Cell().GetPos();
-            match = !man.Channel(pos).CheckMatch(man.Channel(neigh), i);
-            match &= man.Family(pos).HasChildPos(neigh);
-            match &= man.Family(neigh).IsParentPos(pos);
-          }
-
-          state.SetLocal(inst.args[1], match);
         },
         2,
         "TODO"
@@ -525,48 +469,34 @@ public:
     }
 
     il.AddInst(
-      "QueryIsMyPropagule-PrevChan",
-      [is_live, &cfg](hardware_t & hw, const inst_t & inst){
-        state_t & state = hw.GetCurState();
+      "QueryIsPropaguleChild",
+      [&cfg](hardware_t & hw, const inst_t & inst){
 
+        state_t & state = hw.GetCurState();
         FrameHardware &fh = *hw.GetTrait(0);
 
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
-        const size_t neigh = fh.Cell().GetNeigh(dir);
+        state.SetLocal(
+          inst.args[1],
+          fh.IsPropaguleChild(state.GetLocal(inst.args[0]))
+        );
 
-        bool match = false;
-
-        if(is_live(neigh)) {
-          Manager &man = fh.Cell().Man();
-          const size_t pos = fh.Cell().GetPos();
-          match &= man.Family(neigh).GetPrevChan() == *man.Channel(pos).GetID(cfg.NLEV()-1);
-        }
-
-        state.SetLocal(inst.args[1], match);
       },
       2,
       "TODO"
     );
 
     il.AddInst(
-      "QueryIsMyParent-PrevChan",
-      [is_live, &cfg](hardware_t & hw, const inst_t & inst){
+      "QueryIsPropaguleParent",
+      [&cfg](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
 
         FrameHardware &fh = *hw.GetTrait(0);
 
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
-        const size_t neigh = fh.Cell().GetNeigh(dir);
+        state.SetLocal(
+          inst.args[1],
+          fh.IsPropaguleParent(state.GetLocal(inst.args[0]))
+        );
 
-        bool match = false;
-
-        if(is_live(neigh)) {
-          Manager &man = fh.Cell().Man();
-          const size_t pos = fh.Cell().GetPos();
-          match &= man.Family(pos).GetPrevChan() == *man.Channel(neigh).GetID(cfg.NLEV()-1);
-        }
-
-        state.SetLocal(inst.args[1], match);
       },
       2,
       "TODO"
@@ -577,15 +507,15 @@ public:
     for (size_t i = 0; i < cfg.NLEV(); ++i) {
       il.AddInst(
         "QueryFacingChannel-Lev" + emp::to_string(i),
-        [i, is_live](hardware_t & hw, const inst_t & inst){
+        [i](hardware_t & hw, const inst_t & inst){
           state_t & state = hw.GetCurState();
 
           FrameHardware &fh = *hw.GetTrait(0);
 
-          const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+          const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
           const size_t neigh = fh.Cell().GetNeigh(dir);
 
-          if(is_live(neigh)) {
+          if(fh.IsLive(state.GetLocal(inst.args[0]))) {
             Manager &man = fh.Cell().Man();
             auto chanid = man.Channel(neigh).GetID(i);
             if(chanid) state.SetLocal(inst.args[1], *chanid);
@@ -600,15 +530,15 @@ public:
 
     il.AddInst(
       "QueryFacingStockpile",
-      [is_live](hardware_t & hw, const inst_t & inst){
+      [](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
 
         FrameHardware &fh = *hw.GetTrait(0);
 
-        const size_t dir = CalcDir(fh,state.GetLocal(inst.args[0]));
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
-        if(is_live(neigh)) {
+        if(fh.IsLive(state.GetLocal(inst.args[0]))) {
           Manager &man = fh.Cell().Man();
           const double amt = man.Stockpile(neigh).QueryResource();
           state.SetLocal(inst.args[1], amt);
@@ -622,10 +552,7 @@ public:
 
   }
 
-  static const inst_lib_t& Make(
-    std::function<bool(size_t)> is_live,
-    const Config &cfg
-  ) {
+  static const inst_lib_t& Make(const Config &cfg) {
 
     static inst_lib_t il;
 
@@ -639,7 +566,7 @@ public:
 
       InitExternalActions(il, cfg);
 
-      InitExternalSensors(il, is_live, cfg);
+      InitExternalSensors(il, cfg);
 
       std::cout << "Instruction Library Size: " << il.GetSize() << std::endl;
 

@@ -9,6 +9,12 @@
 #include "../DishWorld.h"
 #include "../WebInterface.h"
 
+#include "../Config.cpp"
+#include "../DishWorld.cpp"
+#include "../FrameHardware.cpp"
+#include "../FrameCell.cpp"
+#include "../Manager.cpp"
+
 namespace UI = emp::web;
 
 WebInterface i;

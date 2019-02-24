@@ -3,6 +3,7 @@
 #include "base/Ptr.h"
 
 #include "Config.h"
+#include "FrameHardware.h"
 #include "Manager.h"
 
 class LibraryEvent {
@@ -19,19 +20,33 @@ public:
 
     if (el.GetSize() == 0) {
 
-      auto handle_message = [](hardware_t & hw, const event_t & event){
-        hw.SpawnCore(event.affinity, hw.GetMinBindThresh(), event.msg);
-      };
+      el.AddEvent(
+        "EnvTrigger",
+        [](hardware_t &hw, const event_t & event){
+          hw.SpawnCore(event.affinity, hw.GetMinBindThresh(), event.msg);
+        }
+      );
+
+      el.RegisterDispatchFun(
+        "EnvTrigger",
+        [](hardware_t &hw, const event_t & event){
+          hw.QueueEvent(event);
+        }
+      );
 
       el.AddEvent(
         "SendMsgExternal",
-        handle_message,
+        [](hardware_t & hw, const event_t & event){
+          hw.SpawnCore(event.affinity, hw.GetMinBindThresh(), event.msg);
+        },
         "Send message event."
       );
 
       el.AddEvent(
         "SendMsgInternal",
-        handle_message,
+        [](hardware_t & hw, const event_t & event){
+          hw.SpawnCore(event.affinity, hw.GetMinBindThresh(), event.msg);
+        },
         "Send message event."
       );
 
