@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <cmath>
 
 #include "base/assert.h"
 #include "tools/Random.h"
@@ -328,7 +329,8 @@ public:
           const state_t & state = hw.GetCurState();
           FrameHardware &fh = *hw.GetTrait(0);
           fh.Cell().Man().Channel(fh.Cell().GetPos()).IncrCellAge(
-            lev, state.GetLocal(inst.args[0])
+            lev,
+            std::max(0.0,std::min(1+state.GetLocal(inst.args[0]), 1000000.0))
           );
         },
         1,
