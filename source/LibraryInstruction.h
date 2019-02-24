@@ -163,23 +163,42 @@ public:
       "TODO"
     );
 
-    for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
+    for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
       il.AddInst(
-        "PauseRepr-Lev" + emp::to_string(i),
-        [i](hardware_t & hw, const inst_t & inst){
+        "PauseRepr-Lev" + emp::to_string(replev),
+        [replev](hardware_t & hw, const inst_t & inst){
 
           FrameHardware &fh = *hw.GetTrait(0);
 
           const state_t & state = hw.GetCurState();
           const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
 
-          fh.Cell().GetFrameHardware(dir).PauseRepr(i);
+          fh.Cell().GetFrameHardware(dir).PauseRepr(replev);
 
         },
         1,
         "TODO"
       );
     }
+
+    il.AddInst(
+      "PauseRepr",
+      [&cfg](hardware_t & hw, const inst_t & inst){
+
+        FrameHardware &fh = *hw.GetTrait(0);
+
+        const state_t & state = hw.GetCurState();
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+
+        for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
+          fh.Cell().GetFrameHardware(dir).PauseRepr(i);
+        }
+
+      },
+      1,
+      "TODO"
+    );
+
 
     il.AddInst(
       "ActivateInbox",
@@ -290,12 +309,27 @@ public:
       {"affinity"}
     );
 
-    for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
+    for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
       il.AddInst(
-        "TryReproduce-Lev" + emp::to_string(i),
-        [i, &cfg](hardware_t & hw, const inst_t & inst){
+        "TryReproduce-Lev" + emp::to_string(replev),
+        [replev, &cfg](hardware_t & hw, const inst_t & inst){
           const state_t & state = hw.GetCurState();
-          TRL(hw, state.GetLocal(inst.args[0]), i, cfg);
+          TRL(hw, state.GetLocal(inst.args[0]), replev, cfg);
+        },
+        1,
+        "TODO"
+      );
+    }
+
+    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      il.AddInst(
+        "IncrCellAge-Lev" + emp::to_string(lev),
+        [lev, &cfg](hardware_t & hw, const inst_t & inst){
+          const state_t & state = hw.GetCurState();
+          FrameHardware &fh = *hw.GetTrait(0);
+          fh.Cell().Man().Channel(fh.Cell().GetPos()).IncrCellAge(
+            lev, state.GetLocal(inst.args[0])
+          );
         },
         1,
         "TODO"
