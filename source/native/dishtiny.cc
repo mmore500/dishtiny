@@ -20,6 +20,8 @@
 int main(int argc, char* argv[])
 {
 
+  std::cout << "GIT VERSION " << STRINGIFY(GIT_VERSION_) << std::endl;
+
   // Read configs.
   std::string config_fname = "configs.cfg";
   Config cfg(config_fname, emp::cl::ArgManager(argc, argv));
