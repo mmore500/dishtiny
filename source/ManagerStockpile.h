@@ -16,6 +16,8 @@ private:
 
   emp::vector<double> contrib_resource;
 
+  bool accept_sharing;
+
 public:
 
   ManagerStockpile(
@@ -81,7 +83,16 @@ public:
     return cfg.KILL_THRESH() >= resource;
   }
 
+  bool CheckAcceptSharing() const {
+    return accept_sharing;
+  }
+
+  void SetAcceptSharing(const bool set) {
+    accept_sharing = set;
+  }
+
   void Reset() {
+    SetAcceptSharing(true);
     resource = 0.0;
     for(size_t dir = 0; dir < contrib_resource.size(); ++dir) {
       contrib_resource[dir] = 0.0;

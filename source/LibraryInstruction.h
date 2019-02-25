@@ -233,13 +233,14 @@ public:
 
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
+        const size_t neigh = fh.Cell().GetNeigh(dir);
+
+        if(!man.Stockpile(neigh).CheckAcceptSharing()) return;
 
         const double amt = man.Stockpile(pos).RequestResourceFrac(
           0.5,
           std::max(fh.CheckStockpileReserve()+state.GetLocal(inst.args[1]), 0.0)
         );
-
-        const size_t neigh = fh.Cell().GetNeigh(dir);
 
         man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
       },
@@ -259,15 +260,46 @@ public:
 
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
+        const size_t neigh = fh.Cell().GetNeigh(dir);
+
+        if(!man.Stockpile(neigh).CheckAcceptSharing()) return;
 
         const double amt = man.Stockpile(pos).RequestResourceFrac(
           0.05,
           std::max(fh.CheckStockpileReserve()+state.GetLocal(inst.args[1]), 0.0)
         );
 
-        const size_t neigh = fh.Cell().GetNeigh(dir);
-
         man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
+      },
+      2,
+      "TODO"
+    );
+
+    il.AddInst(
+      "SetAcceptSharingTrue",
+      [](hardware_t & hw, const inst_t & inst){
+
+        FrameHardware &fh = *hw.GetTrait(0);
+
+        Manager &man = fh.Cell().Man();
+        const size_t pos = fh.Cell().GetPos();
+
+        man.Stockpile(pos).SetAcceptSharing(true);
+      },
+      2,
+      "TODO"
+    );
+
+    il.AddInst(
+      "SetAcceptSharingFalse",
+      [](hardware_t & hw, const inst_t & inst){
+
+        FrameHardware &fh = *hw.GetTrait(0);
+
+        Manager &man = fh.Cell().Man();
+        const size_t pos = fh.Cell().GetPos();
+
+        man.Stockpile(pos).SetAcceptSharing(false);
       },
       2,
       "TODO"

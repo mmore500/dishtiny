@@ -65,6 +65,7 @@ public:
       file.createGroup("/ResourceHarvested/lev_"+emp::to_string(lev));
     }
     file.createGroup("/PrevChan/");
+    file.createGroup("/AcceptSharing/");
 
 
     InitAttributes();
@@ -93,6 +94,7 @@ public:
         }
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ResourceHarvested(lev);
         PrevChan();
+        AcceptSharing();
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -174,6 +176,17 @@ private:
 
       inbox_activation_key_attribute.write(H5::StrType(0, H5T_VARIABLE), inbox_activation_key_data);
     }
+
+    const hsize_t acceptsharing_key_dims[] = { 1 };
+    H5::DataSpace acceptsharing_key_dataspace(1, acceptsharing_key_dims);
+
+    H5::Attribute acceptsharing_key_attribute = file.openGroup("/AcceptSharing").createAttribute(
+      "KEY", H5::StrType(0, H5T_VARIABLE), acceptsharing_key_dataspace
+    );
+
+    const char *acceptsharing_key_data[] = {"0: false, 1: true"};
+
+    acceptsharing_key_attribute.write(H5::StrType(0, H5T_VARIABLE), acceptsharing_key_data);
 
   }
 
@@ -465,5 +478,25 @@ private:
 
   }
 
+  void AcceptSharing() {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_INT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/AcceptSharing/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    int data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Stockpile(i).CheckAcceptSharing();
+    }
+
+    ds.write((void*)data, tid);
+
+  }
 
 };
