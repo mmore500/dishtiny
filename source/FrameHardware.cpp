@@ -51,8 +51,8 @@ void FrameHardware::Reset() {
 
 double FrameHardware::CheckStockpileReserve() const { return stockpile_reserve; }
 
-void FrameHardware::AdjustStockpileReserve(const double amt) {
-  stockpile_reserve = std::max(0.0,stockpile_reserve+amt);
+void FrameHardware::SetStockpileReserve(const double amt) {
+  stockpile_reserve = std::max(0.0,amt);
 }
 
 void FrameHardware::DispatchEnvTriggers(){

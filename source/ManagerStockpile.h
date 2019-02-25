@@ -39,10 +39,11 @@ public:
     }
   }
 
-  double RequestResourceFrac(const double frac) {
+  double RequestResourceFrac(const double frac, const double reserve) {
     emp_assert(frac >= 0 && frac <= 1);
-    if (resource > 0 ) {
-      double amt = resource * frac;
+    emp_assert(reserve >= 0);
+    if (resource - reserve > 0) {
+      double amt = (resource - reserve) * frac;
       resource -= amt;
       return amt;
     } else {

@@ -54,7 +54,7 @@ public:
 
   double CheckStockpileReserve() const;
 
-  void AdjustStockpileReserve(const double amt);
+  void SetStockpileReserve(const double amt);
 
   void DispatchEnvTriggers();
 

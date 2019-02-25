@@ -21,7 +21,13 @@ private:
   using inst_t = inst_lib_t::inst_t;
   using state_t = hardware_t::State;
 
-  static void TRL(hardware_t & hw, const double arg, const size_t lev, const Config &cfg){
+  static void TRL(
+    hardware_t & hw,
+    const double dir_arg,
+    const double reserve_arg,
+    const size_t lev,
+    const Config &cfg
+  ){
 
     FrameHardware &fh = *hw.GetTrait(0);
 
@@ -29,15 +35,17 @@ private:
     const size_t pos = fh.Cell().GetPos();
 
     if( fh.IsReprPaused(lev)
-      || cfg.REP_THRESH() + fh.CheckStockpileReserve() > man.Stockpile(pos).QueryResource()
+      || cfg.REP_THRESH() +
+      std::max(fh.CheckStockpileReserve()+reserve_arg,0.0)
+      > man.Stockpile(pos).QueryResource()
     ) {
       return;
     } else if (man.Channel(pos).IsExpired(lev)) {
-      TRL(hw, arg, lev+1, cfg);
+      TRL(hw, dir_arg, reserve_arg, lev+1, cfg);
     } else {
       man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
 
-      const size_t dir = fh.CalcDir(arg);
+      const size_t dir = fh.CalcDir(dir_arg);
       man.Priority(fh.Cell().GetNeigh(dir)).ProcessSire({
           pos,
           dir,
@@ -133,34 +141,18 @@ public:
     );
 
     il.AddInst(
-      "IncrStockpileReserve",
+      "SetStockpileReserve",
       [&cfg](hardware_t & hw, const inst_t & inst){
         FrameHardware &fh = *hw.GetTrait(0);
 
         const state_t & state = hw.GetCurState();
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
 
-        fh.Cell().GetFrameHardware(dir).AdjustStockpileReserve(
-          cfg.REP_THRESH()/2
+        fh.Cell().GetFrameHardware(dir).SetStockpileReserve(
+          std::max(cfg.REP_THRESH()+state.GetLocal(inst.args[1]),0.0)
         );
       },
-      1,
-      "TODO"
-    );
-
-    il.AddInst(
-      "DecrStockpileReserve",
-      [&cfg](hardware_t & hw, const inst_t & inst){
-        FrameHardware &fh = *hw.GetTrait(0);
-
-        const state_t & state = hw.GetCurState();
-        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-
-        fh.Cell().GetFrameHardware(dir).AdjustStockpileReserve(
-          -cfg.REP_THRESH()/2
-        );
-      },
-      1,
+      2,
       "TODO"
     );
 
@@ -242,13 +234,16 @@ public:
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
 
-        const double amt = man.Stockpile(pos).RequestResourceFrac(0.5);
+        const double amt = man.Stockpile(pos).RequestResourceFrac(
+          0.5,
+          std::max(fh.CheckStockpileReserve()+state.GetLocal(inst.args[1]), 0.0)
+        );
 
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
         man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
       },
-      1,
+      2,
       "TODO"
     );
 
@@ -265,13 +260,16 @@ public:
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
 
-        const double amt = man.Stockpile(pos).RequestResourceFrac(0.02);
+        const double amt = man.Stockpile(pos).RequestResourceFrac(
+          0.05,
+          std::max(fh.CheckStockpileReserve()+state.GetLocal(inst.args[1]), 0.0)
+        );
 
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
         man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
       },
-      1,
+      2,
       "TODO"
     );
 
@@ -315,9 +313,15 @@ public:
         "TryReproduce-Lev" + emp::to_string(replev),
         [replev, &cfg](hardware_t & hw, const inst_t & inst){
           const state_t & state = hw.GetCurState();
-          TRL(hw, state.GetLocal(inst.args[0]), replev, cfg);
+          TRL(
+            hw,
+            state.GetLocal(inst.args[0]),
+            state.GetLocal(inst.args[1]),
+            replev,
+            cfg
+          );
         },
-        1,
+        2,
         "TODO"
       );
     }
