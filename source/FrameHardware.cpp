@@ -164,7 +164,10 @@ void FrameHardware::SetupCompute() {
   DispatchEnvTriggers();
 }
 
-void FrameHardware::StepProcess() { cpu.SingleProcess(); }
+void FrameHardware::StepProcess() {
+  emp_assert(cpu.GetProgram().GetSize());
+  cpu.SingleProcess();
+}
 
 void FrameHardware::SetProgram(const Config::program_t & program) {
   cpu.SetProgram(program);
