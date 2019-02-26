@@ -235,14 +235,18 @@ public:
         if(!man.Stockpile(neigh).CheckAcceptSharing()) return;
         if(man.Stockpile(neigh).QueryResource()<0) return;
 
+        const double m_arg = state.GetLocal(inst.args[1]);
+        const double multiplier = m_arg == 0 ? 1 : (
+          m_arg < 0 ? 1/-m_arg : m_arg
+        );
         const double amt = man.Stockpile(pos).RequestResourceFrac(
-          0.5,
-          std::max(fh.CheckStockpileReserve()+state.GetLocal(inst.args[1]), 0.0)
+          std::min(1.0,0.5*multiplier),
+          std::max(fh.CheckStockpileReserve()+state.GetLocal(inst.args[2]), 0.0)
         );
 
         man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
       },
-      2,
+      3,
       "TODO"
     );
 
@@ -263,14 +267,18 @@ public:
         if(!man.Stockpile(neigh).CheckAcceptSharing()) return;
         if(man.Stockpile(neigh).QueryResource()<0) return;
 
+        const double m_arg = state.GetLocal(inst.args[1]);
+        const double multiplier = m_arg == 0 ? 1 : (
+          m_arg < 0 ? 1/-m_arg : m_arg
+        );
         const double amt = man.Stockpile(pos).RequestResourceFrac(
-          0.05,
-          std::max(fh.CheckStockpileReserve()+state.GetLocal(inst.args[1]), 0.0)
+          std::min(1.0,0.05*multiplier),
+          std::max(fh.CheckStockpileReserve()+state.GetLocal(inst.args[2]), 0.0)
         );
 
         man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
       },
-      2,
+      3,
       "TODO"
     );
 
