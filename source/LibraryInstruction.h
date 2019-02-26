@@ -24,7 +24,6 @@ private:
   static void TRL(
     hardware_t & hw,
     const double dir_arg,
-    const double reserve_arg,
     const size_t lev,
     const Config &cfg
   ){
@@ -35,13 +34,11 @@ private:
     const size_t pos = fh.Cell().GetPos();
 
     if( fh.IsReprPaused(lev)
-      || cfg.REP_THRESH() +
-      std::max(fh.CheckStockpileReserve()+reserve_arg,0.0)
-      > man.Stockpile(pos).QueryResource()
+      || cfg.REP_THRESH() > man.Stockpile(pos).QueryResource()
     ) {
       return;
     } else if (man.Channel(pos).IsExpired(lev)) {
-      TRL(hw, dir_arg, reserve_arg, lev+1, cfg);
+      TRL(hw, dir_arg, lev+1, cfg);
     } else {
       man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
 
@@ -350,12 +347,11 @@ public:
           TRL(
             hw,
             state.GetLocal(inst.args[0]),
-            state.GetLocal(inst.args[1]),
             replev,
             cfg
           );
         },
-        2,
+        1,
         "TODO"
       );
     }
