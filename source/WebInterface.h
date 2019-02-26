@@ -141,6 +141,9 @@ public:
     auto version_text = button_dash.AddText("version_text");
     version_text << STRINGIFY(GIT_VERSION_);
 
+    auto seed_text = button_dash.AddText("seed_text");
+    seed_text << emp::to_string(cfg.SEED());
+
     auto ud_text = button_dash.AddText("ud_text");
     ud_text << "Update: " << UI::Live([this](){ return w.GetUpdate(); });
 
