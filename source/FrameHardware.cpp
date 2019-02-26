@@ -88,18 +88,18 @@ void FrameHardware::DispatchEnvTriggers(){
   ++i;
 
   // cell parent trigger
-  if(i >= pro_trigger_tags.size()) {
-    pro_trigger_tags.emplace_back(rng);
-    auto copy = pro_trigger_tags[i];
-    anti_trigger_tags.emplace_back(copy.Toggle());
-  }
-  if (IsCellParent()) {
-    cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
-  } else {
-    // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
-  }
-
-  ++i;
+  // if(i >= pro_trigger_tags.size()) {
+  //   pro_trigger_tags.emplace_back(rng);
+  //   auto copy = pro_trigger_tags[i];
+  //   anti_trigger_tags.emplace_back(copy.Toggle());
+  // }
+  // if (IsCellParent()) {
+  //   cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+  // } else {
+  //   // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+  // }
+  //
+  // ++i;
 
   // negative resource trigger
   if(i >= pro_trigger_tags.size()) {
@@ -145,16 +145,16 @@ void FrameHardware::DispatchEnvTriggers(){
   ++i;
 
   // propagule parent trigger
-  if(i >= pro_trigger_tags.size()) {
-    pro_trigger_tags.emplace_back(rng);
-    auto copy = pro_trigger_tags[i];
-    anti_trigger_tags.emplace_back(copy.Toggle());
-  }
-  if (IsPropaguleParent()) {
-    cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
-  } else {
-    // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
-  }
+  // if(i >= pro_trigger_tags.size()) {
+  //   pro_trigger_tags.emplace_back(rng);
+  //   auto copy = pro_trigger_tags[i];
+  //   anti_trigger_tags.emplace_back(copy.Toggle());
+  // }
+  // if (IsPropaguleParent()) {
+  //   cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+  // } else {
+  //   // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+  // }
 
 }
 
