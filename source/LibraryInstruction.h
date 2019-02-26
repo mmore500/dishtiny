@@ -236,6 +236,7 @@ public:
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
         if(!man.Stockpile(neigh).CheckAcceptSharing()) return;
+        if(man.Stockpile(neigh).QueryResource()<0) return;
 
         const double amt = man.Stockpile(pos).RequestResourceFrac(
           0.5,
@@ -263,6 +264,7 @@ public:
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
         if(!man.Stockpile(neigh).CheckAcceptSharing()) return;
+        if(man.Stockpile(neigh).QueryResource()<0) return;
 
         const double amt = man.Stockpile(pos).RequestResourceFrac(
           0.05,
