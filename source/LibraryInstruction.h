@@ -146,7 +146,7 @@ public:
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
 
         fh.Cell().GetFrameHardware(dir).SetStockpileReserve(
-          std::max(cfg.REP_THRESH()+state.GetLocal(inst.args[1]),0.0)
+          std::max(cfg.REP_THRESH()*2+state.GetLocal(inst.args[1]),0.0)
         );
       },
       2,
