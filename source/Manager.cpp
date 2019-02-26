@@ -34,6 +34,9 @@ Manager::Manager(
     mfs.push_back(
       emp::NewPtr<ManagerFamily>()
     );
+    mhs.push_back(
+      emp::NewPtr<ManagerHeir>()
+    );
     mis.push_back(
       emp::NewPtr<ManagerInbox>(cfg)
     );
@@ -81,6 +84,7 @@ Manager::~Manager() {
   for (auto &ptr : mas) ptr.Delete();
   for (auto &ptr : mcs) ptr.Delete();
   for (auto &ptr : mfs) ptr.Delete();
+  for (auto &ptr : mhs) ptr.Delete();
   for (auto &ptr : mis) ptr.Delete();
   for (auto &ptr : mps) ptr.Delete();
   for (auto &ptr : mss) ptr.Delete();
@@ -97,6 +101,10 @@ ManagerChannel& Manager::Channel(size_t pos) {
 
 ManagerFamily& Manager::Family(size_t pos) {
   return *mfs[pos];
+}
+
+ManagerHeir& Manager::Heir(size_t pos) {
+  return *mhs[pos];
 }
 
 ManagerInbox& Manager::Inbox(size_t pos) {

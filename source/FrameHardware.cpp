@@ -49,7 +49,9 @@ void FrameHardware::Reset() {
   emp_assert(!cpu.GetProgram().GetSize());
 }
 
-double FrameHardware::CheckStockpileReserve() const { return stockpile_reserve; }
+double FrameHardware::CheckStockpileReserve() const {
+  return stockpile_reserve;
+}
 
 void FrameHardware::SetStockpileReserve(const double amt) {
   stockpile_reserve = std::max(0.0,amt);

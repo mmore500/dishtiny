@@ -49,10 +49,27 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
   }
 
   // OnOffspringReady([](){;}});
-  // OnOrgDeath([](){;});
+
+  OnOrgDeath([this](const size_t pos){
+    double amt = std::max(0.0,man->Stockpile(pos).QueryResource());
+    if (man->Apoptosis(pos).IsMarked()) {
+      amt += cfg.REP_THRESH() * 0.8;
+    }
+
+    const size_t h_count = man->Heir(pos).HeirCount();
+    if(h_count) {
+      const auto neighs = GeometryHelper(cfg).CalcLocalNeighs(pos);
+      for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+        if(man->Heir(pos).IsHeir(dir)) {
+          man->Stockpile(neighs[dir]).InternalApplyHarvest(amt/h_count);
+        }
+      }
+    }
+  });
 
   OnPlacement([this](const size_t pos){
     man->Stockpile(pos).Reset();
+    man->Heir(pos).Reset();
     frames[pos]->Reset();
     if(local_rngs[pos]->GetDouble() < cfg.MUTATION_RATE()) {
       mut.ApplyMutations(GetOrg(pos).program,*local_rngs[pos]);

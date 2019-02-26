@@ -412,6 +412,37 @@ public:
       "TODO"
     );
 
+    il.AddInst(
+      "SetHeir",
+      [](hardware_t &hw, const inst_t &inst){
+        FrameHardware &fh = *hw.GetTrait(0);
+        const state_t & state = hw.GetCurState();
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+        Manager &man = fh.Cell().Man();
+        const size_t pos = fh.Cell().GetPos();
+
+        man.Heir(pos).SetHeir(dir,true);
+      },
+      1,
+      "TODO"
+    );
+
+    il.AddInst(
+      "UnsetHeir",
+      [](hardware_t &hw, const inst_t &inst){
+        FrameHardware &fh = *hw.GetTrait(0);
+        const state_t & state = hw.GetCurState();
+        const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+        Manager &man = fh.Cell().Man();
+        const size_t pos = fh.Cell().GetPos();
+
+        man.Heir(pos).SetHeir(dir,false);
+      },
+      1,
+      "TODO"
+    );
+
+
   }
 
   static void InitInternalSensors(inst_lib_t &il, const Config &cfg) {
