@@ -130,6 +130,7 @@ void DishWorld::Pre() {
     }
 
     if (IsOccupied(i)) {
+      man->Stockpile(i).ResolveNextAcceptSharing();
       man->Stockpile(i).ResolveExternalContributions();
       for(size_t l = 0; l < cfg.NLEV(); ++l) {
         man->Wave(i,l).HarvestResource();
