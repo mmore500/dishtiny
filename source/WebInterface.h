@@ -4,7 +4,13 @@
 #include <experimental/optional>
 #include <string>
 
+#include "base/vector.h"
+#include "web/Button.h"
+#include "web/Input.h"
+#include "web/web.h"
+#include "web/Animate.h"
 #include "tools/math.h"
+#include "tools/Random.h"
 
 #include "Config.h"
 #include "DishWorld.h"
@@ -14,7 +20,7 @@ namespace UI = emp::web;
 
 class WebInterface : public UI::Animate {
 
-  const Config cfg;
+  Config cfg;
 
   UI::Document button_dash;  //< Div that contains the button dashboard.
   UI::Document systematics_dash;  //< Div that contains the systematics info.
@@ -31,7 +37,8 @@ class WebInterface : public UI::Animate {
   WebArtist<double> stockpile;
   WebArtist<double> contribution;
 
-  bool render;
+  bool rendered;
+  bool downloaded;
 
   std::string ChannelColor(ChannelPack &cp) {
     return emp::ColorHSV(
@@ -111,7 +118,10 @@ public:
         } else return "black";
       },
       cfg
-    ), render(true) {
+    ) {
+
+      cfg.Set("SNAPSHOT_FREQUENCY", "1000");
+      cfg.Set("SNAPSHOT_LENGTH", "1");
 
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
       wave.emplace_back(
@@ -147,15 +157,27 @@ public:
     auto ud_text = button_dash.AddText("ud_text");
     ud_text << "Update: " << UI::Live([this](){ return w.GetUpdate(); });
 
-    button_dash << UI::Button(
+    button_dash << "&nbsp;" << UI::Button(
       [this](){ DoFrame(); },
       "Step"
     );
-    button_dash << GetToggleButton("Animate");
-    button_dash << UI::Button(
-        [this](){ render = !render; },
-        "Toggle Render"
-      );
+    button_dash << "&nbsp;" << GetToggleButton("Animate");
+    button_dash << "&nbsp;" << UI::Input(
+      [this](std::string in){ ; },
+      "checkbox",
+      "Render?",
+      "render_input"
+    );
+    button_dash << "&nbsp;" << UI::Input(
+      [this](std::string _){
+        if(button_dash.Input("download_input").GetCurrValue() == "true") {
+          Download();
+        }
+      },
+      "checkbox",
+      "Download snapshots?",
+      "download_input"
+    );
 
     auto sys_text = systematics_dash.AddText("sys_text");
     sys_text << " Num Unique Orgs: " << UI::Live([this](){
@@ -198,20 +220,63 @@ public:
   }
 
   void DoFrame() {
+    rendered = false;
+    downloaded = false;
+
     w.Update();
-    Redraw();
+
+    button_dash.Text("ud_text").Redraw();
+
+    if (button_dash.Input("render_input").GetCurrValue() == "true") {
+      Redraw();
+    }
+
+    if (button_dash.Input("download_input").GetCurrValue() == "true") {
+      Download();
+    }
   }
 
   void Redraw() {
-    button_dash.Text("ud_text").Redraw();
+
+    if (rendered) return;
+
     systematics_dash.Text("sys_text").Redraw();
-    if (render) {
-      dominant_viewer.Text("dom_text").Redraw();
-      channel.Redraw();
-      stockpile.Redraw();
-      contribution.Redraw();
-      for(auto &w : wave) w.Redraw();
+    dominant_viewer.Text("dom_text").Redraw();
+    channel.Redraw();
+    stockpile.Redraw();
+    contribution.Redraw();
+    for(auto &w : wave) w.Redraw();
+
+    rendered = true;
+
+  }
+
+
+  void Download() {
+
+    if (downloaded) return;
+
+    const std::string prefix = (
+      std::string()
+      + STRINGIFY(GIT_VERSION_)
+      + "+"
+      + "seed"
+      + emp::to_string(cfg.SEED())
+      + "-"
+      + "update"
+      + emp::to_string(w.GetUpdate())
+      + "-"
+    );
+
+    if(cfg.TimingFun(w.GetUpdate())) {
+      if (!rendered) Redraw();
+      channel.Download(prefix + "channel");
+      stockpile.Download(prefix + "stockpile");
+      contribution.Download(prefix + "contribution");
     }
+
+    downloaded = true;
+
   }
 
 };

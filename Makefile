@@ -4,7 +4,7 @@ EMP_DIR := ../Empirical/source
 GIT_VERSION := $(shell git describe --dirty --always)
 
 # Flags to use regardless of compiler
-CFLAGS_all := -std=c++14 -Wall -Wno-unused-function -I$(EMP_DIR)/ -DGIT_VERSION_=$(GIT_VERSION)
+CFLAGS_all := -std=c++17 -Wall -Wno-unused-function -I$(EMP_DIR)/ -DGIT_VERSION_=$(GIT_VERSION)
 
 # Native compiler information
 CXX_nat := h5c++
