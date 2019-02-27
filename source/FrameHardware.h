@@ -6,8 +6,10 @@
 #include "base/Ptr.h"
 
 #include "Config.h"
+#include "FrameHardware.h"
+#include "Manager.h"
+#include "DishWorld.h"
 
-//forward declaration
 class FrameCell;
 
 class FrameHardware {
@@ -15,6 +17,8 @@ class FrameHardware {
 private:
 
   FrameCell &cell;
+
+  const Config &cfg;
 
   const size_t facing;
 
@@ -31,100 +35,67 @@ private:
 
 public:
 
+  FrameHardware() = delete;
+
   FrameHardware(
       FrameCell &cell_,
       const size_t facing_,
       emp::Random &local_rng_,
-      const Config &cfg,
+      const Config &cfg_,
       const Config::inst_lib_t &inst_lib,
       const Config::event_lib_t &event_lib
-    ) : cell(cell_)
-      , facing(facing_)
-      , inbox_active(false)
-      , stockpile_reserve(0)
-      , repr_pause_cur(emp::NewPtr<emp::vector<bool>>(cfg.NLEV()+1))
-      , repr_pause_nxt(emp::NewPtr<emp::vector<bool>>(cfg.NLEV()+1, true))
-      , cpu(inst_lib, event_lib, &local_rng_)
-    { cpu.PushTrait(this); }
-
-  ~FrameHardware() {
-    repr_pause_cur.Delete();
-    repr_pause_nxt.Delete();
-  }
-
-  FrameCell& Cell() { return cell; }
-
-  void Reset() {
-    inbox_active = false;
-    stockpile_reserve = 0;
-    std::fill(repr_pause_cur->begin(), repr_pause_cur->end(), false);
-    std::fill(repr_pause_nxt->begin(), repr_pause_nxt->end(), true);
-
-    cpu.ResetHardware();
-    cpu.ResetProgram();
-    emp_assert(!cpu.GetProgram().GetSize());
-  }
-
-  double CheckStockpileReserve() const { return stockpile_reserve; }
-
-  void AdjustStockpileReserve(const double amt) {
-    stockpile_reserve = std::max(0.0,stockpile_reserve+amt);
-  }
-
-  void SetupCompute() {
-    std::fill(repr_pause_cur->begin(), repr_pause_cur->end(), false);
-    std::swap(repr_pause_cur, repr_pause_nxt);
-    cpu.SpawnCore(
-      Config::hardware_t::affinity_t(),
-      0.5,
-      {},
-      false
     );
-  }
 
-  void StepProcess() { cpu.SingleProcess(); }
+  ~FrameHardware();
 
-  void SetProgram(const Config::program_t & program) {
-    cpu.SetProgram(program);
-  }
+  FrameCell& Cell();
 
-  void PauseRepr(const size_t lev) { (*repr_pause_nxt)[lev] = true; }
+  void Reset();
 
-  bool IsReprPaused(const size_t lev) const {
-    return repr_pause_cur->at(lev) || repr_pause_nxt->at(lev);
-  }
+  double CheckStockpileReserve() const;
 
-  size_t GetFacing() const {
-    return facing;
-  }
+  void SetStockpileReserve(const double amt);
 
-  size_t GetMsgDir() const {
-    return msg_dir;
-  }
+  void DispatchEnvTriggers();
 
-  void SetMsgDir(const size_t new_dir) {
-    msg_dir = new_dir;
-  }
+  void SetupCompute();
 
-  void SetInboxActivity(const bool state) {
-    inbox_active = state;
-  }
+  void StepProcess();
 
-  bool CheckInboxActivity() const {
-    return inbox_active;
-  }
+  void SetProgram(const Config::program_t & program);
 
-  void QueueMessage(const Config::event_t &event) {
-    cpu.QueueEvent(event);
-  }
+  void PauseRepr(const size_t lev);
 
-  void QueueMessages(Config::inbox_t &inbox) {
-    while(inbox_active && !inbox.empty()) {
-      QueueMessage(inbox.front());
-      inbox.pop_front();
-    }
-    // clear inactive inboxes, too!
-    inbox.clear();
-  }
+  bool IsReprPaused(const size_t lev) const;
+
+  size_t GetFacing() const;
+
+  size_t GetMsgDir() const;
+
+  void SetMsgDir(const size_t new_dir);
+
+  void SetInboxActivity(const bool state);
+
+  bool CheckInboxActivity() const;
+
+  void QueueMessage(const Config::event_t &event);
+
+  void QueueMessages(Config::inbox_t &inbox);
+
+  size_t CalcDir(const int relative_dir);
+
+  bool IsLive(const int relative_dir=0);
+
+  bool IsOccupied(const int relative_dir=0);
+
+  bool IsCellChild(const int relative_dir=0);
+
+  bool IsCellParent(const int relative_dir=0);
+
+  bool IsChannelMate(const size_t lev, const int relative_dir=0);
+
+  bool IsPropaguleChild(const int relative_dir=0);
+
+  bool IsPropaguleParent(const int relative_dir=0);
 
 };

@@ -46,7 +46,11 @@ public:
 
   void ClearIDs() { ids = std::experimental::nullopt; }
 
-  size_t GetGeneration(size_t lev) const { return gen_counter[lev]; }
+  size_t GetGeneration(const size_t lev) const { return gen_counter[lev]; }
+
+  void IncrCellAge(const size_t lev, const size_t amt) {
+    gen_counter[lev] += amt;
+  }
 
   const emp::vector<size_t>& GetGenCounter() const { return gen_counter; }
 
@@ -57,7 +61,7 @@ public:
 
     for(size_t i = replev; i < cfg.NLEV(); ++i) {
 
-      const size_t lim = cfg.Lev(i).EVENT_RADIUS() * 2;
+      const size_t lim = cfg.Lev(i).EVENT_RADIUS();
 
       expired |= GetGeneration(i) > lim;
     }

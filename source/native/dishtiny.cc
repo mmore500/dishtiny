@@ -10,8 +10,17 @@
 #include "../DataHelper.h"
 #endif
 
+#include "../Config.cpp"
+#include "../DishWorld.cpp"
+#include "../FrameHardware.cpp"
+#include "../FrameCell.cpp"
+#include "../Manager.cpp"
+
+
 int main(int argc, char* argv[])
 {
+
+  std::cout << "GIT VERSION " << STRINGIFY(GIT_VERSION_) << std::endl;
 
   // Read configs.
   std::string config_fname = "configs.cfg";

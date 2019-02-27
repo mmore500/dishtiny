@@ -16,6 +16,9 @@ private:
 
   emp::vector<double> contrib_resource;
 
+  bool accept_sharing;
+  bool accept_sharing_nxt;
+
 public:
 
   ManagerStockpile(
@@ -39,10 +42,11 @@ public:
     }
   }
 
-  double RequestResourceFrac(const double frac) {
+  double RequestResourceFrac(const double frac, const double reserve) {
     emp_assert(frac >= 0 && frac <= 1);
-    if (resource > 0 ) {
-      double amt = resource * frac;
+    emp_assert(reserve >= 0);
+    if (resource - reserve > 0) {
+      double amt = (resource - reserve) * frac;
       resource -= amt;
       return amt;
     } else {
@@ -80,7 +84,21 @@ public:
     return cfg.KILL_THRESH() >= resource;
   }
 
+  bool CheckAcceptSharing() const {
+    return accept_sharing;
+  }
+
+  void SetAcceptSharing(const bool set) {
+    accept_sharing_nxt = set;
+  }
+
+  void ResolveNextAcceptSharing() {
+    accept_sharing = accept_sharing_nxt;
+  }
+
   void Reset() {
+    accept_sharing = true;
+    accept_sharing_nxt = true;
     resource = 0.0;
     for(size_t dir = 0; dir < contrib_resource.size(); ++dir) {
       contrib_resource[dir] = 0.0;

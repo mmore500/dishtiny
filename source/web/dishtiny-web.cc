@@ -1,15 +1,14 @@
 #include <string>
 
-#include "web/web.h"
-#include "web/Animate.h"
-#include "base/vector.h"
-#include "tools/Random.h"
-
 #include "../Config.h"
 #include "../DishWorld.h"
 #include "../WebInterface.h"
 
-namespace UI = emp::web;
+#include "../Config.cpp"
+#include "../DishWorld.cpp"
+#include "../FrameHardware.cpp"
+#include "../FrameCell.cpp"
+#include "../Manager.cpp"
 
 WebInterface i;
 

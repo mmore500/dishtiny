@@ -125,4 +125,6 @@ public:
 
   }
 
+  void Download(const std::string & fn) { canvas.DownloadPNG(fn); }
+
 };
