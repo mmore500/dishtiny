@@ -367,7 +367,7 @@ public:
     for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       il.AddInst(
         "IncrCellAge-Lev" + emp::to_string(lev),
-        [lev, &cfg](hardware_t & hw, const inst_t & inst){
+        [lev](hardware_t & hw, const inst_t & inst){
           const state_t & state = hw.GetCurState();
           FrameHardware &fh = *hw.GetTrait(0);
           fh.Cell().Man().Channel(fh.Cell().GetPos()).IncrCellAge(
@@ -579,7 +579,7 @@ public:
 
     il.AddInst(
       "QueryIsPropaguleChild",
-      [&cfg](hardware_t & hw, const inst_t & inst){
+      [](hardware_t & hw, const inst_t & inst){
 
         state_t & state = hw.GetCurState();
         FrameHardware &fh = *hw.GetTrait(0);
@@ -596,7 +596,7 @@ public:
 
     il.AddInst(
       "QueryIsPropaguleParent",
-      [&cfg](hardware_t & hw, const inst_t & inst){
+      [](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
 
         FrameHardware &fh = *hw.GetTrait(0);

@@ -163,7 +163,7 @@ public:
     );
     button_dash << "&nbsp;" << GetToggleButton("Animate");
     button_dash << "&nbsp;" << UI::Input(
-      [this](std::string in){ ; },
+      [](std::string in){ ; },
       "checkbox",
       "Render?",
       "render_input"
