@@ -1,7 +1,7 @@
 #pragma once
 
 #include <algorithm>
-#include <experimental/optional>
+#include <optional>
 #include <tuple>
 
 #include "base/Ptr.h"
@@ -84,9 +84,9 @@ public:
     return replev_dir_count[incoming_dir][replev];
   }
 
-  std::experimental::optional<std::tuple<emp::Ptr<Genome>,SirePack>>
+  std::optional<std::tuple<emp::Ptr<Genome>,SirePack>>
   QueryPendingGenome() const {
-    return gen ? std::experimental::make_optional(std::make_tuple(gen,sp)) : std::experimental::nullopt;
+    return gen ? std::make_optional(std::make_tuple(gen,sp)) : std::nullopt;
   }
 
 };
