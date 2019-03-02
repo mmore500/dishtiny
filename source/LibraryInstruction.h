@@ -613,10 +613,10 @@ public:
 
     // get the raw channel of who is next door
     // potentially useful for aggregate count of distinct neighbors
-    for (size_t i = 0; i < cfg.NLEV(); ++i) {
+    for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       il.AddInst(
-        "QueryFacingChannel-Lev" + emp::to_string(i),
-        [i](hardware_t & hw, const inst_t & inst){
+        "QueryFacingChannel-Lev" + emp::to_string(lev),
+        [lev](hardware_t & hw, const inst_t & inst){
           state_t & state = hw.GetCurState();
 
           FrameHardware &fh = *hw.GetTrait(0);
@@ -626,7 +626,7 @@ public:
 
           if(fh.IsLive(state.GetLocal(inst.args[0]))) {
             Manager &man = fh.Cell().Man();
-            auto chanid = man.Channel(neigh).GetID(i);
+            const auto chanid = man.Channel(neigh).GetID(lev);
             if(chanid) state.SetLocal(inst.args[1], *chanid);
           } else {
             state.SetLocal(inst.args[1], false);
