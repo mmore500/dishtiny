@@ -9,7 +9,7 @@ EMP_BUILD_CONFIG(
   ConfigBase,
 
   GROUP(DEFAULT, "Default settings for DISHTINY"),
-  VALUE(QUIESCENT_MAX, size_t, 4, "Length of quiescent period; TODO unimplemented"),
+  VALUE(QUIESCENT_MAX, size_t, 9, "Length of quiescent period"),
   VALUE(NLEV, size_t, 2, "Number hierarchical resource levels"),
   VALUE(SEED, int, 1, "Random number seed"),
   VALUE(GRID_H, size_t, 60, "Height dimension of the grid"),
