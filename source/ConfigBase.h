@@ -18,6 +18,7 @@ EMP_BUILD_CONFIG(
   VALUE(START_RESOURCE, double, 2.0, "How resource should a cell start with?; TODO unimplemented"),
   VALUE(KILL_THRESH, double, -5.0, "What is the minimum resource level required to stay alive?"),
   VALUE(CULL_TARGET, double, 0.05, "What proportion of the population should a cull remove?"),
+  VALUE(BASE_RESOURCE_INFLOW, double, 0.0, "What amount of resource should be provided to cells at each update?"),
 
   GROUP(PROGRAM_GROUP, "SignalGP program Settings"),
   VALUE(PROGRAM_MAX_FUN_CNT, size_t, 16, "Used for generating SGP programs. How many functions do we generate?"),
