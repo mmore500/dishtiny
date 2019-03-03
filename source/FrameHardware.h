@@ -82,7 +82,7 @@ public:
 
   void QueueMessages(Config::inbox_t &inbox);
 
-  size_t CalcDir(const int relative_dir);
+  size_t CalcDir(const double relative_dir);
 
   bool IsLive(const int relative_dir=0);
 

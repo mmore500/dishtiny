@@ -220,8 +220,8 @@ void FrameHardware::QueueMessages(Config::inbox_t &inbox) {
   inbox.clear();
 }
 
-size_t FrameHardware::CalcDir(const int relative_dir) {
-  return emp::Mod(GetFacing()+relative_dir,(int)Cardi::NumDirs);
+size_t FrameHardware::CalcDir(const double relative_dir) {
+  return emp::Mod(GetFacing()+relative_dir,(double)Cardi::NumDirs);
 }
 
 bool FrameHardware::IsLive(const int relative_dir/*=0*/) {
