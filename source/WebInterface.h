@@ -42,7 +42,7 @@ class WebInterface : public UI::Animate {
 
   std::string ChannelColor(ChannelPack &cp) {
     return emp::ColorHSV(
-      emp::Mod(cp[1],360.0),
+      emp::Mod(cp.size() > 1 ? cp[1] : cp[0], 360.0),
       emp::Mod(cp[0],0.6)+0.4,
       1.0
     );
@@ -71,7 +71,7 @@ public:
       [this](std::optional<ChannelPack> cp1, std::optional<ChannelPack> cp2) -> std::string {
         if (!cp1 || !cp2) return "black";
         else if ((*cp1)[0] == (*cp2)[0]) return ChannelColor(*cp1);
-        else if ((*cp1)[1] == (*cp2)[1]) return "white";
+        else if (cp1->size() > 1 && (*cp1)[1] == (*cp2)[1]) return "white";
         else return "black";
       }
     ), stockpile(
