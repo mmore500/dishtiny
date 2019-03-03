@@ -1,7 +1,7 @@
 #pragma once
 
 #include <algorithm>
-#include <experimental/optional>
+#include <optional>
 #include <string>
 
 #include "base/vector.h"
@@ -42,7 +42,7 @@ class WebInterface : public UI::Animate {
 
   std::string ChannelColor(ChannelPack &cp) {
     return emp::ColorHSV(
-      emp::Mod(cp[1],360.0),
+      emp::Mod(cp.size() > 1 ? cp[1] : cp[0], 360.0),
       emp::Mod(cp[0],0.6)+0.4,
       1.0
     );
@@ -64,22 +64,22 @@ public:
       [this](size_t i){
         return w.man->Channel(i).GetIDs();
       },
-      [this](std::experimental::optional<ChannelPack> cp) {
+      [this](std::optional<ChannelPack> cp) {
         return cp ? ChannelColor(*cp) : "black";
       },
       cfg,
-      [this](std::experimental::optional<ChannelPack> cp1, std::experimental::optional<ChannelPack> cp2) -> std::string {
+      [this](std::optional<ChannelPack> cp1, std::optional<ChannelPack> cp2) -> std::string {
         if (!cp1 || !cp2) return "black";
         else if ((*cp1)[0] == (*cp2)[0]) return ChannelColor(*cp1);
-        else if ((*cp1)[1] == (*cp2)[1]) return "white";
+        else if (cp1->size() > 1 && (*cp1)[1] == (*cp2)[1]) return "white";
         else return "black";
       }
     ), stockpile(
       stockpile_viewer,
       [this](size_t i){
-        return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Stockpile(i).QueryResource()) : std::experimental::nullopt;
+        return w.IsOccupied(i) ? std::make_optional(w.man->Stockpile(i).QueryResource()) : std::nullopt;
       },
-      [this](std::experimental::optional<double> amt) -> std::string {
+      [this](std::optional<double> amt) -> std::string {
         if (amt) {
           if (*amt > cfg.REP_THRESH()) return emp::ColorRGB(
               std::min(255.0,(*amt - cfg.REP_THRESH())*25),
@@ -103,9 +103,9 @@ public:
     ), contribution(
       contribution_viewer,
       [this](size_t i){
-        return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Stockpile(i).QueryTotalContribute()) : std::experimental::nullopt;
+        return w.IsOccupied(i) ? std::make_optional(w.man->Stockpile(i).QueryTotalContribute()) : std::nullopt;
       },
-      [this](std::experimental::optional<double> amt) -> std::string {
+      [this](std::optional<double> amt) -> std::string {
         if (amt) {
           if (*amt > cfg.REP_THRESH()) return "yellow";
           else if (*amt > 0) return emp::ColorHSV(
@@ -127,9 +127,9 @@ public:
       wave.emplace_back(
           wave_viewer,
           [this, l](size_t i){
-            return w.IsOccupied(i) ? std::experimental::make_optional(w.man->Wave(i,l).GetState()) : std::experimental::nullopt;
+            return w.IsOccupied(i) ? std::make_optional(w.man->Wave(i,l).GetState()) : std::nullopt;
           },
-          [this, l](std::experimental::optional<int> cp) -> std::string {
+          [this, l](std::optional<int> cp) -> std::string {
             if (cp) {
               if (*cp > 0 && *cp < cfg.Lev(l).EVENT_RADIUS()) {
                 return emp::ColorRGB(0,255,0);
@@ -163,7 +163,7 @@ public:
     );
     button_dash << "&nbsp;" << GetToggleButton("Animate");
     button_dash << "&nbsp;" << UI::Input(
-      [this](std::string in){ ; },
+      [](std::string in){ ; },
       "checkbox",
       "Render?",
       "render_input"

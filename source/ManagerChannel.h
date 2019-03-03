@@ -1,6 +1,6 @@
 #pragma once
 
-#include <experimental/optional>
+#include <optional>
 
 #include "tools/Random.h"
 
@@ -11,7 +11,7 @@ class ManagerChannel {
 
 private:
 
-  std::experimental::optional<ChannelPack> ids;
+  std::optional<ChannelPack> ids;
 
   emp::Random &local_rng;
 
@@ -38,13 +38,13 @@ public:
     }
   }
 
-  const std::experimental::optional<Config::chanid_t> GetID(const size_t lev) const {
-    return ids ? std::experimental::optional<Config::chanid_t>((*ids)[lev]) : std::experimental::nullopt;
+  const std::optional<Config::chanid_t> GetID(const size_t lev) const {
+    return ids ? std::optional<Config::chanid_t>((*ids)[lev]) : std::nullopt;
   }
 
-  std::experimental::optional<ChannelPack> GetIDs() const { return ids; }
+  std::optional<ChannelPack> GetIDs() const { return ids; }
 
-  void ClearIDs() { ids = std::experimental::nullopt; }
+  void ClearIDs() { ids = std::nullopt; }
 
   size_t GetGeneration(const size_t lev) const { return gen_counter[lev]; }
 
@@ -61,7 +61,7 @@ public:
 
     for(size_t i = replev; i < cfg.NLEV(); ++i) {
 
-      const size_t lim = cfg.Lev(i).EVENT_RADIUS();
+      const size_t lim = cfg.Lev(i).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER();
 
       expired |= GetGeneration(i) > lim;
     }
@@ -85,7 +85,7 @@ public:
     const size_t replev
   ) {
 
-    if (!ids) ids = std::experimental::optional<ChannelPack>{ChannelPack(cfg.NLEV())};
+    if (!ids) ids = std::optional<ChannelPack>{ChannelPack(cfg.NLEV())};
 
     for(size_t i = 0; i < cfg.NLEV(); ++i) {
       if(i < replev) {

@@ -4,7 +4,7 @@ EMP_DIR := ../Empirical/source
 GIT_VERSION := $(shell git describe --dirty --always)
 
 # Flags to use regardless of compiler
-CFLAGS_all := -std=c++14 -Wall -Wno-unused-function -I$(EMP_DIR)/ -DGIT_VERSION_=$(GIT_VERSION)
+CFLAGS_all := -std=c++17 -Wall -Wno-unused-function -I$(EMP_DIR)/ -DGIT_VERSION_=$(GIT_VERSION)
 
 # Native compiler information
 CXX_nat := h5c++
@@ -15,7 +15,7 @@ CFLAGS_nat_profile := -pg -pedantic -DNDEBUG $(CFLAGS_all)
 
 # Emscripten compiler information
 CXX_web := emcc
-OFLAGS_web_all := -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s TOTAL_MEMORY=1073741824 --js-library $(EMP_DIR)/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0 #--preload-file state_grids #--embed-file configs
+OFLAGS_web_all := -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s TOTAL_MEMORY=1073741824 --js-library $(EMP_DIR)/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0 -s "BINARYEN_TRAP_MODE='clamp'"#--preload-file state_grids #--embed-file configs
 OFLAGS_web := -Oz -DNDEBUG
 OFLAGS_web_debug := -g4 -pedantic -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPPORT=1 -s ASSERTIONS=1
 #OFLAGS_web_debug := -g4 -DNDEBUG -pedantic -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPPORT=1

@@ -105,4 +105,8 @@ public:
     }
   }
 
+  void ApplyBaseInflow() {
+    resource += cfg.BASE_RESOURCE_INFLOW();
+  }
+
 };

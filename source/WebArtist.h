@@ -1,6 +1,6 @@
 #pragma once
 
-#include <experimental/optional>
+#include <optional>
 
 #include "web/Animate.h"
 #include "web/Canvas.h"
@@ -15,10 +15,10 @@ private:
 
   UI::Canvas canvas;
 
-  std::function<std::experimental::optional<T>(size_t)> getter;
-  std::function<std::string(std::experimental::optional<T>)> renderer;
+  std::function<std::optional<T>(size_t)> getter;
+  std::function<std::string(std::optional<T>)> renderer;
 
-  std::function<std::string(std::experimental::optional<T>,std::experimental::optional<T>)> divider;
+  std::function<std::string(std::optional<T>,std::optional<T>)> divider;
 
   const Config &cfg;
 
@@ -26,10 +26,10 @@ public:
 
   WebArtist(
     UI::Document &viewer,
-    std::function<std::experimental::optional<T>(size_t)> getter_,
-    std::function<std::string(std::experimental::optional<T>)> renderer_,
+    std::function<std::optional<T>(size_t)> getter_,
+    std::function<std::string(std::optional<T>)> renderer_,
     const Config &cfg_,
-    std::function<std::string(std::experimental::optional<T>,std::experimental::optional<T>)> divider_=[](std::experimental::optional<T>,std::experimental::optional<T>){ return "gray"; }
+    std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
   ) : canvas(500,500)
   , getter(getter_)
   , renderer(renderer_)

@@ -11,11 +11,11 @@
 
 class ManagerWave {
 
-static const int active = 1;
-static const int ready = 0;
-static const int quiescent = -9;
-
 private:
+
+  static const int active = 1;
+  static const int ready = 0;
+  const int quiescent;
 
   emp::Random &global_rng;
 
@@ -75,7 +75,8 @@ public:
     const size_t pos,
     emp::Random &global_rng_,
     const Config &cfg_
-  ) : global_rng(global_rng_)
+  ) : quiescent(-1 * ((int)cfg_.QUIESCENT_MAX()))
+  , global_rng(global_rng_)
   , state(ready)
   , mc(mc_)
   , ms(ms_)
