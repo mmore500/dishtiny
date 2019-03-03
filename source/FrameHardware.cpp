@@ -124,10 +124,12 @@ void FrameHardware::DispatchEnvTriggers(){
       auto copy = pro_trigger_tags[i];
       anti_trigger_tags.emplace_back(copy.Toggle());
     }
-    if (IsChannelMate(lev)) {
-      cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
-    } else {
-      // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+    if (cfg.CHANNELS_VISIBLE()) {
+      if (IsChannelMate(lev)) {
+        cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+      } else {
+        // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+      }
     }
     ++i;
   }
@@ -138,10 +140,12 @@ void FrameHardware::DispatchEnvTriggers(){
     auto copy = pro_trigger_tags[i];
     anti_trigger_tags.emplace_back(copy.Toggle());
   }
-  if (IsPropaguleChild()) {
-    cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
-  } else {
-    // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+  if (cfg.CHANNELS_VISIBLE()) {
+    if (IsPropaguleChild()) {
+      cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+    } else {
+      // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+    }
   }
 
   ++i;
@@ -152,10 +156,12 @@ void FrameHardware::DispatchEnvTriggers(){
   //   auto copy = pro_trigger_tags[i];
   //   anti_trigger_tags.emplace_back(copy.Toggle());
   // }
-  // if (IsPropaguleParent()) {
-  //   cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
-  // } else {
-  //   // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+  // if (cfg.CHANNELS_VISIBLE()) {
+  //   if (IsPropaguleParent()) {
+  //     cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+  //   } else {
+  //     cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+  //   }
   // }
 
 }

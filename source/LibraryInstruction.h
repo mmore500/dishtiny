@@ -156,16 +156,21 @@ public:
     for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
       il.AddInst(
         "PauseRepr-Lev" + emp::to_string(replev),
-        [replev](hardware_t & hw, const inst_t & inst){
+        cfg.CHANNELS_VISIBLE() ?
+        std::function<void(hardware_t &, const inst_t &)>(
+          [replev](hardware_t & hw, const inst_t & inst){
 
-          FrameHardware &fh = *hw.GetTrait(0);
+            FrameHardware &fh = *hw.GetTrait(0);
 
-          const state_t & state = hw.GetCurState();
-          const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+            const state_t & state = hw.GetCurState();
+            const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
 
-          fh.Cell().GetFrameHardware(dir).PauseRepr(replev);
+            fh.Cell().GetFrameHardware(dir).PauseRepr(replev);
 
-        },
+          }
+        ) : std::function<void(hardware_t &, const inst_t &)>(
+          [](hardware_t & hw, const inst_t & inst){ ; }
+        ),
         1,
         "TODO"
       );
@@ -367,20 +372,25 @@ public:
     for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       il.AddInst(
         "IncrCellAge-Lev" + emp::to_string(lev),
-        [lev, &cfg](hardware_t & hw, const inst_t & inst){
-          const state_t & state = hw.GetCurState();
-          FrameHardware &fh = *hw.GetTrait(0);
-          fh.Cell().Man().Channel(fh.Cell().GetPos()).IncrCellAge(
-            lev,
-            std::max(
-              0.0,
-              std::min(
-                1+state.GetLocal(inst.args[0]),
-                cfg.Lev(lev).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER()
+        cfg.CHANNELS_VISIBLE() ?
+        std::function<void(hardware_t &, const inst_t &)>(
+          [lev, &cfg](hardware_t & hw, const inst_t & inst){
+            const state_t & state = hw.GetCurState();
+            FrameHardware &fh = *hw.GetTrait(0);
+            fh.Cell().Man().Channel(fh.Cell().GetPos()).IncrCellAge(
+              lev,
+              std::max(
+                0.0,
+                std::min(
+                  1+state.GetLocal(inst.args[0]),
+                  cfg.Lev(lev).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER()
+                )
               )
-            )
-          );
-        },
+            );
+          }
+        ) : std::function<void(hardware_t &, const inst_t &)>(
+          [](hardware_t & hw, const inst_t & inst){ ; }
+        ),
         1,
         "TODO"
       );
@@ -471,22 +481,27 @@ public:
       "TODO"
     );
 
-    for(size_t l = 0; l < cfg.NLEV(); ++l) {
+    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       il.AddInst(
-        "QueryChannelGen-Lev"+emp::to_string(l),
-        [l](hardware_t & hw, const inst_t & inst){
+        "QueryChannelGen-Lev"+emp::to_string(lev),
+        cfg.CHANNELS_VISIBLE() ?
+        std::function<void(hardware_t &, const inst_t &)>(
+          [lev](hardware_t & hw, const inst_t & inst){
 
-          FrameHardware &fh = *hw.GetTrait(0);
+            FrameHardware &fh = *hw.GetTrait(0);
 
-          Manager &man = fh.Cell().Man();
-          const size_t pos = fh.Cell().GetPos();
-          const size_t gen = man.Channel(pos).GetGeneration(l);
+            Manager &man = fh.Cell().Man();
+            const size_t pos = fh.Cell().GetPos();
+            const size_t gen = man.Channel(pos).GetGeneration(lev);
 
-          state_t & state = hw.GetCurState();
+            state_t & state = hw.GetCurState();
 
-          state.SetLocal(inst.args[0], gen);
+            state.SetLocal(inst.args[0], gen);
 
-        },
+          }
+        ) : std::function<void(hardware_t &, const inst_t &)>(
+          [](hardware_t & hw, const inst_t & inst){ ; }
+        ),
         1,
         "TODO"
       );
@@ -567,17 +582,22 @@ public:
     for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       il.AddInst(
         "QueryFacingChannelMate-Lev" + emp::to_string(lev),
-        [lev](hardware_t & hw, const inst_t & inst){
+        cfg.CHANNELS_VISIBLE() ?
+        std::function<void(hardware_t &, const inst_t &)>(
+          [lev](hardware_t & hw, const inst_t & inst){
 
-          state_t & state = hw.GetCurState();
-          FrameHardware &fh = *hw.GetTrait(0);
+            state_t & state = hw.GetCurState();
+            FrameHardware &fh = *hw.GetTrait(0);
 
-          state.SetLocal(
-            inst.args[1],
-            fh.IsChannelMate(lev, state.GetLocal(inst.args[0]))
-          );
+            state.SetLocal(
+              inst.args[1],
+              fh.IsChannelMate(lev, state.GetLocal(inst.args[0]))
+            );
 
-        },
+          }
+        ) : std::function<void(hardware_t &, const inst_t &)>(
+          [](hardware_t & hw, const inst_t & inst){ ; }
+        ),
         2,
         "TODO"
       );
@@ -585,34 +605,44 @@ public:
 
     il.AddInst(
       "QueryIsPropaguleChild",
-      [](hardware_t & hw, const inst_t & inst){
+      cfg.CHANNELS_VISIBLE() ?
+      std::function<void(hardware_t &, const inst_t &)>(
+        [](hardware_t & hw, const inst_t & inst){
 
-        state_t & state = hw.GetCurState();
-        FrameHardware &fh = *hw.GetTrait(0);
+          state_t & state = hw.GetCurState();
+          FrameHardware &fh = *hw.GetTrait(0);
 
-        state.SetLocal(
-          inst.args[1],
-          fh.IsPropaguleChild(state.GetLocal(inst.args[0]))
-        );
+          state.SetLocal(
+            inst.args[1],
+            fh.IsPropaguleChild(state.GetLocal(inst.args[0]))
+          );
 
-      },
+        }
+      ): std::function<void(hardware_t &, const inst_t &)>(
+        [](hardware_t & hw, const inst_t & inst){}
+      ),
       2,
       "TODO"
     );
 
     il.AddInst(
       "QueryIsPropaguleParent",
-      [](hardware_t & hw, const inst_t & inst){
-        state_t & state = hw.GetCurState();
+      cfg.CHANNELS_VISIBLE() ?
+      std::function<void(hardware_t &, const inst_t &)>(
+        [](hardware_t & hw, const inst_t & inst){
+          state_t & state = hw.GetCurState();
 
-        FrameHardware &fh = *hw.GetTrait(0);
+          FrameHardware &fh = *hw.GetTrait(0);
 
-        state.SetLocal(
-          inst.args[1],
-          fh.IsPropaguleParent(state.GetLocal(inst.args[0]))
-        );
+          state.SetLocal(
+            inst.args[1],
+            fh.IsPropaguleParent(state.GetLocal(inst.args[0]))
+          );
 
-      },
+        }
+      ) : std::function<void(hardware_t &, const inst_t &)>(
+       [](hardware_t & hw, const inst_t & inst){}
+      ),
       2,
       "TODO"
     );
@@ -622,22 +652,27 @@ public:
     for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       il.AddInst(
         "QueryFacingChannel-Lev" + emp::to_string(lev),
-        [lev](hardware_t & hw, const inst_t & inst){
-          state_t & state = hw.GetCurState();
+        cfg.CHANNELS_VISIBLE() ?
+        std::function<void(hardware_t &, const inst_t &)>(
+          [lev](hardware_t & hw, const inst_t & inst){
+            state_t & state = hw.GetCurState();
 
-          FrameHardware &fh = *hw.GetTrait(0);
+            FrameHardware &fh = *hw.GetTrait(0);
 
-          const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-          const size_t neigh = fh.Cell().GetNeigh(dir);
+            const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+            const size_t neigh = fh.Cell().GetNeigh(dir);
 
-          if(fh.IsLive(state.GetLocal(inst.args[0]))) {
-            Manager &man = fh.Cell().Man();
-            const auto chanid = man.Channel(neigh).GetID(lev);
-            if(chanid) state.SetLocal(inst.args[1], *chanid);
-          } else {
-            state.SetLocal(inst.args[1], false);
+            if(fh.IsLive(state.GetLocal(inst.args[0]))) {
+              Manager &man = fh.Cell().Man();
+              const auto chanid = man.Channel(neigh).GetID(lev);
+              if(chanid) state.SetLocal(inst.args[1], *chanid);
+            } else {
+              state.SetLocal(inst.args[1], false);
+            }
           }
-        },
+        ) : std::function<void(hardware_t &, const inst_t &)>(
+          [](hardware_t & hw, const inst_t & inst){ ; }
+        ),
         2,
         "TODO"
       );
