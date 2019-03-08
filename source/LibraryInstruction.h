@@ -581,7 +581,7 @@ public:
 
     for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       il.AddInst(
-        "QueryFacingChannelMate-Lev" + emp::to_string(lev),
+        "QueryChannelMate-Lev" + emp::to_string(lev),
         cfg.CHANNELS_VISIBLE() ?
         std::function<void(hardware_t &, const inst_t &)>(
           [lev](hardware_t & hw, const inst_t & inst){
@@ -651,7 +651,7 @@ public:
     // potentially useful for aggregate count of distinct neighbors
     for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       il.AddInst(
-        "QueryFacingChannel-Lev" + emp::to_string(lev),
+        "QueryChannel-Lev" + emp::to_string(lev),
         cfg.CHANNELS_VISIBLE() ?
         std::function<void(hardware_t &, const inst_t &)>(
           [lev](hardware_t & hw, const inst_t & inst){
@@ -679,7 +679,7 @@ public:
     }
 
     il.AddInst(
-      "QueryFacingStockpile",
+      "QueryStockpile",
       [](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
 
