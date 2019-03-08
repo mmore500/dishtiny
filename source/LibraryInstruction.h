@@ -112,7 +112,7 @@ public:
         hw.TriggerEvent("SendMsgInternal", inst.affinity, state.output_mem);
       },
       1,
-      "Send a single message to a target.",
+      "Send a single message to a particular other CPU within the cell.",
       emp::ScopeType::BASIC,
       0,
       {"affinity"}
@@ -131,7 +131,7 @@ public:
         }
       },
       0,
-      "Send a single message to a target.",
+      "Send a single message all CPUs within the cell, excluding self.",
       emp::ScopeType::BASIC,
       0,
       {"affinity"}
@@ -150,7 +150,7 @@ public:
         );
       },
       2,
-      "TODO"
+      "Set aside an amount of stockpile resource that is not eligible for sharing."
     );
 
     for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
@@ -172,7 +172,7 @@ public:
           [](hardware_t & hw, const inst_t & inst){ ; }
         ),
         1,
-        "TODO"
+        "Pause reproduction in a particular direction for a certain reproduction level for the remainder of the current update and for the next update."
       );
     }
 
@@ -191,7 +191,7 @@ public:
 
       },
       1,
-      "TODO"
+      "Pause reproduction in a particular direction for all reproduction levels for the remainder of the current update and for the next update."
     );
 
 
@@ -204,7 +204,7 @@ public:
         fh.Cell().GetFrameHardware(dir).SetInboxActivity(true);
       },
       1,
-      "TODO"
+      "Allow incoming messages from a neighbor."
     );
 
     il.AddInst(
@@ -216,7 +216,7 @@ public:
         fh.Cell().GetFrameHardware(dir).SetInboxActivity(false);
       },
       1,
-      "TODO"
+      "Block incoming messages from a neighbor."
     );
 
   }
@@ -252,7 +252,7 @@ public:
         man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
       },
       3,
-      "TODO"
+      "Send a fraction of available stockpile resource to a neighbor."
     );
 
     il.AddInst(
@@ -284,7 +284,7 @@ public:
         man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
       },
       3,
-      "TODO"
+      "Send a fraction of available stockpile resource to a neighbor."
     );
 
     il.AddInst(
@@ -299,7 +299,7 @@ public:
         man.Stockpile(pos).SetAcceptSharing(true);
       },
       2,
-      "TODO"
+      "Mark self to accept resource contributions from neighbors."
     );
 
     il.AddInst(
@@ -314,7 +314,7 @@ public:
         man.Stockpile(pos).SetAcceptSharing(false);
       },
       2,
-      "TODO"
+      "Mark self to not accept resource contributions from neighbors."
     );
 
     il.AddInst(
@@ -327,7 +327,7 @@ public:
         hw.TriggerEvent("SendMsgExternal", inst.affinity, state.output_mem);
       },
       1,
-      "Send a single message to a target.",
+      "Send a single message to a neighbor.",
       emp::ScopeType::BASIC,
       0,
       {"affinity"}
@@ -365,7 +365,7 @@ public:
           );
         },
         1,
-        "TODO"
+        "Attempt reproduction at a particular reproduction level; if the cell age limit has been reached reproduction will be attempted at the next highest level."
       );
     }
 
@@ -392,7 +392,7 @@ public:
           [](hardware_t & hw, const inst_t & inst){ ; }
         ),
         1,
-        "TODO"
+        "Increase cell age at a particular reproduction level."
       );
     }
 
@@ -409,7 +409,7 @@ public:
 
       },
       0,
-      "TODO"
+      "Destroy the cell and its channel ID at the end of this update."
     );
 
     il.AddInst(
@@ -425,7 +425,7 @@ public:
 
       },
       0,
-      "TODO"
+      "Destroy the cell but preserve its channel ID at the end of this update."
     );
 
     il.AddInst(
@@ -440,7 +440,7 @@ public:
         man.Heir(pos).SetHeir(dir,true);
       },
       1,
-      "TODO"
+      "Designate a neighbor to share in recoverable resource if the cell dies."
     );
 
     il.AddInst(
@@ -455,7 +455,7 @@ public:
         man.Heir(pos).SetHeir(dir,false);
       },
       1,
-      "TODO"
+      "Prevent neighbor from sharing in recoverable resource if the cell dies."
     );
 
 
@@ -478,7 +478,7 @@ public:
 
       },
       1,
-      "TODO"
+      "How much resource is in my stockpile?"
     );
 
     for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
@@ -503,7 +503,7 @@ public:
           [](hardware_t & hw, const inst_t & inst){ ; }
         ),
         1,
-        "TODO"
+        "What is my cell age at a particular level?"
       );
     }
 
@@ -525,7 +525,7 @@ public:
 
       },
       2,
-      "TODO"
+      "Is the neighboring cell alive?"
     );
 
     il.AddInst(
@@ -542,7 +542,7 @@ public:
 
       },
       2,
-      "TODO"
+      "Is the neighbor cell occupied (e.g., does it have a channel ID)?"
     );
 
     il.AddInst(
@@ -559,7 +559,7 @@ public:
 
       },
       2,
-      "TODO"
+      "Is the neighbor cell my direct offspring?"
     );
 
     il.AddInst(
@@ -576,7 +576,7 @@ public:
 
       },
       2,
-      "TODO"
+      "Is the neighbor cell my direct parent?"
     );
 
     for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
@@ -599,7 +599,7 @@ public:
           [](hardware_t & hw, const inst_t & inst){ ; }
         ),
         2,
-        "TODO"
+        "Does the neighbor cell share my channel ID for a particular level?"
       );
     }
 
@@ -622,7 +622,7 @@ public:
         [](hardware_t & hw, const inst_t & inst){}
       ),
       2,
-      "TODO"
+      "Does the neighbor's high-level channel ID directly descend from my high-level channel ID?"
     );
 
     il.AddInst(
@@ -644,7 +644,7 @@ public:
        [](hardware_t & hw, const inst_t & inst){}
       ),
       2,
-      "TODO"
+      "Does my high-level channdl ID directly descend from the neighbor's high-level channel ID?"
     );
 
     // get the raw channel of who is next door
@@ -674,7 +674,7 @@ public:
           [](hardware_t & hw, const inst_t & inst){ ; }
         ),
         2,
-        "TODO"
+        "What my neighbor's channel ID for a particular level?"
       );
     }
 
@@ -697,7 +697,7 @@ public:
         }
       },
       2,
-      "TODO"
+      "How much resource does my neighbor have in its stockpile?"
     );
 
   }
