@@ -14,11 +14,6 @@ struct Cardi {
   static constexpr int Dx[] { 0, 0, 1, -1 };
   static constexpr int Dy[] { 1, -1, 0, 0 };
 
-  // TODO spin to a random direction
-  static size_t Spin(emp::Random &rng) {
-    return rng.GetUInt(Dir::NumDirs);
-  }
-
 };
 
 constexpr Cardi::Dir Cardi::Opp[];
