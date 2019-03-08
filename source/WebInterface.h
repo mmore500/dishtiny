@@ -14,6 +14,7 @@
 
 #include "Config.h"
 #include "DishWorld.h"
+#include "Genome.h"
 #include "WebArtist.h"
 
 namespace UI = emp::web;
@@ -32,10 +33,12 @@ class WebInterface : public UI::Animate {
   UI::Document wave_viewer;
   UI::Document stockpile_viewer;
   UI::Document contribution_viewer;
+  UI::Document systematics_viewer;
   WebArtist<ChannelPack> channel;
   emp::vector<WebArtist<int>> wave;
   WebArtist<double> stockpile;
   WebArtist<double> contribution;
+  WebArtist<Genome> systematics;
 
   bool rendered;
   bool downloaded;
@@ -59,6 +62,7 @@ public:
     , wave_viewer("wave_viewer")
     , stockpile_viewer("stockpile_viewer")
     , contribution_viewer("contribution_viewer")
+    , systematics_viewer("systematics_viewer")
     , channel(
       channel_viewer,
       [this](size_t i){
@@ -118,6 +122,21 @@ public:
         } else return "black";
       },
       cfg
+    ), systematics(
+      systematics_viewer,
+      [this](size_t i){
+        return w.IsOccupied(i) ? std::make_optional(w.GetOrg(i)) : std::nullopt;
+      },
+      [](std::optional<Genome> gen) -> std::string {
+        if (gen) return "white";
+        else return "black";
+      },
+      cfg,
+      [](std::optional<Genome> g1, std::optional<Genome> g2) -> std::string {
+        if (!g1 || !g2) return "black";
+        else if (*g1 != *g2) return "red";
+        else return "white";
+      }
     ) {
 
       cfg.Set("SNAPSHOT_FREQUENCY", "1000");
@@ -246,6 +265,7 @@ public:
     channel.Redraw();
     stockpile.Redraw();
     contribution.Redraw();
+    systematics.Redraw();
     for(auto &w : wave) w.Redraw();
 
     rendered = true;
