@@ -6,9 +6,9 @@
 
 EMP_BUILD_CONFIG(
   ConfigLevel,
-  GROUP(DEFAULT, "Default settings for DISHTINY level"),
+  GROUP(CORE, "Core settings for a DISHTINY level"),
   VALUE(SIGNAL_RADIUS, int, 12/*std::numeric_limits<int>::max()*/, "How far can a signal propagate?"),
-  VALUE(EVENT_RADIUS, int, 4, "TODO"),
-  VALUE(HARVEST_VALUE, double, 6.0, "TODO"),
-  VALUE(ACTIVATION_COST, double, -5.0, "TODO")
+  VALUE(EVENT_RADIUS, int, 4, "How far from the seed are harvests beneficial?"),
+  VALUE(HARVEST_VALUE, double, 6.0, "How much resource benefit does a successful harvest grant?"),
+  VALUE(ACTIVATION_COST, double, -5.0, "How much resource is spent to attempt a harvest?")
 )
