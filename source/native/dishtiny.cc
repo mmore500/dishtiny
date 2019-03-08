@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
   std::cout << "EMP HASH " << STRINGIFY(EMPIRICAL_HASH_) << std::endl;
 
   // Read configs.
-  std::string config_fname = "configs.cfg";
+  std::string config_fname = "base.cfg";
   Config cfg(config_fname, emp::cl::ArgManager(argc, argv));
 
   std::cout << "==============================" << std::endl;

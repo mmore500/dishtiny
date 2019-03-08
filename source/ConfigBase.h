@@ -52,7 +52,7 @@ EMP_BUILD_CONFIG(
 
   GROUP(LOGISTICS, "logistics"),
   VALUE(TREATMENT_DESCRIPTOR, std::string, "treat=unspecified", "Treatment identifying slug, must begin wth \"treat\"=."),
-  VALUE(CONFIGLEVEL_BASENAME, std::string, "ConfigL", "Base filename"),
+  VALUE(CONFIGLEVEL_BASENAME, std::string, "level=", "Base filename"),
   VALUE(CONFIGLEVEL_EXTENSION, std::string, ".cfg", "Filename extension"),
   VALUE(SNAPSHOT_FREQUENCY, size_t, 50000, "How often should we save data snapshots"),
   VALUE(SNAPSHOT_LENGTH, size_t, 500, "How long should snapshots last for?"),
