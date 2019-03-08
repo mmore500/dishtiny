@@ -47,7 +47,7 @@ public:
 
   const ConfigLevel& Lev(const size_t lev) const;
 
-  void WriteMe(std::ostream & out);
+  void WriteMe(std::ostream & out) const;
 
   bool TimingFun(const size_t update) const;
 

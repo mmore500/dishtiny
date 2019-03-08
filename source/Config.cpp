@@ -58,7 +58,7 @@ const ConfigLevel& Config::Lev(const size_t lev) const {
   return *clevs[lev];
 }
 
-void Config::WriteMe(std::ostream & out) {
+void Config::WriteMe(std::ostream & out) const {
   Write(out);
 
   for (size_t l = 0; l < clevs.size(); ++l) {

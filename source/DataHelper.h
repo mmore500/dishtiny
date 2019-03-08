@@ -172,6 +172,21 @@ private:
 
     empirical_hash_attribute.write(H5::StrType(0, H5T_VARIABLE), empirical_hash_data);
 
+    const hsize_t config_dims[] = { 1 };
+    H5::DataSpace config_dataspace(1,config_dims);
+
+    H5::Attribute config_attribute = file.createAttribute(
+      "config", H5::StrType(0, H5T_VARIABLE),config_dataspace
+    );
+
+    std::ostringstream config_stream;
+    cfg.WriteMe(config_stream);
+    std::string config_string = config_stream.str();
+
+    const char *config_data[] = { config_string.c_str() };
+
+   config_attribute.write(H5::StrType(0, H5T_VARIABLE),config_data);
+
     const hsize_t live_key_dims[] = { 1 };
     H5::DataSpace live_key_dataspace(1, live_key_dims);
 
