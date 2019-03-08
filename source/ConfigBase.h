@@ -8,7 +8,7 @@
 EMP_BUILD_CONFIG(
   ConfigBase,
 
-  GROUP(DEFAULT, "Default settings for DISHTINY"),
+  GROUP(CORE, "Core settings for DISHTINY"),
   VALUE(QUIESCENT_MAX, size_t, 9, "Length of quiescent period"),
   VALUE(NLEV, size_t, 2, "Number hierarchical resource levels"),
   VALUE(SEED, int, 1, "Random number seed"),
