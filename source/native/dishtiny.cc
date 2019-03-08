@@ -20,7 +20,8 @@
 int main(int argc, char* argv[])
 {
 
-  std::cout << "GIT VERSION " << STRINGIFY(GIT_VERSION_) << std::endl;
+  std::cout << "SOURCE HASH " << STRINGIFY(DISHTINY_HASH_) << std::endl;
+  std::cout << "EMP HASH " << STRINGIFY(EMPIRICAL_HASH_) << std::endl;
 
   // Read configs.
   std::string config_fname = "configs.cfg";
