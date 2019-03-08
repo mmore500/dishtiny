@@ -122,13 +122,25 @@ void DishWorld::InitSystematics() {
     #ifndef EMSCRIPTEN
     auto& sf = SetupSystematicsFile(
       "systematics",
-      "Systematics_" + std::to_string(cfg.SEED()) + ".csv",
+      std::string()
+        + "source_hash="
+        + STRINGIFY(DISHTINY_HASH_)
+        + "~"
+        + "emp_hash="
+        + STRINGIFY(EMPIRICAL_HASH_)
+        + "~"
+        + "title=systematics"
+        + "+"
+        + cfg.TREATMENT_DESCRIPTOR()
+        + "+"
+        + "seed="
+        + std::to_string(cfg.SEED())
+        + ".csv",
       false
     );
 
     sf.SetTiming([this](const size_t upd){ return cfg.TimingFun(upd); });
     sf.AddVar(cfg.SEED(), "seed", "Random generator seed");
-    sf.AddVar(STRINGIFY(GIT_VERSION_), "GIT_VERSION", "Software version");
     sf.PrintHeaderKeys();
     #endif
 

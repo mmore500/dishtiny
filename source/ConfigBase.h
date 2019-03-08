@@ -51,6 +51,7 @@ EMP_BUILD_CONFIG(
   VALUE(FUNC_DEL__PER_FUNC, double, 0.05, "Per-function rate of function deletions."),
 
   GROUP(LOGISTICS, "logistics"),
+  VALUE(TREATMENT_DESCRIPTOR, std::string, "treat=unspecified", "Treatment identifying slug, must begin wth \"treat\"=."),
   VALUE(CONFIGLEVEL_BASENAME, std::string, "ConfigL", "Base filename"),
   VALUE(CONFIGLEVEL_EXTENSION, std::string, ".cfg", "Filename extension"),
   VALUE(SNAPSHOT_FREQUENCY, size_t, 50000, "How often should we save data snapshots"),

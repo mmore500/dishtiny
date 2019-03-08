@@ -27,7 +27,23 @@ public:
   DataHelper(DishWorld &dw_, const Config &cfg_)
   : cfg(cfg_)
   , dw(dw_)
-  , file(emp::to_string(cfg.SEED())+".h5", H5F_ACC_TRUNC)
+  , file(
+    std::string()
+    + "source_hash="
+    + STRINGIFY(DISHTINY_HASH_)
+    + "~"
+    + "emp_hash="
+    + STRINGIFY(EMPIRICAL_HASH_)
+    + "~"
+    + "title=grid_snapshots"
+    + "+"
+    + cfg.TREATMENT_DESCRIPTOR()
+    + "+"
+    + "seed="
+    + emp::to_string(cfg.SEED())
+    + ".h5"
+    , H5F_ACC_TRUNC
+  )
   {
 
     file.createGroup("/Population");
@@ -134,16 +150,27 @@ private:
 
     timestamp_attribute.write(H5::PredType::NATIVE_LONG, timestamp_data);
 
-    const hsize_t git_version_dims[] = { 1 };
-    H5::DataSpace git_version_dataspace(1, git_version_dims);
+    const hsize_t dishtiny_hash_dims[] = { 1 };
+    H5::DataSpace dishtiny_hash_dataspace(1, dishtiny_hash_dims);
 
-    H5::Attribute git_version_attribute = file.createAttribute(
-      "GIT_VERSION", H5::StrType(0, H5T_VARIABLE), git_version_dataspace
+    H5::Attribute dishtiny_hash_attribute = file.createAttribute(
+      "SOURCE_HASH", H5::StrType(0, H5T_VARIABLE), dishtiny_hash_dataspace
     );
 
-    const char *git_version_data[] = {STRINGIFY(GIT_VERSION_)};
+    const char *dishtiny_hash_data[] = {STRINGIFY(DISHTINY_HASH_)};
 
-    git_version_attribute.write(H5::StrType(0, H5T_VARIABLE), git_version_data);
+    dishtiny_hash_attribute.write(H5::StrType(0, H5T_VARIABLE), dishtiny_hash_data);
+
+    const hsize_t empirical_hash_dims[] = { 1 };
+    H5::DataSpace empirical_hash_dataspace(1, empirical_hash_dims);
+
+    H5::Attribute empirical_hash_attribute = file.createAttribute(
+      "EMP_HASH", H5::StrType(0, H5T_VARIABLE), empirical_hash_dataspace
+    );
+
+    const char *empirical_hash_data[] = {STRINGIFY(EMPIRICAL_HASH_)};
+
+    empirical_hash_attribute.write(H5::StrType(0, H5T_VARIABLE), empirical_hash_data);
 
     const hsize_t live_key_dims[] = { 1 };
     H5::DataSpace live_key_dataspace(1, live_key_dims);

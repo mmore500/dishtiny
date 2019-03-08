@@ -1,10 +1,25 @@
 # Project-specific settings
 PROJECT := dishtiny
 EMP_DIR := ../Empirical/source
-GIT_VERSION := $(shell git describe --dirty --always)
+
+DISHTINY_HASH := $(shell git rev-parse --short HEAD)
+DISHTINY_DIRTY := $(shell \
+    ( git diff-index --quiet HEAD -- && echo "-clean" || echo "-dirty" ) \
+    | tr -d '\040\011\012\015' \
+  )
+
+EMPIRICAL_HASH := $(shell cd ../Empirical && git rev-parse --short HEAD)
+EMPIRICAL_DIRTY := $(shell \
+    cd ../Empirical \
+    && ( git diff-index --quiet HEAD -- && echo "-clean" || echo "-dirty" ) \
+    | tr -d '\040\011\012\015' \
+  )
 
 # Flags to use regardless of compiler
-CFLAGS_all := -std=c++17 -Wall -Wno-unused-function -I$(EMP_DIR)/ -DGIT_VERSION_=$(GIT_VERSION)
+CFLAGS_all := -std=c++17 -Wall -Wno-unused-function \
+                -I$(EMP_DIR)/ \
+                -DDISHTINY_HASH_=$(DISHTINY_HASH)$(DISHTINY_DIRTY) \
+                -DEMPIRICAL_HASH_=$(EMPIRICAL_HASH)$(EMPIRICAL_DIRTY)
 
 # Native compiler information
 CXX_nat := h5c++

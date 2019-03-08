@@ -149,7 +149,8 @@ public:
     }
 
     auto version_text = button_dash.AddText("version_text");
-    version_text << STRINGIFY(GIT_VERSION_);
+    version_text << "dishtiny " << STRINGIFY(DISHTINY_HASH_);
+    version_text << " / Empirical " << STRINGIFY(EMPIRICAL_HASH_);
 
     auto seed_text = button_dash.AddText("seed_text");
     seed_text << emp::to_string(cfg.SEED());
@@ -256,23 +257,32 @@ public:
 
     if (downloaded) return;
 
-    const std::string prefix = (
-      std::string()
-      + STRINGIFY(GIT_VERSION_)
-      + "+"
-      + "seed"
-      + emp::to_string(cfg.SEED())
-      + "-"
-      + "update"
-      + emp::to_string(w.GetUpdate())
-      + "-"
-    );
+    const auto namify = [this](const std::string &title) {
+      return std::string()
+        + "source_hash="
+        + STRINGIFY(DISHTINY_HASH_)
+        + "~"
+        + "emp_hash="
+        + STRINGIFY(EMPIRICAL_HASH_)
+        + "~"
+        + "title="
+        + title
+        + "+"
+        + cfg.TREATMENT_DESCRIPTOR()
+        + "+"
+        + "seed="
+        + emp::to_string(cfg.SEED())
+        + "+"
+        + "update="
+        + emp::to_string(w.GetUpdate())
+        + ".png";
+    };
 
     if(cfg.TimingFun(w.GetUpdate())) {
       if (!rendered) Redraw();
-      channel.Download(prefix + "channel");
-      stockpile.Download(prefix + "stockpile");
-      contribution.Download(prefix + "contribution");
+      channel.Download(namify("channel_viz"));
+      stockpile.Download(namify("stockpile_viz"));
+      contribution.Download(namify("contribution_viz"));
     }
 
     downloaded = true;
