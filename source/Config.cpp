@@ -62,7 +62,7 @@ void Config::WriteMe(std::ostream & out) const {
   Write(out);
 
   for (size_t l = 0; l < clevs.size(); ++l) {
-    std::cout << std::endl << "ConfigLevel" << l << std::endl;
+    out << std::endl << "ConfigLevel=" << l << std::endl;
     clevs[l]->Write(out);
   }
 
