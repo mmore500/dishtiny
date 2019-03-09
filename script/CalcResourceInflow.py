@@ -14,7 +14,7 @@ files = [h5py.File(filename, 'r') for filename in filenames]
 means = [
         np.mean([
             np.sum([
-                file['ResourceHarvested'][lev_key]['upd_'+str(i)] /file['ResourceHarvested'][lev_key]['upd_'+str(i)].size
+                np.array(file['ResourceHarvested'][lev_key]['upd_'+str(i)]).clip(min=0) / file['ResourceHarvested'][lev_key]['upd_'+str(i)].size
                 for lev_key in file['ResourceHarvested']
             ])
             for i in range(first_update, last_update)
