@@ -99,6 +99,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
 }
 
 DishWorld::~DishWorld() {
+  Clear();
   for (auto &ptr : global_rngs) ptr.Delete();
   for (auto &ptr : local_rngs) ptr.Delete();
   for (auto &ptr : frames) ptr.Delete();
