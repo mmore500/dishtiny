@@ -139,6 +139,17 @@ private:
 
     seed_attribute.write(H5::PredType::NATIVE_INT, seed_data);
 
+    const hsize_t nlev_dims[] = { 1 };
+    H5::DataSpace nlev_dataspace(1, nlev_dims);
+
+    H5::Attribute nlev_attribute = file.createAttribute(
+      "NLEV", H5::PredType::NATIVE_UINT, nlev_dataspace
+    );
+
+    const int nlev_data[] = {(int)cfg.NLEV()};
+
+    nlev_attribute.write(H5::PredType::NATIVE_UINT, nlev_data);
+
     const hsize_t timestamp_dims[] = { 1 };
     H5::DataSpace timestamp_dataspace(1, timestamp_dims);
 
