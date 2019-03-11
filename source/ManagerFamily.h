@@ -11,7 +11,7 @@ private:
   Config::chanid_t prev_chan;
 
 public:
-  ManagerFamily() : parent_pos(0), birth_update(0) { ; }
+  ManagerFamily() : parent_pos(0), birth_update(0), prev_chan(0) { ; }
 
   void Reset(const size_t cur_update) {
     birth_update = cur_update;
