@@ -86,6 +86,8 @@ public:
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       file.createGroup("/Heir/dir_"+emp::to_string(dir));
     }
+    file.createGroup("/ParentPos");
+    file.createGroup("/CellAge");
 
 
     InitAttributes();
@@ -118,6 +120,8 @@ public:
         for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
           Heir(dir);
         }
+        ParentPos();
+        CellAge();
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -260,6 +264,17 @@ private:
 
       heir_key_attribute.write(H5::StrType(0, H5T_VARIABLE), heir_key_data);
     }
+
+    const hsize_t parentpos_key_dims[] = { 1 };
+    H5::DataSpace parentpos_key_dataspace(1, parentpos_key_dims);
+
+    H5::Attribute parentpos_key_attribute = file.openGroup("/ParentPos").createAttribute(
+      "KEY", H5::StrType(0, H5T_VARIABLE), parentpos_key_dataspace
+    );
+
+    const char *parentpos_key_data[] = {"-1: no current parent, >=0: parent index"};
+
+    parentpos_key_attribute.write(H5::StrType(0, H5T_VARIABLE), parentpos_key_data);
 
 
   }
@@ -594,5 +609,49 @@ private:
     ds.write((void*)data, tid);
 
   }
+
+  void ParentPos() {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_INT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/ParentPos/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    int data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Family(dw.man->Family(i).GetParentPos()).HasChildPos(i)
+        ? dw.man->Family(i).GetParentPos() : -1;
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void CellAge() {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_UINT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/CellAge/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    size_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.GetUpdate() - dw.man->Family(i).GetBirthUpdate();
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
 
 };
