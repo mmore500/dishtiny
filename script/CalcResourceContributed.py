@@ -4,6 +4,7 @@
 import numpy as np
 import h5py
 import sys
+import scipy.stats as stats
 from tqdm import tqdm
 
 first_update = int(sys.argv[1])
@@ -17,16 +18,20 @@ files = [h5py.File(filename, 'r') for filename in filenames]
 
 res = {}
 
-res['means'] = [
+res['means'] = (
+[
     np.mean([
         np.mean(file['ResourceContributed'][dir_key]['upd_'+str(upd)])
         for dir_key in file['ResourceContributed']
         for upd in range(first_update, last_update)
     ])
     for file in files
-]
+],
+None
+)
 
-res['means_samechannel_levs'] = [
+res['means_samechannel_levs'] = (
+[
     [np.mean([
         rc[idx]
         for dir_key in file['ResourceContributed']
@@ -47,9 +52,8 @@ res['means_samechannel_levs'] = [
     ]) for file in files
     ]
     for lev_key in files[0]['Channel']
-]
-
-res['means_samechannelNot_levs'] = [
+],
+[
     [np.mean([
         rc[idx]
         for dir_key in file['ResourceContributed']
@@ -71,8 +75,10 @@ res['means_samechannelNot_levs'] = [
     ]
     for lev_key in files[0]['Channel']
 ]
+)
 
-res['means_cell_parent'] = [
+res['means_cell_parent'] = (
+[
     np.mean([
         rc[idx]
         for dir_key in file['ResourceContributed']
@@ -91,9 +97,8 @@ res['means_cell_parent'] = [
         for idx in range(file['Index']['own'].size)
         if (par[idx] == dir[idx])
     ]) for file in files
-]
-
-res['means_cell_parentNot'] = [
+],
+[
     np.mean([
         rc[idx]
         for dir_key in file['ResourceContributed']
@@ -113,8 +118,10 @@ res['means_cell_parentNot'] = [
         if (par[idx] != dir[idx])
     ]) for file in files
 ]
+)
 
-res['means_cell_child'] = [
+res['means_cell_child'] = (
+[
     np.mean([
         rc[idx]
         for dir_key in file['ResourceContributed']
@@ -133,9 +140,8 @@ res['means_cell_child'] = [
         for idx in range(file['Index']['own'].size)
         if (idx == par[dir[idx]])
     ]) for file in files
-]
-
-res['means_cell_childNot'] = [
+],
+[
     np.mean([
         rc[idx]
         for dir_key in file['ResourceContributed']
@@ -155,8 +161,10 @@ res['means_cell_childNot'] = [
         if (idx != par[dir[idx]])
     ]) for file in files
 ]
+)
 
-res['means_propagule_parent'] = [
+res['means_propagule_parent'] = (
+[
     np.mean([
         rc[idx]
         for dir_key in file['ResourceContributed']
@@ -178,9 +186,8 @@ res['means_propagule_parent'] = [
         for idx in range(file['Index']['own'].size)
         if (pc[idx] == ch[dir[idx]])
     ]) for file in files
-]
-
-res['means_propagule_parentNot'] = [
+],
+[
     np.mean([
         rc[idx]
         for dir_key in file['ResourceContributed']
@@ -203,8 +210,33 @@ res['means_propagule_parentNot'] = [
         if (pc[idx] != ch[dir[idx]])
     ]) for file in files
 ]
+)
 
-res['means_propagule_child'] = [
+res['means_propagule_child'] = (
+[
+    np.mean([
+        rc[idx]
+        for dir_key in file['ResourceContributed']
+        for rc, pc, ch, dir in [
+            (np.array(
+                file['ResourceContributed'][dir_key]['upd_'+str(upd)]
+            ).flatten(),
+            np.array(
+                file['PrevChan']['upd_'+str(upd)]
+            ).flatten(),
+            np.array(
+                file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
+            ).flatten(),
+            np.array(
+                file['Index'][dir_key]
+            ).flatten())
+            for upd in tqdm(range(first_update, last_update))
+        ]
+        for idx in range(file['Index']['own'].size)
+        if (ch[idx] == pc[dir[idx]])
+    ]) for file in files
+],
+[
     np.mean([
         rc[idx]
         for dir_key in file['ResourceContributed']
@@ -227,31 +259,18 @@ res['means_propagule_child'] = [
         if (ch[idx] == pc[dir[idx]])
     ]) for file in files
 ]
+)
 
-res['means_propagule_childNot'] = [
-    np.mean([
-        rc[idx]
-        for dir_key in file['ResourceContributed']
-        for rc, pc, ch, dir in [
-            (np.array(
-                file['ResourceContributed'][dir_key]['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['PrevChan']['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['Index'][dir_key]
-            ).flatten())
-            for upd in tqdm(range(first_update, last_update))
-        ]
-        for idx in range(file['Index']['own'].size)
-        if (ch[idx] == pc[dir[idx]])
-    ]) for file in files
-]
-
-
-for k,v in res.items():
-    print(k, " mean/std: ", np.mean(v), "/", np.std(v))
+for k, (v,not_v) in res.items():
+    if not_v:
+        print(
+            k,
+            ": ",
+            stats.ttest_ind(
+                v,
+                not_v,
+                equal_var=False
+            )
+        )
+    else:
+        print(k, " mean/std: ", np.mean(v), "/", np.std(v))
