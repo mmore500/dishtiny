@@ -30,7 +30,7 @@ def FracApoptosis(file):
 def ExtractTreat(filename):
     return next(str for str in filename.split('+') if "treat=" in str)
 
-data = pd.DataFrame.from_dict([
+df = pd.DataFrame.from_dict([
     {
         'Treat' : treat,
         'FracApoptosis' : FracApoptosis(file),
@@ -41,5 +41,5 @@ data = pd.DataFrame.from_dict([
 ])
 
 print("num files:" , len(filenames))
-sns.barplot(x="Treat", y="FracApoptosis", data=data)
+sns.barplot(x="Treat", y="FracApoptosis", data=df)
 plt.show()
