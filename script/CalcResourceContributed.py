@@ -256,7 +256,7 @@ res['means_propagule_child'] = (
             for upd in tqdm(range(first_update, last_update))
         ]
         for idx in range(file['Index']['own'].size)
-        if (ch[idx] == pc[dir[idx]])
+        if (ch[idx] != pc[dir[idx]])
     ]) for file in files
 ]
 )
