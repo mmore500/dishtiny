@@ -1,0 +1,74 @@
+# usage:
+# h5_filenames
+
+import numpy as np
+import h5py
+import sys
+from tqdm import tqdm
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+
+filenames = sys.argv[1:]
+
+repThresh = 3
+
+def MeanCellAge(file, start_update, end_update):
+    return np.mean([
+        cage[idx]
+        for cage, live in [
+            (
+            np.array(
+                file['CellAge']['upd_'+str(upd)]
+            ).flatten(),
+            np.array(
+                file['Live']['upd_'+str(upd)]
+            ).flatten()
+            )
+            for upd in range(start_update, end_update)
+        ]
+        for idx in range(file['Index']['own'].size)
+        if live[idx]
+    ])
+
+def ExtractTreat(filename):
+    print(filename.split('+'))
+    return next(str for str in filename.split('+') if "treat=" in str)
+
+def ExtractSnapshotBlocks(file):
+    upds = sorted([
+        int(s)
+        for upd_key in file['Live'] for s in upd_key.split('_') if s.isdigit()
+    ])
+
+    break_idxs = [0] + [
+        idx
+        for idx in range(1,len(upds))
+        if upds[idx] - upds[idx-1] > 1
+    ] + [len(upds)]
+
+    return [(upds[b],upds[e-1]+1) for b,e in zip(break_idxs,break_idxs[1:])]
+
+def CalcElapsedCellGen(file):
+    snaps = ExtractSnapshotBlocks(file)
+    return np.sum([
+        (e-b)/MeanCellAge(file, b, e)
+        for b,e in snaps
+    ])
+
+df = pd.DataFrame.from_dict([
+    {
+        'Treat' : treat,
+        'ElapsedCellGen' : CalcElapsedCellGen(file),
+    }
+    for treat, file in [
+        (ExtractTreat(filename), h5py.File(filename, 'r')) for filename in filenames
+    ]
+])
+
+print("num files:" , len(filenames))
+
+for treat in df['Treat'].unique():
+    print("TREAT:", treat)
+    print("   mean:", np.mean(df.loc[df['Treat'] == treat]))
+    print("   std:", np.std(df.loc[df['Treat'] == treat]))
