@@ -261,16 +261,21 @@ res['means_propagule_child'] = (
 ]
 )
 
+print("num files:" , len(files))
+
 for k, (v,not_v) in res.items():
+
+    print(k, " mean/std: ", np.mean(v), "/", np.std(v))
+
     if not_v:
+        print("NOT ", k, " mean/std: ", np.mean(not_v), "/", np.std(not_v))
+
         print(
             k,
-            ": ",
+            "Welch test: ",
             stats.ttest_ind(
                 v,
                 not_v,
                 equal_var=False
             )
         )
-    else:
-        print(k, " mean/std: ", np.mean(v), "/", np.std(v))
