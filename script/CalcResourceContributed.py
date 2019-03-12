@@ -46,11 +46,11 @@ for lev_key in files[0]['Channel']:
             np.array(
                 file['Index'][dir_key]
             ).flatten())
-            for upd in tqdm(range(first_update, last_update))
+            for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
         if (ch[idx] == ch[dir[idx]])
-    ]) for file in files
+    ]) for file in tqdm(files)
     ],
     [
     np.mean([
@@ -66,11 +66,11 @@ for lev_key in files[0]['Channel']:
             np.array(
                 file['Index'][dir_key]
             ).flatten())
-            for upd in tqdm(range(first_update, last_update))
+            for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
         if (ch[idx] != ch[dir[idx]])
-    ]) for file in files
+    ]) for file in tqdm(files)
     ]
     )
 
@@ -89,11 +89,11 @@ res['means_cell_parent'] = (
             np.array(
                 file['Index'][dir_key]
             ).flatten())
-            for upd in tqdm(range(first_update, last_update))
+            for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
         if (par[idx] == dir[idx])
-    ]) for file in files
+    ]) for file in tqdm(files)
 ],
 [
     np.mean([
@@ -109,11 +109,11 @@ res['means_cell_parent'] = (
             np.array(
                 file['Index'][dir_key]
             ).flatten())
-            for upd in tqdm(range(first_update, last_update))
+            for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
         if (par[idx] != dir[idx])
-    ]) for file in files
+    ]) for file in tqdm(files)
 ]
 )
 
@@ -132,11 +132,11 @@ res['means_cell_child'] = (
             np.array(
                 file['Index'][dir_key]
             ).flatten())
-            for upd in tqdm(range(first_update, last_update))
+            for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
         if (idx == par[dir[idx]])
-    ]) for file in files
+    ]) for file in tqdm(files)
 ],
 [
     np.mean([
@@ -152,11 +152,11 @@ res['means_cell_child'] = (
             np.array(
                 file['Index'][dir_key]
             ).flatten())
-            for upd in tqdm(range(first_update, last_update))
+            for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
         if (idx != par[dir[idx]])
-    ]) for file in files
+    ]) for file in tqdm(files)
 ]
 )
 
@@ -178,11 +178,11 @@ res['means_propagule_parent'] = (
             np.array(
                 file['Index'][dir_key]
             ).flatten())
-            for upd in tqdm(range(first_update, last_update))
+            for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
         if (pc[idx] == ch[dir[idx]])
-    ]) for file in files
+    ]) for file in tqdm(files)
 ],
 [
     np.mean([
@@ -201,11 +201,11 @@ res['means_propagule_parent'] = (
             np.array(
                 file['Index'][dir_key]
             ).flatten())
-            for upd in tqdm(range(first_update, last_update))
+            for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
         if (pc[idx] != ch[dir[idx]])
-    ]) for file in files
+    ]) for file in tqdm(files)
 ]
 )
 
@@ -227,11 +227,11 @@ res['means_propagule_child'] = (
             np.array(
                 file['Index'][dir_key]
             ).flatten())
-            for upd in tqdm(range(first_update, last_update))
+            for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
         if (ch[idx] == pc[dir[idx]])
-    ]) for file in files
+    ]) for file in tqdm(files)
 ],
 [
     np.mean([
@@ -250,11 +250,11 @@ res['means_propagule_child'] = (
             np.array(
                 file['Index'][dir_key]
             ).flatten())
-            for upd in tqdm(range(first_update, last_update))
+            for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
         if (ch[idx] != pc[dir[idx]])
-    ]) for file in files
+    ]) for file in tqdm(files)
 ]
 )
 
