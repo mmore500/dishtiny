@@ -9,6 +9,14 @@ first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
 filenames = sys.argv[3:]
 
+def ExtractTreat(filename):
+    return next(str for str in filename.split('+') if "treat=" in str)
+
+# check there's only one treatment being analyzed
+assert len({ ExtractTreat(filename) for filename in filenames }) == 1
+
+print("TREATMENT:", ExtractTreat(filenames[0]))
+
 files = [h5py.File(filename, 'r') for filename in filenames]
 
 means = [
