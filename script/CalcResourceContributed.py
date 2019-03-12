@@ -31,7 +31,7 @@ None
 )
 
 for lev_key in files[0]['Channel']:
-    res['means_samechannel_'+lev_key] = (
+    res['samechannel_'+lev_key] = (
     [
     np.mean([
         rc[idx]
@@ -74,7 +74,7 @@ for lev_key in files[0]['Channel']:
     ]
     )
 
-res['means_cell_parent'] = (
+res['cell_parent'] = (
 [
     np.mean([
         rc[idx]
@@ -117,7 +117,7 @@ res['means_cell_parent'] = (
 ]
 )
 
-res['means_cell_child'] = (
+res['cell_child'] = (
 [
     np.mean([
         rc[idx]
@@ -160,7 +160,7 @@ res['means_cell_child'] = (
 ]
 )
 
-res['means_propagule_parent'] = (
+res['propagule_parent'] = (
 [
     np.mean([
         rc[idx]
@@ -209,7 +209,7 @@ res['means_propagule_parent'] = (
 ]
 )
 
-res['means_propagule_child'] = (
+res['propagule_child'] = (
 [
     np.mean([
         rc[idx]
