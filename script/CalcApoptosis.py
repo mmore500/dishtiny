@@ -13,8 +13,6 @@ first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
 filenames = sys.argv[3:]
 
-repThresh = 3
-
 def FracApoptosis(file):
     return np.mean([
         1 if apop[idx] else 0 # 1 and 2 are apoptosis types

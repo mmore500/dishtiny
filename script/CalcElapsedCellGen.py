@@ -11,8 +11,6 @@ import matplotlib.pyplot as plt
 
 filenames = sys.argv[1:]
 
-repThresh = 3
-
 def MeanCellAge(file, start_update, end_update):
     return np.mean([
         cage[idx]
