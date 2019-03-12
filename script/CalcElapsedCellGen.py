@@ -32,7 +32,6 @@ def MeanCellAge(file, start_update, end_update):
     ])
 
 def ExtractTreat(filename):
-    print(filename.split('+'))
     return next(str for str in filename.split('+') if "treat=" in str)
 
 def ExtractSnapshotBlocks(file):
@@ -51,24 +50,48 @@ def ExtractSnapshotBlocks(file):
 
 def CalcElapsedCellGen(file):
     snaps = ExtractSnapshotBlocks(file)
+    last_snap_begin, last_snap_end = snaps[-1]
+
     return np.sum([
-        (e-b)/MeanCellAge(file, b, e)
-        for b,e in snaps
-    ])
+        (b2-b1)/MeanCellAge(file, b1, e1)
+        for (b1,e1), (b2,__) in zip(snaps,snaps[1:])
+    ]) + (
+        (last_snap_end - last_snap_begin) /
+        MeanCellAge(file, last_snap_begin, last_snap_end)
+    )
+
 
 df = pd.DataFrame.from_dict([
     {
         'Treat' : treat,
         'ElapsedCellGen' : CalcElapsedCellGen(file),
+        'FinalMeanCellAge' : MeanCellAge(file, last_snap_begin, last_snap_end)
     }
     for treat, file in [
         (ExtractTreat(filename), h5py.File(filename, 'r')) for filename in filenames
-    ]
+    ] for last_snap_begin, last_snap_end in (ExtractSnapshotBlocks(file)[-1],)
 ])
 
 print("num files:" , len(filenames))
 
 for treat in df['Treat'].unique():
     print("TREAT:", treat)
-    print("   mean:", np.mean(df.loc[df['Treat'] == treat]))
-    print("   std:", np.std(df.loc[df['Treat'] == treat]))
+    print(
+        "   ",
+        "nreps:",
+        len(df.loc[df['Treat'] == treat])
+    )
+    print(
+        "   ",
+        "ElapsedCellGen mean / std:",
+        np.mean(df.loc[df['Treat'] == treat]['ElapsedCellGen']),
+        " / ",
+        np.std(df.loc[df['Treat'] == treat]['ElapsedCellGen'])
+    )
+    print(
+        "   ",
+        "FinalMeanCellAge mean / std:",
+        np.mean(df.loc[df['Treat'] == treat]['FinalMeanCellAge']),
+        " / ",
+        np.std(df.loc[df['Treat'] == treat]['FinalMeanCellAge'])
+    )
