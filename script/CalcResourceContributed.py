@@ -18,7 +18,7 @@ files = [h5py.File(filename, 'r') for filename in filenames]
 
 res = {}
 
-res['means'] = (
+res['none'] = (
 [
     np.mean([
         np.mean(file['ResourceContributed'][dir_key]['upd_'+str(upd)])
@@ -30,9 +30,10 @@ res['means'] = (
 None
 )
 
-res['means_samechannel_levs'] = (
-[
-    [np.mean([
+for lev_key in files[0]['Channel']:
+    res['means_samechannel_'+lev_key] = (
+    [
+    np.mean([
         rc[idx]
         for dir_key in file['ResourceContributed']
         for rc, ch, dir in [
@@ -50,11 +51,9 @@ res['means_samechannel_levs'] = (
         for idx in range(file['Index']['own'].size)
         if (ch[idx] == ch[dir[idx]])
     ]) for file in files
-    ]
-    for lev_key in files[0]['Channel']
-],
-[
-    [np.mean([
+    ],
+    [
+    np.mean([
         rc[idx]
         for dir_key in file['ResourceContributed']
         for rc, ch, dir in [
@@ -73,9 +72,7 @@ res['means_samechannel_levs'] = (
         if (ch[idx] != ch[dir[idx]])
     ]) for file in files
     ]
-    for lev_key in files[0]['Channel']
-]
-)
+    )
 
 res['means_cell_parent'] = (
 [
@@ -263,19 +260,18 @@ res['means_propagule_child'] = (
 
 print("num files:" , len(files))
 
-for k, (v,not_v) in res.items():
-
-    print(k, " mean/std: ", np.mean(v), "/", np.std(v))
-
+for k, (v,not_v) in sorted(res.items()):
+    print()
+    print("FILTER: ", k)
+    print("   YES mean/std: ", np.mean(v), "/", np.std(v))
     if not_v:
-        print("NOT ", k, " mean/std: ", np.mean(not_v), "/", np.std(not_v))
-
+        print("   NOT mean/std: ", np.mean(not_v), "/", np.std(not_v))
         print(
-            k,
-            "Welch test: ",
+            "   WELCH TEST: ",
             stats.ttest_ind(
                 v,
                 not_v,
                 equal_var=False
             )
         )
+    print()
