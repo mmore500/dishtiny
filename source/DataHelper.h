@@ -88,6 +88,7 @@ public:
     }
     file.createGroup("/ParentPos");
     file.createGroup("/CellAge");
+    file.createGroup("/CellGen");
 
 
     InitAttributes();
@@ -122,6 +123,7 @@ public:
         }
         ParentPos();
         CellAge();
+        CellGen();
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -647,6 +649,27 @@ private:
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.GetUpdate() - dw.man->Family(i).GetBirthUpdate();
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void CellGen() {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_UINT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/CellGen/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    size_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Family(i).GetCellGen();
     }
 
     ds.write((void*)data, tid);

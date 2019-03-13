@@ -48,6 +48,7 @@ private:
           dir,
           lev,
           man.Channel(pos).GetGenCounter(),
+          man.Family(pos).GetCellGen(),
           *man.Channel(pos).GetIDs(),
           lev < cfg.NLEV() ? man.Family(pos).GetPrevChan() : *man.Channel(pos).GetID(cfg.NLEV() - 1)
         },
