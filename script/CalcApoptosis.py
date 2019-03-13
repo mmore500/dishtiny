@@ -7,7 +7,11 @@ import sys
 from tqdm import tqdm
 import seaborn as sns
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
+matplotlib.rcParams['pdf.fonttype'] = 42
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
@@ -34,10 +38,16 @@ df = pd.DataFrame.from_dict([
         'FracApoptosis' : FracApoptosis(file),
     }
     for treat, file in (
-        (ExtractTreat(filename), h5py.File(filename, 'r')) for filename in filenames
+        (ExtractTreat(filename), h5py.File(filename, 'r')) for filename in tqdm(filenames)
     )
 ])
 
 print("num files:" , len(filenames))
-sns.barplot(x="Treat", y="FracApoptosis", data=df)
-plt.show()
+fig = sns.barplot(x="Treat", y="FracApoptosis", data=df)
+
+fig.savefig(
+    'script_hash=TODO~source_hash=TODO~emp_hash=TODO~title=apoptosis_fracs.pdf',
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0
+)
