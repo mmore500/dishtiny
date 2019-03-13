@@ -4,6 +4,7 @@
 import numpy as np
 import h5py
 import sys
+import os
 from tqdm import tqdm
 import seaborn as sns
 import pandas as pd
@@ -30,7 +31,9 @@ def FracApoptosis(file):
     ])
 
 def ExtractTreat(filename):
-    return next(str for str in filename.split('+') if "treat=" in str)
+    return next(
+        str for str in os.path.basename(filename).split('+') if "treat=" in str
+    )
 
 df = pd.DataFrame.from_dict([
     {
