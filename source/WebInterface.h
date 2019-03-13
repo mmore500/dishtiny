@@ -139,7 +139,7 @@ public:
       }
     ) {
 
-      cfg.Set("SNAPSHOT_FREQUENCY", "1000");
+      cfg.Set("SNAPSHOT_FREQUENCY", "100");
       cfg.Set("SNAPSHOT_LENGTH", "1");
 
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
