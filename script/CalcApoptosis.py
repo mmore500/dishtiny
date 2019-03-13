@@ -43,9 +43,9 @@ df = pd.DataFrame.from_dict([
 ])
 
 print("num files:" , len(filenames))
-fig = sns.barplot(x="Treat", y="FracApoptosis", data=df)
+ax = sns.barplot(x="Treat", y="FracApoptosis", data=df)
 
-fig.savefig(
+ax.get_figure().savefig(
     'script_hash=TODO~source_hash=TODO~emp_hash=TODO~title=apoptosis_fracs.pdf',
     transparent=True,
     bbox_inches='tight',
