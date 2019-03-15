@@ -35,22 +35,20 @@ def ExtractTreat(filename):
         str for str in os.path.basename(filename).split('+') if "treat=" in str
     )
 
-df = pd.DataFrame.from_dict([
+print("num files:" , len(filenames))
+
+outfile = 'script_hash=TODO~source_hash=TODO~emp_hash=TODO~title=apoptosis.csv'
+
+pd.DataFrame.from_dict([
     {
         'Treat' : treat,
         'FracApoptosis' : FracApoptosis(file),
+        'FirstUpdate' : first_update,
+        'LastUpdate' : last_update
     }
     for treat, file in (
         (ExtractTreat(filename), h5py.File(filename, 'r')) for filename in tqdm(filenames)
     )
-])
+]).to_csv(outfile)
 
-print("num files:" , len(filenames))
-ax = sns.barplot(x="Treat", y="FracApoptosis", data=df)
-
-ax.get_figure().savefig(
-    'script_hash=TODO~source_hash=TODO~emp_hash=TODO~title=apoptosis_fracs.pdf',
-    transparent=True,
-    bbox_inches='tight',
-    pad_inches=0
-)
+print('Output saved to', outfile)
