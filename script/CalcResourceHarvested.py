@@ -4,6 +4,7 @@
 import numpy as np
 import h5py
 import sys
+import os
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])

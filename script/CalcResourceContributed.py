@@ -6,6 +6,7 @@ import h5py
 import sys
 import scipy.stats as stats
 from tqdm import tqdm
+import os
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])

@@ -8,6 +8,7 @@ from tqdm import tqdm
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
