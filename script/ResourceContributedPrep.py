@@ -288,7 +288,9 @@ for k, (v,not_v) in sorted(res.items()):
         )
     print()
 
-outfile = 'script_hash=TODO~source_hash=TODO~emp_hash=TODO~title=resource_contributed.csv'
+outfile = 'script_hash=TODO~source_hash=TODO~emp_hash=TODO~'
+    + ExtractTreat(filenames[0])
+    + '+title=resource_contributed.csv'
 
 pd.DataFrame.from_dict([
     {
@@ -296,7 +298,8 @@ pd.DataFrame.from_dict([
         'Shared Resource Per Cell Pair Update' : v,
         'Applied' : 'true' if idx == 0 else 'false',
         'First Update' : first_update,
-        'Last Update' : last_update
+        'Last Update' : last_update,
+        'Treatment' : ExtractTreat(filenames[0])
     }
     for k, tup in res.items()
     for idx, v in enumerate(tup)
