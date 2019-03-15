@@ -39,7 +39,9 @@ def CalcSameChannelRate(file):
                 np.array(
                     file['Index'][dir_key]
                 ).flatten(),
-                np.array(file['Live']['upd_'+str(upd)]).flatten(),
+                np.array(
+                    file['Live']['upd_'+str(upd)]
+                ).flatten(),
                 [
                     np.array(
                         file['RepCount'][dir_key][replev_key]['upd_'+str(upd)]
@@ -49,7 +51,7 @@ def CalcSameChannelRate(file):
             for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
-        if live[idx] and ch[idx] == ch[dir[idx]]
+        if live[idx] and (ch[idx] == ch[dir[idx]])
     ])
 
 def CalcDiffChannelRate(file):
@@ -63,7 +65,9 @@ def CalcDiffChannelRate(file):
                 np.array(
                     file['Index'][dir_key]
                 ).flatten(),
-                np.array(file['Live']['upd_'+str(upd)]).flatten(),
+                np.array(
+                    file['Live']['upd_'+str(upd)]
+                ).flatten(),
                 [
                     np.array(
                         file['RepCount'][dir_key][replev_key]['upd_'+str(upd)]
@@ -73,7 +77,7 @@ def CalcDiffChannelRate(file):
             for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
-        if live[idx] and ch[idx] != ch[dir[idx]]
+        if live[idx] and (ch[idx] != ch[dir[idx]])
     ])
 
 
