@@ -30,7 +30,9 @@ def MeanCellAge(file, start_update, end_update):
     ])
 
 def ExtractTreat(filename):
-    return next(str for str in filename.split('+') if "treat=" in str)
+    return next(
+        str for str in os.path.basename(filename).split('+') if "treat=" in str
+    )
 
 def ExtractSnapshotBlocks(file):
     upds = sorted([

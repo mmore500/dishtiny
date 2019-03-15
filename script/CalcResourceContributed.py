@@ -12,7 +12,9 @@ last_update = int(sys.argv[2])
 filenames = sys.argv[3:]
 
 def ExtractTreat(filename):
-    return next(str for str in filename.split('+') if "treat=" in str)
+    return next(
+        str for str in os.path.basename(filename).split('+') if "treat=" in str
+    )
 
 # check there's only one treatment being analyzed
 assert len({ ExtractTreat(filename) for filename in filenames }) == 1
