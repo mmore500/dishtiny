@@ -94,7 +94,6 @@ pd.DataFrame.from_dict([
         'Seed' : ExtractSeed(filename)
     }
     for v in propagule_parent
-    for idx, v in enumerate(tup)
 ] + [
     {
         'Shared Resource Per Cell Pair Update' : v,
