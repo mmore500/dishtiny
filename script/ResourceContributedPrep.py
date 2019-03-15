@@ -294,7 +294,7 @@ pd.DataFrame.from_dict([
     {
         'Filter' : k,
         'Shared Resource Per Cell Pair Update' : v,
-        'Applied' : 'true' if idx == 0 else 'false'
+        'Applied' : 'true' if idx == 0 else 'false',
         'First Update' : first_update,
         'Last Update' : last_update
     }
