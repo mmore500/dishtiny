@@ -33,23 +33,21 @@ files = [h5py.File(filename, 'r') for filename in filenames]
 
 def CalcContainedRate(file):
     return np.mean([
-        np.sum(
-            rep[dir_key_inner][lev_key_inner][idx]
-            for rep in [
-                np.array(
-                    file['RepCount'][dir_key_inner][replev_key_inner]['upd_'+str(upd)]
-                ).flatten()
-                for dir_key_inner in file['RepCount']
-                for replev_key_inner in file['RepCount'][dir_key_inner]
-            ]
-        )
-        for ch, dirs in [
+        np.sum(rep for rep in reps)
+        for ch, dirs, reps in [
                 (np.array(
                     file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
                 ).flatten(),
                 [
                     np.array(file['Index'][dir_key]).flatten()
                     for dir_key in file['RepCount']
+                ],
+                [
+                    np.array(
+                        file['RepCount'][dir_key_inner][replev_key_inner]['upd_'+str(upd)]
+                    ).flatten()
+                    for dir_key_inner in file['RepCount']
+                    for replev_key_inner in file['RepCount'][dir_key_inner]
                 ])
             for upd in range(first_update, last_update)
         ]
