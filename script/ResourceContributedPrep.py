@@ -7,6 +7,7 @@ import sys
 import scipy.stats as stats
 from tqdm import tqdm
 import os
+import pandas as pd
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
@@ -286,3 +287,20 @@ for k, (v,not_v) in sorted(res.items()):
             )
         )
     print()
+
+outfile = 'script_hash=TODO~source_hash=TODO~emp_hash=TODO~title=resource_contributed.csv'
+
+pd.DataFrame.from_dict([
+    {
+        'Filter' : k,
+        'Shared Resource Per Cell Pair Update' : v,
+        'Applied' : 'true' if idx == 0 else 'false'
+        'First Update' : first_update,
+        'Last Update' : last_update
+    }
+    for k, tup in res.items()
+    for idx, v in enumerate(tup)
+    if v
+]).to_csv(outfile, index=False)
+
+print('Output saved to', outfile)
