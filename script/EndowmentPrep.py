@@ -24,12 +24,12 @@ def ExtractSeed(filename):
     )
 
 print("TREATMENT:", ExtractTreat(filename))
-
-nlev = h5py.File(filename, 'r').attrs['NLEV'][0]
-ntile = h5py.File(filename, 'r')['Index']['own'].size
+print("SEED:", ExtractSeed(filename))
 
 file = h5py.File(filename, 'r')
 
+nlev = file.attrs['NLEV'][0]
+ntile = file['Index']['own'].size
 
 propagule_parent = [
     rc[idx]
@@ -78,7 +78,7 @@ not_propagule_parent = [
 
 
 outfile = (
-    'script_hash=TODO~source_hash=TODO~emp_hash=TODO~' +
+    'script_hash=TODO_source_hash=TODO_emp_hash=TODO_' +
     ExtractTreat(filename) + "+" +
     ExtractSeed(filename) +
     '+title=resource_contributed_propagule_parent.csv'
