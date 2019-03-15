@@ -32,52 +32,48 @@ nlev = file.attrs['NLEV'][0]
 ntile = file['Index']['own'].size
 
 propagule_parent = [
-    np.mean([
-        rc[idx]
-        for rc, pc, ch, dir in [
-            (np.array(
-                file['ResourceContributed'][dir_key]['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['PrevChan']['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['Index'][dir_key]
-            ).flatten())
-            for upd in range(first_update, last_update)
-        ]
-        if (ch[dir[idx]] != ch[idx] and pc[idx] == ch[dir[idx]])
-    ])
+    rc[idx]
     for dir_key in file['ResourceContributed']
+    for rc, pc, ch, dir in [
+        (np.array(
+            file['ResourceContributed'][dir_key]['upd_'+str(upd)]
+        ).flatten(),
+        np.array(
+            file['PrevChan']['upd_'+str(upd)]
+        ).flatten(),
+        np.array(
+            file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
+        ).flatten(),
+        np.array(
+            file['Index'][dir_key]
+        ).flatten())
+        for upd in range(first_update, last_update)
+    ]
     for idx in range(file['Index']['own'].size)
+    if (ch[dir[idx]] != ch[idx] and pc[idx] == ch[dir[idx]])
 ]
 
 
 not_propagule_parent = [
-    np.mean([
-        rc[idx]
-        for rc, pc, ch, dir in [
-            (np.array(
-                file['ResourceContributed'][dir_key]['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['PrevChan']['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['Index'][dir_key]
-            ).flatten())
-            for upd in range(first_update, last_update)
-        ]
-        if (ch[dir[idx]] != ch[idx] and pc[idx] != ch[dir[idx]])
-    ])
+    rc[idx]
     for dir_key in file['ResourceContributed']
+    for rc, pc, ch, dir in [
+        (np.array(
+            file['ResourceContributed'][dir_key]['upd_'+str(upd)]
+        ).flatten(),
+        np.array(
+            file['PrevChan']['upd_'+str(upd)]
+        ).flatten(),
+        np.array(
+            file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
+        ).flatten(),
+        np.array(
+            file['Index'][dir_key]
+        ).flatten())
+        for upd in range(first_update, last_update)
+    ]
     for idx in range(file['Index']['own'].size)
+    if (ch[dir[idx]] != ch[idx] and pc[idx] != ch[dir[idx]])
 ]
 
 
