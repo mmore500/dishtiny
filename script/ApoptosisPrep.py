@@ -6,13 +6,7 @@ import h5py
 import sys
 import os
 from tqdm import tqdm
-import seaborn as sns
 import pandas as pd
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-
-matplotlib.rcParams['pdf.fonttype'] = 42
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
