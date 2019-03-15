@@ -36,7 +36,7 @@ res['none'] = (
         for dir_key in file['ResourceContributed']
         for upd in range(first_update, last_update)
     ])
-    for file in files
+    for file in tqdm(files)
 ],
 None
 )
