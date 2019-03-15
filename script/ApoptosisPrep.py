@@ -41,14 +41,14 @@ outfile = 'script_hash=TODO~source_hash=TODO~emp_hash=TODO~title=apoptosis.csv'
 
 pd.DataFrame.from_dict([
     {
-        'Treat' : treat,
-        'FracApoptosis' : FracApoptosis(file),
-        'FirstUpdate' : first_update,
-        'LastUpdate' : last_update
+        'Treatment' : treat,
+        'Per-Cell-Update Apoptosis Rate' : FracApoptosis(file),
+        'First Update' : first_update,
+        'Last Update' : last_update
     }
     for treat, file in (
         (ExtractTreat(filename), h5py.File(filename, 'r')) for filename in tqdm(filenames)
     )
-]).to_csv(outfile)
+]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)
