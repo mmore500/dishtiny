@@ -54,6 +54,11 @@ private:
         },
         hw.GetProgram()
       );
+
+      for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
+        fh.Cell().GetFrameHardware(dir).PauseRepr(i);
+      }
+
     }
 
   }
