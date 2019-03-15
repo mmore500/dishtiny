@@ -304,8 +304,9 @@ pd.DataFrame.from_dict([
         'Treatment' : ExtractTreat(filenames[0])
     }
     for k, tup in res.items()
-    for idx, v in enumerate(tup)
-    if v
+    for idx, vs in enumerate(tup)
+    if vs
+    for v in vs
 ]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)
