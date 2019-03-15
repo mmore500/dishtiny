@@ -193,7 +193,7 @@ res['propagule_parent'] = (
             for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
-        if (pc[idx] == ch[dir[idx]])
+        if (ch[dir[idx]] != ch[idx] and pc[idx] == ch[dir[idx]])
     ]) for file in tqdm(files)
 ],
 [
@@ -216,7 +216,7 @@ res['propagule_parent'] = (
             for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
-        if (pc[idx] != ch[dir[idx]])
+        if (ch[dir[idx]] != ch[idx] and pc[idx] != ch[dir[idx]])
     ]) for file in tqdm(files)
 ]
 )
@@ -242,7 +242,7 @@ res['propagule_child'] = (
             for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
-        if (ch[idx] == pc[dir[idx]])
+        if (ch[dir[idx]] != ch[idx] and ch[idx] == pc[dir[idx]])
     ]) for file in tqdm(files)
 ],
 [
@@ -265,7 +265,7 @@ res['propagule_child'] = (
             for upd in range(first_update, last_update)
         ]
         for idx in range(file['Index']['own'].size)
-        if (ch[idx] != pc[dir[idx]])
+        if (ch[dir[idx]] != ch[idx] and ch[idx] != pc[dir[idx]])
     ]) for file in tqdm(files)
 ]
 )
