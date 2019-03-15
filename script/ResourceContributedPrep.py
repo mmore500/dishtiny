@@ -18,6 +18,11 @@ def ExtractTreat(filename):
         str for str in os.path.basename(filename).split('+') if "treat=" in str
     )
 
+def ExtractSeed(filename):
+    return next(
+        str for str in os.path.basename(filename).split('+') if "seed=" in str
+    )
+
 # check there's only one treatment being analyzed
 assert len({ ExtractTreat(filename) for filename in filenames }) == 1
 
@@ -301,12 +306,13 @@ pd.DataFrame.from_dict([
         'Applied' : 'true' if idx == 0 else 'false',
         'First Update' : first_update,
         'Last Update' : last_update,
-        'Treatment' : ExtractTreat(filenames[0])
+        'Treatment' : ExtractTreat(filenames[0]),
+        'Seed' : ExtractSeed(fname)
     }
     for k, tup in res.items()
     for idx, vs in enumerate(tup)
     if vs
-    for v in vs
+    for v, fname in zip(vs,filenames)
 ]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)
