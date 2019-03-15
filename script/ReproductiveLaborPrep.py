@@ -23,9 +23,6 @@ def ExtractSeed(filename):
         str for str in os.path.basename(filename).split('+') if "seed=" in str
     )
 
-# check there's only one treatment being analyzed
-treats = { ExtractTreat(filename) for filename in filenames }
-
 nlev = h5py.File(filenames[0], 'r').attrs['NLEV'][0]
 ntile = h5py.File(filenames[0], 'r')['Index']['own'].size
 
@@ -83,8 +80,7 @@ def CalcFreeRate(file):
 print("num files:" , len(files))
 
 outfile = (
-    'script_hash=TODO~source_hash=TODO~emp_hash=TODO~' +
-    ExtractTreat(filenames[0]) +
+    'script_hash=TODO_source_hash=TODO_emp_hash=TODO' +
     '+title=reproductive_labor.csv'
     )
 
