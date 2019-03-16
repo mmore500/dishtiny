@@ -53,7 +53,7 @@ def CalcSameChannelRate(file):
         for idx in range(file['Index']['own'].size)
         if live[idx] and live[dir[idx]] and (
             (pc[idx] == ch[dir[idx]])
-            or (pc[dir[idx]] == ch[dir[idx]])
+            or (pc[dir[idx]] == ch[idx])
             or (ch[idx] == ch[dir[idx]])
         )
     ])
@@ -86,7 +86,7 @@ def CalcDiffChannelRate(file):
         for idx in range(file['Index']['own'].size)
         if live[idx] and live[dir[idx]] and not (
             (pc[idx] == ch[dir[idx]])
-            or (pc[dir[idx]] == ch[dir[idx]])
+            or (pc[dir[idx]] == ch[idx])
             or (ch[idx] == ch[dir[idx]])
         )
     ])
