@@ -23,9 +23,6 @@ def ExtractSeed(filename):
         str for str in os.path.basename(filename).split('+') if "seed=" in str
     )
 
-nlev = h5py.File(filenames[0], 'r').attrs['NLEV'][0]
-ntile = h5py.File(filenames[0], 'r')['Index']['own'].size
-
 files = [h5py.File(filename, 'r') for filename in filenames]
 
 def CalcSameChannelRate(file):
@@ -34,7 +31,7 @@ def CalcSameChannelRate(file):
         for dir_key in file['RepCount']
         for ch, dir, live, reps in [
                 (np.array(
-                    file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
+                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd)]
                 ).flatten(),
                 np.array(
                     file['Index'][dir_key]
