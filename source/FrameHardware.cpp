@@ -65,16 +65,6 @@ void FrameHardware::DispatchEnvTriggers(){
 
   size_t i = 0;
 
-  // update trigger
-  if(i >= pro_trigger_tags.size()) {
-    pro_trigger_tags.emplace_back(rng);
-    auto copy = pro_trigger_tags[i];
-    anti_trigger_tags.emplace_back(copy.Toggle());
-  }
-  cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
-
-  ++i;
-
   // cell child trigger
   if(i >= pro_trigger_tags.size()) {
     pro_trigger_tags.emplace_back(rng);
@@ -163,6 +153,16 @@ void FrameHardware::DispatchEnvTriggers(){
   //     cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
   //   }
   // }
+
+  //++i;
+
+  // update trigger
+  if(i >= pro_trigger_tags.size()) {
+    pro_trigger_tags.emplace_back(rng);
+    auto copy = pro_trigger_tags[i];
+    anti_trigger_tags.emplace_back(copy.Toggle());
+  }
+  cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
 
 }
 
