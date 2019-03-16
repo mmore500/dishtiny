@@ -57,7 +57,7 @@ def CalcDiffChannelRate(file):
         for dir_key in file['RepCount']
         for ch, dir, live, reps in [
                 (np.array(
-                    file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
+                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd)]
                 ).flatten(),
                 np.array(
                     file['Index'][dir_key]
