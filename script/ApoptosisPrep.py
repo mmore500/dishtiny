@@ -31,7 +31,11 @@ def ExtractTreat(filename):
 
 print("num files:" , len(filenames))
 
-outfile = 'script_hash=TODO~source_hash=TODO~emp_hash=TODO~title=apoptosis.csv'
+outfile = (
+    'title=apoptosis'
+    + '+_emp_hash=TODO+_script_hash=TODO+_source_hash=TODO'
+    + '+ext=.csv'
+    )
 
 pd.DataFrame.from_dict([
     {

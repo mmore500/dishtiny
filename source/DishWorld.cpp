@@ -120,18 +120,20 @@ void DishWorld::InitSystematics() {
     auto& sf = SetupSystematicsFile(
       "systematics",
       std::string()
-        + "source_hash="
-        + STRINGIFY(DISHTINY_HASH_)
-        + "~"
-        + "emp_hash="
-        + STRINGIFY(EMPIRICAL_HASH_)
-        + "~"
         + "title=systematics"
         + "+"
         + cfg.TREATMENT_DESCRIPTOR()
         + "+"
         + "seed="
         + std::to_string(cfg.SEED())
+        + "+"
+        + "_emp_hash="
+        + STRINGIFY(EMPIRICAL_HASH_)
+        + "+"
+        + "_source_hash="
+        + STRINGIFY(DISHTINY_HASH_)
+        + "+"
+        + "ext="
         + ".csv",
       false
     );

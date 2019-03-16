@@ -294,9 +294,10 @@ for k, (v,not_v) in sorted(res.items()):
     print()
 
 outfile = (
-    'script_hash=TODO~source_hash=TODO~emp_hash=TODO~' +
-    ExtractTreat(filenames[0]) +
-    '+title=resource_contributed.csv'
+    'title=resource_contributed'
+    + "+" + ExtractTreat(filenames[0])
+    + '+_emp_hash=TODO+_script_hash=TODO+_source_hash=TODO'
+    + '+ext=.csv'
     )
 
 pd.DataFrame.from_dict([

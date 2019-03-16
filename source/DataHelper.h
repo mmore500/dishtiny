@@ -29,18 +29,20 @@ public:
   , dw(dw_)
   , file(
     std::string()
-    + "source_hash="
-    + STRINGIFY(DISHTINY_HASH_)
-    + "~"
-    + "emp_hash="
-    + STRINGIFY(EMPIRICAL_HASH_)
-    + "~"
     + "title=grid_snapshots"
     + "+"
     + cfg.TREATMENT_DESCRIPTOR()
     + "+"
     + "seed="
     + emp::to_string(cfg.SEED())
+    + "+"
+    + "_emp_hash="
+    + STRINGIFY(EMPIRICAL_HASH_)
+    + "+"
+    + "_source_hash="
+    + STRINGIFY(DISHTINY_HASH_)
+    + "+"
+    + "ext="
     + ".h5"
     , H5F_ACC_TRUNC
   )

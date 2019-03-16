@@ -279,12 +279,6 @@ public:
 
     const auto namify = [this](const std::string &title) {
       return std::string()
-        + "source_hash="
-        + STRINGIFY(DISHTINY_HASH_)
-        + "~"
-        + "emp_hash="
-        + STRINGIFY(EMPIRICAL_HASH_)
-        + "~"
         + "title="
         + title
         + "+"
@@ -295,6 +289,14 @@ public:
         + "+"
         + "update="
         + emp::to_string(w.GetUpdate())
+        + "+"
+        + "_emp_hash="
+        + STRINGIFY(EMPIRICAL_HASH_)
+        + "+"
+        + "_source_hash="
+        + STRINGIFY(DISHTINY_HASH_)
+        + "+"
+        + "ext="
         + ".png";
     };
 
