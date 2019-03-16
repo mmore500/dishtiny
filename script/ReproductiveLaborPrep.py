@@ -27,7 +27,7 @@ files = [h5py.File(filename, 'r') for filename in filenames]
 
 def CalcSameChannelRate(file):
     return np.mean([
-        np.sum(rep[idx] for rep in reps)
+        1 if any(rep[idx] > 0 for rep in reps) else 0
         for dir_key in file['RepCount']
         for ch, dir, live, reps in [
                 (np.array(
@@ -53,7 +53,7 @@ def CalcSameChannelRate(file):
 
 def CalcDiffChannelRate(file):
     return np.mean([
-        np.sum(rep[idx] for rep in reps)
+        1 if any(rep[idx] > 0 for rep in reps) else 0
         for dir_key in file['RepCount']
         for ch, dir, live, reps in [
                 (np.array(
