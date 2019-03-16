@@ -151,12 +151,12 @@ private:
     H5::DataSpace nlev_dataspace(1, nlev_dims);
 
     H5::Attribute nlev_attribute = file.createAttribute(
-      "NLEV", H5::PredType::NATIVE_UINT, nlev_dataspace
+      "NLEV", H5::PredType::NATIVE_INT, nlev_dataspace
     );
 
     const int nlev_data[] = {(int)cfg.NLEV()};
 
-    nlev_attribute.write(H5::PredType::NATIVE_UINT, nlev_data);
+    nlev_attribute.write(H5::PredType::NATIVE_INT, nlev_data);
 
     const hsize_t timestamp_dims[] = { 1 };
     H5::DataSpace timestamp_dataspace(1, timestamp_dims);
@@ -462,7 +462,7 @@ private:
   void InboxTraffic(const size_t dir) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_UINT;
+    static const auto tid = H5::PredType::NATIVE_INT;
 
     H5::DataSet ds = file.createDataSet(
       "/InboxTraffic/dir_" + emp::to_string(dir)
@@ -471,7 +471,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    size_t data[dw.GetSize()];
+    int data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Inbox(i).GetTraffic(dir);
@@ -484,7 +484,7 @@ private:
   void RepCount(const size_t dir, const size_t replev) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_UINT;
+    static const auto tid = H5::PredType::NATIVE_INT;
 
     H5::DataSet ds = file.createDataSet(
       "/RepCount/dir_" + emp::to_string(dir)
@@ -494,7 +494,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    size_t data[dw.GetSize()];
+    int data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Priority(i).GetCount(dir,replev);
@@ -639,7 +639,7 @@ private:
   void CellAge() {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_UINT;
+    static const auto tid = H5::PredType::NATIVE_INT;
 
     H5::DataSet ds = file.createDataSet(
       "/CellAge/upd_"+emp::to_string(dw.GetUpdate()),
@@ -647,7 +647,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    size_t data[dw.GetSize()];
+    int data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.GetUpdate() - dw.man->Family(i).GetBirthUpdate();
@@ -660,7 +660,7 @@ private:
   void CellGen() {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_UINT;
+    static const auto tid = H5::PredType::NATIVE_INT;
 
     H5::DataSet ds = file.createDataSet(
       "/CellGen/upd_"+emp::to_string(dw.GetUpdate()),
@@ -668,7 +668,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    size_t data[dw.GetSize()];
+    int data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Family(i).GetCellGen();
