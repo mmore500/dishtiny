@@ -34,7 +34,7 @@ def CalcSameChannelRate(file):
                     file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd-1)]
                 ).flatten(),
                 np.array(
-                    file['PrevChan']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd-1)]
+                    file['PrevChan']['upd_'+str(upd-1)]
                 ).flatten(),
                 np.array(
                     file['Index'][dir_key]
@@ -67,7 +67,7 @@ def CalcDiffChannelRate(file):
                     file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd-1)]
                 ).flatten(),
                 np.array(
-                    file['PrevChan']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd-1)]
+                    file['PrevChan']['upd_'+str(upd-1)]
                 ).flatten(),
                 np.array(
                     file['Index'][dir_key]
