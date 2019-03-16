@@ -37,17 +37,13 @@ private:
   const Config::inst_lib_t &inst_lib;
   const Config::event_lib_t &event_lib;
 
+  void Step();
+
 public:
   DishWorld(const Config &cfg_, size_t uid_offset=0);
 
   ~DishWorld();
 
   void InitSystematics();
-
-  void Pre();
-
-  void Mid();
-
-  void Post();
 
 };

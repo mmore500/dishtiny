@@ -78,11 +78,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
     man->Inbox(pos).ClearInboxes();
   });
 
-  OnUpdate([this](size_t upd){
-    Pre();
-    Mid();
-    Post();
-  });
+  OnUpdate([this](size_t upd){ Step(); });
 
   InitSystematics();
 
@@ -149,36 +145,9 @@ void DishWorld::InitSystematics() {
 
 }
 
-void DishWorld::Pre() {
-  for (size_t i = 0; i < GetSize(); ++i) {
+void DishWorld::Step() {
 
-    man->Priority(i).Reset();
-    man->Apoptosis(i).Reset();
-
-    for(size_t l = 0; l < cfg.NLEV(); ++l) {
-      man->Wave(i,l).CalcNext(GetUpdate());
-    }
-
-    if (IsOccupied(i)) {
-      man->Stockpile(i).ResolveNextAcceptSharing();
-      man->Stockpile(i).ResolveExternalContributions();
-      man->Stockpile(i).ApplyBaseInflow();
-      for(size_t l = 0; l < cfg.NLEV(); ++l) {
-        man->Wave(i,l).HarvestResource();
-      }
-      frames[i]->QueueMessages(man->Inbox(i).GetInboxes());
-    }
-
-  }
-}
-
-void DishWorld::Mid() {
-  for(size_t i = 0; i < GetSize(); ++i) {
-    if (IsOccupied(i)) frames[i]->Process();
-  }
-}
-
-void DishWorld::Post() {
+  // resolve pending state from last update
   for(size_t i = 0; i < GetSize(); ++i) {
 
     const auto optional_tup = man->Priority(i).QueryPendingGenome();
@@ -218,4 +187,32 @@ void DishWorld::Post() {
     for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
 
   }
+
+  // clean up for next cell action step
+  for (size_t i = 0; i < GetSize(); ++i) {
+
+    man->Priority(i).Reset();
+    man->Apoptosis(i).Reset();
+
+    for(size_t l = 0; l < cfg.NLEV(); ++l) {
+      man->Wave(i,l).CalcNext(GetUpdate());
+    }
+
+    if (IsOccupied(i)) {
+      man->Stockpile(i).ResolveNextAcceptSharing();
+      man->Stockpile(i).ResolveExternalContributions();
+      man->Stockpile(i).ApplyBaseInflow();
+      for(size_t l = 0; l < cfg.NLEV(); ++l) {
+        man->Wave(i,l).HarvestResource();
+      }
+      frames[i]->QueueMessages(man->Inbox(i).GetInboxes());
+    }
+
+  }
+
+  // do cell action!
+  for(size_t i = 0; i < GetSize(); ++i) {
+    if (IsOccupied(i)) frames[i]->Process();
+  }
+
 }
