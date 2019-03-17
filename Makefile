@@ -25,7 +25,8 @@ CFLAGS_all := -std=c++17 -Wall -Wno-unused-function \
 CXX_nat := h5c++
 CFLAGS_nat := -O3 -DNDEBUG $(CFLAGS_all)
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
-CFLAGS_nat_debug := -g -fsanitize=address -fsanitize=undefined -DEMP_TRACK_MEM $(CFLAGS_all)
+CFLAGS_nat_debug := -g -DEMP_TRACK_MEM $(CFLAGS_all)
+CFLAGS_nat_sanitize := -fsanitize=address -fsanitize=undefined $(CFLAGS_nat_debug)
 CFLAGS_nat_profile := -pg -DNDEBUG $(CFLAGS_all)
 
 # Emscripten compiler information
@@ -50,6 +51,9 @@ ndata: $(PROJECT)
 
 debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
 debug:	$(PROJECT)
+
+sanitize: CFLAGS_nat := $(CFLAGS_nat_sanitize)
+sanitize: $(PROJECT)
 
 profile:	CFLAGS_nat := $(CFLAGS_nat_profile)
 profile:	$(PROJECT)
