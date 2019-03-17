@@ -7,4 +7,4 @@ set beacon_priority y
 set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-wave__channelsense-yes__nlev-onebig
 set dest_dir /mnt/scratch/mmore500/dishtiny/treat=resource-wave__channelsense-yes__nlev-onebig
 
-1001..1020 treat=resource-wave__channelsense-yes__nlev-onebig module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; ./dishtiny -SEED $seed
+1001..1030 treat=resource-wave__channelsense-yes__nlev-onebig module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; ./dishtiny -SEED $seed
