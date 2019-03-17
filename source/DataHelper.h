@@ -64,15 +64,13 @@ public:
       file.createGroup("/InboxTraffic/dir_"+emp::to_string(dir));
     }
 
-    file.createGroup("/RepCount");
+    file.createGroup("/RepOutgoing");
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/RepCount/dir_"+emp::to_string(dir));
-      for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
-        file.createGroup(
-          "/RepCount/dir_"+emp::to_string(dir)
-            + "/replev_"+emp::to_string(replev)
-        );
-      }
+      file.createGroup("/RepOutgoing/dir_"+emp::to_string(dir));
+    }
+    file.createGroup("/RepIncoming");
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      file.createGroup("/RepIncoming/dir_"+emp::to_string(dir));
     }
     file.createGroup("/ResourceContributed/");
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
@@ -110,9 +108,10 @@ public:
           InboxTraffic(dir);
         }
         for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-          for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
-            RepCount(dir,replev);
-          }
+          RepOutgoing(dir);
+        }
+        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+          RepIncoming(dir);
         }
         for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
           ResourceContributed(dir);
@@ -481,14 +480,39 @@ private:
 
   }
 
-  void RepCount(const size_t dir, const size_t replev) {
+  void RepOutgoing(const size_t dir) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
     static const auto tid = H5::PredType::NATIVE_INT;
 
     H5::DataSet ds = file.createDataSet(
-      "/RepCount/dir_" + emp::to_string(dir)
-        + "/replev_" + emp::to_string(replev)
+      "/RepOutgoing/dir_" + emp::to_string(dir)
+        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    int data[dw.GetSize()];
+
+    GeometryHelper gh(cfg);
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Priority(
+          gh.CalcLocalNeighs(i)[dir]
+        ).GetRepState(Cardi::Opp[dir]);
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void RepIncoming(const size_t dir) {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_INT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/RepIncoming/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
       H5::DataSpace(2,dims)
@@ -497,7 +521,7 @@ private:
     int data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Priority(i).GetCount(dir,replev);
+      data[i] = dw.man->Priority(i).GetRepState(dir);
     }
 
     ds.write((void*)data, tid);
