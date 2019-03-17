@@ -1,0 +1,10 @@
+set email mmore500@msu.edu
+set freq_email Crash
+set description treat=resource-even__channelsense-no__nlev-two
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-even__channelsense-no__nlev-two
+set dest_dir /mnt/scratch/mmore500/dishtiny/debug
+
+1001..1050 treat=resource-even__channelsense-no__nlev-two module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; gdb -r ./dishtiny -RUN_LENGTH 10000000 -SEED -$seed
