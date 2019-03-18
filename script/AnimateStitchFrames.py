@@ -8,10 +8,7 @@ from tqdm import tqdm
 
 filenames = sys.argv[1:]
 
-df = pd.DataFrame.from_dict(
-    [{**kn.unpack(filename), **{'filename' : filename}}
-        for filename in filenames]
-)
+df = pd.DataFrame.from_dict([kn.unpack(filename) for filename in filenames])
 
 for treat in df['treat'].unique():
     updates = [int(upd) for upd in df['update'].unique()]
@@ -20,7 +17,7 @@ for treat in df['treat'].unique():
         if len(fil['title'].unique()) == len(df['title'].unique()):
             os.system(' '.join(
                 ['convert', '+append']
-                + fil['filename'].tolist()
+                + fil['_'].tolist()
                 + [kn.pack({
                     'treat' : treat,
                     'frame' : str(idx).zfill(4),
