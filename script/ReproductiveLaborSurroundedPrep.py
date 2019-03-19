@@ -22,7 +22,7 @@ def CalcSurroundedRate(file):
         for ch, pc, dirs, live, ros in [
                 (
                 np.array(
-                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd-1)]
+                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd)]
                 ).flatten(),
                 np.array(
                     file['PrevChan']['upd_'+str(upd)]
@@ -49,7 +49,7 @@ def CalcNotSurroundedRate(file):
         for ch, pc, dirs, live, ros in [
                 (
                 np.array(
-                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd-1)]
+                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd)]
                 ).flatten(),
                 np.array(
                     file['PrevChan']['upd_'+str(upd)]
