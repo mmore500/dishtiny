@@ -8,7 +8,7 @@ import scipy.stats as stats
 from tqdm import tqdm
 import os
 import pandas as pd
-import keyname from keyname as kn
+from keyname import keyname as kn
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
@@ -23,7 +23,7 @@ def CalcSameChannelRate(file):
         for ch, pc, dir, live, ro in [
                 (
                 np.array(
-                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd-1)]
+                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd)]
                 ).flatten(),
                 np.array(
                     file['PrevChan']['upd_'+str(upd)]
@@ -57,7 +57,7 @@ def CalcDiffChannelRate(file):
         for ch, pc, dir, live, ro in [
                 (
                 np.array(
-                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd-1)]
+                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd)]
                 ).flatten(),
                 np.array(
                     file['PrevChan']['upd_'+str(upd)]
@@ -101,7 +101,6 @@ pd.DataFrame.from_dict([
         'Last Update' : last_update
     }
     for filename in tqdm(filenames)
-    )
 ] + [
     {
         'Treatment' : kn.unpack(filename)['treat'],
@@ -112,7 +111,6 @@ pd.DataFrame.from_dict([
         'Last Update' : last_update
     }
     for filename in tqdm(filenames)
-    )
 ]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)
