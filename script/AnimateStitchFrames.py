@@ -8,6 +8,8 @@ from tqdm import tqdm
 
 filenames = sys.argv[1:]
 
+assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
+
 df = pd.DataFrame.from_dict([kn.unpack(filename) for filename in filenames])
 
 for treat in df['treat'].unique():
@@ -21,13 +23,22 @@ for treat in df['treat'].unique():
                 + [kn.pack({
                     'treat' : treat,
                     'frame' : str(idx).zfill(4),
+                    '_source_hash' : kn.unpack(filenames[0])['_source_hash'],
                     'ext' : '.png'
                     })]
-                ))
+            ))
 
     os.system(' '.join(
         ['ffmpeg','-framerate','10','-i']
-        + [kn.pack({'treat' : treat, 'frame' : '%04d', 'ext' : '.png'})]
-        + ['-c:v','libx264','-r','30','-pix_fmt','yuv420p']
-        + [kn.pack({'treat' : treat, 'ext' : '.mp4'})]
-        ))
+        + [kn.pack({
+            'treat' : treat,
+            'frame' : '%04d',
+            '_source_hash' : kn.unpack(filenames[0])['_source_hash'],
+            'ext' : '.png'
+        })] + ['-c:v','libx264','-r','30','-pix_fmt','yuv420p']
+        + [kn.pack({
+            'treat' : treat,
+            '_source_hash' : kn.unpack(filenames[0])['_source_hash'],
+            'ext' : '.mp4'
+        })]
+    ))

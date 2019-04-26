@@ -1,15 +1,14 @@
 import sys
 import os
 import shutil
-
-def ExtractSeed(filename):
-    return int(next(
-        ''.join(filter(lambda x: x.isdigit(), str)) for str in os.path.basename(filename).replace('.','+').split('+') if "update=" in str
-    ))
+from keyname import keyname as kn
 
 filenames = sys.argv[1:]
 
-todo = {ExtractSeed(filename) : filename for filename in filenames}
+# check all data is from same software source
+assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
+
+todo = {kn.unpack(filename)['seed'] : filename for filename in filenames}
 
 for idx, (update, filename) in enumerate(sorted(todo.items())):
     newname = 'frame-' + str(idx).zfill(4) + '.png'

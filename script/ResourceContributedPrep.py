@@ -8,25 +8,20 @@ import scipy.stats as stats
 from tqdm import tqdm
 import os
 import pandas as pd
+from keyname import keyname as kn
+from fileshash import fileshash as fsh
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
 filenames = sys.argv[3:]
 
-def ExtractTreat(filename):
-    return next(
-        str for str in os.path.basename(filename).split('+') if "treat=" in str
-    )
-
-def ExtractSeed(filename):
-    return next(
-        str for str in os.path.basename(filename).split('+') if "seed=" in str
-    )
+# check all data is from same software source
+assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 
 # check there's only one treatment being analyzed
-assert len({ ExtractTreat(filename) for filename in filenames }) == 1
+assert len({ kn.unpack(filename)['treat'] for filename in filenames }) == 1
 
-print("TREATMENT:", ExtractTreat(filenames[0]))
+print("TREATMENT:", kn.unpack(filenames[0])['treat']))
 
 nlev = h5py.File(filenames[0], 'r').attrs['NLEV'][0]
 ntile = h5py.File(filenames[0], 'r')['Index']['own'].size
@@ -293,12 +288,17 @@ for k, (v,not_v) in sorted(res.items()):
         )
     print()
 
-outfile = (
-    'title=resource_contributed'
-    + "+" + ExtractTreat(filenames[0])
-    + '+_emp_hash=TODO+_script_hash=TODO+_source_hash=TODO'
-    + '+ext=.csv'
-    )
+outfile = kn.pack({
+    'treat' : kn.unpack(filenames[0])['treat'],
+    'title' : 'resource_contributed',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files(filenames),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                    file_parcel="full_parcel",
+                                    files_join="cat_join"
+                                ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(filenames[0])['_source_hash'],
+    'ext' : ".csv"
+})
 
 pd.DataFrame.from_dict([
     {
@@ -307,8 +307,8 @@ pd.DataFrame.from_dict([
         'Applied' : 'true' if idx == 0 else 'false',
         'First Update' : first_update,
         'Last Update' : last_update,
-        'Treatment' : ExtractTreat(filenames[0]),
-        'Seed' : ExtractSeed(fname)
+        'Treatment' : kn.unpack(fname)['treat'],
+        'Seed' : kn.unpack(fname)['seed']
     }
     for k, tup in res.items()
     for idx, vs in enumerate(tup)

@@ -9,8 +9,13 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+from keyname import keyname as kn
+from fileshash import fileshash as fsh
 
 filenames = sys.argv[1:]
+
+# check all data is from same software source
+assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 
 def MeanCellAge(file, start_update, end_update):
     return np.mean([
@@ -29,11 +34,6 @@ def MeanCellAge(file, start_update, end_update):
         for idx in range(file['Index']['own'].size)
         if live[idx]
     ])
-
-def ExtractTreat(filename):
-    return next(
-        str for str in os.path.basename(filename).split('+') if "treat=" in str
-    )
 
 def ExtractSnapshotBlocks(file):
     upds = sorted([
@@ -69,7 +69,7 @@ df = pd.DataFrame.from_dict([
         'FinalMeanCellAge' : MeanCellAge(file, last_snap_begin, last_snap_end)
     }
     for treat, file in [
-        (ExtractTreat(filename), h5py.File(filename, 'r')) for filename in filenames
+        (kn.unpack(filename)['treat'], h5py.File(filename, 'r')) for filename in filenames
     ] for last_snap_begin, last_snap_end in (ExtractSnapshotBlocks(file)[-1],)
 ])
 

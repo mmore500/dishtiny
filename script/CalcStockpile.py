@@ -9,12 +9,17 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
+from keyname import keyname as kn
+from fileshash import fileshash as fsh
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
 filenames = sys.argv[3:]
 
 repThresh = 3
+
+# check all data is from same software source
+assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 
 def FracOverRepThresh(file):
     return np.mean([
@@ -41,11 +46,6 @@ def MeanOverRepThreshAmt(file):
         if stock[idx] >= repThresh
     ])
 
-def ExtractTreat(filename):
-    return next(
-        str for str in os.path.basename(filename).split('+') if "treat=" in str
-    )
-
 data = pd.DataFrame.from_dict([
     {
         'Treat' : treat,
@@ -53,7 +53,8 @@ data = pd.DataFrame.from_dict([
         'MeanOverRepThreshAmt' : MeanOverRepThreshAmt(file)
     }
     for treat, file in (
-        (ExtractTreat(filename), h5py.File(filename, 'r')) for filename in filenames
+        (kn.unpack(filename)['treat'], h5py.File(filename, 'r'))
+        for filename in filenames
     )
 ])
 

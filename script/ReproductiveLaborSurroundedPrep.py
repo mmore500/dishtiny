@@ -9,10 +9,14 @@ from tqdm import tqdm
 import os
 import pandas as pd
 from keyname import keyname as kn
+from fileshash import fileshash as fsh
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
 filenames = sys.argv[3:]
+
+# check all data is from same software source
+assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 
 files = [h5py.File(filename, 'r') for filename in filenames]
 
@@ -73,8 +77,12 @@ def CalcNotSurroundedRate(file):
 print("num files:" , len(files))
 
 outfile = kn.pack({
-    '_source_hash' : 'TODO',
-    '_emp_hash' : 'TODO',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files(filenames),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                    file_parcel="full_parcel",
+                                    files_join="cat_join"
+                                ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(filenames[0])['_source_hash'],
     'title' : 'reproductive_labor_surrounded',
     'ext' : '.csv'
 })

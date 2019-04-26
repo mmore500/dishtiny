@@ -7,20 +7,20 @@ import sys
 import scipy.stats as stats
 from tqdm import tqdm
 import os
+from fileshash import fileshash as fsh
+from keyname import keyname as kn
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
 filenames = sys.argv[3:]
 
-def ExtractTreat(filename):
-    return next(
-        str for str in os.path.basename(filename).split('+') if "treat=" in str
-    )
+# check all data is from same software source
+assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 
 # check there's only one treatment being analyzed
-assert len({ ExtractTreat(filename) for filename in filenames }) == 1
+assert len({ kn.unpack(filename)['treat'] for filename in filenames }) == 1
 
-print("TREATMENT:", ExtractTreat(filenames[0]))
+print("TREATMENT:", kn.unpack(filenames[0])['treat'])
 
 nlev = h5py.File(filenames[0], 'r').attrs['NLEV'][0]
 ntile = h5py.File(filenames[0], 'r')['Index']['own'].size

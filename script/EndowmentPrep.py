@@ -8,23 +8,15 @@ import scipy.stats as stats
 from tqdm import tqdm
 import os
 import pandas as pd
+from keyname import keyname as kn
+from fileshash import fileshash as fsh
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
 filename = sys.argv[3]
 
-def ExtractTreat(filename):
-    return next(
-        str for str in os.path.basename(filename).replace('.','+').split('+') if "treat=" in str
-    )
-
-def ExtractSeed(filename):
-    return next(
-        str for str in os.path.basename(filename).replace('.','+').split('+') if "seed=" in str
-    )
-
-print("TREATMENT:", ExtractTreat(filename))
-print("SEED:", ExtractSeed(filename))
+print("TREATMENT:", kn.unpack(filename)['treat'])
+print("SEED:", kn.unpack(filename)['seed'])
 
 file = h5py.File(filename, 'r')
 
@@ -77,12 +69,18 @@ not_propagule_parent = [
 ]
 
 
-outfile = (
-    'script_hash=TODO_source_hash=TODO_emp_hash=TODO_' +
-    ExtractTreat(filename) + "+" +
-    ExtractSeed(filename) +
-    '+title=resource_contributed_propagule_parent.csv'
-    )
+outfile = kn.pack({
+    'treat' : kn.unpack(filename)['treat'],
+    'seed' : kn.unpack(filename)['seed'],
+    'title' : 'propagule_parent_resource_contributed',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                    file_parcel="full_parcel",
+                                    files_join="cat_join"
+                                ).hash_files([sys.argv[0]]),
+    '_source_hash' : kn.unpack(filename)['_source_hash'],
+    'ext' : ".csv"
+})
 
 pd.DataFrame.from_dict([
     {
@@ -90,8 +88,8 @@ pd.DataFrame.from_dict([
         'Propagule Parent' : 'true',
         'First Update' : first_update,
         'Last Update' : last_update,
-        'Treatment' : ExtractTreat(filename),
-        'Seed' : ExtractSeed(filename)
+        'Treatment' : kn.unpack(filename)['treat'],
+        'Seed' : kn.unpack(filename)['seed']
     }
     for v in propagule_parent
 ] + [
@@ -100,8 +98,8 @@ pd.DataFrame.from_dict([
         'Propagule Parent' : 'false',
         'First Update' : first_update,
         'Last Update' : last_update,
-        'Treatment' : ExtractTreat(filename),
-        'Seed' : ExtractSeed(filename)
+        'Treatment' : kn.unpack(filename)['treat'],
+        'Seed' : kn.unpack(filename)['seed']
     }
     for v in not_propagule_parent
 ]).to_csv(outfile, index=False)
