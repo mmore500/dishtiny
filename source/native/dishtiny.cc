@@ -23,16 +23,18 @@ int main(int argc, char* argv[])
   std::cout << "SOURCE HASH " << STRINGIFY(DISHTINY_HASH_) << std::endl;
   std::cout << "EMP HASH " << STRINGIFY(EMPIRICAL_HASH_) << std::endl;
 
-  // Read configs.
-  std::string config_fname = "base.cfg";
-  Config cfg(config_fname, emp::cl::ArgManager(argc, argv));
+  Config cfg;
+  cfg.LoadFromFile();
+  const auto specs = emp::ArgManager::make_builtin_specs(&cfg);
+  emp::ArgManager am(argc, argv, specs);
+  am.UseCallbacks();
+  if (am.HasUnused()) std::exit(EXIT_FAILURE);
 
   std::cout << "==============================" << std::endl;
   std::cout << "|    How am I configured?    |" << std::endl;
   std::cout << "==============================" << std::endl;
   cfg.WriteMe(std::cout);
-  std::cout << "==============================\n"
-            << std::endl;
+  std::cout << "==============================\n" << std::endl;
 
 
   DishWorld world(cfg);

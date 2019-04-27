@@ -13,41 +13,35 @@
 #include "ConfigBase.h"
 #include "ConfigLevel.h"
 
-void Config::init() {
+void Config::LoadFromFile() {
+
+  Read("base.cfg");
+
   for (size_t l = 0; l < NLEV(); ++l) {
 
-    clevs.push_back(emp::NewPtr<ConfigLevel>());
+    if (l == clevs.size()) clevs.push_back(emp::NewPtr<ConfigLevel>());
 
-    if (l == 1) {
-      clevs[l]->Set("EVENT_RADIUS", "12");
-      clevs[l]->Set("SIGNAL_RADIUS", "36");
-    }
-    #ifndef EMSCRIPTEN
-    clevs[l]->Read(CONFIGLEVEL_BASENAME() + std::to_string(l) + CONFIGLEVEL_EXTENSION());
-    #endif
+    clevs[l]->Read(
+      CONFIGLEVEL_BASENAME() + std::to_string(l) + CONFIGLEVEL_EXTENSION()
+    );
+
   }
-
   // check conditions on settings
   emp_assert(SEED() > 0);
   emp_assert(TREATMENT_DESCRIPTOR().rfind("treat=", 0) == 0);
 }
 
 Config::Config() {
-  init();
-}
-
-Config::Config(std::string config_fname, emp::cl::ArgManager args) {
-
-  Read(config_fname);
-
-  if (args.ProcessConfigOptions(*this, std::cout, config_fname,
-        "../ConfigBase.h") == false)
-    exit(0);
-  if (args.TestUnknown() == false)
-    exit(0);
-
-  init();
-
+  for (size_t l = 0; l < NLEV(); ++l) {
+    clevs.push_back(emp::NewPtr<ConfigLevel>());
+    if (l == 1) {
+      clevs[l]->Set("EVENT_RADIUS", "12");
+      clevs[l]->Set("SIGNAL_RADIUS", "36");
+    }
+  }
+  // check conditions on settings
+  emp_assert(SEED() > 0);
+  emp_assert(TREATMENT_DESCRIPTOR().rfind("treat=", 0) == 0);
 }
 
 Config::~Config() {

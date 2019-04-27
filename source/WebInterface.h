@@ -21,7 +21,7 @@ namespace UI = emp::web;
 
 class WebInterface : public UI::Animate {
 
-  Config cfg;
+  const Config &cfg;
 
   UI::Document button_dash;  //< Div that contains the button dashboard.
   UI::Document systematics_dash;  //< Div that contains the systematics info.
@@ -53,11 +53,12 @@ class WebInterface : public UI::Animate {
 
 public:
 
-  WebInterface()
-    : button_dash("emp_button_dash")
+  WebInterface(const Config & cfg_)
+    : cfg(cfg_)
+    , button_dash("emp_button_dash")
     , systematics_dash("emp_systematics_dash")
     , dominant_viewer("dominant_viewer")
-    , w(cfg)
+    , w(cfg_)
     , channel_viewer("channel_viewer")
     , wave_viewer("wave_viewer")
     , stockpile_viewer("stockpile_viewer")
@@ -71,7 +72,7 @@ public:
       [this](std::optional<ChannelPack> cp) {
         return cp ? ChannelColor(*cp) : "black";
       },
-      cfg,
+      cfg_,
       [this](std::optional<ChannelPack> cp1, std::optional<ChannelPack> cp2) -> std::string {
         if (!cp1 || !cp2) return "black";
         else if ((*cp1)[0] == (*cp2)[0]) return ChannelColor(*cp1);
@@ -103,7 +104,7 @@ public:
             );
         } else return emp::ColorRGB(0,0,0);
       },
-      cfg
+      cfg_
     ), contribution(
       contribution_viewer,
       [this](size_t i){
@@ -121,7 +122,7 @@ public:
           else return "red";
         } else return "black";
       },
-      cfg
+      cfg_
     ), systematics(
       systematics_viewer,
       [this](size_t i){
@@ -131,16 +132,13 @@ public:
         if (gen) return "white";
         else return "black";
       },
-      cfg,
+      cfg_,
       [](std::optional<Genome> g1, std::optional<Genome> g2) -> std::string {
         if (!g1 || !g2) return "black";
         else if (*g1 != *g2) return "red";
         else return "white";
       }
     ) {
-
-      cfg.Set("SNAPSHOT_FREQUENCY", "100");
-      cfg.Set("SNAPSHOT_LENGTH", "1");
 
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
       wave.emplace_back(

@@ -36,7 +36,7 @@ OFLAGS_web := -Oz -DNDEBUG
 OFLAGS_web_debug := -g4 -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPPORT=1 -s ASSERTIONS=1
 #OFLAGS_web_debug := -g4 -DNDEBUG -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPPORT=1
 
-CFLAGS_web := $(CFLAGS_all) $(OFLAGS_web) $(OFLAGS_web_all)
+CFLAGS_web := $(CFLAGS_all) $(OFLAGS_web) $(OFLAGS_web_all) --preload-file request
 CFLAGS_web_debug := $(CFLAGS_all) $(OFLAGS_web_debug) $(OFLAGS_web_all)
 
 

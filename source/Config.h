@@ -23,8 +23,6 @@ private:
 
   emp::vector<emp::Ptr<ConfigLevel>> clevs;
 
-  void init();
-
 public:
 
   static constexpr size_t TAG_WIDTH = 16;
@@ -44,6 +42,8 @@ public:
   Config(std::string config_fname, emp::cl::ArgManager args);
 
   ~Config();
+
+  void LoadFromFile();
 
   const ConfigLevel& Lev(const size_t lev) const;
 
