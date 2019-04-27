@@ -17,6 +17,11 @@ void Config::LoadFromFile() {
 
   Read("base.cfg");
 
+  while (clevs.size() > NLEV()) {
+    delete clevs.back();
+    clevs.pop_back();
+  }
+
   for (size_t l = 0; l < NLEV(); ++l) {
 
     if (l == clevs.size()) clevs.push_back(emp::NewPtr<ConfigLevel>());
