@@ -2,7 +2,7 @@ set email mmore500@msu.edu
 set freq_email Crash
 set description viz__treat=wave-small__mut-a_low
 set mem_request 6
-set walltime 80
+set walltime 40
 set beacon_priority y
 set config_dir /mnt/home/mmore500/dishtiny/request/treat=wave-small__mut-a_low
 set dest_dir /mnt/scratch/mmore500/js5a3
