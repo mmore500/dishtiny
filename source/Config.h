@@ -39,8 +39,6 @@ public:
 
   Config();
 
-  Config(std::string config_fname, emp::cl::ArgManager args);
-
   ~Config();
 
   void LoadFromFile();
