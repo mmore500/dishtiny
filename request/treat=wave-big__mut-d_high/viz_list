@@ -1,0 +1,10 @@
+set email mmore500@msu.edu
+set freq_email Crash
+set description viz__treat=wave-big__mut-d_high
+set mem_request 6
+set walltime 80
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=wave-big__mut-d_high
+set dest_dir /mnt/scratch/mmore500/js5a3
+
+1001 viz__treat=wave-big__mut-d_high singularity run shub://mmore500/nightmare-downloader /mnt/home/mmore500/dishtiny/web $(pwd) $(python -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()') "dishtiny.html?treat=wave-big__mut-d_high&SNAPSHOT_LENGTH=1&SNAPSHOT_FREQUENCY=100&SEED=$seed" "#download_input" "#Animate"
