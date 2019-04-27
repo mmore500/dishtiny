@@ -17,8 +17,6 @@
 class ManagerPriority {
 
 private:
-  const Config &cfg;
-
   emp::Random &local_rng;
   emp::vector<size_t> priority_order;
 
@@ -43,9 +41,8 @@ private:
   }
 
 public:
-  ManagerPriority(const Config &cfg_, emp::Random &local_rng_)
-  : cfg(cfg_)
-  , local_rng(local_rng_)
+  ManagerPriority(emp::Random &local_rng_)
+  : local_rng(local_rng_)
   , rep_state(Cardi::Dir::NumDirs)
   {
     for(size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {

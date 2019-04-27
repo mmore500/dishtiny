@@ -41,7 +41,7 @@ Manager::Manager(
       emp::NewPtr<ManagerInbox>(cfg)
     );
     mps.push_back(
-      emp::NewPtr<ManagerPriority>(cfg, *local_rngs[i])
+      emp::NewPtr<ManagerPriority>(*local_rngs[i])
     );
     mss.push_back(
       emp::NewPtr<ManagerStockpile>(cfg)
