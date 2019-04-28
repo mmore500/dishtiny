@@ -20,14 +20,14 @@ dataframe_filename = sys.argv[1]
 df = pd.read_csv(dataframe_filename)
 
 df['Treatment'] = df['Treatment'].apply(lambda raw : {
-    'treat=wave-big__mut-a_low' : 'big+low',
-    'treat=wave-big__mut-b_medlow' : 'big+medlow',
-    'treat=wave-big__mut-a_medhigh' : 'big+medhigh',
-    'treat=wave-big__mut-a_high' : 'big+high',
-    'treat=wave-small__mut-a_low' : 'small+low',
-    'treat=wave-small__mut-b_medlow' : 'small+medlow',
-    'treat=wave-small__mut-a_medhigh' : 'small+medhigh',
-    'treat=wave-small__mut-a_high' : 'small+high',
+    'wave-big__mut-a_low' : 'big+low',
+    'wave-big__mut-b_medlow' : 'big+medlow',
+    'wave-big__mut-a_medhigh' : 'big+medhigh',
+    'wave-big__mut-a_high' : 'big+high',
+    'wave-small__mut-a_low' : 'small+low',
+    'wave-small__mut-b_medlow' : 'small+medlow',
+    'wave-small__mut-a_medhigh' : 'small+medhigh',
+    'wave-small__mut-a_high' : 'small+high',
     }[raw]
 )
 
