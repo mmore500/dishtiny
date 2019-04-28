@@ -88,7 +88,7 @@ pd.DataFrame.from_dict([
         'Treatment' : kn.unpack(filename)['treat'],
         'Seed' : kn.unpack(filename)['seed']
     }
-    for filename in filenames
+    for filename in tqdm(filenames)
 ] + [
     {
         'Shared Resource Per Cell Pair Update'
@@ -99,7 +99,7 @@ pd.DataFrame.from_dict([
         'Treatment' : kn.unpack(filename)['treat'],
         'Seed' : kn.unpack(filename)['seed']
     }
-    for filename in filenames
+    for filename in tqdm(filenames)
 ]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)
