@@ -21,7 +21,7 @@ assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 # check there's only one treatment being analyzed
 assert len({ kn.unpack(filename)['treat'] for filename in filenames }) == 1
 
-print("TREATMENT:", kn.unpack(filenames[0])['treat']))
+print("TREATMENT:", kn.unpack(filenames[0])['treat'])
 
 nlev = h5py.File(filenames[0], 'r').attrs['NLEV'][0]
 ntile = h5py.File(filenames[0], 'r')['Index']['own'].size
