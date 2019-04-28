@@ -65,7 +65,7 @@ def CalcDiffChannelContrib(filename):
     ]
     return np.mean(res) if len(res) else 0
 
-print("num files:" , len(files))
+print("num files:" , len(filenames))
 
 outfile = kn.pack({
     'title' : 'resource_contributed',
