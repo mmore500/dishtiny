@@ -21,9 +21,8 @@ assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 nlev = h5py.File(filenames[0], 'r').attrs['NLEV'][0]
 ntile = h5py.File(filenames[0], 'r')['Index']['own'].size
 
-files = [h5py.File(filename, 'r') for filename in filenames]
-
-def CalcSameChannelContrib(file):
+def CalcSameChannelContrib(filename):
+    file = h5py.File(filename, 'r')
     res = [
         rc[idx]
         for dir_key in file['ResourceContributed']
@@ -44,7 +43,8 @@ def CalcSameChannelContrib(file):
     ]
     return np.mean(res) if len(res) else 0
 
-def CalcDiffChannelContrib(file):
+def CalcDiffChannelContrib(filename):
+    file = h5py.File(filename, 'r')
     res = [
         rc[idx]
         for dir_key in file['ResourceContributed']
