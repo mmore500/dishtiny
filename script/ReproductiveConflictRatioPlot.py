@@ -20,16 +20,16 @@ dataframe_filename = sys.argv[1]
 df = pd.read_csv(dataframe_filename)
 
 df['Mutation Rate'] = df['Treatment'].apply(lambda raw : {
-    'wave-big__mut-a_low' : 'low',
-    'wave-big__mut-b_medlow' : 'medlow',
-    'wave-big__mut-c_medhigh' : 'medhigh',
-    'wave-big__mut-d_high' : 'high',
-    'wave-big__mut-e_extreme' : 'extreme',
-    'wave-small__mut-a_low' : 'low',
-    'wave-small__mut-b_medlow' : 'medlow',
-    'wave-small__mut-c_medhigh' : 'medhigh',
-    'wave-small__mut-d_high' : 'high',
-    'wave-small__mut-e_extreme' : 'extreme',
+    'wave-big__mut-a_low' : '1',
+    'wave-big__mut-b_medlow' : '2',
+    'wave-big__mut-c_medhigh' : '3',
+    'wave-big__mut-d_high' : '4',
+    'wave-big__mut-e_extreme' : '5',
+    'wave-small__mut-a_low' : '1',
+    'wave-small__mut-b_medlow' : '2',
+    'wave-small__mut-c_medhigh' : '3',
+    'wave-small__mut-d_high' : '4',
+    'wave-small__mut-e_extreme' : '5',
     }[raw]
 )
 
@@ -50,7 +50,7 @@ df['Resource Wave Size'] = df['Treatment'].apply(lambda raw : {
 
 ax = sns.lineplot(
     x="Mutation Rate",
-    y="Reproductive Cooperation Ratio",
+    y="Reproductive Conflict Ratio",
     hue="Resource Wave Size",
     data=df
 )
@@ -58,7 +58,7 @@ plt.xticks(rotation=30)
 
 ax.get_figure().savefig(
     kn.pack({
-        'title' : 'reproductive_cooperation_ratio',
+        'title' : 'reproductive_conflict_ratio',
         '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
         '_script_fullcat_hash' : fsh.FilesHash(
                                             file_parcel="full_parcel",

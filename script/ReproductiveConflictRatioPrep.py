@@ -91,7 +91,7 @@ def CalcDiffChannelRate(file):
 print("num files:" , len(files))
 
 outfile = kn.pack({
-    'title' : 'reproductive_labor_ratio',
+    'title' : 'reproductive_conflict_ratio',
     '_data_hathash_hash' : fsh.FilesHash().hash_files(filenames),
     '_script_fullcat_hash' : fsh.FilesHash(
                                     file_parcel="full_parcel",
@@ -104,9 +104,9 @@ outfile = kn.pack({
 pd.DataFrame.from_dict([
     {
         'Treatment' : kn.unpack(filename)['treat'],
-        'Reproductive Cooperation Ratio'
-            : CalcDiffChannelRate(h5py.File(filename, 'r'))
-              / CalcSameChannelRate(h5py.File(filename, 'r')),
+        'Reproductive Conflict Ratio'
+            : CalcSameChannelRate(h5py.File(filename, 'r'))
+              / CalcDiffChannelRate(h5py.File(filename, 'r')),
         'First Update' : first_update,
         'Last Update' : last_update,
     }
