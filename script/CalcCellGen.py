@@ -42,7 +42,7 @@ df = pd.DataFrame.from_dict([
         'Upd' : upd
     }
     for treat, file in [
-        (kn.unpack(filename)['treat'], h5py.File(filename, 'r')) for filename in filenames
+        (kn.unpack(filename)['treat'], h5py.File(filename, 'r')) for filename in tqdm(filenames)
     ]
 ])
 
