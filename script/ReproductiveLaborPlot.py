@@ -20,19 +20,21 @@ dataframe_filename = sys.argv[1]
 df = pd.read_csv(dataframe_filename)
 
 df['Treatment'] = df['Treatment'].apply(lambda raw : {
-    'resource-even__channelsense-no__nlev-two' : 'even+blind',
-    'resource-wave__channelsense-no__nlev-two' : 'blind',
-    'resource-wave__channelsense-yes__nlev-onesmall' : 'small wave',
-    'resource-even__channelsense-yes__nlev-two' : 'even',
-    'resource-wave__channelsense-yes__nlev-onebig' : 'large wave',
-    'resource-wave__channelsense-yes__nlev-two' : 'standard'
+    'treat=wave-big__mut-a_low' : 'big+low',
+    'treat=wave-big__mut-b_medlow' : 'big+medlow',
+    'treat=wave-big__mut-a_medhigh' : 'big+medhigh',
+    'treat=wave-big__mut-a_high' : 'big+high',
+    'treat=wave-small__mut-a_low' : 'small+low',
+    'treat=wave-small__mut-b_medlow' : 'small+medlow',
+    'treat=wave-small__mut-a_medhigh' : 'small+medhigh',
+    'treat=wave-small__mut-a_high' : 'small+high',
     }[raw]
 )
 
 ax = sns.barplot(
     x="Treatment",
     y="Incoming Reproduction Rate",
-    hue="Level 1 Channel ID",
+    hue="Level 0 Channel ID",
     hue_order=[
     data=df
 )
