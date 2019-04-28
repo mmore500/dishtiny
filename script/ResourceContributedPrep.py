@@ -53,7 +53,7 @@ def CalcDiffChannelContrib(filename):
                 file['ResourceContributed'][dir_key]['upd_'+str(upd)]
             ).flatten(),
             np.array(
-                file['Channel'][lev_key]['upd_'+str(upd)]
+                file['Channel']['lev_0']['upd_'+str(upd)]
             ).flatten(),
             np.array(
                 file['Index'][dir_key]
