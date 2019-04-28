@@ -85,8 +85,8 @@ pd.DataFrame.from_dict([
         'Channel Match' : 'true',
         'First Update' : first_update,
         'Last Update' : last_update,
-        'Treatment' : kn.unpack(fname)['treat'],
-        'Seed' : kn.unpack(fname)['seed']
+        'Treatment' : kn.unpack(filename)['treat'],
+        'Seed' : kn.unpack(filename)['seed']
     }
     for filename in filenames
 ] + [
@@ -96,8 +96,8 @@ pd.DataFrame.from_dict([
         'Channel Match' : 'false',
         'First Update' : first_update,
         'Last Update' : last_update,
-        'Treatment' : kn.unpack(fname)['treat'],
-        'Seed' : kn.unpack(fname)['seed']
+        'Treatment' : kn.unpack(filename)['treat'],
+        'Seed' : kn.unpack(filename)['seed']
     }
     for filename in filenames
 ]).to_csv(outfile, index=False)
