@@ -22,12 +22,14 @@ df = pd.read_csv(dataframe_filename)
 df['Treatment'] = df['Treatment'].apply(lambda raw : {
     'wave-big__mut-a_low' : 'big+low',
     'wave-big__mut-b_medlow' : 'big+medlow',
-    'wave-big__mut-a_medhigh' : 'big+medhigh',
-    'wave-big__mut-a_high' : 'big+high',
+    'wave-big__mut-c_medhigh' : 'big+medhigh',
+    'wave-big__mut-d_high' : 'big+high',
+    'wave-big__mut-e_extreme' : 'big+extreme',
     'wave-small__mut-a_low' : 'small+low',
     'wave-small__mut-b_medlow' : 'small+medlow',
-    'wave-small__mut-a_medhigh' : 'small+medhigh',
-    'wave-small__mut-a_high' : 'small+high',
+    'wave-small__mut-c_medhigh' : 'small+medhigh',
+    'wave-small__mut-d_high' : 'small+high',
+    'wave-small__mut-e_extreme' : 'small+extreme',
     }[raw]
 )
 
