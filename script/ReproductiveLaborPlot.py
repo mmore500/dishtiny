@@ -35,7 +35,6 @@ ax = sns.barplot(
     x="Treatment",
     y="Incoming Reproduction Rate",
     hue="Level 0 Channel ID",
-    hue_order=[
     data=df
 )
 plt.xticks(rotation=30)
