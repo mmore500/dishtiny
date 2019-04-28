@@ -50,7 +50,7 @@ ax.get_figure().savefig(
                                             file_parcel="full_parcel",
                                             files_join="cat_join"
                                         ).hash_files([sys.argv[0]]),
-        '_source_hash' :kn.unpack(filename)['_source_hash'],
+        '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
         'ext' : '.pdf'
     }),
     transparent=True,
