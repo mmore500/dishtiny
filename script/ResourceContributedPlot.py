@@ -18,6 +18,8 @@ sns.set(style='whitegrid')
 
 dataframe_filename = sys.argv[1]
 
+# Setup dataframe
+
 df = pd.read_csv(dataframe_filename)
 
 df['Wave Size'] = df['Treatment'].apply(lambda raw : {
@@ -48,47 +50,65 @@ df['Mutational Load'] = df['Treatment'].apply(lambda raw : {
     }[raw]
 ).astype('category')
 
-df['Channel Match'] = df['Channel Match'].astype(str)
-
-ax1 = plt.subplot(121)
-ax1.invert_xaxis()
-
-sns.barplot(
-    y="Mutational Load",
-    x="Shared Resource Per Cell Pair Update",
-    hue="Channel Match",
-    hue_order=["True", "False"],
-    data=df[df["Wave Size"] == 'small']
+df['Channel Relationship'] = df['Channel Match'].apply(lambda raw : {
+    True : 'Matching',
+    False : 'Differing',
+    }[raw]
 )
 
-ax1.set_title('Small Wave')
-ax1.xaxis.label.set_visible(False)
-
-ax2 = plt.subplot(122)
-
+# Setup left subplot
+ax1 = plt.subplot(121)
 sns.barplot(
     y="Mutational Load",
     x="Shared Resource Per Cell Pair Update",
-    hue="Channel Match",
-    hue_order=["True", "False"],
+    hue="Channel Relationship",
+    hue_order=["Matching", "Differing"],
+    data=df[df["Wave Size"] == 'small']
+)
+ax1.invert_xaxis()
+ax1.invert_yaxis()
+ax1.set_title('Small Resource Wave')
+ax1.xaxis.label.set_visible(False)
+handles, labels = ax1.get_legend_handles_labels()
+legend = ax1.legend(
+    handles[::-1],
+    labels[::-1],
+    title='Channel Relationship',
+    loc='upper left',
+    fancybox=False,
+    shadow=False,
+
+)
+legend.get_frame().set_alpha(1.0)
+plt.setp(legend.get_title(),fontsize='small')
+
+# Setup right subplot
+ax2 = plt.subplot(122)
+sns.barplot(
+    y="Mutational Load",
+    x="Shared Resource Per Cell Pair Update",
+    hue="Channel Relationship",
+    hue_order=["Matching", "Differing"],
     data=df[df["Wave Size"] == 'big']
 ).get_legend().remove()
-
-ax2.set_title('Big Wave')
-
+ax2.invert_yaxis()
+ax2.set_title('Large Resource Wave')
+ax2.xaxis.label.set_visible(False)
 ax2.set_yticklabels([])
 ax2.yaxis.label.set_visible(False)
-ax2.xaxis.label.set_visible(False)
 
+# Tightly join y axes
 ax2.get_shared_y_axes().join(ax2, ax2)
 plt.subplots_adjust(wspace=.0)
+
+# Set one x axis label
 plt.gcf().text(0.5, 0.0, 'Shared Resource Per Cell Pair Update', ha='center')
 
-bigger = max((ax1, ax2), key=lambda x: max(x.get_xlim()))
-print(bigger)
+# Ensure identical scaling
 ax1.set_xlim(0.2, 0)
 ax2.set_xlim(0, 0.2)
 
+# Save figure
 plt.gcf().savefig(
     kn.pack({
         'title' : 'resource_contributed',
