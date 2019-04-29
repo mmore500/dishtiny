@@ -22,7 +22,7 @@ df = pd.read_csv(dataframe_filename)
 
 df['Relationship'] = df['Filter'].apply(lambda raw : {
     'none' : 'None',
-    'samechannel_lev_0' : 'Channel\nMatch',
+    'samechannel_lev_0' : 'Same\nChannel',
     'cell_parent' : 'Cell\nParent',
     'cell_child' : 'Cell\nChild',
     'propagule_parent' : 'Propagule\nParent',
