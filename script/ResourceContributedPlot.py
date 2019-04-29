@@ -50,7 +50,7 @@ plt.xticks(rotation=30)
 
 ax.get_figure().savefig(
     kn.pack({
-        'treat' : kn.unpack(filenames[0])['treat'],
+        'treat' : kn.unpack(dataframe_filename)['treat'],
         'title' : 'resource_contributed',
         '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
         '_script_fullcat_hash' : fsh.FilesHash(
