@@ -57,6 +57,8 @@ for upd in updates:
         kn.pack({
             'title' : 'channel_viz',
             'update' : str(upd),
+            'seed' : kn.unpack(filename)['seed'],
+            'treat' : kn.unpack(filename)['treat'],
             '_data_hathash_hash' : fsh.FilesHash().hash_files([filename]),
             '_script_fullcat_hash' : fsh.FilesHash(
                                                 file_parcel="full_parcel",
