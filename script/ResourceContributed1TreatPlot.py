@@ -30,7 +30,7 @@ df['Relationship'] = df['Filter'].apply(lambda raw : {
     }[raw]
 )
 
-df['State'] = df['Applied'].as_type(str)
+df['State'] = df['Applied'].astype(str)
 
 df = df[df['Filter'] != 'None']
 
