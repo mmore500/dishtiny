@@ -106,7 +106,7 @@ ax2.set_xlim(0, 0.002)
 # Save figure
 plt.gcf().savefig(
     kn.pack({
-        'title' : 'resource_contributed',
+        'title' : 'reproductive_labor',
         '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
         '_script_fullcat_hash' : fsh.FilesHash(
                                         file_parcel="full_parcel",
