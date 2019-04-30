@@ -94,7 +94,7 @@ outfile = kn.pack({
 pd.DataFrame.from_dict([
     {
         'Treatment' : kn.unpack(filename)['treat'],
-        'Incoming Reproduction Rate' :
+        'Outgoing Reproduction Rate' :
             CalcSameChannelRate(h5py.File(filename, 'r')),
         'Level 0 Channel ID' : 'Matching',
         'First Update' : first_update,
@@ -104,7 +104,7 @@ pd.DataFrame.from_dict([
 ] + [
     {
         'Treatment' : kn.unpack(filename)['treat'],
-        'Incoming Reproduction Rate' :
+        'Outgoing Reproduction Rate' :
             CalcDiffChannelRate(h5py.File(filename, 'r')),
         'Level 0 Channel ID' : 'Differing',
         'First Update' : first_update,

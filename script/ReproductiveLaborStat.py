@@ -1,5 +1,5 @@
 # usage:
-# dataframe_filename
+# treatment dataframe_filename
 
 import numpy as np
 import sys
@@ -8,16 +8,14 @@ from tqdm import tqdm
 import pandas as pd
 from astropy.stats import bootstrap
 
-dataframe_filename = sys.argv[1]
+treat = sys.argv[1]
+
+dataframe_filename = sys.argv[2]
 
 df = pd.read_csv(dataframe_filename)
 
-print(df)
-
-std = df[df['Treatment'] == 'treat=resource-wave__channelsense-yes__nlev-two'
-    ]['Incoming Reproduction Rate']
-control = df[df['Treatment'] == 'treat=resource-wave__channelsense-yes__nlev-onesmall'
-    ]['Incoming Reproduction Rate']
+std = df[df['Treatment'] == treat & df['Level 0 Channel ID'] == 'Matching']['Outgoing Reproduction Rate']
+control = df[df['Treatment'] == treat & df['Level 0 Channel ID'] == 'Differing']['Outgoing Reproduction Rate']
 
 boots = zip(bootstrap(np.array(std), 100000), bootstrap(np.array(control), 100000))
 

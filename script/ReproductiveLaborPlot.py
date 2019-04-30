@@ -56,7 +56,7 @@ df['Channel Relationship'] = df['Level 0 Channel ID']
 ax1 = plt.subplot(121)
 sns.barplot(
     y="Mutational Load",
-    x="Incoming Reproduction Rate",
+    x="Outgoing Reproduction Rate",
     hue="Channel Relationship",
     hue_order=["Matching", "Differing"],
     data=df[df["Wave Size"] == 'small']
@@ -70,7 +70,7 @@ ax1.xaxis.label.set_visible(False)
 ax2 = plt.subplot(122)
 sns.barplot(
     y="Mutational Load",
-    x="Incoming Reproduction Rate",
+    x="Outgoing Reproduction Rate",
     hue="Channel Relationship",
     hue_order=["Matching", "Differing"],
     data=df[df["Wave Size"] == 'big']
@@ -97,7 +97,7 @@ ax2.get_shared_y_axes().join(ax2, ax2)
 plt.subplots_adjust(wspace=.0)
 
 # Set one x axis label
-plt.gcf().text(0.5, 0.0, 'Incoming Reproduction Rate', ha='center')
+plt.gcf().text(0.5, 0.0, 'Outgoing Reproduction Rate', ha='center')
 
 # Ensure identical scaling
 ax1.set_xlim(0.002, 0)
