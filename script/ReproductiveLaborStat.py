@@ -14,8 +14,15 @@ dataframe_filename = sys.argv[2]
 
 df = pd.read_csv(dataframe_filename)
 
-std = df[df['Treatment'] == treat & df['Level 0 Channel ID'] == 'Matching']['Outgoing Reproduction Rate']
-control = df[df['Treatment'] == treat & df['Level 0 Channel ID'] == 'Differing']['Outgoing Reproduction Rate']
+std = df[
+    (df['Treatment'] == treat)
+    & (df['Level 0 Channel ID'] == 'Matching')
+]['Outgoing Reproduction Rate']
+
+control = df[
+    (df['Treatment'] == treat)
+    & (df['Level 0 Channel ID'] == 'Differing')
+]['Outgoing Reproduction Rate']
 
 boots = zip(bootstrap(np.array(std), 100000), bootstrap(np.array(control), 100000))
 
