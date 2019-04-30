@@ -48,11 +48,6 @@ def CalcSameChannelRate(file):
         if live[idx] and live[dir[idx]] and ch[idx] == ch[dir[idx]]
     ])
 
-            #and (
-            #(pc[idx] == ch[dir[idx]])
-            #or ()
-        #)
-
 
 def CalcDiffChannelRate(file):
     return np.mean([
@@ -81,11 +76,6 @@ def CalcDiffChannelRate(file):
         for idx in range(file['Index']['own'].size)
         if live[idx] and live[dir[idx]] and ch[idx] != ch[dir[idx]]
     ])
-
-            #and (
-            #(pc[idx] == ch[dir[idx]])
-            #or ()
-        #)
 
 
 print("num files:" , len(files))
