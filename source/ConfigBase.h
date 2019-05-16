@@ -55,12 +55,13 @@ EMP_BUILD_CONFIG(
   VALUE(TREATMENT_DESCRIPTOR, std::string, "treat=unspecified", "Treatment identifying slug, must begin wth \"treat\"=."),
   VALUE(CONFIGLEVEL_BASENAME, std::string, "level=", "Base filename"),
   VALUE(CONFIGLEVEL_EXTENSION, std::string, ".cfg", "Filename extension"),
-  VALUE(SNAPSHOT_FREQUENCY, size_t, 20000, "How often should we save data snapshots"),
+  VALUE(SNAPSHOT_FREQUENCY, size_t, 100000, "How often should we save data snapshots"),
   VALUE(SNAPSHOT_LENGTH, size_t, 100, "How long should snapshots last for?"),
   VALUE(RUN_LENGTH, size_t, 1000100, "How many updates should we run the experiment for?"),
   VALUE(SYSTEMATICS, bool, true, "Should we keep systematics data?"),
   VALUE(SEED_POP, bool, false, "Should we seed the population?; TOOD unimplemented"),
   VALUE(SEED_POP_FILENAME, std::string, "ConsolidatedChampions.csv", "Where should we look for the genotypes to seed our population with?; TODO unimplemented"),
-  VALUE(SEED_POP_CLONECOUNT, size_t, 2, "How many clones of each champion genotype should we seed our population with?; TODO unimplemented")
+  VALUE(SEED_POP_CLONECOUNT, size_t, 2, "How many clones of each champion genotype should we seed our population with?; TODO unimplemented"),
+  VALUE(ANIMATION_FREQUENCY, size_t, 250, "How often should we save data that will be used to make animations?")
 
 )

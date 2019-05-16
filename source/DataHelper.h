@@ -72,6 +72,7 @@ public:
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       file.createGroup("/RepIncoming/dir_"+emp::to_string(dir));
     }
+    file.createGroup("/TotalContribute/");
     file.createGroup("/ResourceContributed/");
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       file.createGroup("/ResourceContributed/dir_"+emp::to_string(dir));
@@ -98,7 +99,10 @@ public:
 
     dw.OnUpdate([this](const size_t update){
       if(cfg.TimingFun(update)) {
-        Population();
+        // only log one snapshot of genoypes, not a sequence
+        // because it's space intensive
+        if(update % cfg.SNAPSHOT_FREQUENCY() == 0) Population();
+
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
         Stockpile();
         Live();
@@ -113,6 +117,7 @@ public:
         for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
           RepIncoming(dir);
         }
+        TotalContribute();
         for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
           ResourceContributed(dir);
         }
@@ -125,6 +130,12 @@ public:
         ParentPos();
         CellAge();
         CellGen();
+        file.flush(H5F_SCOPE_LOCAL);
+      } else if (update % cfg.ANIMATION_FREQUENCY() == 0) {
+        // record frequent snapshots of these to stich together ananimations
+        for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
+        Stockpile();
+        TotalContribute();
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -527,6 +538,27 @@ private:
     ds.write((void*)data, tid);
 
   }
+
+ void TotalContribute() {
+
+   static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+   static const auto tid = H5::PredType::NATIVE_DOUBLE;
+
+   H5::DataSet ds = file.createDataSet(
+     "/TotalContribute/upd_" + emp::to_string(dw.GetUpdate()),
+     tid,
+     H5::DataSpace(2,dims)
+   );
+
+   double data[dw.GetSize()];
+
+   for (size_t i = 0; i < dw.GetSize(); ++i) {
+     data[i] = dw.man->Stockpile(i).QueryTotalContribute();
+   }
+
+   ds.write((void*)data, tid);
+
+ }
 
   void ResourceContributed(const size_t dir) {
 
