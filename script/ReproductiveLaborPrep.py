@@ -48,11 +48,6 @@ def CalcSameChannelRate(file):
         if live[idx] and live[dir[idx]] and ch[idx] == ch[dir[idx]]
     ])
 
-            #and (
-            #(pc[idx] == ch[dir[idx]])
-            #or ()
-        #)
-
 
 def CalcDiffChannelRate(file):
     return np.mean([
@@ -82,11 +77,6 @@ def CalcDiffChannelRate(file):
         if live[idx] and live[dir[idx]] and ch[idx] != ch[dir[idx]]
     ])
 
-            #and (
-            #(pc[idx] == ch[dir[idx]])
-            #or ()
-        #)
-
 
 print("num files:" , len(files))
 
@@ -104,9 +94,9 @@ outfile = kn.pack({
 pd.DataFrame.from_dict([
     {
         'Treatment' : kn.unpack(filename)['treat'],
-        'Incoming Reproduction Rate' :
+        'Outgoing Reproduction Rate' :
             CalcSameChannelRate(h5py.File(filename, 'r')),
-        'Level 1 Channel ID' : 'Matching',
+        'Level 0 Channel ID' : 'Matching',
         'First Update' : first_update,
         'Last Update' : last_update
     }
@@ -114,9 +104,9 @@ pd.DataFrame.from_dict([
 ] + [
     {
         'Treatment' : kn.unpack(filename)['treat'],
-        'Incoming Reproduction Rate' :
+        'Outgoing Reproduction Rate' :
             CalcDiffChannelRate(h5py.File(filename, 'r')),
-        'Level 1 Channel ID' : 'Differing',
+        'Level 0 Channel ID' : 'Differing',
         'First Update' : first_update,
         'Last Update' : last_update
     }
