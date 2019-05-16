@@ -40,7 +40,7 @@ public:
 
   void Reset();
 
-  void Process();
+  void Process(const size_t update);
 
   void SetProgram(const Config::program_t & program);
 

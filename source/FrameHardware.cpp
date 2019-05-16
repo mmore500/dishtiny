@@ -166,7 +166,7 @@ void FrameHardware::DispatchEnvTriggers(){
 
 }
 
-void FrameHardware::SetupCompute() {
+void FrameHardware::SetupCompute(const size_t update) {
   std::fill(repr_pause_cur->begin(), repr_pause_cur->end(), false);
   std::swap(repr_pause_cur, repr_pause_nxt);
   DispatchEnvTriggers();

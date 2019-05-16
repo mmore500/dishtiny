@@ -42,9 +42,9 @@ FrameCell::~FrameCell() {
 
 void FrameCell::Reset() { for(auto &fh : hw) fh->Reset(); }
 
-void FrameCell::Process() {
+void FrameCell::Process(const size_t update) {
 
-  for(auto & fhw : hw) fhw->SetupCompute();
+  for(auto & fhw : hw) fhw->SetupCompute(update);
 
   static emp::vector<size_t> shuffler;
   if (!shuffler.size()) {

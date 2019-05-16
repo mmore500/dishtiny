@@ -58,7 +58,7 @@ public:
 
   void DispatchEnvTriggers();
 
-  void SetupCompute();
+  void SetupCompute(const size_t update);
 
   void StepProcess();
 
