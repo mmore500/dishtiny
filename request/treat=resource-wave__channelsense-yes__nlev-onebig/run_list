@@ -2,7 +2,7 @@ set email mmore500@msu.edu
 set freq_email Crash
 set description treat=resource-wave__channelsense-yes__nlev-onebig
 set mem_request 6
-set walltime 44
+set walltime 168
 set beacon_priority y
 set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-wave__channelsense-yes__nlev-onebig
 set dest_dir /mnt/scratch/mmore500/dishtiny
