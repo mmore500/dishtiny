@@ -35,10 +35,10 @@ public:
   void TakeMessage(const Config::event_t & event, const size_t incoming_direction) {
 
     // Make room for new message in inbox. Remove oldest first.
-    while (inboxes[incoming_direction].size() >= cfg.INBOX_CAPACITY())
+    while (cfg.INBOX_CAPACITY() && inboxes[incoming_direction].size() >= cfg.INBOX_CAPACITY())
       inboxes[incoming_direction].pop_front();
 
-    inboxes[incoming_direction].emplace_back(event);
+    if(cfg.INBOX_CAPACITY()) inboxes[incoming_direction].emplace_back(event);
 
   }
 
