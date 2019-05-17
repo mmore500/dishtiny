@@ -56,7 +56,8 @@ private:
       );
 
       for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
-        fh.Cell().GetFrameHardware(dir).PauseRepr(i);
+        // pause repr so you don't reproduce over a child before you sense it
+        fh.Cell().GetFrameHardware(dir).PauseRepr(i, cfg.ENV_TRIG_FREQ() + 1);
       }
 
     }
@@ -164,21 +165,24 @@ public:
         "PauseRepr-Lev" + emp::to_string(replev),
         cfg.CHANNELS_VISIBLE() ?
         std::function<void(hardware_t &, const inst_t &)>(
-          [replev](hardware_t & hw, const inst_t & inst){
+          [replev, &cfg](hardware_t & hw, const inst_t & inst){
 
             FrameHardware &fh = *hw.GetTrait(0);
 
             const state_t & state = hw.GetCurState();
             const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+            const size_t dur = (
+              cfg.ENV_TRIG_FREQ() + 1 + state.GetLocal(inst.args[1])
+            );
 
-            fh.Cell().GetFrameHardware(dir).PauseRepr(replev);
+            fh.Cell().GetFrameHardware(dir).PauseRepr(replev, dur);
 
           }
         ) : std::function<void(hardware_t &, const inst_t &)>(
           [](hardware_t & hw, const inst_t & inst){ ; }
         ),
-        1,
-        "Pause reproduction in a particular direction for a certain reproduction level for the remainder of the current update and for the next update."
+        2,
+        "Pause reproduction in a particular direction for a certain reproduction level for a certain duration."
       );
     }
 
@@ -190,14 +194,17 @@ public:
 
         const state_t & state = hw.GetCurState();
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+        const size_t dur = (
+          cfg.ENV_TRIG_FREQ() + 1 + state.GetLocal(inst.args[1])
+        );
 
         for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
-          fh.Cell().GetFrameHardware(dir).PauseRepr(i);
+          fh.Cell().GetFrameHardware(dir).PauseRepr(i, dur);
         }
 
       },
-      1,
-      "Pause reproduction in a particular direction for all reproduction levels for the remainder of the current update and for the next update."
+      2,
+      "Pause reproduction in a particular direction for all reproduction levels for a certain duration."
     );
 
 

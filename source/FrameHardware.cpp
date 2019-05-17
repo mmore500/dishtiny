@@ -23,8 +23,7 @@ FrameHardware::FrameHardware(
     , facing(facing_)
     , inbox_active(false)
     , stockpile_reserve(0)
-    , repr_pause_cur(emp::NewPtr<emp::vector<bool>>(cfg_.NLEV()+1))
-    , repr_pause_nxt(emp::NewPtr<emp::vector<bool>>(cfg_.NLEV()+1, true))
+    , repr_pause(emp::NewPtr<emp::vector<size_t>>(cfg_.NLEV()+1))
     , cpu(inst_lib, event_lib, &local_rng_)
   {
     cpu.PushTrait(this);
@@ -32,8 +31,7 @@ FrameHardware::FrameHardware(
   }
 
 FrameHardware::~FrameHardware() {
-  repr_pause_cur.Delete();
-  repr_pause_nxt.Delete();
+  repr_pause.Delete();
 }
 
 FrameCell& FrameHardware::Cell() { return cell; }
@@ -41,8 +39,7 @@ FrameCell& FrameHardware::Cell() { return cell; }
 void FrameHardware::Reset() {
   inbox_active = false;
   stockpile_reserve = 0;
-  std::fill(repr_pause_cur->begin(), repr_pause_cur->end(), false);
-  std::fill(repr_pause_nxt->begin(), repr_pause_nxt->end(), true);
+  std::fill(repr_pause->begin(), repr_pause->end(), 0);
 
   cpu.ResetHardware();
   cpu.ResetProgram();
@@ -167,8 +164,7 @@ void FrameHardware::DispatchEnvTriggers(){
 }
 
 void FrameHardware::SetupCompute(const size_t update) {
-  std::fill(repr_pause_cur->begin(), repr_pause_cur->end(), false);
-  std::swap(repr_pause_cur, repr_pause_nxt);
+  for (auto & v : *repr_pause) { if(v) { --v; } }
   DispatchEnvTriggers();
 }
 
@@ -181,10 +177,12 @@ void FrameHardware::SetProgram(const Config::program_t & program) {
   cpu.SetProgram(program);
 }
 
-void FrameHardware::PauseRepr(const size_t lev) { (*repr_pause_nxt)[lev] = true; }
+void FrameHardware::PauseRepr(const size_t lev, const size_t dur) {
+  (*repr_pause)[lev] = dur;
+ }
 
 bool FrameHardware::IsReprPaused(const size_t lev) const {
-  return repr_pause_cur->at(lev) || repr_pause_nxt->at(lev);
+  return repr_pause->at(lev);
 }
 
 size_t FrameHardware::GetFacing() const {

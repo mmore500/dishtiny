@@ -26,8 +26,7 @@ private:
 
   double stockpile_reserve;
 
-  emp::Ptr<emp::vector<bool>> repr_pause_cur;
-  emp::Ptr<emp::vector<bool>> repr_pause_nxt;
+  emp::Ptr<emp::vector<size_t>> repr_pause;
 
   Config::hardware_t cpu;
 
@@ -64,7 +63,7 @@ public:
 
   void SetProgram(const Config::program_t & program);
 
-  void PauseRepr(const size_t lev);
+  void PauseRepr(const size_t lev, const size_t dur);
 
   bool IsReprPaused(const size_t lev) const;
 
