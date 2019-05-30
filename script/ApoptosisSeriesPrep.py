@@ -16,7 +16,29 @@ file = h5py.File(filename, 'r')
 
 def FracApoptosis(file, upd):
     return np.mean([
-        1 if apop[idx] else 0 # 1 and 2 are apoptosis types
+        1 if apop[idx] else 0
+        for apop in [
+            np.array(
+                file['Apoptosis']['upd_'+str(upd)]
+            ).flatten()
+        ]
+        for idx in range(file['Index']['own'].size)
+    ])
+
+def FracPartialApoptosis(file, upd):
+    return np.mean([
+        1 if apop[idx] == 1 else 0
+        for apop in [
+            np.array(
+                file['Apoptosis']['upd_'+str(upd)]
+            ).flatten()
+        ]
+        for idx in range(file['Index']['own'].size)
+    ])
+
+def FracCompleteApoptosis(file, upd):
+    return np.mean([
+        1 if apop[idx] == 2 else 0
         for apop in [
             np.array(
                 file['Apoptosis']['upd_'+str(upd)]
@@ -47,10 +69,16 @@ outfile = kn.pack({
 pd.DataFrame.from_dict([
     {
         'Treatment' : kn.unpack(filename)['treat'],
-        'Per-Cell-Update Apoptosis Rate' : FracApoptosis(file, upd),
+        'Per-Cell-Update Apoptosis Rate' : val,
+        'Type' : type,
         'Update' : upd,
     }
     for upd in ExtractUpdates(file)
+    for type, val in [
+        ('Partial', FracPartialApoptosis(file, upd)),
+        ('Complete', FracCompleteApoptosis(file, upd)),
+        ('Overall', FracApoptosis(file, upd))
+    ]
 ]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)
