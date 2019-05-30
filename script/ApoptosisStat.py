@@ -7,47 +7,68 @@ import os
 from tqdm import tqdm
 import pandas as pd
 from astropy.stats import bootstrap
+from scipy import stats
 
 dataframe_filename = sys.argv[1]
 
 df = pd.read_csv(dataframe_filename)
 
-print(df)
+nlev_two = df[
+        df['Treatment'] == 'resource-wave__channelsense-yes__nlev-two'
+    ]['Per-Cell-Update Apoptosis Rate']
 
-std = df[df['Treatment'] == 'treat=resource-wave__channelsense-yes__nlev-two'
+nlev_onesmall = df[
+        df['Treatment'] == 'resource-wave__channelsense-yes__nlev-onesmall'
     ]['Per-Cell-Update Apoptosis Rate']
-smallwave = df[df['Treatment'] == 'treat=resource-wave__channelsense-yes__nlev-onesmall'
+
+nlev_onebig = df[
+        df['Treatment'] == 'resource-wave__channelsense-yes__nlev-onebig'
     ]['Per-Cell-Update Apoptosis Rate']
+
 control = df[
-    df['Treatment'] == 'treat=resource-even__channelsense-no__nlev-two'
+        df['Treatment'] == 'resource-even__channelsense-no__nlev-two__mute'
     ]['Per-Cell-Update Apoptosis Rate']
 
-boots = zip(bootstrap(np.array(std), 100000), bootstrap(np.array(control), 100000))
 
-bootstats = [np.mean(std_boot) - np.mean(control_boot)
-    for std_boot, control_boot in tqdm(boots)]
+print("nlev_two / control:")
+bootstats = [
+    np.mean(nlev_two_boot) - np.mean(control)
+    for nlev_two_boot, control_boot
+    in tqdm(zip(
+            bootstrap(np.array(nlev_two), 100000),
+            bootstrap(np.array(control), 100000)
+        ))
+    ]
+print(
+    "   ",
+    stats.percentileofscore(bootstats, 0, 'rank')
+    )
 
-print("std/control")
-print("99.99% {}".format(np.percentile(bootstats,99.99)))
-print("99.9% {}".format(np.percentile(bootstats,99.9)))
-print("99% {}".format(np.percentile(bootstats,99)))
-print("95% {}".format(np.percentile(bootstats,95)))
-print("5% {}".format(np.percentile(bootstats,5)))
-print("1% {}".format(np.percentile(bootstats,1)))
-print("0.1% {}".format(np.percentile(bootstats,0.1)))
-print("0.01% {}".format(np.percentile(bootstats,0.01)))
 
-boots = zip(bootstrap(np.array(smallwave), 100000), bootstrap(np.array(control), 100000))
+print("nlev_onesmall_boot / control:")
+bootstats = [
+    np.mean(nlev_onesmall_boot) - np.mean(control)
+    for nlev_onesmall_boot, control_boot
+    in tqdm(zip(
+            bootstrap(np.array(nlev_onesmall), 100000),
+            bootstrap(np.array(control), 100000)
+        ))
+    ]
+print(
+   "   ",
+   stats.percentileofscore(bootstats, 0, 'rank')
+   )
 
-bootstats = [np.mean(smallwave_boot) - np.mean(control_boot)
-    for smallwave_boot, control_boot in tqdm(boots)]
-
-print("smallwave/control")
-print("99.99% {}".format(np.percentile(bootstats,99.99)))
-print("99.9% {}".format(np.percentile(bootstats,99.9)))
-print("99% {}".format(np.percentile(bootstats,99)))
-print("95% {}".format(np.percentile(bootstats,95)))
-print("5% {}".format(np.percentile(bootstats,5)))
-print("1% {}".format(np.percentile(bootstats,1)))
-print("0.1% {}".format(np.percentile(bootstats,0.1)))
-print("0.01% {}".format(np.percentile(bootstats,0.01)))
+print("nlev_onebig_boot / control:")
+bootstats = [
+    np.mean(nlev_onebig_boot) - np.mean(control)
+    for nlev_onebig_boot, control_boot
+    in tqdm(zip(
+            bootstrap(np.array(nlev_onebig), 100000),
+            bootstrap(np.array(control), 100000)
+        ))
+    ]
+print(
+   "   ",
+   stats.percentileofscore(bootstats, 0, 'rank')
+   )
