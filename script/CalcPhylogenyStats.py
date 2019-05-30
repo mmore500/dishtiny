@@ -18,7 +18,7 @@ filenames = sys.argv[2:]
 assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 
 res = []
-for filename in filenames:
+for filename in tqdm(filenames):
     df = pd.read_csv(filename)
     df['treat'] = kn.unpack(filename)['treat']
     res.append(df)
