@@ -38,8 +38,22 @@ for treat in df['treat'].unique():
     )
     print(
         "   ",
-        "ElapsedCellGen mean / std:",
+        "Phylogenetic Roots mean / std:",
         np.mean(df.loc[df['treat'] == treat]['num_roots']),
         " / ",
         np.std(df.loc[df['treat'] == treat]['num_roots'])
+    )
+    print(
+        "   ",
+        "Average Phylogenetic Depth mean / std:",
+        np.mean(df.loc[df['treat'] == treat]['ave_depth']),
+        " / ",
+        np.std(df.loc[df['treat'] == treat]['ave_depth'])
+    )
+    print(
+        "   ",
+        "Average MRCA Depth mean / std:",
+        np.mean(df.loc[df['treat'] == treat]['mrca_depth']),
+        " / ",
+        np.std(df.loc[df['treat'] == treat]['mrca_depth'])
     )
