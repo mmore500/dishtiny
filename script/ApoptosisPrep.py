@@ -44,15 +44,14 @@ outfile = kn.pack({
 
 pd.DataFrame.from_dict([
     {
-        'Treatment' : treat,
-        'Per-Cell-Update Apoptosis Rate' : FracApoptosis(file),
+        'Treatment' : kn.unpack(filename)['treat'],
+        'Per-Cell-Update Apoptosis Rate'
+            : FracApoptosis(h5py.File(filename, 'r')),
         'First Update' : first_update,
-        'Last Update' : last_update
+        'Last Update' : last_update,
+        'seed' : kn.unpack(filename)['seed']
     }
-    for treat, file in (
-        (kn.unpack(filename)['treat'], h5py.File(filename, 'r'))
-        for filename in tqdm(filenames)
-    )
+    for filename in tqdm(filenames)
 ]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)
