@@ -41,11 +41,12 @@ bootstats = [
     ]
 print(
     "   ",
-    stats.percentileofscore(bootstats, 0, 'rank')
+    stats.percentileofscore(bootstats, 0, 'rank'),
+    "th percentile"
     )
 
 
-print("nlev_onesmall_boot / control:")
+print("nlev_onesmall / control:")
 bootstats = [
     np.mean(nlev_onesmall_boot) - np.mean(control)
     for nlev_onesmall_boot, control_boot
@@ -56,10 +57,11 @@ bootstats = [
     ]
 print(
    "   ",
-   stats.percentileofscore(bootstats, 0, 'rank')
+   stats.percentileofscore(bootstats, 0, 'rank'),
+   "th percentile"
    )
 
-print("nlev_onebig_boot / control:")
+print("nlev_onebig / control:")
 bootstats = [
     np.mean(nlev_onebig_boot) - np.mean(control)
     for nlev_onebig_boot, control_boot
@@ -70,5 +72,6 @@ bootstats = [
     ]
 print(
    "   ",
-   stats.percentileofscore(bootstats, 0, 'rank')
+   stats.percentileofscore(bootstats, 0, 'rank'),
+   "th percentile"
    )
