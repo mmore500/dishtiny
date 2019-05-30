@@ -45,6 +45,11 @@ for treat in df['treat'].unique():
     )
     print(
         "   ",
+        "Number runs with > 1 phylogenetic root:",
+        len([r for r in df.loc[df['treat'] == treat]['num_roots'] if r > 1])
+    )
+    print(
+        "   ",
         "Average Phylogenetic Depth mean / std:",
         np.mean(df.loc[df['treat'] == treat]['ave_depth']),
         " / ",
