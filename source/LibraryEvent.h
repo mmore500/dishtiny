@@ -54,7 +54,7 @@ public:
         "SendMsgExternal",
         [](hardware_t & hw, const event_t & event) {
 
-          FrameHardware &fh = *hw.GetTrait(0);
+          FrameHardware &fh = *hw.GetTrait();
           Manager &man = fh.Cell().Man();
           const size_t outgoing_dir = fh.GetMsgDir();
           const size_t dest = fh.Cell().GetNeigh(outgoing_dir);
@@ -67,7 +67,7 @@ public:
         "SendMsgInternal",
         [](hardware_t & hw, const event_t & event) {
 
-          FrameHardware &fh = *hw.GetTrait(0);
+          FrameHardware &fh = *hw.GetTrait();
           const size_t dir = fh.GetMsgDir();
 
           fh.Cell().GetFrameHardware(dir).QueueMessage(event);

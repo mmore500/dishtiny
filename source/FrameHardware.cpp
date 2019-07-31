@@ -26,7 +26,7 @@ FrameHardware::FrameHardware(
     , repr_pause(emp::NewPtr<emp::vector<size_t>>(cfg_.NLEV()+1))
     , cpu(inst_lib, event_lib, &local_rng_)
   {
-    cpu.PushTrait(this);
+    cpu.SetTrait(this);
     cpu.SetMinBindThresh(cfg.HW_MIN_BIND_THRESH());
   }
 

@@ -28,7 +28,7 @@ private:
     const Config &cfg
   ){
 
-    FrameHardware &fh = *hw.GetTrait(0);
+    FrameHardware &fh = *hw.GetTrait();
 
     Manager &man = fh.Cell().Man();
     const size_t pos = fh.Cell().GetPos();
@@ -112,7 +112,7 @@ public:
     il.AddInst(
       "SendMsgInternal",
       [](hardware_t & hw, const inst_t & inst){
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
         const state_t & state = hw.GetCurState();
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         fh.SetMsgDir(dir);
@@ -128,7 +128,7 @@ public:
     il.AddInst(
       "BcstMsgInternal",
       [](hardware_t & hw, const inst_t & inst){
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
         const state_t & state = hw.GetCurState();
 
         for(size_t dir = 0; dir < Cardi::NumDirs; ++dir) {
@@ -147,7 +147,7 @@ public:
     il.AddInst(
       "SetStockpileReserve",
       [&cfg](hardware_t & hw, const inst_t & inst){
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         const state_t & state = hw.GetCurState();
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
@@ -167,7 +167,7 @@ public:
         std::function<void(hardware_t &, const inst_t &)>(
           [replev, &cfg](hardware_t & hw, const inst_t & inst){
 
-            FrameHardware &fh = *hw.GetTrait(0);
+            FrameHardware &fh = *hw.GetTrait();
 
             const state_t & state = hw.GetCurState();
             const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
@@ -190,7 +190,7 @@ public:
       "PauseRepr",
       [&cfg](hardware_t & hw, const inst_t & inst){
 
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         const state_t & state = hw.GetCurState();
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
@@ -211,7 +211,7 @@ public:
     il.AddInst(
       "ActivateInbox",
       [](hardware_t &hw, const inst_t &inst){
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
         const state_t & state = hw.GetCurState();
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         fh.Cell().GetFrameHardware(dir).SetInboxActivity(true);
@@ -223,7 +223,7 @@ public:
     il.AddInst(
       "DeactivateInbox",
       [](hardware_t &hw, const inst_t &inst){
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
         const state_t & state = hw.GetCurState();
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         fh.Cell().GetFrameHardware(dir).SetInboxActivity(false);
@@ -240,7 +240,7 @@ public:
       "SendBigFracResource",
       [](hardware_t & hw, const inst_t & inst){
 
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
         const state_t & state = hw.GetCurState();
 
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
@@ -272,7 +272,7 @@ public:
       "SendSmallFracResource",
       [](hardware_t & hw, const inst_t & inst){
 
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
         const state_t & state = hw.GetCurState();
 
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
@@ -304,7 +304,7 @@ public:
       "SetAcceptSharingTrue",
       [](hardware_t & hw, const inst_t & inst){
 
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
@@ -319,7 +319,7 @@ public:
       "SetAcceptSharingFalse",
       [](hardware_t & hw, const inst_t & inst){
 
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
@@ -333,7 +333,7 @@ public:
     il.AddInst(
       "SendMsgExternal",
       [](hardware_t & hw, const inst_t & inst){
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
         const state_t & state = hw.GetCurState();
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         fh.SetMsgDir(dir);
@@ -349,7 +349,7 @@ public:
     il.AddInst(
       "BcstMsgExternal",
       [](hardware_t & hw, const inst_t & inst){
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
         const state_t & state = hw.GetCurState();
 
         for(size_t dir = 0; dir < Cardi::NumDirs; ++dir) {
@@ -389,7 +389,7 @@ public:
         std::function<void(hardware_t &, const inst_t &)>(
           [lev, &cfg](hardware_t & hw, const inst_t & inst){
             const state_t & state = hw.GetCurState();
-            FrameHardware &fh = *hw.GetTrait(0);
+            FrameHardware &fh = *hw.GetTrait();
             fh.Cell().Man().Channel(fh.Cell().GetPos()).IncrCellAge(
               lev,
               std::max(
@@ -413,7 +413,7 @@ public:
       "DoApoptosisComplete",
       [](hardware_t & hw, const inst_t & inst){
 
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
@@ -429,7 +429,7 @@ public:
       "DoApoptosisPartial",
       [](hardware_t & hw, const inst_t & inst){
 
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
@@ -444,7 +444,7 @@ public:
     il.AddInst(
       "SetHeir",
       [](hardware_t &hw, const inst_t &inst){
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
         const state_t & state = hw.GetCurState();
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         Manager &man = fh.Cell().Man();
@@ -459,7 +459,7 @@ public:
     il.AddInst(
       "UnsetHeir",
       [](hardware_t &hw, const inst_t &inst){
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
         const state_t & state = hw.GetCurState();
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         Manager &man = fh.Cell().Man();
@@ -479,7 +479,7 @@ public:
       "QueryOwnStockpile",
       [](hardware_t & hw, const inst_t & inst){
 
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
@@ -501,7 +501,7 @@ public:
         std::function<void(hardware_t &, const inst_t &)>(
           [lev](hardware_t & hw, const inst_t & inst){
 
-            FrameHardware &fh = *hw.GetTrait(0);
+            FrameHardware &fh = *hw.GetTrait();
 
             Manager &man = fh.Cell().Man();
             const size_t pos = fh.Cell().GetPos();
@@ -529,7 +529,7 @@ public:
       [](hardware_t & hw, const inst_t & inst){
 
         state_t & state = hw.GetCurState();
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         state.SetLocal(
           inst.args[1],
@@ -546,7 +546,7 @@ public:
       [](hardware_t & hw, const inst_t & inst){
 
         state_t & state = hw.GetCurState();
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         state.SetLocal(
           inst.args[1],
@@ -563,7 +563,7 @@ public:
       [](hardware_t & hw, const inst_t & inst){
 
         state_t & state = hw.GetCurState();
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         state.SetLocal(
           inst.args[1],
@@ -580,7 +580,7 @@ public:
       [](hardware_t & hw, const inst_t & inst){
 
         state_t & state = hw.GetCurState();
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         state.SetLocal(
           inst.args[1],
@@ -600,7 +600,7 @@ public:
           [lev](hardware_t & hw, const inst_t & inst){
 
             state_t & state = hw.GetCurState();
-            FrameHardware &fh = *hw.GetTrait(0);
+            FrameHardware &fh = *hw.GetTrait();
 
             state.SetLocal(
               inst.args[1],
@@ -623,7 +623,7 @@ public:
         [](hardware_t & hw, const inst_t & inst){
 
           state_t & state = hw.GetCurState();
-          FrameHardware &fh = *hw.GetTrait(0);
+          FrameHardware &fh = *hw.GetTrait();
 
           state.SetLocal(
             inst.args[1],
@@ -645,7 +645,7 @@ public:
         [](hardware_t & hw, const inst_t & inst){
           state_t & state = hw.GetCurState();
 
-          FrameHardware &fh = *hw.GetTrait(0);
+          FrameHardware &fh = *hw.GetTrait();
 
           state.SetLocal(
             inst.args[1],
@@ -670,7 +670,7 @@ public:
           [lev](hardware_t & hw, const inst_t & inst){
             state_t & state = hw.GetCurState();
 
-            FrameHardware &fh = *hw.GetTrait(0);
+            FrameHardware &fh = *hw.GetTrait();
 
             const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
             const size_t neigh = fh.Cell().GetNeigh(dir);
@@ -696,7 +696,7 @@ public:
       [](hardware_t & hw, const inst_t & inst){
         state_t & state = hw.GetCurState();
 
-        FrameHardware &fh = *hw.GetTrait(0);
+        FrameHardware &fh = *hw.GetTrait();
 
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         const size_t neigh = fh.Cell().GetNeigh(dir);
