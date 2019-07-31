@@ -7,6 +7,8 @@
 #include "H5Cpp.h"
 
 #include "data/DataNode.h"
+#include "tools/keyname_utils.h"
+#include "tools/string_utils.h"
 
 #include "Config.h"
 #include "DishWorld.h"
@@ -27,23 +29,14 @@ public:
   DataHelper(DishWorld &dw_, const Config &cfg_)
   : cfg(cfg_)
   , dw(dw_)
-  , file(
-    std::string()
-    + "title=grid_snapshots"
-    + "+"
-    + cfg.TREATMENT_DESCRIPTOR()
-    + "+"
-    + "seed="
-    + emp::to_string(cfg.SEED())
-    + "+"
-    + "_emp_hash="
-    + STRINGIFY(EMPIRICAL_HASH_)
-    + "+"
-    + "_source_hash="
-    + STRINGIFY(DISHTINY_HASH_)
-    + "+"
-    + "ext="
-    + ".h5"
+  , file(emp::keyname::pack({
+      {"title", "grid_snapshots"},
+      {"treat", cfg.TREATMENT_DESCRIPTOR()},
+      {"seed", emp::to_string(cfg.SEED())},
+      {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
+      {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
+      {"ext", ".h5"}
+    })
     , H5F_ACC_TRUNC
   )
   {

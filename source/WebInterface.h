@@ -11,6 +11,7 @@
 #include "web/Animate.h"
 #include "tools/math.h"
 #include "tools/Random.h"
+#include "tools/keyname_utils.h"
 
 #include "Config.h"
 #include "DishWorld.h"
@@ -276,26 +277,15 @@ public:
     if (downloaded) return;
 
     const auto namify = [this](const std::string &title) {
-      return std::string()
-        + "title="
-        + title
-        + "+"
-        + cfg.TREATMENT_DESCRIPTOR()
-        + "+"
-        + "seed="
-        + emp::to_string(cfg.SEED())
-        + "+"
-        + "update="
-        + emp::to_string(w.GetUpdate())
-        + "+"
-        + "_emp_hash="
-        + STRINGIFY(EMPIRICAL_HASH_)
-        + "+"
-        + "_source_hash="
-        + STRINGIFY(DISHTINY_HASH_)
-        + "+"
-        + "ext="
-        + ".png";
+      return emp::keyname::pack({
+        {"title", title},
+        {"treat", cfg.TREATMENT_DESCRIPTOR()},
+        {"seed", emp::to_string(cfg.SEED())},
+        {"update", emp::to_string(w.GetUpdate())},
+        {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
+        {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
+        {"ext", ".png"}
+      });
     };
 
     if(cfg.TimingFun(w.GetUpdate())) {

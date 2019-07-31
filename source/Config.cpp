@@ -33,7 +33,6 @@ void Config::LoadFromFile() {
   }
   // check conditions on settings
   emp_assert(SEED() > 0);
-  emp_assert(TREATMENT_DESCRIPTOR().rfind("treat=", 0) == 0);
 }
 
 Config::Config() {
@@ -46,7 +45,6 @@ Config::Config() {
   }
   // check conditions on settings
   emp_assert(SEED() > 0);
-  emp_assert(TREATMENT_DESCRIPTOR().rfind("treat=", 0) == 0);
 }
 
 Config::~Config() {

@@ -8,6 +8,8 @@
 #include "tools/Random.h"
 #include "tools/hash_utils.h"
 #include "tools/BitSet.h"
+#include "tools/keyname_utils.h"
+#include "tools/string_utils.h"
 
 #include "Cardi.h"
 #include "DishWorld.h"
@@ -119,22 +121,14 @@ void DishWorld::InitSystematics() {
     #ifndef EMSCRIPTEN
     auto& sf = SetupSystematicsFile(
       "systematics",
-      std::string()
-        + "title=systematics"
-        + "+"
-        + cfg.TREATMENT_DESCRIPTOR()
-        + "+"
-        + "seed="
-        + std::to_string(cfg.SEED())
-        + "+"
-        + "_emp_hash="
-        + STRINGIFY(EMPIRICAL_HASH_)
-        + "+"
-        + "_source_hash="
-        + STRINGIFY(DISHTINY_HASH_)
-        + "+"
-        + "ext="
-        + ".csv",
+      emp::keyname::pack({
+        {"title", "systematics"},
+        {"treat", cfg.TREATMENT_DESCRIPTOR()},
+        {"seed", emp::to_string(cfg.SEED())},
+        {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
+        {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
+        {"ext", ".csv"}
+      }),
       false
     );
 
