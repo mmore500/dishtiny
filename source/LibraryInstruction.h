@@ -97,14 +97,7 @@ public:
     il.AddInst("Fork", Config::hardware_t::Inst_Fork, 0, "Fork a new thread, using tag-based referencing to determine which function to call on the new thread.", emp::ScopeType::BASIC, 0, {"affinity"});
     il.AddInst("Terminate", Config::hardware_t::Inst_Terminate, 0, "Terminate current thread.");
     il.AddInst("Nop", Config::hardware_t::Inst_Nop, 0, "No operation.");
-    il.AddInst("Rng",
-      [](hardware_t &hw, const inst_t &inst){
-        state_t & state = hw.GetCurState();
-        state.SetLocal(inst.args[0], hw.GetRandom().GetDouble());
-      },
-      1,
-      "Draw from onboard random number generator."
-    );
+    il.AddInst("Rng", Config::hardware_t::Inst_RngDouble, 1, "Draw from onboard random number generator.");
   }
 
   static void InitInternalActions(inst_lib_t &il, const Config &cfg) {
