@@ -61,9 +61,12 @@ public:
             std::ratio<1, 500>,
             std::ratio<5, 4>
           >,
-        std::conditional<STRINGVIEWIFY(SELECTOR) == "ranked",
+        std::conditional<STRINGVIEWIFY(SELECTOR) == "exproulette",
+          emp::ExpRouletteSelector<>,
+         std::conditional<STRINGVIEWIFY(SELECTOR) == "ranked",
           emp::RankedSelector<std::ratio<3,2>>,
           std::enable_if<false>
+        >::type
         >::type
         >::type
 #else
