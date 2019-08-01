@@ -19,7 +19,10 @@ EMPIRICAL_DIRTY := $(shell \
 CFLAGS_all := -std=c++17 -Wall -Wno-unused-function \
                 -I$(EMP_DIR)/ \
                 -DDISHTINY_HASH_=$(DISHTINY_HASH)$(DISHTINY_DIRTY) \
-                -DEMPIRICAL_HASH_=$(EMPIRICAL_HASH)$(EMPIRICAL_DIRTY)
+                -DEMPIRICAL_HASH_=$(EMPIRICAL_HASH)$(EMPIRICAL_DIRTY) \
+								$(ARGS)
+# to compile different metrics/selecctors
+# make ARGS="-DMETRIC=streak -DSELECTOR=roulette"
 
 # Native compiler information
 CXX_nat := h5c++
