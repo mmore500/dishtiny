@@ -173,6 +173,11 @@ public:
     auto seed_text = button_dash.AddText("seed_text");
     seed_text << emp::to_string(cfg.SEED());
 
+    auto matchbin_text = button_dash.AddText("matchbin_text");
+    emp::Random temp(1); // need this to prevent a memory leak
+    matchbin_text <<
+      Config::hardware_t(nullptr, nullptr, &temp).GetMatchBin().name();
+
     auto ud_text = button_dash.AddText("ud_text");
     ud_text << "Update: " << UI::Live([this](){ return w.GetUpdate(); });
 

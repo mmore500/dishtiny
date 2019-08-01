@@ -22,6 +22,10 @@ int main(int argc, char* argv[])
 
   std::cout << "SOURCE HASH " << STRINGIFY(DISHTINY_HASH_) << std::endl;
   std::cout << "EMP HASH " << STRINGIFY(EMPIRICAL_HASH_) << std::endl;
+  emp::Random temp(1); // need this to prevent a memory leak
+  std::cout << "MATCHBIN "
+    << Config::hardware_t(nullptr, nullptr, &temp).GetMatchBin().name()
+    << std::endl;
 
   Config cfg;
   cfg.LoadFromFile();
