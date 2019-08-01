@@ -98,6 +98,8 @@ public:
     il.AddInst("Terminate", Config::hardware_t::Inst_Terminate, 0, "Terminate current thread.");
     il.AddInst("Nop", Config::hardware_t::Inst_Nop, 0, "No operation.");
     il.AddInst("Rng", Config::hardware_t::Inst_RngDouble, 1, "Draw from onboard random number generator.");
+    il.AddInst("SetRegulator", Config::hardware_t::Inst_SetRegulator, 1, "Sets the regulator of a tag in the matchbin.");
+    il.AddInst("AdjRegulator", Config::hardware_t::Inst_AdjRegulator, 1, "Adjusts the regulator of a tag in the matchbin.");
   }
 
   static void InitInternalActions(inst_lib_t &il, const Config &cfg) {
