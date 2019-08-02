@@ -22,7 +22,12 @@ struct Genome {
     emp::Random &local_rng,
     const Config::inst_lib_t &inst_lib,
     const Config &cfg
-  ) : Genome(emp::GenRandSignalGPProgram<Config::TAG_WIDTH,Config::TRAIT_TYPE>(
+  ) : Genome(
+    emp::GenRandSignalGPProgram<
+      Config::TAG_WIDTH,
+      Config::TRAIT_TYPE,
+      Config::hardware_t::matchbin_t
+    >(
         local_rng,
         inst_lib,
         cfg.PROGRAM_MIN_FUN_CNT(), cfg.PROGRAM_MAX_FUN_CNT(),
