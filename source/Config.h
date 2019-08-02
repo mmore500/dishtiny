@@ -31,7 +31,7 @@ private:
 
 public:
 
-  static constexpr size_t TAG_WIDTH = 16;
+  static constexpr size_t TAG_WIDTH = 32;
 
   using TRAIT_TYPE = emp::Ptr<FrameHardware>;
   using chanid_t = uint64_t;
