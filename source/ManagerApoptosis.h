@@ -4,13 +4,13 @@ class ManagerApoptosis {
 
 private:
 
-  static const size_t complete = 2;
-  static const size_t partial = 1;
-  static const size_t unmarked = 0;
-
   size_t state;
 
 public:
+
+  static const size_t complete = 2;
+  static const size_t partial = 1;
+  static const size_t unmarked = 0;
 
   ManagerApoptosis() : state(unmarked) { Reset(); }
 

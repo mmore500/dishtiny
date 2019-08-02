@@ -34,11 +34,13 @@ class WebInterface : public UI::Animate {
   UI::Document wave_viewer;
   UI::Document stockpile_viewer;
   UI::Document contribution_viewer;
+  UI::Document apoptosis_viewer;
   UI::Document systematics_viewer;
   WebArtist<ChannelPack> channel;
   emp::vector<WebArtist<int>> wave;
   WebArtist<double> stockpile;
   WebArtist<double> contribution;
+  WebArtist<size_t> apoptosis;
   WebArtist<Genome> systematics;
 
   bool rendered;
@@ -64,6 +66,7 @@ public:
     , wave_viewer("wave_viewer")
     , stockpile_viewer("stockpile_viewer")
     , contribution_viewer("contribution_viewer")
+    , apoptosis_viewer("apoptosis_viewer")
     , systematics_viewer("systematics_viewer")
     , channel(
       channel_viewer,
@@ -121,6 +124,20 @@ public:
           );
           else if (*amt == 0) return "white";
           else return "red";
+        } else return "black";
+      },
+      cfg_
+    ), apoptosis(
+      apoptosis_viewer,
+      [this](size_t i){
+        return w.IsOccupied(i) ? std::make_optional(w.man->Apoptosis(i).GetState()) : std::nullopt;
+      },
+      [](std::optional<size_t> state) -> std::string {
+        if (state) {
+          if (*state == ManagerApoptosis::unmarked) return "white";
+          else if (*state == ManagerApoptosis::partial) return "blue";
+          else if (*state == ManagerApoptosis::complete) return "red";
+          else return "yellow";
         } else return "black";
       },
       cfg_
@@ -269,6 +286,7 @@ public:
     channel.Redraw();
     stockpile.Redraw();
     contribution.Redraw();
+    apoptosis.Redraw();
     systematics.Redraw();
     for(auto &w : wave) w.Redraw();
 
@@ -298,6 +316,7 @@ public:
       channel.Download(namify("channel_viz"));
       stockpile.Download(namify("stockpile_viz"));
       contribution.Download(namify("contribution_viz"));
+      apoptosis.Download(namify("apoptosis_viz"));
     }
 
     downloaded = true;
