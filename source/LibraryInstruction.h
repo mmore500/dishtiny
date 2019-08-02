@@ -100,9 +100,9 @@ public:
     il.AddInst("Nop", Config::hardware_t::Inst_Nop, 0, "No operation.");
     il.AddInst("Rng", Config::hardware_t::Inst_RngDouble, 1, "Draw from onboard random number generator.");
     il.AddInst("SetRegulator", Config::hardware_t::Inst_SetRegulator, 1, "Sets the regulator of a tag in the matchbin.");
-    il.AddInst("SetOwnRegulator", Config::hardware_t::Inst_SetRegulator, 1, "Sets the regulator the currently executing function.");
-    il.AddInst("AdjRegulator", Config::hardware_t::Inst_AdjRegulator, 1, "Adjusts the regulator of a tag in the matchbin.");
-    il.AddInst("AdjOwnRegulator", Config::hardware_t::Inst_AdjRegulator, 1, "Adjusts the regulator of the currently executing function.");
+    il.AddInst("SetOwnRegulator", Config::hardware_t::Inst_SetOwnRegulator, 1, "Sets the regulator the currently executing function.");
+    il.AddInst("AdjRegulator", Config::hardware_t::Inst_AdjRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.");
+    il.AddInst("AdjOwnRegulator", Config::hardware_t::Inst_AdjOwnRegulator, 2, "Adjusts the regulator of the currently executing function towards a target.");
     il.AddInst("SenseRegulator", Config::hardware_t::Inst_SenseRegulator, 1, "Senses the regulator of a tag in the matchbin.");
     il.AddInst("SenseOwnRegulator", Config::hardware_t::Inst_SenseOwnRegulator, 1, "Senses the regulator of the currently executing function.");
     for (size_t f = 1; f < 9; ++f) {
