@@ -30,9 +30,10 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
 {
   SetPopStruct_Grid(cfg.GRID_W(), cfg.GRID_H());
 
+  emp::Random rand_init(cfg.SEED());
   for(size_t i = 0; i < GetSize(); ++i) {
     local_rngs.push_back(
-      emp::NewPtr<emp::Random>(emp::szudzik_hash(cfg.SEED(),i+uid_offset))
+      emp::NewPtr<emp::Random>(rand_init.GetInt(1, 1000000))
     );
     global_rngs.push_back(emp::NewPtr<emp::Random>(cfg.SEED()));
   }
