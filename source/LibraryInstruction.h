@@ -105,27 +105,43 @@ public:
     il.AddInst("AdjOwnRegulator", Config::hardware_t::Inst_AdjOwnRegulator, 2, "Adjusts the regulator of the currently executing function towards a target.");
     il.AddInst("SenseRegulator", Config::hardware_t::Inst_SenseRegulator, 1, "Senses the regulator of a tag in the matchbin.");
     il.AddInst("SenseOwnRegulator", Config::hardware_t::Inst_SenseOwnRegulator, 1, "Senses the regulator of the currently executing function.");
-    for (size_t f = 1; f < 9; ++f) {
-      il.AddInst(
-        emp::to_string("Terminal", f),
-        [f](Config::hardware_t & hw, const inst_t & inst) {
-          state_t & state = hw.GetCurState();
-          const auto & tag =
-            hw.GetProgram()[state.GetFP()][state.GetIP()].affinity;
 
-          std::hash<Config::hardware_t::affinity_t> hasher;
-
-          const double val = (
-            static_cast<double>(hasher(tag)) /
-            std::numeric_limits<size_t>::max()
-          ) * 2 - 1.0;
-
-          state.SetLocal(inst.args[0], val / f);
-        },
-        1,
-        "Writes a genetically-determined value into a register."
-      );
-    }
+    il.AddInst(
+      emp::to_string("Terminal", 10),
+      Config::hardware_t::Inst_Terminal<std::ratio<10>, std::ratio<-10>>,
+      1,
+      "Writes a genetically-determined value into a register."
+    );
+    il.AddInst(
+      emp::to_string("Terminal", 5),
+      Config::hardware_t::Inst_Terminal<std::ratio<5>, std::ratio<-5>>,
+      1,
+      "Writes a genetically-determined value into a register."
+    );
+    il.AddInst(
+      emp::to_string("Terminal", 1),
+      Config::hardware_t::Inst_Terminal<std::ratio<1>, std::ratio<-1>>,
+      1,
+      "Writes a genetically-determined value into a register."
+    );
+    il.AddInst(
+      emp::to_string("Terminal", 0.5),
+      Config::hardware_t::Inst_Terminal<std::ratio<1,2>, std::ratio<-1,2>>,
+      1,
+      "Writes a genetically-determined value into a register."
+    );
+    il.AddInst(
+      emp::to_string("Terminal", 0.25),
+      Config::hardware_t::Inst_Terminal<std::ratio<1,4>, std::ratio<-1,4>>,
+      1,
+      "Writes a genetically-determined value into a register."
+    );
+    il.AddInst(
+      emp::to_string("Terminal", 0.125),
+      Config::hardware_t::Inst_Terminal<std::ratio<1,8>, std::ratio<-1,8>>,
+      1,
+      "Writes a genetically-determined value into a register."
+    );
   }
 
   static void InitInternalActions(inst_lib_t &il, const Config &cfg) {
