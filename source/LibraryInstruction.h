@@ -105,12 +105,6 @@ public:
     il.AddInst("SenseOwnRegulator", Config::hardware_t::Inst_SenseOwnRegulator, 1, "Senses the regulator of the currently executing function.");
 
     il.AddInst(
-      emp::to_string("Terminal", 10),
-      Config::hardware_t::Inst_Terminal<std::ratio<10>, std::ratio<-10>>,
-      1,
-      "Writes a genetically-determined value into a register."
-    );
-    il.AddInst(
       emp::to_string("Terminal", 5),
       Config::hardware_t::Inst_Terminal<std::ratio<5>, std::ratio<-5>>,
       1,
@@ -119,18 +113,6 @@ public:
     il.AddInst(
       emp::to_string("Terminal", 1),
       Config::hardware_t::Inst_Terminal<std::ratio<1>, std::ratio<-1>>,
-      1,
-      "Writes a genetically-determined value into a register."
-    );
-    il.AddInst(
-      emp::to_string("Terminal", 0.5),
-      Config::hardware_t::Inst_Terminal<std::ratio<1,2>, std::ratio<-1,2>>,
-      1,
-      "Writes a genetically-determined value into a register."
-    );
-    il.AddInst(
-      emp::to_string("Terminal", 0.25),
-      Config::hardware_t::Inst_Terminal<std::ratio<1,4>, std::ratio<-1,4>>,
       1,
       "Writes a genetically-determined value into a register."
     );
