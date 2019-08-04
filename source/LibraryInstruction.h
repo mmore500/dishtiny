@@ -346,9 +346,9 @@ public:
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
 
-        man.Stockpile(pos).SetAcceptSharing(true);
+        man.Stockpile(pos).SetAcceptSharing(0);
       },
-      2,
+      0,
       "Mark self to accept resource contributions from neighbors."
     );
 
@@ -357,13 +357,16 @@ public:
       [](hardware_t & hw, const inst_t & inst){
 
         FrameHardware &fh = *hw.GetTrait();
+        const state_t & state = hw.GetCurState();
 
         Manager &man = fh.Cell().Man();
         const size_t pos = fh.Cell().GetPos();
 
-        man.Stockpile(pos).SetAcceptSharing(false);
+        man.Stockpile(pos).SetAcceptSharing(
+          2 + state.GetLocal(inst.args[0])
+        );
       },
-      2,
+      1,
       "Mark self to not accept resource contributions from neighbors."
     );
 

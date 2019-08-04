@@ -16,8 +16,7 @@ private:
 
   emp::vector<double> contrib_resource;
 
-  bool accept_sharing;
-  bool accept_sharing_nxt;
+  size_t decline_sharing;
 
 public:
 
@@ -85,20 +84,19 @@ public:
   }
 
   bool CheckAcceptSharing() const {
-    return accept_sharing;
+    return !decline_sharing;
   }
 
-  void SetAcceptSharing(const bool set) {
-    accept_sharing_nxt = set;
+  void SetAcceptSharing(const size_t set) {
+    decline_sharing = set;
   }
 
-  void ResolveNextAcceptSharing() {
-    accept_sharing = accept_sharing_nxt;
+  void ResolveNextAcceptSharing(const size_t update) {
+    if (update % cfg.ENV_TRIG_FREQ() == 0 && decline_sharing) --decline_sharing;
   }
 
   void Reset() {
-    accept_sharing = true;
-    accept_sharing_nxt = true;
+    decline_sharing = 0;
     resource = 0.0;
     for(size_t dir = 0; dir < contrib_resource.size(); ++dir) {
       contrib_resource[dir] = 0.0;
