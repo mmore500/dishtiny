@@ -33,7 +33,41 @@ struct Genome {
         cfg.PROGRAM_MIN_FUN_CNT(), cfg.PROGRAM_MAX_FUN_CNT(),
         cfg.PROGRAM_MIN_FUN_LEN(), cfg.PROGRAM_MAX_FUN_LEN(),
         cfg.PROGRAM_MIN_ARG_VAL(), cfg.PROGRAM_MAX_ARG_VAL()
-    )) { emp_assert(program.GetSize()); }
+    )) {
+      emp_assert(program.GetSize());
+
+      // filter out some instructions from  initially generated genomes
+      // by replacing them with NOPs
+      const size_t nop_id = [&inst_lib](){
+        for (size_t idx = 0; idx <inst_lib.GetSize(); ++idx) {
+          if (inst_lib.GetName(idx) == "Nop") return idx;
+        }
+        emp_assert(false);
+        return 0UL;
+      }();
+
+      for (auto & fun : program.program) {
+        for (auto & inst : fun.inst_seq) {
+          if (
+            inst_lib.GetName(inst.id) == "Countdown" ||
+            inst_lib.GetName(inst.id) == "If" ||
+            inst_lib.GetName(inst.id) == "While" ||
+            inst_lib.GetName(inst.id) == "Break" ||
+            inst_lib.GetName(inst.id) == "Close" ||
+            inst_lib.GetName(inst.id) == "Call" ||
+            inst_lib.GetName(inst.id) == "Return" ||
+            inst_lib.GetName(inst.id) == "Fork" ||
+            inst_lib.GetName(inst.id) == "Terminate" ||
+            inst_lib.GetName(inst.id).find("Apoptosis")
+            != std::string::npos ||
+            inst_lib.GetName(inst.id).find("Regulator")
+            != std::string::npos
+          ) {
+            inst.id = nop_id;
+          }
+        }
+      }
+    }
 
     bool operator!=(const Genome& other) const {
       return program != other.program;
