@@ -34,12 +34,10 @@ private:
     Manager &man = fh.Cell().Man();
     const size_t pos = fh.Cell().GetPos();
 
-    if( fh.IsReprPaused(lev)
-      || cfg.REP_THRESH() > man.Stockpile(pos).QueryResource()
-    ) {
+    if( cfg.REP_THRESH() > man.Stockpile(pos).QueryResource() ) {
       return;
-    } else if (man.Channel(pos).IsExpired(lev)) {
-      TRL(hw, dir_arg, lev+1, cfg);
+    } else if (fh.IsReprPaused(lev) || man.Channel(pos).IsExpired(lev)) {
+      if (lev + 1 < cfg.NLEV() + 1) TRL(hw, dir_arg, lev+1, cfg);
     } else {
       man.Stockpile(pos).RequestResourceAmt(cfg.REP_THRESH());
 
