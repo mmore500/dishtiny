@@ -2,6 +2,7 @@
 
 #include <tuple>
 #include <utility>
+#include <limits>
 
 #include "base/vector.h"
 #include "Evolve/World.h"
@@ -33,7 +34,10 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
   emp::Random rand_init(cfg.SEED());
   for(size_t i = 0; i < GetSize(); ++i) {
     local_rngs.push_back(
-      emp::NewPtr<emp::Random>(rand_init.GetInt(1, 1000000))
+      emp::NewPtr<emp::Random>(rand_init.GetInt(
+        1,
+        std::numeric_limits<int>::max()
+      ))
     );
     global_rngs.push_back(emp::NewPtr<emp::Random>(cfg.SEED()));
   }
