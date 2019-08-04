@@ -149,7 +149,10 @@ void DishWorld::InitSystematics() {
 void DishWorld::Step() {
 
   // resolve pending state from last update
-  for(size_t i = 0; i < GetSize(); ++i) {
+  for (size_t i = 0; i < GetSize(); ++i) {
+
+    // only process cell interactions every ENV_TRIG_FREQ updates
+    if (GetUpdate() % cfg.ENV_TRIG_FREQ()) break;
 
     const auto optional_tup = man->Priority(i).QueryPendingGenome();
 
@@ -183,24 +186,27 @@ void DishWorld::Step() {
         }
       }
     }
+  }
 
+  for(size_t i = 0; i < GetSize(); ++i) {
     // dead cells with no channels have nullopt so no transmission will occur
     for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
-
   }
 
   // clean up for next cell action step
   for (size_t i = 0; i < GetSize(); ++i) {
 
-    man->Priority(i).Reset();
-    man->Apoptosis(i).Reset();
+    if (GetUpdate()%cfg.ENV_TRIG_FREQ()==0) {
+      man->Priority(i).Reset();
+      man->Apoptosis(i).Reset();
+    }
 
     for(size_t l = 0; l < cfg.NLEV(); ++l) {
       man->Wave(i,l).CalcNext(GetUpdate());
     }
 
     if (IsOccupied(i)) {
-      man->Stockpile(i).ResolveNextAcceptSharing();
+      man->Stockpile(i).ResolveNextAcceptSharing(GetUpdate());
       man->Stockpile(i).ResolveExternalContributions();
       man->Stockpile(i).ApplyBaseInflow();
       for(size_t l = 0; l < cfg.NLEV(); ++l) {

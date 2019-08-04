@@ -54,9 +54,9 @@ private:
         hw.GetProgram()
       );
 
-      for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
+      for(size_t lev = 0; lev < cfg.NLEV()+1; ++lev) {
         // pause repr so you don't reproduce over a child before you sense it
-        fh.Cell().GetFrameHardware(dir).PauseRepr(i, cfg.ENV_TRIG_FREQ() + 1);
+        fh.Cell().GetFrameHardware(dir).PauseRepr(lev, 2);
       }
 
     }
@@ -182,14 +182,14 @@ public:
         "PauseRepr-Lev" + emp::to_string(replev),
         cfg.CHANNELS_VISIBLE() ?
         std::function<void(hardware_t &, const inst_t &)>(
-          [replev, &cfg](hardware_t & hw, const inst_t & inst){
+          [replev](hardware_t & hw, const inst_t & inst){
 
             FrameHardware &fh = *hw.GetTrait();
 
             const state_t & state = hw.GetCurState();
             const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
             const size_t dur = (
-              cfg.ENV_TRIG_FREQ() + 1 + state.GetLocal(inst.args[1])
+              2 + state.GetLocal(inst.args[1])
             );
 
             fh.Cell().GetFrameHardware(dir).PauseRepr(replev, dur);
@@ -212,11 +212,11 @@ public:
         const state_t & state = hw.GetCurState();
         const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
         const size_t dur = (
-          cfg.ENV_TRIG_FREQ() + 1 + state.GetLocal(inst.args[1])
+          2 + state.GetLocal(inst.args[1])
         );
 
-        for(size_t i = 0; i < cfg.NLEV()+1; ++i) {
-          fh.Cell().GetFrameHardware(dir).PauseRepr(i, dur);
+        for(size_t lev = 0; lev < cfg.NLEV()+1; ++lev) {
+          fh.Cell().GetFrameHardware(dir).PauseRepr(lev, dur);
         }
 
       },

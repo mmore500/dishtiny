@@ -163,8 +163,10 @@ void FrameHardware::DispatchEnvTriggers(){
 }
 
 void FrameHardware::SetupCompute(const size_t update) {
-  for (auto & v : *repr_pause) { if(v) { --v; } }
-  DispatchEnvTriggers();
+  if (update % cfg.ENV_TRIG_FREQ() == 0) {
+    for (size_t & v : *repr_pause) { if(v) --v; }
+    DispatchEnvTriggers();
+  }
 }
 
 void FrameHardware::StepProcess() {
