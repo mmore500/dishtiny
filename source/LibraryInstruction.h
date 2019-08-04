@@ -424,21 +424,15 @@ public:
 
     for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       il.AddInst(
-        "IncrCellAge-Lev" + emp::to_string(lev),
+        "SetCellAgeMultiplier-Lev" + emp::to_string(lev),
         cfg.CHANNELS_VISIBLE() ?
         std::function<void(hardware_t &, const inst_t &)>(
-          [lev, &cfg](hardware_t & hw, const inst_t & inst){
+          [lev](hardware_t & hw, const inst_t & inst){
             const state_t & state = hw.GetCurState();
             FrameHardware &fh = *hw.GetTrait();
-            fh.Cell().Man().Channel(fh.Cell().GetPos()).IncrCellAge(
+            fh.Cell().Man().Channel(fh.Cell().GetPos()).SetCellAgeMultiplier(
               lev,
-              std::max(
-                0.0,
-                std::min(
-                  1+state.GetLocal(inst.args[0]),
-                  cfg.Lev(lev).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER()
-                )
-              )
+              1.0 + std::abs(state.GetLocal(inst.args[0]))
             );
           }
         ) : std::function<void(hardware_t &, const inst_t &)>(

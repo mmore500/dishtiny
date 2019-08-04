@@ -19,6 +19,8 @@ private:
 
   emp::vector<size_t> gen_counter;
 
+  emp::vector<double> cell_age_multipliers;
+
   Config::chanid_t drawChannelID() {
     return local_rng.GetUInt64();
   }
@@ -32,6 +34,7 @@ public:
   , local_rng(local_rng_)
   , cfg(cfg_)
   , gen_counter(cfg_.NLEV())
+  , cell_age_multipliers(cfg.NLEV(), 1.0)
   {
     for(size_t i = 0; i < cfg.NLEV(); ++i) {
       ids->push_back(drawChannelID());
@@ -44,12 +47,20 @@ public:
 
   std::optional<ChannelPack> GetIDs() const { return ids; }
 
-  void ClearIDs() { ids = std::nullopt; }
+  void ClearIDs() {
+    ids = std::nullopt;
+    std::fill(
+      std::begin(cell_age_multipliers),
+      std::end(cell_age_multipliers),
+      1.0
+    );
+  }
 
   size_t GetGeneration(const size_t lev) const { return gen_counter[lev]; }
 
-  void IncrCellAge(const size_t lev, const size_t amt) {
-    gen_counter[lev] += amt;
+  void SetCellAgeMultiplier(const size_t lev, const double amt) {
+    emp_assert(amt >= 1.0);
+    cell_age_multipliers[lev] = amt;
   }
 
   const emp::vector<size_t>& GetGenCounter() const { return gen_counter; }
@@ -63,7 +74,9 @@ public:
 
       const size_t lim = cfg.Lev(i).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER();
 
-      expired |= GetGeneration(i) > lim;
+      emp_assert(cell_age_multipliers[i] >= 1.0);
+
+      expired |= GetGeneration(i) * cell_age_multipliers[i] > lim;
     }
 
     return expired;
@@ -84,6 +97,12 @@ public:
     const emp::vector<size_t> & parent_gen_counter,
     const size_t replev
   ) {
+
+    std::fill(
+      std::begin(cell_age_multipliers),
+      std::end(cell_age_multipliers),
+      1.0
+    );
 
     if (!ids) ids = std::optional<ChannelPack>{ChannelPack(cfg.NLEV())};
 
