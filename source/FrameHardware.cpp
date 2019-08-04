@@ -27,7 +27,6 @@ FrameHardware::FrameHardware(
     , cpu(inst_lib, event_lib, &local_rng_)
   {
     cpu.SetTrait(this);
-    cpu.SetMinBindThresh(cfg.HW_MIN_BIND_THRESH());
   }
 
 FrameHardware::~FrameHardware() {
