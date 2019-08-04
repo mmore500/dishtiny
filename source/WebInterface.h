@@ -35,9 +35,11 @@ class WebInterface : public UI::Animate {
   UI::Document stockpile_viewer;
   UI::Document contribution_viewer;
   UI::Document apoptosis_viewer;
+  UI::Document pause_viewer;
   UI::Document systematics_viewer;
   WebArtist<ChannelPack> channel;
   emp::vector<WebArtist<int>> wave;
+  emp::vector<WebArtist<size_t>> pause;
   WebArtist<double> stockpile;
   WebArtist<double> contribution;
   WebArtist<size_t> apoptosis;
@@ -67,6 +69,7 @@ public:
     , stockpile_viewer("stockpile_viewer")
     , contribution_viewer("contribution_viewer")
     , apoptosis_viewer("apoptosis_viewer")
+    , pause_viewer("pause_viewer")
     , systematics_viewer("systematics_viewer")
     , channel(
       channel_viewer,
@@ -160,26 +163,48 @@ public:
 
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
       wave.emplace_back(
-          wave_viewer,
-          [this, l](size_t i){
-            return w.IsOccupied(i) ? std::make_optional(w.man->Wave(i,l).GetState()) : std::nullopt;
-          },
-          [this, l](std::optional<int> cp) -> std::string {
-            if (cp) {
-              if (*cp > 0 && *cp < cfg.Lev(l).EVENT_RADIUS()) {
-                return emp::ColorRGB(0,255,0);
-              } else if (*cp > 0) {
-                return emp::ColorRGB(255,0,0);
-              } else if (*cp < 0) {
-                return emp::ColorRGB(0,0,255);
-              } else {
-                return "white";
-              }
+        wave_viewer,
+        [this, l](size_t i){
+          return w.IsOccupied(i) ? std::make_optional(w.man->Wave(i,l).GetState()) : std::nullopt;
+        },
+        [this, l](std::optional<int> cp) -> std::string {
+          if (cp) {
+            if (*cp > 0 && *cp < cfg.Lev(l).EVENT_RADIUS()) {
+              return emp::ColorRGB(0,255,0);
+            } else if (*cp > 0) {
+              return emp::ColorRGB(255,0,0);
+            } else if (*cp < 0) {
+              return emp::ColorRGB(0,0,255);
             } else {
-              return "black";
+              return "white";
             }
-          },
-          cfg
+          } else {
+            return "black";
+          }
+        },
+        cfg
+      );
+    }
+
+    for (size_t l = 0; l < cfg.NLEV() + 1; ++l) {
+      pause.emplace_back(
+        pause_viewer,
+        [this, l](size_t i){
+          return w.IsOccupied(i)
+            ? std::make_optional(w.frames[i]->GetPauseSum(l))
+            : std::nullopt;
+        },
+        [](std::optional<size_t> state) -> std::string {
+          if (state) {
+            if (*state == 0) return "white";
+            else if (*state == 1) return "green";
+            else if (*state == 2) return "blue";
+            else if (*state == 3) return "purple";
+            else if (*state == 4) return "red";
+            else return "yellow";
+          } else return "black";
+        },
+        cfg
       );
     }
 
@@ -289,6 +314,7 @@ public:
     apoptosis.Redraw();
     systematics.Redraw();
     for(auto &w : wave) w.Redraw();
+    for(auto &p : pause) p.Redraw();
 
     rendered = true;
 

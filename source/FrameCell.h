@@ -46,6 +46,8 @@ public:
 
   size_t GetPos() const;
 
+  size_t GetPauseSum(const size_t lev) const;
+
   Manager& Man();
 
   FrameHardware& GetFrameHardware(const size_t dir);

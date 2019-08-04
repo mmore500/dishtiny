@@ -66,6 +66,13 @@ size_t FrameCell::GetPos() const {
   return pos;
 }
 
+size_t FrameCell::GetPauseSum(const size_t lev) const {
+  size_t res = 0;
+  for (size_t i = 0; i < hw.size(); ++i) res += hw[i]->IsReprPaused(lev);
+  return res;
+}
+
+
 Manager& FrameCell::Man() {
   return man;
 }
