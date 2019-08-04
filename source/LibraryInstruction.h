@@ -224,7 +224,6 @@ public:
       "Pause reproduction in a particular direction for all reproduction levels for a certain duration."
     );
 
-
     il.AddInst(
       "ActivateInbox",
       [](hardware_t &hw, const inst_t &inst){
@@ -733,7 +732,7 @@ public:
 
     static inst_lib_t il;
 
-    if (il.GetSize() == 0) {
+    if (!il.GetSize()) {
 
       InitDefault(il);
 

@@ -156,7 +156,7 @@ void DishWorld::Step() {
 
     const auto optional_tup = man->Priority(i).QueryPendingGenome();
 
-    if(optional_tup) {
+    if (optional_tup) {
       SirePack sirepack;
       emp::Ptr<Genome> prog;
       std::tie(prog, sirepack) = *(optional_tup);
@@ -169,6 +169,7 @@ void DishWorld::Step() {
       }
 
       AddOrgAt(prog, i, sirepack.par_pos);
+
       man->Channel(i).Inherit(
         sirepack.chanpack,
         sirepack.channel_gens,
