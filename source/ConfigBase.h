@@ -26,7 +26,6 @@ EMP_BUILD_CONFIG(
   VALUE(PROGRAM_MIN_FUN_CNT, size_t, 1, "Used for generating SGP programs. How many functions do we generate?"),
   VALUE(PROGRAM_MAX_FUN_LEN, size_t, 16, ".."),
   VALUE(PROGRAM_MIN_FUN_LEN, size_t, 1, ".."),
-  VALUE(PROGRAM_MAX_TOTAL_LEN, size_t, 256, "Maximum length of SGP programs."),
 
   GROUP(HARDWARE_GROUP, "SignalGP Hardware Settings"),
   VALUE(HARDWARE_STEPS, size_t, 10, "How many hardware steps to run per update?"),
@@ -34,7 +33,6 @@ EMP_BUILD_CONFIG(
   VALUE(ACTIVE_SENSORS, bool, true, "Do agents have function active sensors?"),
   VALUE(HW_MAX_CORES, size_t, 16, "Max number of hardware cores; i.e., max number of simultaneous threads of execution hardware will support."),
   VALUE(HW_MAX_CALL_DEPTH, size_t, 128, "Max call depth of hardware unit"),
-  VALUE(HW_MIN_BIND_THRESH, double, 0.5, "Hardware minimum referencing threshold"),
   VALUE(INBOX_CAPACITY, size_t, 256, "Capacity of a cell's inbox."),
   VALUE(ENV_TRIG_FREQ, size_t, 5, "Fire environmental triggers every X updates."),
 
