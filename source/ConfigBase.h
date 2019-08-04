@@ -40,6 +40,7 @@ EMP_BUILD_CONFIG(
 
   GROUP(MUTATION_GROUP, "SignalGP Mutation Settings"),
   VALUE(MUTATION_RATE, double, 0.05, "What percentage of reproductions should be subject to mutations at all?"),
+  VALUE(PROPAGULE_MUTATION_RATE, double, 0.5, "What percentage of propagule reproductions should be subject to mutations at all?"),
   VALUE(PROGRAM_MIN_ARG_VAL, int, 0, "Maximum argument value for instructions."),
   VALUE(PROGRAM_MAX_ARG_VAL, int, 6, "Maximum argument value for instructions."),
   VALUE(TAG_BIT_FLIP__PER_BIT, double, 0.005, "Per-bit mutation rate of tag bit flips."),

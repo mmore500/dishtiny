@@ -161,6 +161,13 @@ void DishWorld::Step() {
       emp::Ptr<Genome> prog;
       std::tie(prog, sirepack) = *(optional_tup);
 
+      if (
+        sirepack.replev == cfg.NLEV() &&
+        local_rngs[i]->GetDouble() < cfg.PROPAGULE_MUTATION_RATE()
+      ) {
+        mut.ApplyMutations(prog->program,*local_rngs[i]);
+      }
+
       AddOrgAt(prog, i, sirepack.par_pos);
       man->Channel(i).Inherit(
         sirepack.chanpack,
