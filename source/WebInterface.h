@@ -30,20 +30,9 @@ class WebInterface : public UI::Animate {
 
   DishWorld w;
 
-  UI::Document channel_viewer;
-  UI::Document wave_viewer;
-  UI::Document stockpile_viewer;
-  UI::Document contribution_viewer;
-  UI::Document apoptosis_viewer;
-  UI::Document pause_viewer;
-  UI::Document systematics_viewer;
-  WebArtist<ChannelPack> channel;
-  emp::vector<WebArtist<int>> wave;
-  emp::vector<WebArtist<size_t>> pause;
-  WebArtist<double> stockpile;
-  WebArtist<double> contribution;
-  WebArtist<size_t> apoptosis;
-  WebArtist<Genome> systematics;
+  UI::Document grid_viewer;
+  UI::Document view_selector;
+  emp::vector<emp::Ptr<WebArtistBase>> artists;
 
   bool rendered;
   bool downloaded;
@@ -64,15 +53,13 @@ public:
     , systematics_dash("emp_systematics_dash")
     , dominant_viewer("dominant_viewer")
     , w(cfg_)
-    , channel_viewer("channel_viewer")
-    , wave_viewer("wave_viewer")
-    , stockpile_viewer("stockpile_viewer")
-    , contribution_viewer("contribution_viewer")
-    , apoptosis_viewer("apoptosis_viewer")
-    , pause_viewer("pause_viewer")
-    , systematics_viewer("systematics_viewer")
-    , channel(
-      channel_viewer,
+    , grid_viewer("grid_viewer")
+    , view_selector("view_selector")
+  {
+
+    artists.push_back(emp::NewPtr<WebArtist<ChannelPack>>(
+      "Channel Viewer",
+      grid_viewer,
       [this](size_t i){
         return w.man->Channel(i).GetIDs();
       },
@@ -86,8 +73,11 @@ public:
         else if (cp1->size() > 1 && (*cp1)[1] == (*cp2)[1]) return "white";
         else return "black";
       }
-    ), stockpile(
-      stockpile_viewer,
+    ));
+
+    artists.push_back(emp::NewPtr<WebArtist<double>>(
+      "Stockpile Viewer",
+      grid_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.man->Stockpile(i).QueryResource()) : std::nullopt;
       },
@@ -112,8 +102,11 @@ public:
         } else return emp::ColorRGB(0,0,0);
       },
       cfg_
-    ), contribution(
-      contribution_viewer,
+    ));
+
+    artists.push_back(emp::NewPtr<WebArtist<double>>(
+      "Resource Sharing Viewer",
+      grid_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.man->Stockpile(i).QueryTotalContribute()) : std::nullopt;
       },
@@ -130,8 +123,11 @@ public:
         } else return "black";
       },
       cfg_
-    ), apoptosis(
-      apoptosis_viewer,
+    ));
+
+    artists.push_back(emp::NewPtr<WebArtist<size_t>>(
+      "Apoptosis Viewer",
+      grid_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.man->Apoptosis(i).GetState()) : std::nullopt;
       },
@@ -144,8 +140,11 @@ public:
         } else return "black";
       },
       cfg_
-    ), systematics(
-      systematics_viewer,
+    ));
+
+    artists.push_back(emp::NewPtr<WebArtist<Genome>>(
+      "Taxa Viewer",
+      grid_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.GetOrg(i)) : std::nullopt;
       },
@@ -159,11 +158,12 @@ public:
         else if (*g1 != *g2) return "red";
         else return "white";
       }
-    ) {
+    ));
 
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
-      wave.emplace_back(
-        wave_viewer,
+      artists.push_back(emp::NewPtr<WebArtist<int>>(
+        emp::to_string("Resource Wave Viewer Level ", l),
+        grid_viewer,
         [this, l](size_t i){
           return w.IsOccupied(i) ? std::make_optional(w.man->Wave(i,l).GetState()) : std::nullopt;
         },
@@ -183,12 +183,13 @@ public:
           }
         },
         cfg
-      );
+      ));
     }
 
     for (size_t l = 0; l < cfg.NLEV() + 1; ++l) {
-      pause.emplace_back(
-        pause_viewer,
+      artists.push_back(emp::NewPtr<WebArtist<size_t>>(
+        emp::to_string("Reproductive Pause Viewer Level ", l),
+        grid_viewer,
         [this, l](size_t i){
           return w.IsOccupied(i)
             ? std::make_optional(w.frames[i]->GetPauseSum(l))
@@ -205,6 +206,25 @@ public:
           } else return "black";
         },
         cfg
+      ));
+    }
+
+    artists[0]->Activate();
+
+    for (auto & artist : artists) {
+      const std::string target = artist->GetName();
+      view_selector << UI::Button(
+        [&, target](){
+          for (auto & artist : artists) {
+            if (artist->GetName() == target) artist->Activate();
+            else artist->Deactivate();
+          }
+        },
+        target
+      ).SetAttr(
+        "type", "button"
+      ).SetAttr(
+        "class", "btn btn-secondary btn-lg btn-block"
       );
     }
 
@@ -285,6 +305,10 @@ public:
 
   }
 
+  ~WebInterface() {
+    for (auto & ptr : artists) ptr.Delete();
+  }
+
   void DoFrame() {
     rendered = false;
     downloaded = false;
@@ -308,13 +332,7 @@ public:
 
     systematics_dash.Text("sys_text").Redraw();
     dominant_viewer.Text("dom_text").Redraw();
-    channel.Redraw();
-    stockpile.Redraw();
-    contribution.Redraw();
-    apoptosis.Redraw();
-    systematics.Redraw();
-    for(auto &w : wave) w.Redraw();
-    for(auto &p : pause) p.Redraw();
+    for (auto & artist : artists) artist->Redraw();
 
     rendered = true;
 
@@ -339,10 +357,9 @@ public:
 
     if(cfg.TimingFun(w.GetUpdate())) {
       if (!rendered) Redraw();
-      channel.Download(namify("channel_viz"));
-      stockpile.Download(namify("stockpile_viz"));
-      contribution.Download(namify("contribution_viz"));
-      apoptosis.Download(namify("apoptosis_viz"));
+      for (auto & artist : artists) {
+        artist->Download(namify(emp::slugify(artist->GetName())));
+      }
     }
 
     downloaded = true;

@@ -8,10 +8,26 @@
 
 namespace UI = emp::web;
 
+class WebArtistBase {
+
+public:
+
+  virtual ~WebArtistBase() {};
+  virtual void Deactivate() = 0;
+  virtual void Activate() = 0;
+  virtual std::string GetName() const = 0;
+  virtual void Redraw() = 0;
+  virtual void Download(const std::string & fn) = 0;
+
+};
+
+
 template <typename T>
-class WebArtist {
+class WebArtist : public WebArtistBase {
 
 private:
+
+  const std::string name;
 
   UI::Canvas canvas;
 
@@ -25,17 +41,25 @@ private:
 public:
 
   WebArtist(
+    std::string name_,
     UI::Document &viewer,
     std::function<std::optional<T>(size_t)> getter_,
     std::function<std::string(std::optional<T>)> renderer_,
     const Config &cfg_,
     std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
-  ) : canvas(500,500)
+  ) : name(name_)
+  , canvas(500,500)
   , getter(getter_)
   , renderer(renderer_)
   , divider(divider_)
   , cfg(cfg_)
-  { viewer << canvas; }
+  { viewer << canvas; Deactivate(); }
+
+  void Deactivate() { canvas.Deactivate(); }
+
+  void Activate() { canvas.Activate(); }
+
+  std::string GetName() const { return name; }
 
   void Redraw() {
 
