@@ -503,7 +503,7 @@ private:
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Priority(
           gh.CalcLocalNeighs(i)[dir]
-        ).GetRepState(Cardi::Opp[dir]);
+        ).ViewRepState(Cardi::Opp[dir]);
     }
 
     ds.write((void*)data, tid);
@@ -525,7 +525,7 @@ private:
     int data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Priority(i).GetRepState(dir);
+      data[i] = dw.man->Priority(i).ViewRepStateDup(dir);
     }
 
     ds.write((void*)data, tid);

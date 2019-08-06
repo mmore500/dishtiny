@@ -15,6 +15,7 @@
 #include "../FrameHardware.cpp"
 #include "../FrameCell.cpp"
 #include "../Manager.cpp"
+#include "../LibraryInstruction.cpp"
 
 
 int main(int argc, char* argv[])

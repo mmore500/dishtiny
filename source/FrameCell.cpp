@@ -67,8 +67,12 @@ size_t FrameCell::GetPos() const {
 }
 
 size_t FrameCell::GetPauseSum(const size_t lev) const {
+
   size_t res = 0;
-  for (size_t i = 0; i < hw.size(); ++i) res += hw[i]->IsReprPaused(lev);
+  for (size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
+    res += man.Priority(neighs[d]).IsReprPaused(Cardi::Opp[d], lev);
+  }
+
   return res;
 }
 

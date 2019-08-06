@@ -57,6 +57,10 @@ public:
     resource += amt;
   }
 
+  std::function<void()> MakeRepRefunder() {
+    return [&](){ resource += cfg.REP_THRESH(); };
+  }
+
   void ExternalContribute(const double amt, const size_t incoming_dir) {
     emp_assert(amt >= 0);
     contrib_resource[incoming_dir] += amt;

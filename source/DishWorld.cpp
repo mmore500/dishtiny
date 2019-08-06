@@ -77,6 +77,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
   OnPlacement([this](const size_t pos){
     man->Stockpile(pos).Reset();
     man->Heir(pos).Reset();
+    man->Priority(pos).Reset();
     frames[pos]->Reset();
     if(local_rngs[pos]->GetDouble() < cfg.MUTATION_RATE()) {
       mut.ApplyMutations(GetOrg(pos).program,*local_rngs[pos]);
@@ -154,36 +155,47 @@ void DishWorld::Step() {
     // only process cell interactions every ENV_TRIG_FREQ updates
     if (GetUpdate() % cfg.ENV_TRIG_FREQ()) break;
 
-    const auto optional_tup = man->Priority(i).QueryPendingGenome();
+    // decide who gets to be parent & make a copy of that genome
+    // so that it doesn't get overwritten
+    man->Priority(i).ResolveSire();
 
-    if (optional_tup) {
-      SirePack sirepack;
-      emp::Ptr<Genome> prog;
-      std::tie(prog, sirepack) = *(optional_tup);
+  }
+
+  // resolve pending state from last update
+  for (size_t i = 0; i < GetSize(); ++i) {
+
+    // only process cell interactions every ENV_TRIG_FREQ updates
+    if (GetUpdate() % cfg.ENV_TRIG_FREQ()) break;
+
+    if (
+      const auto opt_sirepack = man->Priority(i).QueryPendingGenome();
+      opt_sirepack
+    ) {
 
       if (
-        sirepack.replev == cfg.NLEV() &&
+        opt_sirepack->replev == cfg.NLEV() &&
         local_rngs[i]->GetDouble() < cfg.PROPAGULE_MUTATION_RATE()
       ) {
-        mut.ApplyMutations(prog->program,*local_rngs[i]);
+        mut.ApplyMutations(opt_sirepack->genome->program,*local_rngs[i]);
       }
 
-      AddOrgAt(prog, i, sirepack.par_pos);
+      AddOrgAt(opt_sirepack->genome, i, opt_sirepack->par_pos);
 
       man->Channel(i).Inherit(
-        sirepack.chanpack,
-        sirepack.channel_gens,
-        sirepack.replev
+        opt_sirepack->chanpack,
+        opt_sirepack->channel_gens,
+        opt_sirepack->replev
       );
       man->Family(i).Reset(GetUpdate());
-      man->Family(i).SetParentPos(sirepack.par_pos);
-      man->Family(i).SetPrevChan(sirepack.prev_chan);
-      man->Family(i).SetCellGen(sirepack.cell_gen+1);
+      man->Family(i).SetParentPos(opt_sirepack->par_pos);
+      man->Family(i).SetPrevChan(opt_sirepack->prev_chan);
+      man->Family(i).SetCellGen(opt_sirepack->cell_gen+1);
       // check that parent hasn't been overwritten by a different birth
-      if(man->Family(sirepack.par_pos).GetBirthUpdate() != GetUpdate()) {
-        man->Family(sirepack.par_pos).AddChildPos(i);
-        man->Channel(sirepack.par_pos).LogReprGen(sirepack.replev);
+      if(man->Family(opt_sirepack->par_pos).GetBirthUpdate() != GetUpdate()) {
+        man->Family(opt_sirepack->par_pos).AddChildPos(i);
+        man->Channel(opt_sirepack->par_pos).LogReprGen(opt_sirepack->replev);
       }
+
     } else if (IsOccupied(i)) {
       // this block doesn't get run if a cell was just born here
       if (man->Stockpile(i).IsBankrupt()
@@ -205,7 +217,7 @@ void DishWorld::Step() {
   for (size_t i = 0; i < GetSize(); ++i) {
 
     if (GetUpdate()%cfg.ENV_TRIG_FREQ()==0) {
-      man->Priority(i).Reset();
+      man->Priority(i).ResolveUpdate();
       man->Apoptosis(i).Reset();
     }
 

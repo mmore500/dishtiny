@@ -26,8 +26,6 @@ private:
 
   double stockpile_reserve;
 
-  emp::Ptr<emp::vector<size_t>> repr_pause;
-
   Config::hardware_t cpu;
 
   size_t msg_dir;
@@ -44,8 +42,6 @@ public:
       const Config::inst_lib_t &inst_lib,
       const Config::event_lib_t &event_lib
     );
-
-  ~FrameHardware();
 
   FrameCell& Cell();
 

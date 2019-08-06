@@ -40,12 +40,31 @@ Manager::Manager(
     mis.push_back(
       emp::NewPtr<ManagerInbox>(cfg)
     );
-    mps.push_back(
-      emp::NewPtr<ManagerPriority>(*local_rngs[i])
-    );
     mss.push_back(
       emp::NewPtr<ManagerStockpile>(cfg)
     );
+  }
+
+  for (size_t i = 0; i < size; ++i) {
+
+    const emp::vector<size_t> neighs = GeometryHelper(cfg).CalcLocalNeighs(i);
+
+    emp::vector<std::function<void()>> refunders;
+    emp::vector<std::function<bool(size_t lev)>> expiredcheckers;
+    for (size_t n : neighs) {
+      refunders.push_back(mss[n]->MakeRepRefunder());
+      expiredcheckers.push_back(mcs[n]->MakeExpChecker());
+    }
+
+    mps.push_back(
+      emp::NewPtr<ManagerPriority>(
+        cfg,
+        *local_rngs[i],
+        refunders,
+        expiredcheckers
+      )
+    );
+
   }
 
   /* ManagerWaves part one */

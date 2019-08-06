@@ -82,6 +82,10 @@ public:
     return expired;
   }
 
+  std::function<bool(size_t)> MakeExpChecker() {
+    return [&](const size_t replev){ return IsExpired(replev); };
+  }
+
   bool CheckMatch(const ManagerChannel &other, const size_t lev) const {
     return GetID(lev) && other.GetID(lev) ? *GetID(lev) == *other.GetID(lev) : false;
   }

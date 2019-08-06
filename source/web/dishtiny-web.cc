@@ -14,6 +14,7 @@
 #include "../FrameHardware.cpp"
 #include "../FrameCell.cpp"
 #include "../Manager.cpp"
+#include "../LibraryInstruction.cpp"
 
 struct ConfigSetup {
 

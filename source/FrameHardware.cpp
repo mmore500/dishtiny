@@ -23,22 +23,16 @@ FrameHardware::FrameHardware(
     , facing(facing_)
     , inbox_active(false)
     , stockpile_reserve(0)
-    , repr_pause(emp::NewPtr<emp::vector<size_t>>(cfg_.NLEV()+1))
     , cpu(inst_lib, event_lib, &local_rng_)
   {
     cpu.SetTrait(this);
   }
-
-FrameHardware::~FrameHardware() {
-  repr_pause.Delete();
-}
 
 FrameCell& FrameHardware::Cell() { return cell; }
 
 void FrameHardware::Reset() {
   inbox_active = false;
   stockpile_reserve = 0;
-  std::fill(repr_pause->begin(), repr_pause->end(), 0);
 
   cpu.ResetHardware();
   cpu.ResetProgram();
@@ -163,10 +157,7 @@ void FrameHardware::DispatchEnvTriggers(){
 }
 
 void FrameHardware::SetupCompute(const size_t update) {
-  if (update % cfg.ENV_TRIG_FREQ() == 0) {
-    for (size_t & v : *repr_pause) { if(v) --v; }
-    DispatchEnvTriggers();
-  }
+  if (update % cfg.ENV_TRIG_FREQ() == 0) DispatchEnvTriggers();
 }
 
 void FrameHardware::StepProcess() {
@@ -176,14 +167,6 @@ void FrameHardware::StepProcess() {
 
 void FrameHardware::SetProgram(const Config::program_t & program) {
   cpu.SetProgram(program);
-}
-
-void FrameHardware::PauseRepr(const size_t lev, const size_t dur) {
-  (*repr_pause)[lev] = dur;
- }
-
-bool FrameHardware::IsReprPaused(const size_t lev) const {
-  return repr_pause->at(lev);
 }
 
 size_t FrameHardware::GetFacing() const {
