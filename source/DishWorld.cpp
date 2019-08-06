@@ -36,7 +36,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
     local_rngs.push_back(
       emp::NewPtr<emp::Random>(rand_init.GetInt(
         1,
-        std::numeric_limits<int>::max()
+        1000000000
       ))
     );
     global_rngs.push_back(emp::NewPtr<emp::Random>(cfg.SEED()));
