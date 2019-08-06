@@ -93,4 +93,7 @@ public:
 
   bool IsPropaguleParent(const int relative_dir=0);
 
+  const Config::hardware_t& GetHardware();
+
+  void SetRegulators(Config::matchbin_t & target);
 };

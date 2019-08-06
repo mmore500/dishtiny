@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <list>
+#include <memory>
 
 #include "tools/Random.h"
 #include "tools/random_utils.h"
@@ -91,4 +92,24 @@ size_t FrameCell::GetNeigh(const size_t dir) const {
 
 void FrameCell::QueueMessages(emp::vector<Config::inbox_t> &inboxes) {
   for(size_t i = 0; i < inboxes.size(); ++i) hw[i]->QueueMessages(inboxes[i]);
+}
+
+emp::vector<std::shared_ptr<Config::matchbin_t>> FrameCell::CopyMatchBins() {
+  emp::vector<std::shared_ptr<Config::matchbin_t>> res;
+  for (const auto & fhw : hw) {
+    res.push_back(
+      std::make_shared<Config::matchbin_t>(fhw->GetHardware().GetMatchBin())
+    );
+  }
+  return res;
+}
+
+void FrameCell::SetRegulators(
+  emp::vector<std::shared_ptr<Config::matchbin_t>> target
+) {
+  for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+    if (target[dir]) {
+      hw[dir]->SetRegulators(*target[dir]);
+    }
+  }
 }

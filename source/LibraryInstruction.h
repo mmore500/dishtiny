@@ -3,6 +3,7 @@
 #include <functional>
 #include <cmath>
 #include <limits>
+#include <memory>
 
 #include "base/assert.h"
 #include "tools/Random.h"
@@ -29,6 +30,7 @@ private:
     hardware_t & hw,
     const double dir_arg,
     const size_t lev,
+    const bool inherit_regulators,
     const Config &cfg
   );
 

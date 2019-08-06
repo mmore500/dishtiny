@@ -11,6 +11,7 @@ void LibraryInstruction::TRL(
   hardware_t & hw,
   const double dir_arg,
   const size_t lev,
+  const bool inherit_regulators,
   const Config &cfg
 ){
 
@@ -34,7 +35,10 @@ void LibraryInstruction::TRL(
       man.Family(pos).GetCellGen(),
       *man.Channel(pos).GetIDs(),
       lev < cfg.NLEV() ? man.Family(pos).GetPrevChan() : *man.Channel(pos).GetID(cfg.NLEV() - 1),
-      man.DW().GetOrgPtr(pos)
+      man.DW().GetOrgPtr(pos),
+      inherit_regulators
+        ? fh.Cell().CopyMatchBins()
+        : emp::vector<std::shared_ptr<Config::matchbin_t>>(4, nullptr)
     };
 
     if (man.Priority(fh.Cell().GetNeigh(dir)).AddRequest(sp)) {
@@ -382,6 +386,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
           hw,
           state.GetLocal(inst.args[0]),
           replev,
+          !state.GetLocal(inst.args[1]),
           cfg
         );
       },

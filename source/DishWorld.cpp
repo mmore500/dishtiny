@@ -181,6 +181,8 @@ void DishWorld::Step() {
 
       AddOrgAt(opt_sirepack->genome, i, opt_sirepack->par_pos);
 
+      frames[i]->SetRegulators(opt_sirepack->matchbins);
+
       man->Channel(i).Inherit(
         opt_sirepack->chanpack,
         opt_sirepack->channel_gens,

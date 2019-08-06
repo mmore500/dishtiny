@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <list>
+#include <memory>
 
 #include "tools/Random.h"
 #include "tools/random_utils.h"
@@ -55,5 +56,9 @@ public:
   size_t GetNeigh(const size_t dir) const;
 
   void QueueMessages(emp::vector<Config::inbox_t> &inboxes);
+
+  emp::vector<std::shared_ptr<Config::matchbin_t>> CopyMatchBins();
+
+  void SetRegulators(emp::vector<std::shared_ptr<Config::matchbin_t>> targets);
 
 };

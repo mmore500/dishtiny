@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <optional>
 #include <tuple>
+#include <memory>
 
 #include "base/Ptr.h"
 #include "base/vector.h"
@@ -27,6 +28,8 @@ struct SirePack {
   // non-owning at first, then we make a copy to hand off if selected
   // to reproduce
   emp::Ptr<Genome> genome;
+  // this may be nullptr if not being inherited
+  emp::vector<std::shared_ptr<Config::matchbin_t>> matchbins;
 
 };
 

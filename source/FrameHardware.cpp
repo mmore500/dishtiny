@@ -292,3 +292,13 @@ bool FrameHardware::IsPropaguleParent(const int relative_dir/*=0*/) {
     ));
 
 }
+
+const Config::hardware_t& FrameHardware::GetHardware() {
+  return cpu;
+}
+
+void FrameHardware::SetRegulators(Config::matchbin_t & target_mb) {
+
+  cpu.GetMatchBin().ImprintRegulators(target_mb);
+
+}
