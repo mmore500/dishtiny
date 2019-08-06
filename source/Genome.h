@@ -59,8 +59,6 @@ struct Genome {
             inst_lib.GetName(inst.id) == "Fork" ||
             inst_lib.GetName(inst.id) == "Terminate" ||
             inst_lib.GetName(inst.id).find("Apoptosis")
-            != std::string::npos ||
-            inst_lib.GetName(inst.id).find("Regulator")
             != std::string::npos
           ) {
             inst.id = nop_id;
