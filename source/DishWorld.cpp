@@ -60,7 +60,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
   OnOrgDeath([this](const size_t pos){
     double amt = std::max(0.0,man->Stockpile(pos).QueryResource());
     if (man->Apoptosis(pos).IsMarked()) {
-      amt += cfg.REP_THRESH() * 0.8;
+      amt += cfg.REP_THRESH() * cfg.APOP_RECOVERY_FRAC();
     }
 
     const size_t h_count = man->Heir(pos).HeirCount();

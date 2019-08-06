@@ -17,6 +17,7 @@ EMP_BUILD_CONFIG(
   VALUE(REP_THRESH, double, 4.0, "How much should replication cost?"),
   VALUE(START_RESOURCE, double, 3.0, "How resource should a cell start with?"),
   VALUE(KILL_THRESH, double, -5.0, "What is the minimum resource level required to stay alive?"),
+  VALUE(APOP_RECOVERY_FRAC, double, 0.8, "What fraction of REP_THRESH is recovered to heirs on apoptosis?"),
   VALUE(BASE_RESOURCE_INFLOW, double, 0.0, "What amount of resource should be provided to cells at each update?"),
   VALUE(AGE_LIMIT_MULTIPLIER, double, 1.5, "What ratio of EVENT_RADIUS should the limit on cell age be?"),
   VALUE(CHANNELS_VISIBLE, bool, true, "Should channels have any effect in the instruction set and event triggers?"),
