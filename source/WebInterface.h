@@ -34,7 +34,6 @@ class WebInterface : public UI::Animate {
   UI::Document view_selector;
   emp::vector<emp::vector<emp::Ptr<WebArtistBase>>> artists;
 
-  bool rendered;
   bool downloaded;
 
   std::string ChannelColor(ChannelPack &cp) {
@@ -248,7 +247,10 @@ public:
                 if (state == "true") {
                   for (auto & series : artists) {
                     for (auto & artist : series) {
-                      if (artist->GetName() == target) artist->Activate();
+                      if (artist->GetName() == target){
+                        artist->Activate();
+                        artist->Redraw(w.GetUpdate());
+                      }
                       else artist->Deactivate();
                     }
                   }
@@ -346,7 +348,6 @@ public:
   }
 
   void DoFrame() {
-    rendered = false;
     downloaded = false;
 
     w.Update();
@@ -354,7 +355,7 @@ public:
     button_dash.Text("ud_text").Redraw();
 
     if (button_dash.Input("render_input").GetCurrValue() == "true") {
-      Redraw();
+      Redraw(w.GetUpdate());
     }
 
     if (button_dash.Input("download_input").GetCurrValue() == "true") {
@@ -362,37 +363,34 @@ public:
     }
   }
 
-  void Redraw() {
-
-    if (rendered) return;
+  void Redraw(const size_t update) {
 
     systematics_dash.Text("sys_text").Redraw();
     dominant_viewer.Text("dom_text").Redraw();
-    for (auto & series : artists) for (auto & artist : series) artist->Redraw();
-
-    rendered = true;
+    for (auto & series : artists) {
+      for (auto & artist : series) artist->Redraw(update);
+    }
 
   }
 
 
   void Download() {
 
-    if (downloaded) return;
+    if(!downloaded && cfg.TimingFun(w.GetUpdate())) {
 
-    const auto namify = [this](const std::string &title) {
-      return emp::keyname::pack({
-        {"title", title},
-        {"treat", cfg.TREATMENT_DESCRIPTOR()},
-        {"seed", emp::to_string(cfg.SEED())},
-        {"update", emp::to_string(w.GetUpdate())},
-        {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
-        {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
-        {"ext", ".png"}
-      });
-    };
+      const auto namify = [this](const std::string &title) {
+        return emp::keyname::pack({
+          {"title", title},
+          {"treat", cfg.TREATMENT_DESCRIPTOR()},
+          {"seed", emp::to_string(cfg.SEED())},
+          {"update", emp::to_string(w.GetUpdate())},
+          {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
+          {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
+          {"ext", ".png"}
+        });
+      };
 
-    if(cfg.TimingFun(w.GetUpdate())) {
-      if (!rendered) Redraw();
+      Redraw(w.GetUpdate());
       for (auto & series : artists) {
         for (auto & artist : series) {
           artist->Download(namify(emp::slugify(artist->GetName())));

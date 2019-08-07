@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <limits>
 
 #include "web/Animate.h"
 #include "web/Canvas.h"
@@ -16,7 +17,7 @@ public:
   virtual void Deactivate() = 0;
   virtual void Activate() = 0;
   virtual std::string GetName() const = 0;
-  virtual void Redraw() = 0;
+  virtual void Redraw(const size_t update) = 0;
   virtual void Download(const std::string & fn) = 0;
 
 };
@@ -38,6 +39,8 @@ private:
 
   const Config &cfg;
 
+  size_t last_update;
+
 public:
 
   WebArtist(
@@ -53,6 +56,7 @@ public:
   , renderer(renderer_)
   , divider(divider_)
   , cfg(cfg_)
+  , last_update(std::numeric_limits<size_t>::max())
   { viewer << canvas; Deactivate(); }
 
   void Deactivate() { canvas.Deactivate(); }
@@ -61,7 +65,10 @@ public:
 
   std::string GetName() const { return name; }
 
-  void Redraw() {
+  void Redraw(const size_t update) {
+
+    if (update == last_update || !canvas.IsActive()) return;
+    else (last_update = update);
 
     // Determine the canvas info.
     const size_t canvas_w = canvas.GetWidth();
