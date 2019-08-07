@@ -58,7 +58,7 @@ public:
   {
 
     artists.push_back(emp::NewPtr<WebArtist<ChannelPack>>(
-      "Channel Viewer",
+      "Channel",
       grid_viewer,
       [this](size_t i){
         return w.man->Channel(i).GetIDs();
@@ -76,7 +76,7 @@ public:
     ));
 
     artists.push_back(emp::NewPtr<WebArtist<double>>(
-      "Stockpile Viewer",
+      "Stockpile",
       grid_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.man->Stockpile(i).QueryResource()) : std::nullopt;
@@ -105,7 +105,7 @@ public:
     ));
 
     artists.push_back(emp::NewPtr<WebArtist<double>>(
-      "Resource Sharing Viewer",
+      "Resource Sharing",
       grid_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.man->Stockpile(i).QueryTotalContribute()) : std::nullopt;
@@ -126,7 +126,7 @@ public:
     ));
 
     artists.push_back(emp::NewPtr<WebArtist<size_t>>(
-      "Apoptosis Viewer",
+      "Apoptosis",
       grid_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.man->Apoptosis(i).GetState()) : std::nullopt;
@@ -143,7 +143,7 @@ public:
     ));
 
     artists.push_back(emp::NewPtr<WebArtist<Genome>>(
-      "Taxa Viewer",
+      "Taxa",
       grid_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.GetOrg(i)) : std::nullopt;
@@ -162,7 +162,7 @@ public:
 
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
       artists.push_back(emp::NewPtr<WebArtist<int>>(
-        emp::to_string("Resource Wave Viewer Level ", l),
+        emp::to_string("Resource Wave Level ", l),
         grid_viewer,
         [this, l](size_t i){
           return w.IsOccupied(i) ? std::make_optional(w.man->Wave(i,l).GetState()) : std::nullopt;
@@ -188,7 +188,7 @@ public:
 
     for (size_t l = 0; l < cfg.NLEV() + 1; ++l) {
       artists.push_back(emp::NewPtr<WebArtist<size_t>>(
-        emp::to_string("Reproductive Pause Viewer Level ", l),
+        emp::to_string("Reproductive Pause Level ", l),
         grid_viewer,
         [this, l](size_t i){
           return w.IsOccupied(i)
