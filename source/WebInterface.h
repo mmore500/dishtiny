@@ -32,7 +32,7 @@ class WebInterface : public UI::Animate {
 
   UI::Document grid_viewer;
   UI::Document view_selector;
-  emp::vector<emp::Ptr<WebArtistBase>> artists;
+  emp::vector<emp::vector<emp::Ptr<WebArtistBase>>> artists;
 
   bool rendered;
   bool downloaded;
@@ -57,7 +57,7 @@ public:
     , view_selector("view_selector")
   {
 
-    artists.push_back(emp::NewPtr<WebArtist<ChannelPack>>(
+    artists.push_back({emp::NewPtr<WebArtist<ChannelPack>>(
       "Channel",
       grid_viewer,
       [this](size_t i){
@@ -73,9 +73,9 @@ public:
         else if (cp1->size() > 1 && (*cp1)[1] == (*cp2)[1]) return "white";
         else return "black";
       }
-    ));
+    )});
 
-    artists.push_back(emp::NewPtr<WebArtist<double>>(
+    artists.push_back({emp::NewPtr<WebArtist<double>>(
       "Stockpile",
       grid_viewer,
       [this](size_t i){
@@ -102,9 +102,9 @@ public:
         } else return emp::ColorRGB(0,0,0);
       },
       cfg_
-    ));
+    )});
 
-    artists.push_back(emp::NewPtr<WebArtist<double>>(
+    artists.push_back({emp::NewPtr<WebArtist<double>>(
       "Resource Sharing",
       grid_viewer,
       [this](size_t i){
@@ -123,9 +123,9 @@ public:
         } else return "black";
       },
       cfg_
-    ));
+    )});
 
-    artists.push_back(emp::NewPtr<WebArtist<size_t>>(
+    artists.push_back({emp::NewPtr<WebArtist<size_t>>(
       "Apoptosis",
       grid_viewer,
       [this](size_t i){
@@ -140,9 +140,9 @@ public:
         } else return "black";
       },
       cfg_
-    ));
+    )});
 
-    artists.push_back(emp::NewPtr<WebArtist<Genome>>(
+    artists.push_back({emp::NewPtr<WebArtist<Genome>>(
       "Taxa",
       grid_viewer,
       [this](size_t i){
@@ -158,10 +158,11 @@ public:
         else if (*g1 != *g2) return "red";
         else return "white";
       }
-    ));
+    )});
 
+    artists.emplace_back();
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
-      artists.push_back(emp::NewPtr<WebArtist<int>>(
+      artists.back().push_back(emp::NewPtr<WebArtist<int>>(
         emp::to_string("Resource Wave Level ", l),
         grid_viewer,
         [this, l](size_t i){
@@ -186,8 +187,9 @@ public:
       ));
     }
 
+    artists.emplace_back();
     for (size_t l = 0; l < cfg.NLEV() + 1; ++l) {
-      artists.push_back(emp::NewPtr<WebArtist<size_t>>(
+      artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
         emp::to_string("Reproductive Pause Level ", l),
         grid_viewer,
         [this, l](size_t i){
@@ -209,42 +211,57 @@ public:
       ));
     }
 
-    artists[0]->Activate();
+    artists[0][0]->Activate();
 
     view_selector.SetAttr(
       "class", "btn-group-toggle"
     ).SetAttr(
       "data-toggle", "buttons"
     );
-    for (auto & artist : artists) {
-      const std::string target = artist->GetName();
-      view_selector << UI::Div(emp::slugify(target)).SetAttr(
-          "class",
-          emp::to_string(
-            "btn btn-secondary btn-lg btn-block",
-            [](){
-              static bool first = true;
-              const bool res = first;
-              first = false;
-              return res;
-            }() ? " active" : ""
-          )
-        ) << UI::Input(
-            [&, target](const std::string & state){
-              if (state == "true") {
-                for (auto & artist : artists) {
-                  if (artist->GetName() == target) artist->Activate();
-                  else artist->Deactivate();
+    for (auto & series : artists) {
+      const std::string series_id = emp::to_string(
+        emp::slugify(series[0]->GetName()),
+        "-outer"
+      );
+      view_selector << UI::Div(
+        series_id
+      ).SetAttr(
+        "class", "btn-group d-flex"
+      ).SetAttr(
+        "role", "group"
+      );
+      for (size_t i = 0; i < series.size(); ++i) {
+        const std::string target = series[i]->GetName();
+        view_selector.Div(series_id) << UI::Div(emp::slugify(target)).SetAttr(
+            "class",
+            emp::to_string(
+              "btn w-100 btn-lg m-1 btn-secondary",
+              [](){
+                static bool first = true;
+                const bool res = first;
+                first = false;
+                return res;
+              }() ? " active" : ""
+            )
+          ) << UI::Input(
+              [&, target](const std::string & state){
+                if (state == "true") {
+                  for (auto & series : artists) {
+                    for (auto & artist : series) {
+                      if (artist->GetName() == target) artist->Activate();
+                      else artist->Deactivate();
+                    }
+                  }
                 }
-              }
-            },
-            "radio",
-            target
-          ).SetAttr(
-            "name", "options"
-          ).SetAttr(
-            "autocomplete", "off"
-        );
+              },
+              "radio",
+              i ? emp::to_string(i) : target
+            ).SetAttr(
+              "name", "options"
+            ).SetAttr(
+              "autocomplete", "off"
+          );
+      }
     }
 
     auto version_text = button_dash.AddText("version_text");
@@ -325,7 +342,7 @@ public:
   }
 
   ~WebInterface() {
-    for (auto & ptr : artists) ptr.Delete();
+    for (auto & series : artists) for (auto & ptr : series) ptr.Delete();
   }
 
   void DoFrame() {
@@ -351,7 +368,7 @@ public:
 
     systematics_dash.Text("sys_text").Redraw();
     dominant_viewer.Text("dom_text").Redraw();
-    for (auto & artist : artists) artist->Redraw();
+    for (auto & series : artists) for (auto & artist : series) artist->Redraw();
 
     rendered = true;
 
@@ -376,8 +393,10 @@ public:
 
     if(cfg.TimingFun(w.GetUpdate())) {
       if (!rendered) Redraw();
-      for (auto & artist : artists) {
-        artist->Download(namify(emp::slugify(artist->GetName())));
+      for (auto & series : artists) {
+        for (auto & artist : series) {
+          artist->Download(namify(emp::slugify(artist->GetName())));
+        }
       }
     }
 
