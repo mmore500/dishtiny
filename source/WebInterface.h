@@ -211,21 +211,40 @@ public:
 
     artists[0]->Activate();
 
+    view_selector.SetAttr(
+      "class", "btn-group-toggle"
+    ).SetAttr(
+      "data-toggle", "buttons"
+    );
     for (auto & artist : artists) {
       const std::string target = artist->GetName();
-      view_selector << UI::Button(
-        [&, target](){
-          for (auto & artist : artists) {
-            if (artist->GetName() == target) artist->Activate();
-            else artist->Deactivate();
-          }
-        },
-        target
-      ).SetAttr(
-        "type", "button"
-      ).SetAttr(
-        "class", "btn btn-secondary btn-lg btn-block"
-      );
+      view_selector << UI::Div(emp::slugify(target)).SetAttr(
+          "class",
+          emp::to_string(
+            "btn btn-secondary btn-lg btn-block",
+            [](){
+              static bool first = true;
+              const bool res = first;
+              first = false;
+              return res;
+            }() ? " active" : ""
+          )
+        ) << UI::Input(
+            [&, target](const std::string & state){
+              if (state == "true") {
+                for (auto & artist : artists) {
+                  if (artist->GetName() == target) artist->Activate();
+                  else artist->Deactivate();
+                }
+              }
+            },
+            "radio",
+            target
+          ).SetAttr(
+            "name", "options"
+          ).SetAttr(
+            "autocomplete", "off"
+        );
     }
 
     auto version_text = button_dash.AddText("version_text");
