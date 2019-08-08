@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <optional>
 #include <string>
+#include <stdexcept>
 
 #include "base/vector.h"
 #include "web/Button.h"
@@ -35,6 +36,9 @@ class WebInterface : public UI::Animate {
   emp::vector<emp::vector<emp::Ptr<WebArtistBase>>> artists;
 
   bool downloaded;
+  bool download;
+
+  bool render;
 
   std::string ChannelColor(ChannelPack &cp) {
     return emp::ColorHSV(
@@ -54,6 +58,9 @@ public:
     , w(cfg_)
     , grid_viewer("grid_viewer")
     , view_selector("view_selector")
+    , downloaded(false)
+    , download(false)
+    , render(true)
   {
 
     artists.push_back({emp::NewPtr<WebArtist<ChannelPack>>(
@@ -75,7 +82,7 @@ public:
     )});
 
     artists.push_back({emp::NewPtr<WebArtist<double>>(
-      "Stockpile",
+      "Resource Stockpile",
       grid_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.man->Stockpile(i).QueryResource()) : std::nullopt;
@@ -210,8 +217,6 @@ public:
       ));
     }
 
-    artists[0][0]->Activate();
-
     view_selector.SetAttr(
       "class", "btn-group-toggle"
     ).SetAttr(
@@ -230,11 +235,14 @@ public:
         "role", "group"
       );
       for (size_t i = 0; i < series.size(); ++i) {
-        const std::string target = series[i]->GetName();
+        auto & artist = series[i];
+        const std::string target = artist->GetName();
         view_selector.Div(series_id) << UI::Div(emp::slugify(target)).SetAttr(
             "class",
             emp::to_string(
-              "btn w-100 btn-lg m-1 btn-secondary",
+              std::string(
+                "btn btn-lg m-1 btn-primary"
+              ) + std::string(i ? " w-25" : " w-100"),
               [](){
                 static bool first = true;
                 const bool res = first;
@@ -243,18 +251,13 @@ public:
               }() ? " active" : ""
             )
           ) << UI::Input(
-              [&, target](const std::string & state){
-                if (state == "true") {
-                  for (auto & series : artists) {
-                    for (auto & artist : series) {
-                      if (artist->GetName() == target){
-                        artist->Activate();
-                        artist->Redraw(w.GetUpdate());
-                      }
-                      else artist->Deactivate();
-                    }
-                  }
+              [&, artist](const std::string & state){
+                std::cout << "running " << ", " << state << std::endl;
+                for (auto & s : artists) {
+                  for (auto & a : s) a->Deactivate();
                 }
+                artist->Activate();
+                artist->Redraw(w.GetUpdate());
               },
               "radio",
               i ? emp::to_string(i) : target
@@ -266,42 +269,126 @@ public:
       }
     }
 
-    auto version_text = button_dash.AddText("version_text");
-    version_text << "dishtiny " << STRINGIFY(DISHTINY_HASH_);
-    version_text << " / Empirical " << STRINGIFY(EMPIRICAL_HASH_);
+    UI::Document("version_text")
+      << "dishtiny " << STRINGIFY(DISHTINY_HASH_)
+      << " / Empirical " << STRINGIFY(EMPIRICAL_HASH_);
 
-    auto seed_text = button_dash.AddText("seed_text");
-    seed_text << emp::to_string(cfg.SEED());
+    UI::Document("seed_text") << emp::to_string(cfg.SEED());
 
-    auto matchbin_text = button_dash.AddText("matchbin_text");
     emp::Random temp(1); // need this to prevent a memory leak
-    matchbin_text <<
-      Config::hardware_t(nullptr, nullptr, &temp).GetMatchBin().name();
+    UI::Document("matchbin_text")
+      << Config::hardware_t(nullptr, nullptr, &temp).GetMatchBin().name();
 
-    auto ud_text = button_dash.AddText("ud_text");
-    ud_text << "Update: " << UI::Live([this](){ return w.GetUpdate(); });
+    button_dash << UI::Div(
+      "button_row"
+    ).SetAttr(
+      "class", "row"
+    );
 
-    button_dash << "&nbsp;" << UI::Button(
+    button_dash.Div("button_row") << UI::Div(
+      "step_col"
+    ).SetAttr(
+      "class", "col-lg-auto p-2"
+    ) << UI::Button(
       [this](){ DoFrame(); },
-      "Step"
+      emp::to_string("Update ", w.GetUpdate()),
+      "step_button"
+    ).SetAttr(
+      "class", "btn btn-block btn-lg btn-primary"
     );
-    button_dash << "&nbsp;" << GetToggleButton("Animate");
-    button_dash << "&nbsp;" << UI::Input(
+
+    button_dash.Div("button_row") << UI::Div(
+      "run_col"
+    ).SetAttr(
+      "class", "col-lg-auto p-2"
+    ) << GetToggleButton("Animate", "Run", "Stop").SetAttr(
+      "class", "btn btn-block btn-lg btn-primary"
+    ).SetAttr(
+      "data-toggle", "button"
+    );
+
+    button_dash.Div("button_row") << UI::Div(
+      "render_col"
+    ).SetAttr(
+      "class", "col-lg-auto p-2"
+    ) << UI::Div(
+      "render-wrapper"
+    ).SetAttr(
+      "class", "input-group input-group-lg btn-block"
+    ) << UI::Div(
+      "render_input-prepend"
+    ).SetAttr(
+      "class", "input-group-prepend"
+    ) << UI::Button(
+      [this](){ render = !render; },
+      "Render every"
+    ).SetAttr(
+      "aria-pressed", "true"
+    ).SetAttr(
+      "class", "btn active btn-primary"
+    ).SetAttr(
+      "data-toggle", "button"
+    ).SetAttr(
+      "autocomplete", "off"
+    );
+
+    button_dash.Div("render-wrapper") << UI::Input(
       [](std::string in){ ; },
-      "checkbox",
-      "Render?",
-      "render_input"
+      "number",
+      "",
+      "render_frequency"
+    ).Checker(
+      [](std::string in){
+        return true;
+        // (
+        //   emp::is_digits(in)
+        //   && std::stoi(in) > 0
+        // );
+      }
+    ).Value(
+      "100"
+    ).Min(
+      "1"
+    ).Max(
+      emp::to_string(std::numeric_limits<size_t>::max())
+    ).Step(
+      "1"
+    ).SetAttr(
+      "oninput", "validity.valid || (value='1');"
+    ).SetAttr(
+      "class", "form-control"
     );
-    button_dash << "&nbsp;" << UI::Input(
-      [this](std::string _){
-        if(button_dash.Input("download_input").GetCurrValue() == "true") {
-          Download();
-        }
-      },
-      "checkbox",
+
+    button_dash.Div("render-wrapper") << UI::Div(
+      "input-group-append"
+    ).SetAttr(
+      "class", "input-group-append"
+    ) << UI::Text().SetAttr(
+       "class", "input-group-text"
+    ) << "th update";
+
+    // "oninput", "validity.valid||(value='');"
+    // .SetAttr(
+    //   "style", "width: 5em;"
+    // );
+
+    button_dash.Div("button_row") << UI::Div(
+      "download_col"
+    ).SetAttr(
+      "class", "col-lg-auto p-2"
+    ) << UI::Button(
+      [this](){ download = !download; },
       "Download snapshots?",
       "download_input"
+    ).SetAttr(
+      "class", "btn btn-block btn-lg btn-primary"
+    ).SetAttr(
+      "data-toggle", "button"
+    ).SetAttr(
+      "autocomplete", "off"
     );
+
+    // button_dash.Input("render_input").RefreshCurrValue();
 
     auto sys_text = systematics_dash.AddText("sys_text");
     sys_text << " Num Unique Orgs: " << UI::Live([this](){
@@ -352,18 +439,36 @@ public:
 
     w.Update();
 
-    button_dash.Text("ud_text").Redraw();
+    button_dash.Button("step_button").SetLabel(
+      emp::to_string("Update ", w.GetUpdate())
+    );
 
-    if (button_dash.Input("render_input").GetCurrValue() == "true") {
+    if (render) {
       Redraw(w.GetUpdate());
     }
 
-    if (button_dash.Input("download_input").GetCurrValue() == "true") {
+    if (download) {
       Download();
     }
   }
 
+  void InitializeViewers(const size_t update) {
+    for (auto & series : artists) {
+      for (auto & artist : series) artist->Deactivate();
+    }
+    artists[0][0]->Activate();
+    // artists[0][0]->Redraw(update);
+  }
+
   void Redraw(const size_t update) {
+
+    std::cout << button_dash.Input("render_frequency").GetCurrValue() << std::endl;
+
+    if (
+      update % std::stoi(button_dash.Input("render_frequency").GetCurrValue())
+    ) return;
+
+    std::cout << "continuing " << std::endl;
 
     systematics_dash.Text("sys_text").Redraw();
     dominant_viewer.Text("dom_text").Redraw();

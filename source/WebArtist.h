@@ -57,18 +57,30 @@ public:
   , divider(divider_)
   , cfg(cfg_)
   , last_update(std::numeric_limits<size_t>::max())
-  { viewer << canvas; Deactivate(); }
+  { viewer << canvas.SetAttr("class", "mx-auto"); }
 
-  void Deactivate() { canvas.Deactivate(); }
+  void Deactivate() {
+    std::cout << "Deactivate " << GetName() << std::endl;
+    canvas.SetCSS("display", "none");
+    canvas.Deactivate();
+  }
 
-  void Activate() { canvas.Activate(); }
+  void Activate() {
+    std::cout << "Activate " << GetName() << std::endl;
+    canvas.Activate();
+    canvas.SetCSS("display", "initial");
+  }
 
   std::string GetName() const { return name; }
 
   void Redraw(const size_t update) {
 
+    std::cout << "redrawing " << GetName() << std::endl;
+
     if (update == last_update || !canvas.IsActive()) return;
-    else (last_update = update);
+    else last_update = update;
+
+    std::cout << "rendering " << GetName() << std::endl;
 
     // Determine the canvas info.
     const size_t canvas_w = canvas.GetWidth();

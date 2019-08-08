@@ -57,6 +57,7 @@ int main()
   cfg.WriteMe(std::cout);
   std::cout << "==============================\n" << std::endl;
 
+  i.InitializeViewers(0);
   i.Redraw(0);
 
   return 0;
