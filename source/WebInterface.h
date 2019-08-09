@@ -316,7 +316,7 @@ public:
       "run_col"
     ).SetAttr(
       "class", "col-lg-auto p-2"
-    ) << GetToggleButton("Animate", "Run ", "Stop").SetAttr(
+    ) << GetToggleButton("Animate", "Run&nbsp;", "Stop").SetAttr(
       "class", "btn btn-block btn-lg btn-primary"
     ).SetAttr(
       "data-toggle", "button"
