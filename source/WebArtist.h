@@ -57,18 +57,23 @@ public:
   , divider(divider_)
   , cfg(cfg_)
   , last_update(std::numeric_limits<size_t>::max())
-  { viewer << canvas.SetAttr("class", "mx-auto"); }
+  { viewer << canvas.SetCSS(
+      "position", "absolute",
+      "margin-left", "auto",
+      "margin-right", "auto",
+      "left", "0",
+      "right", "0"
+    );
+  }
 
   void Deactivate() {
     std::cout << "Deactivate " << GetName() << std::endl;
-    canvas.SetCSS("display", "none");
-    canvas.Deactivate();
+    canvas.SetCSS("visibility", "hidden");
   }
 
   void Activate() {
     std::cout << "Activate " << GetName() << std::endl;
-    canvas.Activate();
-    canvas.SetCSS("display", "initial");
+    canvas.SetCSS("visibility", "visible");
   }
 
   std::string GetName() const { return name; }
@@ -77,7 +82,9 @@ public:
 
     std::cout << "redrawing " << GetName() << std::endl;
 
-    if (update == last_update || !canvas.IsActive()) return;
+    if (update == last_update || canvas.GetCSS("visibility") == "hidden") {
+      return;
+    }
     else last_update = update;
 
     std::cout << "rendering " << GetName() << std::endl;

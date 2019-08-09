@@ -63,6 +63,8 @@ public:
     , render(true)
   {
 
+    grid_viewer.SetAttr("class", "mx-auto");
+
     artists.push_back({emp::NewPtr<WebArtist<ChannelPack>>(
       "Channel",
       grid_viewer,
@@ -250,22 +252,35 @@ public:
                 return res;
               }() ? " active" : ""
             )
+          ).SetAttr(
+            "onclick",
+            emp::to_string(
+              "emp.Callback(",
+              emp::JSWrap(std::function<void()>(
+                [&, artist](){
+                  std::cout << "running " << std::endl;
+                  for (auto & s : artists) {
+                    for (auto & a : s) a->Deactivate();
+                  }
+                  artist->Activate();
+                  artist->Redraw(w.GetUpdate());
+                })),
+              ");"
+            )
           ) << UI::Input(
-              [&, artist](const std::string & state){
-                std::cout << "running " << ", " << state << std::endl;
-                for (auto & s : artists) {
-                  for (auto & a : s) a->Deactivate();
-                }
-                artist->Activate();
-                artist->Redraw(w.GetUpdate());
-              },
+              [](const std::string & state){ ; },
               "radio",
               i ? emp::to_string(i) : target
             ).SetAttr(
-              "name", "options"
+              "name", "view_mode"
+            ).Value(
+              emp::slugify(target)
             ).SetAttr(
               "autocomplete", "off"
+            ).SetAttr(
+              "onclick", "console.log(\"bang\");"
           );
+
       }
     }
 
@@ -282,7 +297,7 @@ public:
     button_dash << UI::Div(
       "button_row"
     ).SetAttr(
-      "class", "row"
+      "class", "row justify-content-md-center"
     );
 
     button_dash.Div("button_row") << UI::Div(
@@ -301,7 +316,7 @@ public:
       "run_col"
     ).SetAttr(
       "class", "col-lg-auto p-2"
-    ) << GetToggleButton("Animate", "Run", "Stop").SetAttr(
+    ) << GetToggleButton("Animate", "Run ", "Stop").SetAttr(
       "class", "btn btn-block btn-lg btn-primary"
     ).SetAttr(
       "data-toggle", "button"
@@ -339,11 +354,11 @@ public:
       "render_frequency"
     ).Checker(
       [](std::string in){
-        return true;
-        // (
-        //   emp::is_digits(in)
-        //   && std::stoi(in) > 0
-        // );
+        return (
+          emp::is_digits(in)
+          && in.size()
+          && std::stoi(in) > 0
+        );
       }
     ).Value(
       "100"
