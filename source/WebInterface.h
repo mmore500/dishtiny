@@ -67,6 +67,7 @@ public:
 
     artists.push_back({emp::NewPtr<WebArtist<ChannelPack>>(
       "Channel",
+      "Channel",
       grid_viewer,
       [this](size_t i){
         return w.man->Channel(i).GetIDs();
@@ -84,6 +85,7 @@ public:
     )});
 
     artists.push_back({emp::NewPtr<WebArtist<double>>(
+      "Resource Stockpile",
       "Resource Stockpile",
       grid_viewer,
       [this](size_t i){
@@ -114,6 +116,7 @@ public:
 
     artists.push_back({emp::NewPtr<WebArtist<double>>(
       "Resource Sharing",
+      "Resource Sharing",
       grid_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.man->Stockpile(i).QueryTotalContribute()) : std::nullopt;
@@ -135,6 +138,7 @@ public:
 
     artists.push_back({emp::NewPtr<WebArtist<size_t>>(
       "Apoptosis",
+      "Apoptosis",
       grid_viewer,
       [this](size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.man->Apoptosis(i).GetState()) : std::nullopt;
@@ -151,6 +155,7 @@ public:
     )});
 
     artists.push_back({emp::NewPtr<WebArtist<Genome>>(
+      "Taxa",
       "Taxa",
       grid_viewer,
       [this](size_t i){
@@ -172,6 +177,7 @@ public:
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
       artists.back().push_back(emp::NewPtr<WebArtist<int>>(
         emp::to_string("Resource Wave Level ", l),
+        "Resource Wave",
         grid_viewer,
         [this, l](size_t i){
           return w.IsOccupied(i) ? std::make_optional(w.man->Wave(i,l).GetState()) : std::nullopt;
@@ -199,6 +205,7 @@ public:
     for (size_t l = 0; l < cfg.NLEV() + 1; ++l) {
       artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
         emp::to_string("Reproductive Pause Level ", l),
+        "Reproductive Pause",
         grid_viewer,
         [this, l](size_t i){
           return w.IsOccupied(i)

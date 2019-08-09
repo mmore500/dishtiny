@@ -73,51 +73,207 @@
         <div id="view_key-body" class="card-body collapse">
 
           <div id="channel-key">
-            In the "Channel Viewer", low-level groups are coded by color saturation (divided by white lines) and high-level groups are coded by color hue (divided by black lines).
+            The <b>Channel Viewer</b> shows the arrangement of hereditarily-defined resource-collecing cell groups.
+            <ul class="list-group">
+              <li class="list-group-item">
+                <b>Color value</b> (e.g.,
+                <span class="badge badge-light" style="background-color: hsl(120, 100%, 70%);">Light Green</span>
+                vs.
+                <span class="badge badge-dark" style="background-color: hsl(120, 100%, 30%);">Dark Green</span>
+                ) differentiates <b>low-level groups</b>.
+              </li>
+              <li class="list-group-item">
+                <b>Color hue</b> (e.g.,
+                <span class="badge badge-light" style="background-color: hsl(120, 100%, 70%);">Light Green</span>
+                /
+                <span class="badge badge-dark" style="background-color: hsl(120, 100%, 30%);">Dark Green</span>
+                vs.
+                <span class="badge badge-light" style="background-color: hsl(240, 100%, 70%);">Light Blue</span>
+                /
+                <span class="badge badge-dark" style="background-color: hsl(240, 100%, 30%);">Dark Blue</span>
+                vs.
+                <span class="badge badge-light" style="background-color: hsl(300, 100%, 70%);">Light Purple</span>
+                /
+                <span class="badge badge-dark" style="background-color: hsl(300, 100%, 30%);">Dark Purple</span>
+                ) differentiates <b>high-level groups</b> (i.e., groups of low-level
+                groups).
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                borders divide <b>low-level groups</b> that are part of the same high-level group.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                borders divide <b>high-level groups</b>.
+              </li>
+            </ul>
           </div>
 
-          <div id="stockpile-key">
-            The "Stockpile Viewer" depicts the resource that each cell-like organism has accumulated.
-            Black grid tiles are dead cells.
-            Red indicates a resource defecit (which, if it becomes too extreme, will result in that cell's death).
-            White indicates zero resource.
-            Blue indicates positive resource, but below the threshold required for reproduction.
-            Green indicates an amount of resource equal to the cost of a single reproduction.
-            Yellow indicates an amount of resource greater than the cost of a single reproduction.
+          <div id="resource-stockpile-key">
+            The <b>Stockpile Viewer</b> depicts the resource that each cell-like organism has accumulated.
+            <ul class ="list-group">
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                indicates a <b>resource defecit</b> (which, if it becomes too extreme, will result in that cell's death).
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                indicates <b>zero resource</b>.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                indicates <b>positive resource</b>, but below the threshold required for reproduction.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #00ff00">Green</span>
+                indicates <b>enough resource to reproduce</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffff00">Yellow</span>
+                indicates an <b>excess of resource</b>, more than enough to reproduce.
+              </li>
+            </ul>
           </div>
 
-          <div id="sharking-key">
-            The "Contribution Viewer" depicts the amount of resource has received from neighbors during the previous update.
-            Black grid tiles are dead cells.
-            White indicates zero resource was received.
-            Blue indicates a small amount of resource was received, green indicates a medium amount of resource was received, and yellow indicates a large amount of resource was received.
+          <div id="resource-sharing-key">
+            The <b>Contribution Viewer</b> depicts the amount of resource has received from neighbors during the previous update.
+
+            <ul class ="list-group">
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                indicates <b>zero resource</b> was received.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                indicates a <b>small amount</b> of resource was received.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #00ff00">Green</span>
+                indicates an <b>intermediate amount</b> of resource was received.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffff00">Yellow</span>
+                indicates a <b>large amount</b> of resource was received.
+              </li>
+            </ul>
           </div>
 
           <div id="apoptosis-key">
-            The "Apoptosis Viewer" TODO
+            The <b>Apoptosis Viewer</b> shows cells that have registered themselves for imminent cellular suicidie.
+            <ul class ="list-group">
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                grid tiles are <b>live cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                cells are registered for <b>partial apoptosis</b>, where a underlying cell is destroyed but its channel structure is preserved.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                cells are registered for <b>complete apoptosis</b>, where a cell and its channel structure are totally destroyed.
+              </li>
+            </ul>
           </div>
 
           <div id="taxa-key">
-            The "Taxa Viewer" depicts the distribution of genetically-identical cells.
-            White cells are occupied and black cells are empty.
-            Red divisions indicate neighboring cells with non-identical genotypes.
+            The <b>Taxa Viewer</b> depicts the distribution of groups of genetically-identical cells.
+            <ul class ="list-group">
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                grid tiles are <b>live cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                lines divide cells with <b>identical genotypes</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                lines divide cells with <b>different genotypes</b>.
+              </li>
+            </ul>
           </div>
 
-          <div id="wave-key">
-            The "Wave Viewer" depicts the resource-collection task that cell groups cooperate to perform.
+          <div id="resource-wave-key">
+            The <b>Wave Viewer</b> depicts the resource-collection task that cell groups cooperate to perform.
             Two grid views are depicted: one for each distinct level of cooperation.
-            Green and red colorings both indicate an active state.
             Activation propigates outward in cooperating groups from an environmentally-triggered seed.
             Activation within a certain radius of the seed is beneficial, while ativation beyond that radius is harfmul.
-            Cells in the green state gain resource.
-            Cells in the red state lose resource.
-            White cells are in the ready state, meaning they can be activated by adjacent cooperating cells.
-            Blue indicates a quiescent state, meaning they cannot be activated by adjacent cooperating cells.
-            Black cells are empty.
+
+            <ul class ="list-group">
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #00ff00">Green</span>
+                cells are activated and <b>gaining resource</b>.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                cells are activated and <b>losing resource</b>.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                cells are in the <b>ready state</b>, meaning they can be activated by adjacent cooperating cells.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                cells are in a <b>quiescent state</b>, meaning they cannot be activated by adjacent cooperating cells.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+            </ul>
           </div>
 
-          <div id="pause-key">
-            The "Reproductive Pause" viewer TODO
+          <div id="reproductive-pause-key">
+            The <b>Reproductive Pause</b> viewer depicts reproductive cooperation.
+            <ul class ="list-group">
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                cells have registered <b>zero</b> reproductive forbearance.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #00ff00">Green</span>
+                cells have temporarily registred to pause reproduction in <b>one direction</b>.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                cells have temporariliy registered to pause reproduction in <b>two directions</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff00ff">Purple</span>
+                cells have temporariliy registered to pause reproduction in <b>three directions</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                cells have temporarily registered to pause reproduction in all <b>four directions</b>.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+            </ul>
           </div>
 
         </div>

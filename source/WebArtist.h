@@ -5,6 +5,7 @@
 
 #include "web/Animate.h"
 #include "web/Canvas.h"
+#include "web/DocuExtras.h"
 #include "web/color_map.h"
 
 namespace UI = emp::web;
@@ -31,6 +32,7 @@ private:
   const std::string name;
 
   UI::Canvas canvas;
+  UI::DocuExtras description;
 
   std::function<std::optional<T>(size_t)> getter;
   std::function<std::string(std::optional<T>)> renderer;
@@ -45,6 +47,7 @@ public:
 
   WebArtist(
     std::string name_,
+    std::string description_,
     UI::Document &viewer,
     std::function<std::optional<T>(size_t)> getter_,
     std::function<std::string(std::optional<T>)> renderer_,
@@ -52,6 +55,7 @@ public:
     std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
   ) : name(name_)
   , canvas(500,500)
+  , description(emp::to_string(emp::slugify(description_), "-key"))
   , getter(getter_)
   , renderer(renderer_)
   , divider(divider_)
@@ -69,11 +73,13 @@ public:
   void Deactivate() {
     std::cout << "Deactivate " << GetName() << std::endl;
     canvas.SetCSS("visibility", "hidden");
+    description.SetCSS("display", "none");
   }
 
   void Activate() {
     std::cout << "Activate " << GetName() << std::endl;
     canvas.SetCSS("visibility", "visible");
+    description.SetCSS("display", "initial");
   }
 
   std::string GetName() const { return name; }
