@@ -9,7 +9,9 @@
 #include "web/Button.h"
 #include "web/Input.h"
 #include "web/web.h"
+#include "web/commands.h"
 #include "web/Animate.h"
+#include "web/Text.h"
 #include "tools/math.h"
 #include "tools/Random.h"
 #include "tools/keyname_utils.h"
@@ -21,6 +23,87 @@
 
 namespace UI = emp::web;
 
+struct DataPill {
+
+  const std::string & title;
+  const std::function<std::string()> value;
+  const std::string & description;
+  const bool split;
+
+  DataPill(
+    const std::string & title_,
+    const std::function<std::string()> value_,
+    const std::string & description_,
+    const bool split_=false
+  ) : title(title_)
+  , value(value_)
+  , description(description_)
+  , split(split_)
+  { ; }
+
+
+  template <typename IN_TYPE>
+  IN_TYPE leftleft(IN_TYPE && in_val) {
+
+    static size_t counter = 0;
+    counter++;
+
+    return in_val << UI::Div(
+      ).SetAttr(
+        "class", split ? "col-md-6 p-3" : "col-md-6 col-lg-4 col-xl-3 p-3"
+      ) << UI::Div(
+      ).SetAttr(
+        "class", "card"
+      ) << UI::Div(
+        emp::to_string("datapill-header-", counter)
+      ).SetAttr(
+        "class", "card-header"
+      ) << UI::Div(
+        emp::to_string("datapill-wrapper-", counter)
+      ).SetAttr(
+        "data-toggle", "collapse",
+        "href", emp::to_string("#datapill-collapse-", counter)
+      ) << UI::Div(
+        emp::to_string("datapill-button-", counter), "button"
+      ).SetAttr(
+        "class", "btn btn-block btn-primary p-0 border-0",
+        "data-toggle", "active",
+        "href", emp::to_string("#datapill-active-", counter)
+      ) << UI::Div(
+        emp::to_string("datapill-btngroup-", counter)
+      ).SetAttr(
+        "class", "btn-group w-100",
+        "role", "group"
+      ) << UI::Div(
+        emp::to_string("datapill-active-", counter)
+      ).SetAttr(
+        "class", "btn w-100 btn-primary border-secondary"
+      ) << title << UI::Close(
+        emp::to_string("datapill-active-", counter)
+      ) << UI::Div(
+        emp::to_string("datapill-value-", counter)
+      ).SetAttr(
+        "class", "badge-light btn w-25 border-secondary"
+      ) << value << UI::Close(
+        emp::to_string("datapill-value-", counter)
+      ) << UI::Close(
+        emp::to_string("datapill-btngroup-", counter)
+      ) << UI::Close(
+        emp::to_string("datapill-button-", counter)
+      ) << UI::Close(
+        emp::to_string("datapill-wrapper-", counter)
+      ) << UI::Close(
+        emp::to_string("datapill-header-", counter)
+      ) << UI::Div(
+        emp::to_string("datapill-collapse-", counter)
+      ).SetAttr(
+        "class", "card-body collapse"
+      ) << description;
+
+    }
+
+};
+
 class WebInterface : public UI::Animate {
 
   const Config &cfg;
@@ -28,6 +111,7 @@ class WebInterface : public UI::Animate {
   UI::Document button_dash;  //< Div that contains the button dashboard.
   UI::Document systematics_dash;  //< Div that contains the systematics info.
   UI::Document dominant_viewer;
+  UI::Document dynamic_config;
 
   DishWorld w;
 
@@ -55,6 +139,7 @@ public:
     , button_dash("emp_button_dash")
     , systematics_dash("emp_systematics_dash")
     , dominant_viewer("dominant_viewer")
+    , dynamic_config("emp_dynamic_config")
     , w(cfg_)
     , grid_viewer("grid_viewer")
     , view_selector("view_selector")
@@ -412,19 +497,59 @@ public:
 
     // button_dash.Input("render_input").RefreshCurrValue();
 
-    auto sys_text = systematics_dash.AddText("sys_text");
-    sys_text << " Num Unique Orgs: " << UI::Live([this](){
-      return w.GetSystematics("systematics")->GetNumActive();
-    });
-    sys_text << " Ave Depth: " << UI::Live([this](){
-      return w.GetSystematics("systematics")->GetAveDepth();
-    });
-    sys_text << " Num Roots: " << UI::Live([this](){
-      return w.GetSystematics("systematics")->GetNumRoots();
-    });
-    sys_text << " MRCA Depth: " << UI::Live([this](){
-      return w.GetSystematics("systematics")->GetMRCADepth();
-    });
+    systematics_dash.SetAttr(
+      "class", "row"
+    );
+
+    DataPill(
+      "Unique Genotypes",
+      UI::Live([this](){
+        return w.GetSystematics("systematics")->GetNumActive();
+      }),
+      "How many unique genotypes are there in the population?",
+      true
+    ).leftleft(systematics_dash << "");
+
+    DataPill(
+      "Mean Phylogenetic Depth",
+      UI::Live([this](){
+        return w.GetSystematics("systematics")->GetAveDepth();
+      }),
+      "How many steps is the line of descent to extant cells?",
+      true
+    ).leftleft(systematics_dash << "");
+
+    DataPill(
+      "Mean Phylogenetic Depth",
+      UI::Live([this](){
+        return w.GetSystematics("systematics")->GetAveDepth();
+      }),
+      "How many steps is the line of descent to extant cells?",
+      true
+    ).leftleft(systematics_dash << "");
+
+    DataPill(
+      "Phylogenetic Roots",
+      UI::Live([this](){
+        return w.GetSystematics("systematics")->GetNumRoots();
+      }),
+      "How many unique root ancestors have extant offspring?",
+      true
+    ).leftleft(systematics_dash << "");
+
+    DataPill(
+      "MRCA Depth",
+      UI::Live([this](){
+        const int res = w.GetSystematics("systematics")->GetMRCADepth();
+        return (
+          res == -1
+          ? "n/a"
+          : emp::to_string(res)
+        );
+      }),
+      "How updates have elapsed since the most recent common ancestor of all extant organisms?",
+      true
+    ).leftleft(systematics_dash << "");
 
     auto dom_text = dominant_viewer.AddText("dom_text");
     dom_text << UI::Live([this](){
@@ -449,6 +574,19 @@ public:
 
       return "COUNT:" + emp::to_string(pr->second) + "\n\n" + buffer.str();
     });
+
+    dynamic_config.SetAttr(
+      "class", "row"
+    );
+    for (const auto & [name, entry] : cfg) {
+      auto & capturable = entry;
+      DataPill(
+        name,
+        [capturable](){ return capturable->GetValue(); },
+        entry->GetDescription()
+      ).leftleft(dynamic_config << "");
+    }
+
 
   }
 
@@ -492,7 +630,7 @@ public:
 
     std::cout << "continuing " << std::endl;
 
-    systematics_dash.Text("sys_text").Redraw();
+    systematics_dash.Redraw();
     dominant_viewer.Text("dom_text").Redraw();
     for (auto & series : artists) {
       for (auto & artist : series) artist->Redraw(update);
