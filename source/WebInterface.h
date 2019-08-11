@@ -112,6 +112,7 @@ class WebInterface : public UI::Animate {
   UI::Document systematics_dash;  //< Div that contains the systematics info.
   UI::Document dominant_viewer;
   UI::Document dynamic_config;
+  UI::Document static_config;
 
   DishWorld w;
 
@@ -140,6 +141,7 @@ public:
     , systematics_dash("emp_systematics_dash")
     , dominant_viewer("dominant_viewer")
     , dynamic_config("emp_dynamic_config")
+    , static_config("emp_static_config")
     , w(cfg_)
     , grid_viewer("grid_viewer")
     , view_selector("view_selector")
@@ -376,16 +378,6 @@ public:
       }
     }
 
-    UI::Document("version_text")
-      << "dishtiny " << STRINGIFY(DISHTINY_HASH_)
-      << " / Empirical " << STRINGIFY(EMPIRICAL_HASH_);
-
-    UI::Document("seed_text") << emp::to_string(cfg.SEED());
-
-    emp::Random temp(1); // need this to prevent a memory leak
-    UI::Document("matchbin_text")
-      << Config::hardware_t(nullptr, nullptr, &temp).GetMatchBin().name();
-
     button_dash << UI::Div(
       "button_row"
     ).SetAttr(
@@ -607,6 +599,110 @@ public:
       ).leftleft(dynamic_config << "");
     }
 
+    static_config.SetAttr(
+      "class", "row"
+    );
+
+    static_config << UI::Div(
+      ).SetAttr(
+        "class", "col-md-6 col-lg-4 col-xl-3 p-3"
+      ) << UI::Div(
+      ).SetAttr(
+        "class", "card"
+      ) << UI::Div(
+        "source-hash-header"
+      ).SetAttr(
+        "class", "card-header"
+      ) << UI::Div(
+        "source-hash-wrapper"
+      ).SetAttr(
+        "data-toggle", "collapse",
+        "href", "#source-hash-collapse"
+      ) << UI::Button(
+        [](){;},
+        "dishtiny Version"
+      ).SetAttr(
+        "class", "btn btn-block btn-primary",
+        "type", "button",
+        "data-toggle", "button",
+        "autocomplete", "off"
+      ) << UI::Close(
+        "source-hash-wrapper"
+      ) << UI::Close(
+        "source-hash-header"
+      ) << UI::Div(
+        "source-hash-collapse"
+      ).SetAttr(
+        "class", "card-body collapse"
+      ) << STRINGIFY(DISHTINY_HASH_);
+
+    static_config << UI::Div(
+      ).SetAttr(
+        "class", "col-md-6 col-lg-4 col-xl-3 p-3"
+      ) << UI::Div(
+      ).SetAttr(
+        "class", "card"
+      ) << UI::Div(
+        "empirical-hash-header"
+      ).SetAttr(
+        "class", "card-header"
+      ) << UI::Div(
+        "empirical-hash-wrapper"
+      ).SetAttr(
+        "data-toggle", "collapse",
+        "href", "#empirical-hash-collapse"
+      ) << UI::Button(
+        [](){;},
+        "Empirical Version"
+      ).SetAttr(
+        "class", "btn btn-block btn-primary",
+        "type", "button",
+        "data-toggle", "button",
+        "autocomplete", "off"
+      ) << UI::Close(
+        "empirical-hash-wrapper"
+      ) << UI::Close(
+        "empirical-hash-header"
+      ) << UI::Div(
+        "empirical-hash-collapse"
+      ).SetAttr(
+        "class", "card-body collapse"
+      ) << STRINGIFY(EMPIRICAL_HASH_);
+
+
+      emp::Random temp(1); // need this to prevent a memory leak
+      static_config << UI::Div(
+        ).SetAttr(
+          "class", "col-md-6 col-lg-4 col-xl-3 p-3"
+        ) << UI::Div(
+        ).SetAttr(
+          "class", "card"
+        ) << UI::Div(
+          "matchbin-header"
+        ).SetAttr(
+          "class", "card-header"
+        ) << UI::Div(
+          "matchbin-wrapper"
+        ).SetAttr(
+          "data-toggle", "collapse",
+          "href", "#matchbin-collapse"
+        ) << UI::Button(
+          [](){;},
+          "MatchBin"
+        ).SetAttr(
+          "class", "btn btn-block btn-primary",
+          "type", "button",
+          "data-toggle", "button",
+          "autocomplete", "off"
+        ) << UI::Close(
+          "matchbin-wrapper"
+        ) << UI::Close(
+          "matchbin-header"
+        ) << UI::Div(
+          "matchbin-collapse"
+        ).SetAttr(
+          "class", "card-body collapse"
+        ) << Config::hardware_t(nullptr, nullptr, &temp).GetMatchBin().name();
 
   }
 
