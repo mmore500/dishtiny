@@ -408,10 +408,30 @@ public:
       "run_col"
     ).SetAttr(
       "class", "col-lg-auto p-2"
-    ) << GetToggleButton("Animate", "Run&nbsp;", "Stop").SetAttr(
-      "class", "btn btn-block btn-lg btn-primary"
-    ).SetAttr(
-      "data-toggle", "button"
+    ) << UI::Div(
+      "run-button",
+      "button"
+    ).OnClick(
+      [this](){
+        ToggleActive();
+        button_dash.Div("run-button").Redraw();
+      }
+    ) << UI::Live(
+      [this](){
+        if (GetActive()) {
+          button_dash.Button("run-button").SetAttr(
+            "class", "btn btn-primary btn-block btn-lg active",
+            "aria-pressed", "true"
+          );
+          return "Stop";
+        } else {
+          button_dash.Button("run-button").SetAttr(
+            "class", "btn btn-primary btn-block btn-lg",
+            "aria-pressed", "false"
+          );
+          return "Run&nbsp";
+        }
+      }
     );
 
     button_dash.Div("button_row") << UI::Div(
