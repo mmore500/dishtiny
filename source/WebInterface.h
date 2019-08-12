@@ -605,14 +605,25 @@ public:
     dynamic_config.SetAttr(
       "class", "row"
     );
-    for (const auto & [name, entry] : cfg) {
-      auto & capturable = entry;
-      DataPill(
-        name,
-        [capturable](){ return capturable->GetValue(); },
-        entry->GetDescription(),
-        dynamic_config
-      ).leftleft(dynamic_config << "");
+
+    // alphabetize
+    const std::map<
+      decltype(cfg.begin()->first),
+      decltype(cfg.begin()->second)
+    > alph(cfg.begin(), cfg.end());
+
+    for (const auto & [name, entry] : alph) {
+      if (
+        entry->GetDescription().find("[NATIVE]") == std::string::npos
+      ) {
+        auto & capturable = entry;
+        DataPill(
+          name,
+          [capturable](){ return capturable->GetValue(); },
+          entry->GetDescription(),
+          dynamic_config
+        ).leftleft(dynamic_config << "");
+      }
     }
 
     static_config.SetAttr(
