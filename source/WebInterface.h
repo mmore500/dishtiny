@@ -313,6 +313,14 @@ public:
       ));
     }
 
+    grid_viewer.SetCSS(
+      "min-height",
+      emp::to_string(
+        std::min(GetViewPortWidth() - 100, 500),
+        "px"
+      )
+    );
+
     view_selector.SetAttr(
       "class", "btn-group-toggle"
     ).SetAttr(
