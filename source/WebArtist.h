@@ -78,13 +78,11 @@ public:
   }
 
   void Deactivate() {
-    std::cout << "Deactivate " << GetName() << std::endl;
     canvas.SetCSS("visibility", "hidden");
     description.SetCSS("display", "none");
   }
 
   void Activate() {
-    std::cout << "Activate " << GetName() << std::endl;
     canvas.SetCSS("visibility", "visible");
     description.SetCSS("display", "initial");
   }
@@ -93,14 +91,10 @@ public:
 
   void Redraw(const size_t update) {
 
-    std::cout << "redrawing " << GetName() << std::endl;
-
     if (update == last_update || canvas.GetCSS("visibility") == "hidden") {
       return;
     }
     else last_update = update;
-
-    std::cout << "rendering " << GetName() << std::endl;
 
     // Determine the canvas info.
     const size_t canvas_w = canvas.GetWidth();

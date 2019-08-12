@@ -727,13 +727,9 @@ public:
 
   void Redraw(const size_t update) {
 
-    std::cout << button_dash.Input("render_frequency").GetCurrValue() << std::endl;
-
     if (
       update % std::stoi(button_dash.Input("render_frequency").GetCurrValue())
     ) return;
-
-    std::cout << "continuing " << std::endl;
 
     systematics_dash.Redraw();
     dominant_viewer.Text("dom_text").Redraw();
