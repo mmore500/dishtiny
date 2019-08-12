@@ -474,8 +474,6 @@ public:
     ).Step(
       "1"
     ).SetAttr(
-      "oninput", "validity.valid || (value='1');"
-    ).SetAttr(
       "class", "form-control"
     ).SetCSS(
       "min-width", "96px"
@@ -488,11 +486,6 @@ public:
     ) << UI::Text().SetAttr(
        "class", "input-group-text"
     ) << "th update";
-
-    // "oninput", "validity.valid||(value='');"
-    // .SetAttr(
-    //   "style", "width: 5em;"
-    // );
 
     button_dash.Div("button_row") << UI::Div(
       "download_col"
