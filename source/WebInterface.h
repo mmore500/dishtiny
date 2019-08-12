@@ -398,8 +398,6 @@ public:
               emp::slugify(target)
             ).SetAttr(
               "autocomplete", "off"
-            ).SetAttr(
-              "onclick", "console.log(\"bang\");"
           );
 
       }
@@ -528,8 +526,6 @@ public:
     ).SetAttr(
       "autocomplete", "off"
     );
-
-    // button_dash.Input("render_input").RefreshCurrValue();
 
     systematics_dash.SetAttr(
       "class", "row"
@@ -753,7 +749,6 @@ public:
       for (auto & artist : series) artist->Deactivate();
     }
     artists[0][0]->Activate();
-    // artists[0][0]->Redraw(update);
   }
 
   void Redraw(const size_t update) {
