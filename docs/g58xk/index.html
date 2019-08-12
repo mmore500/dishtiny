@@ -41,6 +41,9 @@
 
   <script>
   $('.modal').modal('show');
+  setTimeout(function () {
+    $('.modal').modal('hide');
+  }, 10000);
   </script>
 
   <style>
@@ -67,6 +70,20 @@
 
   .carousel-control-next-icon {
       background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+  }
+
+  .carousel-control-prev {
+    position: absolute;
+    top: auto;
+    bottom: 36px;
+    right: 85%;
+  }
+
+  .carousel-control-next{
+    position: absolute;
+    top: auto;
+    bottom: 36px;
+    left: 85%;
   }
 
   .carousel .carousel-indicators li {
@@ -109,7 +126,6 @@
             <div class="carousel-inner">
 
               <div class="carousel-item active">
-                <div class="container w-75">
                 <div class="row">
                   <div class="col-lg-6">
                    <img src="cpus.jpg" class="img-fluid" />
@@ -125,10 +141,8 @@
                   <div class="col-12" style="height: 50px;"> </div>
                 </div>
               </div>
-              </div>
 
               <div class="carousel-item">
-                <div class="container w-75">
                 <div class="row">
                   <div class="col-lg-6">
                    <img src="football.jpg" class="img-fluid" />
@@ -146,7 +160,6 @@
               </div>
 
               <div class="carousel-item">
-                <div class="container w-75">
                 <div class="row">
                   <div class="col-lg-6">
                    <img src="stork.jpg" class="img-fluid" />
@@ -163,10 +176,8 @@
                   <div class="col-12" style="height: 50px;"> </div>
                 </div>
               </div>
-              </div>
 
               <div class="carousel-item">
-                <div class="container w-75">
                 <div class="row">
                   <div class="col-lg-6">
                    <img src="mirror.jpg" class="img-fluid" />
@@ -187,10 +198,8 @@
                   <div class="col-12" style="height: 50px;"> </div>
                 </div>
               </div>
-              </div>
 
               <div class="carousel-item">
-                <div class="container w-75">
                 <div class="row">
                   <div class="col-lg-6">
                    <img src="lightbulb.jpg" class="img-fluid" />
@@ -205,10 +214,8 @@
                   <div class="col-12" style="height: 50px;"> </div>
                 </div>
               </div>
-              </div>
 
               <div class="carousel-item">
-                <div class="container w-75">
                 <div class="row">
                   <div class="col-lg-6">
                    <img src="binoculars.jpg" class="img-fluid" />
@@ -219,9 +226,8 @@
                    We reccomend letting the simulation run maybe 10,000 updates with rendering off (so it runs faster).
                    Then, render every update and look at
                    <ul>
-                     <li> resource sharing in the <b>Resource Sharing Viewer</b>, </li>
-                     <li> signs of reproductive cooperation in the <b>Reproductive Pause Viewer</b> and <b>Resource Stockpile Viewer</b>, </li>
-                     <li> a program in the <b>Dominant Genotype</b> viewer... can you figure out what it evolved to do? </li>
+                     <li> resource sharing in the <b>Resource Sharing Viewer</b> and </li>
+                     <li> signs of reproductive cooperation in the <b>Reproductive Pause Viewer</b> and <b>Resource Stockpile Viewer</b>. </li>
                    </ul>
                    You might need to go get a cup of coffee before there's anything interesting to look at.
                    Pressed for time?
@@ -230,10 +236,8 @@
                   <div class="col-12" style="height: 50px;"> </div>
                 </div>
               </div>
-              </div>
 
               <div class="carousel-item">
-                <div class="container w-75">
                 <div class="row">
                   <div class="col-lg-6">
                    <img src="desk.jpg" class="img-fluid" />
@@ -242,13 +246,13 @@
                   And, for extra credit be sure to
                   <ul>
                     <li>twiddle parameters in <b>Configuration</b>,</li>
+                    <li> look at a program in the <b>Dominant Genotype</b> viewer (... can you figure out what it evolved to do?),</li>
                     <li>check out how the software is put together in <b>Source & Ingredients</b>, and</li>
                     <li>click over to <b>Let's Chat</b> and let us know what you think!</li>
                   </ul>
                   </div>
                 </div>
                 <div class="col-12" style="height: 50px;"> </div>
-              </div>
               </div>
 
             </div>
@@ -675,7 +679,7 @@
         </li>
           <li class="list-group-item">
             You can also reach me at
-            <a href="mailto:m.more500@gmail.com"> m.more500@gmail.com </a>.
+            <a href="mailto:m.more500@gmail.com">m.more500@gmail.com</a>.
           </li>
         </ul>
         </div>
