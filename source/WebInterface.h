@@ -342,7 +342,7 @@ public:
     grid_viewer.SetCSS(
       "min-height",
       emp::to_string(
-        std::min(GetViewPortWidth() - 100, 500),
+        std::min(GetViewPortSize() - 100, 500),
         "px"
       )
     );

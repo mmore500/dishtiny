@@ -10,8 +10,11 @@
 
 namespace UI = emp::web;
 
-EM_JS(int, GetViewPortWidth, (), {
- return Math.max(document.documentElement.clientWidth, $(window).width(), window.innerWidth || 0);
+EM_JS(int, GetViewPortSize, (), {
+ return Math.min(
+   Math.max(document.documentElement.clientWidth, $(window).width(), window.innerWidth || 0),
+   Math.max(document.documentElement.clientHeight, $(window).height(), window.innerHeight || 0)
+  );
 });
 
 class WebArtistBase {
@@ -59,8 +62,8 @@ public:
     std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
   ) : name(name_)
   , canvas(
-    std::min(GetViewPortWidth() - 100, 500),
-    std::min(GetViewPortWidth() - 100, 500)
+    std::min(GetViewPortSize() - 100, 500),
+    std::min(GetViewPortSize() - 100, 500)
   )
   , description(emp::to_string(emp::slugify(description_), "-key"))
   , getter(getter_)
