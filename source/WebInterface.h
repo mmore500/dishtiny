@@ -466,7 +466,7 @@ public:
         );
       }
     ).Value(
-      "100"
+      "16"
     ).Min(
       "1"
     ).Max(
@@ -477,6 +477,8 @@ public:
       "oninput", "validity.valid || (value='1');"
     ).SetAttr(
       "class", "form-control"
+    ).SetCSS(
+      "min-width", "96px"
     );
 
     button_dash.Div("render-wrapper") << UI::Div(
