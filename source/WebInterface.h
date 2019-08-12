@@ -28,16 +28,19 @@ struct DataPill {
   const std::string & title;
   const std::function<std::string()> value;
   const std::string & description;
+  UI::Document & parent;
   const bool split;
 
   DataPill(
     const std::string & title_,
     const std::function<std::string()> value_,
     const std::string & description_,
+    UI::Document & parent_,
     const bool split_=false
   ) : title(title_)
   , value(value_)
   , description(description_)
+  , parent(parent_)
   , split(split_)
   { ; }
 
@@ -64,11 +67,30 @@ struct DataPill {
         "data-toggle", "collapse",
         "href", emp::to_string("#datapill-collapse-", counter)
       ) << UI::Div(
+        emp::to_string("datapill-wrapper2-", counter)
+      ).OnClick(
+        [this](){
+          static bool active = false;
+          active = !active;
+          if (active) {
+            parent.Div("datapill-active").SetCSS(
+              "class", "btn w-100 btn-primary border-secondary active"
+            ).SetAttr(
+              "aria-pressed", "true"
+            );
+          } else {
+            parent.Div("datapill-active").SetCSS(
+              "class", "btn w-100 btn-primary border-secondary"
+            ).SetAttr(
+              "aria-pressed", "false"
+            );
+          }
+        }
+      ) << UI::Div(
         emp::to_string("datapill-button-", counter), "button"
       ).SetAttr(
         "class", "btn btn-block btn-primary p-0 border-0",
-        "data-toggle", "active",
-        "href", emp::to_string("#datapill-active-", counter)
+        "data-toggle", "button"
       ) << UI::Div(
         emp::to_string("datapill-btngroup-", counter)
       ).SetAttr(
@@ -78,6 +100,8 @@ struct DataPill {
         emp::to_string("datapill-active-", counter)
       ).SetAttr(
         "class", "btn w-100 btn-primary border-secondary"
+      ).SetCSS(
+        "max-width", "75%"
       ) << title << UI::Close(
         emp::to_string("datapill-active-", counter)
       ) << UI::Div(
@@ -90,6 +114,8 @@ struct DataPill {
         emp::to_string("datapill-btngroup-", counter)
       ) << UI::Close(
         emp::to_string("datapill-button-", counter)
+      ) << UI::Close(
+        emp::to_string("datapill-wrapper2-", counter)
       ) << UI::Close(
         emp::to_string("datapill-wrapper-", counter)
       ) << UI::Close(
@@ -515,6 +541,7 @@ public:
         return w.GetSystematics("systematics")->GetNumActive();
       }),
       "How many unique genotypes are there in the population?",
+      systematics_dash,
       true
     ).leftleft(systematics_dash << "");
 
@@ -526,6 +553,7 @@ public:
         return ss.str();
       }),
       "How many steps long is the line of descent to extant cells?",
+      systematics_dash,
       true
     ).leftleft(systematics_dash << "");
 
@@ -535,6 +563,7 @@ public:
         return w.GetSystematics("systematics")->GetNumRoots();
       }),
       "How many unique root ancestors have extant offspring?",
+      systematics_dash,
       true
     ).leftleft(systematics_dash << "");
 
@@ -549,6 +578,7 @@ public:
         );
       }),
       "How updates have elapsed since the most recent common ancestor of all extant organisms?",
+      systematics_dash,
       true
     ).leftleft(systematics_dash << "");
 
@@ -584,7 +614,8 @@ public:
       DataPill(
         name,
         [capturable](){ return capturable->GetValue(); },
-        entry->GetDescription()
+        entry->GetDescription(),
+        dynamic_config
       ).leftleft(dynamic_config << "");
     }
 
