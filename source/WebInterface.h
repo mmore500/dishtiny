@@ -521,18 +521,11 @@ public:
     DataPill(
       "Mean Phylogenetic Depth",
       UI::Live([this](){
-        return w.GetSystematics("systematics")->GetAveDepth();
+        std::ostringstream ss;
+        ss << std::fixed << std::setprecision(2) << w.GetSystematics("systematics")->GetAveDepth();
+        return ss.str();
       }),
-      "How many steps is the line of descent to extant cells?",
-      true
-    ).leftleft(systematics_dash << "");
-
-    DataPill(
-      "Mean Phylogenetic Depth",
-      UI::Live([this](){
-        return w.GetSystematics("systematics")->GetAveDepth();
-      }),
-      "How many steps is the line of descent to extant cells?",
+      "How many steps long is the line of descent to extant cells?",
       true
     ).leftleft(systematics_dash << "");
 
