@@ -1,0 +1,351 @@
+### empty ###
+# here to suppress unable to open file pop-ups on web viewer
+### empty ###
+# here to suppress unable to open file pop-ups on web viewer
+### empty ###
+# here to suppress unable to open file pop-ups on web viewer
+set email mmore500@msu.edu
+set freq_email Crash
+set description treat=resource-even__channelsense-yes__nlev-two
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-even__channelsense-yes__nlev-two
+set dest_dir /mnt/scratch/mmore500/dishtiny
+
+1001..1030 treat=resource-even__channelsense-yes__nlev-two module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; ./dishtiny -SEED $seed
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 12           # How far can a signal propagate?
+set EVENT_RADIUS 4             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0            # How much resource benefit does a successful harvest grant?
+set ACTIVATION_COST 0          # How much resource is spent to attempt a harvest?
+set email mmore500@msu.edu
+set freq_email Crash
+set description DEBUGtreat=resource-even__channelsense-yes__nlev-two
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-even__channelsense-yes__nlev-two
+set dest_dir /mnt/scratch/mmore500/debug
+
+1001..1050 DEBUGtreat=resource-even__channelsense-yes__nlev-two module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; gdb -batch -ex "run" -ex "bt" --args ./dishtiny -RUN_LENGTH 10000000 -SEED $seed
+### CORE ###
+# Core settings for DISHTINY
+
+set NLEV 2                         # Number hierarchical resource levels
+set BASE_RESOURCE_INFLOW 0.015000  # What amount of resource should be provided to cells at each update?
+set CHANNELS_VISIBLE 1             # Should channels have any effect in the instruction set and event triggers?
+
+### PROGRAM_GROUP ###
+# SignalGP program Settings
+
+### HARDWARE_GROUP ###
+# SignalGP Hardware Settings
+
+### MUTATION_GROUP ###
+# SignalGP Mutation Settings
+
+### LOGISTICS ###
+# logistics
+
+set TREATMENT_DESCRIPTOR resource-even__channelsense-yes__nlev-two       # Treatment identifying slug
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 36           # How far can a signal propagate?
+set EVENT_RADIUS 12             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0            # How much resource benefit does a successful harvest grant?
+set ACTIVATION_COST 0          # How much resource is spent to attempt a harvest?
+set email mmore500@msu.edu
+set freq_email Crash
+set description treat=resource-wave__channelsense-no__nlev-two
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-wave__channelsense-no__nlev-two
+set dest_dir /mnt/scratch/mmore500/dishtiny
+
+1001..1030 treat=resource-wave__channelsense-no__nlev-two module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; ./dishtiny -SEED $seed
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 12           # How far can a signal propagate?
+set EVENT_RADIUS 4             # How far from the seed are harvests beneficial?
+set email mmore500@msu.edu
+set freq_email Crash
+set description DEBUGtreat=resource-wave__channelsense-no__nlev-two
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-wave__channelsense-no__nlev-two
+set dest_dir /mnt/scratch/mmore500/debug
+
+1001..1050 DEBUGtreat=resource-wave__channelsense-no__nlev-two module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; gdb -batch -ex "run" -ex "bt" --args ./dishtiny -RUN_LENGTH 10000000 -SEED $seed
+### CORE ###
+# Core settings for DISHTINY
+
+set NLEV 2                         # Number hierarchical resource levels
+set BASE_RESOURCE_INFLOW 0.000000  # What amount of resource should be provided to cells at each update?
+set CHANNELS_VISIBLE 0             # Should channels have any effect in the instruction set and event triggers?
+
+### PROGRAM_GROUP ###
+# SignalGP program Settings
+
+### HARDWARE_GROUP ###
+# SignalGP Hardware Settings
+
+### MUTATION_GROUP ###
+# SignalGP Mutation Settings
+
+### LOGISTICS ###
+# logistics
+
+set TREATMENT_DESCRIPTOR resource-wave__channelsense-no__nlev-two       # Treatment identifying slug
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 36           # How far can a signal propagate?
+set EVENT_RADIUS 12             # How far from the seed are harvests beneficial?
+set email mmore500@msu.edu
+set freq_email Crash
+set description treat=resource-even__channelsense-no__nlev-two
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-even__channelsense-no__nlev-two
+set dest_dir /mnt/scratch/mmore500/dishtiny
+
+1001..1030 treat=resource-even__channelsense-no__nlev-two module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; ./dishtiny -SEED $seed
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 12           # How far can a signal propagate?
+set EVENT_RADIUS 4             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0            # How much resource benefit does a successful harvest grant?
+set ACTIVATION_COST 0          # How much resource is spent to attempt a harvest?
+set email mmore500@msu.edu
+set freq_email Crash
+set description DEBUGtreat=resource-even__channelsense-no__nlev-two
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-even__channelsense-no__nlev-two
+set dest_dir /mnt/scratch/mmore500/debug
+
+1001..1050 DEBUGtreat=resource-even__channelsense-no__nlev-two module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; gdb -batch -ex "run" -ex "bt" --args ./dishtiny -RUN_LENGTH 10000000 -SEED $seed
+### CORE ###
+# Core settings for DISHTINY
+
+set NLEV 2                         # Number hierarchical resource levels
+set BASE_RESOURCE_INFLOW 0.015000  # What amount of resource should be provided to cells at each update?
+set CHANNELS_VISIBLE 0             # Should channels have any effect in the instruction set and event triggers?
+
+### PROGRAM_GROUP ###
+# SignalGP program Settings
+
+### HARDWARE_GROUP ###
+# SignalGP Hardware Settings
+
+### MUTATION_GROUP ###
+# SignalGP Mutation Settings
+
+### LOGISTICS ###
+# logistics
+
+set TREATMENT_DESCRIPTOR resource-even__channelsense-no__nlev-two       # Treatment identifying slug
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 36           # How far can a signal propagate?
+set EVENT_RADIUS 12             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0            # How much resource benefit does a successful harvest grant?
+set ACTIVATION_COST 0          # How much resource is spent to attempt a harvest?
+set email mmore500@msu.edu
+set freq_email Crash
+set description treat=resource-wave__channelsense-yes__nlev-onebig
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-wave__channelsense-yes__nlev-onebig
+set dest_dir /mnt/scratch/mmore500/dishtiny
+
+1001..1030 treat=resource-wave__channelsense-yes__nlev-onebig module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; ./dishtiny -SEED $seed
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 36           # How far can a signal propagate?
+set EVENT_RADIUS 12             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 7.0          # How much resource benefit does a successful harvest grant?
+set email mmore500@msu.edu
+set freq_email Crash
+set description DEBUGtreat=resource-wave__channelsense-yes__nlev-onebig
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-wave__channelsense-yes__nlev-onebig
+set dest_dir /mnt/scratch/mmore500/debug
+
+1001..1050 DEBUGtreat=resource-wave__channelsense-yes__nlev-onebig module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; gdb -batch -ex "run" -ex "bt" --args ./dishtiny -RUN_LENGTH 10000000 -SEED $seed
+### CORE ###
+# Core settings for DISHTINY
+
+set NLEV 1                         # Number hierarchical resource levels
+set BASE_RESOURCE_INFLOW 0.000000  # What amount of resource should be provided to cells at each update?
+set CHANNELS_VISIBLE 1             # Should channels have any effect in the instruction set and event triggers?
+
+### PROGRAM_GROUP ###
+# SignalGP program Settings
+
+### HARDWARE_GROUP ###
+# SignalGP Hardware Settings
+
+### MUTATION_GROUP ###
+# SignalGP Mutation Settings
+
+### LOGISTICS ###
+# logistics
+
+set TREATMENT_DESCRIPTOR resource-wave__channelsense-yes__nlev-onebig       # Treatment identifying slug
+set email mmore500@msu.edu
+set freq_email Crash
+set description treat=resource-wave__channelsense-yes__nlev-onesmall
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-wave__channelsense-yes__nlev-onesmall
+set dest_dir /mnt/scratch/mmore500/dishtiny
+
+1001..1030 treat=resource-wave__channelsense-yes__nlev-onesmall module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; ./dishtiny -SEED $seed
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 12           # How far can a signal propagate?
+set EVENT_RADIUS 4             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 7.0          # How much resource benefit does a successful harvest grant?
+set email mmore500@msu.edu
+set freq_email Crash
+set description DEBUGtreat=resource-wave__channelsense-yes__nlev-onesmall
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-wave__channelsense-yes__nlev-onesmall
+set dest_dir /mnt/scratch/mmore500/debug
+
+1001..1050 DEBUGtreat=resource-wave__channelsense-yes__nlev-onesmall module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; gdb -batch -ex "run" -ex "bt" --args ./dishtiny -RUN_LENGTH 10000000 -SEED $seed
+### CORE ###
+# Core settings for DISHTINY
+
+set NLEV 1                         # Number hierarchical resource levels
+set BASE_RESOURCE_INFLOW 0.000000  # What amount of resource should be provided to cells at each update?
+set CHANNELS_VISIBLE 1             # Should channels have any effect in the instruction set and event triggers?
+
+### PROGRAM_GROUP ###
+# SignalGP program Settings
+
+### HARDWARE_GROUP ###
+# SignalGP Hardware Settings
+
+### MUTATION_GROUP ###
+# SignalGP Mutation Settings
+
+### LOGISTICS ###
+# logistics
+
+set TREATMENT_DESCRIPTOR resource-wave__channelsense-yes__nlev-onesmall       # Treatment identifying slug
+set email mmore500@msu.edu
+set freq_email Crash
+set description treat=resource-even__channelsense-no__nlev-two__mute
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-even__channelsense-no__nlev-two__mute
+set dest_dir /mnt/scratch/mmore500/dishtiny
+
+1001..1030 treat=resource-even__channelsense-no__nlev-two__mute module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; ./dishtiny -SEED $seed
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 12           # How far can a signal propagate?
+set EVENT_RADIUS 4             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0            # How much resource benefit does a successful harvest grant?
+set ACTIVATION_COST 0          # How much resource is spent to attempt a harvest?
+### CORE ###
+# Core settings for DISHTINY
+
+set NLEV 2                         # Number hierarchical resource levels
+set BASE_RESOURCE_INFLOW 0.015000  # What amount of resource should be provided to cells at each update?
+set CHANNELS_VISIBLE 0             # Should channels have any effect in the instruction set and event triggers?
+
+### PROGRAM_GROUP ###
+# SignalGP program Settings
+
+### HARDWARE_GROUP ###
+# SignalGP Hardware Settings
+set INBOX_CAPACITY 0             # Capacity of a cell's inbox.
+
+### MUTATION_GROUP ###
+# SignalGP Mutation Settings
+
+### LOGISTICS ###
+# logistics
+
+set TREATMENT_DESCRIPTOR resource-even__channelsense-no__nlev-two__mute       # Treatment identifying slug
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 36           # How far can a signal propagate?
+set EVENT_RADIUS 12             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0            # How much resource benefit does a successful harvest grant?
+set ACTIVATION_COST 0          # How much resource is spent to attempt a harvest?
+set email mmore500@msu.edu
+set freq_email Crash
+set description treat=resource-wave__channelsense-yes__nlev-two
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-wave__channelsense-yes__nlev-two
+set dest_dir /mnt/scratch/mmore500/dishtiny
+
+1001..1030 treat=resource-wave__channelsense-yes__nlev-two module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; ./dishtiny -SEED $seed
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 12           # How far can a signal propagate?
+set EVENT_RADIUS 4             # How far from the seed are harvests beneficial?
+set email mmore500@msu.edu
+set freq_email Crash
+set description DEBUGtreat=resource-wave__channelsense-yes__nlev-two
+set mem_request 6
+set walltime 168
+set beacon_priority y
+set config_dir /mnt/home/mmore500/dishtiny/request/treat=resource-wave__channelsense-yes__nlev-two
+set dest_dir /mnt/scratch/mmore500/debug
+
+1001..1050 DEBUGtreat=resource-wave__channelsense-yes__nlev-two module purge; module load gcc/7.3.0-2.30 openmpi hdf5 python git; gdb -batch -ex "run" -ex "bt" --args ./dishtiny -RUN_LENGTH 10000000 -SEED $seed
+### CORE ###
+# Core settings for DISHTINY
+
+set NLEV 2                         # Number hierarchical resource levels
+set BASE_RESOURCE_INFLOW 0.000000  # What amount of resource should be provided to cells at each update?
+set CHANNELS_VISIBLE 1             # Should channels have any effect in the instruction set and event triggers?
+
+### PROGRAM_GROUP ###
+# SignalGP program Settings
+
+### HARDWARE_GROUP ###
+# SignalGP Hardware Settings
+
+### MUTATION_GROUP ###
+# SignalGP Mutation Settings
+
+### LOGISTICS ###
+# logistics
+
+set TREATMENT_DESCRIPTOR resource-wave__channelsense-yes__nlev-two       # Treatment identifying slug
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 36           # How far can a signal propagate?
+set EVENT_RADIUS 12             # How far from the seed are harvests beneficial?
