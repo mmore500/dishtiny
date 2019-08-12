@@ -354,21 +354,14 @@ public:
                 return res;
               }() ? " active" : ""
             )
-          ).SetAttr(
-            "onclick",
-            emp::to_string(
-              "emp.Callback(",
-              emp::JSWrap(std::function<void()>(
-                [&, artist](){
-                  std::cout << "running " << std::endl;
-                  for (auto & s : artists) {
-                    for (auto & a : s) a->Deactivate();
-                  }
-                  artist->Activate();
-                  artist->Redraw(w.GetUpdate());
-                })),
-              ");"
-            )
+          ).OnClick(
+            [&, artist](){
+              for (auto & s : artists) {
+                for (auto & a : s) a->Deactivate();
+              }
+              artist->Activate();
+              artist->Redraw(w.GetUpdate());
+            }
           ) << UI::Input(
               [](const std::string & state){ ; },
               "radio",
