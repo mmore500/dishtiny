@@ -83,6 +83,7 @@ public:
     file.createGroup("/ParentPos");
     file.createGroup("/CellAge");
     file.createGroup("/CellGen");
+    file.createGroup("/Death");
 
 
     InitAttributes();
@@ -123,6 +124,7 @@ public:
         ParentPos();
         CellAge();
         CellGen();
+        Death();
         file.flush(H5F_SCOPE_LOCAL);
       } else if (update % cfg.ANIMATION_FREQUENCY() == 0) {
         // record frequent snapshots of these to stich together ananimations
@@ -283,6 +285,20 @@ private:
 
     parentpos_key_attribute.write(H5::StrType(0, H5T_VARIABLE), parentpos_key_data);
 
+    const hsize_t death_key_dims[] = { 1 };
+    H5::DataSpace death_key_dataspace(1, death_key_dims);
+
+    H5::Attribute death_key_attribute = file.openGroup(
+      "/Death"
+    ).createAttribute(
+      "KEY", H5::StrType(0, H5T_VARIABLE), death_key_dataspace
+    );
+
+    const char *death_key_data[] = {"0: none, 1: apoptosis, 2: bankrupt, 3: trampled"};
+
+    death_key_attribute.write(
+      H5::StrType(0, H5T_VARIABLE), death_key_data
+    );
 
   }
 
@@ -721,6 +737,38 @@ private:
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Family(i).GetCellGen();
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void Death() {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_INT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/Death/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    int data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+
+      // trampled = 3;
+      // bankrupt = 2;
+      // apoptosis = 1;
+      // none = 0;
+
+      data[i] = 0;
+      if (0 == (dw.GetUpdate() + 1) % cfg.ENV_TRIG_FREQ()) {
+        if (dw.man->Apoptosis(i).IsMarked()) data[i] = 1;
+        else if (dw.man->Stockpile(i).IsBankrupt()) data[i] = 2;
+        else if (dw.man->Priority(i).QueryPendingGenome()) data[i] = 3;
+      }
     }
 
     ds.write((void*)data, tid);

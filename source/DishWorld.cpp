@@ -155,18 +155,6 @@ void DishWorld::Step() {
     // only process cell interactions every ENV_TRIG_FREQ updates
     if (GetUpdate() % cfg.ENV_TRIG_FREQ()) break;
 
-    // decide who gets to be parent & make a copy of that genome
-    // so that it doesn't get overwritten
-    man->Priority(i).ResolveSire();
-
-  }
-
-  // resolve pending state from last update
-  for (size_t i = 0; i < GetSize(); ++i) {
-
-    // only process cell interactions every ENV_TRIG_FREQ updates
-    if (GetUpdate() % cfg.ENV_TRIG_FREQ()) break;
-
     if (
       const auto opt_sirepack = man->Priority(i).QueryPendingGenome();
       opt_sirepack
@@ -248,6 +236,16 @@ void DishWorld::Step() {
   // do cell action!
   for(size_t i = 0; i < GetSize(); ++i) {
     if (IsOccupied(i)) frames[i]->Process(GetUpdate());
+  }
+
+  // prepare for the next update
+  // do it here instead of at the top so that DataHelper can view
+  if (0 == (GetUpdate()+1) % cfg.ENV_TRIG_FREQ()) {
+    for (size_t i = 0; i < GetSize(); ++i) {
+      // decide who gets to be parent & make a copy of that genome
+      // so that it doesn't get overwritten
+      man->Priority(i).ResolveSire();
+    }
   }
 
 }
