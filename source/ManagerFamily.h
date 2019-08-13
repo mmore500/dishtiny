@@ -26,6 +26,10 @@ public:
 
   size_t GetBirthUpdate() const { return birth_update; }
 
+  size_t GetCellAge(const size_t cur_update) {
+    return cur_update - birth_update;
+  };
+
   bool IsParentPos(const size_t pos) const { return pos == parent_pos; }
 
   size_t GetParentPos() const { return parent_pos; }

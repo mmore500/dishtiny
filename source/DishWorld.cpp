@@ -235,6 +235,12 @@ void DishWorld::Step() {
         man->Wave(i,l).HarvestResource();
       }
       frames[i]->QueueMessages(man->Inbox(i).GetInboxes());
+
+      if (
+        cfg.GEN_INCR_FREQ()
+        && man->Family(i).GetCellAge(i)
+        && !(man->Family(i).GetCellAge(i) % cfg.GEN_INCR_FREQ())
+      ) man->Channel(i).IncrGenCounts();
     }
 
   }

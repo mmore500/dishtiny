@@ -41,6 +41,8 @@ public:
     }
   }
 
+  void IncrGenCounts() { for (auto & g : gen_counter) ++g; }
+
   const std::optional<Config::chanid_t> GetID(const size_t lev) const {
     return ids ? std::optional<Config::chanid_t>((*ids)[lev]) : std::nullopt;
   }
