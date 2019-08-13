@@ -15,6 +15,7 @@ private:
   double resource;
 
   emp::vector<double> contrib_resource;
+  emp::vector<size_t> harvest_withdrawals;
 
   size_t decline_sharing;
 
@@ -24,6 +25,7 @@ public:
     const Config &cfg_
   ) : cfg(cfg_)
   , contrib_resource(Cardi::Dir::NumDirs)
+  , harvest_withdrawals(cfg_.NLEV())
   { Reset(); }
 
   double QueryResource() const {
@@ -53,7 +55,13 @@ public:
     }
   }
 
-  void InternalApplyHarvest(const double amt) {
+  void InternalApplyHarvest(const size_t lev, const double amt) {
+    harvest_withdrawals[lev] += (amt < 0.0);
+    resource += amt;
+  }
+
+  void InternalAcceptResource(const double amt) {
+    emp_assert(amt > 0);
     resource += amt;
   }
 
@@ -102,13 +110,24 @@ public:
   void Reset() {
     decline_sharing = 0;
     resource = 0.0;
-    for(size_t dir = 0; dir < contrib_resource.size(); ++dir) {
-      contrib_resource[dir] = 0.0;
-    }
+    std::fill(std::begin(contrib_resource), std::end(contrib_resource), 0.0);
+    std::fill(
+      std::begin(harvest_withdrawals),
+      std::end(harvest_withdrawals),
+      0
+    );
   }
 
   void ApplyBaseInflow() {
     resource += cfg.BASE_RESOURCE_INFLOW();
+  }
+
+  size_t QueryHarvestWithdrawals(size_t lev) const {
+    return harvest_withdrawals[lev];
+  }
+
+  void ResetHarvestWithdrawals(size_t lev) {
+    harvest_withdrawals[lev] = 0;
   }
 
 };

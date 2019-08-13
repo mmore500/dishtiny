@@ -97,6 +97,34 @@ void FrameHardware::DispatchEnvTriggers(){
 
   ++i;
 
+  // harvest withdrawals triggers
+  for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+
+    if (i >= pro_trigger_tags.size()) {
+      pro_trigger_tags.emplace_back(rng);
+      auto copy = pro_trigger_tags[i];
+      anti_trigger_tags.emplace_back(copy.Toggle());
+    }
+
+//  if (!Cell().Man().Stockpile(Cell().GetPos()).QueryHarvestWithdrawals(lev)) {
+//    cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+//  }
+    for (
+      size_t w = 0;
+      w < Cell().Man().Stockpile(Cell().GetPos()).QueryHarvestWithdrawals(lev);
+      ++w
+    ) {
+      if (Cell().Man().Stockpile(Cell().GetPos()).QueryResource() < 0) {
+        cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+      }
+    }
+
+    Cell().Man().Stockpile(Cell().GetPos()).ResetHarvestWithdrawals(lev);
+
+    ++i;
+
+  }
+
   // channel match triggers
   for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
     if(i >= pro_trigger_tags.size()) {

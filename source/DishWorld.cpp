@@ -68,7 +68,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
       const auto neighs = GeometryHelper(cfg).CalcLocalNeighs(pos);
       for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
         if(man->Heir(pos).IsHeir(dir)) {
-          man->Stockpile(neighs[dir]).InternalApplyHarvest(amt/h_count);
+          man->Stockpile(neighs[dir]).InternalAcceptResource(amt/h_count);
         }
       }
     }
@@ -97,7 +97,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
       cfg);
     InjectAt(g, emp::WorldPosition(i));
     emp_assert(GetOrg(i).program.GetSize());
-    man->Stockpile(i).InternalApplyHarvest(cfg.START_RESOURCE());
+    man->Stockpile(i).InternalAcceptResource(cfg.START_RESOURCE());
   }
 
 }

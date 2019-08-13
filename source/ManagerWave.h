@@ -126,7 +126,7 @@ public:
 
       last_harvest = amt;
 
-      ms.InternalApplyHarvest(amt);
+      ms.InternalApplyHarvest(lev, amt);
     }
 
   }
