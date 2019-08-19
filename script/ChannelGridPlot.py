@@ -23,7 +23,7 @@ updates = [int(v) for v in sys.argv[2:]]
 
 file = h5py.File(filename, 'r')
 
-for upd in updates:
+for upd in tqdm(updates):
 
     data = np.array(file['Channel']['lev_0']['upd_'+str(upd)])
 
@@ -73,3 +73,4 @@ for upd in updates:
     )
 
     plt.clf()
+    plt.close(plt.gcf())
