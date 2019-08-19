@@ -55,6 +55,9 @@ ndata: $(PROJECT)
 debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
 debug:	$(PROJECT)
 
+static: CFLAGS_nat := -static $(CFLAGS_nat)
+static: $(PROJECT)
+
 sanitize: CFLAGS_nat := $(CFLAGS_nat_sanitize)
 sanitize: $(PROJECT)
 
