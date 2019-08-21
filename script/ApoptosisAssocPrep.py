@@ -83,7 +83,7 @@ pd.DataFrame.from_dict([
         'Type' : type,
         'Update' : np.mean(upds),
     }
-    for upds in ExtractUpdateGroups(file)
+    for upds in tqdm(ExtractUpdateGroups(file))
     for type, val in [
         ('Debtor', PropApoptosisDebtor(file, upds)),
         ('Nondebtor', PropApoptosisNondebtor(file, upds))
