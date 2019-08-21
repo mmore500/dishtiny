@@ -69,7 +69,8 @@ pd.DataFrame.from_dict([
     {
         'Treatment' : kn.unpack(filename)['treat'],
         'Seed' : kn.unpack(filename)['seed'],
-        'Per-Cell-Update Death Rate' : val / file['Index']['own'].size,
+        'Per-Cell-Update Death Rate' :
+            val / (file['Index']['own'].size * (last_update - first_update)),
         'Cause' : cause
     }
     for filename in tqdm(filenames)
