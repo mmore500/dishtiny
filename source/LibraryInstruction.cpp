@@ -455,21 +455,21 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
     "Destroy the cell and its channel ID at the end of this update."
   );
 
-  il.AddInst(
-    "DoApoptosisPartial",
-    [](hardware_t & hw, const inst_t & inst){
-
-      FrameHardware &fh = *hw.GetTrait();
-
-      Manager &man = fh.Cell().Man();
-      const size_t pos = fh.Cell().GetPos();
-
-      man.Apoptosis(pos).MarkPartial();
-
-    },
-    0,
-    "Destroy the cell but preserve its channel ID at the end of this update."
-  );
+  // il.AddInst(
+  //   "DoApoptosisPartial",
+  //   [](hardware_t & hw, const inst_t & inst){
+  //
+  //     FrameHardware &fh = *hw.GetTrait();
+  //
+  //     Manager &man = fh.Cell().Man();
+  //     const size_t pos = fh.Cell().GetPos();
+  //
+  //     man.Apoptosis(pos).MarkPartial();
+  //
+  //   },
+  //   0,
+  //   "Destroy the cell but preserve its channel ID at the end of this update."
+  // );
 
   il.AddInst(
     "SetHeir",
