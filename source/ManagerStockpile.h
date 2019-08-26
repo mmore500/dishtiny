@@ -63,12 +63,24 @@ public:
   }
 
   void InternalApplyHarvest(const size_t lev, const double amt) {
-    harvest_withdrawals[lev] += (amt < 0.0);
-    resource += amt;
+    const size_t exp = expchecker(lev);
+    harvest_withdrawals[lev] += (amt < 0.0) || (exp > 3);
+    if (exp < 4) {
+      // grace period to allow a few reproduction without sharing
+      resource += amt;
+    } else if (exp <= 6) {
+      // no reward, maybe penalty
+      resource += std::min(0.0, amt);
+    } else {
+      // resource += -std::abs(amt);
+      // time to die
+      resource -= std::numeric_limits<double>::infinity();
+    }
+
   }
 
   void InternalAcceptResource(const double amt) {
-    emp_assert(amt > 0);
+    emp_assert(amt >= 0);
     resource += amt;
   }
 
