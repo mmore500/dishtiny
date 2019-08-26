@@ -482,10 +482,62 @@
             </ul>
           </div>
 
+          <div id="channel-generation-key">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-dark">
+                The <b>Channel Generation Viewer</b> depicts generation counters that enforce a birth-death lifecycle.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                cells are <b>young</b> members of a same-channel group.
+                They are capable of collecting resource and producing offspring that are group members.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                cells are <b>older</b> members of a same-channel group, which still retain all the capabilities of younger cells.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                cells are <b>oldest</b> members of a same-channel group.
+                As coloring progress from light to dark red, cells lose their ability to create same-channel offspring and then to collect resource.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+            </ul>
+          </div>
+
+          <div id="expiration-key">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-dark">
+                The <b>Expiration Viewer</b> depicts end-of-the-road channel generation state in greater detail.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                cells are <b>young</b> and retain all reproductive and resource-collection capabilities.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span> cells are <b>older</b> and have lost same-channel reproductive capability.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                cells are <b>oldest</b> and have additionally lost resource-collection capability.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+            </ul>
+          </div>
+
           <div id="reproductive-pause-key">
             <ul class="list-group list-group-flush">
               <li class="list-group-item list-group-item-dark">
-                The <b>Reproductive Pause</b> viewer depicts reproductive cooperation.
+                The <b>Reproductive Pause Viewer</b> depicts reproductive cooperation.
               </li>
               <li class="list-group-item">
                 <span class="badge badge-light" style="background-color: #ffffff">White</span>
