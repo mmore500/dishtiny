@@ -68,23 +68,28 @@ public:
   const emp::vector<size_t>& GetGenCounter() const { return gen_counter; }
 
   // same replev used for Inherit
-  bool IsExpired(const size_t replev) const {
+  size_t IsExpired(const size_t replev) const {
 
-    bool expired = false;
+    size_t expired = 0;
 
     for(size_t i = replev; i < cfg.NLEV(); ++i) {
 
-      const size_t lim = cfg.Lev(i).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER();
+      const size_t lim = (
+        (i+1) * cfg.Lev(i).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER()
+      );
 
       emp_assert(cell_age_multipliers[i] >= 1.0);
 
-      expired |= GetGeneration(i) * cell_age_multipliers[i] > lim;
+      if (GetGeneration(i) * cell_age_multipliers[i] > lim) {
+        expired += GetGeneration(i) * cell_age_multipliers[i] - lim;
+      }
+
     }
 
     return expired;
   }
 
-  std::function<bool(size_t)> MakeExpChecker() {
+  std::function<size_t(size_t)> MakeExpChecker() {
     return [&](const size_t replev){ return IsExpired(replev); };
   }
 

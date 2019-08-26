@@ -49,7 +49,7 @@ private:
   std::optional<SirePack> pending_birth;
 
   emp::vector<std::function<void()>> refunders;
-  emp::vector<std::function<bool(size_t)>> expiredcheckers;
+  emp::vector<std::function<size_t(size_t)>> expiredcheckers;
 
   // incoming_dir -> rep_lev
   // for data collection only
@@ -61,7 +61,7 @@ public:
     const Config &cfg_,
     emp::Random &local_rng_,
     emp::vector<std::function<void()>> refunders_,
-    emp::vector<std::function<bool(size_t)>> expiredcheckers_
+    emp::vector<std::function<size_t(size_t)>> expiredcheckers_
   ) : cfg(cfg_)
   , local_rng(local_rng_)
   , requests(Cardi::Dir::NumDirs, std::nullopt)

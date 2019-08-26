@@ -235,7 +235,11 @@ void DishWorld::Step() {
 
   // do cell action!
   for(size_t i = 0; i < GetSize(); ++i) {
-    if (IsOccupied(i)) frames[i]->Process(GetUpdate());
+    if (IsOccupied(i)) {
+      man->Stockpile(i).CleanSharingDoers(GetUpdate());
+      frames[i]->Process(GetUpdate());
+      man->Stockpile(i).ProcessSharingDoers(GetUpdate());
+    }
   }
 
   // prepare for the next update

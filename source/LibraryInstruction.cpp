@@ -251,27 +251,36 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       FrameHardware &fh = *hw.GetTrait();
       const state_t & state = hw.GetCurState();
-
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      if(!fh.IsLive(dir)) return;
-
       Manager &man = fh.Cell().Man();
+
       const size_t pos = fh.Cell().GetPos();
-      const size_t neigh = fh.Cell().GetNeigh(dir);
+      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const double arg_1 = state.GetLocal(inst.args[1]);
+      const double arg_2 = state.GetLocal(inst.args[2]);
 
-      if(!man.Stockpile(neigh).CheckAcceptSharing()) return;
-      if(man.Stockpile(neigh).QueryResource()<0) return;
+      man.Stockpile(pos).AddSharingDoer([&fh, dir, arg_1, arg_2](){
 
-      const double m_arg = state.GetLocal(inst.args[1]);
-      const double multiplier = m_arg == 0 ? 1 : (
-        m_arg < 0 ? 1/-m_arg : m_arg
-      );
-      const double amt = man.Stockpile(pos).RequestResourceFrac(
-        std::min(1.0,0.5*multiplier),
-        std::max(fh.CheckStockpileReserve()+state.GetLocal(inst.args[2]), 0.0)
-      );
+        if(!fh.IsLive(dir)) return;
 
-      man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
+        Manager &man = fh.Cell().Man();
+        const size_t pos = fh.Cell().GetPos();
+        const size_t neigh = fh.Cell().GetNeigh(dir);
+
+        if(!man.Stockpile(neigh).CheckAcceptSharing(Cardi::Opp[dir])) return;
+        if(man.Stockpile(neigh).QueryResource()<0) return;
+
+        const double m_arg = arg_1;
+        const double multiplier = m_arg == 0 ? 1 : (
+          m_arg < 0 ? 1/-m_arg : m_arg
+        );
+        const double amt = man.Stockpile(pos).RequestResourceFrac(
+          std::min(1.0,0.5*multiplier),
+          std::max(fh.CheckStockpileReserve()+arg_2, 0.0)
+        );
+
+        man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
+      });
+
     },
     3,
     "Send a fraction of available stockpile resource to a neighbor."
@@ -283,27 +292,36 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       FrameHardware &fh = *hw.GetTrait();
       const state_t & state = hw.GetCurState();
-
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      if(!fh.IsLive(dir)) return;
-
       Manager &man = fh.Cell().Man();
+
       const size_t pos = fh.Cell().GetPos();
-      const size_t neigh = fh.Cell().GetNeigh(dir);
+      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const double arg_1 = state.GetLocal(inst.args[1]);
+      const double arg_2 = state.GetLocal(inst.args[2]);
 
-      if(!man.Stockpile(neigh).CheckAcceptSharing()) return;
-      if(man.Stockpile(neigh).QueryResource()<0) return;
+      man.Stockpile(pos).AddSharingDoer([&fh, dir, arg_1, arg_2](){
 
-      const double m_arg = state.GetLocal(inst.args[1]);
-      const double multiplier = m_arg == 0 ? 1 : (
-        m_arg < 0 ? 1/-m_arg : m_arg
-      );
-      const double amt = man.Stockpile(pos).RequestResourceFrac(
-        std::min(1.0,0.05*multiplier),
-        std::max(fh.CheckStockpileReserve()+state.GetLocal(inst.args[2]), 0.0)
-      );
+        if(!fh.IsLive(dir)) return;
 
-      man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
+        Manager &man = fh.Cell().Man();
+        const size_t pos = fh.Cell().GetPos();
+        const size_t neigh = fh.Cell().GetNeigh(dir);
+
+        if(!man.Stockpile(neigh).CheckAcceptSharing(Cardi::Opp[dir])) return;
+        if(man.Stockpile(neigh).QueryResource()<0) return;
+
+        const double m_arg = arg_1;
+        const double multiplier = m_arg == 0 ? 1 : (
+          m_arg < 0 ? 1/-m_arg : m_arg
+        );
+        const double amt = man.Stockpile(pos).RequestResourceFrac(
+          std::min(1.0,0.01*multiplier),
+          std::max(fh.CheckStockpileReserve()+arg_2, 0.0)
+        );
+
+        man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
+      });
+
     },
     3,
     "Send a fraction of available stockpile resource to a neighbor."
@@ -314,13 +332,15 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
     [](hardware_t & hw, const inst_t & inst){
 
       FrameHardware &fh = *hw.GetTrait();
+      const state_t & state = hw.GetCurState();
 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
+      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
 
-      man.Stockpile(pos).SetAcceptSharing(0);
+      man.Stockpile(pos).SetAcceptSharing(dir, 0);
     },
-    0,
+    1,
     "Mark self to accept resource contributions from neighbors."
   );
 
@@ -333,12 +353,15 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
+      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
 
+      //TODO this makes outcome dependent on execution order of cells
       man.Stockpile(pos).SetAcceptSharing(
-        2 + state.GetLocal(inst.args[0])
+        dir,
+        1 + state.GetLocal(inst.args[1])
       );
     },
-    1,
+    2,
     "Mark self to not accept resource contributions from neighbors."
   );
 

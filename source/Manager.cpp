@@ -41,7 +41,7 @@ Manager::Manager(
       emp::NewPtr<ManagerInbox>(cfg)
     );
     mss.push_back(
-      emp::NewPtr<ManagerStockpile>(cfg)
+      emp::NewPtr<ManagerStockpile>(mcs.back()->MakeExpChecker(), cfg)
     );
   }
 
@@ -50,7 +50,7 @@ Manager::Manager(
     const emp::vector<size_t> neighs = GeometryHelper(cfg).CalcLocalNeighs(i);
 
     emp::vector<std::function<void()>> refunders;
-    emp::vector<std::function<bool(size_t lev)>> expiredcheckers;
+    emp::vector<std::function<size_t(size_t lev)>> expiredcheckers;
     for (size_t n : neighs) {
       refunders.push_back(mss[n]->MakeRepRefunder());
       expiredcheckers.push_back(mcs[n]->MakeExpChecker());

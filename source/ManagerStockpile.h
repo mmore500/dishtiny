@@ -1,6 +1,7 @@
 #pragma once
 
 #include <numeric>
+#include <limits>
 
 #include "base/assert.h"
 
@@ -17,15 +18,21 @@ private:
   emp::vector<double> contrib_resource;
   emp::vector<size_t> harvest_withdrawals;
 
-  size_t decline_sharing;
+  emp::vector<size_t> decline_sharing;
+  emp::vector<std::function<void()>> sharing_doers;
+
+  std::function<size_t(size_t)> expchecker;
 
 public:
 
   ManagerStockpile(
+    std::function<size_t(size_t)> expchecker_,
     const Config &cfg_
   ) : cfg(cfg_)
   , contrib_resource(Cardi::Dir::NumDirs)
   , harvest_withdrawals(cfg_.NLEV())
+  , decline_sharing(Cardi::Dir::NumDirs)
+  , expchecker(expchecker_)
   { Reset(); }
 
   double QueryResource() const {
@@ -95,20 +102,41 @@ public:
     return cfg.KILL_THRESH() >= resource;
   }
 
-  bool CheckAcceptSharing() const {
-    return !decline_sharing;
+  bool CheckAcceptSharing(const size_t outgoing_dir) const {
+    return !decline_sharing[outgoing_dir];
   }
 
-  void SetAcceptSharing(const size_t set) {
-    decline_sharing = set;
+  void SetAcceptSharing(const size_t outgoing_dir, const size_t set) {
+    decline_sharing[outgoing_dir] = set;
   }
 
   void ResolveNextAcceptSharing(const size_t update) {
-    if (update % cfg.ENV_TRIG_FREQ() == 0 && decline_sharing) --decline_sharing;
+    if (update % cfg.ENV_TRIG_FREQ()) return;
+    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      if (decline_sharing[dir]) --decline_sharing[dir];
+    }
+  }
+
+  void AddSharingDoer(std::function<void()> doer) {
+    sharing_doers.push_back(doer);
+  }
+
+  void CleanSharingDoers(const size_t update) {
+    if (update % cfg.ENV_TRIG_FREQ()) {
+      for (auto & doer : sharing_doers) doer();
+    } else {
+      sharing_doers.clear();
+    }
+
+  }
+
+  void ProcessSharingDoers(const size_t update) {
+    if (update % cfg.ENV_TRIG_FREQ() == 0) sharing_doers.clear();
   }
 
   void Reset() {
-    decline_sharing = 0;
+    sharing_doers.clear();
+    std::fill(std::begin(decline_sharing), std::end(decline_sharing), 0);
     resource = 0.0;
     std::fill(std::begin(contrib_resource), std::end(contrib_resource), 0.0);
     std::fill(
