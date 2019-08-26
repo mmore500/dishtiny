@@ -226,8 +226,8 @@ void DishWorld::Step() {
 
       if (
         cfg.GEN_INCR_FREQ()
-        && man->Family(i).GetCellAge(i)
-        && !(man->Family(i).GetCellAge(i) % cfg.GEN_INCR_FREQ())
+        && man->Family(i).GetCellAge(GetUpdate())
+        && man->Family(i).GetCellAge(GetUpdate()) % cfg.GEN_INCR_FREQ() == 0
       ) man->Channel(i).IncrGenCounts();
     }
 
