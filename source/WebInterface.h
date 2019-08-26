@@ -315,6 +315,66 @@ public:
     }
 
     artists.emplace_back();
+    for (size_t l = 0; l < cfg.NLEV(); ++l) {
+      artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
+        emp::to_string("Expiration ", l),
+        "Expiration",
+        grid_viewer,
+        [this, l](size_t i){
+          return w.IsOccupied(i) ? std::make_optional(w.man->Channel(i).IsExpired(l)) : std::nullopt;
+        },
+        [](std::optional<size_t> exp) -> std::string {
+          if (exp) {
+            if (*exp == 0)   {
+              return "white";
+            } else if (*exp < 3) {
+              return "blue";
+            } else if (*exp == 3) {
+              return "purple";
+            } else {
+              return "red";
+            }
+          } else {
+            return "black";
+          }
+        },
+        cfg
+      ));
+    }
+
+    artists.emplace_back();
+    for (size_t l = 0; l < cfg.NLEV(); ++l) {
+      artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
+        emp::to_string("Channel Generation ", l),
+        "Channel Generation",
+        grid_viewer,
+        [this, l](size_t i){
+          return w.IsOccupied(i) ? std::make_optional(w.man->Channel(i).GetGeneration(l)) : std::nullopt;
+        },
+        [this, l](std::optional<size_t> amt) -> std::string {
+          const double thresh = (
+            (l+1) * cfg.Lev(l).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER()
+          );
+          if (amt) {
+            if (*amt <= thresh){
+              return emp::ColorRGB(
+                255.0 - std::min(255.0,(*amt)*255.0/thresh),
+                255.0 - std::min(255.0,(*amt)*255.0/thresh),
+                255.0
+              );
+            } else return emp::ColorRGB(
+              255.0,
+              255.0 - std::min(255.0,((*amt)-thresh)*255.0/4.0),
+              255.0 - std::min(255.0,((*amt)-thresh)*255.0/4.0)
+            );
+          } else return "black";
+        },
+        cfg_
+      ));
+    }
+
+
+    artists.emplace_back();
     for (size_t l = 0; l < cfg.NLEV() + 1; ++l) {
       artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
         emp::to_string("Reproductive Pause Level ", l),
