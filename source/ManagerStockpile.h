@@ -159,7 +159,12 @@ public:
   }
 
   void ApplyBaseInflow() {
-    resource += cfg.BASE_RESOURCE_INFLOW();
+    for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      InternalApplyHarvest(
+        lev,
+        cfg.BASE_RESOURCE_INFLOW()/static_cast<double>(cfg.NLEV())
+      );
+    }
   }
 
   size_t QueryHarvestWithdrawals(size_t lev) const {
