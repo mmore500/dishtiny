@@ -49,6 +49,13 @@ void FrameHardware::SetStockpileReserve(const double amt) {
 
 void FrameHardware::DispatchEnvTriggers(){
 
+  // need at least 6 cpus available
+  emp_assert(cfg.HW_MAX_CORES() > 6);
+  // ... so make sure at least 6 are unoccupied
+  cpu.SetMaxCores(cfg.HW_MAX_CORES() - 6);
+  cpu.SetMaxCores(cfg.HW_MAX_CORES());
+
+
   static emp::Random rng(1);
   static emp::vector<Config::tag_t> pro_trigger_tags;
   static emp::vector<Config::tag_t> anti_trigger_tags;
