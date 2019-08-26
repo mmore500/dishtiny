@@ -27,6 +27,7 @@ public:
   size_t GetBirthUpdate() const { return birth_update; }
 
   size_t GetCellAge(const size_t cur_update) {
+    emp_assert(cur_update >= birth_update);
     return cur_update - birth_update;
   };
 
