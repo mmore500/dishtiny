@@ -128,6 +128,8 @@ public:
         const bool was_empty = !requests[sp.incoming_dir];
         // if request already exists, update request but don't charge for it
         requests[sp.incoming_dir] = sp;
+        // be sure to register the correct replev
+        requests[sp.incoming_dir]->replev = l;
         return was_empty;
       }
     }
