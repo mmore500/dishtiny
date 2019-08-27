@@ -21,7 +21,7 @@ EMP_BUILD_CONFIG(
   VALUE(BASE_RESOURCE_INFLOW, double, 0.0, "What amount of resource should be provided to cells at each update?"),
   VALUE(AGE_LIMIT_MULTIPLIER, double, 1.5, "What ratio of EVENT_RADIUS should the limit on cell age be?"),
   VALUE(CHANNELS_VISIBLE, bool, true, "Should channels have any effect in the instruction set and event triggers?"),
-  VALUE(GEN_INCR_FREQ, size_t, 1000, "How often should we increase cell generation counters?"),
+  VALUE(GEN_INCR_FREQ, size_t, 512, "How often should we increase cell generation counters?"),
   VALUE(EXP_GRACE_PERIOD, size_t, 3, "How many channel generations should resource collection be allowed after a cell's expires channel generation counter?"),
 
   GROUP(PROGRAM_GROUP, "SignalGP program Settings"),
@@ -31,13 +31,13 @@ EMP_BUILD_CONFIG(
   VALUE(PROGRAM_MIN_FUN_LEN, size_t, 1, "Used for generating SGP programs. At least, for each function how many instructions do we generate?"),
 
   GROUP(HARDWARE_GROUP, "SignalGP Hardware Settings"),
-  VALUE(HARDWARE_STEPS, size_t, 8, "How many hardware steps to run per update?"),
+  VALUE(HARDWARE_STEPS, size_t, 1, "How many hardware steps to run per update?"),
   VALUE(ENVIRONMENT_SIGNALS, bool, true, "Can environment signals trigger functions?"),
   VALUE(ACTIVE_SENSORS, bool, true, "Do agents have function active sensors?"),
-  VALUE(HW_MAX_CORES, size_t, 16, "Max number of hardware cores; i.e., max number of simultaneous threads of execution hardware will support."),
+  VALUE(HW_MAX_CORES, size_t, 10, "Max number of hardware cores; i.e., max number of simultaneous threads of execution hardware will support."),
   VALUE(HW_MAX_CALL_DEPTH, size_t, 128, "Max call depth of a hardware unit."),
-  VALUE(INBOX_CAPACITY, size_t, 256, "Capacity of a cell's messaging inbox."),
-  VALUE(ENV_TRIG_FREQ, size_t, 16, "How often to fire environmental trigger events?"),
+  VALUE(INBOX_CAPACITY, size_t, 16, "Capacity of a cell's messaging inbox."),
+  VALUE(ENV_TRIG_FREQ, size_t, 32, "How often to fire environmental trigger events?"),
 
   GROUP(MUTATION_GROUP, "SignalGP Mutation Settings"),
   VALUE(MUTATION_RATE, double, 0.01, "What percentage of offspring should experience mutations?"),
