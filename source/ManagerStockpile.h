@@ -64,17 +64,13 @@ public:
 
   void InternalApplyHarvest(const size_t lev, const double amt) {
     const size_t exp = expchecker(lev);
-    harvest_withdrawals[lev] += (amt < 0.0) || (exp > 3);
-    if (exp < 4) {
-      // grace period to allow a few reproduction without sharing
+    harvest_withdrawals[lev] += amt < 0.0;
+    if (exp <= cfg.EXP_GRACE_PERIOD()) {
+      // grace period to allow a few reproductions without sharing
       resource += amt;
-    } else if (exp <= 6) {
+    } else {
       // no reward, maybe penalty
       resource += std::min(0.0, amt);
-    } else {
-      // resource += -std::abs(amt);
-      // time to die
-      resource -= std::numeric_limits<double>::infinity();
     }
 
   }

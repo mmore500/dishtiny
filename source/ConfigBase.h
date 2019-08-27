@@ -22,6 +22,7 @@ EMP_BUILD_CONFIG(
   VALUE(AGE_LIMIT_MULTIPLIER, double, 1.5, "What ratio of EVENT_RADIUS should the limit on cell age be?"),
   VALUE(CHANNELS_VISIBLE, bool, true, "Should channels have any effect in the instruction set and event triggers?"),
   VALUE(GEN_INCR_FREQ, size_t, 1000, "How often should we increase cell generation counters?"),
+  VALUE(EXP_GRACE_PERIOD, size_t, 3, "How many channel generations should resource collection be allowed after a cell's expires channel generation counter?"),
 
   GROUP(PROGRAM_GROUP, "SignalGP program Settings"),
   VALUE(PROGRAM_MAX_FUN_CNT, size_t, 12, "Used for generating SGP programs. At most, how many functions do we generate?"),

@@ -354,14 +354,12 @@ public:
         [this, l](size_t i){
           return w.IsOccupied(i) ? std::make_optional(w.man->Channel(i).IsExpired(l)) : std::nullopt;
         },
-        [](std::optional<size_t> exp) -> std::string {
+        [this](std::optional<size_t> exp) -> std::string {
           if (exp) {
             if (*exp == 0)   {
               return "white";
-            } else if (*exp < 3) {
+            } else if (*exp <= cfg.EXP_GRACE_PERIOD()) {
               return "blue";
-            } else if (*exp == 3) {
-              return "purple";
             } else {
               return "red";
             }
