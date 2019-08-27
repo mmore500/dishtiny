@@ -25,19 +25,26 @@ private:
     return local_rng.GetUInt64();
   }
 
+  emp::vector<size_t> exp_noise;
+
+  std::function<size_t()> age_getter;
+
 public:
 
   ManagerChannel(
     const Config &cfg_,
-    emp::Random &local_rng_
+    emp::Random &local_rng_,
+    std::function<size_t()> age_getter_
   ) : ids(ChannelPack())
   , local_rng(local_rng_)
   , cfg(cfg_)
   , gen_counter(cfg_.NLEV())
   , cell_age_multipliers(cfg.NLEV(), 1.0)
+  , age_getter(age_getter_)
   {
     for(size_t i = 0; i < cfg.NLEV(); ++i) {
       ids->push_back(drawChannelID());
+      exp_noise.push_back(local_rng.GetUInt(cfg.GEN_INCR_FREQ()));
     }
   }
 
@@ -76,6 +83,9 @@ public:
 
       const size_t lim = (
         (i+1) * cfg.Lev(i).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER()
+      ) + (
+        // add noise so cells don't tick over all at once
+        age_getter() % cfg.GEN_INCR_FREQ() < exp_noise[i]
       );
 
       emp_assert(cell_age_multipliers[i] >= 1.0);
@@ -125,7 +135,13 @@ public:
         (*ids)[i] = parent[i];
         gen_counter[i] = parent_gen_counter[i] + 1;
       }
+
+      // also generate a new exp noise
+      exp_noise[i] = local_rng.GetUInt(cfg.GEN_INCR_FREQ());
+
     }
+
+
   }
 
 };

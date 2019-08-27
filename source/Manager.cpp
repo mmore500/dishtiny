@@ -28,11 +28,15 @@ Manager::Manager(
     mas.push_back(
       emp::NewPtr<ManagerApoptosis>()
     );
-    mcs.push_back(
-      emp::NewPtr<ManagerChannel>(cfg, *local_rngs[i])
-    );
     mfs.push_back(
       emp::NewPtr<ManagerFamily>()
+    );
+    mcs.push_back(
+      emp::NewPtr<ManagerChannel>(
+        cfg,
+        *local_rngs[i],
+        [this, i](){ return mfs[i]->GetCellAge(dw.GetUpdate()); }
+      )
     );
     mhs.push_back(
       emp::NewPtr<ManagerHeir>()
