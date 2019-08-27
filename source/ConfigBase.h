@@ -34,7 +34,7 @@ EMP_BUILD_CONFIG(
   VALUE(HARDWARE_STEPS, size_t, 1, "How many hardware steps to run per update?"),
   VALUE(ENVIRONMENT_SIGNALS, bool, true, "Can environment signals trigger functions?"),
   VALUE(ACTIVE_SENSORS, bool, true, "Do agents have function active sensors?"),
-  VALUE(HW_MAX_CORES, size_t, 10, "Max number of hardware cores; i.e., max number of simultaneous threads of execution hardware will support."),
+  VALUE(HW_MAX_CORES, size_t, 12, "Max number of hardware cores; i.e., max number of simultaneous threads of execution hardware will support."),
   VALUE(HW_MAX_CALL_DEPTH, size_t, 128, "Max call depth of a hardware unit."),
   VALUE(INBOX_CAPACITY, size_t, 16, "Capacity of a cell's messaging inbox."),
   VALUE(ENV_TRIG_FREQ, size_t, 32, "How often to fire environmental trigger events?"),

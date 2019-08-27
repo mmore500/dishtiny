@@ -49,10 +49,10 @@ void FrameHardware::SetStockpileReserve(const double amt) {
 
 void FrameHardware::DispatchEnvTriggers(){
 
-  // need at least 7 cpus available
-  emp_assert(cfg.HW_MAX_CORES() > 7);
-  // ... so make sure at least 7 are unoccupied
-  cpu.SetMaxCores(cfg.HW_MAX_CORES() - 7);
+  // need at least 8 cpus available
+  emp_assert(cfg.HW_MAX_CORES() > 8);
+  // ... so make sure at least 8 are unoccupied
+  cpu.SetMaxCores(cfg.HW_MAX_CORES() - 8);
   cpu.SetMaxCores(cfg.HW_MAX_CORES());
 
 
@@ -91,18 +91,18 @@ void FrameHardware::DispatchEnvTriggers(){
   // ++i;
 
   // negative resource trigger
-  // if(i >= pro_trigger_tags.size()) {
-  //   pro_trigger_tags.emplace_back(rng);
-  //   auto copy = pro_trigger_tags[i];
-  //   anti_trigger_tags.emplace_back(copy.Toggle());
-  // }
-  // if (Cell().Man().Stockpile(Cell().GetPos()).QueryResource() < 0) {
-  //   cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
-  // } else {
-  //   // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
-  // }
-  //
-  // ++i;
+  if(i >= pro_trigger_tags.size()) {
+    pro_trigger_tags.emplace_back(rng);
+    auto copy = pro_trigger_tags[i];
+    anti_trigger_tags.emplace_back(copy.Toggle());
+  }
+  if (Cell().Man().Stockpile(Cell().GetPos()).QueryResource() < 0) {
+    cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+  } else {
+    // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+  }
+
+  ++i;
 
   // expiration trigger
   if (i >= pro_trigger_tags.size()) {
