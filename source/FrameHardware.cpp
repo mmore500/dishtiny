@@ -111,7 +111,6 @@ void FrameHardware::DispatchEnvTriggers(){
     auto copy = pro_trigger_tags[i];
     anti_trigger_tags.emplace_back(copy.Toggle());
   }
-
   for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
 
     if (
@@ -129,7 +128,6 @@ void FrameHardware::DispatchEnvTriggers(){
   // harvest withdrawal trigger
   if (i >= pro_trigger_tags.size()) {
     pro_trigger_tags.emplace_back(rng);
-    std::cout << pro_trigger_tags.back() << std::endl;
     auto copy = pro_trigger_tags[i];
     anti_trigger_tags.emplace_back(copy.Toggle());
   }
