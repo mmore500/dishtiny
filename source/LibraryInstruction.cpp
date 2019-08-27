@@ -80,12 +80,12 @@ void LibraryInstruction::InitDefault(inst_lib_t &il) {
   il.AddInst("Terminate", Config::hardware_t::Inst_Terminate, 0, "Terminate current thread.");
   il.AddInst("Nop", Config::hardware_t::Inst_Nop, 0, "No operation.");
   il.AddInst("Rng", Config::hardware_t::Inst_RngDouble, 1, "Draw from onboard random number generator.");
-  // il.AddInst("SetRegulator", Config::hardware_t::Inst_SetRegulator, 1, "Sets the regulator of a tag in the matchbin.");
-  // il.AddInst("SetOwnRegulator", Config::hardware_t::Inst_SetOwnRegulator, 1, "Sets the regulator the currently executing function.");
-  // il.AddInst("AdjRegulator", Config::hardware_t::Inst_AdjRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.");
-  // il.AddInst("AdjOwnRegulator", Config::hardware_t::Inst_AdjOwnRegulator, 2, "Adjusts the regulator of the currently executing function towards a target.");
-  // il.AddInst("SenseRegulator", Config::hardware_t::Inst_SenseRegulator, 1, "Senses the regulator of a tag in the matchbin.");
-  // il.AddInst("SenseOwnRegulator", Config::hardware_t::Inst_SenseOwnRegulator, 1, "Senses the regulator of the currently executing function.");
+  il.AddInst("SetRegulator", Config::hardware_t::Inst_SetRegulator, 1, "Sets the regulator of a tag in the matchbin.");
+  il.AddInst("SetOwnRegulator", Config::hardware_t::Inst_SetOwnRegulator, 1, "Sets the regulator the currently executing function.");
+  il.AddInst("AdjRegulator", Config::hardware_t::Inst_AdjRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.");
+  il.AddInst("AdjOwnRegulator", Config::hardware_t::Inst_AdjOwnRegulator, 2, "Adjusts the regulator of the currently executing function towards a target.");
+  il.AddInst("SenseRegulator", Config::hardware_t::Inst_SenseRegulator, 1, "Senses the regulator of a tag in the matchbin.");
+  il.AddInst("SenseOwnRegulator", Config::hardware_t::Inst_SenseOwnRegulator, 1, "Senses the regulator of the currently executing function.");
 
   il.AddInst(
     emp::to_string("Terminal", 5),
