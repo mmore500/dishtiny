@@ -56,7 +56,7 @@ void FrameHardware::DispatchEnvTriggers(){
   cpu.SetMaxCores(cfg.HW_MAX_CORES());
 
 
-  static emp::Random rng(1);
+  static emp::Random rng(cfg.SEED()+1);
   static emp::vector<Config::tag_t> pro_trigger_tags;
   static emp::vector<Config::tag_t> anti_trigger_tags;
 
