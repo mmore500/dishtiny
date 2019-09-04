@@ -38,6 +38,7 @@ EMP_BUILD_CONFIG(
   VALUE(HW_MAX_CALL_DEPTH, size_t, 128, "Max call depth of a hardware unit."),
   VALUE(INBOX_CAPACITY, size_t, 16, "Capacity of a cell's messaging inbox."),
   VALUE(ENV_TRIG_FREQ, size_t, 16, "How often to fire environmental trigger events?"),
+  VALUE(COMPUTE_FREQ, size_t, 8, "How often to step the CPUs?"),
 
   GROUP(MUTATION_GROUP, "SignalGP Mutation Settings"),
   VALUE(MUTATION_RATE, double, 0.01, "What percentage of offspring should experience mutations?"),

@@ -223,7 +223,9 @@ void DishWorld::Step() {
       for(size_t l = 0; l < cfg.NLEV(); ++l) {
         man->Wave(i,l).HarvestResource();
       }
-      frames[i]->QueueMessages(man->Inbox(i).GetInboxes());
+      if (GetUpdate() % cfg.COMPUTE_FREQ() == 0) {
+        frames[i]->QueueMessages(man->Inbox(i).GetInboxes());
+      }
 
       if (
         cfg.GEN_INCR_FREQ()

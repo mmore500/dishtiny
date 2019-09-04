@@ -47,6 +47,8 @@ void FrameCell::Process(const size_t update) {
 
   for(auto & fhw : hw) fhw->SetupCompute(update);
 
+  if (update % cfg.COMPUTE_FREQ()) return;
+
   static emp::vector<size_t> shuffler;
   if (!shuffler.size()) {
     for(size_t idx = 0; idx < hw.size(); ++idx) shuffler.push_back(idx);
