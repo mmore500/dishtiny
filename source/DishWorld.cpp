@@ -75,6 +75,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
   });
 
   OnPlacement([this](const size_t pos){
+    man->Apoptosis(pos).Reset();
     man->Stockpile(pos).Reset();
     man->Heir(pos).Reset();
     man->Priority(pos).Reset();
