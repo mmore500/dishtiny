@@ -24,6 +24,7 @@ FrameHardware::FrameHardware(
     , inbox_active(false)
     , stockpile_reserve(0)
     , cpu(inst_lib, event_lib, &local_rng_)
+    , membrane(local_rng_)
   {
     cpu.SetTrait(this);
   }
@@ -36,6 +37,8 @@ void FrameHardware::Reset() {
 
   cpu.ResetHardware();
   cpu.ResetProgram();
+  membrane.Clear();
+  membrane_tags.clear();
   emp_assert(!cpu.GetProgram().GetSize());
 }
 
@@ -207,7 +210,23 @@ void FrameHardware::DispatchEnvTriggers(){
 }
 
 void FrameHardware::SetupCompute(const size_t update) {
-  if (update % cfg.ENV_TRIG_FREQ() == 0) DispatchEnvTriggers();
+  if (update % cfg.ENV_TRIG_FREQ() == 0) {
+    DispatchEnvTriggers();
+
+    emp::vector<Config::matchbin_t::uid_t> marked;
+    for (const auto & uid : membrane.ViewUIDs()) {
+      auto & v = membrane.GetVal(uid);
+      if (v > 2) {
+        v -= 2;
+      } else {
+        membrane_tags.erase(membrane.GetTag(uid));
+        marked.push_back(uid);
+      }
+    }
+    for (const auto & uid : marked) {
+      membrane.Delete(uid);
+    }
+  }
 }
 
 void FrameHardware::StepProcess() {
@@ -245,7 +264,12 @@ void FrameHardware::QueueMessage(const Config::event_t &event) {
 
 void FrameHardware::QueueMessages(Config::inbox_t &inbox) {
   while(inbox_active && !inbox.empty()) {
-    QueueMessage(inbox.front());
+    if (
+      const auto res = membrane.Match(inbox.front().affinity);
+      res.size() && (res[0] % 2)
+    ) {
+      QueueMessage(inbox.front());
+    }
     inbox.pop_front();
   }
   // clear inactive inboxes, too!
@@ -352,3 +376,10 @@ void FrameHardware::SetRegulators(Config::matchbin_t & target_mb) {
   cpu.GetMatchBin().ImprintRegulators(target_mb);
 
 }
+
+Config::matchbin_t & FrameHardware::GetMembrane() { return membrane; }
+
+std::unordered_map<
+  Config::matchbin_t::tag_t,
+  Config::matchbin_t::uid_t
+> & FrameHardware::GetMembraneTags() { return membrane_tags; }

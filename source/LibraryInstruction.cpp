@@ -110,6 +110,167 @@ void LibraryInstruction::InitDefault(inst_lib_t &il) {
 void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) {
 
   il.AddInst(
+    "PutMembraneBlocker",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Config::matchbin_t& membrane = fh.GetMembrane();
+      auto& membrane_tags = fh.GetMembraneTags();
+
+      // if a particular affinity is already in the MatchBin, take it out
+      const auto &existing = membrane_tags.find(
+        inst.affinity
+      );
+      if (existing != std::end(membrane_tags)) {
+        membrane.Delete(existing->second);
+        membrane_tags.erase(existing);
+      }
+
+      // even values are blockers, odd values are bringers
+      membrane_tags.insert(
+        {
+          inst.affinity,
+          membrane.Put(
+            state.GetLocal(inst.args[0])
+              ? std::abs(state.GetLocal(inst.args[1]) + 2) * 2
+              : std::abs(state.GetLocal(inst.args[1]) + 2) * 2 - 1,
+            inst.affinity
+          )
+        }
+      );
+
+    },
+    2,
+    "Place a tag that, by default, blocks incoming messages it matches with.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "PutMembraneBringer",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Config::matchbin_t& membrane = fh.GetMembrane();
+      auto& membrane_tags = fh.GetMembraneTags();
+
+      // if a particular affinity is already in the MatchBin, take it out
+      const auto &existing = membrane_tags.find(
+        inst.affinity
+      );
+      if (existing != std::end(membrane_tags)) {
+        membrane.Delete(existing->second);
+        membrane_tags.erase(existing);
+      }
+
+      // even values are blockers, odd values are bringers
+      membrane_tags.insert(
+        {
+          inst.affinity,
+          membrane.Put(
+            !state.GetLocal(inst.args[0])
+              ? std::abs(state.GetLocal(inst.args[1]) + 2) * 2
+              : std::abs(state.GetLocal(inst.args[1]) + 2) * 2 - 1,
+            inst.affinity
+          )
+        }
+      );
+
+    },
+    2,
+    "Place a tag that, by default, admits incoming messages it matches with.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "SetMembraneRegulator",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      emp::vector<size_t> best_fun = fh.GetMembrane().MatchRaw(
+        inst.affinity,
+        1
+      );
+
+      if (best_fun.size() == 0){ return; }
+
+      double regulator = state.GetLocal(inst.args[0]);
+      if(regulator < 0){
+        regulator = std::max(regulator, std::numeric_limits<double>::min());
+        regulator /= std::numeric_limits<double>::min();
+      }else{
+        regulator += 1.0;
+      }
+      fh.GetMembrane().SetRegulator(best_fun[0], regulator);
+
+    },
+    1,
+    "Sets the regulator of a tag in the membrane."
+  );
+
+  il.AddInst(
+    "AdjMembraneRegulator",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      emp::vector<size_t> best_fun = fh.GetMembrane().MatchRaw(
+        inst.affinity,
+        1
+      );
+      if (!best_fun.size()) return;
+
+      double target = state.GetLocal(inst.args[0]);
+      if(target < 0) {
+        target = std::max(target, std::numeric_limits<double>::min());
+        target /= std::numeric_limits<double>::min();
+      } else {
+        target += 1.0;
+      }
+
+      const double budge = emp::Mod(state.GetLocal(inst.args[1])+0.2, 1.0);
+      const double cur = fh.GetMembrane().ViewRegulator(best_fun[0]);
+
+      fh.GetMembrane().SetRegulator(
+        best_fun[0],
+        target * budge + cur * (1 - budge)
+      );
+    },
+    2,
+    "Adjusts the regulator of a tag in the membrane towards a target."
+  );
+
+  il.AddInst(
+    "SenseMembraneRegulator",
+    [](hardware_t & hw, const inst_t & inst){
+      state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      emp::vector<size_t> best_fun = fh.GetMembrane().MatchRaw(
+        inst.affinity,
+        1
+      );
+      if (best_fun.size()){
+        state.SetLocal(
+          inst.args[0],
+          fh.GetMembrane().ViewRegulator(best_fun[0])
+        );
+      }
+    },
+    1,
+    "Senses the regulator of a tag in the membrane."
+  );
+
+
+  il.AddInst(
     "SendMsgInternal",
     [](hardware_t & hw, const inst_t & inst){
       FrameHardware &fh = *hw.GetTrait();

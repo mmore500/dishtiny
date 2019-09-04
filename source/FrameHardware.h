@@ -30,6 +30,13 @@ private:
 
   size_t msg_dir;
 
+  Config::matchbin_t membrane;
+
+  std::unordered_map<
+    Config::matchbin_t::tag_t,
+    Config::matchbin_t::uid_t
+  > membrane_tags;
+
 public:
 
   FrameHardware() = delete;
@@ -96,4 +103,12 @@ public:
   const Config::hardware_t& GetHardware();
 
   void SetRegulators(Config::matchbin_t & target);
+
+  Config::matchbin_t &GetMembrane();
+
+  std::unordered_map<
+    Config::matchbin_t::tag_t,
+    Config::matchbin_t::uid_t
+  > &GetMembraneTags();
+
 };
