@@ -19,7 +19,7 @@ private:
 
   emp::vector<size_t> gen_counter;
 
-  emp::vector<double> cell_age_multipliers;
+  emp::vector<double> cell_age_boosters;
 
   Config::chanid_t drawChannelID() {
     return local_rng.GetUInt64();
@@ -39,7 +39,7 @@ public:
   , local_rng(local_rng_)
   , cfg(cfg_)
   , gen_counter(cfg_.NLEV())
-  , cell_age_multipliers(cfg.NLEV(), 1.0)
+  , cell_age_boosters(cfg.NLEV(), 0.0)
   , age_getter(age_getter_)
   {
     for(size_t i = 0; i < cfg.NLEV(); ++i) {
@@ -59,17 +59,31 @@ public:
   void ClearIDs() {
     ids = std::nullopt;
     std::fill(
-      std::begin(cell_age_multipliers),
-      std::end(cell_age_multipliers),
-      1.0
+      std::begin(cell_age_boosters),
+      std::end(cell_age_boosters),
+      0.0
     );
   }
 
   size_t GetGeneration(const size_t lev) const { return gen_counter[lev]; }
 
-  void SetCellAgeMultiplier(const size_t lev, const double amt) {
-    emp_assert(amt >= 1.0);
-    cell_age_multipliers[lev] = amt;
+  void SetCellAgeBooster(
+    const size_t lev,
+    const double bounded_amt, // must be positive
+    const double unbounded_amt // can be positive or negative
+  ) {
+    emp_assert(bounded_amt >= 0.0);
+
+    cell_age_boosters[lev] = std::max(
+      0.0,
+      std::min(
+        bounded_amt,
+        std::max(GetGenCounter()[lev] - CalcExpLim(lev), 0.0)
+      ) + unbounded_amt
+    );
+
+    if (!std::isnormal(cell_age_boosters[lev])) cell_age_boosters[lev] = 0.0;
+
   }
 
   const emp::vector<size_t>& GetGenCounter() const { return gen_counter; }
@@ -88,10 +102,14 @@ public:
         age_getter() % cfg.GEN_INCR_FREQ() < exp_noise[i]
       );
 
-      emp_assert(cell_age_multipliers[i] >= 1.0);
+      emp_assert(cell_age_boosters[i] >= 0.0);
 
-      if (GetGeneration(i) * cell_age_multipliers[i] > lim) {
-        expired += GetGeneration(i) * cell_age_multipliers[i] - lim;
+      if (
+        static_cast<double>(GetGeneration(i)) + cell_age_boosters[i] > lim
+      ) {
+        expired += (
+          static_cast<double>(GetGeneration(i)) + cell_age_boosters[i] - lim
+        );
       }
 
     }
@@ -120,9 +138,9 @@ public:
   ) {
 
     std::fill(
-      std::begin(cell_age_multipliers),
-      std::end(cell_age_multipliers),
-      1.0
+      std::begin(cell_age_boosters),
+      std::end(cell_age_boosters),
+      0.0
     );
 
     if (!ids) ids = std::optional<ChannelPack>{ChannelPack(cfg.NLEV())};

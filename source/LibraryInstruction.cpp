@@ -420,21 +420,22 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
   for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
     il.AddInst(
-      "SetCellAgeMultiplier-Lev" + emp::to_string(lev),
+      "SetCellAgeBooster-Lev" + emp::to_string(lev),
       cfg.CHANNELS_VISIBLE() ?
       std::function<void(hardware_t &, const inst_t &)>(
         [lev](hardware_t & hw, const inst_t & inst){
           const state_t & state = hw.GetCurState();
           FrameHardware &fh = *hw.GetTrait();
-          fh.Cell().Man().Channel(fh.Cell().GetPos()).SetCellAgeMultiplier(
+          fh.Cell().Man().Channel(fh.Cell().GetPos()).SetCellAgeBooster(
             lev,
-            1.0 + std::abs(state.GetLocal(inst.args[0]))
+            std::abs(state.GetLocal(inst.args[0])),
+            state.GetLocal(inst.args[1])
           );
         }
       ) : std::function<void(hardware_t &, const inst_t &)>(
         [](hardware_t & hw, const inst_t & inst){ ; }
       ),
-      1,
+      2,
       "Increase cell age at a particular reproduction level."
     );
   }
