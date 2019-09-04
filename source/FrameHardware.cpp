@@ -111,20 +111,17 @@ void FrameHardware::DispatchEnvTriggers(){
   // expiration trigger
   if (i >= pro_trigger_tags.size()) {
     pro_trigger_tags.emplace_back(rng);
-    std::cout << pro_trigger_tags.back() << std::endl;
     auto copy = pro_trigger_tags[i];
     anti_trigger_tags.emplace_back(copy.Toggle());
   }
-  for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
 
-    if (
-      Cell().Man().Channel(Cell().GetPos()).IsExpired(lev)
-      > cfg.EXP_GRACE_PERIOD()
-    ) {
-      cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
-      break;
-    }
-
+  if (
+    Cell().Man().Channel(Cell().GetPos()).IsExpired(0)
+    > cfg.EXP_GRACE_PERIOD()
+  ) {
+    cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+  } else {
+    // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
   }
 
   ++i;
