@@ -324,9 +324,7 @@ public:
           return w.IsOccupied(i) ? std::make_optional(w.man->Channel(i).GetGeneration(l)) : std::nullopt;
         },
         [this, l](std::optional<size_t> amt) -> std::string {
-          const double thresh = (
-            (l+1) * cfg.Lev(l).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER()
-          );
+          const double thresh = w.man->Channel(0).CalcExpLim(l);
           if (amt) {
             if (*amt <= thresh){
               return emp::ColorRGB(

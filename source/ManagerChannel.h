@@ -88,19 +88,23 @@ public:
 
   const emp::vector<size_t>& GetGenCounter() const { return gen_counter; }
 
+  double CalcExpLim(const size_t lev) const {
+    return (
+      (lev+1.0) * cfg.Lev(lev).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER()
+    ) + (
+     // add noise so cells don't tick over all at once
+     ((age_getter() % cfg.GEN_INCR_FREQ()) < exp_noise[lev]) ? 1.0 : 0.0
+    );
+  }
+
   // same replev used for Inherit
-  size_t IsExpired(const size_t replev) const {
+  double IsExpired(const size_t replev) const {
 
-    size_t expired = 0;
+    double expired = 0.0;
 
-    for(size_t i = replev; i < cfg.NLEV(); ++i) {
+    for (size_t i = replev; i < cfg.NLEV(); ++i) {
 
-      const size_t lim = (
-        (i+1) * cfg.Lev(i).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER()
-      ) + (
-        // add noise so cells don't tick over all at once
-        age_getter() % cfg.GEN_INCR_FREQ() < exp_noise[i]
-      );
+      const double lim = CalcExpLim(i);
 
       emp_assert(cell_age_boosters[i] >= 0.0);
 
