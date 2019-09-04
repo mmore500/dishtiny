@@ -171,6 +171,13 @@ public:
       // also, because the parent genome might be overwritten
       emp::Ptr<Genome> copy = emp::NewPtr<Genome>(*(pending_birth->genome));
       pending_birth->genome = copy;
+
+      // refund requests that don't get selected
+      for (size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
+        if (requests[d] && pending_birth->incoming_dir != d) {
+          refunders[d]();
+        }
+      }
     }
   }
 
