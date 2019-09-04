@@ -159,7 +159,7 @@ void FrameHardware::DispatchEnvTriggers(){
       if (IsChannelMate(lev)) {
         cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
       } else {
-        // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+        cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
       }
     }
     ++i;
