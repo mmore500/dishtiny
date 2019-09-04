@@ -58,7 +58,7 @@ EMP_BUILD_CONFIG(
   VALUE(TREATMENT_DESCRIPTOR, std::string, "unspecified", "[NATIVE] Treatment identifying slug"),
   VALUE(CONFIGLEVEL_BASENAME, std::string, "level=", "[NATIVE] Base filename"),
   VALUE(CONFIGLEVEL_EXTENSION, std::string, ".cfg", "[NATIVE] Filename extension"),
-  VALUE(SNAPSHOT_FREQUENCY, size_t, 1000000, "[NATIVE] How often should we save data snapshots?"),
+  VALUE(SNAPSHOT_FREQUENCY, size_t, 100000, "[NATIVE] How often should we save data snapshots?"),
   VALUE(SNAPSHOT_LENGTH, size_t, 256, "[NATIVE] How long should snapshots last for?"),
   VALUE(RUN_LENGTH, size_t, 15000000, "[NATIVE] How many updates should we run the experiment for?"),
   VALUE(SYSTEMATICS, bool, true, "[NATIVE] Should we keep systematics data?"),
