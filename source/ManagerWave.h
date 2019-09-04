@@ -62,7 +62,9 @@ private:
     const size_t seed_y = global_rng.GetUInt(0,event_size);
 
     return (
-      (global_x % event_size == seed_x) && (global_y % event_size == seed_y)
+      (global_x % event_size == seed_x)
+      && (global_y % event_size == seed_y)
+      && mc.IsExpired(0) <= cfg.EXP_GRACE_PERIOD()
     ) ? active : ready;
 
   }
