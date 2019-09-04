@@ -183,7 +183,8 @@ void DishWorld::Step() {
       // check that parent hasn't been overwritten by a different birth
       if(man->Family(opt_sirepack->par_pos).GetBirthUpdate() != GetUpdate()) {
         man->Family(opt_sirepack->par_pos).AddChildPos(i);
-        man->Channel(opt_sirepack->par_pos).LogReprGen(opt_sirepack->replev);
+        // parental generation bump disabled
+        // man->Channel(opt_sirepack->par_pos).LogReprGen(opt_sirepack->replev);
       }
 
     } else if (IsOccupied(i)) {
