@@ -34,12 +34,12 @@ def CalcContrib(filename):
     cage_group = file['CellAge']
     live_group = file['Live']
     ppos_group = file['ParentPos']
+    pvch_group = file['PrevChan']
 
     chan_groups = [
         file['Channel']['lev_' + str(idx)]
         for idx in range(nlev)
     ]
-    pvch_group = file['PrevChan'] #TODO levels
 
     for dir_key in file['ResourceContributed']:
 
@@ -53,7 +53,7 @@ def CalcContrib(filename):
             live = np.array(live_group['upd_'+str(upd)]).flatten()
             ppos = np.array(ppos_group['upd_'+str(upd)]).flatten()
 
-            pvch = np.array(ppos_group['upd_'+str(upd)]).flatten()
+            pvch = np.array(pvch_group['upd_'+str(upd)]).flatten()
 
             resc = np.array(resc_group['upd_'+str(upd)]).flatten()
 
@@ -90,7 +90,7 @@ def CalcContrib(filename):
                     cumsum['Cell Parent'] += resc[idx]
                     obscnt['Cell Parent'] += 1
                     related = True
-                elif ppos[drct[idx]] == idx and cage[idx] < cage[drct[idx]]:
+                elif ppos[drct[idx]] == idx and cage[drct[idx]] < cage[idx]:
                     cumsum['Cell Child'] += resc[idx]
                     obscnt['Cell Child'] += 1
                     related = True
