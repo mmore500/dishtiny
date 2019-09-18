@@ -10,6 +10,7 @@ import os
 import pandas as pd
 from keyname import keyname as kn
 from fileshash import fileshash as fsh
+from collections import defaultdict
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
@@ -21,49 +22,107 @@ assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 nlev = h5py.File(filenames[0], 'r').attrs['NLEV'][0]
 ntile = h5py.File(filenames[0], 'r')['Index']['own'].size
 
-def CalcSameChannelContrib(filename):
+def CalcContrib(filename):
     file = h5py.File(filename, 'r')
-    res = [
-        rc[idx]
-        for dir_key in file['ResourceContributed']
-        for rc, ch, dir in [
-            (np.array(
-                file['ResourceContributed'][dir_key]['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['Channel']['lev_0']['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['Index'][dir_key]
-            ).flatten())
-            for upd in range(first_update, last_update)
-        ]
-        for idx in range(file['Index']['own'].size)
-        if (ch[idx] == ch[dir[idx]])
-    ]
-    return np.mean(res) if len(res) else 0
+    cumsum = defaultdict(float) # cumulative sum of observed values
+    obscnt = defaultdict(int) # how many observations have been made
 
-def CalcDiffChannelContrib(filename):
-    file = h5py.File(filename, 'r')
-    res = [
-        rc[idx]
-        for dir_key in file['ResourceContributed']
-        for rc, ch, dir in [
-            (np.array(
-                file['ResourceContributed'][dir_key]['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['Channel']['lev_0']['upd_'+str(upd)]
-            ).flatten(),
-            np.array(
-                file['Index'][dir_key]
-            ).flatten())
-            for upd in range(first_update, last_update)
-        ]
-        for idx in range(file['Index']['own'].size)
-        if (ch[idx] != ch[dir[idx]])
+    nlev = int(file.attrs.get('NLEV'))
+    ncell = file['Index']['own'].size
+
+    cage_group = file['CellAge']
+    live_group = file['Live']
+    ppos_group = file['ParentPos']
+
+    chan_groups = [
+        file['Channel']['lev_' + str(idx)]
+        for idx in range(nlev)
     ]
-    return np.mean(res) if len(res) else 0
+    pvch_group = file['PrevChan'] #TODO levels
+
+    for dir_key in file['ResourceContributed']:
+
+        drct = np.array(file['Index'][dir_key]).flatten()
+
+        resc_group = file['ResourceContributed'][dir_key]
+
+        for upd in range(first_update, last_update):
+
+            cage = np.array(cage_group['upd_'+str(upd)]).flatten()
+            live = np.array(live_group['upd_'+str(upd)]).flatten()
+            ppos = np.array(ppos_group['upd_'+str(upd)]).flatten()
+
+            pvch = np.array(ppos_group['upd_'+str(upd)]).flatten()
+
+            resc = np.array(resc_group['upd_'+str(upd)]).flatten()
+
+            chans = [
+                np.array(g['upd_'+str(upd)]).flatten()
+                for g in chan_groups
+            ]
+
+
+            for idx in range(ncell):
+
+                # if either of the cells are not alive, there is no sharing
+                if not live[idx] or not live[drct[idx]]:
+                    continue
+
+                related = False
+
+                cumsum['Neighbor'] += resc[idx]
+                obscnt['Neighbor'] += 1
+
+                for lev in range(nlev):
+                    # remember, these are mutually exclusive
+                    if chans[lev][idx] == chans[lev][drct[idx]]:
+                        cumsum['Channelmate ' + str(lev)] += resc[idx]
+                        obscnt['Channelmate ' + str(lev)] += 1
+                        related = True
+                        break
+                else:
+                    # runs if no break is called
+                    cumsum['Nonchannelmate'] += resc[idx]
+                    obscnt['Nonchannelmate'] += 1
+
+                #TODO check this
+                if ppos[idx] == drct[idx] and cage[idx] < cage[drct[idx]]:
+                    cumsum['Cell Parent'] += resc[idx]
+                    obscnt['Cell Parent'] += 1
+                    related = True
+                elif ppos[drct[idx]] == idx and cage[idx] < cage[drct[idx]]:
+                    cumsum['Cell Child'] += resc[idx]
+                    obscnt['Cell Child'] += 1
+                    related = True
+                else:
+                    cumsum['Nondirect Cell Relative'] += resc[idx]
+                    obscnt['Nondirect Cell Relative'] += 1
+
+                if pvch[idx] == chans[-1][drct[idx]]:
+                    cumsum['Propagule Parent'] += resc[idx]
+                    obscnt['Propagule Parent'] += 1
+                    related = True
+                elif pvch[drct[idx]] == chans[-1][idx]:
+                    cumsum['Propagule Child'] += resc[idx]
+                    obscnt['Propagule Child'] += 1
+                    related = True
+                else:
+                    cumsum['Nondirect Propagule Relative'] += resc[idx]
+                    obscnt['Nondirect Propagule Relative'] += 1
+
+                if related:
+                    cumsum['Related Neighbor'] += resc[idx]
+                    obscnt['Related Neighbor'] += 1
+                else:
+                    cumsum['Unrelated Neighbor'] += resc[idx]
+                    obscnt['Unrelated Neighbor'] += 1
+
+    assert(set(cumsum.keys()) == set(obscnt.keys()))
+
+    return {
+        key : cumsum[key] / obscnt[key]
+        for key in cumsum.keys()
+    }
 
 print("num files:" , len(filenames))
 
@@ -80,26 +139,15 @@ outfile = kn.pack({
 
 pd.DataFrame.from_dict([
     {
-        'Shared Resource Per Cell Pair Update'
-            : CalcSameChannelContrib(filename),
-        'Channel Match' : 'true',
+        'Shared Resource Per Cell Pair Update' : value,
+        'Relationship' : relationship,
         'First Update' : first_update,
         'Last Update' : last_update,
         'Treatment' : kn.unpack(filename)['treat'],
         'Seed' : kn.unpack(filename)['seed']
     }
     for filename in tqdm(filenames)
-] + [
-    {
-        'Shared Resource Per Cell Pair Update'
-            : CalcDiffChannelContrib(filename),
-        'Channel Match' : 'false',
-        'First Update' : first_update,
-        'Last Update' : last_update,
-        'Treatment' : kn.unpack(filename)['treat'],
-        'Seed' : kn.unpack(filename)['seed']
-    }
-    for filename in tqdm(filenames)
+    for relationship, value in CalcContrib(filename).items()
 ]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)
