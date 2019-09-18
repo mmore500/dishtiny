@@ -11,6 +11,7 @@ import pandas as pd
 from keyname import keyname as kn
 from fileshash import fileshash as fsh
 from collections import defaultdict
+from joblib import delayed, Parallel
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
@@ -85,7 +86,6 @@ def CalcContrib(filename):
                     cumsum['Nonchannelmate'] += resc[idx]
                     obscnt['Nonchannelmate'] += 1
 
-                #TODO check this
                 if ppos[idx] == drct[idx] and cage[idx] < cage[drct[idx]]:
                     cumsum['Cell Parent'] += resc[idx]
                     obscnt['Cell Parent'] += 1
@@ -146,8 +146,12 @@ pd.DataFrame.from_dict([
         'Treatment' : kn.unpack(filename)['treat'],
         'Seed' : kn.unpack(filename)['seed']
     }
-    for filename in tqdm(filenames)
-    for relationship, value in CalcContrib(filename).items()
+    for res, filename in zip(
+        Parallel(n_jobs=-1)(
+            delayed(CalcContrib)(filename) for filename in tqdm(filenames)
+        ), filenames
+    )
+    for relationship, value in res.items()
 ]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)
