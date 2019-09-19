@@ -86,25 +86,29 @@ def CalcContrib(filename):
                     cumsum['Nonchannelmate'] += resc[idx]
                     obscnt['Nonchannelmate'] += 1
 
+                # resc is incoming resource amount
+                # we're interested in outgoing resource amount
                 if ppos[idx] == drct[idx] and cage[idx] < cage[drct[idx]]:
-                    cumsum['Cell Parent'] += resc[idx]
-                    obscnt['Cell Parent'] += 1
-                    related = True
-                elif ppos[drct[idx]] == idx and cage[drct[idx]] < cage[idx]:
                     cumsum['Cell Child'] += resc[idx]
                     obscnt['Cell Child'] += 1
+                    related = True
+                elif ppos[drct[idx]] == idx and cage[drct[idx]] < cage[idx]:
+                    cumsum['Cell Parent'] += resc[idx]
+                    obscnt['Cell Parent'] += 1
                     related = True
                 else:
                     cumsum['Nondirect Cell Relative'] += resc[idx]
                     obscnt['Nondirect Cell Relative'] += 1
 
+                # resc is incoming resource amount
+                # we're interested in outgoing resource amount
                 if pvch[idx] == chans[-1][drct[idx]]:
-                    cumsum['Propagule Parent'] += resc[idx]
-                    obscnt['Propagule Parent'] += 1
-                    related = True
-                elif pvch[drct[idx]] == chans[-1][idx]:
                     cumsum['Propagule Child'] += resc[idx]
                     obscnt['Propagule Child'] += 1
+                    related = True
+                elif pvch[drct[idx]] == chans[-1][idx]:
+                    cumsum['Propagule Parent'] += resc[idx]
+                    obscnt['Propagule Parent'] += 1
                     related = True
                 else:
                     cumsum['Nondirect Propagule Relative'] += resc[idx]
