@@ -25,8 +25,8 @@ ntile = h5py.File(filenames[0], 'r')['Index']['own'].size
 
 def CalcContrib(filename):
     file = h5py.File(filename, 'r')
-    cumsum = defaultdict(float) # cumulative sum of observed values
-    obscnt = defaultdict(int) # how many observations have been made
+    # relationship type -> metric -> value
+    res = defaultdict(lambda: defaultdict(float))
 
     nlev = int(file.attrs.get('NLEV'))
     ncell = file['Index']['own'].size
@@ -35,6 +35,7 @@ def CalcContrib(filename):
     live_group = file['Live']
     ppos_group = file['ParentPos']
     pvch_group = file['PrevChan']
+    stck_group = file['Stockpile']
 
     chan_groups = [
         file['Channel']['lev_' + str(idx)]
@@ -54,6 +55,7 @@ def CalcContrib(filename):
             ppos = np.array(ppos_group['upd_'+str(upd)]).flatten()
 
             pvch = np.array(pvch_group['upd_'+str(upd)]).flatten()
+            stck = np.array(stck_group['upd_'+str(upd)]).flatten()
 
             resc = np.array(resc_group['upd_'+str(upd)]).flatten()
 
@@ -71,68 +73,103 @@ def CalcContrib(filename):
 
                 related = False
 
-                cumsum['Neighbor'] += resc[idx]
-                obscnt['Neighbor'] += 1
+                dest = res['Neighbor']
+                dest['Total Resource Shared'] += resc[idx]
+                dest['Relationship Incidence'] += 1
+                dest['Total Source Stockpile'] += stck[drct[idx]]
 
                 for lev in range(nlev):
                     # remember, these are mutually exclusive
                     if chans[lev][idx] == chans[lev][drct[idx]]:
-                        cumsum['Channelmate ' + str(lev)] += resc[idx]
-                        obscnt['Channelmate ' + str(lev)] += 1
+                        dest = res['Channelmate ' + str(lev)]
+                        dest['Total Resource Shared'] += resc[idx]
+                        dest['Relationship Incidence'] += 1
+                        dest['Total Source Stockpile'] += stck[drct[idx]]
                         related = True
                         break
                 else:
                     # runs if no break is called
-                    cumsum['Nonchannelmate'] += resc[idx]
-                    obscnt['Nonchannelmate'] += 1
+                    dest = res['Nonchannelmate']
+                    dest['Total Resource Shared'] += resc[idx]
+                    dest['Relationship Incidence'] += 1
+                    dest['Total Source Stockpile'] += stck[drct[idx]]
 
                 # resc is incoming resource amount
                 # we're interested in outgoing resource amount
                 if ppos[idx] == drct[idx] and cage[idx] < cage[drct[idx]]:
-                    cumsum['Cell Child'] += resc[idx]
-                    obscnt['Cell Child'] += 1
+                    dest = res['Cell Child']
+                    dest['Total Resource Shared'] += resc[idx]
+                    dest['Relationship Incidence'] += 1
+                    dest['Total Source Stockpile'] += stck[drct[idx]]
                     related = True
                 elif ppos[drct[idx]] == idx and cage[drct[idx]] < cage[idx]:
-                    cumsum['Cell Parent'] += resc[idx]
-                    obscnt['Cell Parent'] += 1
+                    dest = res['Cell Parent']
+                    dest['Total Resource Shared'] += resc[idx]
+                    dest['Relationship Incidence'] += 1
+                    dest['Total Source Stockpile'] += stck[drct[idx]]
                     related = True
                 else:
-                    cumsum['Nondirect Cell Relative'] += resc[idx]
-                    obscnt['Nondirect Cell Relative'] += 1
+                    dest = res['Nondirect Cell Relative']
+                    dest['Total Resource Shared'] += resc[idx]
+                    dest['Relationship Incidence'] += 1
+                    dest['Total Source Stockpile'] += stck[drct[idx]]
 
                 # resc is incoming resource amount
                 # we're interested in outgoing resource amount
                 if pvch[idx] == chans[-1][drct[idx]]:
-                    cumsum['Propagule Child'] += resc[idx]
-                    obscnt['Propagule Child'] += 1
+                    dest = res['Propagule Child']
+                    dest['Total Resource Shared'] += resc[idx]
+                    dest['Relationship Incidence'] += 1
+                    dest['Total Source Stockpile'] += stck[drct[idx]]
                     related = True
                 elif pvch[drct[idx]] == chans[-1][idx]:
-                    cumsum['Propagule Parent'] += resc[idx]
-                    obscnt['Propagule Parent'] += 1
+                    dest = res['Propagule Parent']
+                    dest['Total Resource Shared'] += resc[idx]
+                    dest['Relationship Incidence'] += 1
+                    dest['Total Source Stockpile'] += stck[drct[idx]]
                     related = True
                 else:
-                    cumsum['Nondirect Propagule Relative'] += resc[idx]
-                    obscnt['Nondirect Propagule Relative'] += 1
+                    dest = res['Nondirect Propagule Relative']
+                    dest['Total Resource Shared'] += resc[idx]
+                    dest['Relationship Incidence'] += 1
+                    dest['Total Source Stockpile'] += stck[drct[idx]]
 
                 if related:
-                    cumsum['Related Neighbor'] += resc[idx]
-                    obscnt['Related Neighbor'] += 1
+                    dest = res['Related Neighbor']
+                    dest['Total Resource Shared'] += resc[idx]
+                    dest['Relationship Incidence'] += 1
+                    dest['Total Source Stockpile'] += stck[drct[idx]]
                 else:
-                    cumsum['Unrelated Neighbor'] += resc[idx]
-                    obscnt['Unrelated Neighbor'] += 1
+                    dest = res['Unrelated Neighbor']
+                    dest['Total Resource Shared'] += resc[idx]
+                    dest['Relationship Incidence'] += 1
+                    dest['Total Source Stockpile'] += stck[drct[idx]]
 
-    assert(set(cumsum.keys()) == set(obscnt.keys()))
+    for data in res.values():
+        data['Resource Transfer Rate'] = (
+            data['Total Resource Shared'] / data['Relationship Incidence']
+        )
+        data['Mean Source Stockpile'] = (
+            data['Total Source Stockpile'] / data['Relationship Incidence']
+        )
+        data['Resource Transfer Ratio'] = (
+            data['Resource Transfer Rate'] / (
+                data['Resource Transfer Rate'] + data['Mean Source Stockpile']
+            )
+            if data['Resource Transfer Rate'] else 0
+        )
+        data['Relationship Frequency'] = (
+            data['Relationship Incidence']
+            / res['Neighbor']['Relationship Incidence']
+        )
 
-    return {
-        key : cumsum[key] / obscnt[key]
-        for key in cumsum.keys()
-    }
+    return res
 
 print("num files:" , len(filenames))
 
 outfile = kn.pack({
     'title' : 'resource_contributed',
-    '_data_hathash_hash' : fsh.FilesHash().hash_files(filenames),
+    '_data_hathash_hash' : fsh.FilesHash().hash_files(tqdm(filenames)),
     '_script_fullcat_hash' : fsh.FilesHash(
                                     file_parcel="full_parcel",
                                     files_join="cat_join"
@@ -143,7 +180,8 @@ outfile = kn.pack({
 
 pd.DataFrame.from_dict([
     {
-        'Shared Resource Per Cell Pair Update' : value,
+        'Measure' : measure,
+        'Value' : value,
         'Relationship' : relationship,
         'First Update' : first_update,
         'Last Update' : last_update,
@@ -155,7 +193,8 @@ pd.DataFrame.from_dict([
             delayed(CalcContrib)(filename) for filename in tqdm(filenames)
         ), filenames
     )
-    for relationship, value in res.items()
+    for relationship, data in res.items()
+    for measure, value in data.items()
 ]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)
