@@ -20,17 +20,61 @@ dataframe_filename = sys.argv[1]
 
 df = pd.read_csv(dataframe_filename)
 
-print(df)
+print("Data loaded!")
 
-ax = sns.barplot(
-    x="Relationship",
-    y="Shared Resource Per Cell Pair Update",
-    hue="Treatment",
-    # order=['Level 0\nChannel\nMatch', 'Level 1\nChannel\nMatch', 'Cell\nParent', 'Cell\nChild', 'Propagule\nParent', 'Propagule\nChild'],
-    # hue_order=['True','False'],
-    data=df,
+df['Treatment'] = df['Treatment'].apply(lambda raw : {
+    'resource-even__channelsense-no__nlev-two__mute' : 'even+blind+mute',
+    'resource-even__channelsense-no__nlev-two' : 'even+blind',
+    'resource-wave__channelsense-no__nlev-two' : 'blind',
+    'resource-wave__channelsense-yes__nlev-onesmall' : 'small wave',
+    'resource-even__channelsense-yes__nlev-two' : 'even',
+    'resource-wave__channelsense-yes__nlev-onebig' : 'large wave',
+    'resource-wave__channelsense-yes__nlev-two' : 'nested wave'
+    }[raw]
 )
-plt.xticks(rotation=-90)
+
+df['Relationship Category'] = df.apply(
+    lambda x: (
+        'Neighbor' if 'Neighbor' in x['Relationship']
+        else 'Channel' if 'mate' in x['Relationship']
+        else 'Cell' if 'Cell' in x['Relationship']
+        else 'Propagule' if 'Propagule' in x['Relationship']
+        else 'Unknown'
+    ),
+    axis=1
+)
+
+print("Data crunched!")
+
+g = sns.FacetGrid(
+    df,
+    col="Treatment",
+    hue="Relationship Category",
+    col_wrap=4,
+    sharey=False
+)
+g.map(
+    sns.barplot,
+    "Relationship",
+    "Shared Resource Per Cell Pair Update",
+    order=[
+        'Neighbor',
+        'Related Neighbor',
+        'Unrelated Neighbor',
+        ] + sorted([
+            r for r in df['Relationship'].unique() if 'Channelmate' in r
+        ]) + [
+        'Nonchannelmate',
+        'Cell Child',
+        'Cell Parent',
+        'Propagule Child',
+        'Propagule Parent',
+    ],
+)
+
+for ax in g.axes.flat:
+    for label in ax.get_xticklabels():
+        label.set_rotation(-90)
 
 outfile = kn.pack({
     'title' : 'resource_contributed',
@@ -43,7 +87,7 @@ outfile = kn.pack({
     'ext' : ".pdf"
 })
 
-ax.get_figure().savefig(
+plt.gcf().savefig(
     outfile,
     transparent=True,
     bbox_inches='tight',
