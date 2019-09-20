@@ -14,19 +14,24 @@ from fileshash import fileshash as fsh
 import h5py
 import colorsys
 from tqdm import tqdm
+from joblib import delayed, Parallel
 
 matplotlib.rcParams['pdf.fonttype'] = 42
 
-
 filename = sys.argv[1]
-updates = [int(v) for v in sys.argv[2:]]
+updates = (int(v) for v in sys.argv[2:])
 
-file = h5py.File(filename, 'r')
+def RenderAndSave(upd, filename):
 
-for upd in tqdm(updates):
+    file = h5py.File(filename, 'r')
+    nlev = int(file.attrs.get('NLEV'))
 
     data_0 = np.array(file['Channel']['lev_0']['upd_'+str(upd)])
-    data_1 = np.array(file['Channel']['lev_1']['upd_'+str(upd)])
+    data_1 = (
+        np.array(file['Channel']['lev_0']['upd_'+str(upd)])
+        if nlev == 1 else
+        np.array(file['Channel']['lev_1']['upd_'+str(upd)])
+    )
 
     image = np.array([
         [
@@ -89,3 +94,7 @@ for upd in tqdm(updates):
 
     plt.clf()
     plt.close(plt.gcf())
+
+Parallel(n_jobs=-1)(
+    delayed(RenderAndSave)(upd, filename) for upd in tqdm(updates)
+)
