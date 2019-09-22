@@ -202,7 +202,11 @@ public:
       "Resource Stockpile",
       grid_viewer,
       [this](size_t i){
-        return w.IsOccupied(i) ? std::make_optional(w.man->Stockpile(i).QueryResource()) : std::nullopt;
+        return w.IsOccupied(i)
+          ? std::make_optional(
+            w.man->Stockpile(i).QueryResource()
+            + w.man->Stockpile(i).QueryTotalContribute()
+          ) : std::nullopt;
       },
       [this](std::optional<double> amt) -> std::string {
         if (amt) {
