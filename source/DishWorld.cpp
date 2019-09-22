@@ -212,6 +212,7 @@ void DishWorld::Step() {
 
     if (GetUpdate()%cfg.ENV_TRIG_FREQ()==0) {
       man->Heir(i).DecayHeirs();
+      man->Channel(i).DecayCellAgeBoosters();
       man->Priority(i).ResolveUpdate();
       man->Apoptosis(i).Reset();
     }

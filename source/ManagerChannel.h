@@ -20,6 +20,7 @@ private:
   emp::vector<size_t> gen_counter;
 
   emp::vector<double> cell_age_boosters;
+  emp::vector<bool> cell_age_boosters_fresh;
 
   Config::chanid_t drawChannelID() {
     return local_rng.GetUInt64();
@@ -40,6 +41,7 @@ public:
   , cfg(cfg_)
   , gen_counter(cfg_.NLEV())
   , cell_age_boosters(cfg.NLEV(), 0.0)
+  , cell_age_boosters_fresh(cfg.NLEV(), false)
   , age_getter(age_getter_)
   {
     for(size_t i = 0; i < cfg.NLEV(); ++i) {
@@ -63,6 +65,11 @@ public:
       std::end(cell_age_boosters),
       0.0
     );
+    std::fill(
+      std::begin(cell_age_boosters_fresh),
+      std::end(cell_age_boosters_fresh),
+      false
+    );
   }
 
   size_t GetGeneration(const size_t lev) const { return gen_counter[lev]; }
@@ -84,6 +91,17 @@ public:
 
     if (!std::isnormal(cell_age_boosters[lev])) cell_age_boosters[lev] = 0.0;
 
+    cell_age_boosters_fresh[lev] = true;
+
+  }
+
+  void DecayCellAgeBoosters() {
+    for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      if (!cell_age_boosters_fresh[lev]) {
+        cell_age_boosters[lev] = 0.0;
+      }
+      cell_age_boosters_fresh[lev] = false;
+    }
   }
 
   const emp::vector<size_t>& GetGenCounter() const { return gen_counter; }
