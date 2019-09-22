@@ -317,17 +317,17 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       FrameHardware &fh = *hw.GetTrait();
 
       const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      const size_t dur = 2 + state.GetLocal(inst.args[1]);
+      const size_t dir = fh.CalcDir();
+      const size_t dur = 2 + state.GetLocal(inst.args[0]);
       const double amt = std::max(
-        cfg.REP_THRESH() + state.GetLocal(inst.args[2]),
+        cfg.REP_THRESH() + state.GetLocal(inst.args[1]),
         0.0
       );
 
       fh.Cell().GetFrameHardware(dir).SetStockpileReserve(amt, dur);
 
     },
-    3,
+    2,
     "Set aside an amount of stockpile resource that is not eligible for sharing."
   );
 
@@ -337,14 +337,14 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       FrameHardware &fh = *hw.GetTrait();
 
       const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      const size_t dur = 2 + state.GetLocal(inst.args[1]);
-      const double amt = std::max(state.GetLocal(inst.args[2]), 0.0);
+      const size_t dir = fh.CalcDir();
+      const size_t dur = 2 + state.GetLocal(inst.args[0]);
+      const double amt = std::max(state.GetLocal(inst.args[1]), 0.0);
 
       fh.Cell().GetFrameHardware(dir).SetStockpileReserve(amt, dur);
 
     },
-    3,
+    2,
     "Set aside an amount of stockpile resource that is not eligible for sharing."
   );
 
@@ -354,17 +354,17 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       FrameHardware &fh = *hw.GetTrait();
 
       const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      const size_t dur = 2 + state.GetLocal(inst.args[1]);
+      const size_t dir = fh.CalcDir();
+      const size_t dur = 2 + state.GetLocal(inst.args[0]);
       const double amt = std::max(
-        cfg.REP_THRESH() + state.GetLocal(inst.args[2]),
+        cfg.REP_THRESH() + state.GetLocal(inst.args[1]),
         0.0
       );
 
       fh.Cell().GetFrameHardware(dir).SetReproductionReserve(amt, dur);
 
     },
-    3,
+    2,
     "Set aside an amount of stockpile resource that is not eligible for using to reproduce."
   );
 
@@ -374,14 +374,14 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       FrameHardware &fh = *hw.GetTrait();
 
       const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      const size_t dur = 2 + state.GetLocal(inst.args[1]);
-      const double amt = std::max(0.0, state.GetLocal(inst.args[2]));
+      const size_t dir = fh.CalcDir();
+      const size_t dur = 2 + state.GetLocal(inst.args[0]);
+      const double amt = std::max(0.0, state.GetLocal(inst.args[1]));
 
       fh.Cell().GetFrameHardware(dir).SetReproductionReserve(amt, dur);
 
     },
-    3,
+    2,
     "Set aside an amount of stockpile resource that is not eligible for using to reproduce."
   );
 
@@ -396,8 +396,8 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
           Manager &man = fh.Cell().Man();
 
           const state_t & state = hw.GetCurState();
-          const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-          const size_t dur = 2 + state.GetLocal(inst.args[1]);
+          const size_t dir = fh.CalcDir();
+          const size_t dur = 2 + state.GetLocal(inst.args[0]);
 
           man.Priority(fh.Cell().GetNeigh(dir)).PauseRepr(
             Cardi::Opp[dir],
@@ -409,7 +409,7 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       ) : std::function<void(hardware_t &, const inst_t &)>(
         [](hardware_t & hw, const inst_t & inst){ ; }
       ),
-      2,
+      1,
       "Pause reproduction in a particular direction for a certain reproduction level for a certain duration."
     );
   }
@@ -422,8 +422,8 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       Manager &man = fh.Cell().Man();
 
       const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      const size_t dur = 2 + state.GetLocal(inst.args[1]);
+      const size_t dir = fh.CalcDir();
+      const size_t dur = 2 + state.GetLocal(inst.args[0]);
 
       for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
         man.Priority(fh.Cell().GetNeigh(dir)).PauseRepr(
@@ -434,7 +434,7 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       }
 
     },
-    2,
+    1,
     "Pause reproduction in a particular direction for all reproduction levels for a certain duration."
   );
 
@@ -442,11 +442,10 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
     "ActivateInbox",
     [](hardware_t &hw, const inst_t &inst){
       FrameHardware &fh = *hw.GetTrait();
-      const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const size_t dir = fh.CalcDir();
       fh.Cell().GetFrameHardware(dir).SetInboxActivity(true);
     },
-    1,
+    0,
     "Allow incoming messages from a neighbor."
   );
 
@@ -454,11 +453,10 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
     "DeactivateInbox",
     [](hardware_t &hw, const inst_t &inst){
       FrameHardware &fh = *hw.GetTrait();
-      const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const size_t dir = fh.CalcDir();
       fh.Cell().GetFrameHardware(dir).SetInboxActivity(false);
     },
-    1,
+    0,
     "Block incoming messages from a neighbor."
   );
 
@@ -475,9 +473,9 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       Manager &man = fh.Cell().Man();
 
       const size_t pos = fh.Cell().GetPos();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      const double arg_1 = state.GetLocal(inst.args[1]);
-      const double arg_2 = state.GetLocal(inst.args[2]);
+      const size_t dir = fh.CalcDir();
+      const double arg_1 = state.GetLocal(inst.args[0]);
+      const double arg_2 = state.GetLocal(inst.args[1]);
 
       man.Stockpile(pos).AddSharingDoer([&fh, dir, arg_1, arg_2](){
 
@@ -503,7 +501,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       });
 
     },
-    3,
+    2,
     "Send a fraction of available stockpile resource to a neighbor."
   );
 
@@ -516,9 +514,9 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       Manager &man = fh.Cell().Man();
 
       const size_t pos = fh.Cell().GetPos();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      const double arg_1 = state.GetLocal(inst.args[1]);
-      const double arg_2 = state.GetLocal(inst.args[2]);
+      const size_t dir = fh.CalcDir();
+      const double arg_1 = state.GetLocal(inst.args[0]);
+      const double arg_2 = state.GetLocal(inst.args[1]);
 
       man.Stockpile(pos).AddSharingDoer([&fh, dir, arg_1, arg_2](){
 
@@ -544,7 +542,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       });
 
     },
-    3,
+    2,
     "Send a fraction of available stockpile resource to a neighbor."
   );
 
@@ -553,15 +551,14 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
     [](hardware_t & hw, const inst_t & inst){
 
       FrameHardware &fh = *hw.GetTrait();
-      const state_t & state = hw.GetCurState();
 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const size_t dir = fh.CalcDir();
 
       man.Stockpile(pos).SetAcceptSharing(dir, 0);
     },
-    1,
+    0,
     "Mark self to accept resource contributions from neighbors."
   );
 
@@ -574,8 +571,8 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      const size_t dur = 2 + state.GetLocal(inst.args[1]);
+      const size_t dir = fh.CalcDir();
+      const size_t dur = 2 + state.GetLocal(inst.args[0]);
 
       //TODO this makes outcome dependent on execution order of cells
       man.Stockpile(pos).SetAcceptSharing(
@@ -583,7 +580,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
         dur
       );
     },
-    2,
+    1,
     "Mark self to not accept resource contributions from neighbors."
   );
 
@@ -629,9 +626,9 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
         const state_t & state = hw.GetCurState();
         TRL(
           hw,
-          state.GetLocal(inst.args[0]),
+          0,
           replev,
-          !state.GetLocal(inst.args[1]),
+          !state.GetLocal(inst.args[0]),
           cfg
         );
       },
@@ -700,14 +697,14 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
     [](hardware_t &hw, const inst_t &inst){
       FrameHardware &fh = *hw.GetTrait();
       const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const size_t dir = fh.CalcDir();
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
-      const size_t dur = 2 + state.GetLocal(inst.args[1]);
+      const size_t dur = 2 + state.GetLocal(inst.args[0]);
 
       man.Heir(pos).SetHeir(dir, dur);
     },
-    2,
+    1,
     "Designate a neighbor to share in recoverable resource if the cell dies."
   );
 
@@ -716,16 +713,16 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
     [](hardware_t &hw, const inst_t &inst){
       FrameHardware &fh = *hw.GetTrait();
       const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const size_t dir = fh.CalcDir();
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
       const size_t dur = (
-        std::max(0.0, state.GetLocal(inst.args[1]))
+        std::max(0.0, state.GetLocal(inst.args[0]))
       );
 
       man.Heir(pos).SetHeir(dir, dur);
     },
-    2,
+    1,
     "Prevent neighbor from sharing in recoverable resource if the cell dies."
   );
 
