@@ -20,7 +20,7 @@ private:
   emp::vector<size_t> gen_counter;
 
   emp::vector<double> cell_age_boosters;
-  emp::vector<bool> cell_age_boosters_fresh;
+  emp::vector<size_t> cell_age_boosters_fresh;
 
   Config::chanid_t drawChannelID() {
     return local_rng.GetUInt64();
@@ -41,7 +41,7 @@ public:
   , cfg(cfg_)
   , gen_counter(cfg_.NLEV())
   , cell_age_boosters(cfg.NLEV(), 0.0)
-  , cell_age_boosters_fresh(cfg.NLEV(), false)
+  , cell_age_boosters_fresh(cfg.NLEV(), 0)
   , age_getter(age_getter_)
   {
     for(size_t i = 0; i < cfg.NLEV(); ++i) {
@@ -68,7 +68,7 @@ public:
     std::fill(
       std::begin(cell_age_boosters_fresh),
       std::end(cell_age_boosters_fresh),
-      false
+      0
     );
   }
 
@@ -77,7 +77,8 @@ public:
   void SetCellAgeBooster(
     const size_t lev,
     const double bounded_amt, // must be positive
-    const double unbounded_amt // can be positive or negative
+    const double unbounded_amt, // can be positive or negative
+    const size_t duration
   ) {
     emp_assert(bounded_amt >= 0.0);
 
@@ -91,16 +92,18 @@ public:
 
     if (!std::isnormal(cell_age_boosters[lev])) cell_age_boosters[lev] = 0.0;
 
-    cell_age_boosters_fresh[lev] = true;
+    cell_age_boosters_fresh[lev] = duration;
 
   }
 
   void DecayCellAgeBoosters() {
     for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      if (cell_age_boosters_fresh[lev]) {
+        --cell_age_boosters_fresh[lev];
+      }
       if (!cell_age_boosters_fresh[lev]) {
         cell_age_boosters[lev] = 0.0;
       }
-      cell_age_boosters_fresh[lev] = false;
     }
   }
 

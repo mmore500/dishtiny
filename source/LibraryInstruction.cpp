@@ -316,15 +316,16 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       const state_t & state = hw.GetCurState();
       const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const size_t dur = 2 + state.GetLocal(inst.args[1]);
       const double amt = std::max(
-        cfg.REP_THRESH() + state.GetLocal(inst.args[1]),
+        cfg.REP_THRESH() + state.GetLocal(inst.args[2]),
         0.0
       );
 
-      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(amt);
+      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(amt, dur);
 
     },
-    2,
+    3,
     "Set aside an amount of stockpile resource that is not eligible for sharing."
   );
 
@@ -335,12 +336,13 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       const state_t & state = hw.GetCurState();
       const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      const double amt = std::max(state.GetLocal(inst.args[1]), 0.0);
+      const size_t dur = 2 + state.GetLocal(inst.args[1]);
+      const double amt = std::max(state.GetLocal(inst.args[2]), 0.0);
 
-      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(amt);
+      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(amt, dur);
 
     },
-    2,
+    3,
     "Set aside an amount of stockpile resource that is not eligible for sharing."
   );
 
@@ -351,15 +353,16 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       const state_t & state = hw.GetCurState();
       const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const size_t dur = 2 + state.GetLocal(inst.args[1]);
       const double amt = std::max(
-        cfg.REP_THRESH() + state.GetLocal(inst.args[1]),
+        cfg.REP_THRESH() + state.GetLocal(inst.args[2]),
         0.0
       );
 
-      fh.Cell().GetFrameHardware(dir).SetReproductionReserve(amt);
+      fh.Cell().GetFrameHardware(dir).SetReproductionReserve(amt, dur);
 
     },
-    2,
+    3,
     "Set aside an amount of stockpile resource that is not eligible for using to reproduce."
   );
 
@@ -370,12 +373,13 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       const state_t & state = hw.GetCurState();
       const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      const double amt = std::max(0.0, state.GetLocal(inst.args[1]));
+      const size_t dur = 2 + state.GetLocal(inst.args[1]);
+      const double amt = std::max(0.0, state.GetLocal(inst.args[2]));
 
-      fh.Cell().GetFrameHardware(dir).SetReproductionReserve(amt);
+      fh.Cell().GetFrameHardware(dir).SetReproductionReserve(amt, dur);
 
     },
-    2,
+    3,
     "Set aside an amount of stockpile resource that is not eligible for using to reproduce."
   );
 
@@ -645,13 +649,14 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
           fh.Cell().Man().Channel(fh.Cell().GetPos()).SetCellAgeBooster(
             lev,
             std::abs(state.GetLocal(inst.args[0])),
-            state.GetLocal(inst.args[1])
+            state.GetLocal(inst.args[1]),
+            2 + state.GetLocal(inst.args[2])
           );
         }
       ) : std::function<void(hardware_t &, const inst_t &)>(
         [](hardware_t & hw, const inst_t & inst){ ; }
       ),
-      2,
+      3,
       "Increase cell age at a particular reproduction level."
     );
   }
@@ -696,9 +701,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
-      const size_t dur = (
-        std::max(0.0, 2 + state.GetLocal(inst.args[1]))
-      );
+      const size_t dur = 2 + state.GetLocal(inst.args[1]);
 
       man.Heir(pos).SetHeir(dir, dur);
     },

@@ -25,10 +25,10 @@ private:
   bool inbox_active;
 
   double stockpile_reserve;
-  bool stockpile_reserve_fresh;
+  size_t stockpile_reserve_fresh;
 
   double reproduction_reserve;
-  bool reproduction_reserve_fresh;
+  size_t reproduction_reserve_fresh;
 
   Config::hardware_t cpu;
 
@@ -60,13 +60,13 @@ public:
 
   double CheckStockpileReserve() const;
 
-  void SetStockpileReserve(const double amt);
+  void SetStockpileReserve(const double amt, const size_t dur);
 
   void TryClearStockpileReserve();
 
   double CheckReproductionReserve() const;
 
-  void SetReproductionReserve(const double amt);
+  void SetReproductionReserve(const double amt, const size_t dur);
 
   void TryClearReproductionReserve();
 

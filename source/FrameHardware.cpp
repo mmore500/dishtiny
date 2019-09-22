@@ -23,9 +23,9 @@ FrameHardware::FrameHardware(
     , facing(facing_)
     , inbox_active(true)
     , stockpile_reserve(0.0)
-    , stockpile_reserve_fresh(false)
+    , stockpile_reserve_fresh(0)
     , reproduction_reserve(0.0)
-    , reproduction_reserve_fresh(false)
+    , reproduction_reserve_fresh(0)
     , cpu(inst_lib, event_lib, &local_rng_)
     , membrane(local_rng_)
   {
@@ -38,10 +38,10 @@ void FrameHardware::Reset() {
   inbox_active = true;
 
   stockpile_reserve = 0.0;
-  stockpile_reserve_fresh = false;
+  stockpile_reserve_fresh = 0;
 
   reproduction_reserve = 0.0;
-  reproduction_reserve_fresh = false;
+  reproduction_reserve_fresh = 0;
 
   cpu.ResetHardware();
   cpu.ResetProgram();
@@ -54,28 +54,28 @@ double FrameHardware::CheckStockpileReserve() const {
   return stockpile_reserve;
 }
 
-void FrameHardware::SetStockpileReserve(const double amt) {
+void FrameHardware::SetStockpileReserve(const double amt, const size_t dur) {
   stockpile_reserve = std::max(0.0,amt);
-  stockpile_reserve_fresh = true;
+  stockpile_reserve_fresh = dur;
 }
 
 void FrameHardware::TryClearStockpileReserve() {
+  if (stockpile_reserve_fresh) --stockpile_reserve_fresh;
   if (!stockpile_reserve_fresh) stockpile_reserve = 0.0;
-  stockpile_reserve_fresh = false;
 }
 
 double FrameHardware::CheckReproductionReserve() const {
   return reproduction_reserve;
 }
 
-void FrameHardware::SetReproductionReserve(const double amt) {
+void FrameHardware::SetReproductionReserve(const double amt, const size_t dur) {
   reproduction_reserve = std::max(0.0,amt);
-  reproduction_reserve_fresh = true;
+  reproduction_reserve_fresh = dur;
 }
 
 void FrameHardware::TryClearReproductionReserve() {
+  if (reproduction_reserve_fresh) --reproduction_reserve_fresh;
   if (!reproduction_reserve_fresh) reproduction_reserve = 0.0;
-  reproduction_reserve_fresh = false;
 }
 
 void FrameHardware::DispatchEnvTriggers(){
