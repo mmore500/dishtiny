@@ -185,6 +185,10 @@ public:
     return pending_birth;
   }
 
+  void ClearPendingGenome() {
+    pending_birth.reset();
+  }
+
   int ViewRepState(const size_t incoming_dir) {
     int res = -1;
     // make sure each reproduction attempt is only viewed once

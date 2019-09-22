@@ -188,6 +188,8 @@ void DishWorld::Step() {
         // man->Channel(opt_sirepack->par_pos).LogReprGen(opt_sirepack->replev);
       }
 
+      man->Priority(i).ClearPendingGenome();
+
     } else if (IsOccupied(i)) {
       // this block doesn't get run if a cell was just born here
       if (man->Stockpile(i).IsBankrupt()
