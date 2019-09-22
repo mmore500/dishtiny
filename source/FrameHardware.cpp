@@ -19,6 +19,7 @@ FrameHardware::FrameHardware(
     const Config::inst_lib_t &inst_lib,
     const Config::event_lib_t &event_lib
   ) : cell(cell_)
+    , local_rng(local_rng_)
     , cfg(cfg_)
     , facing(facing_)
     , inbox_active(true)
@@ -314,6 +315,21 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
   }
 
   if (Cell().Man().Family(Cell().GetPos()).GetCellAge(update) == 0) {
+    cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+  } else {
+  // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+  }
+
+  ++i;
+
+  // stochastic trigger
+  if(i >= pro_trigger_tags.size()) {
+    pro_trigger_tags.emplace_back(rng);
+    auto copy = pro_trigger_tags[i];
+    anti_trigger_tags.emplace_back(copy.Toggle());
+  }
+
+  if (local_rng.GetDouble() < cfg.STOCHASTIC_TRIGGER_FREQ()) {
     cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
   } else {
   // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);

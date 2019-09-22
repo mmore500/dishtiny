@@ -18,6 +18,8 @@ private:
 
   FrameCell &cell;
 
+  emp::Random &local_rng;
+
   const Config &cfg;
 
   const size_t facing;
