@@ -16,6 +16,7 @@ private:
   double resource;
 
   emp::vector<double> contrib_resource;
+  double refund_resource;
   emp::vector<size_t> harvest_withdrawals;
 
   emp::vector<size_t> decline_sharing;
@@ -30,6 +31,7 @@ public:
     const Config &cfg_
   ) : cfg(cfg_)
   , contrib_resource(Cardi::Dir::NumDirs)
+  , refund_resource(0.0)
   , harvest_withdrawals(cfg_.NLEV())
   , decline_sharing(Cardi::Dir::NumDirs)
   , expchecker(expchecker_)
@@ -82,7 +84,7 @@ public:
   }
 
   std::function<void()> MakeRepRefunder() {
-    return [&](){ resource += cfg.REP_THRESH(); };
+    return [&](){ refund_resource += cfg.REP_THRESH(); };
   }
 
   void ExternalContribute(const double amt, const size_t incoming_dir) {
@@ -101,6 +103,9 @@ public:
   }
 
   void ResolveExternalContributions() {
+    // shared resource was sitting around for an update, so it decayed
+    resource += refund_resource * cfg.RESOURCE_DECAY();
+    refund_resource = 0.0;
     for(size_t dir = 0; dir < contrib_resource.size(); ++dir) {
       // shared resource was sitting around for an update, so it decayed
       resource += contrib_resource[dir] * cfg.RESOURCE_DECAY();
@@ -149,6 +154,7 @@ public:
     std::fill(std::begin(decline_sharing), std::end(decline_sharing), 0);
     resource = 0.0;
     std::fill(std::begin(contrib_resource), std::end(contrib_resource), 0.0);
+    refund_resource = 0.0;
     std::fill(
       std::begin(harvest_withdrawals),
       std::end(harvest_withdrawals),
