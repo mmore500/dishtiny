@@ -125,8 +125,7 @@ public:
     decline_sharing[outgoing_dir] = set;
   }
 
-  void ResolveNextAcceptSharing(const size_t update) {
-    if (update % cfg.ENV_TRIG_FREQ()) return;
+  void ResolveNextAcceptSharing() {
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       if (decline_sharing[dir]) --decline_sharing[dir];
     }

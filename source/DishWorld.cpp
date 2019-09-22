@@ -215,6 +215,7 @@ void DishWorld::Step() {
       man->Channel(i).DecayCellAgeBoosters();
       man->Priority(i).ResolveUpdate();
       man->Apoptosis(i).Reset();
+      man->Stockpile(i).ResolveNextAcceptSharing();
     }
 
     for(size_t l = 0; l < cfg.NLEV(); ++l) {
@@ -222,7 +223,6 @@ void DishWorld::Step() {
     }
 
     if (IsOccupied(i)) {
-      man->Stockpile(i).ResolveNextAcceptSharing(GetUpdate());
       man->Stockpile(i).ResolveExternalContributions();
       man->Stockpile(i).ApplyBaseInflow();
       man->Stockpile(i).ApplyDecay();
