@@ -21,7 +21,7 @@ FrameHardware::FrameHardware(
   ) : cell(cell_)
     , cfg(cfg_)
     , facing(facing_)
-    , inbox_active(false)
+    , inbox_active(true)
     , stockpile_reserve(0.0)
     , stockpile_reserve_fresh(false)
     , reproduction_reserve(0.0)
@@ -35,7 +35,7 @@ FrameHardware::FrameHardware(
 FrameCell& FrameHardware::Cell() { return cell; }
 
 void FrameHardware::Reset() {
-  inbox_active = false;
+  inbox_active = true;
 
   stockpile_reserve = 0.0;
   stockpile_reserve_fresh = false;
