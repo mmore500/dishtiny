@@ -253,6 +253,32 @@ public:
       cfg_
     )});
 
+    artists.push_back({emp::NewPtr<WebArtist<double>>(
+      "Resource Flow",
+      "Resource Flow",
+      grid_viewer,
+      [this](size_t i){
+        size_t count = 0;
+        for (size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
+          if (w.man->Stockpile(i).QueryExternalContribute(d)) ++count;
+        }
+        return w.IsOccupied(i)
+          ? std::make_optional(count)
+          : std::nullopt;
+      },
+      [](std::optional<size_t> state) -> std::string {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else return "yellow";
+        } else return "black";
+      },
+      cfg_
+    )});
+
     artists.push_back({emp::NewPtr<WebArtist<size_t>>(
       "Apoptosis",
       "Apoptosis",
