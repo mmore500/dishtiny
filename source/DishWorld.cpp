@@ -224,6 +224,7 @@ void DishWorld::Step() {
       man->Stockpile(i).ResolveNextAcceptSharing(GetUpdate());
       man->Stockpile(i).ResolveExternalContributions();
       man->Stockpile(i).ApplyBaseInflow();
+      man->Stockpile(i).ApplyDecay();
       for(size_t l = 0; l < cfg.NLEV(); ++l) {
         man->Wave(i,l).HarvestResource();
       }

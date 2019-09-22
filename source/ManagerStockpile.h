@@ -102,7 +102,8 @@ public:
 
   void ResolveExternalContributions() {
     for(size_t dir = 0; dir < contrib_resource.size(); ++dir) {
-      resource += contrib_resource[dir];
+      // shared resource was sitting around for an update, so it decayed
+      resource += contrib_resource[dir] * cfg.RESOURCE_DECAY();
       contrib_resource[dir] = 0.0;
     }
   }
@@ -163,6 +164,8 @@ public:
       );
     }
   }
+
+  void ApplyDecay(){ if (resource > 0) resource *= cfg.RESOURCE_DECAY(); }
 
   size_t QueryHarvestWithdrawals(size_t lev) const {
     return harvest_withdrawals[lev];
