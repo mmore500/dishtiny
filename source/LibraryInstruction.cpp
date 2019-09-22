@@ -279,11 +279,13 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
     [](hardware_t & hw, const inst_t & inst){
       FrameHardware &fh = *hw.GetTrait();
       const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const size_t dir = fh.CalcDir(
+        inst.args[0] + state.GetLocal(inst.args[1])
+      );
       fh.SetMsgDir(dir);
       hw.TriggerEvent("SendMsgInternal", inst.affinity, state.output_mem);
     },
-    1,
+    2,
     "Send a single message to a particular other CPU within the cell.",
     emp::ScopeType::BASIC,
     0,
