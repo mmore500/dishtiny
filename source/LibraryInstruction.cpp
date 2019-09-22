@@ -333,9 +333,7 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
           const state_t & state = hw.GetCurState();
           const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-          const size_t dur = (
-            2 + state.GetLocal(inst.args[1])
-          );
+          const size_t dur = 2 + state.GetLocal(inst.args[1]);
 
           man.Priority(fh.Cell().GetNeigh(dir)).PauseRepr(
             Cardi::Opp[dir],
@@ -361,9 +359,7 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       const state_t & state = hw.GetCurState();
       const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-      const size_t dur = (
-        2 + state.GetLocal(inst.args[1])
-      );
+      const size_t dur = 2 + state.GetLocal(inst.args[1]);
 
       for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
         man.Priority(fh.Cell().GetNeigh(dir)).PauseRepr(
@@ -515,11 +511,12 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
       const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const size_t dur = 2 + state.GetLocal(inst.args[1]);
 
       //TODO this makes outcome dependent on execution order of cells
       man.Stockpile(pos).SetAcceptSharing(
         dir,
-        1 + state.GetLocal(inst.args[1])
+        dur
       );
     },
     2,
