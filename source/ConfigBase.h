@@ -16,6 +16,7 @@ EMP_BUILD_CONFIG(
   VALUE(GRID_W, size_t, 60, "How many tiles wide should the grid be?"),
   VALUE(RESOURCE_DECAY, double, 0.999, "How much resource should remain each update?"),
   VALUE(REP_THRESH, double, 4.0, "How much should replication cost?"),
+  VALUE(REP_LEAD, double, 4.0, "How more more resource than your target do you need to trample them?"),
   VALUE(START_RESOURCE, double, 3.0, "How much resource should a cell start with?"),
   VALUE(KILL_THRESH, double, -5.0, "What is the minimum resource level required to stay alive?"),
   VALUE(APOP_RECOVERY_FRAC, double, 0.8, "What fraction of REP_THRESH is recovered to heirs after apoptosis?"),

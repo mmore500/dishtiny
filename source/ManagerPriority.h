@@ -168,7 +168,7 @@ public:
       emp_assert(which != std::cend(requests));
 
       // was parent rich enough?
-      if ((*which)->par_wealth > cur_stockpile) {
+      if ((*which)->par_wealth - cfg.REP_LEAD() > cur_stockpile) {
         // set up the pending birth!
         pending_birth = *which;
         // make a copy of the genome to hand off to the World
