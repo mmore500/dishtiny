@@ -99,10 +99,12 @@ void FrameHardware::DispatchEnvTriggers(){
     auto copy = pro_trigger_tags[i];
     anti_trigger_tags.emplace_back(copy.Toggle());
   }
-  if (IsCellChild()) {
-    cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
-  } else {
-    // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+  if (cfg.CHANNELS_VISIBLE()) {
+    if (IsCellChild()) {
+      cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+    } else {
+      // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+    }
   }
 
   ++i;
@@ -114,10 +116,12 @@ void FrameHardware::DispatchEnvTriggers(){
     auto copy = pro_trigger_tags[i];
     anti_trigger_tags.emplace_back(copy.Toggle());
   }
-  if (IsCellParent()) {
-    cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
-  } else {
-    // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+  if (cfg.CHANNELS_VISIBLE()) {
+    if (IsCellParent()) {
+      cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+    } else {
+      // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+    }
   }
 
   ++i;

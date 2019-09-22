@@ -839,34 +839,43 @@ void InitExternalSensors(
 
   il.AddInst(
     "QueryIsCellChild",
-    [](hardware_t & hw, const inst_t & inst){
+    cfg.CHANNELS_VISIBLE() ?
+    std::function<void(hardware_t &, const inst_t &)>(
+      [](hardware_t & hw, const inst_t & inst){
 
-      state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
+        state_t & state = hw.GetCurState();
+        FrameHardware &fh = *hw.GetTrait();
 
-      state.SetLocal(
-        inst.args[1],
-        fh.IsCellChild(state.GetLocal(inst.args[0]))
-      );
+        state.SetLocal(
+          inst.args[1],
+          fh.IsCellChild(state.GetLocal(inst.args[0]))
+        );
 
-    },
+      }
+    ) : std::function<void(hardware_t &, const inst_t &)>(
+      [](hardware_t & hw, const inst_t & inst){ ; }
+    ),
     2,
     "Is the neighbor cell my direct offspring?"
   );
 
   il.AddInst(
     "QueryIsCellParent",
-    [](hardware_t & hw, const inst_t & inst){
+    cfg.CHANNELS_VISIBLE() ?
+    std::function<void(hardware_t &, const inst_t &)>(
+      [](hardware_t & hw, const inst_t & inst){
 
-      state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
+        state_t & state = hw.GetCurState();
+        FrameHardware &fh = *hw.GetTrait();
 
-      state.SetLocal(
-        inst.args[1],
-        fh.IsCellParent(state.GetLocal(inst.args[0]))
-      );
-
-    },
+        state.SetLocal(
+          inst.args[1],
+          fh.IsCellParent(state.GetLocal(inst.args[0]))
+        );
+      }
+    ) : std::function<void(hardware_t &, const inst_t &)>(
+      [](hardware_t & hw, const inst_t & inst){ ; }
+    ),
     2,
     "Is the neighbor cell my direct parent?"
   );
