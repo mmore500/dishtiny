@@ -764,22 +764,23 @@ void InitExternalSensors(
     );
   }
 
-  il.AddInst(
-    "QueryIsOccupied",
-    [](hardware_t & hw, const inst_t & inst){
-
-      state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      state.SetLocal(
-        inst.args[1],
-        fh.IsOccupied(state.GetLocal(inst.args[0]))
-      );
-
-    },
-    2,
-    "Is the neighbor cell occupied (e.g., does it have a channel ID)?"
-  );
+  // currently irrelevant
+  // il.AddInst(
+  //   "QueryIsOccupied",
+  //   [](hardware_t & hw, const inst_t & inst){
+  //
+  //     state_t & state = hw.GetCurState();
+  //     FrameHardware &fh = *hw.GetTrait();
+  //
+  //     state.SetLocal(
+  //       inst.args[1],
+  //       fh.IsOccupied(state.GetLocal(inst.args[0]))
+  //     );
+  //
+  //   },
+  //   2,
+  //   "Is the neighbor cell occupied (e.g., does it have a channel ID)?"
+  // );
 
   il.AddInst(
     "QueryIsCellChild",
