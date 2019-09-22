@@ -92,8 +92,14 @@ void LibraryInstruction::InitDefault(inst_lib_t &il) {
   il.AddInst("SenseOwnRegulator", Config::hardware_t::Inst_SenseOwnRegulator, 1, "Senses the regulator of the currently executing function.");
 
   il.AddInst(
-    emp::to_string("Terminal", 5),
+    emp::to_string("Terminal", 1073741824),
     Config::hardware_t::Inst_Terminal<std::ratio<5>, std::ratio<-5>>,
+    1,
+    "Writes a genetically-determined value into a register."
+  );
+  il.AddInst(
+    emp::to_string("Terminal", 8),
+    Config::hardware_t::Inst_Terminal<std::ratio<8>, std::ratio<-8>>,
     1,
     "Writes a genetically-determined value into a register."
   );
