@@ -249,7 +249,7 @@ void FrameHardware::DispatchEnvTriggers(){
     anti_trigger_tags.emplace_back(copy.Toggle());
   }
   // if (cfg.CHANNELS_VISIBLE()) {
-    if (IsWealthierThan() && IsLive()) {
+    if (IsPoorerThan() && IsLive()) {
       cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
     } else if (IsLive()) {
       cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
@@ -462,15 +462,16 @@ bool FrameHardware::IsPropaguleParent(const int relative_dir/*=0*/) {
 
 }
 
-bool FrameHardware::IsWealthierThan(const int relative_dir/*=0*/) {
+double FrameHardware::IsPoorerThan(const int relative_dir/*=0*/) {
 
   const size_t dir = CalcDir(relative_dir);
   const size_t neigh = Cell().GetNeigh(dir);
   Manager &man = Cell().Man();
   const size_t pos = Cell().GetPos();
 
-  return (
-    man.Stockpile(pos).QueryResource() >= man.Stockpile(neigh).QueryResource()
+  return std::max(
+    man.Stockpile(neigh).QueryResource() - man.Stockpile(pos).QueryResource(),
+    0.0
   );
 
 }

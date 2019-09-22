@@ -940,7 +940,7 @@ void InitExternalSensors(
   );
 
   il.AddInst(
-    "QueryIsWealthierThan",
+    "QueryIsPoorerThan",
     cfg.CHANNELS_VISIBLE() ?
     std::function<void(hardware_t &, const inst_t &)>(
       [](hardware_t & hw, const inst_t & inst){
@@ -950,7 +950,7 @@ void InitExternalSensors(
 
         state.SetLocal(
           inst.args[1],
-          fh.IsWealthierThan(state.GetLocal(inst.args[0]))
+          fh.IsPoorerThan(state.GetLocal(inst.args[0]))
         );
 
       }
@@ -958,7 +958,7 @@ void InitExternalSensors(
      [](hardware_t & hw, const inst_t & inst){}
     ),
     2,
-    "Is there more resource in my stockpile than in my neighbor's?"
+    "How much more resource is in my neighbor's stockpile than in mine?"
   );
 
   il.AddInst(

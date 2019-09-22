@@ -112,7 +112,7 @@ public:
 
   bool IsPropaguleParent(const int relative_dir=0);
 
-  bool IsWealthierThan(const int relative_dir=0);
+  double IsPoorerThan(const int relative_dir=0);
 
   bool IsOlderThan(const int relative_dir=0);
 
