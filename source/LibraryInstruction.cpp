@@ -958,44 +958,34 @@ void InitExternalSensors(
 
   il.AddInst(
     "QueryIsPoorerThan",
-    cfg.CHANNELS_VISIBLE() ?
-    std::function<void(hardware_t &, const inst_t &)>(
-      [](hardware_t & hw, const inst_t & inst){
-        state_t & state = hw.GetCurState();
+    [](hardware_t & hw, const inst_t & inst){
+      state_t & state = hw.GetCurState();
 
-        FrameHardware &fh = *hw.GetTrait();
+      FrameHardware &fh = *hw.GetTrait();
 
-        state.SetLocal(
-          inst.args[1],
-          fh.IsPoorerThan(state.GetLocal(inst.args[0]))
-        );
+      state.SetLocal(
+        inst.args[1],
+        fh.IsPoorerThan(state.GetLocal(inst.args[0]))
+      );
 
-      }
-    ) : std::function<void(hardware_t &, const inst_t &)>(
-     [](hardware_t & hw, const inst_t & inst){}
-    ),
+    },
     2,
     "How much more resource is in my neighbor's stockpile than in mine?"
   );
 
   il.AddInst(
     "QueryIsOlderThan",
-    cfg.CHANNELS_VISIBLE() ?
-    std::function<void(hardware_t &, const inst_t &)>(
-      [](hardware_t & hw, const inst_t & inst){
-        state_t & state = hw.GetCurState();
+    [](hardware_t & hw, const inst_t & inst){
+      state_t & state = hw.GetCurState();
 
-        FrameHardware &fh = *hw.GetTrait();
+      FrameHardware &fh = *hw.GetTrait();
 
-        state.SetLocal(
-          inst.args[1],
-          fh.IsOlderThan(state.GetLocal(inst.args[0]))
-        );
+      state.SetLocal(
+        inst.args[1],
+        fh.IsOlderThan(state.GetLocal(inst.args[0]))
+      );
 
-      }
-    ) : std::function<void(hardware_t &, const inst_t &)>(
-     [](hardware_t & hw, const inst_t & inst){}
-    ),
+    },
     2,
     "Is my cell age greater than my neighbor's?"
   );
