@@ -78,12 +78,12 @@ void FrameHardware::TryClearReproductionReserve() {
   if (!reproduction_reserve_fresh) reproduction_reserve = 0.0;
 }
 
-void FrameHardware::DispatchEnvTriggers(){
+void FrameHardware::DispatchEnvTriggers(const size_t update){
 
-  // need at least 8 cpus available
-  emp_assert(cfg.HW_MAX_CORES() > 8);
+  // need at least 12 cpus available
+  emp_assert(cfg.HW_MAX_CORES() > 12);
   // ... so make sure at least 8 are unoccupied
-  cpu.SetMaxCores(cfg.HW_MAX_CORES() - 8);
+  cpu.SetMaxCores(cfg.HW_MAX_CORES() - 12);
   cpu.SetMaxCores(cfg.HW_MAX_CORES());
 
 
@@ -304,11 +304,26 @@ void FrameHardware::DispatchEnvTriggers(){
   }
   cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
 
+  ++i;
+
+  // was just born trigger
+  if(i >= pro_trigger_tags.size()) {
+    pro_trigger_tags.emplace_back(rng);
+    auto copy = pro_trigger_tags[i];
+    anti_trigger_tags.emplace_back(copy.Toggle());
+  }
+
+  if (Cell().Man().Family(Cell().GetPos()).GetCellAge(update) == 0) {
+    cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+  } else {
+  // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+  }
+
 }
 
 void FrameHardware::SetupCompute(const size_t update) {
   if (update % cfg.ENV_TRIG_FREQ() == 0) {
-    DispatchEnvTriggers();
+    DispatchEnvTriggers(update);
     TryClearStockpileReserve();
     TryClearReproductionReserve();
 

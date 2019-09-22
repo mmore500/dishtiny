@@ -70,7 +70,7 @@ public:
 
   void TryClearReproductionReserve();
 
-  void DispatchEnvTriggers();
+  void DispatchEnvTriggers(const size_t update);
 
   void SetupCompute(const size_t update);
 
