@@ -20,7 +20,10 @@ void LibraryInstruction::TRL(
   Manager &man = fh.Cell().Man();
   const size_t pos = fh.Cell().GetPos();
 
-  if( cfg.REP_THRESH() > man.Stockpile(pos).QueryResource() ) {
+  if (
+    cfg.REP_THRESH()
+    > man.Stockpile(pos).QueryResource() - fh.CheckReproductionReserve()
+  ) {
     return;
   } else {
 
@@ -312,13 +315,67 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       const state_t & state = hw.GetCurState();
       const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
-
-      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(
-        std::max(cfg.REP_THRESH()*2+state.GetLocal(inst.args[1]),0.0)
+      const double amt = std::max(
+        cfg.REP_THRESH() + state.GetLocal(inst.args[1]),
+        0.0
       );
+
+      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(amt);
+
     },
     2,
     "Set aside an amount of stockpile resource that is not eligible for sharing."
+  );
+
+  il.AddInst(
+    "ClearStockpileReserve",
+    [](hardware_t & hw, const inst_t & inst){
+      FrameHardware &fh = *hw.GetTrait();
+
+      const state_t & state = hw.GetCurState();
+      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const double amt = std::max(state.GetLocal(inst.args[1]), 0.0);
+
+      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(amt);
+
+    },
+    2,
+    "Set aside an amount of stockpile resource that is not eligible for sharing."
+  );
+
+  il.AddInst(
+    "SetReproductionReserve",
+    [&cfg](hardware_t & hw, const inst_t & inst){
+      FrameHardware &fh = *hw.GetTrait();
+
+      const state_t & state = hw.GetCurState();
+      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const double amt = std::max(
+        cfg.REP_THRESH() + state.GetLocal(inst.args[1]),
+        0.0
+      );
+
+      fh.Cell().GetFrameHardware(dir).SetReproductionReserve(amt);
+
+    },
+    2,
+    "Set aside an amount of stockpile resource that is not eligible for using to reproduce."
+  );
+
+  il.AddInst(
+    "ClearReproductionReserve",
+    [](hardware_t & hw, const inst_t & inst){
+      FrameHardware &fh = *hw.GetTrait();
+
+      const state_t & state = hw.GetCurState();
+      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[0]));
+      const double amt = std::max(0.0, state.GetLocal(inst.args[1]));
+
+      fh.Cell().GetFrameHardware(dir).SetReproductionReserve(amt);
+
+    },
+    2,
+    "Set aside an amount of stockpile resource that is not eligible for using to reproduce."
   );
 
   for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {

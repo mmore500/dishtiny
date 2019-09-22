@@ -22,7 +22,10 @@ FrameHardware::FrameHardware(
     , cfg(cfg_)
     , facing(facing_)
     , inbox_active(false)
-    , stockpile_reserve(0)
+    , stockpile_reserve(0.0)
+    , stockpile_reserve_fresh(false)
+    , reproduction_reserve(0.0)
+    , reproduction_reserve_fresh(false)
     , cpu(inst_lib, event_lib, &local_rng_)
     , membrane(local_rng_)
   {
@@ -33,7 +36,12 @@ FrameCell& FrameHardware::Cell() { return cell; }
 
 void FrameHardware::Reset() {
   inbox_active = false;
-  stockpile_reserve = 0;
+
+  stockpile_reserve = 0.0;
+  stockpile_reserve_fresh = false;
+
+  reproduction_reserve = 0.0;
+  reproduction_reserve_fresh = false;
 
   cpu.ResetHardware();
   cpu.ResetProgram();
@@ -48,6 +56,26 @@ double FrameHardware::CheckStockpileReserve() const {
 
 void FrameHardware::SetStockpileReserve(const double amt) {
   stockpile_reserve = std::max(0.0,amt);
+  stockpile_reserve_fresh = true;
+}
+
+void FrameHardware::TryClearStockpileReserve() {
+  if (!stockpile_reserve_fresh) stockpile_reserve = 0.0;
+  stockpile_reserve_fresh = false;
+}
+
+double FrameHardware::CheckReproductionReserve() const {
+  return reproduction_reserve;
+}
+
+void FrameHardware::SetReproductionReserve(const double amt) {
+  reproduction_reserve = std::max(0.0,amt);
+  reproduction_reserve_fresh = true;
+}
+
+void FrameHardware::TryClearReproductionReserve() {
+  if (!reproduction_reserve_fresh) reproduction_reserve = 0.0;
+  reproduction_reserve_fresh = false;
 }
 
 void FrameHardware::DispatchEnvTriggers(){
@@ -277,6 +305,8 @@ void FrameHardware::DispatchEnvTriggers(){
 void FrameHardware::SetupCompute(const size_t update) {
   if (update % cfg.ENV_TRIG_FREQ() == 0) {
     DispatchEnvTriggers();
+    TryClearStockpileReserve();
+    TryClearReproductionReserve();
 
     emp::vector<Config::matchbin_t::uid_t> marked;
     for (const auto & uid : membrane.ViewUIDs()) {

@@ -25,6 +25,10 @@ private:
   bool inbox_active;
 
   double stockpile_reserve;
+  bool stockpile_reserve_fresh;
+
+  double reproduction_reserve;
+  bool reproduction_reserve_fresh;
 
   Config::hardware_t cpu;
 
