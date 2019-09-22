@@ -27,9 +27,9 @@ EMP_BUILD_CONFIG(
   VALUE(EXP_GRACE_PERIOD, double, 3.0, "How many channel generations should resource collection be allowed after a cell's expires channel generation counter?"),
 
   GROUP(PROGRAM_GROUP, "SignalGP program Settings"),
-  VALUE(PROGRAM_MAX_FUN_CNT, size_t, 48, "Used for generating SGP programs. At most, how many functions do we generate?"),
+  VALUE(PROGRAM_MAX_FUN_CNT, size_t, 24, "Used for generating SGP programs. At most, how many functions do we generate?"),
   VALUE(PROGRAM_MIN_FUN_CNT, size_t, 4, "Used for generating SGP programs. At least, how many functions do we generate?"),
-  VALUE(PROGRAM_MAX_FUN_LEN, size_t, 16, "Used for generating SGP programs. At most, for each function how many instructions do we generate?"),
+  VALUE(PROGRAM_MAX_FUN_LEN, size_t, 24, "Used for generating SGP programs. At most, for each function how many instructions do we generate?"),
   VALUE(PROGRAM_MIN_FUN_LEN, size_t, 1, "Used for generating SGP programs. At least, for each function how many instructions do we generate?"),
 
   GROUP(HARDWARE_GROUP, "SignalGP Hardware Settings"),
@@ -43,8 +43,8 @@ EMP_BUILD_CONFIG(
   VALUE(COMPUTE_FREQ, size_t, 8, "How often to step the CPUs?"),
 
   GROUP(MUTATION_GROUP, "SignalGP Mutation Settings"),
-  VALUE(MUTATION_RATE, double, 0.01, "What percentage of offspring should experience mutations?"),
-  VALUE(PROPAGULE_MUTATION_RATE, double, 0.0, "What percentage of propagule offspring should experience mutations?"),
+  VALUE(MUTATION_RATE, double, 1.0, "What percentage of offspring should experience mutations?"),
+  VALUE(PROPAGULE_MUTATION_RATE, double, 0.0, "What percentage of propagule offspring should experience additional mutations?"),
   VALUE(PROGRAM_MIN_ARG_VAL, int, 0, "Minimum argument value for instructions."),
   VALUE(PROGRAM_MAX_ARG_VAL, int, 4, "Maximum argument value for instructions."),
   VALUE(TAG_BIT_FLIP__PER_BIT, double, 0.005, "Per-bit mutation rate of tag bit flips."),
@@ -53,8 +53,8 @@ EMP_BUILD_CONFIG(
   VALUE(INST_INS__PER_INST, double, 0.005, "Per-instruction insertion mutation rate."),
   VALUE(INST_DEL__PER_INST, double, 0.005, "Per-instruction deletion mutation rate."),
   VALUE(SLIP__PER_FUNC, double, 0.05, "Per-function rate of slip mutations."),
-  VALUE(FUNC_DUP__PER_FUNC, double, 0.05, "Per-function rate of function duplication mutations."),
-  VALUE(FUNC_DEL__PER_FUNC, double, 0.05, "Per-function rate of function deletion mutationss."),
+  VALUE(FUNC_DUP__PER_FUNC, double, 0.01, "Per-function rate of function duplication mutations."),
+  VALUE(FUNC_DEL__PER_FUNC, double, 0.01, "Per-function rate of function deletion mutationss."),
 
   GROUP(LOGISTICS, "logistics"),
   VALUE(TREATMENT_DESCRIPTOR, std::string, "unspecified", "[NATIVE] Treatment identifying slug"),
