@@ -745,6 +745,25 @@ void InitExternalSensors(
     "Is the neighboring cell alive?"
   );
 
+  for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+    il.AddInst(
+      emp::to_string("QueryIsExpired", lev),
+      [lev](hardware_t & hw, const inst_t & inst){
+
+        state_t & state = hw.GetCurState();
+        FrameHardware &fh = *hw.GetTrait();
+
+        state.SetLocal(
+          inst.args[1],
+          fh.IsExpired(lev, state.GetLocal(inst.args[0]))
+        );
+
+      },
+      2,
+      "Is the neighboring cell expired?"
+    );
+  }
+
   il.AddInst(
     "QueryIsOccupied",
     [](hardware_t & hw, const inst_t & inst){
@@ -862,6 +881,50 @@ void InitExternalSensors(
     ),
     2,
     "Does my high-level channdl ID directly descend from the neighbor's high-level channel ID?"
+  );
+
+  il.AddInst(
+    "QueryIsWealthierThan",
+    cfg.CHANNELS_VISIBLE() ?
+    std::function<void(hardware_t &, const inst_t &)>(
+      [](hardware_t & hw, const inst_t & inst){
+        state_t & state = hw.GetCurState();
+
+        FrameHardware &fh = *hw.GetTrait();
+
+        state.SetLocal(
+          inst.args[1],
+          fh.IsWealthierThan(state.GetLocal(inst.args[0]))
+        );
+
+      }
+    ) : std::function<void(hardware_t &, const inst_t &)>(
+     [](hardware_t & hw, const inst_t & inst){}
+    ),
+    2,
+    "Is there more resource in my stockpile than in my neighbor's?"
+  );
+
+  il.AddInst(
+    "QueryIsOlderThan",
+    cfg.CHANNELS_VISIBLE() ?
+    std::function<void(hardware_t &, const inst_t &)>(
+      [](hardware_t & hw, const inst_t & inst){
+        state_t & state = hw.GetCurState();
+
+        FrameHardware &fh = *hw.GetTrait();
+
+        state.SetLocal(
+          inst.args[1],
+          fh.IsOlderThan(state.GetLocal(inst.args[0]))
+        );
+
+      }
+    ) : std::function<void(hardware_t &, const inst_t &)>(
+     [](hardware_t & hw, const inst_t & inst){}
+    ),
+    2,
+    "Is my cell age greater than my neighbor's?"
   );
 
   // get the raw channel of who is next door

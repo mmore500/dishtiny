@@ -58,6 +58,14 @@ public:
 
   void SetStockpileReserve(const double amt);
 
+  void TryClearStockpileReserve();
+
+  double CheckReproductionReserve() const;
+
+  void SetReproductionReserve(const double amt);
+
+  void TryClearReproductionReserve();
+
   void DispatchEnvTriggers();
 
   void SetupCompute(const size_t update);
@@ -99,6 +107,12 @@ public:
   bool IsPropaguleChild(const int relative_dir=0);
 
   bool IsPropaguleParent(const int relative_dir=0);
+
+  bool IsWealthierThan(const int relative_dir=0);
+
+  bool IsOlderThan(const int relative_dir=0);
+
+  size_t IsExpired(const size_t lev, const int relative_dir=0);
 
   const Config::hardware_t& GetHardware();
 

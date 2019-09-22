@@ -198,6 +198,72 @@ void FrameHardware::DispatchEnvTriggers(){
 
   ++i;
 
+  // neighbor is dead or live?
+  if(i >= pro_trigger_tags.size()) {
+    pro_trigger_tags.emplace_back(rng);
+    auto copy = pro_trigger_tags[i];
+    anti_trigger_tags.emplace_back(copy.Toggle());
+  }
+  // if (cfg.CHANNELS_VISIBLE()) {
+    if (IsLive()) {
+      cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+    } else {
+      cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+    }
+  // }
+
+  ++i;
+
+  // neighbor has more resource or less?
+  if(i >= pro_trigger_tags.size()) {
+    pro_trigger_tags.emplace_back(rng);
+    auto copy = pro_trigger_tags[i];
+    anti_trigger_tags.emplace_back(copy.Toggle());
+  }
+  // if (cfg.CHANNELS_VISIBLE()) {
+    if (IsWealthierThan() && IsLive()) {
+      cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+    } else if (IsLive()) {
+      cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+    }
+  // }
+
+  ++i;
+
+  // neighbor cell age older or younger?
+  if(i >= pro_trigger_tags.size()) {
+    pro_trigger_tags.emplace_back(rng);
+    auto copy = pro_trigger_tags[i];
+    anti_trigger_tags.emplace_back(copy.Toggle());
+  }
+  // if (cfg.CHANNELS_VISIBLE()) {
+    if (IsOlderThan() && IsLive()) {
+      cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+    } else if (IsLive()) {
+      cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+    }
+  // }
+
+  ++i;
+
+  // is neighbor expired?
+  for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+    if(i >= pro_trigger_tags.size()) {
+      pro_trigger_tags.emplace_back(rng);
+      auto copy = pro_trigger_tags[i];
+      anti_trigger_tags.emplace_back(copy.Toggle());
+    }
+    if (cfg.CHANNELS_VISIBLE()) {
+      if (IsExpired(lev)) {
+        cpu.TriggerEvent("EnvTrigger", pro_trigger_tags[i]);
+      } else {
+        // cpu.TriggerEvent("EnvTrigger", anti_trigger_tags[i]);
+      }
+    }
+
+    ++i;
+  }
+
   // update trigger
   if(i >= pro_trigger_tags.size()) {
     pro_trigger_tags.emplace_back(rng);
@@ -363,6 +429,45 @@ bool FrameHardware::IsPropaguleParent(const int relative_dir/*=0*/) {
     && (
       man.Family(pos).GetPrevChan() == *man.Channel(neigh).GetID(cfg.NLEV()-1)
     ));
+
+}
+
+bool FrameHardware::IsWealthierThan(const int relative_dir/*=0*/) {
+
+  const size_t dir = CalcDir(relative_dir);
+  const size_t neigh = Cell().GetNeigh(dir);
+  Manager &man = Cell().Man();
+  const size_t pos = Cell().GetPos();
+
+  return (
+    man.Stockpile(pos).QueryResource() >= man.Stockpile(neigh).QueryResource()
+  );
+
+}
+
+bool FrameHardware::IsOlderThan(const int relative_dir/*=0*/) {
+
+  const size_t dir = CalcDir(relative_dir);
+  const size_t neigh = Cell().GetNeigh(dir);
+  Manager &man = Cell().Man();
+  const size_t pos = Cell().GetPos();
+
+  return (
+    man.Family(pos).GetBirthUpdate() <= man.Family(neigh).GetBirthUpdate()
+  );
+
+}
+
+size_t FrameHardware::IsExpired(
+  const size_t lev,
+  const int relative_dir/*=0*/
+) {
+
+  const size_t dir = CalcDir(relative_dir);
+  const size_t neigh = Cell().GetNeigh(dir);
+  Manager &man = Cell().Man();
+
+  return man.Channel(neigh).IsExpired(lev);
 
 }
 
