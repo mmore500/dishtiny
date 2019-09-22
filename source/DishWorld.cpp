@@ -209,6 +209,7 @@ void DishWorld::Step() {
   for (size_t i = 0; i < GetSize(); ++i) {
 
     if (GetUpdate()%cfg.ENV_TRIG_FREQ()==0) {
+      man->Heir(i).DecayHeirs();
       man->Priority(i).ResolveUpdate();
       man->Apoptosis(i).Reset();
     }
