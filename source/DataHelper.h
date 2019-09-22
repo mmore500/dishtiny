@@ -86,6 +86,9 @@ public:
     file.createGroup("/ParentPos");
     file.createGroup("/CellAge");
     file.createGroup("/CellGen");
+    for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) {
+      file.createGroup("/CellGen/lev_"+emp::to_string(lev));
+    }
     file.createGroup("/Death");
 
 
@@ -128,7 +131,7 @@ public:
         }
         ParentPos();
         CellAge();
-        CellGen();
+        for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) CellGen(lev);
         Death();
         file.flush(H5F_SCOPE_LOCAL);
       } else if (update % cfg.ANIMATION_FREQUENCY() == 0) {
@@ -730,13 +733,14 @@ private:
 
   }
 
-  void CellGen() {
+  void CellGen(const size_t lev) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
     static const auto tid = H5::PredType::NATIVE_INT;
 
     H5::DataSet ds = file.createDataSet(
-      "/CellGen/upd_"+emp::to_string(dw.GetUpdate()),
+      "/CellGen/lev_" + emp::to_string(lev)
+      + "/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
       H5::DataSpace(2,dims)
     );
@@ -744,7 +748,7 @@ private:
     int data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Family(i).GetCellGen();
+      data[i] = dw.man->Family(i).GetCellGen()[lev];
     }
 
     ds.write((void*)data, tid);

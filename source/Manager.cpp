@@ -29,7 +29,7 @@ Manager::Manager(
       emp::NewPtr<ManagerApoptosis>()
     );
     mfs.push_back(
-      emp::NewPtr<ManagerFamily>()
+      emp::NewPtr<ManagerFamily>(cfg)
     );
     mcs.push_back(
       emp::NewPtr<ManagerChannel>(

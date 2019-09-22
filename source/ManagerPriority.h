@@ -22,7 +22,7 @@ struct SirePack {
   size_t incoming_dir;
   size_t replev;
   emp::vector<size_t> channel_gens;
-  size_t cell_gen;
+  emp::vector<size_t> cell_gen;
   ChannelPack chanpack;
   Config::chanid_t prev_chan;
   // non-owning at first, then we make a copy to hand off if selected

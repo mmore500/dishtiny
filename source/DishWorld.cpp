@@ -180,7 +180,7 @@ void DishWorld::Step() {
       man->Family(i).Reset(GetUpdate());
       man->Family(i).SetParentPos(opt_sirepack->par_pos);
       man->Family(i).SetPrevChan(opt_sirepack->prev_chan);
-      man->Family(i).SetCellGen(opt_sirepack->cell_gen+1);
+      man->Family(i).SetCellGen(opt_sirepack->cell_gen, opt_sirepack->replev);
       // check that parent hasn't been overwritten by a different birth
       if(man->Family(opt_sirepack->par_pos).GetBirthUpdate() != GetUpdate()) {
         man->Family(opt_sirepack->par_pos).AddChildPos(i);
