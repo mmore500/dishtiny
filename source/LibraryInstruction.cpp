@@ -41,7 +41,8 @@ void LibraryInstruction::TRL(
       man.DW().GetOrgPtr(pos),
       inherit_regulators
         ? fh.Cell().CopyMatchBins()
-        : emp::vector<std::shared_ptr<Config::matchbin_t>>(4, nullptr)
+        : emp::vector<std::shared_ptr<Config::matchbin_t>>(4, nullptr),
+      man.Stockpile(pos).QueryResource()
     };
 
     if (man.Priority(fh.Cell().GetNeigh(dir)).AddRequest(sp)) {

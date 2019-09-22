@@ -30,6 +30,7 @@ struct SirePack {
   emp::Ptr<Genome> genome;
   // this may be nullptr if not being inherited
   emp::vector<std::shared_ptr<Config::matchbin_t>> matchbins;
+  double par_wealth;
 
 };
 
@@ -138,7 +139,7 @@ public:
     return false;
   }
 
-  void ResolveSire() {
+  void ResolveSire(const double cur_stockpile) {
 
     // set up reproduction attempts to be logged
     for (size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
@@ -147,13 +148,13 @@ public:
     }
 
     // how many valid requests are there?
-    const size_t n_req = std::count_if(
+    size_t n_req = std::count_if(
       std::cbegin(requests),
       std::cend(requests),
       [](const std::optional<SirePack> & sp){ return static_cast<bool>(sp); }
     );
 
-    if (n_req) {
+    while (n_req) {
       // pick a request at random
       const size_t choice = local_rng.GetUInt(n_req);
       size_t count = 0;
@@ -165,20 +166,31 @@ public:
         }
       );
       emp_assert(which != std::cend(requests));
-      // set up the pending birth!
-      pending_birth = *which;
-      // make a copy of the genome to hand off to the World
-      // also, because the parent genome might be overwritten
-      emp::Ptr<Genome> copy = emp::NewPtr<Genome>(*(pending_birth->genome));
-      pending_birth->genome = copy;
 
-      // refund requests that don't get selected
-      for (size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
-        if (requests[d] && pending_birth->incoming_dir != d) {
-          refunders[d]();
+      // was parent rich enough?
+      if ((*which)->par_wealth > cur_stockpile) {
+        // set up the pending birth!
+        pending_birth = *which;
+        // make a copy of the genome to hand off to the World
+        // also, because the parent genome might be overwritten
+        pending_birth->genome = emp::NewPtr<Genome>(*(pending_birth->genome));
+
+        // refund requests that don't get selected
+        for (size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
+          if (requests[d] && pending_birth->incoming_dir != d) {
+            refunders[d]();
+          }
         }
+        return;
+      } else {
+        // if parent not rich enough, withdraw that request and try again
+        n_req--;
+        refunders[(*which)->incoming_dir]();
+        requests[(*which)->incoming_dir].reset();
       }
+
     }
+
   }
 
   const std::optional<SirePack>& QueryPendingGenome() const {

@@ -256,7 +256,7 @@ void DishWorld::Step() {
     for (size_t i = 0; i < GetSize(); ++i) {
       // decide who gets to be parent & make a copy of that genome
       // so that it doesn't get overwritten
-      man->Priority(i).ResolveSire();
+      man->Priority(i).ResolveSire(man->Stockpile(i).QueryResource());
     }
   }
 
