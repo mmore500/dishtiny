@@ -575,7 +575,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
-      const size_t dir = fh.CalcDir();
+      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[2]));
       const size_t dur = 2 + state.GetLocal(inst.args[0]);
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]), 4.0)
@@ -583,7 +583,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       man.Stockpile(pos).SetInResistance(dir, set, dur);
     },
-    2,
+    3,
     "Mark self to accept resource contributions from neighbors."
   );
 
@@ -596,7 +596,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
-      const size_t dir = fh.CalcDir();
+      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[2]));
       const size_t dur = 2 + state.GetLocal(inst.args[0]);
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
@@ -605,7 +605,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       //TODO this makes outcome dependent on execution order of cells
       man.Stockpile(pos).SetInResistance(dir, set, dur);
     },
-    1,
+    3,
     "Mark self to not accept resource contributions from neighbors."
   );
 
@@ -618,7 +618,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
-      const size_t dir = fh.CalcDir();
+      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[2]));
       const size_t dur = 2 + state.GetLocal(inst.args[0]);
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]), 4.0)
@@ -626,7 +626,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       man.Stockpile(pos).SetOutResistance(dir, set, dur);
     },
-    2,
+    3,
     "Mark self to give resource contributions to neighbors."
   );
 
@@ -639,7 +639,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
-      const size_t dir = fh.CalcDir();
+      const size_t dir = fh.CalcDir(state.GetLocal(inst.args[2]));
       const size_t dur = 2 + state.GetLocal(inst.args[0]);
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
@@ -648,7 +648,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       //TODO this makes outcome dependent on execution order of cells
       man.Stockpile(pos).SetOutResistance(dir, set, dur);
     },
-    2,
+    3,
     "Mark self to not give resource contributions to neighbors."
   );
 
