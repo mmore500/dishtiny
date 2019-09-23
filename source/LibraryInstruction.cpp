@@ -491,15 +491,22 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
         const size_t pos = fh.Cell().GetPos();
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
-        if(!man.Stockpile(neigh).CheckAcceptSharing(Cardi::Opp[dir])) return;
         if(man.Stockpile(neigh).QueryResource()<0) return;
 
         const double m_arg = arg_1;
         const double multiplier = m_arg == 0 ? 1 : (
           m_arg < 0 ? 1/-m_arg : m_arg
         );
+        const double in_resistance = man.Stockpile(neigh).CheckInResistance(
+          Cardi::Opp[dir]
+        );
+        const double out_resistance =  man.Stockpile(pos).CheckOutResistance(
+          dir
+        );
         const double amt = man.Stockpile(pos).RequestResourceFrac(
-          std::min(1.0,0.5*multiplier),
+          std::min(1.0,0.5*multiplier)
+            * (1.0 - in_resistance)
+            * (1.0 - out_resistance),
           std::max(fh.CheckStockpileReserve()+arg_2, 0.0)
         );
 
@@ -532,15 +539,22 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
         const size_t pos = fh.Cell().GetPos();
         const size_t neigh = fh.Cell().GetNeigh(dir);
 
-        if(!man.Stockpile(neigh).CheckAcceptSharing(Cardi::Opp[dir])) return;
         if(man.Stockpile(neigh).QueryResource()<0) return;
 
         const double m_arg = arg_1;
         const double multiplier = m_arg == 0 ? 1 : (
           m_arg < 0 ? 1/-m_arg : m_arg
         );
+        const double in_resistance = man.Stockpile(neigh).CheckInResistance(
+          Cardi::Opp[dir]
+        );
+        const double out_resistance =  man.Stockpile(pos).CheckOutResistance(
+          dir
+        );
         const double amt = man.Stockpile(pos).RequestResourceFrac(
-          std::min(1.0,0.01*multiplier),
+          std::min(1.0,0.01*multiplier)
+            * (1.0 - in_resistance)
+            * (1.0 - out_resistance),
           std::max(fh.CheckStockpileReserve()+arg_2, 0.0)
         );
 
@@ -557,14 +571,19 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
     [](hardware_t & hw, const inst_t & inst){
 
       FrameHardware &fh = *hw.GetTrait();
+      const state_t & state = hw.GetCurState();
 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
       const size_t dir = fh.CalcDir();
+      const size_t dur = 2 + state.GetLocal(inst.args[0]);
+      const double set = std::abs(
+        emp::Mod(state.GetLocal(inst.args[1]), 4.0)
+      ) / 2.0;
 
-      man.Stockpile(pos).SetAcceptSharing(dir, 0);
+      man.Stockpile(pos).SetInResistance(dir, set, dur);
     },
-    0,
+    2,
     "Mark self to accept resource contributions from neighbors."
   );
 
@@ -579,15 +598,58 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       const size_t pos = fh.Cell().GetPos();
       const size_t dir = fh.CalcDir();
       const size_t dur = 2 + state.GetLocal(inst.args[0]);
+      const double set = std::abs(
+        emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
+      ) / 2.0;
 
       //TODO this makes outcome dependent on execution order of cells
-      man.Stockpile(pos).SetAcceptSharing(
-        dir,
-        dur
-      );
+      man.Stockpile(pos).SetInResistance(dir, set, dur);
     },
     1,
     "Mark self to not accept resource contributions from neighbors."
+  );
+
+  il.AddInst(
+    "SetGiveSharingTrue",
+    [](hardware_t & hw, const inst_t & inst){
+
+      FrameHardware &fh = *hw.GetTrait();
+      const state_t & state = hw.GetCurState();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+      const size_t dir = fh.CalcDir();
+      const size_t dur = 2 + state.GetLocal(inst.args[0]);
+      const double set = std::abs(
+        emp::Mod(state.GetLocal(inst.args[1]), 4.0)
+      ) / 2.0;
+
+      man.Stockpile(pos).SetOutResistance(dir, set, dur);
+    },
+    2,
+    "Mark self to give resource contributions to neighbors."
+  );
+
+  il.AddInst(
+    "SetGiveSharingFalse",
+    [](hardware_t & hw, const inst_t & inst){
+
+      FrameHardware &fh = *hw.GetTrait();
+      const state_t & state = hw.GetCurState();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+      const size_t dir = fh.CalcDir();
+      const size_t dur = 2 + state.GetLocal(inst.args[0]);
+      const double set = std::abs(
+        emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
+      ) / 2.0;
+
+      //TODO this makes outcome dependent on execution order of cells
+      man.Stockpile(pos).SetOutResistance(dir, set, dur);
+    },
+    2,
+    "Mark self to not give resource contributions to neighbors."
   );
 
   il.AddInst(

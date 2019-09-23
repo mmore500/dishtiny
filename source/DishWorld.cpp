@@ -215,7 +215,7 @@ void DishWorld::Step() {
       man->Channel(i).DecayCellAgeBoosters();
       man->Priority(i).ResolveUpdate();
       man->Apoptosis(i).Reset();
-      man->Stockpile(i).ResolveNextAcceptSharing();
+      man->Stockpile(i).ResolveNextResistance();
     }
 
     for(size_t l = 0; l < cfg.NLEV(); ++l) {

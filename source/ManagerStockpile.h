@@ -19,7 +19,12 @@ private:
   double refund_resource;
   emp::vector<size_t> harvest_withdrawals;
 
-  emp::vector<size_t> decline_sharing;
+  emp::vector<double> in_resistance;
+  emp::vector<size_t> in_resistance_fresh;
+
+  emp::vector<double> out_resistance;
+  emp::vector<size_t> out_resistance_fresh;
+
   emp::vector<std::function<void()>> sharing_doers;
 
   std::function<size_t(size_t)> expchecker;
@@ -33,7 +38,10 @@ public:
   , contrib_resource(Cardi::Dir::NumDirs)
   , refund_resource(0.0)
   , harvest_withdrawals(cfg_.NLEV())
-  , decline_sharing(Cardi::Dir::NumDirs)
+  , in_resistance(Cardi::Dir::NumDirs)
+  , in_resistance_fresh(Cardi::Dir::NumDirs)
+  , out_resistance(Cardi::Dir::NumDirs)
+  , out_resistance_fresh(Cardi::Dir::NumDirs)
   , expchecker(expchecker_)
   { Reset(); }
 
@@ -117,17 +125,46 @@ public:
     return cfg.KILL_THRESH() >= resource;
   }
 
-  bool CheckAcceptSharing(const size_t outgoing_dir) const {
-    return !decline_sharing[outgoing_dir];
+  bool CheckInResistance(const size_t outgoing_dir) const {
+    return in_resistance[outgoing_dir];
   }
 
-  void SetAcceptSharing(const size_t outgoing_dir, const size_t set) {
-    decline_sharing[outgoing_dir] = set;
+  bool CheckOutResistance(const size_t outgoing_dir) const {
+    return out_resistance[outgoing_dir];
   }
 
-  void ResolveNextAcceptSharing() {
+  void SetInResistance(
+    const size_t outgoing_dir,
+    const double set,
+    const size_t dur
+  ) {
+    emp_assert(set >= 0.0);
+    emp_assert(set <= 1.0);
+    in_resistance[outgoing_dir] = set;
+    in_resistance_fresh[outgoing_dir] = dur;
+  }
+
+  void SetOutResistance(
+    const size_t outgoing_dir,
+    const double set,
+    const size_t dur
+  ) {
+    emp_assert(set >= 0.0);
+    emp_assert(set <= 1.0);
+    out_resistance[outgoing_dir] = set;
+    out_resistance_fresh[outgoing_dir] = dur;
+  }
+
+
+  void ResolveNextResistance() {
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      if (decline_sharing[dir]) --decline_sharing[dir];
+
+      if (out_resistance_fresh[dir]) --out_resistance_fresh[dir];
+      if (in_resistance_fresh[dir]) --in_resistance_fresh[dir];
+
+      if (!out_resistance_fresh[dir]) out_resistance[dir] = 0.0;
+      if (!in_resistance_fresh[dir]) in_resistance[dir] = 0.0;
+
     }
   }
 
@@ -150,7 +187,18 @@ public:
 
   void Reset() {
     sharing_doers.clear();
-    std::fill(std::begin(decline_sharing), std::end(decline_sharing), 0);
+    std::fill(std::begin(in_resistance), std::end(in_resistance), 0.0);
+    std::fill(
+      std::begin(in_resistance_fresh),
+      std::end(in_resistance_fresh),
+      0
+    );
+    std::fill(std::begin(out_resistance), std::end(out_resistance), 0.0);
+    std::fill(
+      std::begin(out_resistance_fresh),
+      std::end(out_resistance_fresh),
+      0
+    );
     resource = 0.0;
     std::fill(std::begin(contrib_resource), std::end(contrib_resource), 0.0);
     refund_resource = 0.0;
