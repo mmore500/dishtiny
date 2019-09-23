@@ -663,6 +663,48 @@ public:
       true
     ).leftleft(systematics_dash << "");
 
+    DataPill(
+      "Mean Cellular Generation",
+      UI::Live([this](){
+        double res = 0.0;
+        size_t count = 0;
+        for (size_t i = 0; i < w.GetSize(); ++i) {
+          if (w.IsOccupied(i)) {
+            res += w.man->Family(i).GetCellGen()[0];
+            ++count;
+          }
+        }
+        std::ostringstream ss;
+        ss << std::fixed << std::setprecision(2) << res / count;
+        return ss.str();
+      }),
+      "How many cellular generations have elapsed?",
+      systematics_dash,
+      true
+    ).leftleft(systematics_dash << "");
+
+    for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      DataPill(
+        emp::to_string("Mean Channel Generation Level ", lev),
+        UI::Live([this, lev](){
+          double res = 0.0;
+          size_t count = 0;
+          for (size_t i = 0; i < w.GetSize(); ++i) {
+            if (w.IsOccupied(i)) {
+              res += w.man->Family(i).GetCellGen()[lev+1];
+              ++count;
+            }
+          }
+          std::ostringstream ss;
+          ss << std::fixed << std::setprecision(2) << res / count;
+          return ss.str();
+        }),
+        "How many channel generations have elapsed?",
+        systematics_dash,
+        true
+      ).leftleft(systematics_dash << "");
+    }
+
     auto dom_text = dominant_viewer.AddText("dom_text");
     dom_text << UI::Live([this](){
 
