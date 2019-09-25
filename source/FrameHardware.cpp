@@ -213,9 +213,7 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
 
 void FrameHardware::SetupCompute(const size_t update) {
   if (update % cfg.ENV_TRIG_FREQ() == 0) {
-    DispatchEnvTriggers(update);
-    TryClearStockpileReserve();
-    TryClearReproductionReserve();
+
     for (const auto & uid : cpu.GetMatchBin().ViewUIDs()) {
       if (cpu.GetMatchBin().GetVal(uid)) {
         --cpu.GetMatchBin().GetVal(uid);
@@ -223,6 +221,11 @@ void FrameHardware::SetupCompute(const size_t update) {
         cpu.GetMatchBin().SetRegulator(uid, 1.0);
       }
     }
+
+    DispatchEnvTriggers(update);
+
+    TryClearStockpileReserve();
+    TryClearReproductionReserve();
 
     emp::vector<Config::matchbin_t::uid_t> marked;
     for (const auto & uid : membrane.ViewUIDs()) {
