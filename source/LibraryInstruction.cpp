@@ -578,7 +578,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       const size_t dir = fh.CalcDir(state.GetLocal(inst.args[2]));
       const size_t dur = 2 + state.GetLocal(inst.args[0]);
       const double set = std::abs(
-        emp::Mod(state.GetLocal(inst.args[1]), 4.0)
+        emp::Mod(state.GetLocal(inst.args[1]) + 2.0, 4.0) - 2.0
       ) / 2.0;
 
       man.Stockpile(pos).SetInResistance(dir, set, dur);
@@ -621,7 +621,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       const size_t dir = fh.CalcDir(state.GetLocal(inst.args[2]));
       const size_t dur = 2 + state.GetLocal(inst.args[0]);
       const double set = std::abs(
-        emp::Mod(state.GetLocal(inst.args[1]), 4.0)
+        emp::Mod(state.GetLocal(inst.args[1]) + 2.0, 4.0) - 2.0
       ) / 2.0;
 
       man.Stockpile(pos).SetOutResistance(dir, set, dur);

@@ -75,9 +75,13 @@ public:
       file.createGroup("/ResourceHarvested/lev_"+emp::to_string(lev));
     }
     file.createGroup("/PrevChan/");
-    file.createGroup("/AcceptSharing/");
+    file.createGroup("/InResistance/");
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/AcceptSharing/dir_"+emp::to_string(dir));
+      file.createGroup("/InResistance/dir_"+emp::to_string(dir));
+    }
+    file.createGroup("/OutResistance/");
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      file.createGroup("/OutResistance/dir_"+emp::to_string(dir));
     }
     file.createGroup("/Heir");
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
@@ -124,7 +128,10 @@ public:
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ResourceHarvested(lev);
         PrevChan();
         for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-          AcceptSharing(dir);
+          InResistance(dir);
+        }
+        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+          OutResistance(dir);
         }
         for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
           Heir(dir);
@@ -262,7 +269,20 @@ private:
       const hsize_t acceptsharing_key_dims[] = { 1 };
       H5::DataSpace acceptsharing_key_dataspace(1, acceptsharing_key_dims);
 
-      H5::Attribute acceptsharing_key_attribute = file.openGroup("/AcceptSharing/dir_"+emp::to_string(dir)).createAttribute(
+      H5::Attribute acceptsharing_key_attribute = file.openGroup("/InResistance/dir_"+emp::to_string(dir)).createAttribute(
+        "KEY", H5::StrType(0, H5T_VARIABLE), acceptsharing_key_dataspace
+      );
+
+      const char *acceptsharing_key_data[] = {"0: false, 1: true"};
+
+      acceptsharing_key_attribute.write(H5::StrType(0, H5T_VARIABLE), acceptsharing_key_data);
+    }
+
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      const hsize_t acceptsharing_key_dims[] = { 1 };
+      H5::DataSpace acceptsharing_key_dataspace(1, acceptsharing_key_dims);
+
+      H5::Attribute acceptsharing_key_attribute = file.openGroup("/OutResistance/dir_"+emp::to_string(dir)).createAttribute(
         "KEY", H5::StrType(0, H5T_VARIABLE), acceptsharing_key_dataspace
       );
 
@@ -646,13 +666,13 @@ private:
 
   }
 
-  void AcceptSharing(const size_t dir) {
+  void InResistance(const size_t dir) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
     static const auto tid = H5::PredType::NATIVE_INT;
 
     H5::DataSet ds = file.createDataSet(
-      "/AcceptSharing/dir_" + emp::to_string(dir)
+      "/InResistance/dir_" + emp::to_string(dir)
       + "/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
       H5::DataSpace(2,dims)
@@ -661,7 +681,29 @@ private:
     int data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Stockpile(i).CheckAcceptSharing(dir);
+      data[i] = dw.man->Stockpile(i).CheckInResistance(dir);
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void OutResistance(const size_t dir) {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_INT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/OutResistance/dir_" + emp::to_string(dir)
+      + "/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    int data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Stockpile(i).CheckOutResistance(dir);
     }
 
     ds.write((void*)data, tid);
