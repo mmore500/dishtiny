@@ -38,6 +38,8 @@ public:
 
   static void InitDefault(inst_lib_t &il);
 
+  static void InitDefaultDup(inst_lib_t &il);
+
   static void InitInternalActions(inst_lib_t &il, const Config &cfg);
 
   static void InitExternalActions(inst_lib_t &il, const Config &cfg);

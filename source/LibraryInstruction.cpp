@@ -117,6 +117,70 @@ void LibraryInstruction::InitDefault(inst_lib_t &il) {
   );
 }
 
+void LibraryInstruction::InitDefaultDup(inst_lib_t &il) {
+
+  il.AddInst("DuplicateInc", Config::hardware_t::Inst_Inc, 1, "Increment value in local memory Arg1");
+  il.AddInst("DuplicateDec", Config::hardware_t::Inst_Dec, 1, "Decrement value in local memory Arg1");
+  il.AddInst("DuplicateNot", Config::hardware_t::Inst_Not, 1, "Logically toggle value in local memory Arg1");
+  il.AddInst("DuplicateAdd", Config::hardware_t::Inst_Add, 3, "Local memory: Arg3 = Arg1 + Arg2");
+  il.AddInst("DuplicateSub", Config::hardware_t::Inst_Sub, 3, "Local memory: Arg3 = Arg1 - Arg2");
+  il.AddInst("DuplicateMult", Config::hardware_t::Inst_Mult, 3, "Local memory: Arg3 = Arg1 * Arg2");
+  il.AddInst("DuplicateDiv", Config::hardware_t::Inst_Div, 3, "Local memory: Arg3 = Arg1 / Arg2");
+  il.AddInst("DuplicateMod", Config::hardware_t::Inst_Mod, 3, "Local memory: Arg3 = Arg1 % Arg2");
+  il.AddInst("DuplicateTestEqu", Config::hardware_t::Inst_TestEqu, 3, "Local memory: Arg3 = (Arg1 == Arg2)");
+  il.AddInst("DuplicateTestNEqu", Config::hardware_t::Inst_TestNEqu, 3, "Local memory: Arg3 = (Arg1 != Arg2)");
+  il.AddInst("DuplicateTestLess", Config::hardware_t::Inst_TestLess, 3, "Local memory: Arg3 = (Arg1 < Arg2)");
+  il.AddInst("DuplicateIf", Config::hardware_t::Inst_If, 1, "Local memory: If Arg1 != 0, proceed; else, skip block.", emp::ScopeType::BASIC, 0, {"block_def"});
+  il.AddInst("DuplicateWhile", Config::hardware_t::Inst_While, 1, "Local memory: If Arg1 != 0, loop; else, skip block.", emp::ScopeType::BASIC, 0, {"block_def"});
+  il.AddInst("DuplicateCountdown", Config::hardware_t::Inst_Countdown, 1, "Local memory: Countdown Arg1 to zero.", emp::ScopeType::BASIC, 0, {"block_def"});
+  il.AddInst("DuplicateClose", Config::hardware_t::Inst_Close, 0, "Close current block if there is a block to close.", emp::ScopeType::BASIC, 0, {"block_close"});
+  il.AddInst("DuplicateBreak", Config::hardware_t::Inst_Break, 0, "Break out of current block.");
+  il.AddInst("DuplicateCall", Config::hardware_t::Inst_Call, 0, "Call function that best matches call affinity.", emp::ScopeType::BASIC, 0, {"affinity"});
+  il.AddInst("DuplicateReturn", Config::hardware_t::Inst_Return, 0, "Return from current function if possible.");
+  il.AddInst("DuplicateSetMem", Config::hardware_t::Inst_SetMem, 2, "Local memory: Arg1 = numerical value of Arg2");
+  il.AddInst("DuplicateCopyMem", Config::hardware_t::Inst_CopyMem, 2, "Local memory: Arg1 = Arg2");
+  il.AddInst("DuplicateSwapMem", Config::hardware_t::Inst_SwapMem, 2, "Local memory: Swap values of Arg1 and Arg2.");
+  il.AddInst("DuplicateInput", Config::hardware_t::Inst_Input, 2, "Input memory Arg1 => Local memory Arg2.");
+  il.AddInst("DuplicateOutput", Config::hardware_t::Inst_Output, 2, "Local memory Arg1 => Output memory Arg2.");
+  il.AddInst("DuplicateCommit", Config::hardware_t::Inst_Commit, 2, "Local memory Arg1 => Shared memory Arg2.");
+  il.AddInst("DuplicatePull", Config::hardware_t::Inst_Pull, 2, "Shared memory Arg1 => Shared memory Arg2.");
+  il.AddInst("DuplicateFork", Config::hardware_t::Inst_Fork, 0, "Fork a new thread, using tag-based referencing to determine which function to call on the new thread.", emp::ScopeType::BASIC, 0, {"affinity"});
+  il.AddInst("DuplicateTerminate", Config::hardware_t::Inst_Terminate, 0, "Terminate current thread.");
+  il.AddInst("DuplicateNop", Config::hardware_t::Inst_Nop, 0, "No operation.");
+  il.AddInst("DuplicateRng", Config::hardware_t::Inst_RngDouble, 1, "Draw from onboard random number generator.");
+  il.AddInst("DuplicateSetRegulator", Config::hardware_t::Inst_SetRegulator, 1, "Sets the regulator of a tag in the matchbin.");
+  il.AddInst("DuplicateSetOwnRegulator", Config::hardware_t::Inst_SetOwnRegulator, 1, "Sets the regulator the currently executing function.");
+  il.AddInst("DuplicateAdjRegulator", Config::hardware_t::Inst_AdjRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.");
+  il.AddInst("DuplicateAdjOwnRegulator", Config::hardware_t::Inst_AdjOwnRegulator, 2, "Adjusts the regulator of the currently executing function towards a target.");
+  il.AddInst("DuplicateSenseRegulator", Config::hardware_t::Inst_SenseRegulator, 1, "Senses the regulator of a tag in the matchbin.");
+  il.AddInst("DuplicateSenseOwnRegulator", Config::hardware_t::Inst_SenseOwnRegulator, 1, "Senses the regulator of the currently executing function.");
+
+  il.AddInst(
+    emp::to_string("DuplicateTerminal", 1073741824),
+    Config::hardware_t::Inst_Terminal<std::ratio<5>, std::ratio<-5>>,
+    1,
+    "Writes a genetically-determined value into a register."
+  );
+  il.AddInst(
+    emp::to_string("DuplicateTerminal", 8),
+    Config::hardware_t::Inst_Terminal<std::ratio<8>, std::ratio<-8>>,
+    1,
+    "Writes a genetically-determined value into a register."
+  );
+  il.AddInst(
+    emp::to_string("DuplicateTerminal", 1),
+    Config::hardware_t::Inst_Terminal<std::ratio<1>, std::ratio<-1>>,
+    1,
+    "Writes a genetically-determined value into a register."
+  );
+  il.AddInst(
+    emp::to_string("DuplicateTerminal", 0.125),
+    Config::hardware_t::Inst_Terminal<std::ratio<1,8>, std::ratio<-1,8>>,
+    1,
+    "Writes a genetically-determined value into a register."
+  );
+}
+
 void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) {
 
   il.AddInst(
@@ -1114,6 +1178,8 @@ const inst_lib_t& LibraryInstruction::Make(const Config &cfg) {
   if (!il.GetSize()) {
 
     InitDefault(il);
+
+    InitDefaultDup(il);
 
     InitInternalActions(il, cfg);
 
