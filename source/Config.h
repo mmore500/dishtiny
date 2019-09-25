@@ -39,13 +39,16 @@ public:
   using matchbin_t = emp::MatchBin<
     size_t
 #ifdef METRIC
-    , std::conditional<STRINGVIEWIFY(METRIC) == "streak",
+    , std::conditional<STRINGVIEWIFY(METRIC) == "integer",
+        emp::SymmetricWrapMetric<TAG_WIDTH>,
+      std::conditional<STRINGVIEWIFY(METRIC) == "streak",
         emp::StreakMetric<TAG_WIDTH>,
       std::conditional<STRINGVIEWIFY(METRIC) == "hash",
         emp::HashMetric<TAG_WIDTH>,
       std::conditional<STRINGVIEWIFY(METRIC) == "hamming",
         emp::HammingMetric<TAG_WIDTH>,
         std::enable_if<false>
+      >::type
       >::type
       >::type
       >::type
