@@ -57,14 +57,13 @@ public:
         for (auto & inst : fun.inst_seq) {
           if (
             inst_lib.GetName(inst.id) == "Countdown" ||
-            inst_lib.GetName(inst.id) == "If" ||
             inst_lib.GetName(inst.id) == "While" ||
-            inst_lib.GetName(inst.id) == "Break" ||
-            inst_lib.GetName(inst.id) == "Close" ||
             inst_lib.GetName(inst.id) == "Call" ||
-            inst_lib.GetName(inst.id) == "Return" ||
             inst_lib.GetName(inst.id) == "Fork" ||
-            inst_lib.GetName(inst.id) == "Terminate" ||
+            inst_lib.GetName(inst.id) == "DuplicateCountdown" ||
+            inst_lib.GetName(inst.id) == "DuplicateWhile" ||
+            inst_lib.GetName(inst.id) == "DuplicateCall" ||
+            inst_lib.GetName(inst.id) == "DuplicateFork" ||
             inst_lib.GetName(inst.id).find("Apoptosis") != std::string::npos
           ) {
             inst.id = nop_id;
