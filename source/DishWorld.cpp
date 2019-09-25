@@ -80,10 +80,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
     man->Heir(pos).Reset();
     man->Priority(pos).Reset();
     frames[pos]->Reset();
-    if(local_rngs[pos]->GetDouble() < cfg.MUTATION_RATE()) {
-      mut.ApplyMutations(GetOrg(pos).program,*local_rngs[pos]);
-    }
-    frames[pos]->SetProgram(GetOrg(pos).program);
+    frames[pos]->SetProgram(GetOrg(pos).GetProgram());
     man->Inbox(pos).ClearInboxes();
   });
 
@@ -97,7 +94,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
       inst_lib,
       cfg);
     InjectAt(g, emp::WorldPosition(i));
-    emp_assert(GetOrg(i).program.GetSize());
+    emp_assert(GetOrg(i).GetProgram().GetSize());
     man->Stockpile(i).InternalAcceptResource(cfg.START_RESOURCE());
   }
 
@@ -165,8 +162,11 @@ void DishWorld::Step() {
         opt_sirepack->replev == cfg.NLEV() &&
         local_rngs[i]->GetDouble() < cfg.PROPAGULE_MUTATION_RATE()
       ) {
-        mut.ApplyMutations(opt_sirepack->genome->program,*local_rngs[i]);
+        opt_sirepack->genome->DoMutations(mut,*local_rngs[i]);
+      } else if(local_rngs[i]->GetDouble() < cfg.MUTATION_RATE()) {
+        opt_sirepack->genome->DoMutations(mut, *local_rngs[i]);
       }
+
 
       AddOrgAt(opt_sirepack->genome, i, opt_sirepack->par_pos);
 

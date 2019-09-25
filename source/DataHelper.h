@@ -386,7 +386,7 @@ private:
 
       if(dw.IsOccupied(i)) {
         Genome & g = dw.GetOrg(i);
-        g.program.PrintProgramFull(buffers[i]);
+        g.GetProgram().PrintProgramFull(buffers[i]);
         strings[i] = buffers[i].str();
       }
       data[i] = strings[i].c_str();

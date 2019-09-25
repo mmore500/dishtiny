@@ -724,7 +724,7 @@ public:
       );
 
       std::ostringstream buffer;
-      pr->first.program.PrintProgram(buffer);
+      pr->first.GetProgram().PrintProgram(buffer);
 
       return "COUNT:" + emp::to_string(pr->second) + "\n\n" + buffer.str();
     });

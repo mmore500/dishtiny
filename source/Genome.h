@@ -4,25 +4,31 @@
 #include "hardware/EventDrivenGP.h"
 #include "hardware/signalgp_utils.h"
 #include "tools/Random.h"
+#include "tools/Binomial.h"
 
+#include "Mutator.h"
 #include "Config.h"
 
-struct Genome {
+class Genome {
 
   using hardware_t = Config::hardware_t;
   using program_t = Config::program_t;
 
-  program_t program;
+  const Config &cfg;
 
-  Genome(const program_t & _p)
-  : program(_p)
-  { emp_assert(program.GetSize()); }
+  program_t program;
+  emp::vector<Config::tag_t> tags;
+
+public:
+
+  Genome(const Genome &) = default;
 
   Genome(
     emp::Random &local_rng,
     const Config::inst_lib_t &inst_lib,
-    const Config &cfg
-  ) : Genome(
+    const Config &cfg_
+  ) : cfg(cfg_)
+  , program(
     emp::GenRandSignalGPProgram<
       Config::TAG_WIDTH,
       Config::TRAIT_TYPE,
@@ -33,7 +39,8 @@ struct Genome {
         cfg.PROGRAM_MIN_FUN_CNT__INIT(), cfg.PROGRAM_MAX_FUN_CNT__INIT(),
         cfg.PROGRAM_MIN_FUN_LEN__INIT(), cfg.PROGRAM_MAX_FUN_LEN__INIT(),
         cfg.PROGRAM_MIN_ARG_VAL__INIT(), cfg.PROGRAM_MAX_ARG_VAL__INIT()
-    )) {
+    ))
+  {
       emp_assert(program.GetSize());
 
       // filter out some instructions from  initially generated genomes
@@ -66,12 +73,44 @@ struct Genome {
       }
     }
 
+    const program_t& GetProgram() const {
+      return program;
+    }
+
+    void DoMutations(Mutator & mut, emp::Random & rand) {
+
+      const static emp::Binomial bino(
+        cfg.TAG_BIT_FLIP__PER_BIT(),
+        Config::TAG_WIDTH
+      );
+
+      for (auto & t : tags) {
+        t.Mutate(rand, bino.PickRandom(rand));
+      }
+
+      mut.ApplyMutations(program, rand);
+
+    }
+
+    const Config::tag_t& GetTag(emp::Random & rand, const size_t i) {
+      while (tags.size() <= i) {
+        tags.emplace_back(rand);
+      }
+      return tags[i];
+    }
+
     bool operator!=(const Genome& other) const {
-      return program != other.program;
+      return (
+        program != other.program
+        || tags != other.tags
+      );
     }
 
     bool operator<(const Genome& other) const {
-      return program < other.program;
+      return (
+        (program < other.program)
+        || ((program == other.program) && (tags < other.tags))
+      );
     }
 
 };
