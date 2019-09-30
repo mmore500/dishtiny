@@ -71,7 +71,7 @@ public:
       >::type
       >::type
 #else
-    , emp::RankedSelector<std::ratio<3,2>> // ranked selector is default
+    , emp::RankedSelector<std::ratio<9,8>> // ranked selector is default
 #endif
   >;
 
