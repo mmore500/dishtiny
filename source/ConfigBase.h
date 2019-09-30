@@ -9,7 +9,6 @@ EMP_BUILD_CONFIG(
   ConfigBase,
 
   GROUP(CORE, "Core settings for DISHTINY"),
-  VALUE(QUIESCENT_MAX, size_t, 9, "Length of quiescent period after activation during resource collection."),
   VALUE(NLEV, size_t, 2, "Number of hierarchical resource levels."),
   VALUE(SEED, int, 1, "Random number generator seed."),
   VALUE(GRID_H, size_t, 60, "How many tiles tall should the grid be?"),

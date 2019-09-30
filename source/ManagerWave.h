@@ -77,7 +77,10 @@ public:
     const size_t pos,
     emp::Random &global_rng_,
     const Config &cfg_
-  ) : quiescent(-1 * ((int)cfg_.QUIESCENT_MAX()))
+  ) : quiescent(
+      - static_cast<int>(cfg.WAVE_REPLICATES())
+      * static_cast<int>(cfg_.Lev(lev_).SIGNAL_RADIUS())
+    )
   , global_rng(global_rng_)
   , state(ready)
   , mc(mc_)
