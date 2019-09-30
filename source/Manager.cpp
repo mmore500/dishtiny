@@ -83,7 +83,6 @@ Manager::Manager(
             l,
             i,
             *global_rngs[i],
-            *local_rngs[i],
             cfg
         ));
       }
