@@ -70,7 +70,7 @@ public:
           FrameHardware &fh = *hw.GetTrait();
           const size_t dir = fh.GetMsgDir();
 
-          fh.Cell().GetFrameHardware(dir).QueueMessage(event);
+          fh.Cell().GetFrameHardware(dir).QueueInternalMessage(event);
         }
       );
 

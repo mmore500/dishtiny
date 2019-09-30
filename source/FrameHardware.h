@@ -37,11 +37,17 @@ private:
   size_t msg_dir;
 
   Config::matchbin_t membrane;
+  Config::matchbin_t internal_membrane;
 
   std::unordered_map<
     Config::matchbin_t::tag_t,
     Config::matchbin_t::uid_t
   > membrane_tags;
+
+  std::unordered_map<
+    Config::matchbin_t::tag_t,
+    Config::matchbin_t::uid_t
+  > internal_membrane_tags;
 
 public:
 
@@ -96,6 +102,8 @@ public:
 
   void QueueMessage(const Config::event_t &event);
 
+  void QueueInternalMessage(const Config::event_t &event);
+
   void QueueMessages(Config::inbox_t &inbox);
 
   size_t CalcDir(const double relative_dir=0.0);
@@ -130,5 +138,12 @@ public:
     Config::matchbin_t::tag_t,
     Config::matchbin_t::uid_t
   > &GetMembraneTags();
+
+  Config::matchbin_t &GetInternalMembrane();
+
+  std::unordered_map<
+    Config::matchbin_t::tag_t,
+    Config::matchbin_t::uid_t
+  > &GetInternalMembraneTags();
 
 };

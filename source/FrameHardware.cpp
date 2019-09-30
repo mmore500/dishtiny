@@ -30,6 +30,7 @@ FrameHardware::FrameHardware(
     , reproduction_reserve_fresh(0)
     , cpu(inst_lib, event_lib, &local_rng_)
     , membrane(local_rng_)
+    , internal_membrane(local_rng_)
   {
     cpu.SetTrait(this);
   }
@@ -49,6 +50,8 @@ void FrameHardware::Reset() {
   cpu.ResetProgram();
   membrane.Clear();
   membrane_tags.clear();
+  internal_membrane.Clear();
+  internal_membrane_tags.clear();
   emp_assert(!cpu.GetProgram().GetSize());
 }
 
@@ -240,6 +243,21 @@ void FrameHardware::SetupCompute(const size_t update) {
     for (const auto & uid : marked) {
       membrane.Delete(uid);
     }
+
+    emp::vector<Config::matchbin_t::uid_t> internal_marked;
+    for (const auto & uid : internal_membrane.ViewUIDs()) {
+      auto & v = internal_membrane.GetVal(uid);
+      if (v > 2) {
+        v -= 2;
+      } else {
+        internal_membrane_tags.erase(internal_membrane.GetTag(uid));
+        internal_marked.push_back(uid);
+      }
+    }
+    for (const auto & uid : internal_marked) {
+      internal_membrane.Delete(uid);
+    }
+
   }
 }
 
@@ -270,6 +288,15 @@ void FrameHardware::SetInboxActivity(const bool state) {
 
 bool FrameHardware::CheckInboxActivity() const {
   return inbox_active;
+}
+
+void FrameHardware::QueueInternalMessage(const Config::event_t &event) {
+  if (
+    const auto res = internal_membrane.Match(event.affinity);
+    !res.size() || (res[0] % 2 == 0)
+  ) {
+    QueueMessage(event);
+  }
 }
 
 void FrameHardware::QueueMessage(const Config::event_t &event) {
@@ -437,3 +464,14 @@ std::unordered_map<
   Config::matchbin_t::tag_t,
   Config::matchbin_t::uid_t
 > & FrameHardware::GetMembraneTags() { return membrane_tags; }
+
+Config::matchbin_t & FrameHardware::GetInternalMembrane() {
+  return internal_membrane;
+}
+
+std::unordered_map<
+  Config::matchbin_t::tag_t,
+  Config::matchbin_t::uid_t
+> & FrameHardware::GetInternalMembraneTags() {
+  return internal_membrane_tags;
+}
