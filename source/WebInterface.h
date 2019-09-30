@@ -346,7 +346,7 @@ public:
         },
         [this, l](std::optional<int> cp) -> std::string {
           if (cp) {
-            if (*cp > 0 && *cp < cfg.Lev(l).EVENT_RADIUS()) {
+            if (*cp > 0 && *cp <= cfg.Lev(l).EVENT_RADIUS()) {
               return emp::ColorRGB(0,255,0);
             } else if (*cp > 0) {
               return emp::ColorRGB(255,0,0);
