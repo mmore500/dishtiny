@@ -20,7 +20,7 @@ Manager::Manager(
   emp::vector<emp::Ptr<emp::Random>> &local_rngs,
   emp::vector<emp::Ptr<emp::Random>> &global_rngs,
   const Config &cfg
-) : dw(dw_), mws(GeometryHelper(cfg).GetLocalSize()) {
+) : dw(dw_), mws(cfg.WAVE_REPLICATES()) {
 
   const size_t size = GeometryHelper(cfg).GetLocalSize();
 
@@ -71,33 +71,37 @@ Manager::Manager(
 
   }
 
-  /* ManagerWaves part one */
-  for(size_t i = 0; i < size; ++i) {
-    for(size_t l = 0; l < cfg.NLEV(); ++l) {
-      mws[i].push_back(
-        emp::NewPtr<ManagerWave>(
-          *mcs[i],
-          *mss[i],
-          l,
-          i,
-          *global_rngs[i],
-          cfg
-      ));
+  for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
+    /* ManagerWaves part one */
+    for(size_t i = 0; i < size; ++i) {
+      mws[r].emplace_back();
+      for(size_t l = 0; l < cfg.NLEV(); ++l) {
+        mws[r][i].push_back(
+          emp::NewPtr<ManagerWave>(
+            *mcs[i],
+            *mss[i],
+            l,
+            i,
+            *global_rngs[i],
+            *local_rngs[i],
+            cfg
+        ));
+      }
     }
-  }
 
-  /* ManagerWaves part two */
-  for(size_t i = 0; i < size; ++i) {
-    auto neigh_poses = GeometryHelper(cfg).CalcLocalNeighs(i);
-    for(size_t l = 0; l < cfg.NLEV(); ++l) {
-      emp::vector<emp::Ptr<ManagerWave>> res(neigh_poses.size());
-      std::transform(
-        neigh_poses.begin(),
-        neigh_poses.end(),
-        res.begin(),
-        [this, l](size_t pos) { return mws[pos][l]; }
-      );
-      mws[i][l]->SetNeighs(res);
+    /* ManagerWaves part two */
+    for(size_t i = 0; i < size; ++i) {
+      auto neigh_poses = GeometryHelper(cfg).CalcLocalNeighs(i);
+      for(size_t l = 0; l < cfg.NLEV(); ++l) {
+        emp::vector<emp::Ptr<ManagerWave>> res(neigh_poses.size());
+        std::transform(
+          neigh_poses.begin(),
+          neigh_poses.end(),
+          res.begin(),
+          [this, l, r](size_t pos) { return mws[r][pos][l]; }
+        );
+        mws[r][i][l]->SetNeighs(res);
+      }
     }
   }
 
@@ -111,7 +115,13 @@ Manager::~Manager() {
   for (auto &ptr : mis) ptr.Delete();
   for (auto &ptr : mps) ptr.Delete();
   for (auto &ptr : mss) ptr.Delete();
-  for (auto &vec : mws) for (auto &ptr : vec) ptr.Delete();
+  for (auto &rep : mws) {
+    for (auto &vec : rep) {
+      for (auto &ptr : vec) {
+        ptr.Delete();
+      }
+    }
+  }
 }
 
 ManagerApoptosis& Manager::Apoptosis(size_t pos) {
@@ -142,8 +152,8 @@ ManagerStockpile& Manager::Stockpile(size_t pos) {
   return *mss[pos];
 }
 
-ManagerWave& Manager::Wave(size_t pos, size_t lev) {
-  return *mws[pos][lev];
+ManagerWave& Manager::Wave(size_t rep, size_t pos, size_t lev) {
+  return *mws[rep][pos][lev];
 }
 
 DishWorld& Manager::DW() { return dw; }

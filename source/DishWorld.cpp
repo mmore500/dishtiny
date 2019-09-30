@@ -202,9 +202,11 @@ void DishWorld::Step() {
     }
   }
 
-  for(size_t i = 0; i < GetSize(); ++i) {
-    // dead cells with no channels have nullopt so no transmission will occur
-    for(size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(i,l).ResolveNext();
+  for (size_t i = 0; i < GetSize(); ++i) {
+    for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
+      // dead cells with no channels have nullopt so no transmission will occur
+      for (size_t l = 0; l < cfg.NLEV(); ++l) man->Wave(r,i,l).ResolveNext();
+    }
   }
 
   // clean up for next cell action step
@@ -218,16 +220,20 @@ void DishWorld::Step() {
       man->Stockpile(i).ResolveNextResistance();
     }
 
-    for(size_t l = 0; l < cfg.NLEV(); ++l) {
-      man->Wave(i,l).CalcNext(GetUpdate());
+    for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
+      for(size_t l = 0; l < cfg.NLEV(); ++l) {
+        man->Wave(r,i,l).CalcNext(GetUpdate());
+      }
     }
 
     if (IsOccupied(i)) {
       man->Stockpile(i).ResolveExternalContributions();
       man->Stockpile(i).ApplyBaseInflow();
       man->Stockpile(i).ApplyDecay();
-      for(size_t l = 0; l < cfg.NLEV(); ++l) {
-        man->Wave(i,l).HarvestResource();
+      for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
+        for(size_t l = 0; l < cfg.NLEV(); ++l) {
+          man->Wave(r,i,l).HarvestResource();
+        }
       }
       if (GetUpdate() % cfg.COMPUTE_FREQ() == 0) {
         frames[i]->QueueMessages(man->Inbox(i).GetInboxes());

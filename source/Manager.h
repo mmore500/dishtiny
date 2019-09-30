@@ -28,7 +28,7 @@ private:
   emp::vector<emp::Ptr<ManagerInbox>> mis;
   emp::vector<emp::Ptr<ManagerPriority>> mps;
   emp::vector<emp::Ptr<ManagerStockpile>> mss;
-  emp::vector<emp::vector<emp::Ptr<ManagerWave>>> mws;
+  emp::vector<emp::vector<emp::vector<emp::Ptr<ManagerWave>>>> mws;
 
 
 public:
@@ -58,7 +58,7 @@ public:
 
   ManagerStockpile& Stockpile(size_t pos);
 
-  ManagerWave& Wave(size_t pos, size_t lev);
+  ManagerWave& Wave(size_t rep, size_t pos, size_t lev);
 
   DishWorld &DW();
 

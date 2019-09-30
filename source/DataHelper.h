@@ -636,7 +636,10 @@ private:
     double data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Wave(i,lev).GetLastHarvest();
+      data[i] = 0.0;
+      for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
+        data[i] += dw.man->Wave(r, i,lev).GetLastHarvest();
+      }
     }
 
     ds.write((void*)data, tid);
