@@ -75,7 +75,7 @@ public:
   void InternalApplyHarvest(const size_t lev, const double amt) {
     // if ANY level expired, can't collect resource
     const size_t exp = expchecker(0);
-    harvest_withdrawals[lev] += amt < 0.0;
+    harvest_withdrawals[lev] += (amt <= 0.0);
     if (exp <= cfg.EXP_GRACE_PERIOD()) {
       // grace period to allow a few reproductions without sharing
       resource += amt;
@@ -210,12 +210,7 @@ public:
   }
 
   void ApplyBaseInflow() {
-    for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      InternalApplyHarvest(
-        lev,
-        cfg.BASE_RESOURCE_INFLOW()/static_cast<double>(cfg.NLEV())
-      );
-    }
+    resource += cfg.BASE_RESOURCE_INFLOW();
   }
 
   void ApplyDecay(){ if (resource > 0) resource *= cfg.RESOURCE_DECAY(); }
