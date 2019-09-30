@@ -78,7 +78,7 @@ public:
     emp::Random &global_rng_,
     const Config &cfg_
   ) : quiescent(
-      - static_cast<int>(cfg.WAVE_REPLICATES())
+      - static_cast<int>(cfg_.WAVE_REPLICATES())
       * static_cast<int>(cfg_.Lev(lev_).SIGNAL_RADIUS())
     )
   , global_rng(global_rng_)
