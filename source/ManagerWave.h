@@ -64,7 +64,7 @@ private:
     return (
       (global_x % event_size == seed_x)
       && (global_y % event_size == seed_y)
-      && mc.IsExpired(0) <= cfg.EXP_GRACE_PERIOD()
+      && (mc.IsExpired(0) <= cfg.EXP_GRACE_PERIOD())
     ) ? active : ready;
 
   }
