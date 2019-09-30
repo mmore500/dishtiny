@@ -173,7 +173,8 @@ public:
 
       // was parent rich enough?
       if (
-        cur_stockpile <= 0.0
+        !cfg.RESOURCE_ARMOR()
+        || cur_stockpile <= 0.0
         || (*which)->par_wealth - cfg.REP_LEAD() > cur_stockpile
       ) {
         // set up the pending birth!

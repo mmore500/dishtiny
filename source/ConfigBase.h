@@ -27,6 +27,7 @@ EMP_BUILD_CONFIG(
   VALUE(EXP_GRACE_PERIOD, double, 3.0, "How many channel generations should resource collection be allowed after a cell's expires channel generation counter?"),
   VALUE(STOCHASTIC_TRIGGER_FREQ, double, 0.001, "How often should the stochastic event fire?"),
   VALUE(WAVE_REPLICATES, size_t, 3, "How often should the stochastic event fire?"),
+  VALUE(RESOURCE_ARMOR, bool, false, "Should cells be able to use stockpiled resource to block incoming reproduction?"),
 
   GROUP(PROGRAM_GROUP, "SignalGP program Settings"),
   VALUE(PROGRAM_MAX_FUN_CNT__INIT, size_t, 16, "Used for generating SGP programs. At most, how many functions do we generate?"),
