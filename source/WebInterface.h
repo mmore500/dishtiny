@@ -280,6 +280,25 @@ public:
     )});
 
     artists.push_back({emp::NewPtr<WebArtist<size_t>>(
+      "Reproduction",
+      "Reproduction",
+      grid_viewer,
+      [this](size_t i){
+        return w.man->Priority(i).CountRequests();
+      },
+      [](std::optional<size_t> state) {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else return "yellow";
+        } else return "black";
+      },
+      cfg_
+    )});
+    artists.push_back({emp::NewPtr<WebArtist<size_t>>(
       "Apoptosis",
       "Apoptosis",
       grid_viewer,

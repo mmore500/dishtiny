@@ -117,6 +117,14 @@ public:
 
   }
 
+  size_t CountRequests() {
+    return std::count_if(
+      std::cbegin(requests),
+      std::cend(requests),
+      [](const std::optional<SirePack> & sp){ return static_cast<bool>(sp); }
+    );
+  }
+
   // return whether an additional request was queued
   // i.e., whether reproduction cost should be assessed
   bool AddRequest(const SirePack & sp) {
@@ -148,11 +156,7 @@ public:
     }
 
     // how many valid requests are there?
-    size_t n_req = std::count_if(
-      std::cbegin(requests),
-      std::cend(requests),
-      [](const std::optional<SirePack> & sp){ return static_cast<bool>(sp); }
-    );
+    size_t n_req = CountRequests();
 
     while (n_req) {
       // pick a request at random
