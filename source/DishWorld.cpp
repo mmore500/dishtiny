@@ -159,11 +159,11 @@ void DishWorld::Step() {
     ) {
 
       if (
-        opt_sirepack->replev == cfg.NLEV() &&
-        local_rngs[i]->GetDouble() < cfg.PROPAGULE_MUTATION_RATE()
+        (opt_sirepack->replev == cfg.NLEV()) &&
+        (local_rngs[i]->GetDouble() < cfg.PROPAGULE_MUTATION_RATE())
       ) {
         opt_sirepack->genome->DoMutations(mut,*local_rngs[i]);
-      } else if(local_rngs[i]->GetDouble() < cfg.MUTATION_RATE()) {
+      } else if (local_rngs[i]->GetDouble() < cfg.MUTATION_RATE()) {
         opt_sirepack->genome->DoMutations(mut, *local_rngs[i]);
       }
 
