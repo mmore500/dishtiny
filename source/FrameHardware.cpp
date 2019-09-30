@@ -95,120 +95,118 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
   Genome & g = Cell().Man().DW().GetOrg(Cell().GetPos());
 
   // update trigger
-  cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 0));
+  cpu.TriggerEvent("EnvTrigger", g.GetTag(0));
 
   // was just born trigger
   if (Cell().Man().Family(Cell().GetPos()).GetCellAge(update) == 0) {
-    cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 1));
+    cpu.TriggerEvent("EnvTrigger", g.GetTag(1));
   } else {
-  // cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
+  // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
   }
-
-  // negative resource trigger
-  if (Cell().Man().Stockpile(Cell().GetPos()).QueryResource() < 0) {
-    cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 2));
-  } else {
-    // cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
-  }
-
-  // harvest withdrawal trigger
-  for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-    if (Cell().Man().Stockpile(Cell().GetPos()).QueryHarvestWithdrawals(lev)) {
-      cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 3));
-      break;
-    }
-  }
-  // clean up
-  for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-    Cell().Man().Stockpile(Cell().GetPos()).ResetHarvestWithdrawals(lev);
-  }
-
 
   // neighbor has more resource or less?
   if (IsPoorerThan() && IsLive()) {
-    cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 4));
+    cpu.TriggerEvent("EnvTrigger", g.GetTag(3));
   } else if (IsLive()) {
-    cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 5));
+    cpu.TriggerEvent("EnvTrigger", g.GetTag(4));
   }
 
   // neighbor is dead or live?
   // if (IsLive()) {
-  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
+  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
   // } else {
-  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
+  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
   // }
 
   // neighbor cell age older or younger?
   // if (IsOlderThan() && IsLive()) {
-  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
+  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
   // } else if (IsLive()) {
-  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
+  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
   // }
 
   // stochastic trigger
   // if (local_rng.GetDouble() < cfg.STOCHASTIC_TRIGGER_FREQ()) {
-  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
+  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
   // } else {
-  // // cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
+  // // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
   // }
 
   if (cfg.CHANNELS_VISIBLE()) {
 
+    // is neighbor expired?
+    // if (IsExpired(0)) {
+    //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
+    // } else {
+    //   // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
+    // }
+
     // cell parent trigger
     // note: mutually exclusive with cell child trigger
     if (IsCellParent()) {
-      cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 6));
+      cpu.TriggerEvent("EnvTrigger", g.GetTag(5));
     } else {
-      // cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
+      // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
     }
 
     // cell child trigger
     if (IsCellChild()) {
-      cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 7));
+      cpu.TriggerEvent("EnvTrigger", g.GetTag(6));
     } else {
-      // cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
+      // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
     }
 
     // propagule child trigger
     if (IsPropaguleChild()) {
-      cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 8));
+      cpu.TriggerEvent("EnvTrigger", g.GetTag(7));
     } else {
-      // cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
+      // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
     }
 
     // propagule parent trigger
     // note: mutually exclusive with propagule child trigger
     if (IsPropaguleParent()) {
-      cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 9));
+      cpu.TriggerEvent("EnvTrigger", g.GetTag(8));
     } else {
-      // cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
+      // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
     }
 
-    // is neighbor expired?
-    if (IsExpired(0)) {
-      cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 10));
-    } else {
-      // cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
-    }
+  }
 
-    // self-expiration trigger
-    if (
-      Cell().Man().Channel(Cell().GetPos()).IsExpired(0)
-      > cfg.EXP_GRACE_PERIOD()
-    ) {
-      cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 11));
-    } else {
-      // cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, X));
-    }
+  for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
 
-    // channel match triggers
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      if (IsChannelMate(lev)) {
-        cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 12+2*lev));
+    if (cfg.CHANNELS_VISIBLE()) {
+      const size_t exp = Cell().Man().Channel(Cell().GetPos()).IsExpired(lev);
+      // self-expiration trigger
+      if (!exp) {
+        // not expired at all
+        cpu.TriggerEvent("EnvTrigger", g.GetTag(9+6*lev));
+      } else if (exp <= cfg.EXP_GRACE_PERIOD()) {
+        // slightly exprired
+        cpu.TriggerEvent("EnvTrigger", g.GetTag(10+6*lev));
       } else {
-        cpu.TriggerEvent("EnvTrigger", g.GetTag(local_rng, 13+2*lev));
+        // totally expired
+        cpu.TriggerEvent("EnvTrigger", g.GetTag(11+6*lev));
+      }
+
+      // channel match triggers
+      if (IsChannelMate(lev)) {
+        cpu.TriggerEvent("EnvTrigger", g.GetTag(12+6*lev));
+      } else {
+        cpu.TriggerEvent("EnvTrigger", g.GetTag(13+6*lev));
       }
     }
+
+    // harvest withdrawal trigger
+    if (Cell().Man().Stockpile(Cell().GetPos()).QueryHarvestWithdrawals(lev)) {
+      cpu.TriggerEvent(
+        "EnvTrigger",
+        g.GetTag(14+6*lev)
+      );
+    }
+    // clean up
+    Cell().Man().Stockpile(Cell().GetPos()).ResetHarvestWithdrawals(lev);
+
 
   }
 

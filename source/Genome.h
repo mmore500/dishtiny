@@ -21,7 +21,9 @@ class Genome {
 
 public:
 
-  Genome(const Genome &) = default;
+  Genome(const Genome&) = default;
+
+  Genome& operator=(const Genome&) = delete;
 
   Genome(
     emp::Random &local_rng,
@@ -42,6 +44,10 @@ public:
     ))
   {
       emp_assert(program.GetSize());
+
+      for (size_t i = 0; i < 14 + 6 * cfg.NLEV(); ++i) {
+        tags.emplace_back(local_rng);
+      }
 
       // filter out some instructions from  initially generated genomes
       // by replacing them with NOPs
@@ -91,18 +97,17 @@ public:
 
     }
 
-    const Config::tag_t& GetTag(emp::Random & rand, const size_t i) {
-      while (tags.size() <= i) {
-        tags.emplace_back(rand);
-      }
-      return tags[i];
+    const Config::tag_t& GetTag(const size_t i) { return tags[i]; }
+
+    bool operator==(const Genome& other) const {
+      return (
+        program == other.program
+        && tags == other.tags
+      );
     }
 
     bool operator!=(const Genome& other) const {
-      return (
-        program != other.program
-        || tags != other.tags
-      );
+      return !(*this == other);
     }
 
     bool operator<(const Genome& other) const {
