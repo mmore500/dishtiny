@@ -316,21 +316,21 @@ public:
       cfg_
     )});
 
-    artists.push_back({emp::NewPtr<WebArtist<Genome>>(
+    artists.push_back({emp::NewPtr<WebArtist<emp::Ptr<Genome>>>(
       "Taxa",
       "Taxa",
       grid_viewer,
       [this](size_t i){
-        return w.IsOccupied(i) ? std::make_optional(w.GetOrg(i)) : std::nullopt;
+        return w.IsOccupied(i) ? std::make_optional(w.GetOrgPtr(i)) : std::nullopt;
       },
-      [](std::optional<Genome> gen) -> std::string {
+      [](std::optional<emp::Ptr<Genome>> gen) -> std::string {
         if (gen) return "white";
         else return "black";
       },
       cfg_,
-      [](std::optional<Genome> g1, std::optional<Genome> g2) -> std::string {
+      [](std::optional<emp::Ptr<Genome>> g1, std::optional<emp::Ptr<Genome>> g2) -> std::string {
         if (!g1 || !g2) return "black";
-        else if (*g1 != *g2) return "red";
+        else if (**g1 != **g2) return "red";
         else return "white";
       }
     )});
