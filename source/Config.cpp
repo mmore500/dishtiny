@@ -39,8 +39,8 @@ Config::Config() {
   for (size_t l = 0; l < NLEV(); ++l) {
     clevs.push_back(emp::NewPtr<ConfigLevel>());
     if (l == 1) {
-      clevs[l]->Set("EVENT_RADIUS", "9");
-      clevs[l]->Set("SIGNAL_RADIUS", "27");
+      clevs[l]->Set("EVENT_RADIUS", "6");
+      clevs[l]->Set("SIGNAL_RADIUS", "24");
     }
   }
   // check conditions on settings

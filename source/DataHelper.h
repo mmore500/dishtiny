@@ -141,7 +141,7 @@ public:
         for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) CellGen(lev);
         Death();
         file.flush(H5F_SCOPE_LOCAL);
-      } else if (update % cfg.ANIMATION_FREQUENCY() == 0) {
+      } else if (update % cfg.ANIMATION_FREQUENCY() < cfg.ENV_TRIG_FREQ()) {
         // record frequent snapshots of these to stich together ananimations
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
         Stockpile();
