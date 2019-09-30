@@ -342,7 +342,7 @@ public:
         "Resource Wave",
         grid_viewer,
         [this, l](size_t i){
-          return w.IsOccupied(i) ? std::make_optional(w.man->Wave(i,l).GetState()) : std::nullopt;
+          return w.IsOccupied(i) ? std::make_optional(w.man->Wave(0, i,l).GetState()) : std::nullopt;
         },
         [this, l](std::optional<int> cp) -> std::string {
           if (cp) {
