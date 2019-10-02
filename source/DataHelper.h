@@ -111,9 +111,11 @@ public:
       if(cfg.TimingFun(update)) {
         // only log one snapshot of genoypes, not a sequence
         // because it's space intensive
-        if(update % cfg.SNAPSHOT_FREQUENCY() == 0) Population();
-        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-          Regulators(dir);
+        if(update % cfg.SNAPSHOT_FREQUENCY() == 0) {
+          Population();
+          for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+            Regulators(dir);
+          }
         }
 
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
