@@ -47,8 +47,8 @@ EMP_BUILD_CONFIG(
   VALUE(COMPUTE_FREQ, size_t, 4, "How often to step the CPUs?"),
 
   GROUP(MUTATION_GROUP, "SignalGP Mutation Settings"),
-  VALUE(MUTATION_RATE, double, 0.02, "What percentage of offspring should experience mutations?"),
-  VALUE(PROPAGULE_MUTATION_RATE, double, 0.0, "What percentage of propagule offspring should experience additional mutations?"),
+  VALUE(MUTATION_RATE, double, 0.001, "What percentage of offspring should experience mutations?"),
+  VALUE(PROPAGULE_MUTATION_RATE, double, 1.0, "What percentage of propagule offspring should experience additional mutations?"),
   VALUE(PROGRAM_MIN_ARG_VAL, int, 0, "Minimum argument value for instructions."),
   VALUE(PROGRAM_MAX_ARG_VAL, int, 8, "Maximum argument value for instructions."),
   VALUE(TAG_BIT_FLIP__PER_BIT, double, 0.005, "Per-bit mutation rate of tag bit flips."),
