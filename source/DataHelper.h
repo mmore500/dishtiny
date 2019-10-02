@@ -146,6 +146,7 @@ public:
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
         Stockpile();
         TotalContribute();
+        Live();
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
