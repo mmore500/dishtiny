@@ -6,6 +6,8 @@
 
 #include "H5Cpp.h"
 
+#include <cereal/archives/json.hpp>
+
 #include "data/DataNode.h"
 #include "tools/keyname_utils.h"
 #include "tools/string_utils.h"
@@ -42,6 +44,10 @@ public:
   {
 
     file.createGroup("/Population");
+    file.createGroup("/Regulators");
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      file.createGroup("/Regulators/dir_"+emp::to_string(dir));
+    }
     file.createGroup("/Index");
     file.createGroup("/Channel");
     for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
@@ -106,6 +112,9 @@ public:
         // only log one snapshot of genoypes, not a sequence
         // because it's space intensive
         if(update % cfg.SNAPSHOT_FREQUENCY() == 0) Population();
+        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+          Regulators(dir);
+        }
 
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
         Stockpile();
@@ -390,6 +399,44 @@ private:
         g.GetProgram().PrintProgramFull(buffers[i]);
         strings[i] = buffers[i].str();
       }
+      data[i] = strings[i].c_str();
+
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void Regulators(const size_t dir) {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const H5::StrType tid(0, H5T_VARIABLE);
+
+    H5::DataSet ds = file.createDataSet(
+      "/Regulators/dir_" + emp::to_string(dir)
+        + "/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    const char *data[dw.GetSize()];
+
+    std::ostringstream buffers[dw.GetSize()];
+    std::string strings[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+
+      if(dw.IsOccupied(i)) {
+        cereal::JSONOutputArchive oarchive(buffers[i]);
+        oarchive(
+          dw.frames[i]->GetFrameHardware(
+            dir
+          ).GetHardware().GetMatchBin().GetState()
+        );
+      }
+
+      strings[i] = buffers[i].str();
+
       data[i] = strings[i].c_str();
 
     }
