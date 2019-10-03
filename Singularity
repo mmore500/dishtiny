@@ -49,6 +49,7 @@ pip3 install fileshash
 pip3 install h5py
 pip3 install tqdm
 pip3 install joblib
+pip3 install sklearn
 
 # rm -rf /opt/Empirical
 git clone https://github.com/devosoft/Empirical /opt/Empirical -b match-bin
