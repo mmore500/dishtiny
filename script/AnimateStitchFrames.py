@@ -10,6 +10,7 @@ from joblib import delayed, Parallel
 filenames = sys.argv[1:]
 
 assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
+assert len({kn.unpack(filename)['seed'] for filename in filenames}) == 1
 
 df = pd.DataFrame.from_dict([kn.unpack(filename) for filename in filenames])
 
@@ -46,6 +47,7 @@ for treat in df['treat'].unique():
         })] + ['-c:v','libx264','-r','30','-pix_fmt','yuv420p']
         + [kn.pack({
             'treat' : treat,
+            'seed' : seed,
             '_source_hash' : kn.unpack(filenames[0])['_source_hash'],
             'ext' : '.mp4'
         })]
