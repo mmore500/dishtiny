@@ -48,6 +48,10 @@ public:
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       file.createGroup("/Regulators/dir_"+emp::to_string(dir));
     }
+    file.createGroup("/Functions");
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      file.createGroup("/Functions/dir_"+emp::to_string(dir));
+    }
     file.createGroup("/Index");
     file.createGroup("/Channel");
     for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
@@ -113,9 +117,10 @@ public:
         // because it's space intensive
         if(update % cfg.SNAPSHOT_FREQUENCY() == 0) {
           Population();
-          for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-            Regulators(dir);
-          }
+        }
+        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+          Regulators(dir);
+          Functions(dir);
         }
 
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
@@ -429,7 +434,10 @@ private:
     for (size_t i = 0; i < dw.GetSize(); ++i) {
 
       if(dw.IsOccupied(i)) {
-        cereal::JSONOutputArchive oarchive(buffers[i]);
+        cereal::JSONOutputArchive oarchive(
+          buffers[i],
+          cereal::JSONOutputArchive::Options::NoIndent()
+        );
         oarchive(
           dw.frames[i]->GetFrameHardware(
             dir
@@ -438,7 +446,53 @@ private:
       }
 
       strings[i] = buffers[i].str();
+      emp::remove_whitespace(strings[i]);
+      data[i] = strings[i].c_str();
 
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void Functions(const size_t dir) {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const H5::StrType tid(0, H5T_VARIABLE);
+
+    H5::DataSet ds = file.createDataSet(
+      "/Functions/dir_" + emp::to_string(dir)
+        + "/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    const char *data[dw.GetSize()];
+
+    std::ostringstream buffers[dw.GetSize()];
+    std::string strings[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+
+      if(dw.IsOccupied(i)) {
+        cereal::JSONOutputArchive oarchive(
+          buffers[i],
+          cereal::JSONOutputArchive::Options::NoIndent()
+        );
+        const auto & hw = dw.frames[i]->GetFrameHardware(
+          dir
+        ).GetHardware();
+        emp::vector<Config::tag_t> res;
+        for (const auto & stack : hw.GetCores()) {
+          if (stack.size()) res.push_back(
+            hw.GetMatchBin().GetState().tags.find(stack.back().GetFP())->second
+          );
+        }
+        oarchive(res);
+      }
+
+      strings[i] = buffers[i].str();
+      emp::remove_whitespace(strings[i]);
       data[i] = strings[i].c_str();
 
     }
