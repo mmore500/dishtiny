@@ -70,7 +70,7 @@ EMP_BUILD_CONFIG(
   VALUE(CONFIGLEVEL_EXTENSION, std::string, ".cfg", "[NATIVE] Filename extension"),
   VALUE(SNAPSHOT_FREQUENCY, size_t, 131072, "[NATIVE] How often should we save data snapshots?"),
   VALUE(SNAPSHOT_LENGTH, size_t, 512, "[NATIVE] How long should snapshots last for?"),
-  VALUE(RUN_LENGTH, size_t, 1052672, "[NATIVE] How many updates should we run the experiment for?"),
+  VALUE(RUN_LENGTH, size_t, 524800, "[NATIVE] How many updates should we run the experiment for?"),
   VALUE(SYSTEMATICS, bool, true, "[NATIVE] Should we keep systematics data?"),
   VALUE(SEED_POP, bool, false, "[NATIVE] Should we seed the population?; TOOD unimplemented"),
   VALUE(SEED_POP_FILENAME, std::string, "ConsolidatedChampions.csv", "[NATIVE] Where should we look for the genotypes to seed our population with?; TODO unimplemented"),
