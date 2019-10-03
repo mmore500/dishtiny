@@ -52,37 +52,32 @@ def RenderTriangles(
         radius=21
     ):
 
-    b = (1.0, 1.0, 1.0, 1.0)
-    w = (0.0, 0.0, 0.0, 1,0)
     top = ColorMap(top_val)
     bottom = ColorMap(bottom_val)
     left = ColorMap(left_val)
     right = ColorMap(right_val)
 
-    res = np.array([
-        [b] * (radius * 2)
+    return np.array([
+        [top] * (radius * 2)
     ] + [
-        [b]
+        [left]
         + [left] * idx
-        + [b]
+        + [top]
         + [top] * (2 * (radius - idx) - 3)
-        + [b]
+        + [right]
         + [right] * idx
         for idx in range(radius - 1)
     ] + [
-        [b] + [left] * (radius - 1) + [b] + [right] * (radius - 1)
+        [left] + [left] * (radius - 1) + [top] + [right] * (radius - 1)
     ] + [
-        [b]
+        [left]
         + [left] * (radius - idx - 1)
-        + [b]
+        + [bottom]
         + [bottom] * (2 * idx - 1)
-        + [b]
+        + [right]
         + [right] * (radius - idx - 1)
         for idx in range(1, radius)
-    ]) if live_val else np.full((radius, radius), w)
-
-    return res
-
+    ]) if live_val else np.full((radius, radius), (0.0, 0.0, 0.0, 1.0))
 
 
 def RenderAndSave(upd, filename):
@@ -122,7 +117,7 @@ def RenderAndSave(upd, filename):
         )
     ]))
 
-    plt.figure(figsize=(50,50))
+    plt.figure(figsize=(18,18))
 
     plt.imshow(
         image,

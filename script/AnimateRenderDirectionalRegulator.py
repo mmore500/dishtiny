@@ -35,30 +35,27 @@ def RenderTriangles(
         radius=21
     ):
 
-    b = (0.5, 0.5, 0.5)
-    res = np.array([
-        [b] * (radius * 2)
+    return np.array([
+        [top] * (radius * 2)
     ] + [
-        [b]
+        [left]
         + [left] * idx
-        + [b]
+        + [top]
         + [top] * (2 * (radius - idx) - 3)
-        + [b]
+        + [right]
         + [right] * idx
         for idx in range(radius - 1)
     ] + [
-        [b] + [left] * (radius - 1) + [b] + [right] * (radius - 1)
+        [left] + [left] * (radius - 1) + [top] + [right] * (radius - 1)
     ] + [
-        [b]
+        [left]
         + [left] * (radius - idx - 1)
-        + [b]
+        + [bottom]
         + [bottom] * (2 * idx - 1)
-        + [b]
+        + [right]
         + [right] * (radius - idx - 1)
         for idx in range(1, radius)
     ]) if live_val else np.full((radius, radius), (0.0, 0.0, 0.0))
-
-    return res
 
 def RenderAndSave(upd, filename):
 
@@ -144,7 +141,7 @@ def RenderAndSave(upd, filename):
         in zip(live, index)
     ])),k=1),axis=0)
 
-    plt.figure(figsize=(50,50))
+    plt.figure(figsize=(18,18))
 
     plt.imshow(
         image,
