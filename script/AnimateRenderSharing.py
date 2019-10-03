@@ -19,7 +19,17 @@ from joblib import delayed, Parallel
 matplotlib.rcParams['pdf.fonttype'] = 42
 
 filename = sys.argv[1]
-updates = (int(v) for v in sys.argv[2:])
+updates = [int(v) for v in sys.argv[2:]]
+
+file = h5py.File(filename, 'r')
+nlev = int(file.attrs.get('NLEV'))
+
+most = max([
+    np.max(np.array(file['TotalContribute']['upd_'+str(upd)]))
+    for upd in updates
+])
+if not most:
+    most = 1.0
 
 def RenderAndSave(upd, filename):
 
@@ -32,8 +42,8 @@ def RenderAndSave(upd, filename):
     image = np.array([
         [
             (
-                max(0.0, (1.0 - val_share ** 10)),
-                max(0.0, (1.0 - val_share ** 10)),
+                1.0 - val_share/most,
+                1.0 - val_share/most,
                 1.0
             ) if val_live else (0.0,0.0,0.0)
             for val_share, val_live in zip(row_share, row_live)

@@ -19,15 +19,29 @@ import colorsys
 from tqdm import tqdm
 from joblib import delayed, Parallel
 
-viridis = cm.get_cmap('viridis', 12)
-
 matplotlib.rcParams['pdf.fonttype'] = 42
 
 filename = sys.argv[1]
-updates = (int(v) for v in sys.argv[2:])
+updates = [int(v) for v in sys.argv[2:]]
+
+file = h5py.File(filename, 'r')
+most = max([
+    np.max(np.array(
+        file['ResourceContributed']['dir_'+str(dir)]['upd_'+str(upd)]
+    ))
+    for dir in range(4)
+    for upd in updates
+])
+if not most:
+    most = 1.0
 
 def ColorMap(val):
-    return viridis(val)
+    return (
+        1.0 - val/most,
+        1.0 - val/most,
+        1.0,
+        1.0
+    )
 
 def RenderTriangles(
         top_val,
