@@ -18,6 +18,7 @@ EMPIRICAL_DIRTY := $(shell \
 # Flags to use regardless of compiler
 CFLAGS_all := -std=c++17 -Wall -Wno-unused-function \
                 -I$(EMP_DIR)/ \
+                -I$(EMP_DIR)/../third-party/cereal/include \
                 -DDISHTINY_HASH_=$(DISHTINY_HASH)$(DISHTINY_DIRTY) \
                 -DEMPIRICAL_HASH_=$(EMPIRICAL_HASH)$(EMPIRICAL_DIRTY) \
 								$(ARGS)
