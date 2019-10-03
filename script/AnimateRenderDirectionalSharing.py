@@ -91,6 +91,13 @@ def RenderAndSave(upd, filename):
     right = np.array(file['ResourceContributed']['dir_2']['upd_'+str(upd)])
     live = np.array(file['Live']['upd_'+str(upd)])
 
+    data_0 = np.array(file['Channel']['lev_0']['upd_'+str(upd)])
+    data_1 = (
+        np.array(file['Channel']['lev_0']['upd_'+str(upd)])
+        if nlev == 1 else
+        np.array(file['Channel']['lev_1']['upd_'+str(upd)])
+    )
+
     image = np.transpose(np.block([
         [
             np.transpose(RenderTriangles(
@@ -126,6 +133,25 @@ def RenderAndSave(upd, filename):
 
     plt.axis('off')
     plt.grid(b=None)
+
+    rescale = lambda coord: [v * 42 for v in coord]
+    lines_0 = LineCollection([
+        [ rescale(coord) for coord in ((x,y), dest) ]
+        for x in range(data_0.shape[0])
+        for y in range(data_0.shape[1])
+        for dest in ((x+1,y), (x,y+1))
+        if data_0[y][x] != data_0[dest[1]-1][dest[0]-1]
+    ], linestyle=(0, (1, 3)), colors='0.5')
+    plt.gca().add_collection(lines_0)
+
+    lines_1 = LineCollection([
+        [ rescale(coord) for coord in ((x,y), dest) ]
+        for x in range(data_1.shape[0])
+        for y in range(data_1.shape[1])
+        for dest in ((x+1,y), (x,y+1))
+        if data_1[y][x] != data_1[dest[1]-1][dest[0]-1]
+    ], linestyle='solid', colors='black')
+    plt.gca().add_collection(lines_1)
 
     plt.savefig(
         kn.pack({
