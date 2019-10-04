@@ -2,6 +2,7 @@
 
 import sys
 import os
+import warnings
 
 import matplotlib
 matplotlib.use('Agg')
@@ -89,8 +90,13 @@ def RenderAndSave(upd, filename):
         if n:
             pca = PCA(n_components=n)
 
-            pc = pca.fit_transform(df.to_numpy())
-            pc = (pc - pc.min(0)) / pc.ptp(0)
+            pc = None
+            with warnings.catch_warnings():
+                # ignore sklearn and divide by zero warnings
+                # (we handle them below)
+                warnings.simplefilter("ignore")
+                pc = pca.fit_transform(df.to_numpy())
+                pc = (pc - pc.min(0)) / pc.ptp(0)
 
             for idx, row in zip(idxs, pc):
                 cmapper[idx] = (
