@@ -92,9 +92,15 @@ def MakePCA(id, filename):
     df = df.dropna(thresh=len(df)/2, axis=1).fillna(1)
 
     n = min(3, len(df.columns), len(df))
+
+    pca = PCA(n_components=n).fit(df.to_numpy()) if n else None
+    res = pca.transform(df.to_numpy()) if n else None
+
     return (
-        PCA(n_components=n).fit(df.to_numpy()),
-        list(df.columns)
+        pca,
+        list(df.columns),
+        res.min(0),
+        res.ptp(0)
     ) if n else None
 
 results = Parallel(n_jobs=-1)(
@@ -161,9 +167,9 @@ def RenderAndSave(upd, filename):
         ).fillna(1)
 
         if pcamapper[id] is not None:
-            pca, cols = pcamapper[id]
+            pca, cols, minv, ptpv = pcamapper[id]
             pc = pca.transform(df[cols].to_numpy())
-            pc = (pc - pc.min(0)) / pc.ptp(0)
+            pc = (pc - minv) / ptpv
 
             for idx, row in zip(idxs, pc):
                 cmapper[idx] = (
