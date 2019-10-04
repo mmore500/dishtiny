@@ -78,18 +78,29 @@ def RenderAndSave(upd, filename):
                     tags[uid] : regulatorsum[uid] for uid in archives[0]['uids']
                 })
 
-        df = pd.DataFrame.from_records(tags_to_regs).dropna(axis=1)
-        pca = PCA(n_components=3)
+        # if less than half the cells have the regulator, drop it
+        # otherwise (e.g., probably a few cells lost it), assume it's default
+        df = pd.DataFrame.from_records(
+            tags_to_regs
+        )
+        df = df.dropna(thresh=len(df)/2).fillna(1)
 
-        pc = pca.fit_transform(df.to_numpy())
-        pc = (pc - pc.min(0)) / pc.ptp(0)
+        n=min(3, len(df.columns), len(df))
+        if n:
+            pca = PCA(n_components=n)
 
-        for idx, row in zip(idxs, pc):
-            cmapper[idx] = (
-                row[0] if row.size >= 1 and not np.isnan(row[0]) else 0.5,
-                row[1] if row.size >= 2 and not np.isnan(row[1]) else 0.5,
-                row[2] if row.size >= 3 and not np.isnan(row[2]) else 0.5,
-            )
+            pc = pca.fit_transform(df.to_numpy())
+            pc = (pc - pc.min(0)) / pc.ptp(0)
+
+            for idx, row in zip(idxs, pc):
+                cmapper[idx] = (
+                    row[0] if row.size >= 1 and not np.isnan(row[0]) else 0.5,
+                    row[1] if row.size >= 2 and not np.isnan(row[1]) else 0.5,
+                    row[2] if row.size >= 3 and not np.isnan(row[2]) else 0.5,
+                )
+        else:
+            for idx in idxs:
+                cmapper[idx] = (0.5, 0.5, 0.5)
 
     image = np.array([
         [
