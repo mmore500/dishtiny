@@ -76,7 +76,7 @@ def RenderTriangles(
         + [right]
         + [right] * (radius - idx - 1)
         for idx in range(1, radius)
-    ]) if live_val else np.full((radius, radius, 3), 0.0)
+    ]) if live_val else np.full((radius*2, radius*2, 3), 0.0)
 
 
 def RenderAndSave(upd, filename):
