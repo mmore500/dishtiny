@@ -28,10 +28,10 @@ filename = sys.argv[1]
 updates = (int(v) for v in sys.argv[2:])
 
 def RenderTriangles(
-        top,
-        bottom,
-        left,
         right,
+        left,
+        bottom,
+        top,
         live_val,
         radius=21
     ):

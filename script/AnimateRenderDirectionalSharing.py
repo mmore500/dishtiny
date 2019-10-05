@@ -44,10 +44,10 @@ def ColorMap(val):
     )
 
 def RenderTriangles(
-        top_val,
-        bottom_val,
-        left_val,
         right_val,
+        left_val,
+        bottom_val,
+        top_val,
         live_val,
         radius=21
     ):
