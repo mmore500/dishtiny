@@ -169,7 +169,7 @@ def RenderAndSave(upd, filename):
         for y in range(index.shape[1])
         for dest in ((x+1,y), (x,y+1))
         if data_0[y][x] != data_0[dest[1]-1][dest[0]-1]
-    ], linestyle='solid', colors='white', linewidths=(4,))
+    ], linestyle='solid', colors='white', linewidths=(2,))
     plt.gca().add_collection(lines_0)
 
     lines_1 = LineCollection([
@@ -178,7 +178,7 @@ def RenderAndSave(upd, filename):
         for y in range(index.shape[1])
         for dest in ((x+1,y), (x,y+1))
         if data_1[y][x] != data_1[dest[1]-1][dest[0]-1]
-    ], linestyle='solid', colors='black', linewidths=(4,))
+    ], linestyle='solid', colors='black', linewidths=(2,))
     plt.gca().add_collection(lines_1)
 
     plt.savefig(
