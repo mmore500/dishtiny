@@ -2,6 +2,7 @@
 
 import sys
 import os
+import warnings
 
 import matplotlib
 matplotlib.use('Agg')
@@ -106,22 +107,27 @@ def RenderAndSave(upd, filename):
 
         df = pd.DataFrame.from_records(fps_to_counts).fillna(0)
 
-        if not len(df.columns):
+        n=min(3, len(df.columns), len(df))
+        if n:
+            pca = PCA(n_components=n)
+
+            pc = None
+            with warnings.catch_warnings():
+                # ignore sklearn and divide by zero warnings
+                # (we handle them below)
+                warnings.simplefilter("ignore")
+                pc = pca.fit_transform(df.to_numpy())
+                pc = (pc - pc.min(0)) / pc.ptp(0)
+
+            for (dir, idx), row in zip(idxdirs, pc):
+                cmapper[dir][idx] = (
+                    row[0] if row.size >= 1 and not np.isnan(row[0]) else 0.5,
+                    row[1] if row.size >= 2 and not np.isnan(row[1]) else 0.5,
+                    row[2] if row.size >= 3 and not np.isnan(row[2]) else 0.5,
+                )
+        else:
             for dir, idx in idxdirs:
                 cmapper[dir][idx] = (0.5, 0.5, 0.5)
-            continue
-
-        pca = PCA(n_components=min(3, len(df.columns)))
-
-        pc = pca.fit_transform(df.to_numpy())
-        pc = (pc - pc.min(0)) / pc.ptp(0)
-
-        for (dir, idx), row in zip(idxdirs, pc):
-            cmapper[dir][idx] = (
-                row[0] if row.size >= 1 and not np.isnan(row[0]) else 0.5,
-                row[1] if row.size >= 2 and not np.isnan(row[1]) else 0.5,
-                row[2] if row.size >= 4 and not np.isnan(row[2]) else 0.5,
-            )
 
     image = np.flip(np.rot90(np.transpose(np.block([
         [
