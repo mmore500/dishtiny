@@ -25,6 +25,7 @@ for treat in df['treat'].unique():
             + [kn.pack({
                 'treat' : treat,
                 'frame' : str(idx).zfill(4),
+                'seed' : kn.unpack(filenames[0])['seed'],
                 '_source_hash' : kn.unpack(filenames[0])['_source_hash'],
                 'ext' : '.png'
                 })]
@@ -42,12 +43,13 @@ for treat in df['treat'].unique():
         + [kn.pack({
             'treat' : treat,
             'frame' : '%04d',
+            'seed' : kn.unpack(filenames[0])['seed'],
             '_source_hash' : kn.unpack(filenames[0])['_source_hash'],
             'ext' : '.png'
         })] + ['-c:v','libx264','-r','30','-pix_fmt','yuv420p']
         + [kn.pack({
             'treat' : treat,
-            'seed' : seed,
+            'seed' : kn.unpack(filenames[0])['seed'],
             '_source_hash' : kn.unpack(filenames[0])['_source_hash'],
             'ext' : '.mp4'
         })]
