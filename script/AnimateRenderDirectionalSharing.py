@@ -40,7 +40,6 @@ def ColorMap(val):
         1.0 - val/most,
         1.0 - val/most,
         1.0,
-        1.0
     )
 
 def RenderTriangles(
@@ -77,7 +76,7 @@ def RenderTriangles(
         + [right]
         + [right] * (radius - idx - 1)
         for idx in range(1, radius)
-    ]) if live_val else np.full((radius, radius), (0.0, 0.0, 0.0, 1.0))
+    ]) if live_val else np.full((radius, radius, 3), 0.0)
 
 
 def RenderAndSave(upd, filename):
