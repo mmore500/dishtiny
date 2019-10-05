@@ -56,7 +56,7 @@ def RenderTriangles(
         + [right]
         + [right] * (radius - idx - 1)
         for idx in range(1, radius)
-    ]) if live_val else np.full((radius, radius), (0.0, 0.0, 0.0))
+    ]) if live_val else np.full((radius*2, radius*2, 3), 0.0)
 
 def RenderAndSave(upd, filename):
 
@@ -89,21 +89,24 @@ def RenderAndSave(upd, filename):
     cmapper = [ {} for dir in range(4) ]
     for id in ids:
         fps_to_counts = []
-        idxdirs = []
-        for idx in range(index.flatten().size):
-            if channel[idx] == id and live.flatten()[idx]:
+        idxs = []
+        dirs = []
+        for flat_idx, idx in enumerate(index.flatten()):
+            if channel[flat_idx] == id:
                 for dir in range(4):
-                    idxdirs.append( (dir, idx) )
-                    fps = map(
-                        lambda x: x['value0']['value0'],
-                        json.loads(
-                            function[dir][idx].decode("utf-8")
-                        )['value0']
-                    )
-                    fpcounts = defaultdict(lambda: 0)
-                    for fp in fps:
-                        fpcounts[fp] += 1
-                    fps_to_counts.append(fpcounts)
+                    idxs.append(idx)
+                    dirs.append(dir)
+                    if live.flatten()[flat_idx]:
+                        fps = map(
+                            lambda x: x['value0']['value0'],
+                            json.loads(
+                                function[dir][flat_idx].decode("utf-8")
+                            )['value0']
+                        )
+                        fpcounts = defaultdict(lambda: 0)
+                        for fp in fps:
+                            fpcounts[fp] += 1
+                        fps_to_counts.append(fpcounts)
 
         df = pd.DataFrame.from_records(fps_to_counts).fillna(0)
 
@@ -119,14 +122,14 @@ def RenderAndSave(upd, filename):
                 pc = pca.fit_transform(df.to_numpy())
                 pc = (pc - pc.min(0)) / pc.ptp(0)
 
-            for (dir, idx), row in zip(idxdirs, pc):
+            for dir, idx, row in zip(dirs, idxs, pc):
                 cmapper[dir][idx] = (
                     row[0] if row.size >= 1 and not np.isnan(row[0]) else 0.5,
                     row[1] if row.size >= 2 and not np.isnan(row[1]) else 0.5,
                     row[2] if row.size >= 3 and not np.isnan(row[2]) else 0.5,
                 )
         else:
-            for dir, idx in idxdirs:
+            for dir, idx in zip(dirs, idxs):
                 cmapper[dir][idx] = (0.5, 0.5, 0.5)
 
     image = np.flip(np.rot90(np.transpose(np.block([

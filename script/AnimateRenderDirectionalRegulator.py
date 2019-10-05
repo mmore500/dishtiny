@@ -56,7 +56,7 @@ def RenderTriangles(
         + [right]
         + [right] * (radius - idx - 1)
         for idx in range(1, radius)
-    ]) if live_val else np.full((radius, radius), (0.0, 0.0, 0.0))
+    ]) if live_val else np.full((radius*2, radius*2, 3), 0.0)
 
 def RenderAndSave(upd, filename):
 
@@ -89,32 +89,30 @@ def RenderAndSave(upd, filename):
     cmapper = [ {} for dir in range(4) ]
     for id in ids:
         tags_to_regs = []
-        idxdirs = []
-        for idx in range(index.flatten().size):
-            if channel[idx] == id and live.flatten()[idx]:
+        idxs = []
+        dirs = []
+        for flat_idx, idx in enumerate(index.flatten()):
+            if channel[flat_idx] == id:
                 for dir in range(4):
-                    idxdirs.append( (dir, idx) )
-                    archive = json.loads(
-                        regulator[dir][idx].decode("utf-8")
-                    )['value0']
-                    tags = {
-                        d['key'] : d['value']['value0']['value0']
-                        for d in archive['tags']
-                    }
-                    regulators = {
-                        d['key'] : d['value']
-                        for d in archive['regulators']
-                    }
-                    tags_to_regs.append({
-                        tags[uid] : regulators[uid] for uid in archive['uids']
-                    })
+                    idxs.append( idx )
+                    dirs.append( dir )
+                    if live.flatten()[flat_idx]:
+                        archive = json.loads(
+                            regulator[dir][flat_idx].decode("utf-8")
+                        )['value0']
+                        tags = {
+                            d['key'] : d['value']['value0']['value0']
+                            for d in archive['tags']
+                        }
+                        regulators = {
+                            d['key'] : d['value']
+                            for d in archive['regulators']
+                        }
+                        tags_to_regs.append({
+                            tags[uid] : regulators[uid] for uid in archive['uids']
+                        })
 
         df = pd.DataFrame.from_records(tags_to_regs).fillna(0)
-
-        if not len(df.columns):
-            for dir, idx in idxdirs:
-                cmapper[dir][idx] = (0.5, 0.5, 0.5)
-            continue
 
         n=min(3, len(df.columns), len(df))
         if n:
@@ -128,14 +126,14 @@ def RenderAndSave(upd, filename):
                 pc = pca.fit_transform(df.to_numpy())
                 pc = (pc - pc.min(0)) / pc.ptp(0)
 
-            for (dir, idx), row in zip(idxdirs, pc):
+            for idx, dir, row in zip(idxs, dirs, pc):
                 cmapper[dir][idx] = (
                     row[0] if row.size >= 1 and not np.isnan(row[0]) else 0.5,
                     row[1] if row.size >= 2 and not np.isnan(row[1]) else 0.5,
                     row[2] if row.size >= 3 and not np.isnan(row[2]) else 0.5,
                 )
         else:
-            for dir, idx in idxdirs:
+            for idx, dir in zip(idxs, dirs):
                 cmapper[dir][idx] = (0.5, 0.5, 0.5)
 
     image = np.flip(np.rot90(np.transpose(np.block([
