@@ -49,6 +49,7 @@ for treat in df['treat'].unique():
         })] + ['-c:v','libx264','-r','30','-pix_fmt','yuv420p']
         + [kn.pack({
             'treat' : treat,
+            'title' : '_'.join(df['title'].unique()),
             'seed' : kn.unpack(filenames[0])['seed'],
             '_source_hash' : kn.unpack(filenames[0])['_source_hash'],
             'ext' : '.mp4'
