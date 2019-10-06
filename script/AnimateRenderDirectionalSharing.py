@@ -38,7 +38,7 @@ if not most:
 def ColorMap(val):
     return (
         1.0 - val/most,
-        1.0 - val/most,
+        0.0 if val else 1.0,
         1.0,
     )
 
