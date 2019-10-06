@@ -13,6 +13,8 @@ private:
 
   const Config &cfg;
 
+  emp::Random &local_rng;
+
   double resource;
 
   emp::vector<double> contrib_resource;
@@ -33,8 +35,10 @@ public:
 
   ManagerStockpile(
     std::function<size_t(size_t)> expchecker_,
+    emp::Random &local_rng_,
     const Config &cfg_
   ) : cfg(cfg_)
+  , local_rng(local_rng_)
   , contrib_resource(Cardi::Dir::NumDirs)
   , refund_resource(0.0)
   , harvest_withdrawals(cfg_.NLEV())
@@ -173,16 +177,17 @@ public:
   }
 
   void CleanSharingDoers(const size_t update) {
-    if (update % cfg.ENV_TRIG_FREQ()) {
-      for (auto & doer : sharing_doers) doer();
-    } else {
+    if (update % cfg.ENV_TRIG_FREQ() == 0) {
       sharing_doers.clear();
     }
 
   }
 
   void ProcessSharingDoers(const size_t update) {
-    if (update % cfg.ENV_TRIG_FREQ() == 0) sharing_doers.clear();
+    if (update % cfg.ENV_TRIG_FREQ()) {
+      emp::Shuffle(local_rng, sharing_doers);
+      for (auto & doer : sharing_doers) doer();
+    }
   }
 
   void Reset() {

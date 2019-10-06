@@ -45,7 +45,11 @@ Manager::Manager(
       emp::NewPtr<ManagerInbox>(cfg)
     );
     mss.push_back(
-      emp::NewPtr<ManagerStockpile>(mcs.back()->MakeExpChecker(), cfg)
+      emp::NewPtr<ManagerStockpile>(
+        mcs.back()->MakeExpChecker(),
+        *local_rngs[i],
+        cfg
+      )
     );
   }
 
