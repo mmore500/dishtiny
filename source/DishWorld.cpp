@@ -72,6 +72,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
         }
       }
     }
+    man->Stockpile(pos).Reset();
   });
 
   OnPlacement([this](const size_t pos){
