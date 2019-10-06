@@ -97,7 +97,7 @@ def RenderAndSave(upd, filename):
         np.array(file['Channel']['lev_1']['upd_'+str(upd)])
     )
 
-    image = np.transpose(np.block([
+    image = np.flip(np.rot90(np.transpose(np.block([
         [
             np.transpose(RenderTriangles(
                 val_top,
@@ -121,7 +121,7 @@ def RenderAndSave(upd, filename):
             right,
             live
         )
-    ]))
+    ])),k=1),axis=0)
 
     plt.figure(figsize=(18,18))
 
