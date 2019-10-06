@@ -861,8 +861,6 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
           FrameHardware &fh = *hw.GetTrait();
           fh.Cell().Man().Channel(fh.Cell().GetPos()).SetCellAgeBooster(
             lev,
-            std::abs(state.GetLocal(inst.args[0])),
-            state.GetLocal(inst.args[1]),
             2 + state.GetLocal(inst.args[2])
           );
         }

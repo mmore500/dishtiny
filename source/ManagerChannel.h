@@ -74,23 +74,11 @@ public:
 
   size_t GetGeneration(const size_t lev) const { return gen_counter[lev]; }
 
-  void SetCellAgeBooster(
-    const size_t lev,
-    const double bounded_amt, // must be positive
-    const double unbounded_amt, // can be positive or negative
-    const size_t duration
-  ) {
-    emp_assert(bounded_amt >= 0.0);
-
+  void SetCellAgeBooster(const size_t lev, const size_t duration) {
     cell_age_boosters[lev] = std::max(
-      0.0,
-      std::min(
-        bounded_amt,
-        std::max(GetGenCounter()[lev] - CalcExpLim(lev), 0.0)
-      ) + unbounded_amt
+      GetGeneration(lev) - CalcExpLim(lev),
+      0.0
     );
-
-    if (!std::isnormal(cell_age_boosters[lev])) cell_age_boosters[lev] = 0.0;
 
     cell_age_boosters_fresh[lev] = duration;
 
