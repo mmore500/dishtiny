@@ -44,6 +44,7 @@ public:
   {
 
     file.createGroup("/Population");
+    file.createGroup("/Triggers");
     file.createGroup("/Regulators");
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       file.createGroup("/Regulators/dir_"+emp::to_string(dir));
@@ -56,6 +57,14 @@ public:
     file.createGroup("/Channel");
     for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
       file.createGroup("/Channel/lev_"+emp::to_string(lev));
+    }
+    file.createGroup("/Expiration");
+    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      file.createGroup("/Expiration/lev_"+emp::to_string(lev));
+    }
+    file.createGroup("/ChannelGeneration");
+    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      file.createGroup("/ChannelGeneration/lev_"+emp::to_string(lev));
     }
     file.createGroup("/Stockpile");
     file.createGroup("/Live");
@@ -117,6 +126,7 @@ public:
         // because it's space intensive
         if(update % cfg.SNAPSHOT_FREQUENCY() == 0) {
           Population();
+          Triggers();
         }
         for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
           Regulators(dir);
@@ -124,6 +134,8 @@ public:
         }
 
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
+        for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ChannelGeneration(lev);
+        for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Expiration(lev);
         Stockpile();
         Live();
         Apoptosis();
@@ -242,6 +254,17 @@ private:
     const char *config_data[] = { config_string.c_str() };
 
    config_attribute.write(H5::StrType(0, H5T_VARIABLE),config_data);
+
+   const hsize_t expiration_key_dims[] = { 1 };
+   H5::DataSpace expiration_key_dataspace(1, expiration_key_dims);
+
+   H5::Attribute expiration_key_attribute = file.openGroup("/Expiration").createAttribute(
+     "KEY", H5::StrType(0, H5T_VARIABLE), expiration_key_dataspace
+   );
+
+   const char *expiration_key_data[] = {"0: unexpired, 1: within grace period, 2: expired"};
+
+   expiration_key_attribute.write(H5::StrType(0, H5T_VARIABLE), expiration_key_data);
 
     const hsize_t live_key_dims[] = { 1 };
     H5::DataSpace live_key_dataspace(1, live_key_dims);
@@ -414,6 +437,45 @@ private:
 
   }
 
+  void Triggers() {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const H5::StrType tid(0, H5T_VARIABLE);
+
+    H5::DataSet ds = file.createDataSet(
+      "/Triggers/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    const char *data[dw.GetSize()];
+
+    std::ostringstream buffers[dw.GetSize()];
+    std::string strings[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+
+      if(dw.IsOccupied(i)) {
+
+        cereal::JSONOutputArchive oarchive(
+          buffers[i],
+          cereal::JSONOutputArchive::Options::NoIndent()
+        );
+        oarchive(dw.GetOrg(i).GetTags());
+
+      }
+
+      strings[i] = buffers[i].str();
+      emp::remove_whitespace(strings[i]);
+
+      data[i] = strings[i].c_str();
+
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
   void Regulators(const size_t dir) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
@@ -518,6 +580,59 @@ private:
 
       const auto res = dw.man->Channel(i).GetID(lev);
       data[i] = res ? *res : 0;
+
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void Expiration(const size_t lev) {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_INT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/Expiration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    Config::chanid_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+
+      const auto res = dw.man->Channel(i).IsExpired(lev);
+      if (!res) {
+        data[i] = 0;
+      } else if (res <= cfg.EXP_GRACE_PERIOD()) {
+        data[i] = 1;
+      } else {
+        data[i] = 2;
+      }
+
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void ChannelGeneration(const size_t lev) {
+
+    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+    static const auto tid = H5::PredType::NATIVE_UINT;
+
+    H5::DataSet ds = file.createDataSet(
+      "/ChannelGeneration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims)
+    );
+
+    Config::chanid_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+
+      data[i] = dw.man->Channel(i).GetGeneration(lev);
 
     }
 

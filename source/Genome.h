@@ -99,6 +99,8 @@ public:
 
     const Config::tag_t& GetTag(const size_t i) { return tags[i]; }
 
+    const emp::vector<Config::tag_t> & GetTags() const { return tags; }
+
     bool operator==(const Genome& other) const {
       return (
         program == other.program
