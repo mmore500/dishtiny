@@ -15,7 +15,7 @@ SEED_OFFSET=1000
 TREATMENT="treat=resource-even__channelsense-yes__nlev-two"
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
-OUTPUT_DIR=/mnt/scratch/mmore500/dishtiny/${TREATMENT}/${SEED}/
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny/"${TREATMENT}"/"${SEED}"/"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/request/"${TREATMENT}
 
 ################################################################################
