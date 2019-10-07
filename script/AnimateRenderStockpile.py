@@ -26,8 +26,17 @@ def RenderAndSave(upd, filename):
     file = h5py.File(filename, 'r')
     nlev = int(file.attrs.get('NLEV'))
 
+    # display current stockpile AND inbound resource
     stock = np.array(file['Stockpile']['upd_'+str(upd)])
+    share = np.array(file['TotalContribute']['upd_'+str(upd)])
     live = np.array(file['Live']['upd_'+str(upd)])
+
+    data_0 = np.array(file['Channel']['lev_0']['upd_'+str(upd)])
+    data_1 = (
+        np.array(file['Channel']['lev_0']['upd_'+str(upd)])
+        if nlev == 1 else
+        np.array(file['Channel']['lev_1']['upd_'+str(upd)])
+    )
 
     image = np.array([
         [
@@ -36,25 +45,25 @@ def RenderAndSave(upd, filename):
             if not val_live else
             # enough resource to reproduce (green to yellow)
             (
-                min(1.0, 0.25 * (val_stock - 4.0)),
+                min(1.0, (val_stock + val_share) - 1.0),
                 1.0,
                 0.0
-            ) if val_stock > 4.0 else
+            ) if val_stock + val_share > 1.0 else
             # not yet enough resource to reproduce (blue)
             (
-                1.0 - val_stock*0.25,
-                1.0 - val_stock*0.25,
+                1.0 - (val_stock + val_share),
+                1.0 - (val_stock + val_share),
                 1.0
-            ) if val_stock > 0.0 else
+            ) if val_stock + val_share > 0.0 else
             # netative resource (red)
             (
                 1.0,
-                max(0.0, 1.0 + val_stock / 5.0),
-                max(0.0, 1.0 + val_stock / 5.0)
+                max(0.0, 1.0 + (val_stock + val_share) / 1.25),
+                max(0.0, 1.0 + (val_stock + val_share) / 1.25)
             )
-            for val_stock, val_live in zip(row_stock, row_live)
+            for val_stock, val_share, val_live in zip(row_stock, row_share, row_live)
         ]
-    for row_stock, row_live in zip(stock, live)])
+    for row_stock, row_share, row_live in zip(stock, share, live)])
 
     plt.figure(figsize=(18,18))
 
@@ -66,13 +75,23 @@ def RenderAndSave(upd, filename):
     plt.axis('off')
     plt.grid(b=None)
 
-    lines = LineCollection([
+    lines_0 = LineCollection([
         ((x,y), dest)
         for x in range(image.shape[0])
         for y in range(image.shape[1])
         for dest in ((x+1,y), (x,y+1))
+        if data_0[y][x] != data_0[dest[1]-1][dest[0]-1]
+    ], linestyle=(0, (1, 3)), colors='0.5')
+    plt.gca().add_collection(lines_0)
+
+    lines_1 = LineCollection([
+        ((x,y), dest)
+        for x in range(image.shape[0])
+        for y in range(image.shape[1])
+        for dest in ((x+1,y), (x,y+1))
+        if data_1[y][x] != data_1[dest[1]-1][dest[0]-1]
     ], linestyle='solid', colors='black')
-    plt.gca().add_collection(lines)
+    plt.gca().add_collection(lines_1)
 
     plt.savefig(
         kn.pack({
