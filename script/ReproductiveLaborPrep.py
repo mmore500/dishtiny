@@ -155,6 +155,14 @@ def CalcRepr(filename):
 
     return res
 
+def SafeCalcRepr(filename):
+    try:
+        return CalcRepr(filename)
+    except Exception as e:
+        print("warning: corrupt or incomplete data file... skipping")
+        print("   ", e)
+        return None
+
 print("num files:" , len(filenames))
 
 outfile = kn.pack({
@@ -180,9 +188,10 @@ pd.DataFrame.from_dict([
     }
     for res, filename in zip(
         Parallel(n_jobs=-1)(
-            delayed(CalcRepr)(filename) for filename in tqdm(filenames)
+            delayed(SafeCalcRepr)(filename) for filename in tqdm(filenames)
         ), filenames
     )
+    if res is not None
     for relationship, data in res.items()
     for measure, value in data.items()
 ]).to_csv(outfile, index=False)
