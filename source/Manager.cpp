@@ -58,18 +58,15 @@ Manager::Manager(
     const emp::vector<size_t> neighs = GeometryHelper(cfg).CalcLocalNeighs(i);
 
     emp::vector<std::function<void()>> refunders;
-    emp::vector<std::function<size_t(size_t lev)>> expiredcheckers;
     for (size_t n : neighs) {
       refunders.push_back(mss[n]->MakeRepRefunder());
-      expiredcheckers.push_back(mcs[n]->MakeExpChecker());
     }
 
     mps.push_back(
       emp::NewPtr<ManagerPriority>(
         cfg,
         *local_rngs[i],
-        refunders,
-        expiredcheckers
+        refunders
       )
     );
 

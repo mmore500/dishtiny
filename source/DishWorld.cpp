@@ -63,9 +63,10 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
       amt += cfg.REP_THRESH() * cfg.APOP_RECOVERY_FRAC();
     }
 
+    const auto neighs = GeometryHelper(cfg).CalcLocalNeighs(pos);
+
     const size_t h_count = man->Heir(pos).HeirCount();
     if(h_count) {
-      const auto neighs = GeometryHelper(cfg).CalcLocalNeighs(pos);
       for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
         if(man->Heir(pos).IsHeir(dir)) {
           man->Stockpile(neighs[dir]).InternalAcceptResource(amt/h_count);
@@ -73,6 +74,9 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
       }
     }
     man->Stockpile(pos).Reset();
+    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      man->Priority(neighs[dir]).ClearPauses(Cardi::Opp[dir]);
+    }
   });
 
   OnPlacement([this](const size_t pos){

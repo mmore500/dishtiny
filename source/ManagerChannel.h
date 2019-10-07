@@ -39,7 +39,7 @@ public:
   ) : ids(ChannelPack())
   , local_rng(local_rng_)
   , cfg(cfg_)
-  , gen_counter(cfg_.NLEV())
+  , gen_counter(cfg.NLEV(), 0)
   , cell_age_boosters(cfg.NLEV(), 0.0)
   , cell_age_boosters_fresh(cfg.NLEV(), 0)
   , age_getter(age_getter_)
@@ -64,6 +64,11 @@ public:
       std::begin(cell_age_boosters),
       std::end(cell_age_boosters),
       0.0
+    );
+    std::fill(
+      std::begin(gen_counter),
+      std::end(gen_counter),
+      0
     );
     std::fill(
       std::begin(cell_age_boosters_fresh),
@@ -128,6 +133,14 @@ public:
     }
 
     return expired;
+  }
+
+  emp::vector<double> GetExpirations() {
+    emp::vector<double> res;
+    for (size_t i = 0; i < cfg.NLEV() + 1; ++i) {
+      res.push_back(IsExpired(i));
+    }
+    return res;
   }
 
   std::function<size_t(size_t)> MakeExpChecker() {

@@ -22,6 +22,7 @@ struct SirePack {
   size_t incoming_dir;
   size_t replev;
   emp::vector<size_t> channel_gens;
+  emp::vector<double> expirations;
   emp::vector<size_t> cell_gen;
   ChannelPack chanpack;
   Config::chanid_t prev_chan;
@@ -50,7 +51,6 @@ private:
   std::optional<SirePack> pending_birth;
 
   emp::vector<std::function<void()>> refunders;
-  emp::vector<std::function<size_t(size_t)>> expiredcheckers;
 
   // incoming_dir -> rep_lev
   // for data collection only
@@ -61,14 +61,12 @@ public:
   ManagerPriority(
     const Config &cfg_,
     emp::Random &local_rng_,
-    emp::vector<std::function<void()>> refunders_,
-    emp::vector<std::function<size_t(size_t)>> expiredcheckers_
+    emp::vector<std::function<void()>> refunders_
   ) : cfg(cfg_)
   , local_rng(local_rng_)
   , requests(Cardi::Dir::NumDirs, std::nullopt)
   , pauses(Cardi::Dir::NumDirs, emp::vector<size_t>(cfg_.NLEV()+1, 0))
   , refunders(refunders_)
-  , expiredcheckers(expiredcheckers_)
   , rep_state(Cardi::Dir::NumDirs)
   , rep_state_dup(Cardi::Dir::NumDirs)
   { ; }
@@ -117,6 +115,12 @@ public:
 
   }
 
+  void ClearPauses(const size_t incoming_dir) {
+    for (auto & pause : pauses[incoming_dir]) {
+      if (pause) pause = 1;
+    }
+  }
+
   size_t CountRequests() {
     return std::count_if(
       std::cbegin(requests),
@@ -130,7 +134,7 @@ public:
   bool AddRequest(const SirePack & sp) {
 
     for (size_t l = sp.replev; l < cfg.NLEV() + 1; ++l) {
-      if (pauses[sp.incoming_dir][l] || expiredcheckers[sp.incoming_dir](l)) {
+      if (pauses[sp.incoming_dir][l] || sp.expirations[l]) {
         // if repr paused or channel has expired, try the next higher replev
         continue;
       } else {
