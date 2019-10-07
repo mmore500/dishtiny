@@ -28,6 +28,7 @@ def RenderAndSave(upd, filename):
 
     live = np.array(file['Live']['upd_'+str(upd)])
     pop = np.array(file['Population']['upd_'+str(upd)])
+    triggers = np.array(file['Triggers']['upd_'+str(upd)])
 
     image = np.array([
         [
@@ -51,7 +52,10 @@ def RenderAndSave(upd, filename):
         for x in range(image.shape[0])
         for y in range(image.shape[1])
         for dest in ((x+1,y), (x,y+1))
-        if pop[y][x] != pop[dest[1]-1][dest[0]-1]
+        if (
+            pop[y][x] != pop[dest[1]-1][dest[0]-1]
+            or triggers[y][x] != triggers[dest[1]-1][dest[0]-1]
+        )
     ], linestyle='solid', colors='red')
     plt.gca().add_collection(lines)
 
