@@ -99,7 +99,7 @@ public:
 
   double CalcExpLim(const size_t lev) const {
     return (
-      (lev+1.0) * cfg.Lev(lev).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER()
+      cfg.Lev(lev).EVENT_RADIUS() * cfg.AGE_LIMIT_MULTIPLIER()
     ) + (
      // add noise so cells don't tick over all at once
      ((age_getter() % cfg.GEN_INCR_FREQ()) < exp_noise[lev]) ? 1.0 : 0.0

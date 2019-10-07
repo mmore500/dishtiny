@@ -20,7 +20,7 @@ EMP_BUILD_CONFIG(
   VALUE(KILL_THRESH, double, -1.25, "What is the minimum resource level required to stay alive?"),
   VALUE(APOP_RECOVERY_FRAC, double, 0.5, "What fraction of REP_THRESH is recovered to heirs after apoptosis?"),
   VALUE(BASE_RESOURCE_INFLOW, double, 0.005, "What amount of resource should be provided to cells at each update?"),
-  VALUE(AGE_LIMIT_MULTIPLIER, double, 1.5, "What ratio of EVENT_RADIUS should the limit on cell age be?"),
+  VALUE(AGE_LIMIT_MULTIPLIER, double, 2.0, "What ratio of EVENT_RADIUS should the limit on cell age be?"),
   VALUE(CHANNELS_VISIBLE, bool, true, "Should channels have any effect in the instruction set and event triggers?"),
   VALUE(GEN_INCR_FREQ, size_t, 512, "How often should we increase cell generation counters?"),
   VALUE(EXP_GRACE_PERIOD, double, 3.0, "How many channel generations should resource collection be allowed after a cell's expires channel generation counter?"),
