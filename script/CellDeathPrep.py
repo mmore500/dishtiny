@@ -11,6 +11,7 @@ from keyname import keyname as kn
 from fileshash import fileshash as fsh
 import re
 from collections import Counter
+from joblib import delayed, Parallel
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
@@ -19,8 +20,9 @@ filenames = sys.argv[3:]
 # check all data is from same software source
 assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 
-def CauseOfDeath(file):
+def CauseOfDeath(filename):
 
+    file = h5py.File(filename, 'r')
     deaths = [
         {
             0 : None,
@@ -50,7 +52,21 @@ def CauseOfDeath(file):
 
     res.pop(None)
 
+    res = {
+        k : v / (file['Index']['own'].size * (last_update - first_update))
+        for k, v in res.items()
+    }
+
     return res
+
+def SafeCauseOfDeath(filename):
+    try:
+        return CauseOfDeath(filename)
+    except Exception as e:
+        print("warning: corrupt or incomplete data file... skipping")
+        print("   ", e)
+        return None
+
 
 print("num files:" , len(filenames))
 
@@ -69,13 +85,18 @@ pd.DataFrame.from_dict([
     {
         'Treatment' : kn.unpack(filename)['treat'],
         'Seed' : kn.unpack(filename)['seed'],
-        'Per-Cell-Update Death Rate' :
-            val / (file['Index']['own'].size * (last_update - first_update)),
+        'Per-Cell-Update Death Rate' : val,
         'Cause' : cause
     }
-    for filename in tqdm(filenames)
-    for file in (h5py.File(filename, 'r'),)
-    for cause, val in CauseOfDeath(file).items()
+    for filename, res in zip(
+        filenames,
+        Parallel(n_jobs=-1)(
+            delayed(SafeCauseOfDeath)(filename)
+            for filename in tqdm(filenames)
+        )
+    )
+    if res is not None
+    for cause, val in res.items()
 ]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)

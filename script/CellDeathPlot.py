@@ -32,19 +32,50 @@ df['Treatment'] = df['Treatment'].apply(lambda raw : {
 
 ax = sns.swarmplot(
     x="Treatment",
-    y="Per-Cell-Update Apoptosis Rate",
+    y="Per-Cell-Update Death Rate",
     order=['even+blind+mute','even+blind','even','blind','large wave','small wave','nested wave'],
-    data=df
+    data=df[df["Cause"] == "Apoptosis"],
 )
-plt.xticks(rotation=30)
 
-ax.set_ylim(
-    ymin=0.0,
-    ymax=1.1*max(np.array(df['Per-Cell-Update Apoptosis Rate']))
-)
+ax.set(ylim=(
+    0,
+    df[df["Cause"] == "Apoptosis"]["Per-Cell-Update Death Rate"].max() * 1.1
+))
+plt.xticks(rotation=-90)
 
 outfile = kn.pack({
     'title' : 'apoptosis',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                file_parcel="full_parcel",
+                                files_join="cat_join"
+                            ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+    'ext' : '.pdf'
+})
+
+ax.get_figure().savefig(
+    outfile,
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
+
+ax = sns.barplot(
+    x="Treatment",
+    y="Per-Cell-Update Death Rate",
+    order=['even+blind+mute','even+blind','even','blind','large wave','small wave','nested wave'],
+    data=df[df["Cause"] == "Apoptosis"],
+)
+
+plt.xticks(rotation=-90)
+
+outfile = kn.pack({
+    'title' : 'apoptosis_bar',
     '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
     '_script_fullcat_hash' : fsh.FilesHash(
                                 file_parcel="full_parcel",
