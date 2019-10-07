@@ -1,6 +1,6 @@
 #!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
-#SBATCH --time=168:00:00         # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --time=167:00:00         # limit of wall clock time - how long the job will run (same as -t)
 #SBATCH --array=1-40
 #SBATCH --mem=4G                # memory required per node - amount of memory (in bytes)
 #SBATCH --job-name treat=resource-wave__channelsense-yes__nlev-two     # you can give your job a name for easier identification (same as -J)
@@ -30,4 +30,4 @@ cd ${OUTPUT_DIR}
 echo "Do Work"
 ################################################################################
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
-timeout 164h ./dishtiny -SEED ${SEED} >run.log 2>&1 || true
+./dishtiny -SEED ${SEED} >run.log 2>&1
