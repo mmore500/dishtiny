@@ -93,27 +93,23 @@ def RenderAndSave(upd, filename):
     for id in ids:
         fps_to_counts = []
         idxs = []
-        for idx in range(index.flatten().size):
-            if channel[idx] == id and live.flatten()[idx]:
+        for flat_idx, idx in enumerate(index.flatten()):
+            if channel[flat_idx] == id:
                 idxs.append(idx)
-                fpcounts = defaultdict(lambda: 0)
-                for dir in range(4):
-                    fps = map(
-                        lambda x: x['value0']['value0'],
-                        json.loads(
-                            function[dir][idx].decode("utf-8")
-                        )['value0']
-                    )
-                    for fp in fps:
-                        fpcounts[fp] += 1
-                fps_to_counts.append(fpcounts)
+                if live.flatten()[flat_idx]:
+                    fpcounts = defaultdict(lambda: 0)
+                    for dir in range(4):
+                        fps = map(
+                            lambda x: x['value0']['value0'],
+                            json.loads(
+                                function[dir][flat_idx].decode("utf-8")
+                            )['value0']
+                        )
+                        for fp in fps:
+                            fpcounts[fp] += 1
+                    fps_to_counts.append(fpcounts)
 
         df = pd.DataFrame.from_records(fps_to_counts).fillna(0)
-
-        if not len(df.columns):
-            for idx in idxs:
-                cmapper[idx] = (0.5, 0.5, 0.5)
-            continue
 
         pca = PCA(n_components=min(3, len(df.columns)))
 
