@@ -628,7 +628,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    Config::chanid_t data[dw.GetSize()];
+    size_t data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
 
