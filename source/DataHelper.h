@@ -377,7 +377,7 @@ private:
   void InitReference() {
 
     const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    const auto tid = H5::PredType::NATIVE_INT;
+    const auto tid = H5::PredType::NATIVE_UINT32;
 
     H5::DataSet ds_idx = file.createDataSet(
       "/Index/own",
@@ -385,7 +385,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    uint32_t data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) data[i] = i;
 
@@ -592,7 +592,7 @@ private:
   void Expiration(const size_t lev) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_CHAR;
 
     H5::DataSet ds = file.createDataSet(
       "/Expiration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
@@ -600,7 +600,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    Config::chanid_t data[dw.GetSize()];
+    char data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
 
@@ -622,7 +622,7 @@ private:
   void ChannelGeneration(const size_t lev) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_UINT;
+    static const auto tid = H5::PredType::NATIVE_UINT32;
 
     H5::DataSet ds = file.createDataSet(
       "/ChannelGeneration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
@@ -630,7 +630,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    size_t data[dw.GetSize()];
+    uint32_t data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
 
@@ -668,7 +668,7 @@ private:
   void Live() {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_CHAR;
 
     H5::DataSet ds = file.createDataSet(
       "/Live/upd_"+emp::to_string(dw.GetUpdate()),
@@ -676,7 +676,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    char data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.IsOccupied(i);
@@ -689,7 +689,7 @@ private:
   void Apoptosis() {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_CHAR;
 
     H5::DataSet ds = file.createDataSet(
       "/Apoptosis/upd_"+emp::to_string(dw.GetUpdate()),
@@ -697,7 +697,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    char data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Apoptosis(i).GetState();
@@ -710,7 +710,7 @@ private:
   void InboxActivation(const size_t dir) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_CHAR;
 
     H5::DataSet ds = file.createDataSet(
       "/InboxActivation/dir_" + emp::to_string(dir)
@@ -719,7 +719,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    char data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.frames[i]->GetFrameHardware(dir).CheckInboxActivity();
@@ -732,7 +732,7 @@ private:
   void InboxTraffic(const size_t dir) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_UINT32;
 
     H5::DataSet ds = file.createDataSet(
       "/InboxTraffic/dir_" + emp::to_string(dir)
@@ -741,7 +741,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    uint32_t data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Inbox(i).GetTraffic(dir);
@@ -893,7 +893,7 @@ private:
   void InResistance(const size_t dir) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_DOUBLE;
 
     H5::DataSet ds = file.createDataSet(
       "/InResistance/dir_" + emp::to_string(dir)
@@ -902,7 +902,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    double data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Stockpile(i).CheckInResistance(dir);
@@ -915,7 +915,7 @@ private:
   void OutResistance(const size_t dir) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_DOUBLE;
 
     H5::DataSet ds = file.createDataSet(
       "/OutResistance/dir_" + emp::to_string(dir)
@@ -924,7 +924,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    double data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Stockpile(i).CheckOutResistance(dir);
@@ -937,7 +937,7 @@ private:
   void Heir(const size_t dir) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_CHAR;
 
     H5::DataSet ds = file.createDataSet(
       "/Heir/dir_" + emp::to_string(dir)
@@ -946,7 +946,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    char data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Heir(i).IsHeir(dir);
@@ -959,7 +959,7 @@ private:
   void ParentPos() {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_UINT32;
 
     H5::DataSet ds = file.createDataSet(
       "/ParentPos/upd_"+emp::to_string(dw.GetUpdate()),
@@ -967,7 +967,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    uint32_t data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Family(dw.man->Family(i).GetParentPos()).HasChildPos(i)
@@ -981,7 +981,7 @@ private:
   void CellAge() {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_UINT32;
 
     H5::DataSet ds = file.createDataSet(
       "/CellAge/upd_"+emp::to_string(dw.GetUpdate()),
@@ -989,7 +989,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    uint32_t data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.GetUpdate() - dw.man->Family(i).GetBirthUpdate();
@@ -1002,7 +1002,7 @@ private:
   void CellGen(const size_t lev) {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_UINT32;
 
     H5::DataSet ds = file.createDataSet(
       "/CellGen/lev_" + emp::to_string(lev)
@@ -1011,7 +1011,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    uint32_t data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.man->Family(i).GetCellGen()[lev];
@@ -1024,7 +1024,7 @@ private:
   void Death() {
 
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const auto tid = H5::PredType::NATIVE_INT;
+    static const auto tid = H5::PredType::NATIVE_CHAR;
 
     H5::DataSet ds = file.createDataSet(
       "/Death/upd_"+emp::to_string(dw.GetUpdate()),
@@ -1032,7 +1032,7 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    int data[dw.GetSize()];
+    char data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
 
