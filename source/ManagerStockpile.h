@@ -129,11 +129,11 @@ public:
     return cfg.KILL_THRESH() >= resource;
   }
 
-  bool CheckInResistance(const size_t outgoing_dir) const {
+  double CheckInResistance(const size_t outgoing_dir) const {
     return in_resistance[outgoing_dir];
   }
 
-  bool CheckOutResistance(const size_t outgoing_dir) const {
+  double CheckOutResistance(const size_t outgoing_dir) const {
     return out_resistance[outgoing_dir];
   }
 

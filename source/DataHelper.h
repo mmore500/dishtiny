@@ -128,9 +128,11 @@ public:
           Population();
           Triggers();
         }
-        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-          Regulators(dir);
-          Functions(dir);
+        if(update % cfg.COMPUTE_FREQ() == 0) {
+          for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+            Regulators(dir);
+            Functions(dir);
+          }
         }
 
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
