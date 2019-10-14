@@ -429,10 +429,9 @@ private:
         g.GetProgram().PrintProgramFull(buffer);
       }
 
-      std::string string = buffer.str();
-      emp::remove_whitespace(string);
-
-      const auto & [node, did_insert] = uids.insert({string, uids.size()});
+      const auto & [node, did_insert] = uids.insert(
+        {buffer.str(), uids.size()}
+      );
       if (did_insert) {
         decoder.push_back(node);
       }
