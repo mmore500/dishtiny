@@ -2,7 +2,7 @@
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=167:00:00         # limit of wall clock time - how long the job will run (same as -t)
 #SBATCH --array=1-40
-#SBATCH --mem=4G                # memory required per node - amount of memory (in bytes)
+#SBATCH --mem=8G                # memory required per node - amount of memory (in bytes)
 #SBATCH --job-name treat=resource-wave__channelsense-yes__nlev-onebig     # you can give your job a name for easier identification (same as -J)
 #SBATCH --account=devolab
 #SBATCH --output="slurmlogs/slurm-%A_%a.out"
