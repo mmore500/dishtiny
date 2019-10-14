@@ -44,12 +44,16 @@ public:
   {
 
     file.createGroup("/Population");
+    file.createGroup("/Population/decoder");
     file.createGroup("/Triggers");
+    file.createGroup("/Triggers/decoder");
     file.createGroup("/Regulators");
+    file.createGroup("/Regulators/decoder");
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       file.createGroup("/Regulators/dir_"+emp::to_string(dir));
     }
     file.createGroup("/Functions");
+    file.createGroup("/Functions/decoder");
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       file.createGroup("/Functions/dir_"+emp::to_string(dir));
     }
@@ -129,10 +133,8 @@ public:
           Triggers();
         }
         if(update % cfg.COMPUTE_FREQ() == 0) {
-          for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-            Regulators(dir);
-            Functions(dir);
-          }
+          Regulators();
+          Functions();
         }
 
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
@@ -410,8 +412,37 @@ private:
 
   void Population() {
 
+    // goal: reduce redundant data by giving each observed value a UID
+    // then storing UIDs positionally & providing a UID-to-value map
+    using uid_map_t = std::unordered_map<std::string, size_t>;
+    uid_map_t uids;
+    emp::vector<uid_map_t::const_iterator> decoder;
+
+    uint32_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+
+      std::ostringstream buffer;
+
+      if(dw.IsOccupied(i)) {
+        Genome & g = dw.GetOrg(i);
+        g.GetProgram().PrintProgramFull(buffer);
+      }
+
+      std::string string = buffer.str();
+      emp::remove_whitespace(string);
+
+      const auto & [node, did_insert] = uids.insert({string, uids.size()});
+      if (did_insert) {
+        decoder.push_back(node);
+      }
+      data[i] = node->second;
+
+    }
+
+    {
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const H5::StrType tid(0, H5T_VARIABLE);
+    static const auto tid = H5::PredType::NATIVE_UINT32;
 
     H5::DataSet ds = file.createDataSet(
       "/Population/upd_"+emp::to_string(dw.GetUpdate()),
@@ -419,30 +450,66 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    const char *data[dw.GetSize()];
-
-    std::ostringstream buffers[dw.GetSize()];
-    std::string strings[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      if(dw.IsOccupied(i)) {
-        Genome & g = dw.GetOrg(i);
-        g.GetProgram().PrintProgramFull(buffers[i]);
-        strings[i] = buffers[i].str();
-      }
-      data[i] = strings[i].c_str();
-
+    ds.write((void*)data, tid);
     }
 
-    ds.write((void*)data, tid);
+    {
+    const hsize_t dims[] = { decoder.size() };
+    const H5::StrType tid(0, H5T_VARIABLE);
+    H5::DataSet ds = file.createDataSet(
+      "/Population/decoder/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(1,dims)
+    );
+
+    std::vector<const char*> res;
+    std::transform(
+      std::begin(decoder),
+      std::end(decoder),
+      std::back_inserter(res),
+      [](const auto & it){ return it->first.c_str(); }
+    );
+    ds.write((void*)res.data(), tid);
+    }
 
   }
 
   void Triggers() {
 
+    // goal: reduce redundant data by giving each observed value a UID
+    // then storing UIDs positionally & providing a UID-to-value map
+    using uid_map_t = std::unordered_map<std::string, size_t>;
+    uid_map_t uids;
+    emp::vector<uid_map_t::const_iterator> decoder;
+
+    uint32_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+
+      std::ostringstream buffer;
+
+      if(dw.IsOccupied(i)) {
+        cereal::JSONOutputArchive oarchive(
+          buffer,
+          cereal::JSONOutputArchive::Options::NoIndent()
+        );
+        oarchive(dw.GetOrg(i).GetTags());
+      }
+
+      std::string string = buffer.str();
+      emp::remove_whitespace(string);
+
+      const auto & [node, did_insert] = uids.insert({string, uids.size()});
+      if (did_insert) {
+        decoder.push_back(node);
+      }
+      data[i] = node->second;
+
+    }
+
+    {
     static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const H5::StrType tid(0, H5T_VARIABLE);
+    static const auto tid = H5::PredType::NATIVE_UINT32;
 
     H5::DataSet ds = file.createDataSet(
       "/Triggers/upd_"+emp::to_string(dw.GetUpdate()),
@@ -450,118 +517,185 @@ private:
       H5::DataSpace(2,dims)
     );
 
-    const char *data[dw.GetSize()];
-
-    std::ostringstream buffers[dw.GetSize()];
-    std::string strings[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      if(dw.IsOccupied(i)) {
-
-        cereal::JSONOutputArchive oarchive(
-          buffers[i],
-          cereal::JSONOutputArchive::Options::NoIndent()
-        );
-        oarchive(dw.GetOrg(i).GetTags());
-
-      }
-
-      strings[i] = buffers[i].str();
-      emp::remove_whitespace(strings[i]);
-
-      data[i] = strings[i].c_str();
-
+    ds.write((void*)data, tid);
     }
 
-    ds.write((void*)data, tid);
+    {
+    const hsize_t dims[] = { decoder.size() };
+    const H5::StrType tid(0, H5T_VARIABLE);
+    H5::DataSet ds = file.createDataSet(
+      "/Triggers/decoder/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(1,dims)
+    );
+
+    std::vector<const char*> res;
+    std::transform(
+      std::begin(decoder),
+      std::end(decoder),
+      std::back_inserter(res),
+      [](const auto & it){ return it->first.c_str(); }
+    );
+    ds.write((void*)res.data(), tid);
+    }
 
   }
 
-  void Regulators(const size_t dir) {
+  void Regulators() {
 
-    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const H5::StrType tid(0, H5T_VARIABLE);
+    // goal: reduce redundant data by giving each observed value a UID
+    // then storing UIDs positionally & providing a UID-to-value map
+    using uid_map_t = std::unordered_map<std::string, size_t>;
+    uid_map_t uids;
+    emp::vector<uid_map_t::const_iterator> decoder;
 
-    H5::DataSet ds = file.createDataSet(
-      "/Regulators/dir_" + emp::to_string(dir)
-        + "/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims)
-    );
+    uint32_t data[Cardi::Dir::NumDirs][dw.GetSize()];
 
-    const char *data[dw.GetSize()];
+    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      for (size_t i = 0; i < dw.GetSize(); ++i) {
 
-    std::ostringstream buffers[dw.GetSize()];
-    std::string strings[dw.GetSize()];
+        std::ostringstream buffer;
 
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      if(dw.IsOccupied(i)) {
-        cereal::JSONOutputArchive oarchive(
-          buffers[i],
-          cereal::JSONOutputArchive::Options::NoIndent()
-        );
-        oarchive(
-          dw.frames[i]->GetFrameHardware(
-            dir
-          ).GetHardware().GetMatchBin().GetState()
-        );
-      }
-
-      strings[i] = buffers[i].str();
-      emp::remove_whitespace(strings[i]);
-      data[i] = strings[i].c_str();
-
-    }
-
-    ds.write((void*)data, tid);
-
-  }
-
-  void Functions(const size_t dir) {
-
-    static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    static const H5::StrType tid(0, H5T_VARIABLE);
-
-    H5::DataSet ds = file.createDataSet(
-      "/Functions/dir_" + emp::to_string(dir)
-        + "/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims)
-    );
-
-    const char *data[dw.GetSize()];
-
-    std::ostringstream buffers[dw.GetSize()];
-    std::string strings[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      if(dw.IsOccupied(i)) {
-        cereal::JSONOutputArchive oarchive(
-          buffers[i],
-          cereal::JSONOutputArchive::Options::NoIndent()
-        );
-        const auto & hw = dw.frames[i]->GetFrameHardware(
-          dir
-        ).GetHardware();
-        emp::vector<Config::tag_t> res;
-        for (const auto & stack : hw.GetCores()) {
-          if (stack.size()) res.push_back(
-            hw.GetMatchBin().GetState().tags.find(stack.back().GetFP())->second
+        if(dw.IsOccupied(i)) {
+          cereal::JSONOutputArchive oarchive(
+            buffer,
+            cereal::JSONOutputArchive::Options::NoIndent()
+          );
+          oarchive(
+            dw.frames[i]->GetFrameHardware(
+              dir
+            ).GetHardware().GetMatchBin().GetState()
           );
         }
-        oarchive(res);
+
+        std::string string = buffer.str();
+        emp::remove_whitespace(string);
+
+        const auto & [node, did_insert] = uids.insert({string, uids.size()});
+        if (did_insert) {
+          decoder.push_back(node);
+        }
+        data[dir][i] = node->second;
+
       }
-
-      strings[i] = buffers[i].str();
-      emp::remove_whitespace(strings[i]);
-      data[i] = strings[i].c_str();
-
     }
 
-    ds.write((void*)data, tid);
+    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+      static const auto tid = H5::PredType::NATIVE_UINT32;
+
+      H5::DataSet ds = file.createDataSet(
+        "/Regulators/dir_" + emp::to_string(dir)
+          + "/upd_"+emp::to_string(dw.GetUpdate()),
+        tid,
+        H5::DataSpace(2,dims)
+      );
+
+      ds.write((void*)data[dir], tid);
+    }
+
+
+    {
+    const hsize_t dims[] = { decoder.size() };
+    const H5::StrType tid(0, H5T_VARIABLE);
+    H5::DataSet ds = file.createDataSet(
+      "/Regulators/decoder/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(1,dims)
+    );
+
+    std::vector<const char*> res;
+    std::transform(
+      std::begin(decoder),
+      std::end(decoder),
+      std::back_inserter(res),
+      [](const auto & it){ return it->first.c_str(); }
+    );
+    ds.write((void*)res.data(), tid);
+    }
+
+  }
+
+  void Functions() {
+
+    // goal: reduce redundant data by giving each observed value a UID
+    // then storing UIDs positionally & providing a UID-to-value map
+    using uid_map_t = std::unordered_map<std::string, size_t>;
+    uid_map_t uids;
+    emp::vector<uid_map_t::const_iterator> decoder;
+
+    uint32_t data[Cardi::Dir::NumDirs][dw.GetSize()];
+
+    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      for (size_t i = 0; i < dw.GetSize(); ++i) {
+
+        std::ostringstream buffer;
+
+        if(dw.IsOccupied(i)) {
+          cereal::JSONOutputArchive oarchive(
+            buffer,
+            cereal::JSONOutputArchive::Options::NoIndent()
+          );
+          const auto & hw = dw.frames[i]->GetFrameHardware(
+            dir
+          ).GetHardware();
+          emp::vector<Config::tag_t> res;
+          for (const auto & stack : hw.GetCores()) {
+            if (stack.size()) res.push_back(
+              hw.GetMatchBin().GetState().tags.find(
+                stack.back().GetFP()
+              )->second
+            );
+            std::sort(std::begin(res), std::end(res));
+          }
+          oarchive(res);
+        }
+
+        std::string string = buffer.str();
+        emp::remove_whitespace(string);
+
+        const auto & [node, did_insert] = uids.insert({string, uids.size()});
+        if (did_insert) {
+          decoder.push_back(node);
+        }
+        data[dir][i] = node->second;
+
+      }
+    }
+
+    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      static const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+      static const auto tid = H5::PredType::NATIVE_UINT32;
+
+      H5::DataSet ds = file.createDataSet(
+        "/Functions/dir_" + emp::to_string(dir)
+          + "/upd_"+emp::to_string(dw.GetUpdate()),
+        tid,
+        H5::DataSpace(2,dims)
+      );
+
+      ds.write((void*)data[dir], tid);
+    }
+
+
+    {
+    const hsize_t dims[] = { decoder.size() };
+    const H5::StrType tid(0, H5T_VARIABLE);
+    H5::DataSet ds = file.createDataSet(
+      "/Functions/decoder/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(1,dims)
+    );
+
+    std::vector<const char*> res;
+    std::transform(
+      std::begin(decoder),
+      std::end(decoder),
+      std::back_inserter(res),
+      [](const auto & it){ return it->first.c_str(); }
+    );
+    ds.write((void*)res.data(), tid);
+    }
 
   }
 
