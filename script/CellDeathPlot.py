@@ -20,20 +20,18 @@ dataframe_filename = sys.argv[1]
 df = pd.read_csv(dataframe_filename)
 
 df['Treatment'] = df['Treatment'].apply(lambda raw : {
-    'resource-even__channelsense-no__nlev-two' : 'even+blind',
-    'resource-even__channelsense-no__nlev-two__mute' : 'even+blind+mute',
-    'resource-wave__channelsense-no__nlev-two' : 'blind',
-    'resource-wave__channelsense-yes__nlev-onesmall' : 'small wave',
-    'resource-even__channelsense-yes__nlev-two' : 'even',
-    'resource-wave__channelsense-yes__nlev-onebig' : 'large wave',
-    'resource-wave__channelsense-yes__nlev-two' : 'nested wave'
+    'resource-even__channelsense-no__nlev-two__mute' : 'Blind',
+    'resource-even__channelsense-no__nlev-two__mute__mixed' : 'Mixed',
+    'resource-even__channelsense-yes__nlev-two' : 'Even',
+    'resource-wave__channelsense-yes__nlev-onebig' : 'Flat',
+    'resource-wave__channelsense-yes__nlev-two' : 'Nested'
     }[raw]
 )
 
 ax = sns.swarmplot(
     x="Treatment",
     y="Per-Cell-Update Death Rate",
-    order=['even+blind+mute','even+blind','even','blind','large wave','small wave','nested wave'],
+    order=['Mixed','Blind','Even','Flat','Nested'],
     data=df[df["Cause"] == "Apoptosis"],
 )
 
@@ -68,7 +66,7 @@ plt.clf()
 ax = sns.barplot(
     x="Treatment",
     y="Per-Cell-Update Death Rate",
-    order=['even+blind+mute','even+blind','even','blind','large wave','small wave','nested wave'],
+    order=['Mixed','Blind','Even','Flat','Nested'],
     data=df[df["Cause"] == "Apoptosis"],
 )
 
