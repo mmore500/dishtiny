@@ -50,6 +50,7 @@ pip3 install h5py
 pip3 install tqdm
 pip3 install joblib
 pip3 install sklearn
+pip3 install more_itertools
 
 # rm -rf /opt/Empirical
 git clone https://github.com/devosoft/Empirical /opt/Empirical -b match-bin
