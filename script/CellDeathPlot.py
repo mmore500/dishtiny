@@ -91,3 +91,77 @@ ax.get_figure().savefig(
 )
 
 print('Output saved to', outfile)
+
+plt.clf()
+
+df['Fraction Mortality'] = df.apply(
+    lambda row: np.sum(df[
+            (df['Treatment'] == row['Treatment']) &
+            (df['Cause'] == row['Cause']) &
+            (df['Seed'] == row['Seed'])
+        ]['Per-Cell-Update Death Rate'].values) / np.sum(df[
+            (df['Treatment'] == row['Treatment']) &
+            (df['Seed'] == row['Seed'])
+        ]['Per-Cell-Update Death Rate'].values),
+    axis=1
+)
+
+ax = sns.swarmplot(
+ x="Treatment",
+ y="Fraction Mortality",
+ order=['Mixed','Blind','Even','Flat','Nested'],
+ data=df[df["Cause"] == "Apoptosis"],
+)
+plt.xticks(rotation=-90)
+
+outfile = kn.pack({
+ 'title' : 'apoptosis_pct_mortality',
+ '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+ '_script_fullcat_hash' : fsh.FilesHash(
+                             file_parcel="full_parcel",
+                             files_join="cat_join"
+                         ).hash_files([sys.argv[0]]),
+ '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+ 'ext' : '.pdf'
+})
+
+ax.get_figure().savefig(
+ outfile,
+ transparent=True,
+ bbox_inches='tight',
+ pad_inches=0
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
+
+ax = sns.barplot(
+ x="Treatment",
+ y="Fraction Mortality",
+ order=['Mixed','Blind','Even','Flat','Nested'],
+ data=df[df["Cause"] == "Apoptosis"],
+)
+plt.xticks(rotation=-90)
+
+outfile = kn.pack({
+ 'title' : 'apoptosis_pct_mortality_barplot',
+ '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+ '_script_fullcat_hash' : fsh.FilesHash(
+                             file_parcel="full_parcel",
+                             files_join="cat_join"
+                         ).hash_files([sys.argv[0]]),
+ '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+ 'ext' : '.pdf'
+})
+
+ax.get_figure().savefig(
+ outfile,
+ transparent=True,
+ bbox_inches='tight',
+ pad_inches=0
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
