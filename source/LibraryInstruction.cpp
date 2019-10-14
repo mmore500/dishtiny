@@ -1018,17 +1018,22 @@ void InitExternalSensors(
   for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
     il.AddInst(
       emp::to_string("QueryIsExpired", lev),
-      [lev](hardware_t & hw, const inst_t & inst){
+      cfg.CHANNELS_VISIBLE() ?
+      std::function<void(hardware_t &, const inst_t &)>(
+        [lev](hardware_t & hw, const inst_t & inst){
 
-        state_t & state = hw.GetCurState();
-        FrameHardware &fh = *hw.GetTrait();
+          state_t & state = hw.GetCurState();
+          FrameHardware &fh = *hw.GetTrait();
 
-        state.SetLocal(
-          inst.args[1],
-          fh.IsExpired(lev, state.GetLocal(inst.args[0]))
-        );
+          state.SetLocal(
+            inst.args[1],
+            fh.IsExpired(lev, state.GetLocal(inst.args[0]))
+          );
 
-      },
+        }
+      ) : std::function<void(hardware_t &, const inst_t &)>(
+        [](hardware_t & hw, const inst_t & inst){ ; }
+      ),
       2,
       "Is the neighboring cell expired?"
     );
