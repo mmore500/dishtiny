@@ -27,6 +27,7 @@ EMP_BUILD_CONFIG(
   VALUE(STOCHASTIC_TRIGGER_FREQ, double, 0.001, "How often should the stochastic event fire?"),
   VALUE(WAVE_REPLICATES, size_t, 4, "How many replicates of the wave system should operate concurrently?"),
   VALUE(RESOURCE_ARMOR, bool, false, "Should cells be able to use stockpiled resource to block incoming reproduction?"),
+  VALUE(LOCAL_REPRODUCTION, bool, true, "Should cell reproductions be targeted to neighbor cells?"),
 
   GROUP(PROGRAM_GROUP, "SignalGP program Settings"),
   VALUE(PROGRAM_MAX_FUN_CNT__INIT, size_t, 16, "Used for generating SGP programs. At most, how many functions do we generate?"),

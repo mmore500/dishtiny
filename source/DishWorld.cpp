@@ -172,23 +172,31 @@ void DishWorld::Step() {
         opt_sirepack->genome->DoMutations(mut, *local_rngs[i]);
       }
 
+      const size_t dest = (
+        cfg.LOCAL_REPRODUCTION()
+        ? i
+        : (
+            local_rngs[i]->GetUInt(1, GetSize())
+            + opt_sirepack->par_pos
+        ) % GetSize()
+      );
 
-      AddOrgAt(opt_sirepack->genome, i, opt_sirepack->par_pos);
+      AddOrgAt(opt_sirepack->genome, dest, opt_sirepack->par_pos);
 
-      frames[i]->SetRegulators(opt_sirepack->matchbins);
+      frames[dest]->SetRegulators(opt_sirepack->matchbins);
 
-      man->Channel(i).Inherit(
+      man->Channel(dest).Inherit(
         opt_sirepack->chanpack,
         opt_sirepack->channel_gens,
         opt_sirepack->replev
       );
-      man->Family(i).Reset(GetUpdate());
-      man->Family(i).SetParentPos(opt_sirepack->par_pos);
-      man->Family(i).SetPrevChan(opt_sirepack->prev_chan);
-      man->Family(i).SetCellGen(opt_sirepack->cell_gen, opt_sirepack->replev);
+      man->Family(dest).Reset(GetUpdate());
+      man->Family(dest).SetParentPos(opt_sirepack->par_pos);
+      man->Family(dest).SetPrevChan(opt_sirepack->prev_chan);
+      man->Family(dest).SetCellGen(opt_sirepack->cell_gen, opt_sirepack->replev);
       // check that parent hasn't been overwritten by a different birth
       if(man->Family(opt_sirepack->par_pos).GetBirthUpdate() != GetUpdate()) {
-        man->Family(opt_sirepack->par_pos).AddChildPos(i);
+        man->Family(opt_sirepack->par_pos).AddChildPos(dest);
         // parental generation bump disabled
         // man->Channel(opt_sirepack->par_pos).LogReprGen(opt_sirepack->replev);
       }
