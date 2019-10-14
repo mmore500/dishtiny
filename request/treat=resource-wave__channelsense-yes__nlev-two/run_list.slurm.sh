@@ -18,6 +18,11 @@ SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny/"${TREATMENT}"/"${SEED}"/"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/request/"${TREATMENT}
 
+echo "   TREATMENT" $TREATMENT
+echo "   SEED" $SEED
+echo "   OUTPUT_DIR" $OUTPUT_DIR
+echo "   CONFIG_DIR" $CONFIG_DIR
+
 ################################################################################
 echo "Setup Work Dir"
 ################################################################################
