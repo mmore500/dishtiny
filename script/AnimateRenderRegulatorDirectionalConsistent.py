@@ -60,7 +60,7 @@ def RenderTriangles(
     ]) if live_val else np.full((radius*2, radius*2, 3), 0.0)
 
 # for each group, get all regulators
-def MakePCA(id, filename):
+def MakePCA(id, updates, filename):
 
     # make pcamapper using ALL updates
     file = h5py.File(filename, 'r')
@@ -125,29 +125,33 @@ def MakePCA(id, filename):
         pca = PCA(n_components=n).fit(df.to_numpy()) if n else None
         res = pca.transform(df.to_numpy()) if n else None
 
-    return (
+    return (id, (
         pca,
         list(df.columns),
         res.min(0),
         res.ptp(0)
-    ) if n else None
+    ) if n else None)
 
 # get unique group IDs
 file = h5py.File(filename, 'r')
 nlev = int(file.attrs.get('NLEV'))
-ids = {
-    id
+
+id_upds = defaultdict(list)
+for id, upd in {
+    (id, upd)
     for upd in updates
     for id in np.array(
         file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
     ).flatten()
-}
+}:
+    id_upds[id].append(upd)
 
 results = Parallel(n_jobs=-1)(
-    delayed(MakePCA)(id, filename) for id in tqdm(ids)
+    delayed(MakePCA)(id, upds, filename)
+    for id, upds in tqdm(id_upds.items())
 )
 
-pcamapper = { id : res for id, res in zip(ids, results) }
+pcamapper = { id : res for id, res in results }
 
 def RenderAndSave(upd, filename):
 
