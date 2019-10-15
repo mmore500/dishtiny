@@ -72,6 +72,9 @@ def RenderAndSave(upd, filename):
         ).flatten()
         for dir in range(4)
     ]
+    decoder = np.array(
+        file['Regulators']['decoder']['upd_'+str(upd)]
+    ).flatten()
     live = np.array(file['Live']['upd_'+str(upd)])
     index = np.array(file['Index']['own'])
 
@@ -98,7 +101,7 @@ def RenderAndSave(upd, filename):
                     dirs.append( dir )
                     if live.flatten()[flat_idx]:
                         archive = json.loads(
-                            regulator[dir][flat_idx].decode("utf-8")
+                            decoder[regulator[dir][flat_idx]].decode("utf-8")
                         )['value0']
                         tags = {
                             d['key'] : d['value']['value0']['value0']
