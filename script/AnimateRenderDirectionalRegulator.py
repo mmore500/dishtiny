@@ -115,7 +115,7 @@ def RenderAndSave(upd, filename):
                             tags[uid] : regulators[uid] for uid in archive['uids']
                         })
 
-        df = pd.DataFrame.from_records(tags_to_regs).fillna(0)
+        df = pd.DataFrame.from_records(tags_to_regs).fillna(1)
 
         n=min(3, len(df.columns), len(df))
         if n:
