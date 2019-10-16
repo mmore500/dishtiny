@@ -43,6 +43,7 @@ public:
   )
   {
 
+    file.createGroup("/RootID");
     file.createGroup("/Population");
     file.createGroup("/Population/decoder");
     file.createGroup("/Triggers");
@@ -129,6 +130,7 @@ public:
         // only log one snapshot of genoypes, not a sequence
         // because it's space intensive
         if(update % cfg.SNAPSHOT_FREQUENCY() == 0) {
+          RootID();
           Population();
           Triggers();
         }
@@ -179,6 +181,7 @@ public:
         Stockpile();
         TotalContribute();
         Live();
+        RootID();
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -407,6 +410,38 @@ private:
       ds_dir.write((void*)data, tid);
 
     }
+
+  }
+
+  void RootID() {
+
+    uint32_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+
+      if(dw.IsOccupied(i)) {
+        data[i] = dw.GetOrg(i).GetRootID();
+      } else {
+        data[i] = 0;
+      }
+
+    }
+
+    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+
+    H5::DSetCreatPropList plist;
+    plist.setChunk(2, dims);
+    plist.setDeflate(6);
+
+    const auto tid = H5::PredType::NATIVE_UINT32;
+    H5::DataSet ds = file.createDataSet(
+      "/RootID/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims),
+      plist
+    );
+
+    ds.write((void*)data, tid);
 
   }
 

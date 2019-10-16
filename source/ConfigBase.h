@@ -74,8 +74,7 @@ EMP_BUILD_CONFIG(
   VALUE(RUN_LENGTH, size_t, 1056768, "[NATIVE] How many updates should we run the experiment for?"),
   VALUE(SYSTEMATICS, bool, true, "[NATIVE] Should we keep systematics data?"),
   VALUE(SEED_POP, bool, false, "[NATIVE] Should we seed the population?; TOOD unimplemented"),
-  VALUE(SEED_POP_FILENAME, std::string, "ConsolidatedChampions.csv", "[NATIVE] Where should we look for the genotypes to seed our population with?; TODO unimplemented"),
-  VALUE(SEED_POP_CLONECOUNT, size_t, 2, "[NATIVE] How many clones of each champion genotype should we seed our population with?; TODO unimplemented"),
+  VALUE(SEED_POP_CLONECOUNT, size_t, 10, "[NATIVE] How many clones of each champion genotype should we seed our population with?; TODO unimplemented"),
   VALUE(ANIMATION_FREQUENCY, size_t, 512, "[NATIVE] How often should we save data that will be used to make animations?")
 
 )

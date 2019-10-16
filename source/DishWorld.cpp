@@ -3,6 +3,9 @@
 #include <tuple>
 #include <utility>
 #include <limits>
+#include <filesystem>
+
+#include <cereal/archives/json.hpp>
 
 #include "base/vector.h"
 #include "Evolve/World.h"
@@ -93,6 +96,15 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
 
   InitSystematics();
 
+  if (cfg.SEED_POP()) {
+    LoadPopulation();
+  } else {
+    GeneratePopulation();
+  }
+
+}
+
+void DishWorld::GeneratePopulation() {
   for(size_t i = 0; i < GetSize(); ++i) {
     Genome g(
       *local_rngs[i],
@@ -101,6 +113,139 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
     InjectAt(g, emp::WorldPosition(i));
     emp_assert(GetOrg(i).GetProgram().GetSize());
     man->Stockpile(i).InternalAcceptResource(cfg.START_RESOURCE());
+  }
+}
+
+void DishWorld::LoadPopulation() {
+
+  auto directory = std::filesystem::directory_iterator("./seedpop/");
+  emp::vector<std::string> filenames;
+  std::transform(
+    std::filesystem::begin(directory),
+    std::filesystem::end(directory),
+    std::back_inserter(filenames),
+    [](const auto & entry){ return entry.path(); }
+  );
+
+  // get ids of seeded cells
+  std::unordered_set<size_t> ids;
+  for (const auto & filename : filenames) {
+    if (
+      const auto res = emp::keyname::unpack(filename);
+      res.count("id")
+    ) {
+      size_t id;
+      std::stringstream(res.at("id")) >> id;
+      ids.insert(id);
+    }
+  }
+
+  // pick where to put seeded cells
+  emp::Random rand(cfg.SEED());
+  emp::vector<size_t> targets = emp::Choose(
+    rand,
+    GetSize(),
+    cfg.SEED_POP_CLONECOUNT() * ids.size()
+  );
+
+  auto target = std::begin(targets);
+
+  for (const auto & id : ids) {
+
+    std::ifstream program_stream(
+      *std::find_if(
+        std::begin(filenames),
+        std::end(filenames),
+        [this, id](const auto & filename){
+          const auto res = emp::keyname::unpack(filename);
+
+          return (
+            res.count("id") && res.at("id") == emp::to_string(id)
+            && res.count("treat")
+            && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
+            && res.count("component") && res.at("component") == "program"
+            && res.count("ext") && res.at("ext") == ".txt"
+          );
+        }
+      )
+    );
+    Config::program_t program(&inst_lib);
+    program.Load(program_stream);
+
+    std::ifstream triggers_stream(
+      *std::find_if(
+        std::begin(filenames),
+        std::end(filenames),
+        [this, id](const auto & filename){
+          const auto res = emp::keyname::unpack(filename);
+          return (
+            res.count("id") && res.at("id") == emp::to_string(id)
+            && res.count("treat")
+            && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
+            && res.count("component") && res.at("component") == "triggers"
+            && res.count("ext") && res.at("ext") == ".json"
+          );
+        }
+      )
+    );
+    cereal::JSONInputArchive triggers_archive(triggers_stream);
+
+    emp::vector<Config::tag_t> triggers;
+    triggers_archive(triggers);
+
+    for (size_t clone = 0; clone < cfg.SEED_POP_CLONECOUNT(); ++clone) {
+      InjectAt(
+        Genome(
+          cfg,
+          program,
+          triggers,
+          id
+        ),
+        emp::WorldPosition(
+          *(target++)
+        )
+      );
+    }
+  }
+
+  target = std::begin(targets);
+
+  for (const auto & id : ids) {
+
+    std::cout << id << std::endl;
+
+    for (size_t clone = 0; clone < cfg.SEED_POP_CLONECOUNT(); ++clone) {
+
+      for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+        Config::matchbin_t::state_t state;
+        std::ifstream reg_stream(
+          *std::find_if(
+            std::begin(filenames),
+            std::end(filenames),
+            [this, id, dir](const auto & filename){
+              const auto res = emp::keyname::unpack(filename);
+              return (
+                res.count("id") && res.at("id") == emp::to_string(id)
+                && res.count("treat")
+                && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
+                && res.count("dir") && res.at("dir") == emp::to_string(dir)
+                && res.count("component") && res.at("component") == "regulator"
+                && res.count("ext") && res.at("ext") == ".json"
+              );
+            }
+          )
+        );
+        cereal::JSONInputArchive reg_archive(reg_stream);
+        reg_archive(state);
+        frames[*target]->GetFrameHardware(
+          dir
+        ).SetMatchBinState(state);
+      }
+
+      ++target;
+
+    }
+
   }
 
 }

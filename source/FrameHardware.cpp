@@ -456,6 +456,14 @@ void FrameHardware::SetRegulators(Config::matchbin_t & target_mb) {
 
 }
 
+void FrameHardware::SetMatchBinState(
+  const Config::matchbin_t::state_t & state
+) {
+
+  cpu.GetMatchBin().SetState(state);
+
+}
+
 Config::matchbin_t & FrameHardware::GetMembrane() { return membrane; }
 
 std::unordered_map<

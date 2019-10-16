@@ -18,12 +18,23 @@ class Genome {
 
   program_t program;
   emp::vector<Config::tag_t> tags;
+  size_t root_id;
 
 public:
 
   Genome(const Genome&) = default;
 
   Genome& operator=(const Genome&) = delete;
+
+  Genome(
+    const Config &cfg_,
+    const program_t &program_,
+    const emp::vector<Config::tag_t> &tags_,
+    const size_t root_id_
+  ) : cfg(cfg_)
+  , program(program_)
+  , tags(tags_)
+  , root_id(root_id_) { ; }
 
   Genome(
     emp::Random &local_rng,
@@ -117,6 +128,10 @@ public:
         (program < other.program)
         || ((program == other.program) && (tags < other.tags))
       );
+    }
+
+    size_t GetRootID() const {
+      return root_id;
     }
 
 };

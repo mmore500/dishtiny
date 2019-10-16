@@ -132,6 +132,8 @@ public:
 
   void SetRegulators(Config::matchbin_t & target);
 
+  void SetMatchBinState(const Config::matchbin_t::state_t & state);
+
   Config::matchbin_t &GetMembrane();
 
   std::unordered_map<

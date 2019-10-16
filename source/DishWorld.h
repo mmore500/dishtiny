@@ -46,4 +46,9 @@ public:
 
   void InitSystematics();
 
+  void LoadPopulation();
+
+  void GeneratePopulation();
+
+
 };
