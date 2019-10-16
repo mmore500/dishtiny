@@ -10,6 +10,7 @@ import os
 import pandas as pd
 from keyname import keyname as kn
 from fileshash import fileshash as fsh
+from joblib import delayed, Parallel
 
 first_update = int(sys.argv[1])
 last_update = int(sys.argv[2])
@@ -18,15 +19,15 @@ filenames = sys.argv[3:]
 # check all data is from same software source
 assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 
-files = [h5py.File(filename, 'r') for filename in filenames]
-
-def CalcSurroundedRate(file):
+def CalcSurroundedRate(filename):
+    file = h5py.File(filename, 'r')
+    nlev = int(file.attrs.get('NLEV'))
     return np.mean([
         sum(ro[idx] != -1 for ro in ros)
         for ch, pc, dirs, live, ros in [
                 (
                 np.array(
-                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd)]
+                    file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
                 ).flatten(),
                 np.array(
                     file['PrevChan']['upd_'+str(upd)]
@@ -47,13 +48,23 @@ def CalcSurroundedRate(file):
         if live[idx] and all(ch[idx] == ch[dir[idx]] for dir in dirs)
     ])
 
-def CalcNotSurroundedRate(file):
+def SafeCalcSurroundedRate(filename):
+    try:
+        return CalcSurroundedRate(filename)
+    except Exception as e:
+        print("warning: corrupt or incomplete data file... skipping")
+        print("   ", e)
+        return None
+
+def CalcNotSurroundedRate(filename):
+    file = h5py.File(filename, 'r')
+    nlev = int(file.attrs.get('NLEV'))
     return np.mean([
         sum(ro[idx] != -1 for ro in ros)
         for ch, pc, dirs, live, ros in [
                 (
                 np.array(
-                    file['Channel']['lev_'+str(file.attrs['NLEV'][0]-1)]['upd_'+str(upd)]
+                    file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
                 ).flatten(),
                 np.array(
                     file['PrevChan']['upd_'+str(upd)]
@@ -74,7 +85,15 @@ def CalcNotSurroundedRate(file):
         if live[idx] and any(ch[idx] != ch[dir[idx]] for dir in dirs)
     ])
 
-print("num files:" , len(files))
+def SafeCalcNotSurroundedRate(filename):
+    try:
+        return CalcNotSurroundedRate(filename)
+    except Exception as e:
+        print("warning: corrupt or incomplete data file... skipping")
+        print("   ", e)
+        return None
+
+print("num files:" , len(filenames))
 
 outfile = kn.pack({
     '_data_hathash_hash' : fsh.FilesHash().hash_files(filenames),
@@ -90,23 +109,31 @@ outfile = kn.pack({
 pd.DataFrame.from_dict([
     {
         'Treatment' : kn.unpack(filename)['treat'],
-        'Reproduction Rate' :
-            CalcSurroundedRate(h5py.File(filename, 'r')),
+        'Reproduction Rate' : res,
         'Channel 1 Surrounded' : 'True',
         'First Update' : first_update,
         'Last Update' : last_update
     }
-    for filename in tqdm(filenames)
+    for res, filename in zip(
+        Parallel(n_jobs=-1)(
+            delayed(SafeCalcSurroundedRate)(filename)
+            for filename in tqdm(filenames)
+        ), filenames
+    )
 ] + [
     {
         'Treatment' : kn.unpack(filename)['treat'],
-        'Reproduction Rate' :
-            CalcNotSurroundedRate(h5py.File(filename, 'r')),
+        'Reproduction Rate' : res,
         'Channel 1 Surrounded' : 'False',
         'First Update' : first_update,
         'Last Update' : last_update
     }
-    for filename in tqdm(filenames)
+    for res, filename in zip(
+        Parallel(n_jobs=-1)(
+            delayed(SafeCalcNotSurroundedRate)(filename)
+            for filename in tqdm(filenames)
+        ), filenames
+    )
 ]).to_csv(outfile, index=False)
 
 print('Output saved to', outfile)
