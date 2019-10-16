@@ -212,8 +212,6 @@ void DishWorld::LoadPopulation() {
 
   for (const auto & id : ids) {
 
-    std::cout << id << std::endl;
-
     for (size_t clone = 0; clone < cfg.SEED_POP_CLONECOUNT(); ++clone) {
 
       for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
