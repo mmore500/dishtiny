@@ -37,18 +37,22 @@ ax = sns.barplot(
 plt.xticks(rotation=30)
 
 
+outfile = kn.pack({
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                    file_parcel="full_parcel",
+                                    files_join="cat_join"
+                                ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+    'title' : 'reproductive_labor_surrounded',
+    'ext' : '.pdf'
+})
+
 ax.get_figure().savefig(
-    kn.pack({
-        '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
-        '_script_fullcat_hash' : fsh.FilesHash(
-                                        file_parcel="full_parcel",
-                                        files_join="cat_join"
-                                    ).hash_files([sys.argv[0]]),
-        '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
-        'title' : 'reproductive_labor_surrounded',
-        'ext' : '.pdf'
-    }),
+    outfile,
     transparent=True,
     bbox_inches='tight',
     pad_inches=0
 )
+
+print('Output saved to', outfile)
