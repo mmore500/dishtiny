@@ -246,6 +246,19 @@ void DishWorld::LoadPopulation() {
 
   }
 
+  // kill everything that's not a target
+  std::unordered_set<size_t> target_set(
+    std::begin(targets),
+    std::end(targets)
+  );
+
+  for (size_t i = 0; i < GetSize(); ++i) {
+    if (!target_set.count(i)) {
+      DoDeath(i);
+      man->Channel(i).ClearIDs();
+    }
+  }
+
 }
 
 DishWorld::~DishWorld() {
