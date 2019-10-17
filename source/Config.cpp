@@ -18,7 +18,7 @@ void Config::LoadFromFile() {
   Read("base.cfg");
 
   while (clevs.size() > NLEV()) {
-    delete clevs.back();
+    clevs.back().Delete();
     clevs.pop_back();
   }
 
