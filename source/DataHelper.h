@@ -130,7 +130,6 @@ public:
         // only log one snapshot of genoypes, not a sequence
         // because it's space intensive
         if(update % cfg.SNAPSHOT_FREQUENCY() == 0) {
-          RootID();
           Population();
           Triggers();
         }
@@ -142,6 +141,7 @@ public:
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ChannelGeneration(lev);
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Expiration(lev);
+        RootID();
         Stockpile();
         Live();
         Apoptosis();
@@ -178,10 +178,10 @@ public:
       } else if (update % cfg.ANIMATION_FREQUENCY() < cfg.ENV_TRIG_FREQ()) {
         // record frequent snapshots of these to stich together ananimations
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
+        RootID();
         Stockpile();
         TotalContribute();
         Live();
-        RootID();
         file.flush(H5F_SCOPE_LOCAL);
       }
     });
@@ -415,6 +415,21 @@ private:
 
   void RootID() {
 
+    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+
+    H5::DSetCreatPropList plist;
+    plist.setChunk(2, dims);
+    plist.setDeflate(6);
+
+    const auto tid = H5::PredType::NATIVE_UINT32;
+
+    H5::DataSet ds = file.createDataSet(
+      "/RootID/upd_" + emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims),
+      plist
+    );
+
     uint32_t data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
@@ -426,20 +441,6 @@ private:
       }
 
     }
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-    H5::DataSet ds = file.createDataSet(
-      "/RootID/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
-    );
 
     ds.write((void*)data, tid);
 
