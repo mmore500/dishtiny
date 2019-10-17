@@ -16,7 +16,7 @@ TREATMENT="treat=resource-wave__channelsense-yes__nlev-onebig"
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
 OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny_seeded/"${TREATMENT}"/"${SEED}"/"
-CONFIG_DIR="/mnt/home/mmore500/dishtiny/request/"${TREATMENT}
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/request_seeded/"${TREATMENT}
 
 echo "   TREATMENT" $TREATMENT
 echo "   SEED" $SEED
