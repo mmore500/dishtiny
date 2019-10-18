@@ -5,7 +5,7 @@
 #SBATCH --mem=8G                # memory required per node - amount of memory (in bytes)
 #SBATCH --job-name treat=resource-even__channelsense-yes__nlev-two     # you can give your job a name for easier identification (same as -J)
 #SBATCH --account=devolab
-#SBATCH --output="slurmlogs/slurm-%A_%a.out"
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 
 ################################################################################
 echo "Prepare Env Vars"
