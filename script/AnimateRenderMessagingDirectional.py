@@ -154,7 +154,7 @@ def RenderAndSave(upd, filename):
 
     plt.savefig(
         kn.pack({
-            'title' : 'directional_sharing_viz',
+            'title' : 'directional_messaging_viz',
             'update' : str(upd),
             'seed' : kn.unpack(filename)['seed'],
             'treat' : kn.unpack(filename)['treat'],
