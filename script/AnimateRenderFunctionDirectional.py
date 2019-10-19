@@ -66,6 +66,9 @@ def RenderAndSave(upd, filename):
     channel = np.array(
         file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
     ).flatten()
+    decoder = np.array(
+        file['Functions']['decoder']['upd_'+str(upd)]
+    ).flatten()
     function = [
         np.array(
             file['Functions']['dir_'+str(dir)]['upd_'+str(upd)]
@@ -100,7 +103,7 @@ def RenderAndSave(upd, filename):
                         fps = map(
                             lambda x: x['value0']['value0'],
                             json.loads(
-                                function[dir][flat_idx].decode("utf-8")
+                                decoder[function[dir][flat_idx]].decode("utf-8")
                             )['value0']
                         )
                         fpcounts = defaultdict(lambda: 0)
