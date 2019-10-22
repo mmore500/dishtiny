@@ -54,6 +54,11 @@ def ExtractSeed(filename):
         "component" : "program",
         "treat" : kn.unpack(filename)["treat"],
         "seed" : kn.unpack(filename)["seed"],
+        '_data_hathash_hash' : fsh.FilesHash().hash_files([filename]),
+        '_script_fullcat_hash' : fsh.FilesHash(
+                                            file_parcel="full_parcel",
+                                            files_join="cat_join"
+                                        ).hash_files([sys.argv[0]]),
         "ext" : ".txt",
     }), 'w') as file:
         file.write(
@@ -64,6 +69,11 @@ def ExtractSeed(filename):
         "component" : "triggers",
         "treat" : kn.unpack(filename)["treat"],
         "seed" : kn.unpack(filename)["seed"],
+        '_data_hathash_hash' : fsh.FilesHash().hash_files([filename]),
+        '_script_fullcat_hash' : fsh.FilesHash(
+                                            file_parcel="full_parcel",
+                                            files_join="cat_join"
+                                        ).hash_files([sys.argv[0]]),
         "ext" : ".json",
     }), 'w') as file:
         file.write(
@@ -76,6 +86,11 @@ def ExtractSeed(filename):
             "dir" : dir,
             "treat" : kn.unpack(filename)["treat"],
             "seed" : kn.unpack(filename)["seed"],
+            '_data_hathash_hash' : fsh.FilesHash().hash_files([filename]),
+            '_script_fullcat_hash' : fsh.FilesHash(
+                                                file_parcel="full_parcel",
+                                                files_join="cat_join"
+                                            ).hash_files([sys.argv[0]]),
             "ext" : ".json",
         }), 'w') as file:
             file.write(
