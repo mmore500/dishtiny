@@ -75,6 +75,7 @@ EMP_BUILD_CONFIG(
   VALUE(SYSTEMATICS, bool, true, "[NATIVE] Should we keep systematics data?"),
   VALUE(SEED_POP, bool, false, "[NATIVE] Should we seed the population?"),
   VALUE(SEED_POP_CLONECOUNT, size_t, 10, "[NATIVE] How many clones of each champion genotype should we seed our population with?"),
+  VALUE(SEED_POP_ID, size_t, 0, "[NATIVE] Should we seed the population with all seedpop IDs (0) or with a specific ID (>0)?"),
   VALUE(ANIMATION_FREQUENCY, size_t, 512, "[NATIVE] How often should we save data that will be used to make animations?")
 
 )

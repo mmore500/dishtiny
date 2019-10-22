@@ -128,7 +128,7 @@ void DishWorld::LoadPopulation() {
   );
 
   // get ids of seeded cells
-  std::unordered_set<size_t> ids;
+  emp::vector<size_t> ids;
   for (const auto & filename : filenames) {
     if (
       const auto res = emp::keyname::unpack(filename);
@@ -136,8 +136,28 @@ void DishWorld::LoadPopulation() {
     ) {
       size_t id;
       std::stringstream(res.at("id")) >> id;
-      ids.insert(id);
+      emp_assert(id > 0);
+      ids.push_back(id);
     }
+  }
+
+  // remove duplicate ids
+  std::sort(std::begin(ids), std::end(ids));
+  ids.erase(
+    std::unique(std::begin(ids), std::end(ids)),
+    std::end(ids)
+  );
+
+  // if single seed ID configured, drop all others
+  if (cfg.SEED_POP_ID()) {
+    ids.erase(
+      std::remove_if(
+        std::begin(ids),
+        std::end(ids),
+        [this](const auto & id){ return id != cfg.SEED_POP_ID(); }
+      ),
+      std::end(ids)
+    );
   }
 
   // pick where to put seeded cells
