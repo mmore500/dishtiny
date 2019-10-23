@@ -102,8 +102,8 @@ def RenderAndSave(upd, filename):
             np.transpose(RenderTriangles(
                 val_top,
                 val_bottom,
-                val_left,
                 val_right,
+                val_left,
                 val_live
             )) for val_top, val_bottom, val_left, val_right, val_live in zip(
                 row_top,
