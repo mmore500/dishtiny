@@ -14,7 +14,7 @@ echo "Prepare Env Vars"
 TREATMENT="seed=1024+title=intramessaging+treat=resource-even__channelsense-yes__nlev-two"
 SEED=1
 
-OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/id\="${SLURM_ARRAY_TASK_ID}"/"
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/id="${SLURM_ARRAY_TASK_ID}"/"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/knockout/"${TREATMENT}"/"
 
 echo "   TREATMENT" $TREATMENT
