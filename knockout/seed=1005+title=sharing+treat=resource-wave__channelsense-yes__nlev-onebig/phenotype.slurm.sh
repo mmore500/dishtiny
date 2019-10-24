@@ -15,7 +15,7 @@ TREATMENT="seed=1005+title=sharing+treat=resource-wave__channelsense-yes__nlev-o
 SEED=1
 
 OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/id\="${SLURM_ARRAY_TASK_ID}"/"
-CONFIG_DIR="/mnt/home/mmore500/knockout/"${TREATMENT}"/"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/knockout/"${TREATMENT}"/"
 
 echo "   TREATMENT" $TREATMENT
 echo "   SEED" $SEED

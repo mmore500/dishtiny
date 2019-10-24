@@ -16,7 +16,7 @@ TREATMENT="seed=1034+title=propagule+treat=resource-wave__channelsense-yes__nlev
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
 OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/"${SEED}"/"
-CONFIG_DIR="/mnt/home/mmore500/knockout/"${TREATMENT}"/"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/knockout/"${TREATMENT}"/"
 
 echo "   TREATMENT" $TREATMENT
 echo "   SEED" $SEED
