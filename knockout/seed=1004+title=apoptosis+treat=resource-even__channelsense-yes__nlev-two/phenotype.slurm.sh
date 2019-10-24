@@ -1,6 +1,6 @@
 #!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
-#SBATCH --time=4:00:00
+#SBATCH --time=48:00:00
 #SBATCH --array=1-2
 #SBATCH --mem=8G
 #SBATCH --job-name ko-1004-apoptosis-phenotype
@@ -34,7 +34,7 @@ cd ${OUTPUT_DIR}
 echo "Do Work"
 ################################################################################
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
-./dishtiny -SEED ${SEED} -SEED_POP_ID ${SLURM_ARRAY_TASK_ID} -RUN_LENGTH 8192 >run.log 2>&1
+./dishtiny -SEED ${SEED} -SEED_POP_ID ${SLURM_ARRAY_TASK_ID} -RUN_LENGTH 270336 >run.log 2>&1
 
 ###############################################################################
 echo "Done"
