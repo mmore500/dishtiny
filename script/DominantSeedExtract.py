@@ -19,6 +19,10 @@ filenames = sys.argv[2:]
 def ExtractSeed(filename):
     file = h5py.File(filename, 'r')
 
+    lives = list(np.array(
+        file['Live']['upd_'+str(update)]
+    ).flatten())
+
     prog_decoder = list(np.array(
         file['Population']['decoder']['upd_'+str(update)]
     ).flatten())
@@ -42,7 +46,13 @@ def ExtractSeed(filename):
         ).flatten())
         for dir in range(4)
     ]))
-    dominant_prog = max(set(progs), key=progs.count)
+
+    dominant_prog = max(
+        set(
+            prog for prog, live in zip(progs,lives) if live
+        ),
+        key=progs.count
+    )
 
     triggers = [t for p, t in zip(progs, triggers) if p == dominant_prog]
     dominant_trigger = max(set(triggers), key=triggers.count)
