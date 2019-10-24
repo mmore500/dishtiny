@@ -11,7 +11,7 @@
 echo "Prepare Env Vars"
 ################################################################################
 
-TREATMENT="seed=1005+title=intermessaging_sharing+treat=resource-wave__channelsense-yes__nlev-two"
+TREATMENT="seed=1005+title=intermessaging_sharing+treat=resource-wave__channelsense-yes__nlev-onebig"
 SEED=1
 
 OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/id="${SLURM_ARRAY_TASK_ID}"/"
