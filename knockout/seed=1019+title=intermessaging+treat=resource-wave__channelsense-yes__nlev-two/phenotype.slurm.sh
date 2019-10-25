@@ -12,8 +12,8 @@ echo "Prepare Env Vars"
 ################################################################################
 
 TREATMENT="seed=1019+title=intermessaging+treat=resource-wave__channelsense-yes__nlev-two"
-SEED=$(( $SLURM_ARRAY_TASK_ID % 20 ))
-ID=$(( $SLURM_ARRAY_TASK_ID / 20 ))
+SEED=$(( 1 + ($SLURM_ARRAY_TASK_ID - 1) % 20 ))
+ID=$(( 1 + ($SLURM_ARRAY_TASK_ID - 1) / 20 ))
 
 OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/id="${ID}"+seed="${SEED}"/"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/knockout/"${TREATMENT}"/"
