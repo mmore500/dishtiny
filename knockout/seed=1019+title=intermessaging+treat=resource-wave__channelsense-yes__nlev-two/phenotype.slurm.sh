@@ -1,7 +1,7 @@
 #!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --array=1-2
+#SBATCH --array=1-40
 #SBATCH --mem=8G
 #SBATCH --job-name ko-1019-intermessaging-phenotype
 #SBATCH --account=devolab
@@ -12,9 +12,10 @@ echo "Prepare Env Vars"
 ################################################################################
 
 TREATMENT="seed=1019+title=intermessaging+treat=resource-wave__channelsense-yes__nlev-two"
-SEED=1
+SEED=$(( $SLURM_ARRAY_TASK_ID % 20 ))
+ID=$(( $SLURM_ARRAY_TASK_ID / 20 ))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/id="${SLURM_ARRAY_TASK_ID}"/"
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/id="${ID}"+seed="${SEED}"/"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/knockout/"${TREATMENT}"/"
 
 echo "   TREATMENT" $TREATMENT
