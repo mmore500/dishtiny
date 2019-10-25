@@ -13,9 +13,9 @@ echo "Prepare Env Vars"
 
 TREATMENT="seed=1019+title=intermessaging+treat=resource-wave__channelsense-yes__nlev-two"
 SEED=$(( 1 + ($SLURM_ARRAY_TASK_ID - 1) % 20 ))
-ID=$(( 1 + ($SLURM_ARRAY_TASK_ID - 1) / 20 ))
+POP_ID=$(( 1 + ($SLURM_ARRAY_TASK_ID - 1) / 20 ))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/id="${ID}"+seed="${SEED}"/"
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/id="${POP_ID}"+seed="${SEED}"/"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/knockout/"${TREATMENT}"/"
 
 echo "   TREATMENT" $TREATMENT
@@ -35,7 +35,7 @@ cd ${OUTPUT_DIR}
 echo "Do Work"
 ################################################################################
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
-./dishtiny -SEED ${SEED} -SEED_POP_ID ${SLURM_ARRAY_TASK_ID} -RUN_LENGTH 8192 >run.log 2>&1
+./dishtiny -SEED ${SEED} -SEED_POP_ID ${POP_ID} -RUN_LENGTH 8192 >run.log 2>&1
 
 ###############################################################################
 echo "Done"
