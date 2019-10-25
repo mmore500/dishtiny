@@ -58,6 +58,7 @@ df_res["Scaled Mean Border Age"] = (
         df_res["Mean Border Age"] / df_res["Expected Border Age"]
     )
 
+# replicability info
 print({
     '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
     '_script_fullcat_hash' : fsh.FilesHash(
@@ -67,6 +68,35 @@ print({
     '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
 })
 for key in "Scaled Mean Border Age", "Border Turnover":
+    print(
+        key,
+        "Wild Type mean / std:",
+        np.mean(
+            df_res[
+                df_res["Genotype"] == "Wild Type"
+            ][key]
+        ),
+        np.std(
+            df_res[
+                df_res["Genotype"] == "Wild Type"
+            ][key]
+        ),
+    )
+    print(
+        key,
+        "Messaging Knockout mean:",
+        np.mean(
+            df_res[
+                df_res["Genotype"] == "Messaging Knockout"
+            ][key]
+        ),
+        np.std(
+            df_res[
+                df_res["Genotype"] == "Messaging Knockout"
+            ][key]
+        ),
+    )
+
     # do bootstrap statistics
     bootsamples = 1000000
 
@@ -96,7 +126,7 @@ for key in "Scaled Mean Border Age", "Border Turnover":
 
     print(
         key,
-        "p: ",
+        "p:",
         # divide by 100 b/c percentileofscore returns 0-100 and we want 0-1
         sp.stats.percentileofscore(bootstats, 0, 'rank')/100,
     )
