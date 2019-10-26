@@ -50,7 +50,7 @@ def SharingDirection(filename):
                     res[chans[i]][1][dir] += shares[i];
 
     return [
-        max(dirshares) / sum(dirshares) if sum(dirshares) else 0.25
+        np.std([v / sum(dirshares) for v in dirshares]) if sum(dirshares) else 0
         for pop, dirshares in res.values()
         if pop >= 9
     ]
@@ -85,7 +85,7 @@ pd.DataFrame.from_dict([
             else None
         ),
         'Seed' : kn.unpack(filename)['seed'],
-        'Maximum Cardinal Resource-Sharing Fraction': entry,
+        'Cardinal Resource-Sharing Standard Deviation': entry,
     }
     for filename, res in zip(
         filenames,

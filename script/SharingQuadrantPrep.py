@@ -119,7 +119,7 @@ def SharingQuadrant(filename):
     }
 
     return [
-        max(densities) / sum(densities) if sum(densities) else 0.25
+        np.std([v / sum(densities) for v in densities]) if sum(densities) else 0
         for densities in quadrant_share_densities.values()
     ]
 
@@ -153,7 +153,7 @@ pd.DataFrame.from_dict([
             else None
         ),
         'Seed' : kn.unpack(filename)['seed'],
-        'Maximum Quadrant Resource-Sharing Fraction': entry,
+        'Quadrant Resource-Sharing Standard Deviation': entry,
     }
     for filename, res in zip(
         filenames,

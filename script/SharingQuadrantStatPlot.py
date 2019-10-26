@@ -31,7 +31,7 @@ print({
                             ).hash_files([sys.argv[0]]),
     '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
 })
-for key in "Maximum Quadrant Resource-Sharing Fraction",:
+for key in "Quadrant Resource-Sharing Standard Deviation",:
     print(
         key,
         "Wild Type mean / std:",
@@ -99,7 +99,7 @@ for key in "Maximum Quadrant Resource-Sharing Fraction",:
 sns.barplot(
     data=df,
     x="Genotype",
-    y="Maximum Quadrant Resource-Sharing Fraction",
+    y="Quadrant Resource-Sharing Standard Deviation",
 )
 
 outfile = kn.pack({
