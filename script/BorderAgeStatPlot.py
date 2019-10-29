@@ -27,15 +27,16 @@ df['Border Age'] /= 8
 
 
 # calculate separately
-df_age = df.groupby([
+df_mean = df.groupby([
     'Update',
     'Genotype',
     'Seed',
 ]).mean().reset_index().rename({
     "Border Age" : "Mean Border Age",
+    "Cold" : "Fraction Cold Borders",
 }, axis=1)
 
-df_turnover = df.groupby([
+df_agg = df.groupby([
     'Update',
     'Genotype',
     'Seed',
@@ -43,20 +44,29 @@ df_turnover = df.groupby([
     lambda x: sum(1 for v in x if v < 1) / len(x)
 ).reset_index().rename({
     "Border Age" : "Border Turnover",
+    "Cell Age" : "Cell Turnover",
 }, axis=1)
 
 
 # combine
-df_res = df_turnover
+df_res = df_mean
 
-df_res["Mean Border Age"] = df_age["Mean Border Age"]
+df_res["Border Turnover"] = df_agg["Border Turnover"]
+df_res["Cell Turnover"] = df_agg["Cell Turnover"]
 
-# expected value of a geometric distribution is 1/p
-df_res["Expected Border Age"] = 1 / df_res["Border Turnover"]
+# border turnover -> cell birth rate -> expected border age
+# see math in lab notes
+df_res["Expected Border Age"] = (
+    1 / (
+        (2 - df_res["Cell Turnover"]) * df_res["Cell Turnover"]
+    )
+)
 
 df_res["Scaled Mean Border Age"] = (
         df_res["Mean Border Age"] / df_res["Expected Border Age"]
     )
+
+print(df_res)
 
 # replicability info
 print({
@@ -67,7 +77,7 @@ print({
                             ).hash_files([sys.argv[0]]),
     '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
 })
-for key in "Scaled Mean Border Age", "Border Turnover":
+for key in "Scaled Mean Border Age", "Border Turnover", "Fraction Cold Borders":
     print(
         key,
         "Wild Type mean / std:",
@@ -136,6 +146,7 @@ sns.barplot(
     data=df_res,
     x="Genotype",
     y="Scaled Mean Border Age",
+    order=['Wild Type', 'Messaging Knockout'],
 )
 
 outfile = kn.pack({
@@ -164,10 +175,40 @@ sns.barplot(
     data=df_res,
     x="Genotype",
     y="Border Turnover",
+    order=['Wild Type', 'Messaging Knockout'],
 )
 
 outfile = kn.pack({
     'title' : 'borderturnover',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                file_parcel="full_parcel",
+                                files_join="cat_join"
+                            ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+    'ext' : '.pdf',
+})
+
+plt.gcf().savefig(
+    outfile,
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0,
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
+
+sns.barplot(
+    data=df_res,
+    x="Genotype",
+    y="Fraction Cold Borders",
+    order=['Wild Type', 'Messaging Knockout'],
+)
+
+outfile = kn.pack({
+    'title' : 'propcold',
     '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
     '_script_fullcat_hash' : fsh.FilesHash(
                                 file_parcel="full_parcel",

@@ -43,15 +43,33 @@ def BorderAge(filename):
         lives = np.array(file['Live']['upd_'+str(update)]).flatten()
         cages = np.array(file['CellAge']['upd_'+str(update)]).flatten()
         pvchs = np.array(file['PrevChan']['upd_'+str(update)]).flatten()
+        ppos = np.array(file['ParentPos']['upd_'+str(update)]).flatten()
+        cage = np.array(file['CellAge']['upd_'+str(update)]).flatten()
+        stock = np.array(file['Stockpile']['upd_'+str(update + 1)]).flatten()
 
         for i in range(len(indices)):
             for neigh in neighs:
-                if (lives[i] and chans[indices[neigh[i]]] != chans[i]):
-                    if (
-                        pvchs[i] != chans[indices[neigh[i]]]
-                        or pvchs[indices[neigh[i]]] != chans[i]
-                        ):
+                if (
+                    lives[i]
+                    and chans[indices[neigh[i]]] != chans[i]
+                    # no propagule parent/propagule child
+                    # relationship registered
+                    and pvchs[i] != chans[indices[neigh[i]]]
+                    and pvchs[indices[neigh[i]]] != chans[i]
+                    and not ( # not cell parent
+                        ppos[i] == indices[neigh[i]]
+                        and cage[i] < cage[indices[neigh[i]]]
+                    ) and not ( # not cell child
+                        ppos[indices[neigh[i]]] == indices[i]
+                        and cage[indices[neigh[i]]] < cage[i]
+                    )):
                         res.append({
+                            'Cold' : (
+                                (stock[indices[neigh[i]]] >= 1.0)
+                                or (stock[i]  >= 1.0)
+                            ),
+                            'Cell Age'
+                                : cages[i],
                             'Border Age'
                                 : min(cages[i], cages[indices[neigh[i]]]),
                             'Update' : update,
