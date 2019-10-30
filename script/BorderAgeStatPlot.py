@@ -77,7 +77,11 @@ print({
                             ).hash_files([sys.argv[0]]),
     '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
 })
-for key in "Scaled Mean Border Age", "Border Turnover", "Fraction Cold Borders":
+for key in (
+    "Scaled Mean Border Age",
+    "Border Turnover",
+    "Fraction Cold Borders",
+    ):
     print(
         key,
         "Wild Type mean / std:",
