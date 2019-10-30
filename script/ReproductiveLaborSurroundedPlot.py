@@ -28,13 +28,17 @@ df['Treatment'] = df['Treatment'].apply(lambda raw : {
     }[raw]
 )
 
+df['Cell Context'] = df['Channel 1 Surrounded'].replace(to_replace={
+    True : 'Interior',
+    False : 'Exterior',
+})
+
 ax = sns.barplot(
     x="Treatment",
     y="Reproduction Rate",
-    hue="Channel 1 Surrounded",
+    hue="Cell Context",
     data=df
 )
-plt.xticks(rotation=30)
 
 
 outfile = kn.pack({
