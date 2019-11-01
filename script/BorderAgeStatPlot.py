@@ -24,7 +24,10 @@ df = pd.read_csv(dataframe_filename)
 
 # updates ==> how many reproduction cycles
 df['Border Age'] /= 8
+df['Cell Age'] /= 8
 
+
+print(df.corr())
 
 # calculate separately
 df_mean = df.groupby([
@@ -213,6 +216,151 @@ sns.barplot(
 
 outfile = kn.pack({
     'title' : 'propcold',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                file_parcel="full_parcel",
+                                files_join="cat_join"
+                            ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+    'ext' : '.pdf',
+})
+
+plt.gcf().savefig(
+    outfile,
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0,
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
+
+sns.regplot(
+    data=df[df["Genotype"] == "Wild Type"],
+    x="Inbox Traffic Difference",
+    y="Cold",
+    logistic=True, ci=None, y_jitter=.03
+)
+
+outfile = kn.pack({
+    'title' : 'traffic-cold',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                file_parcel="full_parcel",
+                                files_join="cat_join"
+                            ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+    'ext' : '.pdf',
+})
+
+plt.gcf().savefig(
+    outfile,
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0,
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
+
+sns.regplot(
+    data=df[df["Genotype"] == "Wild Type"],
+    x="Inbox Traffic Difference",
+    y="Border Age",
+    ci=None
+)
+
+outfile = kn.pack({
+    'title' : 'traffic-age',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                file_parcel="full_parcel",
+                                files_join="cat_join"
+                            ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+    'ext' : '.pdf',
+})
+
+plt.gcf().savefig(
+    outfile,
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0,
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
+
+sns.regplot(
+    data=df[df["Genotype"] == "Wild Type"],
+    x="Inbox Traffic Difference",
+    y="Cell Age",
+    ci=None
+)
+
+outfile = kn.pack({
+    'title' : 'traffic-cellage',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                file_parcel="full_parcel",
+                                files_join="cat_join"
+                            ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+    'ext' : '.pdf',
+})
+
+plt.gcf().savefig(
+    outfile,
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0,
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
+
+sns.regplot(
+    data=df[df["Genotype"] == "Wild Type"],
+    x="Maximum Inbox Traffic",
+    y="Border Age",
+    ci=None
+)
+
+outfile = kn.pack({
+    'title' : 'max-borderage',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                file_parcel="full_parcel",
+                                files_join="cat_join"
+                            ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+    'ext' : '.pdf',
+})
+
+plt.gcf().savefig(
+    outfile,
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0,
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
+
+sns.regplot(
+    data=df[df["Genotype"] == "Wild Type"],
+    x="Minimum Inbox Traffic",
+    y="Border Age",
+    ci=None
+)
+
+outfile = kn.pack({
+    'title' : 'min-borderage',
     '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
     '_script_fullcat_hash' : fsh.FilesHash(
                                 file_parcel="full_parcel",

@@ -46,9 +46,14 @@ def BorderAge(filename):
         ppos = np.array(file['ParentPos']['upd_'+str(update)]).flatten()
         cage = np.array(file['CellAge']['upd_'+str(update)]).flatten()
         stock = np.array(file['Stockpile']['upd_'+str(update + 1)]).flatten()
+        traffics = [
+            np.array(file['InboxTraffic']['dir_'+str(dir)]['upd_'+str(update + 1)]).flatten()
+            for dir in range(4)
+        ]
+
 
         for i in range(len(indices)):
-            for neigh in neighs:
+            for neigh, traffic in zip(neighs, traffics):
                 if (
                     lives[i]
                     and chans[indices[neigh[i]]] != chans[i]
@@ -72,6 +77,21 @@ def BorderAge(filename):
                                 : cages[i],
                             'Border Age'
                                 : min(cages[i], cages[indices[neigh[i]]]),
+                            'Inbox Traffic Difference'
+                                : abs(
+                                    int(traffic[i])
+                                    - int(traffic[indices[neigh[i]]])
+                                ),
+                            'Minimum Inbox Traffic'
+                                : min(
+                                    int(traffic[i]),
+                                    int(traffic[indices[neigh[i]]])
+                                ),
+                            'Maximum Inbox Traffic'
+                                : max(
+                                    int(traffic[i]),
+                                    int(traffic[indices[neigh[i]]])
+                                ),
                             'Update' : update,
                         })
 
