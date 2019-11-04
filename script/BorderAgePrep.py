@@ -56,6 +56,7 @@ def BorderAge(filename):
             for neigh, traffic in zip(neighs, traffics):
                 if (
                     lives[i]
+                    and lives[indices[neigh[i]]]
                     and chans[indices[neigh[i]]] != chans[i]
                     # no propagule parent/propagule child
                     # relationship registered
