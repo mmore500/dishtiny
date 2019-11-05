@@ -504,6 +504,39 @@ print('Output saved to', outfile)
 
 plt.clf()
 
+df_mean_external["Aggressor"] = "Neighbor"
+df_mean_internal["Aggressor"] = "Affiliate"
+
+sns.barplot(
+    data=df_mean_external.append(df_mean_internal),
+    x="Aggressor",
+    y="Mean Border Age",
+    hue="Genotype",
+    hue_order=['Wild Type', 'Messaging Knockout'],
+)
+
+outfile = kn.pack({
+    'title' : 'comboborderage',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                file_parcel="full_parcel",
+                                files_join="cat_join"
+                            ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+    'ext' : '.pdf',
+})
+
+plt.gcf().savefig(
+    outfile,
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0,
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
+
 sns.barplot(
     data=df_mean_external,
     x="Genotype",
