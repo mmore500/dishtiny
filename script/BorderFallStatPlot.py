@@ -31,6 +31,8 @@ df["Internal Channel Change"] = (
     & ~df["External Channel Change"]
 )
 
+df["Internal"] = ~df["External"]
+
 print(df.corr())
 
 # calculate separately
@@ -106,6 +108,22 @@ df_mean_antiintchange = df[~df["Internal Channel Change"]].groupby([
     "Cold" : "Fraction Cold Borders",
 }, axis=1)
 
+df_mean_external = df[df["External"]].groupby([
+    'Genotype',
+    'Seed',
+]).mean().reset_index().rename({
+    "Border Age" : "Mean Border Age",
+    "Cold" : "Fraction Cold Borders",
+}, axis=1)
+
+df_mean_internal = df[~df["External"]].groupby([
+    'Genotype',
+    'Seed',
+]).mean().reset_index().rename({
+    "Border Age" : "Mean Border Age",
+    "Cold" : "Fraction Cold Borders",
+}, axis=1)
+
 df_agg = df.groupby([
     'Genotype',
     'Seed',
@@ -150,6 +168,8 @@ for key in (
     "Channel Change",
     "External Channel Change",
     "Internal Channel Change",
+    "External",
+    "Internal",
     ):
     print(
         key,
@@ -181,7 +201,7 @@ for key in (
     )
 
     # do bootstrap statistics
-    bootsamples = 1000
+    bootsamples = 1000000
 
     boots = zip(
         bootstrap(
@@ -252,16 +272,16 @@ for key in (
     boots = zip(
         bootstrap(
             np.array(
-                df_mean_swap[
-                    df_mean_swap["Genotype"] == "Wild Type"
+                df_mean_external[
+                    df_mean_external["Genotype"] == "Wild Type"
                 ][key]
             ),
             bootsamples
         ),
         bootstrap(
             np.array(
-                df_mean_swap[
-                    df_mean_swap["Genotype"] == "Messaging Knockout"
+                df_mean_external[
+                    df_mean_external["Genotype"] == "Messaging Knockout"
                 ][key]
             ),
             bootsamples
@@ -464,6 +484,64 @@ sns.barplot(
 
 outfile = kn.pack({
     'title' : 'antiintchangeborderage',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                file_parcel="full_parcel",
+                                files_join="cat_join"
+                            ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+    'ext' : '.pdf',
+})
+
+plt.gcf().savefig(
+    outfile,
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0,
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
+
+sns.barplot(
+    data=df_mean_external,
+    x="Genotype",
+    y="Mean Border Age",
+    order=['Wild Type', 'Messaging Knockout'],
+)
+
+outfile = kn.pack({
+    'title' : 'externalborderage',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                file_parcel="full_parcel",
+                                files_join="cat_join"
+                            ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
+    'ext' : '.pdf',
+})
+
+plt.gcf().savefig(
+    outfile,
+    transparent=True,
+    bbox_inches='tight',
+    pad_inches=0,
+)
+
+print('Output saved to', outfile)
+
+plt.clf()
+
+sns.barplot(
+    data=df_mean_internal,
+    x="Genotype",
+    y="Mean Border Age",
+    order=['Wild Type', 'Messaging Knockout'],
+)
+
+outfile = kn.pack({
+    'title' : 'internalborderage',
     '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
     '_script_fullcat_hash' : fsh.FilesHash(
                                 file_parcel="full_parcel",

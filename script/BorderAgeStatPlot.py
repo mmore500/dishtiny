@@ -115,7 +115,7 @@ for key in (
     )
 
     # do bootstrap statistics
-    bootsamples = 1000000
+    bootsamples = 100000
 
     boots = zip(
         bootstrap(
@@ -236,15 +236,15 @@ print('Output saved to', outfile)
 
 plt.clf()
 
-sns.regplot(
-    data=df[df["Genotype"] == "Wild Type"],
-    x="Inbox Traffic Difference",
-    y="Cold",
-    logistic=True, ci=None, y_jitter=.03
+sns.barplot(
+    data=df_mean,
+    x="Genotype",
+    y="Mean Border Age",
+    order=['Wild Type', 'Messaging Knockout'],
 )
 
 outfile = kn.pack({
-    'title' : 'traffic-cold',
+    'title' : 'borderageraw',
     '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
     '_script_fullcat_hash' : fsh.FilesHash(
                                 file_parcel="full_parcel",
@@ -264,117 +264,3 @@ plt.gcf().savefig(
 print('Output saved to', outfile)
 
 plt.clf()
-
-sns.regplot(
-    data=df[df["Genotype"] == "Wild Type"],
-    x="Inbox Traffic Difference",
-    y="Border Age",
-    ci=None
-)
-
-outfile = kn.pack({
-    'title' : 'traffic-age',
-    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
-    '_script_fullcat_hash' : fsh.FilesHash(
-                                file_parcel="full_parcel",
-                                files_join="cat_join"
-                            ).hash_files([sys.argv[0]]),
-    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
-    'ext' : '.pdf',
-})
-
-plt.gcf().savefig(
-    outfile,
-    transparent=True,
-    bbox_inches='tight',
-    pad_inches=0,
-)
-
-print('Output saved to', outfile)
-
-plt.clf()
-
-sns.regplot(
-    data=df[df["Genotype"] == "Wild Type"],
-    x="Inbox Traffic Difference",
-    y="Cell Age",
-    ci=None
-)
-
-outfile = kn.pack({
-    'title' : 'traffic-cellage',
-    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
-    '_script_fullcat_hash' : fsh.FilesHash(
-                                file_parcel="full_parcel",
-                                files_join="cat_join"
-                            ).hash_files([sys.argv[0]]),
-    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
-    'ext' : '.pdf',
-})
-
-plt.gcf().savefig(
-    outfile,
-    transparent=True,
-    bbox_inches='tight',
-    pad_inches=0,
-)
-
-print('Output saved to', outfile)
-
-plt.clf()
-
-sns.regplot(
-    data=df[df["Genotype"] == "Wild Type"],
-    x="Maximum Inbox Traffic",
-    y="Border Age",
-    ci=None
-)
-
-outfile = kn.pack({
-    'title' : 'max-borderage',
-    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
-    '_script_fullcat_hash' : fsh.FilesHash(
-                                file_parcel="full_parcel",
-                                files_join="cat_join"
-                            ).hash_files([sys.argv[0]]),
-    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
-    'ext' : '.pdf',
-})
-
-plt.gcf().savefig(
-    outfile,
-    transparent=True,
-    bbox_inches='tight',
-    pad_inches=0,
-)
-
-print('Output saved to', outfile)
-
-plt.clf()
-
-sns.regplot(
-    data=df[df["Genotype"] == "Wild Type"],
-    x="Minimum Inbox Traffic",
-    y="Border Age",
-    ci=None
-)
-
-outfile = kn.pack({
-    'title' : 'min-borderage',
-    '_data_hathash_hash' : fsh.FilesHash().hash_files([dataframe_filename]),
-    '_script_fullcat_hash' : fsh.FilesHash(
-                                file_parcel="full_parcel",
-                                files_join="cat_join"
-                            ).hash_files([sys.argv[0]]),
-    '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
-    'ext' : '.pdf',
-})
-
-plt.gcf().savefig(
-    outfile,
-    transparent=True,
-    bbox_inches='tight',
-    pad_inches=0,
-)
-
-print('Output saved to', outfile)

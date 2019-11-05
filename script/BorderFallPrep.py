@@ -127,6 +127,23 @@ def BorderAge(filename):
                                     and chans[next_ppos[i]] != chans[i]
                                 ))
                             ),
+                            'External' : (
+                                # safety: no ppos = -1
+                                next_ppos[indices[neigh[i]]] != 2**32 - 1
+                                and next_ppos[i] != 2**32 - 1
+                                # some other channel group was the parent
+                                # A | B
+                                # e.g., C's parent wasn't in A or B group
+                                and ((
+                                    # other channel group was parent
+                                    chans[next_ppos[indices[neigh[i]]]] != chans[indices[neigh[i]]]
+                                    and chans[next_ppos[indices[neigh[i]]]] != chans[i]
+                                ) or (
+                                    # other channel group was parent
+                                    chans[next_ppos[i]] != chans[indices[neigh[i]]]
+                                    and chans[next_ppos[i]] != chans[i]
+                                ))
+                            ),
                             'Border Age'
                                 : 8 + min(cages[i], cages[indices[neigh[i]]]),
                             'Update' : update,
