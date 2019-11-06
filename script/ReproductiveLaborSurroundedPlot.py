@@ -37,6 +37,7 @@ ax = sns.barplot(
     x="Treatment",
     y="Reproduction Rate",
     hue="Cell Context",
+    order=["Even", "Flat", "Nested"],
     data=df
 )
 

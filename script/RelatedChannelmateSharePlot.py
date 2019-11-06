@@ -102,8 +102,8 @@ for measure in df['Measure'].unique():
         hue="Relationship",
         order=[
             "Even",
-            "Nested",
             "Flat",
+            "Nested",
         ],
         hue_order=[
             "Child Channelmate",
