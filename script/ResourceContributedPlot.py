@@ -76,7 +76,6 @@ for measure in df['Measure'].unique():
         col="Treatment",
         hue="Relationship Category",
         col_wrap=4,
-        sharey=False
     )
 
     g.map(
