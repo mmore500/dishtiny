@@ -26,7 +26,8 @@ def Regulator(filename):
     file = h5py.File(filename, 'r')
     index = np.array(file['Index']['own']).flatten()
 
-    res = []
+    sett = []
+    unique = []
     for upd in range(first_update, last_update, 4):
         live = np.array(file['Live']['upd_'+str(upd)]).flatten()
         decoder = np.array(
@@ -43,14 +44,15 @@ def Regulator(filename):
                     archive = json.loads(
                         decoder[keys[idx]].decode("utf-8")
                     )['value0']
-                    res.append(sum(
+                    sett.append(sum(
                         1
                         for k, v in archive['regulators']
                         if v != 1.0
                     ))
+                    unique.append(len(archive['regulators']))
 
 
-    return np.mean(res)
+    return np.mean(sett), np.mean(unique)
 
 def SafeRegulator(filename):
     try:
@@ -78,7 +80,8 @@ pd.DataFrame.from_dict([
     {
         'Treatment' : kn.unpack(filename)['treat'],
         'Seed' : kn.unpack(filename)['seed'],
-        'Mean Set Regulators' : res,
+        'Mean Set Regulators' : res[0],
+        'Mean Unique Regulators' : res[1],
     }
     for filename, res in zip(
         filenames,
