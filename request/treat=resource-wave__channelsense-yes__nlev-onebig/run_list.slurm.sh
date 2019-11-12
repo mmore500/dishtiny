@@ -32,10 +32,62 @@ cp -r ${CONFIG_DIR}/* ${OUTPUT_DIR}
 cd ${OUTPUT_DIR}
 
 ################################################################################
+echo "Setup DMTCP"
+# https://wiki.hpcc.msu.edu/display/ITH/Checkpoint+with+DMTCP
+################################################################################
+
+# set a limited stack size so DMTCP could work
+ulimit -s 8192
+
+# to store port number
+fname=port.$SLURM_JOBID
+
+# start coordinator
+dmtcp_coordinator --daemon --exit-on-last -p 0 --port-file $fname $@          \
+  1>/dev/null 2>&1
+
+# get coordinator's host name
+h=$(hostname)
+
+# get coordinator's port number
+p=$(cat $fname)
+
+export DMTCP_COORD_HOST=$h
+
+export DMTCP_COORD_PORT=$p
+
+# checkpoint every six hours
+export CKPT_WAIT_SEC=$(( 6 * 60 * 60 ))
+
+################################################################################
 echo "Do Work"
 ################################################################################
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
-./dishtiny -SEED ${SEED} >run.log 2>&1
+
+# run job in background
+dmtcp_launch -h $DMTCP_COORD_HOST -p $DMTCP_COORD_PORT --rm --ckpt-open-files  \
+  ./dishtiny -SEED ${SEED}                                                     \
+  >run.log 2>&1                                                                \
+  &
+
+# while the program is still running checkpoint it intermittently
+while dmtcp_command -h $DMTCP_COORD_HOST -p $DMTCP_COORD_PORT -s               \
+   1>/dev/null 2>&1
+do
+
+  # wait for checkpoint interval
+  sleep $CKPT_WAIT_SEC
+
+  # move any current checkpoint files out of the way
+  mkdir -p checkpoint_bak
+  mv ckpt_*.dmtcp checkpoint_bak
+
+  # checkpoint the job and, if successful, clear old checkpoint files
+  dmtcp_command -h $DMTCP_COORD_HOST -p $DMTCP_COORD_PORT                      \
+    --ckpt-open-files -bc \
+    && rm -rf checkpoint_bak
+
+done
 
 ###############################################################################
 echo "Done"
