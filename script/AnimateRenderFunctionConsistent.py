@@ -30,14 +30,12 @@ updates = [int(v) for v in sys.argv[2:]]
 file = h5py.File(filename, 'r')
 nlev = int(file.attrs.get('NLEV'))
 
+channels = [ np.array(
+    file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
+).flatten() for upd in updates ]
+
 # get unique group IDs
-ids = {
-    id
-    for upd in updates
-    for id in np.array(
-        file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
-    ).flatten()
-}
+ids = { id for snap in channels for id in snap.flatten() }
 
 # for each group, get all regulators
 def MakePCA(id, filename):
@@ -49,59 +47,43 @@ def MakePCA(id, filename):
     channels = [ np.array(
         file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
     ).flatten() for upd in updates ]
-    regulators = [ [
+    functions = [ [
         np.array(
-            file['Regulators']['dir_'+str(dir)]['upd_'+str(upd)]
+            file['Functions']['dir_'+str(dir)]['upd_'+str(upd)]
         ).flatten()
         for dir in range(4)
     ] for upd in updates ]
-    lives = [
+    functions = [ [
         np.array(
-            file['Live']['upd_'+str(upd)]
-        ).flatten() for upd in updates
-    ]
+            file['Functions']['dir_'+str(dir)]['upd_'+str(upd)]
+        ).flatten()
+        for dir in range(4)
+    ] for upd in updates ]
+    lives = [ np.array(file['Live']['upd_'+str(upd)]) for upd in updates ]
     index = np.array(file['Index']['own'])
 
-    tags_to_regs = []
+    fps_to_counts = []
 
-    for idx in index.flatten():
-        for channel, regulator, live in zip(channels, regulators, lives):
-            if channel[idx] == id and live[idx]:
-                archives = [ json.loads(
-                    dir[idx].decode("utf-8")
-                )['value0'] for dir in regulator ]
-                tags = {
-                    d['key'] : d['value']['value0']['value0']
-                    for d in archives[0]['tags']
-                }
+    # for each group, get all functions
+    for idx in range(index.flatten().size):
+        for channel, function, live in zip(channels, functions, lives):
+            if channel[idx] == id and live.flatten()[idx]:
 
-                regulatorsum = defaultdict(lambda: 0.0)
-                for archive in archives:
-                    for d in archive['regulators']:
-                        regulatorsum[d['key']] += d['value']
+                fpcounts = {}
+                for dir in range(4):
+                    fps = map(
+                        lambda x: x['value0']['value0'],
+                        json.loads(
+                            function[dir][idx].decode("utf-8")
+                        )['value0']
+                    )
+                    for fp in fps:
+                        fpcounts[fp] += 1
+                fps_to_counts.append(fpcounts)
 
-                tags_to_regs.append({
-                    tags[uid] : regulatorsum[uid] for uid in archives[0]['uids']
-                })
-
-    df = pd.DataFrame.from_records(
-        tags_to_regs
-    )
-    # if less than half the cells have the regulator, drop it
-    # otherwise (e.g., probably a few cells lost it), assume it's default
-    df = df.dropna(thresh=len(df)/2, axis=1).fillna(1)
-
+    df = pd.DataFrame.from_records(fps_to_counts).fillna(0)
     n = min(3, len(df.columns), len(df))
-
-    pca = PCA(n_components=n).fit(df.to_numpy()) if n else None
-    res = pca.transform(df.to_numpy()) if n else None
-
-    return (
-        pca,
-        list(df.columns),
-        res.min(0),
-        res.ptp(0)
-    ) if n else None
+    return PCA(n_components=n).fit(df.to_numpy()) if n else None
 
 results = Parallel(n_jobs=-1)(
     delayed(MakePCA)(id, filename) for id in tqdm(ids)
@@ -117,9 +99,9 @@ def RenderAndSave(upd, filename):
     channel = np.array(
         file['Channel']['lev_'+str(nlev-1)]['upd_'+str(upd)]
     ).flatten()
-    regulators = [
+    function = [
         np.array(
-            file['Regulators']['dir_'+str(dir)]['upd_'+str(upd)]
+            file['Functions']['dir_'+str(dir)]['upd_'+str(upd)]
         ).flatten()
         for dir in range(4)
     ]
@@ -136,51 +118,42 @@ def RenderAndSave(upd, filename):
     # get unique group IDs
     ids = { id for id in channel.flatten() }
 
-    # for each group, get all regulators
+    # for each group, get all functions
     cmapper = {}
     for id in ids:
-        tags_to_regs = []
+        fps_to_counts = []
         idxs = []
-        for flat_idx, idx in enumerate(index.flatten()):
-            if channel[flat_idx] == id:
+        for idx in range(index.flatten().size):
+            if channel[idx] == id and live.flatten()[idx]:
                 idxs.append(idx)
-                if live.flatten()[flat_idx]:
-                    archives = [ json.loads(
-                        regulator[flat_idx].decode("utf-8")
-                    )['value0'] for regulator in regulators ]
-                    tags = {
-                        d['key'] : d['value']['value0']['value0']
-                        for d in archives[0]['tags']
-                    }
+                fpcounts = defaultdict(lambda: 0)
+                for dir in range(4):
+                    fps = map(
+                        lambda x: x['value0']['value0'],
+                        json.loads(
+                            function[dir][idx].decode("utf-8")
+                        )['value0']
+                    )
+                    for fp in fps:
+                        fpcounts[fp] += 1
+                fps_to_counts.append(fpcounts)
 
-                    regulatorsum = defaultdict(lambda: 0.0)
-                    for archive in archives:
-                        for d in archive['regulators']:
-                            regulatorsum[d['key']] += d['value']
-
-                    tags_to_regs.append({
-                        tags[uid] : regulatorsum[uid] for uid in archives[0]['uids']
-                    })
-
-
-        df = pd.DataFrame.from_records(
-            tags_to_regs
-        ).fillna(1)
+        df = pd.DataFrame.from_records(fps_to_counts).fillna(0)
 
         if pcamapper[id] is not None:
-            pca, cols, minv, ptpv = pcamapper[id]
-            pc = pca.transform(df[cols].to_numpy())
-            pc = (pc - minv) / ptpv
-
+            pc = pcamapper[id].transform(df.to_numpy())
+            pc = (pc - pc.min(0)) / pc.ptp(0)
             for idx, row in zip(idxs, pc):
                 cmapper[idx] = (
                     row[0] if row.size >= 1 and not np.isnan(row[0]) else 0.5,
                     row[1] if row.size >= 2 and not np.isnan(row[1]) else 0.5,
                     row[2] if row.size >= 3 and not np.isnan(row[2]) else 0.5,
                 )
+
         else:
             for idx in idxs:
                 cmapper[idx] = (0.5, 0.5, 0.5)
+            continue
 
     image = np.array([
         [
@@ -215,12 +188,11 @@ def RenderAndSave(upd, filename):
         for dest in ((x+1,y), (x,y+1))
         if data_1[y][x] != data_1[dest[1]-1][dest[0]-1]
     ], linestyle='solid', colors='black')
-
     plt.gca().add_collection(lines_1)
 
     plt.savefig(
         kn.pack({
-            'title' : 'consistent_regulator_viz',
+            'title' : 'function_viz',
             'update' : str(upd),
             'seed' : kn.unpack(filename)['seed'],
             'treat' : kn.unpack(filename)['treat'],

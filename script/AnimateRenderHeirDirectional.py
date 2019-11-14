@@ -18,23 +18,16 @@ import h5py
 import colorsys
 from tqdm import tqdm
 from joblib import delayed, Parallel
-from collections import defaultdict
 
 matplotlib.rcParams['pdf.fonttype'] = 42
 
 filename = sys.argv[1]
 updates = [int(v) for v in sys.argv[2:]]
 
-NONE = 0
-P_PARENT = -3
-P_CHILD = -4
+file = h5py.File(filename, 'r')
 
 def ColorMap(val):
-    return (
-        (1.0, 0.0, 0.0) if val == P_PARENT else
-        (1.0, 1.0, 0.0) if val == P_CHILD else
-        (val, val, val)
-    )
+    return (0.0, 1.0, 1.0) if val else (1.0, 1.0, 1.0)
 
 def RenderTriangles(
         right_val,
@@ -78,22 +71,10 @@ def RenderAndSave(upd, filename):
     file = h5py.File(filename, 'r')
     nlev = int(file.attrs.get('NLEV'))
 
-    own = np.array(file['Index']['own']).flatten()
-    dirs = {
-        'top' : np.array(file['Index']['dir_0']).flatten(),
-        'bottom' : np.array(file['Index']['dir_1']).flatten(),
-        'left' : np.array(file['Index']['dir_3']).flatten(),
-        'right' : np.array(file['Index']['dir_2']).flatten(),
-    }
-
-    chans = [
-        np.array(file['Channel']['lev_'+str(lev)]['upd_'+str(upd)]).flatten()
-        for lev in range(nlev)
-    ]
-    cage = np.array(file['CellAge']['upd_'+str(upd)]).flatten()
-    pvch = np.array(file['PrevChan']['upd_'+str(upd)]).flatten()
-    ppos = np.array(file['ParentPos']['upd_'+str(upd)]).flatten()
-
+    top = np.array(file['Heir']['dir_0']['upd_'+str(upd)])
+    bottom = np.array(file['Heir']['dir_1']['upd_'+str(upd)])
+    left = np.array(file['Heir']['dir_3']['upd_'+str(upd)])
+    right = np.array(file['Heir']['dir_2']['upd_'+str(upd)])
     live = np.array(file['Live']['upd_'+str(upd)])
 
     data_0 = np.array(file['Channel']['lev_0']['upd_'+str(upd)])
@@ -103,40 +84,28 @@ def RenderAndSave(upd, filename):
         np.array(file['Channel']['lev_1']['upd_'+str(upd)])
     )
 
-    res = defaultdict(dict)
-    for idx in range(own.size):
-        for dir, drct in dirs.items():
-            type = NONE
-            if pvch[idx] == chans[-1][drct[idx]]:
-                type = P_CHILD
-            elif pvch[drct[idx]] == chans[-1][idx]:
-                type = P_PARENT
-            else:
-                # grayscale channel ID
-                type = (chans[-1][idx] / 2**64) * 0.8
-
-            res[own[idx]][dir] = type
-
-
-    own = np.array(file['Index']['own'])
-    live = np.array(file['Live']['upd_'+str(upd)])
-
     image = np.flip(np.rot90(np.transpose(np.block([
         [
             np.transpose(RenderTriangles(
-                res[val_own]['top'],
-                res[val_own]['bottom'],
-                res[val_own]['right'],
-                res[val_own]['left'],
+                val_top,
+                val_bottom,
+                val_right,
+                val_left,
                 val_live
-            )) for val_own, val_live in zip(
-                row_own,
+            )) for val_top, val_bottom, val_left, val_right, val_live in zip(
+                row_top,
+                row_bottom,
+                row_left,
+                row_right,
                 row_live
             )
         ]
-        for row_own, row_live
+        for row_top, row_bottom, row_left, row_right, row_live
         in zip(
-            own,
+            top,
+            bottom,
+            left,
+            right,
             live
         )
     ])),k=1),axis=0)
@@ -172,7 +141,7 @@ def RenderAndSave(upd, filename):
 
     plt.savefig(
         kn.pack({
-            'title' : 'directional_propagule_viz',
+            'title' : 'directional_heir_viz',
             'update' : str(upd),
             'seed' : kn.unpack(filename)['seed'],
             'treat' : kn.unpack(filename)['treat'],

@@ -26,14 +26,18 @@ filename = sys.argv[1]
 updates = [int(v) for v in sys.argv[2:]]
 
 NONE = 0
-P_PARENT = -3
-P_CHILD = -4
+PARENT = 1
+CHILD = 2
+P_PARENT = 3
+P_CHILD = 4
 
 def ColorMap(val):
     return (
+        (1.0, 0.0, 1.0) if val == PARENT else
+        (0.0, 1.0, 1.0) if val == CHILD else
         (1.0, 0.0, 0.0) if val == P_PARENT else
         (1.0, 1.0, 0.0) if val == P_CHILD else
-        (val, val, val)
+        (0.2, 0.2, 0.2)
     )
 
 def RenderTriangles(
@@ -107,13 +111,14 @@ def RenderAndSave(upd, filename):
     for idx in range(own.size):
         for dir, drct in dirs.items():
             type = NONE
-            if pvch[idx] == chans[-1][drct[idx]]:
+            if ppos[idx] == drct[idx] and cage[idx] < cage[drct[idx]]:
+                type = CHILD
+            elif ppos[drct[idx]] == idx and cage[drct[idx]] < cage[idx]:
+                type = PARENT
+            elif pvch[idx] == chans[-1][drct[idx]]:
                 type = P_CHILD
             elif pvch[drct[idx]] == chans[-1][idx]:
                 type = P_PARENT
-            else:
-                # grayscale channel ID
-                type = (chans[-1][idx] / 2**64) * 0.8
 
             res[own[idx]][dir] = type
 
@@ -172,7 +177,7 @@ def RenderAndSave(upd, filename):
 
     plt.savefig(
         kn.pack({
-            'title' : 'directional_propagule_viz',
+            'title' : 'directional_daughter_viz',
             'update' : str(upd),
             'seed' : kn.unpack(filename)['seed'],
             'treat' : kn.unpack(filename)['treat'],
