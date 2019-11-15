@@ -71,7 +71,9 @@ debug-web:	$(PROJECT).js
 web-debug:	debug-web
 
 $(PROJECT):	source/native/$(PROJECT).cc
-	$(CXX_nat) $(CFLAGS_nat) source/native/$(PROJECT).cc -lstdc++fs -o $(PROJECT)
+	export HDF5_CXX=mpic++ \
+	&& export HDF5_CLINKER=mpic++ \
+	&& $(CXX_nat) $(CFLAGS_nat) source/native/$(PROJECT).cc -lstdc++fs -o $(PROJECT)
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web/$(PROJECT)-web.cc
