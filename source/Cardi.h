@@ -11,8 +11,10 @@ struct Cardi {
   static constexpr Dir Opp[] { S, N, W, E };
   static constexpr Dir Cw[] { E, W, S, N };
   static constexpr Dir Ccw[] { W, E, N, S };
+  static constexpr int Dim[] { 1, 1, 0, 0 };
   static constexpr int Dx[] { 0, 0, 1, -1 };
   static constexpr int Dy[] { 1, -1, 0, 0 };
+  static constexpr int Dd[] { 1, -1, 1, -1 };
 
 };
 
