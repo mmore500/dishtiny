@@ -70,7 +70,7 @@ public:
         return 0UL;
       }();
 
-      for (auto & fun : program.program) {
+      for (auto & fun : program) {
         for (auto & inst : fun.inst_seq) {
           if (
             inst_lib.GetName(inst.id) == "Countdown" ||

@@ -58,21 +58,22 @@ public:
 #ifdef SELECTOR
     , std::conditional<STRINGVIEWIFY(SELECTOR) == "roulette",
         emp::RouletteSelector<
-          std::ratio<3, 2>,
+          std::ratio<1, 2>,
           std::ratio<1, 500>,
-          std::ratio<5, 4>
+          std::ratio<1, 4>
         >,
       std::conditional<STRINGVIEWIFY(SELECTOR) == "exproulette",
         emp::ExpRouletteSelector<>,
        std::conditional<STRINGVIEWIFY(SELECTOR) == "ranked",
-        emp::RankedSelector<std::ratio<3,2>>,
+        emp::RankedSelector<std::ratio<1,2>>,
         std::enable_if<false>
       >::type
       >::type
       >::type
 #else
-    , emp::RankedSelector<std::ratio<9,8>> // ranked selector is default
+    , emp::RankedSelector<std::ratio<1,2>> // ranked selector is default
 #endif
+    , emp::WeakCountdownRegulator<>
   >;
 
   using hardware_t = emp::EventDrivenGP_AW<
