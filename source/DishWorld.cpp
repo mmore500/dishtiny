@@ -3,8 +3,11 @@
 #include <tuple>
 #include <utility>
 #include <limits>
+#ifdef EMSCRIPTEN
+#include <experimental/filesystem>
+#else
 #include <filesystem>
-
+#endif
 #include <cereal/archives/json.hpp>
 
 #include "base/vector.h"
@@ -118,6 +121,16 @@ void DishWorld::GeneratePopulation() {
 
 void DishWorld::LoadPopulation() {
 
+  #ifdef EMSCRIPTEN
+  auto directory = std::experimental::filesystem::directory_iterator("./seedpop/");
+  emp::vector<std::string> filenames;
+  std::transform(
+    std::experimental::filesystem::begin(directory),
+    std::experimental::filesystem::end(directory),
+    std::back_inserter(filenames),
+    [](const auto & entry){ return entry.path(); }
+  );
+  #else
   auto directory = std::filesystem::directory_iterator("./seedpop/");
   emp::vector<std::string> filenames;
   std::transform(
@@ -126,6 +139,7 @@ void DishWorld::LoadPopulation() {
     std::back_inserter(filenames),
     [](const auto & entry){ return entry.path(); }
   );
+  #endif
 
   // get ids of seeded cells
   emp::vector<size_t> ids;
