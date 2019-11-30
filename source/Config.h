@@ -42,12 +42,15 @@ public:
     , std::conditional<STRINGVIEWIFY(METRIC) == "integer",
         emp::SymmetricWrapMetric<TAG_WIDTH>,
       std::conditional<STRINGVIEWIFY(METRIC) == "streak",
-        emp::StreakMetric<TAG_WIDTH>,
+        emp::CacheMod<emp::UnifMod<emp::ApproxDualStreakMetric<TAG_WIDTH>>>,
+      std::conditional<STRINGVIEWIFY(METRIC) == "simplestreak",
+        emp::ExactSingleStreakMetric<TAG_WIDTH>,
       std::conditional<STRINGVIEWIFY(METRIC) == "hash",
         emp::HashMetric<TAG_WIDTH>,
       std::conditional<STRINGVIEWIFY(METRIC) == "hamming",
-        emp::HammingMetric<TAG_WIDTH>,
+        emp::HammingCumuMetric<TAG_WIDTH>,
         std::enable_if<false>
+      >::type
       >::type
       >::type
       >::type
@@ -64,9 +67,12 @@ public:
         >,
       std::conditional<STRINGVIEWIFY(SELECTOR) == "exproulette",
         emp::ExpRouletteSelector<>,
+      std::conditional<STRINGVIEWIFY(SELECTOR) == "sieve",
+        emp::SieveSelector<>,
        std::conditional<STRINGVIEWIFY(SELECTOR) == "ranked",
         emp::RankedSelector<std::ratio<1,2>>,
         std::enable_if<false>
+      >::type
       >::type
       >::type
       >::type
