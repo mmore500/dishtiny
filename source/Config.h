@@ -79,7 +79,17 @@ public:
 #else
     , emp::RankedSelector<std::ratio<1,2>> // ranked selector is default
 #endif
-    , emp::WeakCountdownRegulator<>
+#ifdef REGULATOR
+    , std::conditional<STRINGVIEWIFY(REGULATOR) == "multiplicative",
+        emp::MultiplicativeCountdownRegulator<>,
+      std::conditional<STRINGVIEWIFY(SELECTOR) == "additive",
+        emp::AdditiveCountdownRegulator<>,
+        std::enable_if<false>
+    >::type
+    >::type
+#else
+    , emp::MultiplicativeCountdownRegulator<>
+#endif
   >;
 
   using hardware_t = emp::EventDrivenGP_AW<
