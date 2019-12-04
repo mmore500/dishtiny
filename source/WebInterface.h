@@ -6,6 +6,8 @@
 #include <stdexcept>
 
 #include "base/vector.h"
+#include "web/Div.h"
+#include "web/Element.h"
 #include "web/Button.h"
 #include "web/Input.h"
 #include "web/web.h"
@@ -86,8 +88,8 @@ struct DataPill {
             );
           }
         }
-      ) << UI::Div(
-        emp::to_string("datapill-button-", counter), "button"
+      ) << UI::Element(
+         "button", emp::to_string("datapill-button-", counter)
       ).SetAttr(
         "class", "btn btn-block btn-primary p-0 border-0",
         "data-toggle", "button"
@@ -529,9 +531,9 @@ public:
       "run_col"
     ).SetAttr(
       "class", "col-lg-auto p-2"
-    ) << UI::Div(
-      "run-button",
-      "button"
+    ) << UI::Element(
+      "button",
+      "run-button"
     ).OnClick(
       [this](){
         ToggleActive();
