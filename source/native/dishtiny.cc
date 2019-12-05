@@ -16,6 +16,7 @@
 #include "../FrameCell.cpp"
 #include "../Manager.cpp"
 #include "../LibraryInstruction.cpp"
+#include "../LibraryInstructionSpiker.cpp"
 
 
 int main(int argc, char* argv[])

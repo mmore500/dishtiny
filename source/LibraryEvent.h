@@ -50,6 +50,14 @@ public:
         "Send message event."
       );
 
+      el.AddEvent(
+        "SendMsgSpiker",
+        [](hardware_t & hw, const event_t & event){
+          hw.SpawnCore(event.affinity, hw.GetMinBindThresh(), event.msg);
+        },
+        "Send message event."
+      );
+
       el.RegisterDispatchFun(
         "SendMsgExternal",
         [](hardware_t & hw, const event_t & event) {
@@ -71,6 +79,16 @@ public:
           const size_t dir = fh.GetMsgDir();
 
           fh.Cell().GetFrameHardware(dir).QueueInternalMessage(event);
+        }
+      );
+
+      el.RegisterDispatchFun(
+        "SendMsgSpiker",
+        [](hardware_t & hw, const event_t & event) {
+
+          FrameHardware &fh = *hw.GetTrait();
+
+          fh.Cell().GetSpiker().QueueInternalMessage(event);
         }
       );
 

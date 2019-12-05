@@ -50,8 +50,10 @@ void FrameHardware::Reset() {
   cpu.ResetProgram();
   membrane.Clear();
   membrane_tags.clear();
+  membrane_timers.clear();
   internal_membrane.Clear();
   internal_membrane_tags.clear();
+  internal_membrane_timers.clear();
   emp_assert(!cpu.GetProgram().GetSize());
 }
 
@@ -215,45 +217,46 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
 void FrameHardware::SetupCompute(const size_t update) {
   if (update % cfg.ENV_TRIG_FREQ() == 0) {
 
-    for (const auto & uid : cpu.GetMatchBin().ViewUIDs()) {
-      if (cpu.GetMatchBin().GetVal(uid)) {
-        --cpu.GetMatchBin().GetVal(uid);
-      } else {
-        cpu.GetMatchBin().SetRegulator(uid, 1.0);
-      }
+    cpu.GetMatchBin().DecayRegulators();
+    membrane.DecayRegulators();
+    internal_membrane.DecayRegulators();
+
+    // account for spiker
+    if (facing < Cardi::Dir::NumDirs) {
+      DispatchEnvTriggers(update);
+
+      TryClearReproductionReserve();
     }
 
-    DispatchEnvTriggers(update);
-
     TryClearStockpileReserve();
-    TryClearReproductionReserve();
+
 
     emp::vector<Config::matchbin_t::uid_t> marked;
-    for (const auto & uid : membrane.ViewUIDs()) {
-      auto & v = membrane.GetVal(uid);
-      if (v > 2) {
-        v -= 2;
+    for (auto & [uid, v] : membrane_timers) {
+      if (v) {
+        --v;
       } else {
         membrane_tags.erase(membrane.GetTag(uid));
+        membrane.Delete(uid);
         marked.push_back(uid);
       }
     }
     for (const auto & uid : marked) {
-      membrane.Delete(uid);
+      membrane_timers.erase(uid);
     }
 
-    emp::vector<Config::matchbin_t::uid_t> internal_marked;
-    for (const auto & uid : internal_membrane.ViewUIDs()) {
-      auto & v = internal_membrane.GetVal(uid);
-      if (v > 2) {
-        v -= 2;
+    marked.clear();
+    for (auto & [uid, v] : internal_membrane_timers) {
+      if (v) {
+        --v;
       } else {
         internal_membrane_tags.erase(internal_membrane.GetTag(uid));
-        internal_marked.push_back(uid);
+        internal_membrane.Delete(uid);
+        marked.push_back(uid);
       }
     }
-    for (const auto & uid : internal_marked) {
-      internal_membrane.Delete(uid);
+    for (const auto & uid : marked) {
+      internal_membrane_timers.erase(uid);
     }
 
   }
@@ -290,8 +293,15 @@ bool FrameHardware::CheckInboxActivity() const {
 
 void FrameHardware::QueueInternalMessage(const Config::event_t &event) {
   if (
-    const auto res = internal_membrane.Match(event.affinity);
-    !res.size() || (res[0] % 2 == 0)
+    const auto res = internal_membrane.GetVals(
+      internal_membrane.Match(event.affinity)
+    );
+    !res.size()
+    || std::count_if(
+      std::begin(res),
+      std::end(res),
+      [](auto & val){ return val; }
+    ) > static_cast<int>(res.size())/2
   ) {
     QueueMessage(event);
   }
@@ -304,8 +314,15 @@ void FrameHardware::QueueMessage(const Config::event_t &event) {
 void FrameHardware::QueueMessages(Config::inbox_t &inbox) {
   while(inbox_active && !inbox.empty()) {
     if (
-      const auto res = membrane.Match(inbox.front().affinity);
-      res.size() && (res[0] % 2)
+      const auto res = membrane.GetVals(
+        membrane.Match(inbox.front().affinity)
+      );
+      res.size()
+      || std::all_of(
+        std::begin(res),
+        std::end(res),
+        [](auto & val){ return val; }
+      )
     ) {
       QueueMessage(inbox.front());
     }
@@ -471,6 +488,11 @@ std::unordered_map<
   Config::matchbin_t::uid_t
 > & FrameHardware::GetMembraneTags() { return membrane_tags; }
 
+std::unordered_map<
+  Config::matchbin_t::uid_t,
+  size_t
+> & FrameHardware::GetMembraneTimers() { return membrane_timers; }
+
 Config::matchbin_t & FrameHardware::GetInternalMembrane() {
   return internal_membrane;
 }
@@ -481,3 +503,8 @@ std::unordered_map<
 > & FrameHardware::GetInternalMembraneTags() {
   return internal_membrane_tags;
 }
+
+std::unordered_map<
+  Config::matchbin_t::uid_t,
+  size_t
+> & FrameHardware::GetInternalMembraneTimers() { return internal_membrane_timers; }

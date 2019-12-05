@@ -17,6 +17,7 @@ class Genome {
   const Config &cfg;
 
   program_t program;
+  program_t program_spiker;
   emp::vector<Config::tag_t> tags;
   size_t root_id;
 
@@ -29,16 +30,19 @@ public:
   Genome(
     const Config &cfg_,
     const program_t &program_,
+    const program_t &program_spiker_,
     const emp::vector<Config::tag_t> &tags_,
     const size_t root_id_
   ) : cfg(cfg_)
   , program(program_)
+  , program_spiker(program_spiker_)
   , tags(tags_)
   , root_id(root_id_) { ; }
 
   Genome(
     emp::Random &local_rng,
     const Config::inst_lib_t &inst_lib,
+    const Config::inst_lib_t &inst_lib_spiker,
     const Config &cfg_
   ) : cfg(cfg_)
   , program(
@@ -49,6 +53,18 @@ public:
     >(
         local_rng,
         inst_lib,
+        cfg.PROGRAM_MIN_FUN_CNT__INIT(), cfg.PROGRAM_MAX_FUN_CNT__INIT(),
+        cfg.PROGRAM_MIN_FUN_LEN__INIT(), cfg.PROGRAM_MAX_FUN_LEN__INIT(),
+        cfg.PROGRAM_MIN_ARG_VAL__INIT(), cfg.PROGRAM_MAX_ARG_VAL__INIT()
+    ))
+  , program_spiker(
+    emp::GenRandSignalGPProgram<
+      Config::TAG_WIDTH,
+      Config::TRAIT_TYPE,
+      Config::hardware_t::matchbin_t
+    >(
+        local_rng,
+        inst_lib_spiker,
         cfg.PROGRAM_MIN_FUN_CNT__INIT(), cfg.PROGRAM_MAX_FUN_CNT__INIT(),
         cfg.PROGRAM_MIN_FUN_LEN__INIT(), cfg.PROGRAM_MAX_FUN_LEN__INIT(),
         cfg.PROGRAM_MIN_ARG_VAL__INIT(), cfg.PROGRAM_MAX_ARG_VAL__INIT()
@@ -93,6 +109,10 @@ public:
       return program;
     }
 
+    const program_t& GetProgramSpiker() const {
+      return program_spiker;
+    }
+
     void DoMutations(Mutator & mut, emp::Random & rand) {
 
       const static emp::Binomial bino(
@@ -105,6 +125,7 @@ public:
       }
 
       mut.ApplyMutations(program, rand);
+      mut.ApplyMutations(program_spiker, rand);
 
     }
 
@@ -115,6 +136,7 @@ public:
     bool operator==(const Genome& other) const {
       return (
         program == other.program
+        && program_spiker == other.program_spiker
         && tags == other.tags
       );
     }
@@ -126,7 +148,11 @@ public:
     bool operator<(const Genome& other) const {
       return (
         (program < other.program)
-        || ((program == other.program) && (tags < other.tags))
+        || ((program == other.program)
+            && (program_spiker < other.program_spiker))
+        || ((program == other.program)
+            && (program_spiker == other.program_spiker)
+            && (tags < other.tags))
       );
     }
 

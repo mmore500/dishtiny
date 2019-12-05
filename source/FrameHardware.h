@@ -45,9 +45,20 @@ private:
   > membrane_tags;
 
   std::unordered_map<
+    Config::matchbin_t::uid_t,
+    size_t
+  > membrane_timers;
+
+  std::unordered_map<
     Config::matchbin_t::tag_t,
     Config::matchbin_t::uid_t
   > internal_membrane_tags;
+
+  std::unordered_map<
+    Config::matchbin_t::uid_t,
+    size_t
+  > internal_membrane_timers;
+
 
 public:
 
@@ -141,11 +152,21 @@ public:
     Config::matchbin_t::uid_t
   > &GetMembraneTags();
 
+  std::unordered_map<
+    Config::matchbin_t::uid_t,
+    size_t
+  > &GetMembraneTimers();
+
   Config::matchbin_t &GetInternalMembrane();
 
   std::unordered_map<
     Config::matchbin_t::tag_t,
     Config::matchbin_t::uid_t
   > &GetInternalMembraneTags();
+
+  std::unordered_map<
+    Config::matchbin_t::uid_t,
+    size_t
+  > &GetInternalMembraneTimers();
 
 };

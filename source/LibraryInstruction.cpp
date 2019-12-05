@@ -187,14 +187,15 @@ void LibraryInstruction::InitDefaultDup(inst_lib_t &il) {
 void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) {
 
   il.AddInst(
-    "PutMembraneBlocker",
+    "PutInternalMembraneBringer",
     [](hardware_t & hw, const inst_t & inst){
 
       const state_t & state = hw.GetCurState();
       FrameHardware &fh = *hw.GetTrait();
 
-      Config::matchbin_t& membrane = fh.GetMembrane();
-      auto& membrane_tags = fh.GetMembraneTags();
+      Config::matchbin_t& membrane = fh.GetInternalMembrane();
+      auto& membrane_tags = fh.GetInternalMembraneTags();
+      auto& membrane_timers = fh.GetInternalMembraneTimers();
 
       // if a particular affinity is already in the MatchBin, take it out
       const auto &existing = membrane_tags.find(
@@ -202,25 +203,28 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       );
       if (existing != std::end(membrane_tags)) {
         membrane.Delete(existing->second);
+        membrane_timers.erase(existing->second);
         membrane_tags.erase(existing);
       }
 
-      // even values are blockers, odd values are bringers
-      membrane_tags.insert(
-        {
-          inst.affinity,
-          membrane.Put(
-            state.GetLocal(inst.args[0])
-              ? std::abs(state.GetLocal(inst.args[1]) + 2) * 2
-              : std::abs(state.GetLocal(inst.args[1]) + 2) * 2 - 1,
-            inst.affinity
-          )
-        }
+      const auto uid = membrane.Put(
+        !state.GetLocal(inst.args[0]),
+        inst.affinity
       );
+
+      membrane_tags.insert({
+        inst.affinity,
+        uid
+      });
+
+      membrane_timers.insert({
+        uid,
+        2
+      });
 
     },
     2,
-    "Place a tag that, by default, blocks incoming messages it matches with.",
+    "Place a tag that, by default, admits incoming messages it matches with.",
     emp::ScopeType::BASIC,
     0,
     {"affinity"}
@@ -235,6 +239,7 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       Config::matchbin_t& membrane = fh.GetInternalMembrane();
       auto& membrane_tags = fh.GetInternalMembraneTags();
+      auto& membrane_timers = fh.GetInternalMembraneTimers();
 
       // if a particular affinity is already in the MatchBin, take it out
       const auto &existing = membrane_tags.find(
@@ -242,61 +247,24 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       );
       if (existing != std::end(membrane_tags)) {
         membrane.Delete(existing->second);
+        membrane_timers.erase(existing->second);
         membrane_tags.erase(existing);
       }
 
-      // even values are blockers, odd values are bringers
-      membrane_tags.insert(
-        {
-          inst.affinity,
-          membrane.Put(
-            !state.GetLocal(inst.args[0])
-              ? std::abs(state.GetLocal(inst.args[1]) + 2) * 2
-              : std::abs(state.GetLocal(inst.args[1]) + 2) * 2 - 1,
-            inst.affinity
-          )
-        }
-      );
-
-    },
-    2,
-    "Place a tag that, by default, admits incoming messages it matches with.",
-    emp::ScopeType::BASIC,
-    0,
-    {"affinity"}
-  );
-
-  il.AddInst(
-    "PutInternalMembraneBlocker",
-    [](hardware_t & hw, const inst_t & inst){
-
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      Config::matchbin_t& membrane = fh.GetInternalMembrane();
-      auto& membrane_tags = fh.GetInternalMembraneTags();
-
-      // if a particular affinity is already in the MatchBin, take it out
-      const auto &existing = membrane_tags.find(
+      const auto uid = membrane.Put(
+        state.GetLocal(inst.args[0]),
         inst.affinity
       );
-      if (existing != std::end(membrane_tags)) {
-        membrane.Delete(existing->second);
-        membrane_tags.erase(existing);
-      }
 
-      // even values are blockers, odd values are bringers
-      membrane_tags.insert(
-        {
-          inst.affinity,
-          membrane.Put(
-            state.GetLocal(inst.args[0])
-              ? std::abs(state.GetLocal(inst.args[1]) + 2) * 2
-              : std::abs(state.GetLocal(inst.args[1]) + 2) * 2 - 1,
-            inst.affinity
-          )
-        }
-      );
+      membrane_tags.insert({
+        inst.affinity,
+        uid
+      });
+
+      membrane_timers.insert({
+        uid,
+        2
+      });
 
     },
     2,
@@ -304,6 +272,32 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
     emp::ScopeType::BASIC,
     0,
     {"affinity"}
+  );
+
+  il.AddInst(
+    "SetInternalMembraneRegulator",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      emp::vector<size_t> best_fun = fh.GetInternalMembrane().MatchRaw(
+        inst.affinity
+      );
+
+      for (auto & fun : best_fun) {
+        fh.GetInternalMembrane().SetRegulator(
+          fun,
+          state.GetLocal(inst.args[0])
+        );
+        fh.GetInternalMembrane().DecayRegulator(
+          fun,
+          -(state.GetLocal(inst.args[1])+1)
+        );
+      }
+
+    },
+    2,
+    "Sets the regulator of a tag in the membrane."
   );
 
   il.AddInst(
@@ -315,6 +309,7 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       Config::matchbin_t& membrane = fh.GetMembrane();
       auto& membrane_tags = fh.GetMembraneTags();
+      auto& membrane_timers = fh.GetMembraneTimers();
 
       // if a particular affinity is already in the MatchBin, take it out
       const auto &existing = membrane_tags.find(
@@ -322,25 +317,72 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       );
       if (existing != std::end(membrane_tags)) {
         membrane.Delete(existing->second);
+        membrane_timers.erase(existing->second);
         membrane_tags.erase(existing);
       }
 
-      // even values are blockers, odd values are bringers
-      membrane_tags.insert(
-        {
-          inst.affinity,
-          membrane.Put(
-            !state.GetLocal(inst.args[0])
-              ? std::abs(state.GetLocal(inst.args[1]) + 2) * 2
-              : std::abs(state.GetLocal(inst.args[1]) + 2) * 2 - 1,
-            inst.affinity
-          )
-        }
+      const auto uid = membrane.Put(
+        !state.GetLocal(inst.args[0]),
+        inst.affinity
       );
+
+      membrane_tags.insert({
+        inst.affinity,
+        uid
+      });
+
+      membrane_timers.insert({
+        uid,
+        2
+      });
 
     },
     2,
     "Place a tag that, by default, admits incoming messages it matches with.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "PutMembraneBlocker",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Config::matchbin_t& membrane = fh.GetMembrane();
+      auto& membrane_tags = fh.GetMembraneTags();
+      auto& membrane_timers = fh.GetMembraneTimers();
+
+      // if a particular affinity is already in the MatchBin, take it out
+      const auto &existing = membrane_tags.find(
+        inst.affinity
+      );
+      if (existing != std::end(membrane_tags)) {
+        membrane.Delete(existing->second);
+        membrane_timers.erase(existing->second);
+        membrane_tags.erase(existing);
+      }
+
+      const auto uid = membrane.Put(
+        state.GetLocal(inst.args[0]),
+        inst.affinity
+      );
+
+      membrane_tags.insert({
+        inst.affinity,
+        uid
+      });
+
+      membrane_timers.insert({
+        uid,
+        2
+      });
+
+    },
+    2,
+    "Place a tag that, by default, blocks incoming messages it matches with.",
     emp::ScopeType::BASIC,
     0,
     {"affinity"}
@@ -353,79 +395,24 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       FrameHardware &fh = *hw.GetTrait();
 
       emp::vector<size_t> best_fun = fh.GetMembrane().MatchRaw(
-        inst.affinity,
-        1
+        inst.affinity
       );
 
-      if (best_fun.size() == 0){ return; }
+      for (auto & fun : best_fun) {
 
-      double regulator = state.GetLocal(inst.args[0]);
-      if(regulator < 0){
-        regulator = std::max(regulator, std::numeric_limits<double>::min());
-        regulator /= std::numeric_limits<double>::min();
-      }else{
-        regulator += 1.0;
-      }
-      fh.GetMembrane().SetRegulator(best_fun[0], regulator);
-
-    },
-    1,
-    "Sets the regulator of a tag in the membrane."
-  );
-
-  il.AddInst(
-    "AdjMembraneRegulator",
-    [](hardware_t & hw, const inst_t & inst){
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      emp::vector<size_t> best_fun = fh.GetMembrane().MatchRaw(
-        inst.affinity,
-        1
-      );
-      if (!best_fun.size()) return;
-
-      double target = state.GetLocal(inst.args[0]);
-      if(target < 0) {
-        target = std::max(target, std::numeric_limits<double>::min());
-        target /= std::numeric_limits<double>::min();
-      } else {
-        target += 1.0;
-      }
-
-      const double budge = emp::Mod(state.GetLocal(inst.args[1])+0.2, 1.0);
-      const double cur = fh.GetMembrane().ViewRegulator(best_fun[0]);
-
-      fh.GetMembrane().SetRegulator(
-        best_fun[0],
-        target * budge + cur * (1 - budge)
-      );
-    },
-    2,
-    "Adjusts the regulator of a tag in the membrane towards a target."
-  );
-
-  il.AddInst(
-    "SenseMembraneRegulator",
-    [](hardware_t & hw, const inst_t & inst){
-      state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      emp::vector<size_t> best_fun = fh.GetMembrane().MatchRaw(
-        inst.affinity,
-        1
-      );
-      if (best_fun.size()){
-        state.SetLocal(
-          inst.args[0],
-          fh.GetMembrane().ViewRegulator(best_fun[0])
+        fh.GetMembrane().SetRegulator(
+          best_fun[0],
+          state.GetLocal(inst.args[0])
+        );
+        fh.GetMembrane().DecayRegulator(
+          fun,
+          -(state.GetLocal(inst.args[1])+1)
         );
       }
     },
     1,
-    "Senses the regulator of a tag in the membrane."
+    "Sets the regulator of a tag in the membrane."
   );
-
 
   il.AddInst(
     "SendMsgInternal",
@@ -446,6 +433,19 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
   );
 
   il.AddInst(
+    "SendMsgSpiker",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      hw.TriggerEvent("SendMsgSpiker", inst.affinity, state.output_mem);
+    },
+    0,
+    "Send a single message to a particular other CPU within the cell.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
     "BcstMsgInternal",
     [](hardware_t & hw, const inst_t & inst){
       FrameHardware &fh = *hw.GetTrait();
@@ -456,6 +456,9 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
         fh.SetMsgDir(dir);
         hw.TriggerEvent("SendMsgInternal", inst.affinity, state.output_mem);
       }
+
+      hw.TriggerEvent("SendMsgSpiker", inst.affinity, state.output_mem);
+
     },
     0,
     "Send a single message all CPUs within the cell, excluding self.",

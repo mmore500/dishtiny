@@ -18,12 +18,21 @@ FrameCell::FrameCell(
   Manager &man_,
   const size_t pos_,
   const Config::inst_lib_t &inst_lib,
+  const Config::inst_lib_t &inst_lib_spiker,
   const Config::event_lib_t &event_lib
 ) : man(man_)
   , local_rng(local_rng_)
   , cfg(cfg_)
   , neighs(GeometryHelper(cfg_).CalcLocalNeighs(pos_))
   , pos(pos_)
+  , spiker(
+    *this,
+    std::numeric_limits<size_t>::max(),
+    local_rng,
+    cfg,
+    inst_lib_spiker,
+    event_lib
+  )
 {
   for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
     hw.push_back(emp::NewPtr<FrameHardware>(
@@ -41,11 +50,15 @@ FrameCell::~FrameCell() {
   for (auto & ptr : hw) ptr.Delete();
 }
 
-void FrameCell::Reset() { for(auto &fh : hw) fh->Reset(); }
+void FrameCell::Reset() {
+  for(auto &fh : hw) fh->Reset();
+  spiker.Reset();
+}
 
 void FrameCell::Process(const size_t update) {
 
   for(auto & fhw : hw) fhw->SetupCompute(update);
+  spiker.SetupCompute(update);
 
   if (update % cfg.COMPUTE_FREQ()) return;
 
@@ -57,12 +70,17 @@ void FrameCell::Process(const size_t update) {
 
   for(size_t s = 0; s < cfg.HARDWARE_STEPS(); ++s) {
     for(size_t idx : shuffler) hw[idx]->StepProcess();
+    spiker.StepProcess();
   }
 
 }
 
 void FrameCell::SetProgram(const Config::program_t & program) {
   for(auto & fhw : hw) fhw->SetProgram(program);
+}
+
+void FrameCell::SetProgramSpiker(const Config::program_t & program) {
+  spiker.SetProgram(program);
 }
 
 size_t FrameCell::GetPos() const {
@@ -115,3 +133,5 @@ void FrameCell::SetRegulators(
     }
   }
 }
+
+FrameHardware& FrameCell::GetSpiker() { return spiker; }

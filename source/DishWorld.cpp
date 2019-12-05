@@ -25,6 +25,7 @@
 #include "Genome.h"
 #include "LibraryEvent.h"
 #include "LibraryInstruction.h"
+#include "LibraryInstructionSpiker.h"
 #include "Manager.h"
 #include "Mutator.h"
 
@@ -33,6 +34,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
 : cfg(cfg_)
 , mut(cfg_)
 , inst_lib(LibraryInstruction::Make(cfg))
+, inst_lib_spiker(LibraryInstructionSpiker::Make(cfg))
 , event_lib(LibraryEvent::Make(cfg))
 {
   SetPopStruct_Grid(cfg.GRID_W(), cfg.GRID_H());
@@ -57,6 +59,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
       *man,
       i,
       inst_lib,
+      inst_lib_spiker,
       event_lib
     ));
   }
@@ -92,6 +95,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
     man->Priority(pos).Reset();
     frames[pos]->Reset();
     frames[pos]->SetProgram(GetOrg(pos).GetProgram());
+    frames[pos]->SetProgramSpiker(GetOrg(pos).GetProgramSpiker());
     man->Inbox(pos).ClearInboxes();
   });
 
@@ -112,7 +116,9 @@ void DishWorld::GeneratePopulation() {
     Genome g(
       *local_rngs[i],
       inst_lib,
-      cfg);
+      inst_lib_spiker,
+      cfg
+    );
     InjectAt(g, emp::WorldPosition(i));
     emp_assert(GetOrg(i).GetProgram().GetSize());
     man->Stockpile(i).InternalAcceptResource(cfg.START_RESOURCE());
@@ -206,6 +212,26 @@ void DishWorld::LoadPopulation() {
     Config::program_t program(&inst_lib);
     program.Load(program_stream);
 
+    std::ifstream program_spiker_stream(
+      *std::find_if(
+        std::begin(filenames),
+        std::end(filenames),
+        [this, id](const auto & filename){
+          const auto res = emp::keyname::unpack(filename);
+
+          return (
+            res.count("id") && res.at("id") == emp::to_string(id)
+            && res.count("treat")
+            && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
+            && res.count("component") && res.at("component") == "program_spiker"
+            && res.count("ext") && res.at("ext") == ".txt"
+          );
+        }
+      )
+    );
+    Config::program_t program_spiker(&inst_lib_spiker);
+    program_spiker.Load(program_spiker_stream);
+
     std::ifstream triggers_stream(
       *std::find_if(
         std::begin(filenames),
@@ -232,6 +258,7 @@ void DishWorld::LoadPopulation() {
         Genome(
           cfg,
           program,
+          program_spiker,
           triggers,
           id
         ),

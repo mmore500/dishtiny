@@ -24,6 +24,8 @@ private:
   const emp::vector<size_t> neighs;
   const size_t pos;
 
+  FrameHardware spiker;
+
 public:
 
   FrameCell() = delete;
@@ -34,6 +36,7 @@ public:
     Manager &man_,
     const size_t pos_,
     const Config::inst_lib_t &inst_lib,
+    const Config::inst_lib_t &inst_lib_spiker,
     const Config::event_lib_t &event_lib
   );
 
@@ -44,6 +47,8 @@ public:
   void Process(const size_t update);
 
   void SetProgram(const Config::program_t & program);
+
+  void SetProgramSpiker(const Config::program_t & program);
 
   size_t GetPos() const;
 
@@ -60,5 +65,7 @@ public:
   emp::vector<std::shared_ptr<Config::matchbin_t>> CopyMatchBins();
 
   void SetRegulators(emp::vector<std::shared_ptr<Config::matchbin_t>> targets);
+
+  FrameHardware& GetSpiker();
 
 };

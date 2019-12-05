@@ -35,6 +35,7 @@ private:
   emp::Ptr<Manager> man;
 
   const Config::inst_lib_t &inst_lib;
+  const Config::inst_lib_t &inst_lib_spiker;
   const Config::event_lib_t &event_lib;
 
   void Step();
