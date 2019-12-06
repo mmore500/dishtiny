@@ -55,6 +55,15 @@ public:
 
   }
 
+  inline size_t CalcLocalNeigh(const size_t pos, const size_t dir) const {
+
+    return GetLocalPos(
+      ((int)GetLocalX(pos)) + Cardi::Dx[dir],
+      ((int)GetLocalY(pos)) + Cardi::Dy[dir]
+    );
+
+  }
+
   /*
    * Global geometry helper function.
    */

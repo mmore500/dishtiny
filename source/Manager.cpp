@@ -38,6 +38,15 @@ Manager::Manager(
         [this, i](){ return mfs[i]->GetCellAge(dw.GetUpdate()); }
       )
     );
+    mcos.push_back(
+      emp::NewPtr<ManagerConnection>(
+        i,
+        [this](const size_t pos)->FrameCell&{ return DW().GetFrame(pos); },
+        mcs,
+        cfg,
+        *local_rngs[i]
+      )
+    );
     mhs.push_back(
       emp::NewPtr<ManagerHeir>()
     );
@@ -110,6 +119,7 @@ Manager::Manager(
 Manager::~Manager() {
   for (auto &ptr : mas) ptr.Delete();
   for (auto &ptr : mcs) ptr.Delete();
+  for (auto &ptr : mcos) ptr.Delete();
   for (auto &ptr : mfs) ptr.Delete();
   for (auto &ptr : mhs) ptr.Delete();
   for (auto &ptr : mis) ptr.Delete();
@@ -130,6 +140,10 @@ ManagerApoptosis& Manager::Apoptosis(size_t pos) {
 
 ManagerChannel& Manager::Channel(size_t pos) {
   return *mcs[pos];
+}
+
+ManagerConnection& Manager::Connection(size_t pos) {
+  return *mcos[pos];
 }
 
 ManagerFamily& Manager::Family(size_t pos) {

@@ -53,6 +53,7 @@ FrameCell::~FrameCell() {
 void FrameCell::Reset() {
   for(auto &fh : hw) fh->Reset();
   spiker.Reset();
+  while (incoming_connections.size()) RemoveIncomingConnection();
 }
 
 void FrameCell::Process(const size_t update) {
@@ -135,3 +136,32 @@ void FrameCell::SetRegulators(
 }
 
 FrameHardware& FrameCell::GetSpiker() { return spiker; }
+
+void FrameCell::RegisterIncomingConnection(const size_t source) {
+  incoming_connections.insert(source);
+}
+
+
+void FrameCell::DeleteIncomingConnection(const size_t source) {
+  emp_assert(incoming_connections.size());
+  emp_assert(incoming_connections.count(source));
+  incoming_connections.erase(
+    incoming_connections.find(source)
+  );
+
+}
+
+void FrameCell::RemoveIncomingConnection(const size_t source) {
+  emp_assert(incoming_connections.size());
+  emp_assert(incoming_connections.count(source));
+  // call delete not remove to prevent infinite recursion
+  Man().Connection(source).DeleteOutgoingConnection(pos);
+  DeleteIncomingConnection(source);
+
+}
+
+void FrameCell::RemoveIncomingConnection() {
+  if (incoming_connections.size()) {
+    RemoveIncomingConnection(*std::begin(incoming_connections));
+  }
+}

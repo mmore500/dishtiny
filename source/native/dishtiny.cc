@@ -17,6 +17,7 @@
 #include "../Manager.cpp"
 #include "../LibraryInstruction.cpp"
 #include "../LibraryInstructionSpiker.cpp"
+#include "../ManagerConnection.cpp"
 
 
 int main(int argc, char* argv[])

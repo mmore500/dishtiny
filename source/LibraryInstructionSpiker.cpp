@@ -135,6 +135,186 @@ void LibraryInstructionSpiker::InitDefaultDup(inst_lib_t &il) {
 void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config &cfg) {
 
   il.AddInst(
+    "RemoveOutgoingConnection",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      if (state.GetLocal(inst.args[0])) {
+        man.Connection(pos).RemoveOutgoingConnection();
+      }
+
+    },
+    1,
+    "TODO"
+  );
+
+  il.AddInst(
+    "RemoveIncomingConnection",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      if (state.GetLocal(inst.args[0])) {
+        fh.Cell().RemoveIncomingConnection();
+      }
+
+    },
+    1,
+    "TODO"
+  );
+
+
+  il.AddInst(
+    "AddDevoUpQuery",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      man.Connection(pos).AddQuery(
+        inst.affinity,
+        2 + state.GetLocal(inst.args[0]),
+        std::tanh(state.GetLocal(inst.args[1]) + 1.0)
+      );
+
+    },
+    2,
+    "TODO",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "AddDevoDownQuery",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      man.Connection(pos).AddQuery(
+        inst.affinity,
+        2 + state.GetLocal(inst.args[0]),
+        std::tanh(state.GetLocal(inst.args[1]) - 1.0)
+      );
+
+    },
+    2,
+    "TODO",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "SetConnectionAgingParam",
+    [](hardware_t & hw, const inst_t & inst){
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+      man.Connection(pos).TryAddFledgling();
+
+    },
+    0,
+    "TODO"
+  );
+
+  il.AddInst(
+    "SetConnectionAgingParam",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      // note this sets the param relative to default
+      // so zero sets it to default
+      man.Connection(pos).SetAgingParam(
+        state.GetLocal(inst.args[0])
+      );
+
+    },
+    1,
+    "TODO"
+  );
+
+  il.AddInst(
+    "SetConnectionExploitParam",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      // note this sets the param relative to default
+      // so zero sets it to default
+      man.Connection(pos).SetExploitParam(
+        state.GetLocal(inst.args[0])
+      );
+
+    },
+    1,
+    "TODO"
+  );
+
+  il.AddInst(
+    "SetConnectionDevelopmentParam",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      // note this sets the param relative to default
+      // so zero sets it to default
+      man.Connection(pos).SetDevelopmentParam(
+        state.GetLocal(inst.args[0])
+      );
+
+    },
+    1,
+    "TODO"
+  );
+
+  il.AddInst(
+    "SetConnectionSensingParam",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      // note this sets the param relative to default
+      // so zero sets it to default
+      man.Connection(pos).SetSensingParam(
+        state.GetLocal(inst.args[0])
+      );
+
+    },
+    1,
+    "TODO"
+  );
+
+  il.AddInst(
     "PutInternalMembraneBringer",
     [](hardware_t & hw, const inst_t & inst){
 
@@ -360,6 +540,19 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
     },
     1,
     "Sets the regulator of a tag in the membrane."
+  );
+
+  il.AddInst(
+    "SendSpikeMsg",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      hw.TriggerEvent("SendSpikeMsg", inst.affinity, state.output_mem);
+    },
+    0,
+    "Send a single message to connections.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
   );
 
   il.AddInst(

@@ -86,6 +86,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       man->Priority(neighs[dir]).ClearPauses(Cardi::Opp[dir]);
     }
+    man->Connection(pos).Reset();
   });
 
   OnPlacement([this](const size_t pos){
@@ -442,6 +443,8 @@ void DishWorld::Step() {
   // clean up for next cell action step
   for (size_t i = 0; i < GetSize(); ++i) {
 
+    man->Connection(i).SearchAndDevelop();
+
     if (GetUpdate()%cfg.ENV_TRIG_FREQ()==0) {
       man->Heir(i).DecayHeirs();
       man->Channel(i).DecayCellAgeBoosters();
@@ -497,4 +500,8 @@ void DishWorld::Step() {
     }
   }
 
+}
+
+FrameCell & DishWorld::GetFrame(const size_t loc) {
+  return *frames[loc];
 }

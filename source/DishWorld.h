@@ -51,5 +51,6 @@ public:
 
   void GeneratePopulation();
 
+  FrameCell & GetFrame(const size_t loc);
 
 };

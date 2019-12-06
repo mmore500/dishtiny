@@ -8,6 +8,7 @@
 #include "DishWorld.h"
 #include "ManagerApoptosis.h"
 #include "ManagerChannel.h"
+#include "ManagerConnection.h"
 #include "ManagerHeir.h"
 #include "ManagerFamily.h"
 #include "ManagerInbox.h"
@@ -23,6 +24,7 @@ private:
   DishWorld &dw;
   emp::vector<emp::Ptr<ManagerApoptosis>> mas;
   emp::vector<emp::Ptr<ManagerChannel>> mcs;
+  emp::vector<emp::Ptr<ManagerConnection>> mcos;
   emp::vector<emp::Ptr<ManagerFamily>> mfs;
   emp::vector<emp::Ptr<ManagerHeir>> mhs;
   emp::vector<emp::Ptr<ManagerInbox>> mis;
@@ -47,6 +49,8 @@ public:
   ManagerApoptosis& Apoptosis(size_t pos);
 
   ManagerChannel& Channel(size_t pos);
+
+  ManagerConnection& Connection(size_t pos);
 
   ManagerFamily& Family(size_t pos);
 

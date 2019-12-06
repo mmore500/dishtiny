@@ -24,6 +24,8 @@ private:
   const emp::vector<size_t> neighs;
   const size_t pos;
 
+  std::unordered_multiset<size_t> incoming_connections;
+
   FrameHardware spiker;
 
 public:
@@ -65,6 +67,14 @@ public:
   emp::vector<std::shared_ptr<Config::matchbin_t>> CopyMatchBins();
 
   void SetRegulators(emp::vector<std::shared_ptr<Config::matchbin_t>> targets);
+
+  void RegisterIncomingConnection(const size_t source);
+
+  void DeleteIncomingConnection(const size_t source);
+
+  void RemoveIncomingConnection(const size_t source);
+
+  void RemoveIncomingConnection();
 
   FrameHardware& GetSpiker();
 

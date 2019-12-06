@@ -103,6 +103,34 @@ public:
           }
         }
       }
+
+      // filter out some instructions from  initially generated genomes
+      // by replacing them with NOPs
+      const size_t nop_id_spiker = [&inst_lib_spiker](){
+        for (size_t idx = 0; idx <inst_lib_spiker.GetSize(); ++idx) {
+          if (inst_lib_spiker.GetName(idx) == "Nop") return idx;
+        }
+        emp_assert(false);
+        return 0UL;
+      }();
+
+      for (auto & fun : program_spiker) {
+        for (auto & inst : fun.inst_seq) {
+          if (
+            inst_lib_spiker.GetName(inst.id) == "Countdown" ||
+            inst_lib_spiker.GetName(inst.id) == "While" ||
+            inst_lib_spiker.GetName(inst.id) == "Call" ||
+            inst_lib_spiker.GetName(inst.id) == "Fork" ||
+            inst_lib_spiker.GetName(inst.id) == "DuplicateCountdown" ||
+            inst_lib_spiker.GetName(inst.id) == "DuplicateWhile" ||
+            inst_lib_spiker.GetName(inst.id) == "DuplicateCall" ||
+            inst_lib_spiker.GetName(inst.id) == "DuplicateFork" ||
+            inst_lib_spiker.GetName(inst.id).find("Apoptosis") != std::string::npos
+          ) {
+            inst.id = nop_id_spiker;
+          }
+        }
+      }
     }
 
     const program_t& GetProgram() const {

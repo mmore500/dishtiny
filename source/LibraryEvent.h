@@ -58,6 +58,14 @@ public:
         "Send message event."
       );
 
+      el.AddEvent(
+        "SendSpikeMsg",
+        [](hardware_t & hw, const event_t & event){
+          hw.SpawnCore(event.affinity, hw.GetMinBindThresh(), event.msg);
+        },
+        "Send message event."
+      );
+
       el.RegisterDispatchFun(
         "SendMsgExternal",
         [](hardware_t & hw, const event_t & event) {
@@ -89,6 +97,23 @@ public:
           FrameHardware &fh = *hw.GetTrait();
 
           fh.Cell().GetSpiker().QueueInternalMessage(event);
+        }
+      );
+
+      el.RegisterDispatchFun(
+        "SendSpikeMsg",
+        [](hardware_t & hw, const event_t & event) {
+
+          FrameHardware &fh = *hw.GetTrait();
+          Manager &man = fh.Cell().Man();
+          const size_t pos = fh.Cell().GetPos();
+
+          for (auto & [pos, target] : man.Connection(pos).ViewDeveloped()) {
+            target.get().GetSpiker().QueueInternalMessage(event);
+            for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+              target.get().GetFrameHardware(dir).QueueInternalMessage(event);
+            }
+          }
         }
       );
 

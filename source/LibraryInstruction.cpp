@@ -187,6 +187,172 @@ void LibraryInstruction::InitDefaultDup(inst_lib_t &il) {
 void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) {
 
   il.AddInst(
+    "AddDevoUpQuery",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      man.Connection(pos).AddQuery(
+        inst.affinity,
+        2 + state.GetLocal(inst.args[0]),
+        std::tanh(state.GetLocal(inst.args[1]) + 1.0)
+      );
+
+    },
+    2,
+    "TODO",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "AddDevoDownQuery",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      man.Connection(pos).AddQuery(
+        inst.affinity,
+        2 + state.GetLocal(inst.args[0]),
+        std::tanh(state.GetLocal(inst.args[1]) - 1.0)
+      );
+
+    },
+    2,
+    "TODO",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "PutDevoMembraneBringer",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      auto & spiker = fh.Cell().GetSpiker();
+      Config::matchbin_t& membrane = spiker.GetMembrane();
+      auto& membrane_tags = spiker.GetMembraneTags();
+      auto& membrane_timers = spiker.GetMembraneTimers();
+
+      // if a particular affinity is already in the MatchBin, take it out
+      const auto &existing = membrane_tags.find(
+        inst.affinity
+      );
+      if (existing != std::end(membrane_tags)) {
+        membrane.Delete(existing->second);
+        membrane_timers.erase(existing->second);
+        membrane_tags.erase(existing);
+      }
+
+      const auto uid = membrane.Put(
+        !state.GetLocal(inst.args[0]),
+        inst.affinity
+      );
+
+      membrane_tags.insert({
+        inst.affinity,
+        uid
+      });
+
+      membrane_timers.insert({
+        uid,
+        2
+      });
+
+    },
+    2,
+    "Place a tag that, by default, admits incoming messages it matches with.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "PutDevoMembraneBlocker",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      auto & spiker = fh.Cell().GetSpiker();
+      Config::matchbin_t& membrane = spiker.GetMembrane();
+      auto& membrane_tags = spiker.GetMembraneTags();
+      auto& membrane_timers = spiker.GetMembraneTimers();
+
+      // if a particular affinity is already in the MatchBin, take it out
+      const auto &existing = membrane_tags.find(
+        inst.affinity
+      );
+      if (existing != std::end(membrane_tags)) {
+        membrane.Delete(existing->second);
+        membrane_timers.erase(existing->second);
+        membrane_tags.erase(existing);
+      }
+
+      const auto uid = membrane.Put(
+        state.GetLocal(inst.args[0]),
+        inst.affinity
+      );
+
+      membrane_tags.insert({
+        inst.affinity,
+        uid
+      });
+
+      membrane_timers.insert({
+        uid,
+        2
+      });
+
+    },
+    2,
+    "Place a tag that, by default, blocks incoming messages it matches with.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "SetDevoMembraneRegulator",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      auto & spiker = fh.Cell().GetSpiker();
+
+      emp::vector<size_t> best_fun = spiker.GetMembrane().MatchRaw(
+        inst.affinity
+      );
+
+      for (auto & fun : best_fun) {
+        spiker.GetMembrane().SetRegulator(
+          fun,
+          state.GetLocal(inst.args[0])
+        );
+        spiker.GetMembrane().DecayRegulator(
+          fun,
+          -(state.GetLocal(inst.args[1])+1)
+        );
+      }
+
+    },
+    2,
+    "Sets the regulator of a tag in the membrane."
+  );
+
+  il.AddInst(
     "PutInternalMembraneBringer",
     [](hardware_t & hw, const inst_t & inst){
 
@@ -231,7 +397,7 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
   );
 
   il.AddInst(
-    "PutInternalMembraneBringer",
+    "PutInternalMembraneBlocker",
     [](hardware_t & hw, const inst_t & inst){
 
       const state_t & state = hw.GetCurState();
@@ -440,6 +606,19 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
     },
     0,
     "Send a single message to a particular other CPU within the cell.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "SendSpikeMsg",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      hw.TriggerEvent("SendSpikeMsg", inst.affinity, state.output_mem);
+    },
+    0,
+    "Send a single message to connections.",
     emp::ScopeType::BASIC,
     0,
     {"affinity"}
