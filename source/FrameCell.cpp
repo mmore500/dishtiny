@@ -63,10 +63,15 @@ void FrameCell::Process(const size_t update) {
 
   if (update % cfg.COMPUTE_FREQ()) return;
 
-  static emp::vector<size_t> shuffler;
-  if (!shuffler.size()) {
-    for(size_t idx = 0; idx < hw.size(); ++idx) shuffler.push_back(idx);
-  }
+  static emp::vector<size_t> shuffler(
+    [](){
+      emp::vector<size_t> res(Cardi::Dir::NumDirs);
+      std::iota(std::begin(res), std::end(res), 0);
+      return res;
+    }()
+  );
+  emp_assert(shuffler.size() == Cardi::Dir::NumDirs);
+
   emp::Shuffle(local_rng, shuffler);
 
   for(size_t s = 0; s < cfg.HARDWARE_STEPS(); ++s) {
