@@ -83,6 +83,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
       }
     }
     man->Stockpile(pos).Reset();
+    man->Sharing(pos).Reset();
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       man->Priority(neighs[dir]).ClearPauses(Cardi::Opp[dir]);
     }
@@ -92,6 +93,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
   OnPlacement([this](const size_t pos){
     man->Apoptosis(pos).Reset();
     man->Stockpile(pos).Reset();
+    man->Sharing(pos).Reset();
     man->Heir(pos).Reset();
     man->Priority(pos).Reset();
     frames[pos]->Reset();
@@ -450,7 +452,8 @@ void DishWorld::Step() {
       man->Channel(i).DecayCellAgeBoosters();
       man->Priority(i).ResolveUpdate();
       man->Apoptosis(i).Reset();
-      man->Stockpile(i).ResolveNextResistance();
+      man->Sharing(i).ResolveNextResistance(GetUpdate());
+      man->Sharing(i).ProcessSharingRequest(GetUpdate());
     }
 
     for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
@@ -484,9 +487,7 @@ void DishWorld::Step() {
   // do cell action!
   for(size_t i = 0; i < GetSize(); ++i) {
     if (IsOccupied(i)) {
-      man->Stockpile(i).CleanSharingDoers(GetUpdate());
       frames[i]->Process(GetUpdate());
-      man->Stockpile(i).ProcessSharingDoers(GetUpdate());
     }
   }
 

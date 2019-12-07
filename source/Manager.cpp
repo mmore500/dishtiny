@@ -53,6 +53,63 @@ Manager::Manager(
     mis.push_back(
       emp::NewPtr<ManagerInbox>(cfg)
     );
+    mshs.push_back(
+      emp::NewPtr<ManagerSharing>(
+        [this, i](const double frac){
+          return Stockpile(i).RequestResourceFrac(frac, 0.0);
+        },
+        [this, i, &cfg](){
+          GeometryHelper geom(cfg);
+          emp::vector<std::function<void(const double)>> res;
+          for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+            const size_t target = geom.CalcLocalNeigh(i, dir);
+            const size_t incoming_dir = Cardi::Opp[dir];
+            res.push_back(
+              [this, target, incoming_dir](const double amt){
+                Stockpile(target).ExternalContribute(amt, incoming_dir);
+              }
+            );
+          }
+
+          // spiker
+          res.push_back(
+            [this, i](const double amt){
+
+              double in_permittivity = 0.0;
+              const auto & developed = Connection(i).ViewDeveloped();
+              for (const auto & [neigh, cell] : developed) {
+                in_permittivity += 1.0 - Sharing(neigh).CheckInResistance(
+                  Cardi::Dir::NumDirs
+                );
+              }
+              emp_assert(in_permittivity >= 0.0);
+
+              for (const auto & [loc, cell] : developed) {
+                const double my_permittivity = 1.0 - Sharing(
+                  loc
+                ).CheckInResistance(
+                  Cardi::Dir::NumDirs
+                );
+                emp_assert(my_permittivity >= 0.0);
+                emp_assert(my_permittivity <= 1.0);
+                const double frac = (
+                  in_permittivity
+                  ? my_permittivity / in_permittivity
+                  : 0.0
+                ); emp_assert(frac >= 0.0); emp_assert(frac <= 1.0);
+                Stockpile(loc).ExternalContribute(
+                  amt * frac,
+                  Cardi::Dir::NumDirs
+                );
+              }
+            }
+          );
+          return res;
+        }(),
+        *local_rngs[i],
+        cfg
+      )
+    );
     mss.push_back(
       emp::NewPtr<ManagerStockpile>(
         mcs.back()->MakeExpChecker(),
@@ -164,6 +221,10 @@ ManagerPriority& Manager::Priority(size_t pos) {
 
 ManagerStockpile& Manager::Stockpile(size_t pos) {
   return *mss[pos];
+}
+
+ManagerSharing& Manager::Sharing(size_t pos) {
+  return *mshs[pos];
 }
 
 ManagerWave& Manager::Wave(size_t rep, size_t pos, size_t lev) {

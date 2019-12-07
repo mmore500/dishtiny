@@ -13,6 +13,7 @@
 #include "ManagerFamily.h"
 #include "ManagerInbox.h"
 #include "ManagerPriority.h"
+#include "ManagerSharing.h"
 #include "ManagerStockpile.h"
 #include "ManagerWave.h"
 
@@ -29,6 +30,7 @@ private:
   emp::vector<emp::Ptr<ManagerHeir>> mhs;
   emp::vector<emp::Ptr<ManagerInbox>> mis;
   emp::vector<emp::Ptr<ManagerPriority>> mps;
+  emp::vector<emp::Ptr<ManagerSharing>> mshs;
   emp::vector<emp::Ptr<ManagerStockpile>> mss;
   emp::vector<emp::vector<emp::vector<emp::Ptr<ManagerWave>>>> mws;
 
@@ -59,6 +61,8 @@ public:
   ManagerInbox& Inbox(size_t pos);
 
   ManagerPriority& Priority(size_t pos);
+
+  ManagerSharing& Sharing(size_t pos);
 
   ManagerStockpile& Stockpile(size_t pos);
 

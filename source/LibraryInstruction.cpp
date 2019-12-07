@@ -809,38 +809,51 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       const size_t pos = fh.Cell().GetPos();
       const size_t dir = fh.CalcDir();
+      const size_t neigh = fh.Cell().GetNeigh(dir);
       const double arg_1 = state.GetLocal(inst.args[0]);
       const double arg_2 = state.GetLocal(inst.args[1]);
 
-      man.Stockpile(pos).AddSharingDoer([&fh, dir, arg_1, arg_2](){
+      const double in_resistance = man.Sharing(neigh).CheckInResistance(
+        Cardi::Opp[dir]
+      ); emp_assert(in_resistance >= 0); emp_assert(in_resistance <= 1.0);
+      const double out_resistance =  man.Sharing(pos).CheckOutResistance(
+        dir
+      ); emp_assert(out_resistance >= 0); emp_assert(out_resistance <= 1.0);
 
-        if(!fh.IsLive(dir)) return;
+      const double reserve = std::max(fh.CheckStockpileReserve()+arg_2, 0.0);
+      const double reserve_frac = std::clamp(
+        reserve / std::max(
+          man.Stockpile(pos).QueryResource(),
+          std::numeric_limits<double>::epsilon()
+        ),
+        0.0,
+        1.0
+      ); emp_assert(reserve_frac >= 0.0); emp_assert(reserve_frac <= 1.0);
 
-        Manager &man = fh.Cell().Man();
-        const size_t pos = fh.Cell().GetPos();
-        const size_t neigh = fh.Cell().GetNeigh(dir);
+      const double multiplier = (
+        arg_1 == 0
+        ? 1
+        : (
+          arg_1 < 0
+          ? 1/-arg_1
+          : arg_1
+        )
+      ); emp_assert(multiplier >= 0);
 
-        if(man.Stockpile(neigh).QueryResource()<0) return;
+      const double req_frac = std::min(1.0, 0.5*multiplier);
+      emp_assert(req_frac >= 0); emp_assert(req_frac <= 1.0);
 
-        const double m_arg = arg_1;
-        const double multiplier = m_arg == 0 ? 1 : (
-          m_arg < 0 ? 1/-m_arg : m_arg
-        );
-        const double in_resistance = man.Stockpile(neigh).CheckInResistance(
-          Cardi::Opp[dir]
-        );
-        const double out_resistance =  man.Stockpile(pos).CheckOutResistance(
-          dir
-        );
-        const double amt = man.Stockpile(pos).RequestResourceFrac(
-          std::min(1.0,0.5*multiplier)
-            * (1.0 - in_resistance)
-            * (1.0 - out_resistance),
-          std::max(fh.CheckStockpileReserve()+arg_2, 0.0)
-        );
 
-        man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
-      });
+      const double frac = std::max(
+        (1.0 - in_resistance) * (1.0 - out_resistance) * req_frac
+          - reserve_frac,
+        0.0
+      ); emp_assert(frac >= 0); emp_assert(frac <= 1.0);
+
+      man.Sharing(pos).AddSharingRequest(
+        dir,
+        frac
+      );
 
     },
     2,
@@ -857,38 +870,51 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
 
       const size_t pos = fh.Cell().GetPos();
       const size_t dir = fh.CalcDir();
+      const size_t neigh = fh.Cell().GetNeigh(dir);
       const double arg_1 = state.GetLocal(inst.args[0]);
       const double arg_2 = state.GetLocal(inst.args[1]);
 
-      man.Stockpile(pos).AddSharingDoer([&fh, dir, arg_1, arg_2](){
+      const double in_resistance = man.Sharing(neigh).CheckInResistance(
+        Cardi::Opp[dir]
+      ); emp_assert(in_resistance >= 0); emp_assert(in_resistance <= 1.0);
+      const double out_resistance =  man.Sharing(pos).CheckOutResistance(
+        dir
+      ); emp_assert(out_resistance >= 0); emp_assert(out_resistance <= 1.0);
 
-        if(!fh.IsLive(dir)) return;
+      const double reserve = std::max(fh.CheckStockpileReserve()+arg_2, 0.0);
+      const double reserve_frac = std::clamp(
+        reserve / std::max(
+          man.Stockpile(pos).QueryResource(),
+          std::numeric_limits<double>::epsilon()
+        ),
+        0.0,
+        1.0
+      ); emp_assert(reserve_frac >= 0.0); emp_assert(reserve_frac <= 1.0);
 
-        Manager &man = fh.Cell().Man();
-        const size_t pos = fh.Cell().GetPos();
-        const size_t neigh = fh.Cell().GetNeigh(dir);
+      const double multiplier = (
+        arg_1 == 0
+        ? 1
+        : (
+          arg_1 < 0
+          ? 1/-arg_1
+          : arg_1
+        )
+      ); emp_assert(multiplier >= 0);
 
-        if(man.Stockpile(neigh).QueryResource()<0) return;
+      const double req_frac = std::min(1.0, 0.01*multiplier);
+      emp_assert(req_frac >= 0); emp_assert(req_frac <= 1.0);
 
-        const double m_arg = arg_1;
-        const double multiplier = m_arg == 0 ? 1 : (
-          m_arg < 0 ? 1/-m_arg : m_arg
-        );
-        const double in_resistance = man.Stockpile(neigh).CheckInResistance(
-          Cardi::Opp[dir]
-        );
-        const double out_resistance =  man.Stockpile(pos).CheckOutResistance(
-          dir
-        );
-        const double amt = man.Stockpile(pos).RequestResourceFrac(
-          std::min(1.0,0.01*multiplier)
-            * (1.0 - in_resistance)
-            * (1.0 - out_resistance),
-          std::max(fh.CheckStockpileReserve()+arg_2, 0.0)
-        );
 
-        man.Stockpile(neigh).ExternalContribute(amt,Cardi::Opp[dir]);
-      });
+      const double frac = std::max(
+        (1.0 - in_resistance) * (1.0 - out_resistance) * req_frac
+          - reserve_frac,
+        0.0
+      ); emp_assert(frac >= 0); emp_assert(frac <= 1.0);
+
+      man.Sharing(pos).AddSharingRequest(
+        dir,
+        frac
+      );
 
     },
     2,
@@ -910,7 +936,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
         emp::Mod(state.GetLocal(inst.args[1]) + 2.0, 4.0) - 2.0
       ) / 2.0;
 
-      man.Stockpile(pos).SetInResistance(dir, set, dur);
+      man.Sharing(pos).SetInResistance(dir, set, dur);
     },
     3,
     "Mark self to accept resource contributions from neighbors."
@@ -932,7 +958,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       ) / 2.0;
 
       //TODO this makes outcome dependent on execution order of cells
-      man.Stockpile(pos).SetInResistance(dir, set, dur);
+      man.Sharing(pos).SetInResistance(dir, set, dur);
     },
     3,
     "Mark self to not accept resource contributions from neighbors."
@@ -953,7 +979,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
         emp::Mod(state.GetLocal(inst.args[1]) + 2.0, 4.0) - 2.0
       ) / 2.0;
 
-      man.Stockpile(pos).SetOutResistance(dir, set, dur);
+      man.Sharing(pos).SetOutResistance(dir, set, dur);
     },
     3,
     "Mark self to give resource contributions to neighbors."
@@ -975,7 +1001,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       ) / 2.0;
 
       //TODO this makes outcome dependent on execution order of cells
-      man.Stockpile(pos).SetOutResistance(dir, set, dur);
+      man.Sharing(pos).SetOutResistance(dir, set, dur);
     },
     3,
     "Mark self to not give resource contributions to neighbors."

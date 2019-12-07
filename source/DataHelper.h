@@ -1207,7 +1207,7 @@ private:
     double data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Stockpile(i).CheckInResistance(dir);
+      data[i] = dw.man->Sharing(i).CheckInResistance(dir);
     }
 
     ds.write((void*)data, tid);
@@ -1235,7 +1235,7 @@ private:
     double data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Stockpile(i).CheckOutResistance(dir);
+      data[i] = dw.man->Sharing(i).CheckOutResistance(dir);
     }
 
     ds.write((void*)data, tid);
