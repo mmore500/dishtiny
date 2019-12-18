@@ -63,22 +63,22 @@ module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
 # set up background loop
 # so we always have at least one previous checkpoint and file state
-mkdir checkpoint_bak
-touch checkpoint_bak/init.dmtcp
-while true; do
-  echo "   BAK SLEEP" $(date)
-  sleep $BAK_WAIT_SEC
-  echo "   BAK WAKE" $(date)
-  # if we have a new checkpoint, shuffle the backups
-  if ! diff *.dmtcp checkpoint_bak/*.dmtcp; then
-    echo "   BAK BEGIN" $(date)
-    rm -rf checkpoint_bakbak
-    mv checkpoint_bak checkpoint_bakbak
-    mkdir checkpoint_bak
-    cp *.csv *.h5 *dmtcp* checkpoint_bak
-    echo "   BAK END" $(date)
-  fi
-done &
+# mkdir checkpoint_bak
+# touch checkpoint_bak/init.dmtcp
+# while true; do
+#   echo "   BAK SLEEP" $(date)
+#   sleep $BAK_WAIT_SEC
+#   echo "   BAK WAKE" $(date)
+#   # if we have a new checkpoint, shuffle the backups
+#   if ! diff *.dmtcp checkpoint_bak/*.dmtcp; then
+#     echo "   BAK BEGIN" $(date)
+#     rm -rf checkpoint_bakbak
+#     mv checkpoint_bak checkpoint_bakbak
+#     mkdir checkpoint_bak
+#     cp *.csv *.h5 *dmtcp* checkpoint_bak
+#     echo "   BAK END" $(date)
+#   fi
+# done &
 
 # run job with checkpointing
 dmtcp_launch -i $CKPT_WAIT_SEC                                                 \

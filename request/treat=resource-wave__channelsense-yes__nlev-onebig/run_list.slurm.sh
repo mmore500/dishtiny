@@ -71,23 +71,23 @@ dmtcp_launch -h $DMTCP_COORD_HOST -p $DMTCP_COORD_PORT --rm --ckpt-open-files  \
   &
 
 # while the program is still running checkpoint it intermittently
-while dmtcp_command -h $DMTCP_COORD_HOST -p $DMTCP_COORD_PORT -s               \
-   1>/dev/null 2>&1
-do
-
-  # wait for checkpoint interval
-  sleep $CKPT_WAIT_SEC
-
-  # move any current checkpoint files out of the way
-  mkdir -p checkpoint_bak
-  mv ckpt_*.dmtcp checkpoint_bak
-
-  # checkpoint the job and, if successful, clear old checkpoint files
-  dmtcp_command -h $DMTCP_COORD_HOST -p $DMTCP_COORD_PORT                      \
-    --ckpt-open-files -bc \
-    && rm -rf checkpoint_bak
-
-done
+# while dmtcp_command -h $DMTCP_COORD_HOST -p $DMTCP_COORD_PORT -s               \
+#    1>/dev/null 2>&1
+# do
+#
+#   # wait for checkpoint interval
+#   sleep $CKPT_WAIT_SEC
+#
+#   # move any current checkpoint files out of the way
+#   mkdir -p checkpoint_bak
+#   mv ckpt_*.dmtcp checkpoint_bak
+#
+#   # checkpoint the job and, if successful, clear old checkpoint files
+#   dmtcp_command -h $DMTCP_COORD_HOST -p $DMTCP_COORD_PORT                      \
+#     --ckpt-open-files -bc \
+#     && rm -rf checkpoint_bak
+#
+# done
 
 ###############################################################################
 echo "Done"
