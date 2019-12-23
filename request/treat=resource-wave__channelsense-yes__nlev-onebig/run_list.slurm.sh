@@ -39,56 +39,55 @@ echo "Setup DMTCP"
 # set a limited stack size so DMTCP could work
 ulimit -s 8192
 
-# to store port number
-fname=port.$SLURM_JOBID
+# save coordinators host info in an environment variable
+export DMTCP_COORD_HOST=$(hostname)
 
-# start coordinator
-dmtcp_coordinator --daemon --exit-on-last -p 0 --port-file $fname $@          \
-  1>/dev/null 2>&1
+# ask for a uniqe port at runtime
+export DMTCP_COORD_PORT=0
 
-# get coordinator's host name
-h=$(hostname)
+# checkpoint every eight hours
+CKPT_WAIT_SEC=$(( 8 * 60 * 60 ))
 
-# get coordinator's port number
-p=$(cat $fname)
+# back up checkpoints every hour
+BAK_WAIT_SEC=$(( 1 * 60 * 60 ))
 
-export DMTCP_COORD_HOST=$h
-
-export DMTCP_COORD_PORT=$p
-
-# checkpoint every six hours
-export CKPT_WAIT_SEC=$(( 6 * 60 * 60 ))
+echo "   DMTCP_COORD_HOST" $DMTCP_COORD_HOST
+echo "   DMTCP_COORD_PORT" $DMTCP_COORD_PORT
+echo "   CKPT_WAIT_SEC" $CKPT_WAIT_SEC
+echo "   BAK_WAIT_SEC" $BAK_WAIT_SEC
 
 ################################################################################
 echo "Do Work"
 ################################################################################
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
-# run job in background
-dmtcp_launch -h $DMTCP_COORD_HOST -p $DMTCP_COORD_PORT --rm --ckpt-open-files  \
-  ./dishtiny -SEED ${SEED}                                                     \
-  >run.log 2>&1                                                                \
-  &
+# set up background loop
+# so we always have at least one previous checkpoint and file state
+# mkdir checkpoint_bak
+# touch checkpoint_bak/init.dmtcp
+# while true; do
+#   echo "   BAK SLEEP" $(date)
+#   sleep $BAK_WAIT_SEC
+#   echo "   BAK WAKE" $(date)
+#   # if we have a new checkpoint, shuffle the backups
+#   if ! diff *.dmtcp checkpoint_bak/*.dmtcp; then
+#     echo "   BAK BEGIN" $(date)
+#     rm -rf checkpoint_bakbak
+#     mv checkpoint_bak checkpoint_bakbak
+#     mkdir checkpoint_bak
+#     cp *.csv *.h5 *dmtcp* checkpoint_bak
+#     echo "   BAK END" $(date)
+#   fi
+# done &
 
-# while the program is still running checkpoint it intermittently
-# while dmtcp_command -h $DMTCP_COORD_HOST -p $DMTCP_COORD_PORT -s               \
-#    1>/dev/null 2>&1
-# do
-#
-#   # wait for checkpoint interval
-#   sleep $CKPT_WAIT_SEC
-#
-#   # move any current checkpoint files out of the way
-#   mkdir -p checkpoint_bak
-#   mv ckpt_*.dmtcp checkpoint_bak
-#
-#   # checkpoint the job and, if successful, clear old checkpoint files
-#   dmtcp_command -h $DMTCP_COORD_HOST -p $DMTCP_COORD_PORT                      \
-#     --ckpt-open-files -bc \
-#     && rm -rf checkpoint_bak
-#
-# done
+# run job with checkpointing
+dmtcp_launch -i $CKPT_WAIT_SEC                                                 \
+  ./dishtiny -SEED ${SEED} -ANIMATION_FREQUENCY 2097152                        \
+  >run.log 2>&1
+
+# when running job fails or finishes, kill the background loop
+pkill -P $$
 
 ###############################################################################
-echo "Done"
+echo "Done" $(date)
 ################################################################################
