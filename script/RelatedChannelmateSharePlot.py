@@ -41,9 +41,10 @@ print("Data loaded!")
 df['Treatment'] = df['Treatment'].apply(lambda raw : {
     'resource-even__channelsense-no__nlev-two__mute' : 'Blind',
     'resource-even__channelsense-no__nlev-two__mute__mixed' : 'Mixed',
-    'resource-even__channelsense-yes__nlev-two' : 'Even',
-    'resource-wave__channelsense-yes__nlev-onebig' : 'Flat',
-    'resource-wave__channelsense-yes__nlev-two' : 'Nested'
+    'resource-even__channelsense-yes__nlev-onebig' : 'Flat-Even',
+    'resource-even__channelsense-yes__nlev-two' : 'Nested-Even',
+    'resource-wave__channelsense-yes__nlev-onebig' : 'Flat-Wave',
+    'resource-wave__channelsense-yes__nlev-two' : 'Nested-Wave',
     }[raw]
 )
 
@@ -101,9 +102,10 @@ for measure in df['Measure'].unique():
         y=measure,
         hue="Relationship",
         order=[
-            "Even",
-            "Flat",
-            "Nested",
+            'Flat-Even',
+            'Nested-Even',
+            'Flat-Wave',
+            'Nested-Wave',
         ],
         hue_order=[
             "Child Channelmate",
