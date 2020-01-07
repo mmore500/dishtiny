@@ -922,7 +922,7 @@ const inst_lib_t& LibraryInstructionSpiker::Make(const Config &cfg) {
       emp::keyname::pack({
         {"title", "instruction_library_spiker"},
         {"treat", cfg.TREATMENT_DESCRIPTOR()},
-        {"ext", ".json"}
+        {"ext", ".csv"}
       })
     );
     il.PrintManifest(inst_lib_stream);

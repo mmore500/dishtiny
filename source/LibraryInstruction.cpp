@@ -1489,7 +1489,7 @@ const inst_lib_t& LibraryInstruction::Make(const Config &cfg) {
       emp::keyname::pack({
         {"title", "instruction_library"},
         {"treat", cfg.TREATMENT_DESCRIPTOR()},
-        {"ext", ".json"}
+        {"ext", ".csv"}
       })
     );
     il.PrintManifest(inst_lib_stream);
