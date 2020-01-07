@@ -362,7 +362,11 @@ void DishWorld::Step() {
 
       AddOrgAt(opt_sirepack->genome, dest, opt_sirepack->par_pos);
 
-      frames[dest]->SetRegulators(opt_sirepack->matchbins);
+      // disable epigenetic inheritance for propagule-generating reproduction
+      // this makes harvesting and restarting propagules more straightforward
+      if (opt_sirepack->replev != cfg.NLEV()) {
+        frames[dest]->SetRegulators(opt_sirepack->matchbins);
+      }
 
       man->Channel(dest).Inherit(
         opt_sirepack->chanpack,
