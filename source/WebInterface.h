@@ -729,25 +729,11 @@ public:
     auto dom_text = dominant_viewer.AddText("dom_text");
     dom_text << UI::Live([this](){
 
-      std::map<Genome, size_t> counts;
-
-      for(size_t pos = 0; pos < w.GetSize(); ++pos) {
-        if (w.IsOccupied(pos)) counts[w.GetOrg(pos)] ++;
-      }
-
-      using pair_type = decltype(counts)::value_type;
-      auto pr = std::max_element(
-        std::begin(counts),
-        std::end(counts),
-        [](const pair_type & p1, const pair_type & p2) {
-          return p1.second < p2.second;
-        }
-      );
-
+      const auto dominant = w.GetDominantInfo();
       std::ostringstream buffer;
-      pr->first.GetProgram().PrintProgram(buffer);
+      dominant.first.GetProgram().PrintProgram(buffer);
 
-      return "COUNT:" + emp::to_string(pr->second) + "\n\n" + buffer.str();
+      return "COUNT:" + emp::to_string(dominant.second) + "\n\n" + buffer.str();
     });
 
     dynamic_config.SetAttr(
