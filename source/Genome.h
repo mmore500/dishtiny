@@ -28,6 +28,15 @@ public:
   Genome& operator=(const Genome&) = delete;
 
   Genome(
+    const Config& cfg_,
+    const Config::inst_lib_t &ilib,
+    const Config::inst_lib_t &ilib_spiker
+  ) : cfg(cfg_)
+  , program(&ilib)
+  , program_spiker(&ilib_spiker)
+  { }
+
+  Genome(
     const Config &cfg_,
     const program_t &program_,
     const program_t &program_spiker_,
@@ -186,6 +195,16 @@ public:
 
     size_t GetRootID() const {
       return root_id;
+    }
+
+    template <class Archive>
+    void serialize( Archive & ar ) {
+      ar(
+        CEREAL_NVP(program),
+        CEREAL_NVP(program_spiker),
+        CEREAL_NVP(tags),
+        CEREAL_NVP(root_id)
+      );
     }
 
 };

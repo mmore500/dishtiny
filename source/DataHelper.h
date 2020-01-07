@@ -132,6 +132,20 @@ public:
         if(update % cfg.SNAPSHOT_FREQUENCY() == 0) {
           Population();
           Triggers();
+
+          // save population best
+          const auto org_count = dw.GetDominantInfo();
+          std::ofstream genome_stream(
+            emp::keyname::pack({
+              {"component", "genome"},
+              {"count", emp::to_string(org_count.second)},
+              {"title", "dominant"},
+              {"update", emp::to_string(update)},
+              {"ext", ".json"}
+            })
+          );
+          cereal::JSONOutputArchive genome_archive(genome_stream);
+          genome_archive(org_count.first);
         }
         if(update % cfg.COMPUTE_FREQ() == 0) {
           Regulators();

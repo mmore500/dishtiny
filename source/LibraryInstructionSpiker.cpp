@@ -917,6 +917,16 @@ const inst_lib_t& LibraryInstructionSpiker::Make(const Config &cfg) {
 
     // InitExternalSensors(il, cfg);
 
+    // save instruction library
+    std::ofstream inst_lib_stream(
+      emp::keyname::pack({
+        {"title", "instruction_library_spiker"},
+        {"treat", cfg.TREATMENT_DESCRIPTOR()},
+        {"ext", ".json"}
+      })
+    );
+    il.PrintManifest(inst_lib_stream);
+
     std::cout << "Instruction Library Size: " << il.GetSize() << std::endl;
 
   }

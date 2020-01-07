@@ -8,7 +8,6 @@
 #else
 #include <filesystem>
 #endif
-#include <cereal/archives/json.hpp>
 
 #include "base/vector.h"
 #include "Evolve/World.h"
@@ -195,7 +194,7 @@ void DishWorld::LoadPopulation() {
 
   for (const auto & id : ids) {
 
-    std::ifstream program_stream(
+    std::ifstream genome_stream(
       *std::find_if(
         std::begin(filenames),
         std::end(filenames),
@@ -206,65 +205,24 @@ void DishWorld::LoadPopulation() {
             res.count("id") && res.at("id") == emp::to_string(id)
             && res.count("treat")
             && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
-            && res.count("component") && res.at("component") == "program"
+            && res.count("component") && res.at("component") == "genome"
             && res.count("ext") && res.at("ext") == ".txt"
           );
         }
       )
     );
-    Config::program_t program(&inst_lib);
-    program.Load(program_stream);
 
-    std::ifstream program_spiker_stream(
-      *std::find_if(
-        std::begin(filenames),
-        std::end(filenames),
-        [this, id](const auto & filename){
-          const auto res = emp::keyname::unpack(filename);
-
-          return (
-            res.count("id") && res.at("id") == emp::to_string(id)
-            && res.count("treat")
-            && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
-            && res.count("component") && res.at("component") == "program_spiker"
-            && res.count("ext") && res.at("ext") == ".txt"
-          );
-        }
-      )
+    cereal::JSONInputArchive genome_archive(genome_stream);
+    Genome genome(
+      cfg,
+      LibraryInstruction::Make(cfg),
+      LibraryInstructionSpiker::Make(cfg)
     );
-    Config::program_t program_spiker(&inst_lib_spiker);
-    program_spiker.Load(program_spiker_stream);
-
-    std::ifstream triggers_stream(
-      *std::find_if(
-        std::begin(filenames),
-        std::end(filenames),
-        [this, id](const auto & filename){
-          const auto res = emp::keyname::unpack(filename);
-          return (
-            res.count("id") && res.at("id") == emp::to_string(id)
-            && res.count("treat")
-            && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
-            && res.count("component") && res.at("component") == "triggers"
-            && res.count("ext") && res.at("ext") == ".json"
-          );
-        }
-      )
-    );
-    cereal::JSONInputArchive triggers_archive(triggers_stream);
-
-    emp::vector<Config::tag_t> triggers;
-    triggers_archive(triggers);
+    genome_archive(genome);
 
     for (size_t clone = 0; clone < cfg.SEED_POP_CLONECOUNT(); ++clone) {
       InjectAt(
-        Genome(
-          cfg,
-          program,
-          program_spiker,
-          triggers,
-          id
-        ),
+        genome,
         emp::WorldPosition(
           *(target++)
         )
@@ -272,43 +230,44 @@ void DishWorld::LoadPopulation() {
     }
   }
 
-  target = std::begin(targets);
-
-  for (const auto & id : ids) {
-
-    for (size_t clone = 0; clone < cfg.SEED_POP_CLONECOUNT(); ++clone) {
-
-      for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-        Config::matchbin_t::state_t state;
-        std::ifstream reg_stream(
-          *std::find_if(
-            std::begin(filenames),
-            std::end(filenames),
-            [this, id, dir](const auto & filename){
-              const auto res = emp::keyname::unpack(filename);
-              return (
-                res.count("id") && res.at("id") == emp::to_string(id)
-                && res.count("treat")
-                && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
-                && res.count("dir") && res.at("dir") == emp::to_string(dir)
-                && res.count("component") && res.at("component") == "regulator"
-                && res.count("ext") && res.at("ext") == ".json"
-              );
-            }
-          )
-        );
-        cereal::JSONInputArchive reg_archive(reg_stream);
-        reg_archive(state);
-        frames[*target]->GetFrameHardware(
-          dir
-        ).SetMatchBinState(state);
-      }
-
-      ++target;
-
-    }
-
-  }
+  // turn off restoring regulator state for now
+  // target = std::begin(targets);
+  //
+  // for (const auto & id : ids) {
+  //
+  //   for (size_t clone = 0; clone < cfg.SEED_POP_CLONECOUNT(); ++clone) {
+  //
+  //     for (size_t dir = 0; dir < Cardi::Dir::NumDirs + 1; ++dir) {
+  //       Config::matchbin_t::state_t state;
+  //       std::ifstream reg_stream(
+  //         *std::find_if(
+  //           std::begin(filenames),
+  //           std::end(filenames),
+  //           [this, id, dir](const auto & filename){
+  //             const auto res = emp::keyname::unpack(filename);
+  //             return (
+  //               res.count("id") && res.at("id") == emp::to_string(id)
+  //               && res.count("treat")
+  //               && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
+  //               && res.count("dir") && res.at("dir") == emp::to_string(dir)
+  //               && res.count("component") && res.at("component") == "regulator"
+  //               && res.count("ext") && res.at("ext") == ".json"
+  //             );
+  //           }
+  //         )
+  //       );
+  //       cereal::JSONInputArchive reg_archive(reg_stream);
+  //       reg_archive(state);
+  //       frames[*target]->GetFrameHardware(
+  //         dir
+  //       ).SetMatchBinState(state);
+  //     }
+  //
+  //     ++target;
+  //
+  //   }
+  //
+  // }
 
   // kill everything that's not a target
   std::unordered_set<size_t> target_set(
