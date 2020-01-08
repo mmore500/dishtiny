@@ -46,7 +46,7 @@ def SharingDirection(filename):
             ).flatten()
             for i in range(len(chans)):
                 if lives[i]:
-                    res[chans[i]][0] += 1
+                    res[chans[i]][0] += 0.25
                     res[chans[i]][1][dir] += shares[i];
 
     return [
