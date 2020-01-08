@@ -12,7 +12,7 @@ echo "Prepare Env Vars"
 ################################################################################
 
 SEED_OFFSET=1000
-TREATMENT="seed=1004+title=apoptosis+treat=resource-even__channelsense-yes__nlev-two"
+TREATMENT="seed=1004+title=apoptosis-monoculture-rate+treat=resource-even__channelsense-yes__nlev-two"
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
 OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/"${SEED}"/"
