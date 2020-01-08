@@ -443,6 +443,15 @@ void DishWorld::Step() {
       man->Stockpile(i).CleanSharingDoers(GetUpdate());
       frames[i]->Process(GetUpdate());
       man->Stockpile(i).ProcessSharingDoers(GetUpdate());
+
+      if (
+        GetOrg(i).GetRootID() == 2
+        && cfg.ROOT_ID2_APOP_RATE()
+        && local_rngs[i]->GetDouble() < cfg.ROOT_ID2_APOP_RATE()
+      ) {
+        man->Apoptosis(i).MarkComplete();
+      }
+
     }
   }
 
