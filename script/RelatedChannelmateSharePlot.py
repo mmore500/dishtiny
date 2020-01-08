@@ -101,12 +101,6 @@ for measure in df['Measure'].unique():
         x="Treatment",
         y=measure,
         hue="Relationship",
-        order=[
-            'Flat-Even',
-            'Nested-Even',
-            'Flat-Wave',
-            'Nested-Wave',
-        ],
         hue_order=[
             "Child Channelmate",
             "Parent Channelmate",
