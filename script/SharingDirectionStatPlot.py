@@ -34,13 +34,18 @@ print({
 for key in "Cardinal Resource-Sharing Standard Deviation",:
     print(
         key,
-        "Wild Type mean / std:",
+        "Wild Type mean / std / n:",
         np.mean(
             df[
                 df["Genotype"] == "Wild Type"
             ][key]
         ),
         np.std(
+            df[
+                df["Genotype"] == "Wild Type"
+            ][key]
+        ),
+        len(
             df[
                 df["Genotype"] == "Wild Type"
             ][key]
@@ -48,13 +53,18 @@ for key in "Cardinal Resource-Sharing Standard Deviation",:
     )
     print(
         key,
-        "Messaging Knockout mean:",
+        "Messaging Knockout mean / std / n:",
         np.mean(
             df[
                 df["Genotype"] == "Messaging Knockout"
             ][key]
         ),
         np.std(
+            df[
+                df["Genotype"] == "Messaging Knockout"
+            ][key]
+        ),
+        len(
             df[
                 df["Genotype"] == "Messaging Knockout"
             ][key]

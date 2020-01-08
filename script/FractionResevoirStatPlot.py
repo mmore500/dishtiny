@@ -35,13 +35,18 @@ print({
 for key in "Fraction Resevoir Cells",:
     print(
         key,
-        "Wild Type mean / std:",
+        "Wild Type mean / std / n:",
         np.mean(
             df[
                 df["Genotype"] == "Wild Type"
             ][key]
         ),
         np.std(
+            df[
+                df["Genotype"] == "Wild Type"
+            ][key]
+        ),
+        len(
             df[
                 df["Genotype"] == "Wild Type"
             ][key]
@@ -49,13 +54,18 @@ for key in "Fraction Resevoir Cells",:
     )
     print(
         key,
-        "Messaging Knockout mean:",
+        "Messaging Knockout mean / std / n:",
         np.mean(
             df[
                 df["Genotype"] == "Messaging Knockout"
             ][key]
         ),
         np.std(
+            df[
+                df["Genotype"] == "Messaging Knockout"
+            ][key]
+        ),
+        len(
             df[
                 df["Genotype"] == "Messaging Knockout"
             ][key]
