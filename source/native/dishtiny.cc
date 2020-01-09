@@ -1,5 +1,7 @@
 // This is the main function for the NATIVE version of this project.
 
+#include <omp.h>
+
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
 #include <cereal/types/array.hpp>
@@ -51,6 +53,18 @@ int main(int argc, char* argv[])
   cfg.WriteMe(std::cout);
   std::cout << "==============================\n" << std::endl;
 
+
+  #pragma omp parallel
+  {
+    #pragma omp single
+    {
+
+      std::cout
+        << "omp_get_num_threads() "
+        << omp_get_num_threads()
+        << std::endl;
+    }
+  }
 
   DishWorld world(cfg);
   #ifndef NDATA
