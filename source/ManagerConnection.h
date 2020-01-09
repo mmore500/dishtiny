@@ -10,6 +10,8 @@ class ManagerConnection {
 
 private:
 
+  emp::vector<size_t> shuffler;
+
   std::unordered_map<
     Config::matchbin_t::query_t,
     std::tuple<

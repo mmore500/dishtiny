@@ -24,6 +24,8 @@ private:
   const emp::vector<size_t> neighs;
   const size_t pos;
 
+  emp::vector<size_t> shuffler;
+
   std::unordered_multiset<size_t> incoming_connections;
 
   FrameHardware spiker;

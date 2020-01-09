@@ -44,6 +44,13 @@ FrameCell::FrameCell(
       event_lib
     ));
   }
+  shuffler = emp::vector<size_t>(
+    [](){
+      emp::vector<size_t> res(Cardi::Dir::NumDirs);
+      std::iota(std::begin(res), std::end(res), 0);
+      return res;
+    }()
+  );
 }
 
 FrameCell::~FrameCell() {
@@ -63,20 +70,13 @@ void FrameCell::Process(const size_t update) {
 
   if (update % cfg.COMPUTE_FREQ()) return;
 
-  static emp::vector<size_t> shuffler(
-    [](){
-      emp::vector<size_t> res(Cardi::Dir::NumDirs);
-      std::iota(std::begin(res), std::end(res), 0);
-      return res;
-    }()
-  );
   emp_assert(shuffler.size() == Cardi::Dir::NumDirs);
 
   emp::Shuffle(local_rng, shuffler);
 
   for(size_t s = 0; s < cfg.HARDWARE_STEPS(); ++s) {
     for(size_t idx : shuffler) hw[idx]->StepProcess();
-    spiker.StepProcess();
+    if (cfg.RUN_SPIKER()) spiker.StepProcess();
   }
 
 }

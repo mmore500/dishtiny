@@ -16,7 +16,16 @@ ManagerConnection::ManagerConnection(
 , mcs(mcs_)
 , cfg(cfg_)
 , local_rng(local_rng_)
-{ Reset(); }
+{
+  Reset();
+  shuffler = emp::vector<size_t>(
+    [](){
+      emp::vector<size_t> res(Cardi::Dir::NumDirs);
+      std::iota(std::begin(res), std::end(res), 0);
+      return res;
+    }()
+  );
+}
 
 void ManagerConnection::Reset() {
   query.clear();
@@ -98,8 +107,8 @@ void ManagerConnection::SearchAndDevelop() {
     // random walk all probes
     for (auto & probe : probes) {
 
-      emp::Shuffle(local_rng, dirs);
-      for (const auto & dir : dirs) {
+      emp::Shuffle(local_rng, shuffler);
+      for (const auto & dir : shuffler) {
 
         const size_t dest = geom.CalcLocalNeigh(std::get<0>(probe), dir);
         // TODO store channel at creation
