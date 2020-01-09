@@ -43,6 +43,8 @@ public:
         emp::SymmetricWrapMetric<TAG_WIDTH>,
       std::conditional<STRINGVIEWIFY(METRIC) == "streak",
         emp::CacheMod<emp::UnifMod<emp::ApproxDualStreakMetric<TAG_WIDTH>>>,
+      std::conditional<STRINGVIEWIFY(METRIC) == "rawstreak",
+        emp::ApproxDualStreakMetric<TAG_WIDTH>,
       std::conditional<STRINGVIEWIFY(METRIC) == "simplestreak",
         emp::ExactSingleStreakMetric<TAG_WIDTH>,
       std::conditional<STRINGVIEWIFY(METRIC) == "hash",
@@ -50,6 +52,7 @@ public:
       std::conditional<STRINGVIEWIFY(METRIC) == "hamming",
         emp::HammingCumuMetric<TAG_WIDTH>,
         std::enable_if<false>
+      >::type
       >::type
       >::type
       >::type
@@ -84,7 +87,10 @@ public:
         emp::MultiplicativeCountdownRegulator<>,
       std::conditional<STRINGVIEWIFY(SELECTOR) == "additive",
         emp::AdditiveCountdownRegulator<>,
+      std::conditional<STRINGVIEWIFY(SELECTOR) == "nop",
+        emp::NopRegulator<>,
         std::enable_if<false>
+    >::type
     >::type
     >::type
 #else
