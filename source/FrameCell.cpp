@@ -120,7 +120,7 @@ size_t FrameCell::GetNeigh(const size_t dir) const {
 }
 
 void FrameCell::QueueMessages(emp::vector<Config::inbox_t> &inboxes) {
-  for(size_t i = 0; i < hw.size(); ++i) {
+  for(size_t i = 0; i < Cardi::Dir::NumDirs; ++i) {
     hw[i]->QueueMessages(inboxes[i]);
   }
   spiker.QueueInternalMessages(inboxes[Cardi::Dir::NumDirs]);
