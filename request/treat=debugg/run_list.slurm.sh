@@ -6,7 +6,7 @@
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 24
 #SBATCH --mem=24G
-#SBATCH --job-name debugg     # you can give your job a name for easier identification (same as -J)
+#SBATCH --job-name treat=debugg     # you can give your job a name for easier identification (same as -J)
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 
