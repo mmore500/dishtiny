@@ -88,7 +88,7 @@ public:
       std::conditional<STRINGVIEWIFY(SELECTOR) == "additive",
         emp::AdditiveCountdownRegulator<>,
       std::conditional<STRINGVIEWIFY(SELECTOR) == "nop",
-        emp::NopRegulator<>,
+        emp::NopRegulator,
         std::enable_if<false>
     >::type
     >::type
