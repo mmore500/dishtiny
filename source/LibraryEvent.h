@@ -108,12 +108,10 @@ public:
           Manager &man = fh.Cell().Man();
           const size_t pos = fh.Cell().GetPos();
 
-          for (auto & [pos, target] : man.Connection(pos).ViewDeveloped()) {
-            target.get().GetSpiker().QueueInternalMessage(event);
-            for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-              target.get().GetFrameHardware(dir).QueueInternalMessage(event);
-            }
+          for (auto & [dest, target] : man.Connection(pos).ViewDeveloped()) {
+            man.Inbox(dest).TakeMessage(event, Cardi::Dir::NumDirs);
           }
+
         }
       );
 

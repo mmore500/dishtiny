@@ -57,7 +57,11 @@ private:
 
   emp::Random &local_rng;
 
+  size_t connection_prune_count;
+
 public:
+
+  mutable std::mutex outgoing_connection_mutex;
 
   ManagerConnection(
     const size_t location_,
@@ -96,6 +100,8 @@ public:
 
   void RemoveOutgoingConnection(size_t loc);
 
-  void RemoveOutgoingConnection();
+  void PruneOutgoingConnection();
+
+  void DoPrune();
 
 };

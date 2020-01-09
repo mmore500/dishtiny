@@ -1,5 +1,6 @@
 #pragma once
 
+#include <mutex>
 #include <algorithm>
 #include <list>
 #include <memory>
@@ -30,7 +31,11 @@ private:
 
   FrameHardware spiker;
 
+  size_t connection_prune_count;
+
 public:
+
+  mutable std::mutex incoming_connection_mutex;
 
   FrameCell() = delete;
 
@@ -76,7 +81,9 @@ public:
 
   void RemoveIncomingConnection(const size_t source);
 
-  void RemoveIncomingConnection();
+  void PruneIncomingConnection();
+
+  void DoPrune();
 
   FrameHardware& GetSpiker();
 

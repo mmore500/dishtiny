@@ -32,7 +32,7 @@ FrameCell::FrameCell(
     cfg,
     inst_lib_spiker,
     event_lib
-  )
+  ), connection_prune_count(0)
 {
   for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
     hw.push_back(emp::NewPtr<FrameHardware>(
@@ -60,7 +60,10 @@ FrameCell::~FrameCell() {
 void FrameCell::Reset() {
   for(auto &fh : hw) fh->Reset();
   spiker.Reset();
-  while (incoming_connections.size()) RemoveIncomingConnection();
+  while (incoming_connections.size()) {
+    RemoveIncomingConnection(*std::begin(incoming_connections));
+  }
+  connection_prune_count = 0;
 }
 
 void FrameCell::Process(const size_t update) {
@@ -117,7 +120,10 @@ size_t FrameCell::GetNeigh(const size_t dir) const {
 }
 
 void FrameCell::QueueMessages(emp::vector<Config::inbox_t> &inboxes) {
-  for(size_t i = 0; i < inboxes.size(); ++i) hw[i]->QueueMessages(inboxes[i]);
+  for(size_t i = 0; i < hw.size(); ++i) {
+    hw[i]->QueueMessages(inboxes[i]);
+  }
+  spiker.QueueInternalMessages(inboxes[Cardi::Dir::NumDirs]);
 }
 
 emp::vector<std::shared_ptr<Config::matchbin_t>> FrameCell::CopyMatchBins() {
@@ -157,6 +163,14 @@ void FrameCell::DeleteIncomingConnection(const size_t source) {
 }
 
 void FrameCell::RemoveIncomingConnection(const size_t source) {
+  auto & in_mutex = incoming_connection_mutex;
+  auto & out_mutex = Man().Connection(source).outgoing_connection_mutex;
+
+  // acquire both mutexes in one swoop to prevent deadlock
+  std::lock(in_mutex, out_mutex);
+  std::lock_guard<std::mutex> in_guard(in_mutex, std::adopt_lock);
+  std::lock_guard<std::mutex> out_guard(out_mutex, std::adopt_lock);
+
   emp_assert(incoming_connections.size());
   emp_assert(incoming_connections.count(source));
   // call delete not remove to prevent infinite recursion
@@ -165,8 +179,13 @@ void FrameCell::RemoveIncomingConnection(const size_t source) {
 
 }
 
-void FrameCell::RemoveIncomingConnection() {
-  if (incoming_connections.size()) {
+void FrameCell::PruneIncomingConnection() {
+  connection_prune_count = 1;
+}
+
+void FrameCell::DoPrune() {
+  while (incoming_connections.size() && connection_prune_count) {
     RemoveIncomingConnection(*std::begin(incoming_connections));
-  }
+    --connection_prune_count;
+  };
 }

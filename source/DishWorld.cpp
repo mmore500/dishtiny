@@ -395,6 +395,7 @@ void DishWorld::Step() {
           man->Channel(i).ClearIDs();
         }
       }
+      frames[i]->DoPrune();
     }
   }
 
@@ -418,6 +419,7 @@ void DishWorld::Step() {
       man->Apoptosis(i).Reset();
       man->Sharing(i).ResolveNextResistance(GetUpdate());
       man->Sharing(i).ProcessSharingRequest(GetUpdate());
+      man->Connection(i).DoPrune();
     }
 
     for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {

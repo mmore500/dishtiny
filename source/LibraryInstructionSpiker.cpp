@@ -345,7 +345,7 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
   );
 
   il.AddInst(
-    "RemoveOutgoingConnection",
+    "PruneOutgoingConnection",
     [](hardware_t & hw, const inst_t & inst){
       const state_t & state = hw.GetCurState();
       FrameHardware &fh = *hw.GetTrait();
@@ -354,7 +354,7 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
       const size_t pos = fh.Cell().GetPos();
 
       if (state.GetLocal(inst.args[0])) {
-        man.Connection(pos).RemoveOutgoingConnection();
+        man.Connection(pos).PruneOutgoingConnection();
       }
 
     },
@@ -363,13 +363,13 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
   );
 
   il.AddInst(
-    "RemoveIncomingConnection",
+    "PruneIncomingConnection",
     [](hardware_t & hw, const inst_t & inst){
       const state_t & state = hw.GetCurState();
       FrameHardware &fh = *hw.GetTrait();
 
       if (state.GetLocal(inst.args[0])) {
-        fh.Cell().RemoveIncomingConnection();
+        fh.Cell().PruneIncomingConnection();
       }
 
     },

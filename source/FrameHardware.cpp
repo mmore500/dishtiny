@@ -307,6 +307,13 @@ void FrameHardware::QueueInternalMessage(const Config::event_t &event) {
   }
 }
 
+void FrameHardware::QueueInternalMessages(Config::inbox_t &inbox) {
+  while(!inbox.empty()) {
+    QueueInternalMessage(inbox.front());
+    inbox.pop_front();
+  }
+}
+
 void FrameHardware::QueueMessage(const Config::event_t &event) {
   cpu.QueueEvent(event);
 }

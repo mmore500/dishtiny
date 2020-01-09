@@ -16,6 +16,7 @@ ManagerConnection::ManagerConnection(
 , mcs(mcs_)
 , cfg(cfg_)
 , local_rng(local_rng_)
+, connection_prune_count(0)
 {
   Reset();
   shuffler = emp::vector<size_t>(
@@ -30,10 +31,13 @@ ManagerConnection::ManagerConnection(
 void ManagerConnection::Reset() {
   query.clear();
   fledgling.clear();
-  while (developed.size()) RemoveOutgoingConnection();
+  while (developed.size()) {
+    RemoveOutgoingConnection(std::begin(developed)->first);
+  }
   aging_param = default_aging_param;
   exploit_param = default_exploit_param;
   development_param = default_development_param;
+  connection_prune_count = 0;
 }
 
 std::unordered_multimap<
@@ -127,12 +131,22 @@ void ManagerConnection::SearchAndDevelop() {
       // put into developed
       const size_t final_loc = std::get<0>(best_probe);
 
-      cell_getter(final_loc).RegisterIncomingConnection(location);
+      {
+        auto & in_mutex = cell_getter(final_loc).incoming_connection_mutex;
+        auto & out_mutex = outgoing_connection_mutex;
 
-      developed.emplace(
-        final_loc,
-        cell_getter(final_loc)
-      );
+        // acquire both mutexes in one swoop to prevent deadlock
+        std::lock(in_mutex, out_mutex);
+        std::lock_guard<std::mutex> in_guard(in_mutex, std::adopt_lock);
+        std::lock_guard<std::mutex> out_guard(out_mutex, std::adopt_lock);
+
+        cell_getter(final_loc).RegisterIncomingConnection(location);
+
+        developed.emplace(
+          final_loc,
+          cell_getter(final_loc)
+        );
+      }
 
       // swap 'n pop out fledgling entry
       std::swap(
@@ -179,14 +193,28 @@ void ManagerConnection::DeleteOutgoingConnection(size_t loc) {
 }
 
 void ManagerConnection::RemoveOutgoingConnection(size_t loc) {
+
+  auto & in_mutex = cell_getter(loc).incoming_connection_mutex;
+  auto & out_mutex = outgoing_connection_mutex;
+
+  // acquire both mutexes in one swoop to prevent deadlock
+  std::lock(in_mutex, out_mutex);
+  std::lock_guard<std::mutex> in_guard(in_mutex, std::adopt_lock);
+  std::lock_guard<std::mutex> out_guard(out_mutex, std::adopt_lock);
+
   emp_assert(developed.size());
   emp_assert(developed.count(loc));
   cell_getter(loc).DeleteIncomingConnection(location);
   DeleteOutgoingConnection(loc);
 }
 
-void ManagerConnection::RemoveOutgoingConnection() {
-  if (developed.size()) {
+void ManagerConnection::PruneOutgoingConnection() {
+  connection_prune_count = 1;
+}
+
+void ManagerConnection::DoPrune() {
+  while (developed.size() && connection_prune_count) {
     RemoveOutgoingConnection(std::begin(developed)->first);
+    --connection_prune_count;
   }
 }
