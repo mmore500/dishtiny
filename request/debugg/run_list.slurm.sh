@@ -15,7 +15,7 @@ echo "Prepare Env Vars"
 ################################################################################
 
 SEED_OFFSET=1000
-TREATMENT="debugg"
+TREATMENT="treat=debugg"
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
 OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny/"${TREATMENT}"/"${SEED}"/"
