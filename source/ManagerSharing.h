@@ -49,8 +49,8 @@ public:
   , in_resistance_pending(Cardi::Dir::NumDirs+1) // +1 for spiker
   , in_resistance_fresh(Cardi::Dir::NumDirs+1) // +1 for spiker
   , out_resistance(Cardi::Dir::NumDirs+1) // +1 for spiker
-  , out_resistance_fresh(Cardi::Dir::NumDirs+1) // +1 for spiker
   , out_resistance_pending(Cardi::Dir::NumDirs+1) // +1 for spiker
+  , out_resistance_fresh(Cardi::Dir::NumDirs+1) // +1 for spiker
   , sharing_fracs(Cardi::Dir::NumDirs+1, 0.0) // +1 for spiker
   , request_resource_frac(request_resource_frac_)
   , external_contribute(external_contribute_)
