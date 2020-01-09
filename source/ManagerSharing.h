@@ -16,9 +16,11 @@ private:
   emp::Random &local_rng;
 
   emp::vector<double> in_resistance;
+  emp::vector<double> in_resistance_pending;
   emp::vector<size_t> in_resistance_fresh;
 
   emp::vector<double> out_resistance;
+  emp::vector<double> out_resistance_pending;
   emp::vector<size_t> out_resistance_fresh;
 
   emp::vector<double> sharing_fracs;
@@ -44,9 +46,11 @@ public:
   ) : cfg(cfg_)
   , local_rng(local_rng_)
   , in_resistance(Cardi::Dir::NumDirs+1) // +1 for spiker
+  , in_resistance_pending(Cardi::Dir::NumDirs+1) // +1 for spiker
   , in_resistance_fresh(Cardi::Dir::NumDirs+1) // +1 for spiker
   , out_resistance(Cardi::Dir::NumDirs+1) // +1 for spiker
   , out_resistance_fresh(Cardi::Dir::NumDirs+1) // +1 for spiker
+  , out_resistance_pending(Cardi::Dir::NumDirs+1) // +1 for spiker
   , sharing_fracs(Cardi::Dir::NumDirs+1, 0.0) // +1 for spiker
   , request_resource_frac(request_resource_frac_)
   , external_contribute(external_contribute_)
@@ -67,7 +71,7 @@ public:
   ) {
     emp_assert(set >= 0.0);
     emp_assert(set <= 1.0);
-    in_resistance[outgoing_dir] = set;
+    in_resistance_pending[outgoing_dir] = set;
     in_resistance_fresh[outgoing_dir] = dur;
   }
 
@@ -78,7 +82,7 @@ public:
   ) {
     emp_assert(set >= 0.0);
     emp_assert(set <= 1.0);
-    out_resistance[outgoing_dir] = set;
+    out_resistance_pending[outgoing_dir] = set;
     out_resistance_fresh[outgoing_dir] = dur;
   }
 
@@ -86,6 +90,9 @@ public:
   void ResolveNextResistance(const size_t update) {
 
     emp_assert(update % cfg.ENV_TRIG_FREQ() == 0);
+
+    in_resistance = in_resistance_pending;
+    out_resistance = out_resistance_pending;
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
 
@@ -96,6 +103,10 @@ public:
       if (!in_resistance_fresh[dir]) in_resistance[dir] = 0.0;
 
     }
+
+    in_resistance_pending = in_resistance;
+    out_resistance_pending = out_resistance;
+
   }
 
   void AddSharingRequest(
@@ -157,12 +168,14 @@ public:
 
   void Reset() {
     std::fill(std::begin(in_resistance), std::end(in_resistance), 0.0);
+    std::fill(std::begin(in_resistance_pending), std::end(in_resistance_pending), 0.0);
     std::fill(
       std::begin(in_resistance_fresh),
       std::end(in_resistance_fresh),
       0
     );
     std::fill(std::begin(out_resistance), std::end(out_resistance), 0.0);
+    std::fill(std::begin(out_resistance_pending), std::end(out_resistance_pending), 0.0);
     std::fill(
       std::begin(out_resistance_fresh),
       std::end(out_resistance_fresh),

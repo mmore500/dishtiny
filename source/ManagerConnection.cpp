@@ -91,15 +91,6 @@ void ManagerConnection::SearchAndDevelop() {
     }
   }
 
-  // set up 0, 1, 2, 3
-  static emp::vector<size_t> dirs(
-    [](){
-      emp::vector<size_t> res(Cardi::Dir::NumDirs);
-      std::iota(std::begin(res), std::end(res), 0);
-      return res;
-    }()
-  );
-
   for (size_t f = 0; f < fledgling.size(); ++f) {
 
     auto & probes = fledgling[f];

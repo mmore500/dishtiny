@@ -957,7 +957,6 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
         emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
       ) / 2.0;
 
-      //TODO this makes outcome dependent on execution order of cells
       man.Sharing(pos).SetInResistance(dir, set, dur);
     },
     3,
@@ -1000,7 +999,6 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
         emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
       ) / 2.0;
 
-      //TODO this makes outcome dependent on execution order of cells
       man.Sharing(pos).SetOutResistance(dir, set, dur);
     },
     3,

@@ -298,7 +298,6 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
         emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
       ) / 2.0;
 
-      //TODO this makes outcome dependent on execution order of cells
       man.Sharing(pos).SetInResistance(Cardi::Dir::NumDirs, set, dur);
     },
     3,
@@ -339,7 +338,6 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
         emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
       ) / 2.0;
 
-      //TODO this makes outcome dependent on execution order of cells
       man.Sharing(pos).SetOutResistance(Cardi::Dir::NumDirs, set, dur);
     },
     3,
