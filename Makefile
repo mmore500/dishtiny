@@ -27,7 +27,7 @@ CFLAGS_all := -std=c++17 -Wall -Wno-unused-function \
 
 # Native compiler information
 CXX_nat := h5c++
-CFLAGS_nat := -O3 -DNDEBUG $(CFLAGS_all)
+CFLAGS_nat := -O3 -DNDEBUG $(CFLAGS_all) -fopenmp
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
 CFLAGS_nat_debug := -g -DEMP_TRACK_MEM $(CFLAGS_all)
 CFLAGS_nat_sanitize := -fsanitize=address -fsanitize=undefined $(CFLAGS_nat_debug)

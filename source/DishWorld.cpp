@@ -406,6 +406,7 @@ void DishWorld::Step() {
   }
 
   // clean up for next cell action step
+  #pragma omp parallel for
   for (size_t i = 0; i < GetSize(); ++i) {
 
     man->Connection(i).SearchAndDevelop();
@@ -448,6 +449,7 @@ void DishWorld::Step() {
   }
 
   // do cell action!
+  #pragma omp parallel for
   for(size_t i = 0; i < GetSize(); ++i) {
     if (IsOccupied(i)) {
       frames[i]->Process(GetUpdate());
