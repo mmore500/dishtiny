@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 #include "LibraryInstruction.h"
 
 using hardware_t = LibraryInstruction::hardware_t;
@@ -658,8 +660,10 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
         cfg.REP_THRESH() + state.GetLocal(inst.args[1]),
         0.0
       );
+      const double clean_amt = std::isfinite(amt) ? amt : 0.0;
+      emp_assert(clean_amt >= 0.0);
 
-      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(amt, dur);
+      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(clean_amt, dur);
 
     },
     2,
@@ -675,8 +679,10 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       const size_t dir = fh.CalcDir();
       const size_t dur = 2 + state.GetLocal(inst.args[0]);
       const double amt = std::max(state.GetLocal(inst.args[1]), 0.0);
+      const double clean_amt = std::isfinite(amt) ? amt : 0.0;
+      emp_assert(clean_amt >= 0.0);
 
-      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(amt, dur);
+      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(clean_amt, dur);
 
     },
     2,
@@ -695,8 +701,10 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
         cfg.REP_THRESH() + state.GetLocal(inst.args[1]),
         0.0
       );
+      const double clean_amt = std::isfinite(amt) ? amt : 0.0;
+      emp_assert(clean_amt >= 0.0);
 
-      fh.Cell().GetFrameHardware(dir).SetReproductionReserve(amt, dur);
+      fh.Cell().GetFrameHardware(dir).SetReproductionReserve(clean_amt, dur);
 
     },
     2,
@@ -712,8 +720,10 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
       const size_t dir = fh.CalcDir();
       const size_t dur = 2 + state.GetLocal(inst.args[0]);
       const double amt = std::max(0.0, state.GetLocal(inst.args[1]));
+      const double clean_amt = std::isfinite(amt) ? amt : 0.0;
+      emp_assert(clean_amt >= 0.0);
 
-      fh.Cell().GetFrameHardware(dir).SetReproductionReserve(amt, dur);
+      fh.Cell().GetFrameHardware(dir).SetReproductionReserve(clean_amt, dur);
 
     },
     2,
@@ -810,8 +820,16 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       const size_t pos = fh.Cell().GetPos();
       const size_t dir = fh.CalcDir();
       const size_t neigh = fh.Cell().GetNeigh(dir);
-      const double arg_1 = state.GetLocal(inst.args[0]);
-      const double arg_2 = state.GetLocal(inst.args[1]);
+      const double arg_1 = (
+        std::isfinite(state.GetLocal(inst.args[0]))
+        ? state.GetLocal(inst.args[0])
+        : 0.0
+      );
+      const double arg_2 = (
+        std::isfinite(state.GetLocal(inst.args[1]))
+        ? state.GetLocal(inst.args[1])
+        : 0.0
+      );
 
       const double in_resistance = man.Sharing(neigh).CheckInResistance(
         Cardi::Opp[dir]
@@ -844,11 +862,13 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       emp_assert(req_frac >= 0); emp_assert(req_frac <= 1.0);
 
 
-      const double frac = std::max(
+      const double frac = std::clamp(
         (1.0 - in_resistance) * (1.0 - out_resistance) * req_frac
           - reserve_frac,
-        0.0
+        0.0,
+        1.0
       ); emp_assert(frac >= 0); emp_assert(frac <= 1.0);
+      emp_assert(std::is_finite(frac));
 
       man.Sharing(pos).AddSharingRequest(
         dir,
@@ -871,15 +891,23 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       const size_t pos = fh.Cell().GetPos();
       const size_t dir = fh.CalcDir();
       const size_t neigh = fh.Cell().GetNeigh(dir);
-      const double arg_1 = state.GetLocal(inst.args[0]);
-      const double arg_2 = state.GetLocal(inst.args[1]);
+      const double arg_1 = (
+        std::isfinite(state.GetLocal(inst.args[0]))
+        ? state.GetLocal(inst.args[0])
+        : 0.0
+      );
+      const double arg_2 = (
+        std::isfinite(state.GetLocal(inst.args[1]))
+        ? state.GetLocal(inst.args[1])
+        : 0.0
+      );
 
       const double in_resistance = man.Sharing(neigh).CheckInResistance(
         Cardi::Opp[dir]
-      ); emp_assert(in_resistance >= 0); emp_assert(in_resistance <= 1.0);
+      ); emp_assert(in_resistance >= 0.0); emp_assert(in_resistance <= 1.0);
       const double out_resistance =  man.Sharing(pos).CheckOutResistance(
         dir
-      ); emp_assert(out_resistance >= 0); emp_assert(out_resistance <= 1.0);
+      ); emp_assert(out_resistance >= 0.0); emp_assert(out_resistance <= 1.0);
 
       const double reserve = std::max(fh.CheckStockpileReserve()+arg_2, 0.0);
       const double reserve_frac = std::clamp(
@@ -905,11 +933,13 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       emp_assert(req_frac >= 0); emp_assert(req_frac <= 1.0);
 
 
-      const double frac = std::max(
+      const double frac = std::clamp(
         (1.0 - in_resistance) * (1.0 - out_resistance) * req_frac
           - reserve_frac,
-        0.0
-      ); emp_assert(frac >= 0); emp_assert(frac <= 1.0);
+        0.0,
+        1.0
+      ); emp_assert(frac >= 0.0); emp_assert(frac <= 1.0);
+      emp_assert(std::is_finite(frac));
 
       man.Sharing(pos).AddSharingRequest(
         dir,
@@ -935,8 +965,10 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]) + 2.0, 4.0) - 2.0
       ) / 2.0;
+      const double clean_set = std::isfinite(set) ? set : 0.0;
+      emp_assert(clean_set >= 0.0); emp_assert(clean_set <= 1.0);
 
-      man.Sharing(pos).SetInResistance(dir, set, dur);
+      man.Sharing(pos).SetInResistance(dir, clean_set, dur);
     },
     3,
     "Mark self to accept resource contributions from neighbors."
@@ -956,8 +988,10 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
       ) / 2.0;
+      const double clean_set = std::isfinite(set) ? set : 0.0;
+      emp_assert(clean_set >= 0.0); emp_assert(clean_set <= 1.0);
 
-      man.Sharing(pos).SetInResistance(dir, set, dur);
+      man.Sharing(pos).SetInResistance(dir, clean_set, dur);
     },
     3,
     "Mark self to not accept resource contributions from neighbors."
@@ -977,8 +1011,10 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]) + 2.0, 4.0) - 2.0
       ) / 2.0;
+      const double clean_set = std::isfinite(set) ? set : 0.0;
+      emp_assert(clean_set >= 0.0); emp_assert(clean_set <= 1.0);
 
-      man.Sharing(pos).SetOutResistance(dir, set, dur);
+      man.Sharing(pos).SetOutResistance(dir, clean_set, dur);
     },
     3,
     "Mark self to give resource contributions to neighbors."
@@ -998,8 +1034,10 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
       ) / 2.0;
+      const double clean_set = std::isfinite(set) ? set : 0.0;
+      emp_assert(clean_set >= 0.0); emp_assert(clean_set <= 1.0);
 
-      man.Sharing(pos).SetOutResistance(dir, set, dur);
+      man.Sharing(pos).SetOutResistance(dir, clean_set, dur);
     },
     3,
     "Mark self to not give resource contributions to neighbors."

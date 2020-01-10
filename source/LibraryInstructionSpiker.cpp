@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 #include "LibraryInstructionSpiker.h"
 
 void LibraryInstructionSpiker::InitDefault(inst_lib_t &il) {
@@ -143,8 +145,16 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
       Manager &man = fh.Cell().Man();
 
       const size_t pos = fh.Cell().GetPos();
-      const double arg_1 = state.GetLocal(inst.args[0]);
-      const double arg_2 = state.GetLocal(inst.args[1]);
+      const double arg_1 = (
+        std::isfinite(state.GetLocal(inst.args[0]))
+        ? state.GetLocal(inst.args[0])
+        : 0.0
+      );
+      const double arg_2 = (
+        std::isfinite(state.GetLocal(inst.args[1]))
+        ? state.GetLocal(inst.args[1])
+        : 0.0
+      );
 
       double in_resistance = 0.0;
       const auto & developed = man.Connection(pos).ViewDeveloped();
@@ -183,11 +193,13 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
       const double req_frac = std::min(1.0, 0.5*multiplier);
       emp_assert(req_frac >= 0.0); emp_assert(req_frac <= 1.0);
 
-      const double frac = std::max(
+      const double frac = std::clamp(
         (1.0 - in_resistance) * (1.0 - out_resistance) * req_frac
           - reserve_frac,
-        0.0
+        0.0,
+        1.0
       ); emp_assert(frac >= 0.0); emp_assert(frac <= 1.0);
+      emp_assert(std::is_finite(frac));
 
       man.Sharing(pos).AddSharingRequest(
         Cardi::Dir::NumDirs,
@@ -208,8 +220,16 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
       Manager &man = fh.Cell().Man();
 
       const size_t pos = fh.Cell().GetPos();
-      const double arg_1 = state.GetLocal(inst.args[0]);
-      const double arg_2 = state.GetLocal(inst.args[1]);
+      const double arg_1 = (
+        std::isfinite(state.GetLocal(inst.args[0]))
+        ? state.GetLocal(inst.args[0])
+        : 0.0
+      );
+      const double arg_2 = (
+        std::isfinite(state.GetLocal(inst.args[1]))
+        ? state.GetLocal(inst.args[1])
+        : 0.0
+      );
 
       double in_resistance = 0.0;
       const auto & developed = man.Connection(pos).ViewDeveloped();
@@ -248,11 +268,13 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
       const double req_frac = std::min(1.0, 0.01*multiplier);
       emp_assert(req_frac >= 0.0); emp_assert(req_frac <= 1.0);
 
-      const double frac = std::max(
+      const double frac = std::clamp(
         (1.0 - in_resistance) * (1.0 - out_resistance) * req_frac
           - reserve_frac,
-        0.0
+        0.0,
+        1.0
       ); emp_assert(frac >= 0.0); emp_assert(frac <= 1.0);
+      emp_assert(std::is_finite(frac));
 
       man.Sharing(pos).AddSharingRequest(
         Cardi::Dir::NumDirs,
@@ -277,8 +299,10 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]) + 2.0, 4.0) - 2.0
       ) / 2.0;
+      const double clean_set = std::isfinite(set) ? set : 0.0;
+      emp_assert(clean_set >= 0.0); emp_assert(clean_set <= 1.0);
 
-      man.Sharing(pos).SetInResistance(Cardi::Dir::NumDirs, set, dur);
+      man.Sharing(pos).SetInResistance(Cardi::Dir::NumDirs, clean_set, dur);
     },
     3,
     "Mark self to accept resource contributions from neighbors."
@@ -297,8 +321,10 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
       ) / 2.0;
+      const double clean_set = std::isfinite(set) ? set : 0.0;
+      emp_assert(clean_set >= 0.0); emp_assert(clean_set <= 1.0);
 
-      man.Sharing(pos).SetInResistance(Cardi::Dir::NumDirs, set, dur);
+      man.Sharing(pos).SetInResistance(Cardi::Dir::NumDirs, clean_set, dur);
     },
     3,
     "Mark self to not accept resource contributions from neighbors."
@@ -317,8 +343,10 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]) + 2.0, 4.0) - 2.0
       ) / 2.0;
+      const double clean_set = std::isfinite(set) ? set : 0.0;
+      emp_assert(clean_set >= 0.0); emp_assert(clean_set <= 1.0);
 
-      man.Sharing(pos).SetOutResistance(Cardi::Dir::NumDirs, set, dur);
+      man.Sharing(pos).SetOutResistance(Cardi::Dir::NumDirs, clean_set, dur);
     },
     3,
     "Mark self to give resource contributions to neighbors."
@@ -337,8 +365,10 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
       const double set = std::abs(
         emp::Mod(state.GetLocal(inst.args[1]), 4.0) - 2.0
       ) / 2.0;
+      const double clean_set = std::isfinite(set) ? set : 0.0;
+      emp_assert(clean_set >= 0.0); emp_assert(clean_set <= 1.0);
 
-      man.Sharing(pos).SetOutResistance(Cardi::Dir::NumDirs, set, dur);
+      man.Sharing(pos).SetOutResistance(Cardi::Dir::NumDirs, clean_set, dur);
     },
     3,
     "Mark self to not give resource contributions to neighbors."
