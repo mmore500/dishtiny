@@ -78,9 +78,14 @@ Manager::Manager(
               double tot_permittivity = 0.0;
               const auto & developed = Connection(i).ViewDeveloped();
               for (const auto & [neigh, cell] : developed) {
-                tot_permittivity += 1.0 - Sharing(neigh).CheckInResistance(
+                const double cur_permittivity = 1.0 - Sharing(
+                  neigh
+                ).CheckInResistance(
                   Cardi::Dir::NumDirs
                 );
+                emp_assert(cur_permittivity >= 0.0);
+                emp_assert(cur_permittivity <= 1.0);
+                tot_permittivity += cur_permittivity;
               }
               emp_assert(tot_permittivity >= 0.0);
 
@@ -92,10 +97,12 @@ Manager::Manager(
                 );
                 emp_assert(cur_permittivity >= 0.0);
                 emp_assert(cur_permittivity <= 1.0);
-                const double frac = (
+                const double frac = std::clamp(
                   tot_permittivity
-                  ? cur_permittivity / tot_permittivity
-                  : 0.0
+                    ? cur_permittivity / tot_permittivity
+                    : 0.0,
+                  0.0,
+                  1.0
                 ); emp_assert(frac >= 0.0); emp_assert(frac <= 1.0);
                 Stockpile(loc).ExternalContribute(
                   amt * frac,
