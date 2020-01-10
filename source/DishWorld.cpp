@@ -206,7 +206,7 @@ void DishWorld::LoadPopulation() {
             && res.count("treat")
             && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
             && res.count("component") && res.at("component") == "genome"
-            && res.count("ext") && res.at("ext") == ".txt"
+            && res.count("ext") && res.at("ext") == ".json"
           );
         }
       )
