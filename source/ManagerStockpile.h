@@ -2,6 +2,7 @@
 
 #include <numeric>
 #include <limits>
+#include <mutex>
 
 #include "base/assert.h"
 
@@ -22,6 +23,8 @@ private:
   emp::vector<size_t> harvest_withdrawals;
 
   std::function<size_t(size_t)> expchecker;
+
+  std::mutex spike_contribute_mutex;
 
 public:
 
@@ -89,7 +92,12 @@ public:
 
   void ExternalContribute(const double amt, const size_t incoming_dir) {
     emp_assert(amt >= 0);
-    contrib_resource[incoming_dir] += amt;
+    if (incoming_dir == Cardi::Dir::NumDirs) {
+      std::lock_guard<std::mutex> lock(spike_contribute_mutex);
+      contrib_resource[incoming_dir] += amt;
+    } else {
+      contrib_resource[incoming_dir] += amt;
+    }
   }
 
   double QueryExternalContribute(const size_t incoming_dir) const {
