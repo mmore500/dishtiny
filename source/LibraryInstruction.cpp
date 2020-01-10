@@ -868,7 +868,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
         0.0,
         1.0
       ); emp_assert(frac >= 0); emp_assert(frac <= 1.0);
-      emp_assert(std::is_finite(frac));
+      emp_assert(std::isfinite(frac));
 
       man.Sharing(pos).AddSharingRequest(
         dir,
@@ -939,7 +939,7 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
         0.0,
         1.0
       ); emp_assert(frac >= 0.0); emp_assert(frac <= 1.0);
-      emp_assert(std::is_finite(frac));
+      emp_assert(std::isfinite(frac));
 
       man.Sharing(pos).AddSharingRequest(
         dir,
