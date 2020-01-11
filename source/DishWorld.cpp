@@ -203,8 +203,6 @@ void DishWorld::LoadPopulation() {
 
           return (
             res.count("id") && res.at("id") == emp::to_string(id)
-            && res.count("treat")
-            && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
             && res.count("component") && res.at("component") == "genome"
             && res.count("ext") && res.at("ext") == ".json"
           );
