@@ -197,7 +197,7 @@ public:
       return root_id;
     }
 
-    void SetRootID(size_t id) const {
+    void SetRootID(const size_t id) {
       root_id = id;
     }
 
