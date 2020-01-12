@@ -197,6 +197,10 @@ public:
       return root_id;
     }
 
+    void SetRootID(size_t id) const {
+      root_id = id;
+    }
+
     template <class Archive>
     void serialize( Archive & ar ) {
       ar(

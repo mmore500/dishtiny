@@ -217,6 +217,7 @@ void DishWorld::LoadPopulation() {
       LibraryInstructionSpiker::Make(cfg)
     );
     genome_archive(genome);
+    genome.SetRootID(id);
 
     for (size_t clone = 0; clone < cfg.SEED_POP_CLONECOUNT(); ++clone) {
       InjectAt(
