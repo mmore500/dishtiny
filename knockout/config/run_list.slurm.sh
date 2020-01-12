@@ -3,7 +3,7 @@
 #SBATCH --time=4:00:00         # limit of wall clock time - how long the job will run (same as -t)
 #SBATCH --array=1-400
 #SBATCH --ntasks 1
-#SBATCH --cpus-per-task 24
+#SBATCH --cpus-per-task 8
 #SBATCH --mem=24G                # memory required per node - amount of memory (in bytes)
 #SBATCH --job-name knockout     # you can give your job a name for easier identification (same as -J)
 #SBATCH --account=devolab
@@ -16,10 +16,10 @@ echo "Prepare Env Vars"
 SEED_OFFSET=1000
 TREATMENT="treat=standard"
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
-SOURCE_SEED=$(( (SLURM_ARRAY_TASK_ID - 1) / 40 + SEED_OFFSET + 1))
+SOURCE_SEED=$(( (SLURM_ARRAY_TASK_ID - 1) / 10 + SEED_OFFSET + 1))
 
 OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/${TREATMENT}+source=${SOURCE_SEED}+seed=${SEED}/"
-CONFIG_DIR="/mnt/home/mmore500/dishtiny/request/${TREATMENT}"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/knockout/config"
 SOURCE_DIR="/mnt/home/mmore500/dishtiny/knockout/treat=standard+seed=${SOURCE_SEED}"
 
 echo "   TREATMENT" $TREATMENT
@@ -45,7 +45,9 @@ echo "Do Work"
 ################################################################################
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
-./dishtiny -SEED ${SEED} -SEED_POP 1 >run.log 2>&1
+cmp --silent seedpop/* \
+  && echo "Equivalent Competitors, Skip Competition" \
+  || ./dishtiny -SEED ${SEED} >run.log 2>&1
 
 ###############################################################################
 echo "Done" $(date)
