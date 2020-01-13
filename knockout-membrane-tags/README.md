@@ -5,7 +5,7 @@
 # ID Key
 
 1. standard treatment
-2. standard treatment with spiker message, resource sharing (big, small) knocked out
+2. standard treatment with spiker PutMembraneBringer, PutMembraneBlocker, SetMembraneRegulator knocked out
 
 # Knockout Prep
 
@@ -18,9 +18,9 @@ for t in treat=*; do
     FILE_LENGTH=$(cat $file | wc -l)
     echo $SPIKER_START
     echo $FILE_LENGTH
-    sed -i -- "${SPIKER_START},${FILE_LENGTH}s/\"id\": 80/\"id\": 27/g" $file
-    sed -i -- "${SPIKER_START},${FILE_LENGTH}s/\"id\": 81/\"id\": 27/g" $file
-    sed -i -- "${SPIKER_START},${FILE_LENGTH}s/\"id\": 101/\"id\": 27/g" $file
+    sed -i -- "${SPIKER_START},${FILE_LENGTH}s/\"id\": 98/\"id\": 27/g" $file
+    sed -i -- "${SPIKER_START},${FILE_LENGTH}s/\"id\": 99/\"id\": 27/g" $file
+    sed -i -- "${SPIKER_START},${FILE_LENGTH}s/\"id\": 100/\"id\": 27/g" $file
   done
 done
 ```
