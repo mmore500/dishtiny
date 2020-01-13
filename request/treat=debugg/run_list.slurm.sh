@@ -46,3 +46,5 @@ echo "Done" $(date)
 ################################################################################
 
 qstat -f ${PBS_JOBID}
+
+cp "/mnt/home/mmore500/slurmlogs/slurm-${PBS_JOBID}_${PBS_ARRAYID}.out" .
