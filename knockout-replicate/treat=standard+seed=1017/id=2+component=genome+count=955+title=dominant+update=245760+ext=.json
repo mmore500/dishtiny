@@ -1,0 +1,1619 @@
+{
+    "value0": {
+        "program": {
+            "program": [
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 4125622979
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 16497282
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 0,
+                                "value2": 4
+                            },
+                            "id": 42
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1833932536
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 0,
+                                "value2": 2
+                            },
+                            "id": 100
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 2216488163
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 629406014
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 3,
+                                "value2": 4
+                            },
+                            "id": 7
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 3707130115
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3891930014
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 3,
+                                "value2": 1
+                            },
+                            "id": 31
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 260605211
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 0,
+                                "value2": 4
+                            },
+                            "id": 2
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2628694163
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 2,
+                                "value2": 4
+                            },
+                            "id": 96
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2771628177
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 7,
+                                "value2": 4
+                            },
+                            "id": 93
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2775172783
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 4,
+                                "value2": 4
+                            },
+                            "id": 40
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1946280897
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 3,
+                                "value2": 3
+                            },
+                            "id": 93
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 200689867
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 4,
+                                "value2": 3
+                            },
+                            "id": 137
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1093137691
+                                }
+                            },
+                            "args": {
+                                "value0": 8,
+                                "value1": 0,
+                                "value2": 3
+                            },
+                            "id": 11
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3866052118
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 3,
+                                "value2": 2
+                            },
+                            "id": 31
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 4139082375
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1647334328
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 3,
+                                "value2": 4
+                            },
+                            "id": 27
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3330338796
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 2,
+                                "value2": 3
+                            },
+                            "id": 104
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3488052918
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 1,
+                                "value2": 4
+                            },
+                            "id": 17
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 241737649
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 3,
+                                "value2": 2
+                            },
+                            "id": 69
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 460821359
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 3,
+                                "value2": 4
+                            },
+                            "id": 4
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 3677245703
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2271059754
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 4,
+                                "value2": 4
+                            },
+                            "id": 63
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 151334416
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 1,
+                                "value2": 0
+                            },
+                            "id": 54
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1465718661
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 2,
+                                "value2": 2
+                            },
+                            "id": 27
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 760006039
+                                }
+                            },
+                            "args": {
+                                "value0": 5,
+                                "value1": 6,
+                                "value2": 4
+                            },
+                            "id": 27
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1646461548
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 2,
+                                "value2": 0
+                            },
+                            "id": 64
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 850745481
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 2,
+                                "value2": 0
+                            },
+                            "id": 120
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3344105922
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 3,
+                                "value2": 1
+                            },
+                            "id": 27
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 112941802
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 4,
+                                "value2": 1
+                            },
+                            "id": 24
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 3333003973
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3598506438
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 2,
+                                "value2": 3
+                            },
+                            "id": 13
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1612644966
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 1,
+                                "value2": 1
+                            },
+                            "id": 120
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3930041757
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 2,
+                                "value2": 4
+                            },
+                            "id": 1
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1287813363
+                                }
+                            },
+                            "args": {
+                                "value0": 6,
+                                "value1": 1,
+                                "value2": 0
+                            },
+                            "id": 93
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 128762725
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 2,
+                                "value2": 0
+                            },
+                            "id": 67
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3498623387
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 2,
+                                "value2": 1
+                            },
+                            "id": 92
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 4115137219
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 414948998
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 0,
+                                "value2": 4
+                            },
+                            "id": 42
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1833928401
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 0,
+                                "value2": 2
+                            },
+                            "id": 39
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 971149173
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 1,
+                                "value2": 2
+                            },
+                            "id": 8
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 3041828536
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2885053726
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 3,
+                                "value2": 1
+                            },
+                            "id": 122
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3861862456
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 1,
+                                "value2": 0
+                            },
+                            "id": 79
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2182831453
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 2,
+                                "value2": 2
+                            },
+                            "id": 91
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2571356940
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 2,
+                                "value2": 0
+                            },
+                            "id": 43
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 1585862089
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3873921468
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 1,
+                                "value2": 2
+                            },
+                            "id": 79
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2355558153
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 2,
+                                "value2": 3
+                            },
+                            "id": 27
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 820902178
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 7,
+                                "value2": 8
+                            },
+                            "id": 114
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1059539304
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 1,
+                                "value2": 2
+                            },
+                            "id": 73
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2773127109
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 3,
+                                "value2": 2
+                            },
+                            "id": 137
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3333854107
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 2,
+                                "value2": 4
+                            },
+                            "id": 70
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3264777554
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 2,
+                                "value2": 4
+                            },
+                            "id": 74
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1377839943
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 4,
+                                "value2": 1
+                            },
+                            "id": 73
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2184443011
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 2,
+                                "value2": 0
+                            },
+                            "id": 94
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 205027505
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 4,
+                                "value2": 3
+                            },
+                            "id": 6
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 317457855
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 4,
+                                "value2": 4
+                            },
+                            "id": 29
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1464527781
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 4,
+                                "value2": 4
+                            },
+                            "id": 39
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2987461932
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 1,
+                                "value2": 3
+                            },
+                            "id": 114
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3852832284
+                                }
+                            },
+                            "args": {
+                                "value0": 7,
+                                "value1": 3,
+                                "value2": 3
+                            },
+                            "id": 67
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1519765080
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 0,
+                                "value2": 0
+                            },
+                            "id": 91
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 4139082375
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1647342264
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 3,
+                                "value2": 4
+                            },
+                            "id": 27
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3330336748
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 2,
+                                "value2": 3
+                            },
+                            "id": 104
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3488052926
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 1,
+                                "value2": 4
+                            },
+                            "id": 17
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 258514865
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 3,
+                                "value2": 2
+                            },
+                            "id": 69
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 460821359
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 3,
+                                "value2": 4
+                            },
+                            "id": 4
+                        }
+                    ]
+                }
+            ]
+        },
+        "program_spiker": {
+            "program": [
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 2032518836
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 4214287613
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 1,
+                                "value2": 1
+                            },
+                            "id": 105
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2264030549
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 0,
+                                "value2": 0
+                            },
+                            "id": 50
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1447094108
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 1,
+                                "value2": 1
+                            },
+                            "id": 39
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2384262185
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 3,
+                                "value2": 3
+                            },
+                            "id": 61
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1250482262
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 3,
+                                "value2": 2
+                            },
+                            "id": 4
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3823588898
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 3,
+                                "value2": 3
+                            },
+                            "id": 31
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1122753194
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 4,
+                                "value2": 2
+                            },
+                            "id": 64
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 403557397
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 0,
+                                "value2": 3
+                            },
+                            "id": 23
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 4159598642
+                                }
+                            },
+                            "args": {
+                                "value0": 8,
+                                "value1": 2,
+                                "value2": 0
+                            },
+                            "id": 49
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 905111940
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 1,
+                                "value2": 2
+                            },
+                            "id": 41
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2587995227
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 2,
+                                "value2": 4
+                            },
+                            "id": 14
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 3958432599
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1223167024
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 1,
+                                "value2": 3
+                            },
+                            "id": 33
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3151878148
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 1,
+                                "value2": 4
+                            },
+                            "id": 5
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 409877718
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 0,
+                                "value2": 1
+                            },
+                            "id": 29
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1142386049
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 4,
+                                "value2": 1
+                            },
+                            "id": 74
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2334491186
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 3,
+                                "value2": 4
+                            },
+                            "id": 44
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2472301265
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 3,
+                                "value2": 4
+                            },
+                            "id": 43
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2000017908
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 2,
+                                "value2": 0
+                            },
+                            "id": 57
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2898286732
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 3,
+                                "value2": 0
+                            },
+                            "id": 61
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 2382950633
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 617004798
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 4,
+                                "value2": 3
+                            },
+                            "id": 27
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2162070542
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 0,
+                                "value2": 0
+                            },
+                            "id": 17
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 288339379
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 65747776
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 3,
+                                "value2": 4
+                            },
+                            "id": 31
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3184552166
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 3,
+                                "value2": 0
+                            },
+                            "id": 106
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3397377179
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 3,
+                                "value2": 2
+                            },
+                            "id": 64
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3738833974
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 0,
+                                "value2": 0
+                            },
+                            "id": 54
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1635683630
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 0,
+                                "value2": 4
+                            },
+                            "id": 66
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3871102898
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 2,
+                                "value2": 2
+                            },
+                            "id": 0
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2537774429
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 2,
+                                "value2": 2
+                            },
+                            "id": 27
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3614570549
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 2,
+                                "value2": 0
+                            },
+                            "id": 0
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 4166417009
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 1,
+                                "value2": 0
+                            },
+                            "id": 41
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3958901145
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 0,
+                                "value2": 5
+                            },
+                            "id": 79
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1606469036
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 2,
+                                "value2": 1
+                            },
+                            "id": 93
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2247422120
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 0,
+                                "value2": 0
+                            },
+                            "id": 42
+                        }
+                    ]
+                },
+                {
+                    "affinity": {
+                        "value0": {
+                            "value0": 4247094964
+                        }
+                    },
+                    "inst_seq": [
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 4157486664
+                                }
+                            },
+                            "args": {
+                                "value0": 8,
+                                "value1": 0,
+                                "value2": 8
+                            },
+                            "id": 25
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 4222938365
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 1,
+                                "value2": 1
+                            },
+                            "id": 105
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2264030549
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 0,
+                                "value2": 0
+                            },
+                            "id": 50
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1145104156
+                                }
+                            },
+                            "args": {
+                                "value0": 0,
+                                "value1": 1,
+                                "value2": 1
+                            },
+                            "id": 39
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2384262185
+                                }
+                            },
+                            "args": {
+                                "value0": 1,
+                                "value1": 3,
+                                "value2": 3
+                            },
+                            "id": 61
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1250483286
+                                }
+                            },
+                            "args": {
+                                "value0": 4,
+                                "value1": 3,
+                                "value2": 2
+                            },
+                            "id": 4
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 3823588898
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 3,
+                                "value2": 6
+                            },
+                            "id": 31
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 1139538666
+                                }
+                            },
+                            "args": {
+                                "value0": 2,
+                                "value1": 4,
+                                "value2": 2
+                            },
+                            "id": 64
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 403557393
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 0,
+                                "value2": 3
+                            },
+                            "id": 23
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 4150685746
+                                }
+                            },
+                            "args": {
+                                "value0": 8,
+                                "value1": 2,
+                                "value2": 0
+                            },
+                            "id": 49
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 636676484
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 1,
+                                "value2": 2
+                            },
+                            "id": 41
+                        },
+                        {
+                            "affinity": {
+                                "value0": {
+                                    "value0": 2588142683
+                                }
+                            },
+                            "args": {
+                                "value0": 3,
+                                "value1": 2,
+                                "value2": 4
+                            },
+                            "id": 14
+                        }
+                    ]
+                }
+            ]
+        },
+        "tags": [
+            {
+                "value0": {
+                    "value0": 1690404413
+                }
+            },
+            {
+                "value0": {
+                    "value0": 1909170628
+                }
+            },
+            {
+                "value0": {
+                    "value0": 3199382769
+                }
+            },
+            {
+                "value0": {
+                    "value0": 2380119364
+                }
+            },
+            {
+                "value0": {
+                    "value0": 3259138670
+                }
+            },
+            {
+                "value0": {
+                    "value0": 221678742
+                }
+            },
+            {
+                "value0": {
+                    "value0": 3489055186
+                }
+            },
+            {
+                "value0": {
+                    "value0": 3462566639
+                }
+            },
+            {
+                "value0": {
+                    "value0": 2070897071
+                }
+            },
+            {
+                "value0": {
+                    "value0": 795041134
+                }
+            },
+            {
+                "value0": {
+                    "value0": 1602479133
+                }
+            },
+            {
+                "value0": {
+                    "value0": 497343744
+                }
+            },
+            {
+                "value0": {
+                    "value0": 3160273783
+                }
+            },
+            {
+                "value0": {
+                    "value0": 3552743417
+                }
+            },
+            {
+                "value0": {
+                    "value0": 2571828593
+                }
+            },
+            {
+                "value0": {
+                    "value0": 1152832124
+                }
+            },
+            {
+                "value0": {
+                    "value0": 1561893798
+                }
+            },
+            {
+                "value0": {
+                    "value0": 2533720975
+                }
+            },
+            {
+                "value0": {
+                    "value0": 1860666547
+                }
+            },
+            {
+                "value0": {
+                    "value0": 697852254
+                }
+            },
+            {
+                "value0": {
+                    "value0": 725704782
+                }
+            },
+            {
+                "value0": {
+                    "value0": 51309864
+                }
+            },
+            {
+                "value0": {
+                    "value0": 1182531759
+                }
+            },
+            {
+                "value0": {
+                    "value0": 1078782260
+                }
+            },
+            {
+                "value0": {
+                    "value0": 3890169678
+                }
+            },
+            {
+                "value0": {
+                    "value0": 3157458092
+                }
+            }
+        ],
+        "root_id": 140734226257312
+    }
+}
