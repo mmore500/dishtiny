@@ -24,6 +24,8 @@
 #include "../FrameCell.cpp"
 #include "../Manager.cpp"
 #include "../LibraryInstruction.cpp"
+#include "../LibraryInstructionSpiker.cpp"
+#include "../ManagerConnection.cpp"
 
 struct ConfigSetup {
 

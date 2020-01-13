@@ -198,7 +198,7 @@ void DishWorld::LoadPopulation() {
       *std::find_if(
         std::begin(filenames),
         std::end(filenames),
-        [this, id](const auto & filename){
+        [id](const auto & filename){
           const auto res = emp::keyname::unpack(filename);
 
           return (
