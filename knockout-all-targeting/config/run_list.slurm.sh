@@ -1,7 +1,7 @@
 #!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00         # limit of wall clock time - how long the job will run (same as -t)
-#SBATCH --array=1-20
+#SBATCH --array=1-40
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 8
 #SBATCH --mem=24G                # memory required per node - amount of memory (in bytes)
