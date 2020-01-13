@@ -457,7 +457,7 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
   );
 
   il.AddInst(
-    "SetConnectionAgingParam",
+    "TryAddFledglingConnection",
     [](hardware_t & hw, const inst_t & inst){
       FrameHardware &fh = *hw.GetTrait();
 
