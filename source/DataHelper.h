@@ -146,6 +146,29 @@ public:
           );
           cereal::JSONOutputArchive genome_archive(genome_stream);
           genome_archive(org_count.first);
+
+          emp::Random rand(cfg.SEED());
+          emp::vector<size_t> shuffler(dw.GetSize());
+          std::iota(std::begin(shuffler), std::end(shuffler), 0);
+          emp::Shuffle(rand, shuffler);
+
+          // save the entire population
+          std::ofstream population_stream(
+            emp::keyname::pack({
+              {"title", "population"},
+              {"count", emp::to_string(dw.GetNumOrgs())},
+              {"component", "genomes"},
+              {"update", emp::to_string(update)},
+              {"ext", ".json.cereal"}
+            })
+          );
+          cereal::JSONOutputArchive population_archive(population_stream);
+          for (const size_t i : shuffler) {
+            if (dw.IsOccupied(i)) {
+              population_archive(dw.GetOrg(i));
+            }
+          }
+
         }
         if(update % cfg.COMPUTE_FREQ() == 0) {
           Regulators();

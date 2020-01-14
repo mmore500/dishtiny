@@ -187,14 +187,14 @@ void DishWorld::LoadPopulation() {
   emp::vector<size_t> targets = emp::Choose(
     rand,
     GetSize(),
-    cfg.SEED_POP_CLONECOUNT() * ids.size()
+    GetSize() // okay if there are extra targets
   );
 
   auto target = std::begin(targets);
 
   for (const auto & id : ids) {
 
-    std::ifstream genome_stream(
+    const std::string filename{
       *std::find_if(
         std::begin(filenames),
         std::end(filenames),
@@ -203,23 +203,30 @@ void DishWorld::LoadPopulation() {
 
           return (
             res.count("id") && res.at("id") == emp::to_string(id)
-            && res.count("component") && res.at("component") == "genome"
-            && res.count("ext") && res.at("ext") == ".json"
+            && res.count("component") && res.at("component") == "genomes"
+            && res.count("count")
+            && res.count("title") && res.at("title") == "population"
+            && res.count("ext") && res.at("ext") == ".json.cereal"
           );
         }
       )
-    );
+    };
 
-    cereal::JSONInputArchive genome_archive(genome_stream);
-    Genome genome(
-      cfg,
-      LibraryInstruction::Make(cfg),
-      LibraryInstructionSpiker::Make(cfg)
-    );
-    genome_archive(genome);
-    genome.SetRootID(id);
+    const size_t count = std::stoi(emp::keyname::unpack(filename).at("count"));
 
-    for (size_t clone = 0; clone < cfg.SEED_POP_CLONECOUNT(); ++clone) {
+    std::ifstream genomes_stream(filename);
+
+    cereal::JSONInputArchive genomes_archive(genomes_stream);
+
+    for (size_t i = 0; i < std::min(GetSize()/ids.size(), count); ++i) {
+      Genome genome(
+        cfg,
+        LibraryInstruction::Make(cfg),
+        LibraryInstructionSpiker::Make(cfg)
+      );
+      genomes_archive(genome);
+      genome.SetRootID(id);
+
       InjectAt(
         genome,
         emp::WorldPosition(
