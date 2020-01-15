@@ -19,9 +19,9 @@ function on_exit() {
   echo "   EXIT STATUS ${1}"
   echo "   EXIT ERR $(( ${1} != 0 ))"
 
-  qstat -f ${PBS_JOBID}
+  qstat -f ${SLURM_JOB_ID}
 
-  cp "/mnt/home/mmore500/slurmlogs/slurm-${PBS_JOBID}.out" .
+  cp "/mnt/home/mmore500/slurmlogs/slurm-${SLURM_JOB_ID}.out" .
 
 }
 
