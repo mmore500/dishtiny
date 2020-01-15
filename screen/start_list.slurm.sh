@@ -22,7 +22,11 @@ function on_exit() {
 
   qstat -f ${SLURM_JOB_ID}
 
-  cp "/mnt/home/mmore500/slurmlogs/slurm-${SLURM_JOB_ID}_${SLURM_ARRAY_TASK_ID}.out" .
+  SLURM_LOG="/mnt/home/mmore500/slurmlogs/slurm-${SLURM_JOB_ID}_${SLURM_ARRAY_TASK_ID}.out"
+
+  if [[ ${1} -ne 0 ]]; then cp ${SLURM_LOG} "/mnt/home/mmore500/err_slurm"; fi
+
+  cp ${SLURM_LOG} .
 
 }
 
