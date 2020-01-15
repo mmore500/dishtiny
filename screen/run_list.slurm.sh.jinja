@@ -35,8 +35,12 @@ mkdir -p ${OUTPUT_DIR}
 cp -r ${CONFIG_DIR}/* ${OUTPUT_DIR}
 cd ${OUTPUT_DIR}
 
+# prepare python environment
+module purge; module load GCC/7.3.0-2.30 OpenMPI/3.1.1 Python/3.6.6
+source "/mnt/home/mmore500/myPy/bin/activate"
+
 # get seed population from preceeding run
-MAX_UPDATE=$(python3 -c "import sys; import keyname; print(                    \
+MAX_UPDATE=$(python3 -c "import sys; from keyname import keyname as kn; print( \
   max(                                                                         \
     int(kn.unpack(filename)['update'])                                         \
     for filename in sys.argv[1:]                                               \
