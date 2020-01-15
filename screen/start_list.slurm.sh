@@ -59,7 +59,7 @@ echo "   CUR_STEP" $CUR_STEP
 echo "   OUTPUT_DIR" $OUTPUT_DIR
 echo "   CONFIG_DIR" $CONFIG_DIR
 
-export SLURM_LOGFILE="slurm-${SLURM_JOB_ID}_${SLURM_ARRAY_TASK_ID}.out"
+export SLURM_LOGFILE="slurm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.out"
 export SLURM_LOGPATH="/mnt/home/mmore500/slurmlogs/${SLURM_LOGFILE}"
 
 echo "   SLURM_LOGFILE" $SLURM_LOGFILE

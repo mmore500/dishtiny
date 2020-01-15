@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task 4
 #SBATCH --job-name s-{{ seed }}-{{ cur_step }}
 #SBATCH --account=devolab
-#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A.out"
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%j.out"
 
 ################################################################################
 echo
