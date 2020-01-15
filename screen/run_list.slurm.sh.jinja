@@ -15,9 +15,9 @@ echo "Prepare Env Vars"
 SEED={{ seed }} # jinja
 LAST_STEP={{ last_step }} # jinja
 CUR_STEP={{ cur_step }} # jinja
-OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny/seed=${SEED}+step=${CUR_STEP}"
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=${CUR_STEP}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/screen/"
-SOURCE_DIR="/mnt/scratch/mmore500/dishtiny/screen/seed=${SEED}+step=${LAST_STEP}"
+SOURCE_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=${LAST_STEP}"
 
 echo "   SEED" $SEED
 echo "   LAST_STEP" $LAST_STEP

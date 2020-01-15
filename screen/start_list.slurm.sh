@@ -17,7 +17,7 @@ SEED_OFFSET=1000
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 CUR_STEP=0
 
-OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny/seed=${SEED}+step=0"
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=0"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/screen/"
 
 echo "   TREATMENT" $TREATMENT
