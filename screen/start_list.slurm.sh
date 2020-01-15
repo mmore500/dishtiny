@@ -115,7 +115,7 @@ source "/mnt/home/mmore500/myPy/bin/activate"
 j2 -o run_list.slurm.sh run_list.slurm.sh.jinja
 
 if  [ $CUR_STEP -lt 24 ]; then
-  if ls *.json.cereal | grep -q "update\=16384"; then
+  if ls *.json.cereal | grep -q "update\=65536"; then
     sbatch run_list.slurm.sh                                                   \
     && echo "   job submit success!"                                           \
     || echo "   job submit failure (FAIL)"
