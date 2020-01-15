@@ -46,15 +46,15 @@ echo "Submit Next Job..."
 ################################################################################
 
 # export information so jinja can use it
-export seed={{ seed }} # jinja
-export last_step={{ cur_step }} # jinja; aka cur step w.r.t. this script
-export cur_step=$(( {{ step }} + 1 )) # jinja; aka next step w.r.t. this script
+export seed=$SEED
+export last_step=$CUR_STEP # aka cur step wrt this script
+export cur_step=$(( $CUR_STEP + 1 )) # aka next step wrt this script
 
 # run jinja on template
 source "/mnt/home/mmore500/myPy/bin/activate"
 j2 -o run_list.slurm.sh run_list.slurm.sh.jinja
 
-if  [ {{ step }} -lt 24 ]; then
+if  [ $CUR_STEP -lt 24 ]; then
   if ls *.json.cereal | grep -q "update\=16384"; then
     sbatch run_list.slurm.sh                                                   \
     || echo "   job submit failure."                                           \
