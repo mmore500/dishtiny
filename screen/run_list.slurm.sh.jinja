@@ -9,27 +9,34 @@
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A.out"
 
 ################################################################################
-echo "Setup Exit Trap" # should run before exit with or without error
+echo "Setup Exit and Error Traps"
 ################################################################################
 function on_exit() {
 
   echo "Run Exit Trap"
 
-  echo "   LINE NO ${2}"
-  echo "   EXIT STATUS ${1}"
-  echo "   EXIT ERR $(( ${1} != 0 ))"
-
   qstat -f ${SLURM_JOB_ID}
-
-  SLURM_LOG="/mnt/home/mmore500/slurmlogs/slurm-${SLURM_JOB_ID}.out"
-
-  if [[ ${1} -ne 0 ]]; then cp ${SLURM_LOG} "/mnt/home/mmore500/err_slurm"; fi
 
   cp ${SLURM_LOG} .
 
 }
 
-trap "on_exit ${?} ${LINENO}" EXIT
+function on_error() {
+
+  echo "Run Error Trap (FAIL)"
+
+  echo "   EXIT STATUS ${1}"
+  echo "   LINE NO ${2}"
+
+  cp ${SLURM_LOGPATH} "/mnt/home/mmore500/err_slurm"
+
+  qstat -f ${SLURM_JOB_ID} >> "/mnt/home/mmore500/err_slurm/${SLURM_LOGFILE}"
+
+}
+
+trap "on_error ${$?} ${LINENO}" ERR
+trap "on_exit" EXIT
+
 
 ################################################################################
 echo "Prepare Env Vars"
@@ -48,6 +55,12 @@ echo "   CUR_STEP" $CUR_STEP
 echo "   OUTPUT_DIR" $OUTPUT_DIR
 echo "   CONFIG_DIR" $CONFIG_DIR
 echo "   SOURCE_DIR" $SOURCE_DIR
+
+export SLURM_LOGFILE="slurm-${SLURM_JOB_ID}.out"
+export SLURM_LOGPATH="/mnt/home/mmore500/slurmlogs/${SLURM_LOGFILE}"
+
+echo "   SLURM_LOGFILE" $SLURM_LOGFILE
+echo "   SLURM_LOGPATH" $SLURM_LOGPATH
 
 ################################################################################
 echo "Setup Work Dir"
