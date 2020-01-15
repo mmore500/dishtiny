@@ -10,6 +10,25 @@
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 
 ################################################################################
+echo "Setup Exit Trap" # should run before exit with or without error
+################################################################################
+function on_exit() {
+
+  echo "Run Exit Trap"
+
+  echo "   LINE NO ${2}"
+  echo "   EXIT STATUS ${1}"
+  echo "   EXIT ERR $(( ${1} != 0 ))"
+
+  qstat -f ${PBS_JOBID}
+
+  cp "/mnt/home/mmore500/slurmlogs/slurm-${PBS_JOBID}_${PBS_ARRAYID}.out" .
+
+}
+
+trap "on_exit ${?} ${LINENO}" EXIT
+
+################################################################################
 echo "Prepare Env Vars"
 ################################################################################
 
@@ -72,10 +91,6 @@ else
   echo "   nevermind, all done! (COMPLETE)"
 fi
 
-###############################################################################
-echo "Done" $(date)
 ################################################################################
-
-qstat -f ${PBS_JOBID}
-
-cp "/mnt/home/mmore500/slurmlogs/slurm-${PBS_JOBID}_${PBS_ARRAYID}.out" .
+echo "Done! (SUCCESS)"
+################################################################################
