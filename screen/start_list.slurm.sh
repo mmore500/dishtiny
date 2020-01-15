@@ -16,7 +16,9 @@ echo "--------------------------"
 ################################################################################
 function on_exit() {
 
+  echo
   echo "Run Exit Trap"
+  echo "-------------"
 
   qstat -f ${SLURM_JOB_ID}
 
@@ -26,7 +28,9 @@ function on_exit() {
 
 function on_error() {
 
+  echo
   echo "Run Error Trap (FAIL)"
+  echo "---------------------"
 
   echo "   EXIT STATUS ${1}"
   echo "   LINE NO ${2}"
