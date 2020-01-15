@@ -14,6 +14,7 @@ echo
 echo "Setup Exit and Error Traps"
 echo "--------------------------"
 ################################################################################
+
 function on_exit() {
 
   echo
@@ -79,7 +80,7 @@ rm -rf ${OUTPUT_DIR}/*  #If this is a redo, clear the dir
 mkdir -p ${OUTPUT_DIR}
 cp -r ${CONFIG_DIR}/* ${OUTPUT_DIR}
 cd ${OUTPUT_DIR}
-echo ${PWD}
+echo "   PWD" $PWD
 
 ################################################################################
 echo

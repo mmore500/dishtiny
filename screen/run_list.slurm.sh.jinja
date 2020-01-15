@@ -13,6 +13,7 @@ echo
 echo "Setup Exit and Error Traps"
 echo "--------------------------"
 ################################################################################
+
 function on_exit() {
 
   echo
@@ -81,7 +82,7 @@ rm -rf ${OUTPUT_DIR}/*  #If this is a redo, clear the dir
 mkdir -p ${OUTPUT_DIR}
 cp -r ${CONFIG_DIR}/* ${OUTPUT_DIR}
 cd ${OUTPUT_DIR}
-echo ${PWD}
+echo "   PWD" $PWD
 
 # prepare python environment
 module purge; module load GCC/7.3.0-2.30 OpenMPI/3.1.1 Python/3.6.6
