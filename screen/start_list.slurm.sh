@@ -20,7 +20,7 @@ function on_exit() {
 
   qstat -f ${SLURM_JOB_ID}
 
-  cp ${SLURM_LOG} .
+  cp ${SLURM_LOGPATH} .
 
 }
 
