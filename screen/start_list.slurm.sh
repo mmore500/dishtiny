@@ -50,8 +50,15 @@ export seed=$SEED
 export last_step=$CUR_STEP # aka cur step wrt this script
 export cur_step=$(( $CUR_STEP + 1 )) # aka next step wrt this script
 
-# run jinja on template
+echo "   seed" $seed
+echo "   last_step" $last_step
+echo "   cur_step" $cur_step
+
+# prepare python environment
+module purge; module load GCC/7.3.0-2.30 OpenMPI/3.1.1 Python/3.6.6
 source "/mnt/home/mmore500/myPy/bin/activate"
+
+# run jinja on template
 j2 -o run_list.slurm.sh run_list.slurm.sh.jinja
 
 if  [ $CUR_STEP -lt 24 ]; then
