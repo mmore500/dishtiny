@@ -20,7 +20,6 @@ CUR_STEP=0
 OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=0"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/screen/"
 
-echo "   TREATMENT" $TREATMENT
 echo "   SEED" $SEED
 echo "   CUR_STEP" $CUR_STEP
 echo "   OUTPUT_DIR" $OUTPUT_DIR
