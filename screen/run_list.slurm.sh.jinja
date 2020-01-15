@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task 4
 #SBATCH --job-name s-{{ seed }}-{{ cur_step }}
 #SBATCH --account=devolab
-#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A.out"
 
 ################################################################################
 echo "Prepare Env Vars"
@@ -94,4 +94,4 @@ echo "Done" $(date)
 
 qstat -f ${PBS_JOBID}
 
-cp "/mnt/home/mmore500/slurmlogs/slurm-${PBS_JOBID}_${PBS_ARRAYID}.out" .
+cp "/mnt/home/mmore500/slurmlogs/slurm-${PBS_JOBID}.out" .
