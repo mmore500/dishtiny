@@ -127,7 +127,7 @@ csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'              \
 # 101,SendSpikeMsg
 
 for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
-  sed -i -- "s/\"id\": 80\$\|\"id\": 81\$\|\"id\": 101\$\|/\"id\": 27/g" $f &
+  sed -i -- "s/\"id\": 80\$\|\"id\": 81\$\|\"id\": 101\$/\"id\": 27/g" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
 
