@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
 #SBATCH --array=0-999
