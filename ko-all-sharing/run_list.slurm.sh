@@ -126,10 +126,8 @@ csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'              \
 # 109,SendSmallFracResource
 
 for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-  for TARGET in 108 109; do
-    sed -i -- "s/\"id\": ${TARGET}\$/\"id\": 27/g" $f
-  done
-  wait
+  sed -i -- "s/\"id\": 108\$\|\"id\": 109\$\|/\"id\": 27/g" $f &
+  while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
 
 # knockout spiker components, genome by genome
@@ -138,13 +136,12 @@ done
 # 81,SendSmallFracResource
 
 for f in xx*1 xx*3 xx*5 xx*7 xx*9;
-  for TARGET in 80 81; do
-    sed -i -- "s/\"id\": ${TARGET}\$/\"id\": 27/g" $f
-  done
-  wait
+  sed -i -- "s/\"id\": 80\$\|\"id\": 81\$\|/\"id\": 27/g" $f &
+  while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
 
 # recombine components and delete fragments
+wait
 cat xx* > ${KO_PATH}
 rm xx*
 
