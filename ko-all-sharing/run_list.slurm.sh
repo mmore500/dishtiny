@@ -118,7 +118,7 @@ cp $POP_PATH $KO_PATH
 
 
 FILE_LENGTH=$(cat ${KO_PATH} | wc -l)
-echo FILE_LENGTH
+echo "   FILE_LENGTH" $FILE_LENGTH
 
 # knockout pointer components, genome by genome
 # 27,Nop
