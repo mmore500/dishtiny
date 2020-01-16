@@ -160,7 +160,7 @@ done
 # 75,DuplicateSenseOwnRegulator
 
 
-for f in xx*1 xx*3 xx*5 xx*7 xx*9;
+for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
   sed -i -- "s/\"id\": 29\$\|\"id\": 30\$\|\"id\": 31\$\|\"id\": 32\$\|\"id\": 33\$\|\"id\": 34\$\|\"id\": 35\$\|\"id\": 69\$\|\"id\": 70\$\|\"id\": 71\$\|\"id\": 72\$\|\"id\": 73\$\|\"id\": 74\$\|\"id\": 75\$\|/\"id\": 27/g" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done

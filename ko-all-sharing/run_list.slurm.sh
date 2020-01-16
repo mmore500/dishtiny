@@ -135,7 +135,7 @@ done
 # 80,SendBigFracResource
 # 81,SendSmallFracResource
 
-for f in xx*1 xx*3 xx*5 xx*7 xx*9;
+for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
   sed -i -- "s/\"id\": 80\$\|\"id\": 81\$\|/\"id\": 27/g" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
