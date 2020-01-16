@@ -129,12 +129,15 @@ for START STOP in $(sed -n '/program.*{$/=' ${KO_PATH}); do
   let ++REGION_COUNTER
   for TARGET in 108 109; do
     let ++OPERATION_COUNTER
-    sed -i -- "${START},${STOP}s/\"id\": ${TARGET}\$/\"id\": 27/g" $KO_PATH
+    SED_POINTER_COMMAND+="${START},${STOP}s/\"id\": ${TARGET}\$/\"id\": 27/g; "
   done
 done
 
 echo "   REGION_COUNTER" $REGION_COUNTER
 echo "   OPERATION_COUNTER" $OPERATION_COUNTER
+echo "   SED_POINTER_COMMAND" $SED_POINTER_COMMAND | head -c 100 && echo
+
+sed -i -- $SED_POINTER_COMMAND $KO_PATH
 
 # knockout spiker components, genome by genome
 # 27,Nop
@@ -147,12 +150,15 @@ for START STOP in                                                              \
   let ++REGION_COUNTER
   for TARGET in 80 81; do
     let ++OPERATION_COUNTER
-    sed -i -- "${START},${STOP}s/\"id\": ${TARGET}\$/\"id\": 27/g" $KO_PATH
+    SED_SPIKER_COMMAND+="${START},${STOP}s/\"id\": ${TARGET}\$/\"id\": 27/g; "
   done
 done
 
 echo "   REGION_COUNTER" $REGION_COUNTER
 echo "   OPERATION_COUNTER" $OPERATION_COUNTER
+echo "   SED_SPIKER_COMMAND" $SED_SPIKER_COMMAND | head -c 100 && echo
+
+sed -i -- $SED_SPIKER_COMMAND $KO_PATH
 
 ################################################################################
 echo

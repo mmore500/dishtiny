@@ -130,12 +130,15 @@ for START STOP in                                                              \
   let ++REGION_COUNTER
   for TARGET in 80 81 101; do
     let ++OPERATION_COUNTER
-    sed -i -- "${START},${STOP}s/\"id\": ${TARGET}\$/\"id\": 27/g" $KO_PATH
+    SED_POINTER_COMMAND+="${START},${STOP}s/\"id\": ${TARGET}\$/\"id\": 27/g; "
   done
 done
 
 echo "   REGION_COUNTER" $REGION_COUNTER
 echo "   OPERATION_COUNTER" $OPERATION_COUNTER
+echo "   SED_POINTER_COMMAND" $SED_POINTER_COMMAND | head -c 100 && echo
+
+sed -i -- $SED_POINTER_COMMAND $KO_PATH
 
 ################################################################################
 echo
