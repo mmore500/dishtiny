@@ -57,8 +57,8 @@ SEED=$((SLURM_ARRAY_TASK_ID / 10 + SEED_OFFSET))
 REP=$((SLURM_ARRAY_TASK_ID % 10))
 LAST_STEP=24
 
-OUTPUT_DIR="/mnt/scratch/mmore500/ko-all-regulation/seed=${SEED}+rep=${REP}"
-CONFIG_DIR="/mnt/home/mmore500/dishtiny/ko-all-regulation/"
+OUTPUT_DIR="/mnt/scratch/mmore500/ko-spiker-message_sharing/seed=${SEED}+rep=${REP}"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/ko-spiker-message_sharing/"
 SOURCE_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=${LAST_STEP}"
 
 echo "   SEED" $SEED
