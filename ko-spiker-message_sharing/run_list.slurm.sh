@@ -94,7 +94,7 @@ MAX_UPDATE=$(python3 -c "import sys; from keyname import keyname as kn; print( \
     for filename in sys.argv[1:]                                               \
   )                                                                            \
 )" "${SOURCE_DIR}/"*".json.cereal")
-POP_PATH="${SOURCE_DIR}/"*"+update=${MAX_UPDATE}+"*".json.cereal"
+POP_PATH=$(echo "${SOURCE_DIR}/"*"+update=${MAX_UPDATE}+"*".json.cereal")
 POP_FILENAME=$(basename ${POP_PATH})
 KO_PATH="seedpop/id=2+${POP_FILENAME}"
 
