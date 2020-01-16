@@ -1,7 +1,7 @@
 #!/bin/zsh
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --array=0-99
+#SBATCH --array=0-999
 #SBATCH --mem=16G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 4
@@ -55,14 +55,16 @@ echo "----------------"
 ################################################################################
 
 SEED_OFFSET=1000
-SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
+SEED=$((SLURM_ARRAY_TASK_ID / 10 + SEED_OFFSET))
+REP=$((SLURM_ARRAY_TASK_ID % 10))
 LAST_STEP=24
 
-OUTPUT_DIR="/mnt/scratch/mmore500/ko-all-regulation/seed=${SEED}"
+OUTPUT_DIR="/mnt/scratch/mmore500/ko-all-regulation/seed=${SEED}+rep=${REP}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/ko-all-regulation/"
 SOURCE_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=${LAST_STEP}"
 
 echo "   SEED" $SEED
+echo "   REP" $REP
 echo "   LAST_STEP" $LAST_STEP
 echo "   OUTPUT_DIR" $OUTPUT_DIR
 echo "   CONFIG_DIR" $CONFIG_DIR
@@ -170,7 +172,7 @@ echo "-------"
 
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
-./dishtiny -SEED $(( ${SEED} + 25 )) -SEED_POP 1 >run.log 2>&1
+./dishtiny -SEED $(( ${SEED} + ${REP} + 25 )) -SEED_POP 1 >run.log 2>&1
 
 ################################################################################
 echo
