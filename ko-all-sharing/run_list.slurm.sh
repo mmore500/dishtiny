@@ -9,6 +9,8 @@
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 
+source /etc/profile.d/modules.sh
+
 ################################################################################
 echo
 echo "Setup Exit and Error Traps"
