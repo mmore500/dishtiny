@@ -114,9 +114,11 @@ mkdir seedpop
 cp $POP_PATH "seedpop/id=1+${POP_FILENAME}"
 cp $POP_PATH $KO_PATH
 
-
-FILE_LENGTH=$(cat ${KO_PATH} | wc -l)
-echo "   FILE_LENGTH" $FILE_LENGTH
+# split into chunks to do knockouts on individual genome components
+  # even chunks: pointer
+  # odd chunks: spiker
+csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'              \
+  > /dev/null # ignore byte counts printed to stdout
 
 # knockout spiker components, genome by genome
 # 27,Nop
@@ -124,21 +126,16 @@ echo "   FILE_LENGTH" $FILE_LENGTH
 # 81,SendSmallFracResource
 # 101,SendSpikeMsg
 
-for START STOP in                                                              \
-  $(sed -n '/program.*{$/=' ${KO_PATH} | tail -n +2) $FILE_LENGTH              \
-; do
-  let ++REGION_COUNTER
+for f in xx*1 xx*3 xx*5 xx*7 xx*9;
   for TARGET in 80 81 101; do
-    let ++OPERATION_COUNTER
-    SED_POINTER_COMMAND+="${START},${STOP}s/\"id\": ${TARGET}\$/\"id\": 27/g; "
+    sed -i -- "s/\"id\": ${TARGET}\$/\"id\": 27/g" $f
   done
+  wait
 done
 
-echo "   REGION_COUNTER" $REGION_COUNTER
-echo "   OPERATION_COUNTER" $OPERATION_COUNTER
-echo "   SED_POINTER_COMMAND" $SED_POINTER_COMMAND | head -c 100 && echo
-
-sed -i -- $SED_POINTER_COMMAND $KO_PATH
+# recombine components and delete fragments
+cat xx* > ${KO_PATH}
+rm xx*
 
 ################################################################################
 echo
