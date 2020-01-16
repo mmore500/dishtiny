@@ -5,7 +5,7 @@
 #SBATCH --mem=16G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 4
-#SBATCH --job-name ko-all-regulation
+#SBATCH --job-name ko-all-sharing
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 
