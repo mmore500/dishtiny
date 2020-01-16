@@ -126,7 +126,7 @@ csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'              \
 # 109,SendSmallFracResource
 
 for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-  sed -i -- "s/\"id\": 108\$\|\"id\": 109\$\|/\"id\": 27/g" $f &
+  sed -i -- "s/\"id\": 108\$\|\"id\": 109\$/\"id\": 27/g" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
 
