@@ -137,13 +137,10 @@ echo "   FILE_LENGTH" $FILE_LENGTH
 # 74,DuplicateSenseRegulator
 # 75,DuplicateSenseOwnRegulator
 
-let REGION_COUNTER=0
-let OPERATION_COUNTER=0
-
 for START STOP in $(sed -n '/program.*{$/=' ${KO_PATH}); do
-  let REGION_COUNTER++
+  let ++REGION_COUNTER
   for TARGET in 29 30 31 32 33 34 35 69 70 71 72 73 74 75; do
-    let OPERATION_COUNTER++
+    let ++OPERATION_COUNTER
     sed -i -- "${START},${STOP}s/\"id\": ${TARGET}\$/\"id\": 27/g" $KO_PATH
   done
 done
@@ -168,15 +165,12 @@ echo "   OPERATION_COUNTER" $OPERATION_COUNTER
 # 74,DuplicateSenseRegulator
 # 75,DuplicateSenseOwnRegulator
 
-let REGION_COUNTER=0
-let OPERATION_COUNTER=0
-
 for START STOP in                                                              \
   $(sed -n '/program.*{$/=' ${KO_PATH} | tail -n +2) $FILE_LENGTH              \
 ; do
-  let REGION_COUNTER++
+  let ++REGION_COUNTER
   for TARGET in 29 30 31 32 33 34 35 69 70 71 72 73 74 75; do
-    let OPERATION_COUNTER++
+    let ++OPERATION_COUNTER
     sed -i -- "${START},${STOP}s/\"id\": ${TARGET}\$/\"id\": 27/g" $KO_PATH
   done
 done

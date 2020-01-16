@@ -124,15 +124,12 @@ echo "   FILE_LENGTH" $FILE_LENGTH
 # 81,SendSmallFracResource
 # 101,SendSpikeMsg
 
-let REGION_COUNTER=0
-let OPERATION_COUNTER=0
-
 for START STOP in                                                              \
   $(sed -n '/program.*{$/=' ${KO_PATH} | tail -n +2) $FILE_LENGTH              \
 ; do
-  let REGION_COUNTER++
+  let ++REGION_COUNTER
   for TARGET in 80 81 101; do
-    let OPERATION_COUNTER++
+    let ++OPERATION_COUNTER
     sed -i -- "${START},${STOP}s/\"id\": ${TARGET}\$/\"id\": 27/g" $KO_PATH
   done
 done
