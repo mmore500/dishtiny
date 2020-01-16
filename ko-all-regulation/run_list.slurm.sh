@@ -115,8 +115,9 @@ cp $POP_PATH "seedpop/id=1+${POP_FILENAME}"
 cp $POP_PATH $KO_PATH
 
 # split into chunks to do knockouts on individual genome components
-  # even chunks: pointer
-  # odd chunks: spiker
+  # 0th chunk: nada (ok to still sed it though!)
+  # odd chunks: pointer
+  # even chunks: spiker
 csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'              \
   > /dev/null # ignore byte counts printed to stdout
 
@@ -137,7 +138,7 @@ csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'              \
 # 74,DuplicateSenseRegulator
 # 75,DuplicateSenseOwnRegulator
 
-for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
+for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
   sed -i -- "s/\"id\": 29\$\|\"id\": 30\$\|\"id\": 31\$\|\"id\": 32\$\|\"id\": 33\$\|\"id\": 34\$\|\"id\": 35\$\|\"id\": 69\$\|\"id\": 70\$\|\"id\": 71\$\|\"id\": 72\$\|\"id\": 73\$\|\"id\": 74\$\|\"id\": 75\$/\"id\": 27/g" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
@@ -160,7 +161,7 @@ done
 # 75,DuplicateSenseOwnRegulator
 
 
-for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
+for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
   sed -i -- "s/\"id\": 29\$\|\"id\": 30\$\|\"id\": 31\$\|\"id\": 32\$\|\"id\": 33\$\|\"id\": 34\$\|\"id\": 35\$\|\"id\": 69\$\|\"id\": 70\$\|\"id\": 71\$\|\"id\": 72\$\|\"id\": 73\$\|\"id\": 74\$\|\"id\": 75\$/\"id\": 27/g" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
