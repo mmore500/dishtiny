@@ -82,7 +82,7 @@ echo "Setup Work Dir"
 echo "--------------"
 ################################################################################
 
-rm -rf ${OUTPUT_DIR}/*  #If this is a redo, clear the dir
+rm -rf ${OUTPUT_DIR}/* || echo "   not a redo"  #If this is a redo, clear the dir
 mkdir -p ${OUTPUT_DIR}
 cp -r ${CONFIG_DIR}/* ${OUTPUT_DIR}
 cd ${OUTPUT_DIR}
