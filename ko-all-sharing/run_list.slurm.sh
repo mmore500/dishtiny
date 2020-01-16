@@ -43,6 +43,9 @@ function on_error() {
   qstat -f ${SLURM_JOB_ID}                                                     \
     >> "/mnt/home/mmore500/err_slurmlogs/${SLURM_LOGFILE}"
 
+  echo "---------------------"
+  echo
+
 }
 
 trap 'on_error $? $LINENO' ERR

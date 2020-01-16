@@ -35,11 +35,16 @@ function on_error() {
 
   echo "   EXIT STATUS ${1}"
   echo "   LINE NO ${2}"
+  echo "---------------------"
+  echo
 
   cp ${SLURM_LOGPATH} "/mnt/home/mmore500/err_slurmlogs"
 
   qstat -f ${SLURM_JOB_ID}                                                     \
     >> "/mnt/home/mmore500/err_slurmlogs/${SLURM_LOGFILE}"
+
+  echo "---------------------"
+  echo
 
 }
 
