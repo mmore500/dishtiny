@@ -126,11 +126,13 @@ void ManagerConnection::SearchAndDevelop() {
     );
 
     // if best probe's activation is past threshold, it develops
-    if (std::get<1>(best_probe) >= development_param) {
-
-      // put into developed
+    // and it's somewhere other than the source cell
+    if (
       const size_t final_loc = std::get<0>(best_probe);
+      std::get<1>(best_probe) >= development_param
+      && location != final_loc
 
+  ) {
       {
         auto & in_mutex = cell_getter(final_loc).incoming_connection_mutex;
         auto & out_mutex = outgoing_connection_mutex;
