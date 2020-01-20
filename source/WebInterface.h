@@ -180,7 +180,8 @@ public:
 
     grid_viewer.SetAttr("class", "mx-auto");
 
-    artists.push_back({emp::NewPtr<WebArtist<ChannelPack>>(
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<ChannelPack>>(
       "Channel",
       "Channel",
       grid_viewer,
@@ -197,9 +198,10 @@ public:
         else if (cp1->size() > 1 && (*cp1)[1] == (*cp2)[1]) return "white";
         else return "black";
       }
-    )});
+    ));
 
-    artists.push_back({emp::NewPtr<WebArtist<double>>(
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<double>>(
       "Resource Stockpile",
       "Resource Stockpile",
       grid_viewer,
@@ -231,9 +233,10 @@ public:
         } else return emp::ColorRGB(0,0,0);
       },
       cfg_
-    )});
+    ));
 
-    artists.push_back({emp::NewPtr<WebArtist<double>>(
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<double>>(
       "Resource Sharing",
       "Resource Sharing",
       grid_viewer,
@@ -253,9 +256,10 @@ public:
         } else return "black";
       },
       cfg_
-    )});
+    ));
 
-    artists.push_back({emp::NewPtr<WebArtist<double>>(
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<double>>(
       "Resource Flow",
       "Resource Flow",
       grid_viewer,
@@ -279,9 +283,10 @@ public:
         } else return "black";
       },
       cfg_
-    )});
+    ));
 
-    artists.push_back({emp::NewPtr<WebArtist<size_t>>(
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
       "Reproduction",
       "Reproduction",
       grid_viewer,
@@ -299,8 +304,9 @@ public:
         } else return "black";
       },
       cfg_
-    )});
-    artists.push_back({emp::NewPtr<WebArtist<size_t>>(
+    ));
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
       "Apoptosis",
       "Apoptosis",
       grid_viewer,
@@ -316,9 +322,10 @@ public:
         } else return "black";
       },
       cfg_
-    )});
+    ));
 
-    artists.push_back({emp::NewPtr<WebArtist<emp::Ptr<Genome>>>(
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<emp::Ptr<Genome>>>(
       "Taxa",
       "Taxa",
       grid_viewer,
@@ -335,7 +342,7 @@ public:
         else if (**g1 != **g2) return "red";
         else return "white";
       }
-    )});
+    ));
 
     artists.emplace_back();
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
