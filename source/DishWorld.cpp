@@ -99,6 +99,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
     frames[pos]->SetProgram(GetOrg(pos).GetProgram());
     frames[pos]->SetProgramSpiker(GetOrg(pos).GetProgramSpiker());
     man->Inbox(pos).ClearInboxes();
+    man->Connection(pos).Reset();
   });
 
   OnUpdate([this](size_t upd){ Step(); });
