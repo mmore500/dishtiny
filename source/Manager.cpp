@@ -104,6 +104,9 @@ Manager::Manager(
                   0.0,
                   1.0
                 ); emp_assert(frac >= 0.0); emp_assert(frac <= 1.0);
+                // make sure connections are only linked up
+                // to same-channel cells
+                emp_assert(mcs[i]->CheckMatch(*mcs[loc], cfg.NLEV()-1));
                 Stockpile(loc).ExternalContribute(
                   amt * frac,
                   Cardi::Dir::NumDirs
@@ -111,6 +114,7 @@ Manager::Manager(
               }
             }
           );
+          emp_assert(res.size() == Cardi::Dir::NumDirs + 1);
           return res;
         }(),
         *local_rngs[i],

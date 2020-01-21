@@ -26,6 +26,7 @@ ManagerConnection::ManagerConnection(
       return res;
     }()
   );
+  emp_assert(location < geom.GetLocalSize());
 }
 
 void ManagerConnection::Reset() {
@@ -106,9 +107,9 @@ void ManagerConnection::SearchAndDevelop() {
       for (const auto & dir : shuffler) {
 
         const size_t dest = geom.CalcLocalNeigh(std::get<0>(probe), dir);
-        // TODO store channel at creation
-        if (mcs[std::get<0>(probe)]->CheckMatch(*mcs[dest], cfg.NLEV()-1)) {
+        if (mcs[location]->CheckMatch(*mcs[dest], cfg.NLEV()-1)) {
           std::get<0>(probe) = dest;
+          emp_assert(dest < geom.GetLocalSize());
           break;
         }
 
@@ -120,19 +121,36 @@ void ManagerConnection::SearchAndDevelop() {
     const auto & best_probe = *std::max_element(
       std::begin(probes),
       std::end(probes),
-      [](const auto & first, const auto &second) {
-        return std::get<1>(first) < std::get<1>(second);
+      [this](const auto & first, const auto &second) {
+        // second is BETTER if it has a higher score
+        // OR the first has drifted out of the channel group but the second
+        // hasn't
+        return (
+          std::get<1>(first) < std::get<1>(second)
+          || (
+            ! mcs[location]->CheckMatch(*mcs[std::get<0>(first)], cfg.NLEV()-1)
+            && mcs[location]->CheckMatch(
+              *mcs[std::get<0>(second)], cfg.NLEV()-1
+            )
+          )
+        );
       }
     );
 
-    // if best probe's activation is past threshold, it develops
-    // and it's somewhere other than the source cell
+    // if best probe's activation is past the threshold
+    // AND it's somewhere other than the source cell
+    // AND it's still in the same channel group as the source cell
+    // then it develops
     if (
       const size_t final_loc = std::get<0>(best_probe);
       std::get<1>(best_probe) >= development_param
       && location != final_loc
+      && mcs[location]->CheckMatch(*mcs[final_loc], cfg.NLEV()-1)
+    ) {
 
-  ) {
+      emp_assert(final_loc < geom.GetLocalSize());
+
+
       {
         auto & in_mutex = cell_getter(final_loc).incoming_connection_mutex;
         auto & out_mutex = outgoing_connection_mutex;
@@ -162,9 +180,16 @@ void ManagerConnection::SearchAndDevelop() {
     }
 
     for (auto & probe : probes) {
-      // set worst probes to most successful probe
-      if (std::get<1>(best_probe) - exploit_param > std::get<1>(probe)) {
-        probe = best_probe;
+      // set worst probes and out of channel group probes
+      // to the most successful probe or, failing that, to the spawning cell
+      if (
+        std::get<1>(best_probe) - exploit_param > std::get<1>(probe)
+        || ! mcs[location]->CheckMatch(*mcs[std::get<0>(probe)], cfg.NLEV()-1)
+      ) {
+        if (
+          mcs[location]->CheckMatch(*mcs[std::get<0>(best_probe)], cfg.NLEV()-1)
+        ) probe = best_probe;
+        else probe = {location, 0.0};
       }
 
       // each probe uses tags to sense the favorability of its current location
@@ -195,6 +220,8 @@ void ManagerConnection::DeleteOutgoingConnection(size_t loc) {
 }
 
 void ManagerConnection::RemoveOutgoingConnection(size_t loc) {
+
+  emp_assert(loc < geom.GetLocalSize());
 
   auto & in_mutex = cell_getter(loc).incoming_connection_mutex;
   auto & out_mutex = outgoing_connection_mutex;
