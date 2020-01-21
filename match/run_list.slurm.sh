@@ -81,7 +81,7 @@ print(rep, ax, bx)
 ")
 LAST_STEP=24
 
-OUTPUT_DIR="/mnt/scratch/mmore500/ko-all-regulation/seed_a=${SEED_A}+seed_b=${SEED_B}+rep=${REP}"
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-match/seed_a=${SEED_A}+seed_b=${SEED_B}+rep=${REP}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/match/"
 SOURCE_DIR_A="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED_A}+step=${LAST_STEP}"
 SOURCE_DIR_B="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED_B}+step=${LAST_STEP}"
