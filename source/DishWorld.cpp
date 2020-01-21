@@ -424,7 +424,6 @@ void DishWorld::Step() {
       man->Priority(i).ResolveUpdate();
       man->Apoptosis(i).Reset();
       man->Sharing(i).ResolveNextResistance(GetUpdate());
-      man->Sharing(i).ProcessSharingRequest(GetUpdate());
       man->Connection(i).DoPrune();
     }
 
@@ -471,6 +470,7 @@ void DishWorld::Step() {
       // decide who gets to be parent & make a copy of that genome
       // so that it doesn't get overwritten
       man->Priority(i).ResolveSire(man->Stockpile(i).QueryResource());
+      man->Sharing(i).ProcessSharingRequest(GetUpdate()+1);
     }
   }
 
