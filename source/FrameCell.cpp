@@ -189,3 +189,7 @@ void FrameCell::DoPrune() {
     --connection_prune_count;
   };
 }
+
+size_t FrameCell::GetIncomingConectionCount() const {
+  return incoming_connections.size();
+}

@@ -247,3 +247,7 @@ void ManagerConnection::DoPrune() {
     --connection_prune_count;
   }
 }
+
+const ManagerConnection::fledgling_t & ManagerConnection::ViewFledgling() const {
+  return fledgling;
+}

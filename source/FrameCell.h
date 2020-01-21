@@ -87,4 +87,6 @@ public:
 
   FrameHardware& GetSpiker();
 
+  size_t GetIncomingConectionCount() const;
+
 };

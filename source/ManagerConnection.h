@@ -8,6 +8,17 @@ class FrameCell;
 
 class ManagerConnection {
 
+public:
+
+  using fledgling_t = emp::vector<
+    emp::vector<
+      std::tuple<
+        size_t, // location
+        double // activation
+      >
+    >
+  >;
+
 private:
 
   emp::vector<size_t> shuffler;
@@ -23,14 +34,7 @@ private:
   // TODO random walk params
 
   //fledgling
-  emp::vector<
-    emp::vector<
-      std::tuple<
-        size_t, // location
-        double // activation
-      >
-    >
-  > fledgling;
+  fledgling_t fledgling;
 
   //developed
   std::unordered_multimap<
@@ -103,5 +107,7 @@ public:
   void PruneOutgoingConnection();
 
   void DoPrune();
+
+  const fledgling_t & ViewFledgling() const;
 
 };

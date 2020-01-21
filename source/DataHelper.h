@@ -76,7 +76,7 @@ public:
     file.createGroup("/Apoptosis");
     file.createGroup("/InboxActivation");
     file.createGroup("/InboxTraffic");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {// <= include spiker
       file.createGroup("/InboxActivation/dir_"+emp::to_string(dir));
       file.createGroup("/InboxTraffic/dir_"+emp::to_string(dir));
     }
@@ -91,7 +91,7 @@ public:
     }
     file.createGroup("/TotalContribute/");
     file.createGroup("/ResourceContributed/");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {// <= include spiker
       file.createGroup("/ResourceContributed/dir_"+emp::to_string(dir));
     }
     file.createGroup("/ResourceHarvested/");
@@ -118,6 +118,9 @@ public:
       file.createGroup("/CellGen/lev_"+emp::to_string(lev));
     }
     file.createGroup("/Death");
+    file.createGroup("/OutgoingConnectionCount");
+    file.createGroup("/FledglingConnectionCount");
+    file.createGroup("/IncomingConnectionCount");
 
 
     InitAttributes();
@@ -211,6 +214,9 @@ public:
         CellAge();
         for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) CellGen(lev);
         Death();
+        OutgoingConnectionCount();
+        FledglingConnectionCount();
+        IncomingConnectionCount();
         file.flush(H5F_SCOPE_LOCAL);
       } else if (update % cfg.ANIMATION_FREQUENCY() < cfg.ENV_TRIG_FREQ()) {
         // record frequent snapshots of these to stich together ananimations
@@ -1422,6 +1428,87 @@ private:
         else if (dw.man->Stockpile(i).IsBankrupt()) data[i] = 2;
         else if (dw.man->Priority(i).QueryPendingGenome()) data[i] = 3;
       }
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void OutgoingConnectionCount() {
+
+    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+
+    H5::DSetCreatPropList plist;
+    plist.setChunk(2, dims);
+    plist.setDeflate(6);
+
+    const auto tid = H5::PredType::NATIVE_UINT32;
+
+    H5::DataSet ds = file.createDataSet(
+      "/OutgoingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims),
+      plist
+    );
+
+    uint32_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Connection(i).ViewDeveloped().size();
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void FledglingConnectionCount() {
+
+    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+
+    H5::DSetCreatPropList plist;
+    plist.setChunk(2, dims);
+    plist.setDeflate(6);
+
+    const auto tid = H5::PredType::NATIVE_UINT32;
+
+    H5::DataSet ds = file.createDataSet(
+      "/FledglingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims),
+      plist
+    );
+
+    uint32_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Connection(i).ViewFledgling().size();
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void IncomingConnectionCount() {
+
+    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+
+    H5::DSetCreatPropList plist;
+    plist.setChunk(2, dims);
+    plist.setDeflate(6);
+
+    const auto tid = H5::PredType::NATIVE_UINT32;
+
+    H5::DataSet ds = file.createDataSet(
+      "/IncomingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims),
+      plist
+    );
+
+    uint32_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.frames[i]->GetIncomingConectionCount();
     }
 
     ds.write((void*)data, tid);
