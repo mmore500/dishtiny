@@ -39,7 +39,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
   SetPopStruct_Grid(cfg.GRID_W(), cfg.GRID_H());
 
   emp::Random rand_init(cfg.SEED());
-  for(size_t i = 0; i < GetSize(); ++i) {
+  for (size_t i = 0; i < GetSize(); ++i) {
     local_rngs.push_back(
       emp::NewPtr<emp::Random>(rand_init.GetInt(
         1,
@@ -51,7 +51,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
 
   man = emp::NewPtr<Manager>(*this, local_rngs, global_rngs, cfg);
 
-  for(size_t i = 0; i < GetSize(); ++i) {
+  for (size_t i = 0; i < GetSize(); ++i) {
     frames.push_back(emp::NewPtr<FrameCell>(
       *local_rngs[i],
       cfg,
@@ -74,9 +74,9 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
     const auto neighs = GeometryHelper(cfg).CalcLocalNeighs(pos);
 
     const size_t h_count = man->Heir(pos).HeirCount();
-    if(h_count) {
-      for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-        if(man->Heir(pos).IsHeir(dir)) {
+    if (h_count) {
+      for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+        if (man->Heir(pos).IsHeir(dir)) {
           man->Stockpile(neighs[dir]).InternalAcceptResource(amt/h_count);
         }
       }
@@ -384,7 +384,7 @@ void DishWorld::Step() {
       man->Family(dest).SetPrevChan(opt_sirepack->prev_chan);
       man->Family(dest).SetCellGen(opt_sirepack->cell_gen, opt_sirepack->replev);
       // check that parent hasn't been overwritten by a different birth
-      if(man->Family(opt_sirepack->par_pos).GetBirthUpdate() != GetUpdate()) {
+      if (man->Family(opt_sirepack->par_pos).GetBirthUpdate() != GetUpdate()) {
         man->Family(opt_sirepack->par_pos).AddChildPos(dest);
         // parental generation bump disabled
         // man->Channel(opt_sirepack->par_pos).LogReprGen(opt_sirepack->replev);
@@ -428,7 +428,7 @@ void DishWorld::Step() {
     }
 
     for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
-      for(size_t l = 0; l < cfg.NLEV(); ++l) {
+      for (size_t l = 0; l < cfg.NLEV(); ++l) {
         man->Wave(r,i,l).CalcNext(GetUpdate());
       }
     }
@@ -457,7 +457,7 @@ void DishWorld::Step() {
 
   // do cell action!
   #pragma omp parallel for
-  for(size_t i = 0; i < GetSize(); ++i) {
+  for (size_t i = 0; i < GetSize(); ++i) {
     if (IsOccupied(i)) {
       frames[i]->Process(GetUpdate());
     }
