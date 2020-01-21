@@ -259,7 +259,7 @@ public:
     ));
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<double>>(
+    artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
       "Resource Flow",
       "Resource Flow",
       grid_viewer,
@@ -279,6 +279,56 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
+          else return "yellow";
+        } else return "black";
+      },
+      cfg_
+    ));
+
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
+      "Messaging",
+      "Messaging",
+      grid_viewer,
+      [this](const size_t i){
+        return w.IsOccupied(i)
+          ? std::make_optional(w.man->Inbox(i).GetTraffic())
+          : std::nullopt;
+      },
+      [](std::optional<size_t> state) -> std::string {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else return "yellow";
+        } else return "black";
+      },
+      cfg_
+    ));
+
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
+      "Messaging Flow",
+      "Messaging Flow",
+      grid_viewer,
+      [this](const size_t i){
+        size_t count = 0;
+        for (size_t d = 0; d < Cardi::Dir::NumDirs + 1; ++d) { if (w.man->Inbox(i).GetTraffic(d)) ++count;
+        }
+        return w.IsOccupied(i)
+          ? std::make_optional(count)
+          : std::nullopt;
+      },
+      [](std::optional<size_t> state) -> std::string {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else if (*state == 5) return "gray";
           else return "yellow";
         } else return "black";
       },
@@ -451,6 +501,128 @@ public:
         cfg
       ));
     }
+
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtistConnection>(
+      "Connection",
+      "Connection",
+      grid_viewer,
+      [this](const size_t i){
+        emp::vector<size_t> res;
+        const auto & source = w.man->Connection(i).ViewDeveloped();
+        std::transform(
+          std::begin(source),
+          std::end(source),
+          std::back_inserter(res),
+          [](const auto & item){ return item.first; }
+        );
+        return res;
+      },
+      cfg_
+    ));
+
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtistConnection>(
+      "Fledgling",
+      "Fledgling",
+      grid_viewer,
+      [this](const size_t i){
+        emp::vector<size_t> res;
+        const auto & source = w.man->Connection(i).ViewFledgling();
+        for (const auto & set : source) {
+          std::transform(
+            std::begin(set),
+            std::end(set),
+            std::back_inserter(res),
+            [](const auto & item){ return std::get<0>(item); }
+          );
+        }
+        return res;
+      },
+      cfg_
+    ));
+
+    artists.emplace_back();
+    for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
+      artists.back().push_back(emp::NewPtr<WebArtist<double>>(
+        emp::to_string("Sharing Fraction Direction ", d),
+        "Sharing Fraction",
+        grid_viewer,
+        [this, d](const size_t i){
+          return w.IsOccupied(i)
+            ? std::make_optional(w.man->Sharing(i).ViewSharingFrac(d))
+            : std::nullopt;
+        },
+        [this](std::optional<double> amt) -> std::string {
+          if (amt) {
+            if (*amt > cfg.REP_THRESH()) return "yellow";
+            else if (*amt > 0) return emp::ColorHSV(
+              240.0-180.0*(*amt)/cfg.REP_THRESH(),
+              1.0,
+              1.0
+            );
+            else if (*amt == 0) return "white";
+            else return "red";
+          } else return "black";
+        },
+        cfg
+      ));
+    }
+
+    artists.emplace_back();
+    for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
+      artists.back().push_back(emp::NewPtr<WebArtist<double>>(
+        emp::to_string("Shared Resource Direction ", d),
+        "Shared Resource",
+        grid_viewer,
+        [this, d](const size_t i){
+          return w.IsOccupied(i)
+            ? std::make_optional(w.man->Stockpile(i).QueryExternalContribute(d))
+            : std::nullopt;
+        },
+        [this](std::optional<double> amt) -> std::string {
+          if (amt) {
+            if (*amt > cfg.REP_THRESH()) return "yellow";
+            else if (*amt > 0) return emp::ColorHSV(
+              240.0-180.0*(*amt)/cfg.REP_THRESH(),
+              1.0,
+              1.0
+            );
+            else if (*amt == 0) return "white";
+            else return "red";
+          } else return "black";
+        },
+        cfg
+      ));
+    }
+
+    artists.emplace_back();
+    for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
+      artists.back().push_back(emp::NewPtr<WebArtist<double>>(
+        emp::to_string("Messaging Direction ", d),
+        "Messaging",
+        grid_viewer,
+        [this, d](const size_t i){
+          return w.IsOccupied(i)
+            ? std::make_optional(w.man->Inbox(i).GetTraffic(d))
+            : std::nullopt;
+        },
+        [this](std::optional<double> amt) -> std::string {
+          if (amt) {
+            if (*amt > cfg.REP_THRESH()) return "yellow";
+            else if (*amt > 0) return emp::ColorHSV(
+              240.0-180.0*(*amt)/cfg.REP_THRESH(),
+              1.0,
+              1.0
+            );
+            else if (*amt == 0) return "white";
+            else return "red";
+          } else return "black";
+        },
+        cfg
+      ));
+    }
+
 
     grid_viewer.SetCSS(
       "min-height",

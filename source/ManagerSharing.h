@@ -86,6 +86,9 @@ public:
     out_resistance_fresh[outgoing_dir] = dur;
   }
 
+  double ViewSharingFrac(const size_t dir) const {
+    return sharing_fracs[dir];
+  }
 
   void ResolveNextResistance(const size_t update) {
 

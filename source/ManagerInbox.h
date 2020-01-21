@@ -68,5 +68,15 @@ public:
     return inboxes[dir].size();
   }
 
+  size_t GetTraffic() const {
+    return std::accumulate(
+      std::begin(inboxes),
+      std::end(inboxes),
+      0,
+      [](const size_t & a, const auto & b){
+        return a + b.size();
+      }
+    );
+  }
 
 };
