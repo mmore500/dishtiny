@@ -34,10 +34,13 @@ public:
   inline size_t GetLocalSize() const { return cfg.GRID_H() * cfg.GRID_W(); }
 
   /*
-   * Local eometry helper function.
+   * Local geometry helper function.
    */
   inline size_t GetLocalPos(const int x, const int y) const {
-    return emp::Mod(y, cfg.GRID_H()) * cfg.GRID_W() + emp::Mod(x, cfg.GRID_W());
+    return (
+      emp::Mod(y, static_cast<int>(cfg.GRID_H())) * cfg.GRID_W()
+      + emp::Mod(x, static_cast<int>(cfg.GRID_W()))
+    );
   }
 
   emp::vector<size_t> CalcLocalNeighs(const size_t pos) const {
@@ -45,10 +48,7 @@ public:
     emp::vector<size_t> res;
 
     for(size_t d = 0; d < Cardi::NumDirs; ++d) {
-      res.push_back(GetLocalPos(
-          ((int)GetLocalX(pos)) + Cardi::Dx[d],
-          ((int)GetLocalY(pos)) + Cardi::Dy[d]
-        ));
+      res.push_back( CalcLocalNeigh(pos, d) );
     }
 
     return res;
@@ -58,8 +58,8 @@ public:
   inline size_t CalcLocalNeigh(const size_t pos, const size_t dir) const {
 
     return GetLocalPos(
-      ((int)GetLocalX(pos)) + Cardi::Dx[dir],
-      ((int)GetLocalY(pos)) + Cardi::Dy[dir]
+      static_cast<int>(GetLocalX(pos)) + Cardi::Dx[dir],
+      static_cast<int>(GetLocalY(pos)) + Cardi::Dy[dir]
     );
 
   }
