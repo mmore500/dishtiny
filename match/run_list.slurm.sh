@@ -57,25 +57,28 @@ echo "----------------"
 
 SEED_OFFSET=1000
 SEED=$(( SEED_OFFSET + SLURM_ARRAY_TASK_ID ))
-read -r SEED_A SEED_B <<< $(python3 -c "
+read -r REP SEED_A SEED_B <<< $(python3 -c "
 import itertools as it
 a = [1004, 1017, 1029, 1051, 1071, 1078, 1083, 1085, ]
 b = [
   x for x in range(${SEED_OFFSET}, ${SEED_OFFSET} + 100)
   if x not in a
 ]
-combos = it.cycle(
-  res
+combos = [
+  (ax, bx)
   for rot_a in ( a[n:] + a[:n] for n in range(len(a)) )
-  for res in zip(rot_a, b)
+  for ax, bx in zip(it.cycle(rot_a), b)
+]
+repped_combos = (
+  (rep, combo)
+  for rep, combos in enumerate(it.repeat(combos))
+  for combo in combos
 )
-ax, bx = next(
-  x for i, x in enumerate(combos) if i == ${SLURM_ARRAY_TASK_ID}
+rep, (ax, bx) = next(
+  x for i, x in enumerate(repped_combos) if i == ${SLURM_ARRAY_TASK_ID}
 )
-print(ax, bx)
+print(rep, ax, bx)
 ")
-
-REP=$((SLURM_ARRAY_TASK_ID % 10))
 LAST_STEP=24
 
 OUTPUT_DIR="/mnt/scratch/mmore500/ko-all-regulation/seed_a=${SEED_A}+seed_b=${SEED_B}+rep=${REP}"
