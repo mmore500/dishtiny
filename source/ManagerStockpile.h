@@ -106,7 +106,9 @@ public:
 
   double QueryTotalContribute() const {
     return std::accumulate(
-      contrib_resource.begin(),contrib_resource.end(), 0.0
+      std::begin(contrib_resource),
+      std::end(contrib_resource),
+      0.0
     );
   }
 
@@ -114,11 +116,17 @@ public:
     // shared resource was sitting around for an update, so it decayed
     resource += refund_resource * cfg.RESOURCE_DECAY();
     refund_resource = 0.0;
-    for(size_t dir = 0; dir < contrib_resource.size(); ++dir) {
-      // shared resource was sitting around for an update, so it decayed
-      resource += contrib_resource[dir] * cfg.RESOURCE_DECAY();
-      contrib_resource[dir] = 0.0;
-    }
+    // shared resource was sitting around for an update, so it decayed
+    resource += std::accumulate(
+      std::begin(contrib_resource),
+      std::end(contrib_resource),
+      0.0
+    ) * cfg.RESOURCE_DECAY();
+    std::fill(
+      std::begin(contrib_resource),
+      std::end(contrib_resource),
+      0.0
+    );
   }
 
   bool IsBankrupt() const {
