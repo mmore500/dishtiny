@@ -185,7 +185,7 @@ public:
       "Channel",
       "Channel",
       grid_viewer,
-      [this](size_t i){
+      [this](const size_t i){
         return w.man->Channel(i).GetIDs();
       },
       [this](std::optional<ChannelPack> cp) {
@@ -205,7 +205,7 @@ public:
       "Resource Stockpile",
       "Resource Stockpile",
       grid_viewer,
-      [this](size_t i){
+      [this](const size_t i){
         return w.IsOccupied(i)
           ? std::make_optional(
             w.man->Stockpile(i).QueryResource()
@@ -240,7 +240,7 @@ public:
       "Resource Sharing",
       "Resource Sharing",
       grid_viewer,
-      [this](size_t i){
+      [this](const size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.man->Stockpile(i).QueryTotalContribute()) : std::nullopt;
       },
       [this](std::optional<double> amt) -> std::string {
@@ -263,7 +263,7 @@ public:
       "Resource Flow",
       "Resource Flow",
       grid_viewer,
-      [this](size_t i){
+      [this](const size_t i){
         size_t count = 0;
         for (size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
           if (w.man->Stockpile(i).QueryExternalContribute(d)) ++count;
@@ -290,7 +290,7 @@ public:
       "Reproduction",
       "Reproduction",
       grid_viewer,
-      [this](size_t i){
+      [this](const size_t i){
         return w.man->Priority(i).CountRequests();
       },
       [](std::optional<size_t> state) {
@@ -310,7 +310,7 @@ public:
       "Apoptosis",
       "Apoptosis",
       grid_viewer,
-      [this](size_t i){
+      [this](const size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.man->Apoptosis(i).GetState()) : std::nullopt;
       },
       [](std::optional<size_t> state) -> std::string {
@@ -329,7 +329,7 @@ public:
       "Taxa",
       "Taxa",
       grid_viewer,
-      [this](size_t i){
+      [this](const size_t i){
         return w.IsOccupied(i) ? std::make_optional(w.GetOrgPtr(i)) : std::nullopt;
       },
       [](std::optional<emp::Ptr<Genome>> gen) -> std::string {
@@ -350,7 +350,7 @@ public:
         emp::to_string("Resource Wave Level ", l),
         "Resource Wave",
         grid_viewer,
-        [this, l](size_t i){
+        [this, l](const size_t i){
           return w.IsOccupied(i) ? std::make_optional(w.man->Wave(0, i,l).GetState()) : std::nullopt;
         },
         [this, l](std::optional<int> cp) -> std::string {
@@ -378,7 +378,7 @@ public:
         emp::to_string("Channel Generation Level ", l),
         "Channel Generation",
         grid_viewer,
-        [this, l](size_t i){
+        [this, l](const size_t i){
           return w.IsOccupied(i) ? std::make_optional(w.man->Channel(i).GetGeneration(l)) : std::nullopt;
         },
         [this, l](std::optional<size_t> amt) -> std::string {
@@ -407,7 +407,7 @@ public:
         emp::to_string("Expiration Level ", l),
         "Expiration",
         grid_viewer,
-        [this, l](size_t i){
+        [this, l](const size_t i){
           return w.IsOccupied(i) ? std::make_optional(w.man->Channel(i).IsExpired(l)) : std::nullopt;
         },
         [this](std::optional<size_t> exp) -> std::string {
@@ -433,7 +433,7 @@ public:
         emp::to_string("Reproductive Pause Level ", l),
         "Reproductive Pause",
         grid_viewer,
-        [this, l](size_t i){
+        [this, l](const size_t i){
           return w.IsOccupied(i)
             ? std::make_optional(w.frames[i]->GetPauseSum(l))
             : std::nullopt;
