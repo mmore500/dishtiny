@@ -59,7 +59,7 @@ public:
       >::type
       >::type
 #else
-    , emp::SymmetricWrapMetric<TAG_WIDTH> // hamming is default
+    , emp::UnifMod<emp::ApproxDualStreakMetric<TAG_WIDTH>>
 #endif
 #ifdef SELECTOR
     , std::conditional<STRINGVIEWIFY(SELECTOR) == "roulette",
