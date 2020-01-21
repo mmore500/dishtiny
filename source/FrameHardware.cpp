@@ -106,11 +106,13 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
   // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
   }
 
+  if (facing < Cardi::Dir::NumDirs) { // not spiker
   // neighbor has more resource or less?
   if (IsPoorerThan() && IsLive()) {
     cpu.TriggerEvent("EnvTrigger", g.GetTag(3));
   } else if (IsLive()) {
     cpu.TriggerEvent("EnvTrigger", g.GetTag(4));
+  }
   }
 
   // neighbor is dead or live?
@@ -133,8 +135,7 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
   // } else {
   // // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
   // }
-
-  if (cfg.CHANNELS_VISIBLE()) {
+  if (cfg.CHANNELS_VISIBLE() && facing < Cardi::Dir::NumDirs) { // not spiker
 
     // is neighbor expired?
     // if (IsExpired(0)) {
@@ -191,11 +192,13 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
         cpu.TriggerEvent("EnvTrigger", g.GetTag(11+6*lev));
       }
 
+      if (facing < Cardi::Dir::NumDirs) { // not spiker
       // channel match triggers
       if (IsChannelMate(lev)) {
         cpu.TriggerEvent("EnvTrigger", g.GetTag(12+6*lev));
       } else {
         cpu.TriggerEvent("EnvTrigger", g.GetTag(13+6*lev));
+      }
       }
     }
 
@@ -221,12 +224,9 @@ void FrameHardware::SetupCompute(const size_t update) {
     membrane.DecayRegulators();
     internal_membrane.DecayRegulators();
 
-    // account for spiker
-    if (facing < Cardi::Dir::NumDirs) {
-      DispatchEnvTriggers(update);
+    DispatchEnvTriggers(update);
 
-      TryClearReproductionReserve();
-    }
+    TryClearReproductionReserve();
 
     TryClearStockpileReserve();
 
