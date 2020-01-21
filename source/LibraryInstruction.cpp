@@ -760,30 +760,6 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
   }
 
   il.AddInst(
-    "PauseRepr",
-    [&cfg](hardware_t & hw, const inst_t & inst){
-
-      FrameHardware &fh = *hw.GetTrait();
-      Manager &man = fh.Cell().Man();
-
-      const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir();
-      const size_t dur = 2 + state.GetLocal(inst.args[0]);
-
-      for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
-        man.Priority(fh.Cell().GetNeigh(dir)).PauseRepr(
-          Cardi::Opp[dir],
-          replev,
-          dur
-        );
-      }
-
-    },
-    1,
-    "Pause reproduction in a particular direction for all reproduction levels for a certain duration."
-  );
-
-  il.AddInst(
     "ActivateInbox",
     [](hardware_t &hw, const inst_t &inst){
       FrameHardware &fh = *hw.GetTrait();
