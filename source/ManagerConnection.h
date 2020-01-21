@@ -77,10 +77,10 @@ public:
 
   void Reset();
 
-  std::unordered_multimap<
+  const std::unordered_multimap<
     size_t,
     std::reference_wrapper<FrameCell>
-  > & ViewDeveloped();
+  > & ViewDeveloped() const;
 
   void SetAgingParam(const double request);
 

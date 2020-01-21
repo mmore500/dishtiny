@@ -41,10 +41,10 @@ void ManagerConnection::Reset() {
   connection_prune_count = 0;
 }
 
-std::unordered_multimap<
+const std::unordered_multimap<
   size_t,
   std::reference_wrapper<FrameCell>
-> & ManagerConnection::ViewDeveloped() {
+> & ManagerConnection::ViewDeveloped() const {
   return developed;
 }
 
