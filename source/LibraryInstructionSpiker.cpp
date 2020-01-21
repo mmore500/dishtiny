@@ -383,7 +383,9 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
 
-      if (state.GetLocal(inst.args[0])) {
+      const double p = 0.5 * std::tanh(-state.GetLocal(inst.args[0]) - 1) + 0.5;
+
+      if (hw.GetRandom().P(p)) {
         man.Connection(pos).PruneOutgoingConnection();
       }
 
@@ -398,7 +400,9 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
       const state_t & state = hw.GetCurState();
       FrameHardware &fh = *hw.GetTrait();
 
-      if (state.GetLocal(inst.args[0])) {
+      const double p = 0.5 * std::tanh(-state.GetLocal(inst.args[0]) - 1) + 0.5;
+
+      if (hw.GetRandom().P(p)) {
         fh.Cell().PruneIncomingConnection();
       }
 
@@ -460,13 +464,19 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
     "TryAddFledglingConnection",
     [](hardware_t & hw, const inst_t & inst){
       FrameHardware &fh = *hw.GetTrait();
+      const state_t & state = hw.GetCurState();
 
       Manager &man = fh.Cell().Man();
+
+      const double p = 0.5 * std::tanh(state.GetLocal(inst.args[0])) + 0.5;
+
       const size_t pos = fh.Cell().GetPos();
-      man.Connection(pos).TryAddFledgling();
+      if (hw.GetRandom().P(p)) {
+        man.Connection(pos).TryAddFledgling();
+      }
 
     },
-    0,
+    1,
     "TODO"
   );
 
