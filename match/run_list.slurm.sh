@@ -92,7 +92,8 @@ echo "   REP" $REP
 echo "   LAST_STEP" $LAST_STEP
 echo "   OUTPUT_DIR" $OUTPUT_DIR
 echo "   CONFIG_DIR" $CONFIG_DIR
-echo "   SOURCE_DIR" $SOURCE_DIR
+echo "   SOURCE_DIR_A" $SOURCE_DIR_A
+echo "   SOURCE_DIR_B" $SOURCE_DIR_B
 
 export SLURM_LOGFILE="slurm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.out"
 export SLURM_LOGPATH="/mnt/home/mmore500/slurmlogs/${SLURM_LOGFILE}"
@@ -136,13 +137,13 @@ MAX_UPDATE_B=$(python3 -c "import sys;from keyname import keyname as kn; print(\
 POP_PATH_B=$(echo "${SOURCE_DIR_B}/"*"+update=${MAX_UPDATE_B}+"*".json.cereal")
 POP_FILENAME_B=$(basename ${POP_PATH_B})
 
-echo "   MAX_UPDATE" $MAX_UPDATE_A
-echo "   POP_PATH" $POP_PATH_A
-echo "   POP_FILENAME" $POP_FILENAME_A
+echo "   MAX_UPDATE_A" $MAX_UPDATE_A
+echo "   POP_PATH_A" $POP_PATH_A
+echo "   POP_FILENAME_A" $POP_FILENAME_A
 
-echo "   MAX_UPDATE" $MAX_UPDATE_B
-echo "   POP_PATH" $POP_PATH_B
-echo "   POP_FILENAME" $POP_FILENAME_B
+echo "   MAX_UPDATE_B" $MAX_UPDATE_B
+echo "   POP_PATH_B" $POP_PATH_B
+echo "   POP_FILENAME_B" $POP_FILENAME_B
 
 # copy over competitors
 mkdir seedpop
