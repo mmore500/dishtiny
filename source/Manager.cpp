@@ -73,7 +73,7 @@ Manager::Manager(
 
           // spiker
           res.push_back(
-            [this, i](const double amt){
+            [this, i, &cfg](const double amt){
 
               double tot_permittivity = 0.0;
               const auto & developed = Connection(i).ViewDeveloped();
