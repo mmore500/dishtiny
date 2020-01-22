@@ -77,7 +77,10 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
     if (h_count) {
       for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
         if (man->Heir(pos).IsHeir(dir)) {
-          man->Stockpile(neighs[dir]).InternalAcceptResource(amt/h_count);
+          man->Stockpile(neighs[dir]).ExternalContribute(
+            amt/h_count,
+            Cardi::Opp[dir]
+          );
         }
       }
     }
