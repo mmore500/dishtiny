@@ -148,7 +148,7 @@ echo "   POP_FILENAME_B" $POP_FILENAME_B
 # copy over competitors
 mkdir seedpop
 cp $POP_PATH_A "seedpop/id=1+${POP_FILENAME_A}"
-cp $POP_PATH_B "seedpop/id=1+${POP_FILENAME_B}"
+cp $POP_PATH_B "seedpop/id=2+${POP_FILENAME_B}"
 
 ################################################################################
 echo
