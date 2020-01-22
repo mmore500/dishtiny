@@ -119,13 +119,14 @@ source "/mnt/home/mmore500/myPy/bin/activate"
 # run jinja on template
 j2 -o run_list.slurm.sh run_list.slurm.sh.jinja
 
-if  [ $CUR_STEP -lt 24 ]; then
-  if ls *.json.cereal | grep -q "update\=65536"; then
+if  [ $CUR_STEP -lt 72 ]; then
+  if ls *.json.cereal | grep -q "update\=32768"; then
     sbatch run_list.slurm.sh                                                   \
     && echo "   job submit success!"                                           \
     || echo "   job submit failure (FAIL)"
   else
     echo "   missing final population... job incomplete? (FAIL)"
+    exit 32768
   fi
 else
   echo "   nevermind, all done! (COMPLETE)"
