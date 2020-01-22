@@ -64,8 +64,8 @@ for measure in df['Measure'].unique():
 
     plt.clf()
 
-    g = sns.FacetGrid(
-        df.pivot_table(
+    ax = sns.barplot(
+        data=df.pivot_table(
             index=[
                 'First Update', 'Last Update', 'Relationship',
                 'Relationship Category', 'Seed', 'Treatment'
@@ -74,15 +74,9 @@ for measure in df['Measure'].unique():
             values='Value',
             aggfunc='first'
         ).reset_index(),
-        col="Treatment",
-        hue="Relationship Category",
-        col_wrap=4,
-    )
-
-    g.map(
-        sns.barplot,
-        "Relationship",
-        measure,
+        x="Relationship",
+        y=measure,
+        hue="Treatment",
         order=[
             'Neighbor',
             'Related Neighbor',
@@ -98,9 +92,8 @@ for measure in df['Measure'].unique():
         ],
     )
 
-    for ax in g.axes.flat:
-        for label in ax.get_xticklabels():
-            label.set_rotation(-90)
+    for label in ax.get_xticklabels():
+        label.set_rotation(-90)
 
     outfile = kn.pack({
         'title' : slugify(measure),
@@ -112,6 +105,8 @@ for measure in df['Measure'].unique():
         '_source_hash' :kn.unpack(dataframe_filename)['_source_hash'],
         'ext' : ".pdf"
     })
+
+    plt.gcf().set_size_inches(12, 5)
 
     plt.gcf().savefig(
         outfile,
