@@ -56,7 +56,7 @@ Manager::Manager(
     mshs.push_back(
       emp::NewPtr<ManagerSharing>(
         [this, i](const double frac){
-          return Stockpile(i).RequestResourceFrac(frac, 0.0);
+          return Stockpile(i).RequestResourceFrac(frac);
         },
         [this, i, &cfg](){
           GeometryHelper geom(cfg);

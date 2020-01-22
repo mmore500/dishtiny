@@ -44,27 +44,27 @@ public:
     return resource;
   }
 
-  double RequestResourceAmt(const double amt) {
+  double RequestResourceAmt(const double amt, const double reserve = 0.0) {
     emp_assert(amt >= 0);
-    if (resource > 0) {
-      double actual = std::min(resource, amt);
-      resource -= actual;
-      return actual;
-    } else {
-      return 0;
-    }
+    emp_assert(reserve >= 0.0);
+
+    const double available = std::max(0.0, resource - reserve);
+    const double dispensed = std::min(available, amt);
+
+    emp_assert(dispensed >= 0.0);
+    resource -= dispensed;
+
+    //if you dispensed something, resource >= 0
+    emp_assert(!dispensed || resource >= 0.0);
+
+    return dispensed;
+
   }
 
-  double RequestResourceFrac(const double frac, const double reserve) {
-    emp_assert(frac >= 0 && frac <= 1);
-    emp_assert(reserve >= 0);
-    if (resource - reserve > 0) {
-      double amt = (resource - reserve) * frac;
-      resource -= amt;
-      return amt;
-    } else {
-      return 0;
-    }
+  double RequestResourceFrac(const double frac, const double reserve = 0.0) {
+    emp_assert(frac >= 0.0 && frac <= 1.0);
+    emp_assert(reserve >= 0.0);
+    return RequestResourceAmt(frac * resource, reserve);
   }
 
   void InternalApplyHarvest(const size_t lev, const double amt) {
@@ -113,6 +113,12 @@ public:
   }
 
   void ResolveExternalContributions() {
+
+    emp_assert(std::all_of(
+      std::begin(contrib_resource),
+      std::end(contrib_resource),
+      [](const auto val){ return val >= 0.0; }
+    ));
     // shared resource was sitting around for an update, so it decayed
     resource += refund_resource * cfg.RESOURCE_DECAY();
     refund_resource = 0.0;
