@@ -128,11 +128,13 @@ public:
     const double frac // in_resistance * out_resistance * req_frac
   ) {
     emp_assert(frac >= 0.0); emp_assert(frac <= 1.0);
+    emp_assert(std::isfinite(frac));
     sharing_fracs[outgoing_dir] += (
       (1.0 - sharing_fracs[outgoing_dir]) * frac
     );
     emp_assert(sharing_fracs[outgoing_dir] >= 0.0);
     emp_assert(sharing_fracs[outgoing_dir] <= 1.0);
+    emp_assert(std::isfinite(sharing_fracs[outgoing_dir]));
   }
 
   void ProcessSharingRequest(const size_t update) {
@@ -143,6 +145,12 @@ public:
       std::begin(sharing_fracs),
       std::end(sharing_fracs),
       [](const auto val){ return val >= 0.0 && val <= 1.0; }
+    ));
+
+    emp_assert(std::all_of(
+      std::begin(sharing_fracs),
+      std::end(sharing_fracs),
+      [](const auto val){ return std::isfinite(val); }
     ));
 
     // have to make sure we don't take a fraction greater than largest request
@@ -166,7 +174,7 @@ public:
     ));
 
     const double max_amt = request_resource_frac(max_frac);
-    emp_assert(max_amt >= 0.0);
+    emp_assert(max_amt >= 0.0); emp_assert(std::isfinite(max_frac));
 
     const double tot_fracs = std::accumulate(
       std::begin(sharing_fracs),
@@ -186,6 +194,12 @@ public:
       std::begin(sharing_fracs),
       std::end(sharing_fracs),
       [](const auto val){ return val >= 0.0 && val <= 1.0; }
+    ));
+
+    emp_assert(std::all_of(
+      std::begin(sharing_fracs),
+      std::end(sharing_fracs),
+      [](const auto val){ return isfinite(val); }
     ));
 
     emp_assert((
@@ -215,14 +229,22 @@ public:
 
   void Reset() {
     std::fill(std::begin(in_resistance), std::end(in_resistance), 0.0);
-    std::fill(std::begin(in_resistance_pending), std::end(in_resistance_pending), 0.0);
+    std::fill(
+      std::begin(in_resistance_pending),
+      std::end(in_resistance_pending),
+      0.0
+    );
     std::fill(
       std::begin(in_resistance_fresh),
       std::end(in_resistance_fresh),
       0
     );
     std::fill(std::begin(out_resistance), std::end(out_resistance), 0.0);
-    std::fill(std::begin(out_resistance_pending), std::end(out_resistance_pending), 0.0);
+    std::fill(
+      std::begin(out_resistance_pending),
+      std::end(out_resistance_pending),
+      0.0
+    );
     std::fill(
       std::begin(out_resistance_fresh),
       std::end(out_resistance_fresh),
