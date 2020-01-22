@@ -123,7 +123,7 @@ MAX_UPDATE_A=$(python3 -c "import sys;from keyname import keyname as kn; print(\
     int(kn.unpack(filename)['update'])                                         \
     for filename in sys.argv[1:]                                               \
   )                                                                            \
-)" "${SOURCE_DIR}/"*".json.cereal")
+)" "${SOURCE_DIR_A}/"*".json.cereal")
 POP_PATH_A=$(echo "${SOURCE_DIR_A}/"*"+update=${MAX_UPDATE_A}+"*".json.cereal")
 POP_FILENAME_A=$(basename ${POP_PATH_A})
 
@@ -133,7 +133,7 @@ MAX_UPDATE_B=$(python3 -c "import sys;from keyname import keyname as kn; print(\
     int(kn.unpack(filename)['update'])                                         \
     for filename in sys.argv[1:]                                               \
   )                                                                            \
-)" "${SOURCE_DIR}/"*".json.cereal")
+)" "${SOURCE_DIR_B}/"*".json.cereal")
 POP_PATH_B=$(echo "${SOURCE_DIR_B}/"*"+update=${MAX_UPDATE_B}+"*".json.cereal")
 POP_FILENAME_B=$(basename ${POP_PATH_B})
 
