@@ -69,7 +69,7 @@ public:
 
   void InternalApplyHarvest(const size_t lev, const double amt) {
     // if ANY level expired, can't collect resource
-    const size_t exp = expchecker(0);
+    const size_t exp = expchecker(lev);
     harvest_withdrawals[lev] += (amt <= 0.0);
     if (exp <= cfg.EXP_GRACE_PERIOD()) {
       // grace period to allow a few reproductions without sharing
