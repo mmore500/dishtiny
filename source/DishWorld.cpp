@@ -133,6 +133,7 @@ void DishWorld::GeneratePopulation() {
       inst_lib_spiker,
       cfg
     );
+    g.SetRootID(i);
     InjectAt(g, emp::WorldPosition(i));
     emp_assert(GetOrg(i).GetProgram().GetSize());
     man->Stockpile(i).InternalAcceptResource(cfg.START_RESOURCE());
