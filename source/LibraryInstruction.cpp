@@ -91,9 +91,9 @@ void LibraryInstruction::InitDefault(inst_lib_t &il) {
   il.AddInst("SetOwnRegulator", Config::hardware_t::Inst_SetOwnRegulator, 1, "Sets the regulator the currently executing function.");
   il.AddInst("AdjRegulator", Config::hardware_t::Inst_AdjRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.");
   il.AddInst("AdjOwnRegulator", Config::hardware_t::Inst_AdjOwnRegulator, 2, "Adjusts the regulator of the currently executing function towards a target.");
-  il.AddInst("ExtRegulator", Config::hardware_t::Inst_ExtRegulator, 2, "extends the decay counter of a regulator of a tag in the matchbin.");
-  il.AddInst("SenseRegulator", Config::hardware_t::Inst_SenseRegulator, 1, "Senses the regulator of a tag in the matchbin.");
-  il.AddInst("SenseOwnRegulator", Config::hardware_t::Inst_SenseOwnRegulator, 1, "Senses the regulator of the currently executing function.");
+  // il.AddInst("ExtRegulator", Config::hardware_t::Inst_ExtRegulator, 2, "extends the decay counter of a regulator of a tag in the matchbin.");
+  // il.AddInst("SenseRegulator", Config::hardware_t::Inst_SenseRegulator, 1, "Senses the regulator of a tag in the matchbin.");
+  // il.AddInst("SenseOwnRegulator", Config::hardware_t::Inst_SenseOwnRegulator, 1, "Senses the regulator of the currently executing function.");
 
   il.AddInst(
     emp::to_string("Terminal", 1073741824),
@@ -155,10 +155,10 @@ void LibraryInstruction::InitDefaultDup(inst_lib_t &il) {
   il.AddInst("DuplicateSetRegulator", Config::hardware_t::Inst_SetRegulator, 1, "Sets the regulator of a tag in the matchbin.");
   il.AddInst("DuplicateSetOwnRegulator", Config::hardware_t::Inst_SetOwnRegulator, 1, "Sets the regulator the currently executing function.");
   il.AddInst("DuplicateExtRegulator", Config::hardware_t::Inst_ExtRegulator, 2, "extends the decay counter of a regulator of a tag in the matchbin.");
-  il.AddInst("DuplicateAdjRegulator", Config::hardware_t::Inst_AdjRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.");
-  il.AddInst("DuplicateAdjOwnRegulator", Config::hardware_t::Inst_AdjOwnRegulator, 2, "Adjusts the regulator of the currently executing function towards a target.");
-  il.AddInst("DuplicateSenseRegulator", Config::hardware_t::Inst_SenseRegulator, 1, "Senses the regulator of a tag in the matchbin.");
-  il.AddInst("DuplicateSenseOwnRegulator", Config::hardware_t::Inst_SenseOwnRegulator, 1, "Senses the regulator of the currently executing function.");
+  // il.AddInst("DuplicateAdjRegulator", Config::hardware_t::Inst_AdjRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.");
+  // il.AddInst("DuplicateAdjOwnRegulator", Config::hardware_t::Inst_AdjOwnRegulator, 2, "Adjusts the regulator of the currently executing function towards a target.");
+  // il.AddInst("DuplicateSenseRegulator", Config::hardware_t::Inst_SenseRegulator, 1, "Senses the regulator of a tag in the matchbin.");
+  // il.AddInst("DuplicateSenseOwnRegulator", Config::hardware_t::Inst_SenseOwnRegulator, 1, "Senses the regulator of the currently executing function.");
 
   il.AddInst(
     emp::to_string("DuplicateTerminal", 1073741824),
@@ -326,33 +326,33 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
     {"affinity"}
   );
 
-  il.AddInst(
-    "SetDevoMembraneRegulator",
-    [](hardware_t & hw, const inst_t & inst){
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      auto & spiker = fh.Cell().GetSpiker();
-
-      emp::vector<size_t> best_fun = spiker.GetMembrane().MatchRaw(
-        inst.affinity
-      );
-
-      for (auto & fun : best_fun) {
-        spiker.GetMembrane().SetRegulator(
-          fun,
-          state.GetLocal(inst.args[0])
-        );
-        spiker.GetMembrane().DecayRegulator(
-          fun,
-          -(state.GetLocal(inst.args[1])+1)
-        );
-      }
-
-    },
-    2,
-    "Sets the regulator of a tag in the membrane."
-  );
+  // il.AddInst(
+  //   "SetDevoMembraneRegulator",
+  //   [](hardware_t & hw, const inst_t & inst){
+  //     const state_t & state = hw.GetCurState();
+  //     FrameHardware &fh = *hw.GetTrait();
+  //
+  //     auto & spiker = fh.Cell().GetSpiker();
+  //
+  //     emp::vector<size_t> best_fun = spiker.GetMembrane().MatchRaw(
+  //       inst.affinity
+  //     );
+  //
+  //     for (auto & fun : best_fun) {
+  //       spiker.GetMembrane().SetRegulator(
+  //         fun,
+  //         state.GetLocal(inst.args[0])
+  //       );
+  //       spiker.GetMembrane().DecayRegulator(
+  //         fun,
+  //         -(state.GetLocal(inst.args[1])+1)
+  //       );
+  //     }
+  //
+  //   },
+  //   2,
+  //   "Sets the regulator of a tag in the membrane."
+  // );
 
   il.AddInst(
     "PutInternalMembraneBringer",
@@ -442,31 +442,31 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
     {"affinity"}
   );
 
-  il.AddInst(
-    "SetInternalMembraneRegulator",
-    [](hardware_t & hw, const inst_t & inst){
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      emp::vector<size_t> best_fun = fh.GetInternalMembrane().MatchRaw(
-        inst.affinity
-      );
-
-      for (auto & fun : best_fun) {
-        fh.GetInternalMembrane().SetRegulator(
-          fun,
-          state.GetLocal(inst.args[0])
-        );
-        fh.GetInternalMembrane().DecayRegulator(
-          fun,
-          -(state.GetLocal(inst.args[1])+1)
-        );
-      }
-
-    },
-    2,
-    "Sets the regulator of a tag in the membrane."
-  );
+  // il.AddInst(
+  //   "SetInternalMembraneRegulator",
+  //   [](hardware_t & hw, const inst_t & inst){
+  //     const state_t & state = hw.GetCurState();
+  //     FrameHardware &fh = *hw.GetTrait();
+  //
+  //     emp::vector<size_t> best_fun = fh.GetInternalMembrane().MatchRaw(
+  //       inst.affinity
+  //     );
+  //
+  //     for (auto & fun : best_fun) {
+  //       fh.GetInternalMembrane().SetRegulator(
+  //         fun,
+  //         state.GetLocal(inst.args[0])
+  //       );
+  //       fh.GetInternalMembrane().DecayRegulator(
+  //         fun,
+  //         -(state.GetLocal(inst.args[1])+1)
+  //       );
+  //     }
+  //
+  //   },
+  //   2,
+  //   "Sets the regulator of a tag in the membrane."
+  // );
 
   il.AddInst(
     "PutMembraneBringer",
@@ -556,31 +556,31 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
     {"affinity"}
   );
 
-  il.AddInst(
-    "SetMembraneRegulator",
-    [](hardware_t & hw, const inst_t & inst){
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      emp::vector<size_t> best_fun = fh.GetMembrane().MatchRaw(
-        inst.affinity
-      );
-
-      for (auto & fun : best_fun) {
-
-        fh.GetMembrane().SetRegulator(
-          best_fun[0],
-          state.GetLocal(inst.args[0])
-        );
-        fh.GetMembrane().DecayRegulator(
-          fun,
-          -(state.GetLocal(inst.args[1])+1)
-        );
-      }
-    },
-    1,
-    "Sets the regulator of a tag in the membrane."
-  );
+  // il.AddInst(
+  //   "SetMembraneRegulator",
+  //   [](hardware_t & hw, const inst_t & inst){
+  //     const state_t & state = hw.GetCurState();
+  //     FrameHardware &fh = *hw.GetTrait();
+  //
+  //     emp::vector<size_t> best_fun = fh.GetMembrane().MatchRaw(
+  //       inst.affinity
+  //     );
+  //
+  //     for (auto & fun : best_fun) {
+  //
+  //       fh.GetMembrane().SetRegulator(
+  //         best_fun[0],
+  //         state.GetLocal(inst.args[0])
+  //       );
+  //       fh.GetMembrane().DecayRegulator(
+  //         fun,
+  //         -(state.GetLocal(inst.args[1])+1)
+  //       );
+  //     }
+  //   },
+  //   1,
+  //   "Sets the regulator of a tag in the membrane."
+  // );
 
   il.AddInst(
     "SendMsgInternal",
@@ -670,24 +670,24 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
     "Set aside an amount of stockpile resource that is not eligible for sharing."
   );
 
-  il.AddInst(
-    "ClearStockpileReserve",
-    [](hardware_t & hw, const inst_t & inst){
-      FrameHardware &fh = *hw.GetTrait();
-
-      const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir();
-      const size_t dur = 2 + state.GetLocal(inst.args[0]);
-      const double amt = std::max(state.GetLocal(inst.args[1]), 0.0);
-      const double clean_amt = std::isfinite(amt) ? amt : 0.0;
-      emp_assert(clean_amt >= 0.0);
-
-      fh.Cell().GetFrameHardware(dir).SetStockpileReserve(clean_amt, dur);
-
-    },
-    2,
-    "Set aside an amount of stockpile resource that is not eligible for sharing."
-  );
+  // il.AddInst(
+  //   "ClearStockpileReserve",
+  //   [](hardware_t & hw, const inst_t & inst){
+  //     FrameHardware &fh = *hw.GetTrait();
+  //
+  //     const state_t & state = hw.GetCurState();
+  //     const size_t dir = fh.CalcDir();
+  //     const size_t dur = 2 + state.GetLocal(inst.args[0]);
+  //     const double amt = std::max(state.GetLocal(inst.args[1]), 0.0);
+  //     const double clean_amt = std::isfinite(amt) ? amt : 0.0;
+  //     emp_assert(clean_amt >= 0.0);
+  //
+  //     fh.Cell().GetFrameHardware(dir).SetStockpileReserve(clean_amt, dur);
+  //
+  //   },
+  //   2,
+  //   "Set aside an amount of stockpile resource that is not eligible for sharing."
+  // );
 
   il.AddInst(
     "SetReproductionReserve",
@@ -711,24 +711,24 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
     "Set aside an amount of stockpile resource that is not eligible for using to reproduce."
   );
 
-  il.AddInst(
-    "ClearReproductionReserve",
-    [](hardware_t & hw, const inst_t & inst){
-      FrameHardware &fh = *hw.GetTrait();
-
-      const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir();
-      const size_t dur = 2 + state.GetLocal(inst.args[0]);
-      const double amt = std::max(0.0, state.GetLocal(inst.args[1]));
-      const double clean_amt = std::isfinite(amt) ? amt : 0.0;
-      emp_assert(clean_amt >= 0.0);
-
-      fh.Cell().GetFrameHardware(dir).SetReproductionReserve(clean_amt, dur);
-
-    },
-    2,
-    "Set aside an amount of stockpile resource that is not eligible for using to reproduce."
-  );
+  // il.AddInst(
+  //   "ClearReproductionReserve",
+  //   [](hardware_t & hw, const inst_t & inst){
+  //     FrameHardware &fh = *hw.GetTrait();
+  //
+  //     const state_t & state = hw.GetCurState();
+  //     const size_t dir = fh.CalcDir();
+  //     const size_t dur = 2 + state.GetLocal(inst.args[0]);
+  //     const double amt = std::max(0.0, state.GetLocal(inst.args[1]));
+  //     const double clean_amt = std::isfinite(amt) ? amt : 0.0;
+  //     emp_assert(clean_amt >= 0.0);
+  //
+  //     fh.Cell().GetFrameHardware(dir).SetReproductionReserve(clean_amt, dur);
+  //
+  //   },
+  //   2,
+  //   "Set aside an amount of stockpile resource that is not eligible for using to reproduce."
+  // );
 
   for(size_t replev = 0; replev < cfg.NLEV()+1; ++replev) {
     il.AddInst(
@@ -759,27 +759,27 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
     );
   }
 
-  il.AddInst(
-    "ActivateInbox",
-    [](hardware_t &hw, const inst_t &inst){
-      FrameHardware &fh = *hw.GetTrait();
-      const size_t dir = fh.CalcDir();
-      fh.Cell().GetFrameHardware(dir).SetInboxActivity(true);
-    },
-    0,
-    "Allow incoming messages from a neighbor."
-  );
-
-  il.AddInst(
-    "DeactivateInbox",
-    [](hardware_t &hw, const inst_t &inst){
-      FrameHardware &fh = *hw.GetTrait();
-      const size_t dir = fh.CalcDir();
-      fh.Cell().GetFrameHardware(dir).SetInboxActivity(false);
-    },
-    0,
-    "Block incoming messages from a neighbor."
-  );
+  // il.AddInst(
+  //   "ActivateInbox",
+  //   [](hardware_t &hw, const inst_t &inst){
+  //     FrameHardware &fh = *hw.GetTrait();
+  //     const size_t dir = fh.CalcDir();
+  //     fh.Cell().GetFrameHardware(dir).SetInboxActivity(true);
+  //   },
+  //   0,
+  //   "Allow incoming messages from a neighbor."
+  // );
+  //
+  // il.AddInst(
+  //   "DeactivateInbox",
+  //   [](hardware_t &hw, const inst_t &inst){
+  //     FrameHardware &fh = *hw.GetTrait();
+  //     const size_t dir = fh.CalcDir();
+  //     fh.Cell().GetFrameHardware(dir).SetInboxActivity(false);
+  //   },
+  //   0,
+  //   "Block incoming messages from a neighbor."
+  // );
 
 }
 
