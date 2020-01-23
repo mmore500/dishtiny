@@ -17,6 +17,7 @@
 #include "tools/math.h"
 #include "tools/Random.h"
 #include "tools/keyname_utils.h"
+#include "tools/hash_utils.h"
 
 #include "Config.h"
 #include "DishWorld.h"
@@ -622,6 +623,41 @@ public:
         cfg
       ));
     }
+
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
+      "Root",
+      "Root",
+      grid_viewer,
+      [this](const size_t i){
+        return w.IsOccupied(i)
+          ? std::make_optional(w.GetOrg(i).GetRootID())
+          : std::nullopt;
+      },
+      [](std::optional<size_t> root) -> std::string {
+        if (!root) return "black";
+        else if (*root == 1) return "red";
+        else if (*root == 2) return "green";
+        else if (*root == 3) return "blue";
+        else {
+          const size_t res = emp::hash_combine(*root, *root);
+          return emp::ColorHSV(
+            emp::Mod(res, 360.0),
+            emp::Mod(res, 0.6)+0.4,
+            1.0
+          );
+        }
+      },
+      cfg_,
+      [](
+        std::optional<size_t> root1,
+        std::optional<size_t> root2
+      ) -> std::string {
+        if (!root1 || !root2) return "black";
+        else if (*root1 == *root2) return "transparent";
+        else return "black";
+      }
+    ));
 
 
     grid_viewer.SetCSS(
