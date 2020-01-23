@@ -218,13 +218,14 @@ public:
       external_contribute[d]( sharing_fracs[d] * max_amt );
     }
 
-    // reset
-    std::fill(
-      std::begin(sharing_fracs),
-      std::end(sharing_fracs),
-      0.0
-    );
-
+    if (update % cfg.ENV_TRIG_FREQ() == 0) {
+      // reset
+      std::fill(
+        std::begin(sharing_fracs),
+        std::end(sharing_fracs),
+        0.0
+      );
+    }
   }
 
   void Reset() {

@@ -469,12 +469,12 @@ void DishWorld::Step() {
 
   // prepare for the next update
   // do it here instead of at the top so that DataHelper can view
-  if (0 == (GetUpdate()+1) % cfg.ENV_TRIG_FREQ()) {
-    for (size_t i = 0; i < GetSize(); ++i) {
+  for (size_t i = 0; i < GetSize(); ++i) {
+    man->Sharing(i).ProcessSharingRequest(GetUpdate()+1);
+    if (0 == (GetUpdate()+1) % cfg.ENV_TRIG_FREQ()) {
       // decide who gets to be parent & make a copy of that genome
       // so that it doesn't get overwritten
       man->Priority(i).ResolveSire(man->Stockpile(i).QueryResource());
-      man->Sharing(i).ProcessSharingRequest(GetUpdate()+1);
     }
   }
 
