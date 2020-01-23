@@ -16,6 +16,7 @@
 #include "tools/BitSet.h"
 #include "tools/keyname_utils.h"
 #include "tools/string_utils.h"
+#include "tools/random_utils.h"
 
 #include "Cardi.h"
 #include "DishWorld.h"
@@ -196,7 +197,7 @@ void DishWorld::LoadPopulation() {
   }
 
   // pick where to put seeded cells
-  std::vector<size_t> targets(GetSize());
+  emp::vector<size_t> targets(GetSize());
   std::iota(targets.begin(), targets.end(), 0);
 
   emp::Random rand(cfg.SEED());
