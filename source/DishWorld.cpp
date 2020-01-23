@@ -195,12 +195,11 @@ void DishWorld::LoadPopulation() {
   }
 
   // pick where to put seeded cells
+  std::vector<size_t> targets(GetSize());
+  std::iota(targets.begin(), targets.end(), 0);
+
   emp::Random rand(cfg.SEED());
-  emp::vector<size_t> targets = emp::Choose(
-    rand,
-    GetSize(),
-    GetSize() // okay if there are extra targets
-  );
+  emp::Shuffle(rand, targets);
 
   auto target = std::begin(targets);
 
