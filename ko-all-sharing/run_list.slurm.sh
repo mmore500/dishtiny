@@ -123,21 +123,21 @@ csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'              \
 
 # knockout pointer components, genome by genome
 # 27,Nop
-# 108,SendBigFracResource
-# 109,SendSmallFracResource
+# 93,SendBigFracResource
+# 94,SendSmallFracResource
 
 for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
-  sed -i -- "s/\"id\": 108\$\|\"id\": 109\$/\"id\": 27/g" $f &
+  sed -i -- "s/\"id\": 93\$\|\"id\": 94\$/\"id\": 27/g" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
 
 # knockout spiker components, genome by genome
 # 27,Nop
-# 80,SendBigFracResource
-# 81,SendSmallFracResource
+# 74,SendBigFracResource
+# 75,SendSmallFracResource
 
 for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-  sed -i -- "s/\"id\": 80\$\|\"id\": 81\$/\"id\": 27/g" $f &
+  sed -i -- "s/\"id\": 74\$\|\"id\": 75\$/\"id\": 27/g" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
 

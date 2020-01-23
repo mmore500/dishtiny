@@ -121,22 +121,35 @@ cp $POP_PATH $KO_PATH
 csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'              \
   > /dev/null # ignore byte counts printed to stdout
 
+  # knockout pointer components, genome by genome
+  # 27,Nop
+  # 73,AddDevoUpQuery
+  # 74,AddDevoDownQuery
+  # 75,PutDevoMembraneBringer
+  # 76,PutDevoMembraneBlocker
+
+  for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
+    sed -i -- "s/\"id\": 73\$\|\"id\": 74\$\|\"id\": 75\$\|\"id\": 76\$/\"id\": 27/g" $f &
+    while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
+  done
+
+
 # knockout spiker components, genome by genome
 # 27,Nop
-# 86,RemoveOutgoingConnection
-# 87,RemoveIncomingConnection
-# 88,AddDevoUpQuery
-# 89,AddDevoDownQuery
-# 91,SetConnectionAgingParam
-# 92,SetConnectionExploitParam
-# 93,SetConnectionDevelopmentParam
-# 94,SetConnectionSensingParam
-# 98,PutMembraneBringer
-# 99,PutMembraneBlocker
-# 100,SetMembraneRegulator
+# 80,PruneOutgoingConnection
+# 81,PruneIncomingConnection
+# 82,AddDevoUpQuery
+# 83,AddDevoDownQuery
+# 85,SetConnectionAgingParam
+# 86,SetConnectionExploitParam
+# 87,SetConnectionDevelopmentParam
+# 88,SetConnectionSensingParam
+
+# 98,PutMembraneBringer TODO
+# 99,PutMembraneBlocker TODO
 
 for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-  sed -i -- "s/\"id\": 80\$\|\"id\": 81\$\|\"id\": 101\$\|\"id\": 86\$\|\"id\": 87\$\|\"id\": 88\$\|\"id\": 89\$\|\"id\": 91\$\|\"id\": 92\$\|\"id\": 93\$\|\"id\": 94\$\|\"id\": 98\$\|\"id\": 99\$\|\"id\": 100\$/\"id\": 27/g" $f &
+  sed -i -- "s/\"id\": 80\$\|\"id\": 81\$\|\"id\": 82\$\|\"id\": 83\$\|\"id\": 85\$\|\"id\": 86\$\|\"id\": 87\$\|\"id\": 88\$/\"id\": 27/g" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
 

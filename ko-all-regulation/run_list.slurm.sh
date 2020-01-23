@@ -127,19 +127,12 @@ csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'              \
 # 30,SetOwnRegulator
 # 31,AdjRegulator
 # 32,AdjOwnRegulator
-# 33,ExtRegulator
-# 34,SenseRegulator
-# 35,SenseOwnRegulator
-# 69,DuplicateSetRegulator
-# 70,DuplicateSetOwnRegulator
-# 71,DuplicateExtRegulator
-# 72,DuplicateAdjRegulator
-# 73,DuplicateAdjOwnRegulator
-# 74,DuplicateSenseRegulator
-# 75,DuplicateSenseOwnRegulator
+# 66,DuplicateSetRegulator
+# 67,DuplicateSetOwnRegulator
+# 68,DuplicateExtRegulator
 
 for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
-  sed -i -- "s/\"id\": 29\$\|\"id\": 30\$\|\"id\": 31\$\|\"id\": 32\$\|\"id\": 33\$\|\"id\": 34\$\|\"id\": 35\$\|\"id\": 69\$\|\"id\": 70\$\|\"id\": 71\$\|\"id\": 72\$\|\"id\": 73\$\|\"id\": 74\$\|\"id\": 75\$/\"id\": 27/g" $f &
+  sed -i -- "s/\"id\": 29\$\|\"id\": 30\$\|\"id\": 31\$\|\"id\": 32\$\|\"id\": 66\$\|\"id\": 67\$\|\"id\": 68\$/\"id\": 27/g" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
 
@@ -149,20 +142,14 @@ done
 # 30,SetOwnRegulator
 # 31,AdjRegulator
 # 32,AdjOwnRegulator
-# 33,ExtRegulator
-# 34,SenseRegulator
-# 35,SenseOwnRegulator
-# 69,DuplicateSetRegulator
-# 70,DuplicateSetOwnRegulator
-# 71,DuplicateExtRegulator
-# 72,DuplicateAdjRegulator
-# 73,DuplicateAdjOwnRegulator
-# 74,DuplicateSenseRegulator
-# 75,DuplicateSenseOwnRegulator
+# 66,DuplicateSetRegulator
+# 67,DuplicateSetOwnRegulator
+# 68,DuplicateAdjRegulator
+# 69,DuplicateAdjOwnRegulator
 
 
 for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-  sed -i -- "s/\"id\": 29\$\|\"id\": 30\$\|\"id\": 31\$\|\"id\": 32\$\|\"id\": 33\$\|\"id\": 34\$\|\"id\": 35\$\|\"id\": 69\$\|\"id\": 70\$\|\"id\": 71\$\|\"id\": 72\$\|\"id\": 73\$\|\"id\": 74\$\|\"id\": 75\$/\"id\": 27/g" $f &
+  sed -i -- "s/\"id\": 29\$\|\"id\": 30\$\|\"id\": 31\$\|\"id\": 32\$\|\"id\": 66\$\|\"id\": 67\$\|\"id\": 68\$\|\"id\": 69\$/\"id\": 27/g" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
 
