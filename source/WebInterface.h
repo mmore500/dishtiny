@@ -910,7 +910,10 @@ public:
 
       const auto dominant = w.GetDominantInfo();
       std::ostringstream buffer;
+      buffer << "POINTER" << std::endl;
       dominant.first.GetProgram().PrintProgram(buffer);
+      buffer << std::endl << "SPIKER" << std::endl;
+      dominant.first.GetProgramSpiker().PrintProgram(buffer);
 
       return "COUNT:" + emp::to_string(dominant.second) + "\n\n" + buffer.str();
     });
