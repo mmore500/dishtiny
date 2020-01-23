@@ -67,7 +67,12 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
   // OnOffspringReady([](){;}});
 
   OnOrgDeath([this](const size_t pos){
-    double amt = std::max(0.0,man->Stockpile(pos).QueryResource());
+
+    // resolve any pending external contributions
+    man->Stockpile(pos).ResolveExternalContributions();
+
+    double amt = std::max(0.0, man->Stockpile(pos).QueryResource());
+
     if (man->Apoptosis(pos).IsMarked()) {
       amt += cfg.REP_THRESH() * cfg.APOP_RECOVERY_FRAC();
     }
