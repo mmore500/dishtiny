@@ -95,7 +95,17 @@ echo "-------"
 
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
-./dishtiny -SEED ${SEED} >run.log 2>&1
+export OMP_NUM_THREADS=1
+
+./dishtiny -SEED ${SEED} >run0.log 2>&1 &
+
+./dishtiny -SEED $(( ${SEED} + 100 )) >run1.log 2>&1 &
+
+./dishtiny -SEED $(( ${SEED} + 200 )) >run2.log 2>&1 &
+
+./dishtiny -SEED $(( ${SEED} + 300 )) >run3.log 2>&1 &
+
+wait
 
 ################################################################################
 echo
