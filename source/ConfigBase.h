@@ -22,7 +22,7 @@ EMP_BUILD_CONFIG(
   VALUE(BASE_RESOURCE_INFLOW, double, 0.0051, "What amount of resource should be provided to cells at each update?"),
   VALUE(AGE_LIMIT_MULTIPLIER, double, 1.0, "What ratio of EVENT_RADIUS should the limit on cell age be?"),
   VALUE(CHANNELS_VISIBLE, bool, true, "Should channels have any effect in the instruction set and event triggers?"),
-  VALUE(GEN_INCR_FREQ, size_t, 768, "How often should we increase cell generation counters?"),
+  VALUE(GEN_INCR_FREQ, size_t, 512, "How often should we increase cell generation counters?"),
   VALUE(EXP_GRACE_PERIOD, double, 1.0, "How many channel generations should resource collection be allowed after a cell's expires channel generation counter?"),
   VALUE(STOCHASTIC_TRIGGER_FREQ, double, 0.001, "How often should the stochastic event fire?"),
   VALUE(WAVE_REPLICATES, size_t, 4, "How many replicates of the wave system should operate concurrently?"),
