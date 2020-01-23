@@ -146,6 +146,10 @@ public:
               {"count", emp::to_string(org_count.second)},
               {"title", "dominant"},
               {"update", emp::to_string(update)},
+              {"treat", cfg.TREATMENT_DESCRIPTOR()},
+              {"seed", emp::to_string(cfg.SEED())},
+              {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
+              {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
               {"ext", ".json"}
             })
           );
@@ -164,6 +168,10 @@ public:
               {"count", emp::to_string(dw.GetNumOrgs())},
               {"component", "genomes"},
               {"update", emp::to_string(update)},
+              {"treat", cfg.TREATMENT_DESCRIPTOR()},
+              {"seed", emp::to_string(cfg.SEED())},
+              {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
+              {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
               {"ext", ".json.cereal"}
             })
           );
