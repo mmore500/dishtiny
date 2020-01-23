@@ -142,9 +142,10 @@ public:
     // shared resource was sitting around for an update, so it decayed
     resource += std::accumulate(
       std::begin(contrib_resource),
-      std::end(contrib_resource),
+      std::prev(std::end(contrib_resource)),
       0.0
     ) * cfg.RESOURCE_DECAY();
+    resource += *std::prev(std::end(contrib_resource));
     std::fill(
       std::begin(contrib_resource),
       std::end(contrib_resource),
