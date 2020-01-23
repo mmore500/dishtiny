@@ -75,9 +75,11 @@ public:
     file.createGroup("/Live");
     file.createGroup("/Apoptosis");
     file.createGroup("/InboxActivation");
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {// <= include spiker
+      file.createGroup("/InboxActivation/dir_"+emp::to_string(dir));
+    }
     file.createGroup("/InboxTraffic");
     for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {// <= include spiker
-      file.createGroup("/InboxActivation/dir_"+emp::to_string(dir));
       file.createGroup("/InboxTraffic/dir_"+emp::to_string(dir));
     }
 
@@ -185,8 +187,10 @@ public:
         Stockpile();
         Live();
         Apoptosis();
-        for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
+        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
           InboxActivation(dir);
+        }
+        for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
           InboxTraffic(dir);
         }
         for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
