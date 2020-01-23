@@ -193,9 +193,9 @@ public:
         return cp ? ChannelColor(*cp) : "black";
       },
       cfg_,
-      [this](std::optional<ChannelPack> cp1, std::optional<ChannelPack> cp2) -> std::string {
+      [](std::optional<ChannelPack> cp1, std::optional<ChannelPack> cp2) -> std::string {
         if (!cp1 || !cp2) return "black";
-        else if ((*cp1)[0] == (*cp2)[0]) return ChannelColor(*cp1);
+        else if ((*cp1)[0] == (*cp2)[0]) return "transparent";
         else if (cp1->size() > 1 && (*cp1)[1] == (*cp2)[1]) return "white";
         else return "black";
       }
