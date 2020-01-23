@@ -185,7 +185,7 @@ public:
         Stockpile();
         Live();
         Apoptosis();
-        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+        for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
           InboxActivation(dir);
           InboxTraffic(dir);
         }
@@ -196,7 +196,7 @@ public:
           RepIncoming(dir);
         }
         TotalContribute();
-        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+        for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
           ResourceContributed(dir);
         }
         for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ResourceHarvested(lev);
