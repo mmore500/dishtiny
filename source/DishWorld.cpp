@@ -73,6 +73,14 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
 
     const auto neighs = GeometryHelper(cfg).CalcLocalNeighs(pos);
 
+    // automatically set channelmates as heirs
+    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      if (man->Channel(pos).CheckMatch(
+        man->Channel(neighs[dir]),
+        cfg.NLEV() - 1
+      )) man->Heir(pos).SetHeir(dir, 2);
+    }
+
     const size_t h_count = man->Heir(pos).HeirCount();
     if (h_count) {
       for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {

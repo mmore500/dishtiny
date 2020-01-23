@@ -1140,24 +1140,24 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
     1,
     "Designate a neighbor to share in recoverable resource if the cell dies."
   );
-
-  il.AddInst(
-    "UnsetHeir",
-    [](hardware_t &hw, const inst_t &inst){
-      FrameHardware &fh = *hw.GetTrait();
-      const state_t & state = hw.GetCurState();
-      const size_t dir = fh.CalcDir();
-      Manager &man = fh.Cell().Man();
-      const size_t pos = fh.Cell().GetPos();
-      const size_t dur = (
-        std::max(0.0, state.GetLocal(inst.args[0]))
-      );
-
-      man.Heir(pos).SetHeir(dir, dur);
-    },
-    1,
-    "Prevent neighbor from sharing in recoverable resource if the cell dies."
-  );
+  //
+  // il.AddInst(
+  //   "UnsetHeir",
+  //   [](hardware_t &hw, const inst_t &inst){
+  //     FrameHardware &fh = *hw.GetTrait();
+  //     const state_t & state = hw.GetCurState();
+  //     const size_t dir = fh.CalcDir();
+  //     Manager &man = fh.Cell().Man();
+  //     const size_t pos = fh.Cell().GetPos();
+  //     const size_t dur = (
+  //       std::max(0.0, state.GetLocal(inst.args[0]))
+  //     );
+  //
+  //     man.Heir(pos).SetHeir(dir, dur);
+  //   },
+  //   1,
+  //   "Prevent neighbor from sharing in recoverable resource if the cell dies."
+  // );
 
 
 }
