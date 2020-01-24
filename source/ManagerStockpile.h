@@ -136,16 +136,13 @@ public:
       std::end(contrib_resource),
       [](const auto val){ return val >= 0.0; }
     ));
-    // shared resource was sitting around for an update, so it decayed
-    resource += refund_resource * cfg.RESOURCE_DECAY();
+    resource += refund_resource;
     refund_resource = 0.0;
-    // shared resource was sitting around for an update, so it decayed
     resource += std::accumulate(
       std::begin(contrib_resource),
-      std::prev(std::end(contrib_resource)),
+      std::end(contrib_resource),
       0.0
-    ) * cfg.RESOURCE_DECAY();
-    resource += *std::prev(std::end(contrib_resource));
+    );
     std::fill(
       std::begin(contrib_resource),
       std::end(contrib_resource),
