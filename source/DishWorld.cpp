@@ -236,7 +236,11 @@ void DishWorld::LoadPopulation() {
 
     cereal::JSONInputArchive genomes_archive(genomes_stream);
 
-    for (size_t i = 0; i < std::min(GetSize()/ids.size(), count); ++i) {
+    const size_t load_quota = GetSize() / ids.size();
+
+    const size_t load_start = ( load_quota * cfg.SEED_POP() ) % count;
+
+    for (size_t i = 0; i < count; ++i) {
       Genome genome(
         cfg,
         LibraryInstruction::Make(cfg),
@@ -245,7 +249,13 @@ void DishWorld::LoadPopulation() {
       genomes_archive(genome);
       genome.SetRootID(id);
 
-      InjectAt(
+      const size_t distance_from_start = (
+        i >= load_start
+        ? i - load_start
+        : (count - load_start) + i
+      );
+
+      if (distance_from_start < load_quota) InjectAt(
         genome,
         emp::WorldPosition(
           *(target++)
