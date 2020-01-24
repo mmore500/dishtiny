@@ -78,6 +78,7 @@ EMP_BUILD_CONFIG(
   VALUE(SYSTEMATICS, bool, true, "[NATIVE] Should we keep systematics data?"),
   VALUE(SEED_POP, size_t, 0, "[NATIVE] Should we seed the population?"),
   VALUE(SEED_POP_ID, size_t, 0, "[NATIVE] Should we seed the population with all seedpop IDs (0) or with a specific ID (>0)?"),
+  VALUE(SEED_MUTATIONS_P, double, 0.0, "[NATIVE] With what probability should we apply mutations to seeded cells??"),
   VALUE(ANIMATION_FREQUENCY, size_t, 512, "[NATIVE] How often should we save data that will be used to make animations?")
 
 )

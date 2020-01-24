@@ -249,6 +249,11 @@ void DishWorld::LoadPopulation() {
       genomes_archive(genome);
       genome.SetRootID(id);
 
+      if (rand.P(cfg.SEED_MUTATIONS_P())) genome.DoMutations(
+        mut,
+        rand
+      );
+
       const size_t distance_from_start = (
         i >= load_start
         ? i - load_start
