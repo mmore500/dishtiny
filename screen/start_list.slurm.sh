@@ -59,7 +59,7 @@ echo "----------------"
 
 SEED_OFFSET=1000
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
-CUR_STEP=0
+CUR_STEP=1000
 
 OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=0"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/screen/"
