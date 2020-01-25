@@ -122,9 +122,6 @@ int main(int argc, char* argv[])
       && world.GetUpdate() >= expiration_update + cfg.SNAPSHOT_LENGTH()
     ) break;
 
-    // update the simulation
-    world.Update();
-
     // perform snapshot components during run or right after it is expired
     #ifndef NDATA
     if (
@@ -147,6 +144,9 @@ int main(int argc, char* argv[])
       || expiration_update
     ) datahelper.SnapshotPhenotypes();
     #endif
+
+    // update the simulation
+    world.Update();
 
   }
 
