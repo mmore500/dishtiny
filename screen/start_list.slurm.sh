@@ -96,6 +96,7 @@ echo "-------"
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
 export OMP_NUM_THREADS=2
+export SECONDS
 
 ./dishtiny -SEED ${SEED} >run0.log 2>&1 &
 
@@ -130,13 +131,13 @@ source "/mnt/home/mmore500/myPy/bin/activate"
 j2 -o run_list.slurm.sh run_list.slurm.sh.jinja
 
 if  [ $CUR_STEP -lt 128 ]; then
-  if [ $(ls *.json.cereal | grep -o "update\=32768" | wc -l) -eq 4 ]; then
+  if [ $(ls *.json.cereal | wc -l) -eq 4 ]; then
     sbatch run_list.slurm.sh                                                   \
     && echo "   job submit success!"                                           \
-    || echo "   job submit failure (FAIL)" && exit 2
+    || echo "   job submit failure (FAIL)" && exit 1
   else
     echo "   missing final population... job incomplete? (FAIL)"
-    exit 32768
+    exit 2
   fi
 else
   echo "   nevermind, all done! (COMPLETE)"

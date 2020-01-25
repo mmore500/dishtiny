@@ -64,7 +64,3 @@ void Config::WriteMe(std::ostream & out) const {
   }
 
 }
-
-bool Config::TimingFun(const size_t update) const {
-  return update % SNAPSHOT_FREQUENCY() < SNAPSHOT_LENGTH();
-}

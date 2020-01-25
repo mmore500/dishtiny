@@ -122,30 +122,16 @@ module purge; module load GCC/7.3.0-2.30 OpenMPI/3.1.1 Python/3.6.6
 source "/mnt/home/mmore500/myPy/bin/activate"
 
 # get seed population from preceeding run
-MAX_UPDATE_A=$(python3 -c "import sys;from keyname import keyname as kn; print(\
-  max(                                                                         \
-    int(kn.unpack(filename)['update'])                                         \
-    for filename in sys.argv[1:]                                               \
-  )                                                                            \
-)" "${SOURCE_DIR_A}/"*".json.cereal")
-POP_PATH_A=$(echo "${SOURCE_DIR_A}/"*"+update=${MAX_UPDATE_A}+"*".json.cereal")
+POP_PATH_A=$(echo "${SOURCE_DIR_A}/"*".json.cereal")
 POP_FILENAME_A=$(basename ${POP_PATH_A})
 
 # get seed population from preceeding run
-MAX_UPDATE_B=$(python3 -c "import sys;from keyname import keyname as kn; print(\
-  max(                                                                         \
-    int(kn.unpack(filename)['update'])                                         \
-    for filename in sys.argv[1:]                                               \
-  )                                                                            \
-)" "${SOURCE_DIR_B}/"*".json.cereal")
-POP_PATH_B=$(echo "${SOURCE_DIR_B}/"*"+update=${MAX_UPDATE_B}+"*".json.cereal")
+POP_PATH_B=$(echo "${SOURCE_DIR_B}/"*".json.cereal")
 POP_FILENAME_B=$(basename ${POP_PATH_B})
 
-echo "   MAX_UPDATE_A" $MAX_UPDATE_A
 echo "   POP_PATH_A" $POP_PATH_A
 echo "   POP_FILENAME_A" $POP_FILENAME_A
 
-echo "   MAX_UPDATE_B" $MAX_UPDATE_B
 echo "   POP_PATH_B" $POP_PATH_B
 echo "   POP_FILENAME_B" $POP_FILENAME_B
 

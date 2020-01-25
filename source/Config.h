@@ -120,6 +120,4 @@ public:
 
   void WriteMe(std::ostream & out) const;
 
-  bool TimingFun(const size_t update) const;
-
 };

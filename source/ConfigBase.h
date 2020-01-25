@@ -72,13 +72,13 @@ EMP_BUILD_CONFIG(
   VALUE(TREATMENT_DESCRIPTOR, std::string, "unspecified", "[NATIVE] Treatment identifying slug"),
   VALUE(CONFIGLEVEL_BASENAME, std::string, "level=", "[NATIVE] Base filename"),
   VALUE(CONFIGLEVEL_EXTENSION, std::string, ".cfg", "[NATIVE] Filename extension"),
-  VALUE(SNAPSHOT_FREQUENCY, size_t, 262144, "[NATIVE] How often should we save data snapshots?"),
-  VALUE(SNAPSHOT_LENGTH, size_t, 8192, "[NATIVE] How long should snapshots last for?"),
-  VALUE(RUN_LENGTH, size_t, 1056768, "[NATIVE] How many updates should we run the experiment for?"),
+  VALUE(SNAPSHOT_FREQUENCY, size_t, 0, "[NATIVE] How often should we save data snapshots?"),
+  VALUE(SNAPSHOT_LENGTH, size_t, 16, "[NATIVE] How long should snapshots last for?"),
+  VALUE(RUN_LENGTH, size_t, 0, "[NATIVE] How many updates should we run the experiment for?"),
+  VALUE(RUN_SECONDS, size_t, 0, "[NATIVE] How many seconds should we run the experiment for?"),
   VALUE(SYSTEMATICS, bool, true, "[NATIVE] Should we keep systematics data?"),
   VALUE(SEED_POP, size_t, 0, "[NATIVE] Should we seed the population?"),
   VALUE(SEED_POP_ID, size_t, 0, "[NATIVE] Should we seed the population with all seedpop IDs (0) or with a specific ID (>0)?"),
   VALUE(SEED_MUTATIONS_P, double, 0.0, "[NATIVE] With what probability should we apply mutations to seeded cells??"),
-  VALUE(ANIMATION_FREQUENCY, size_t, 512, "[NATIVE] How often should we save data that will be used to make animations?")
 
 )

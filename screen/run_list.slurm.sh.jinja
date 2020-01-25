@@ -96,16 +96,8 @@ module purge; module load GCC/7.3.0-2.30 OpenMPI/3.1.1 Python/3.6.6
 source "/mnt/home/mmore500/myPy/bin/activate"
 
 # get seed population from preceeding run
-MAX_UPDATE=$(python3 -c "import sys; from keyname import keyname as kn; print( \
-  max(                                                                         \
-    int(kn.unpack(filename)['update'])                                         \
-    for filename in sys.argv[1:]                                               \
-  )                                                                            \
-)" "${SOURCE_DIR}/"*".json.cereal")
-echo "   MAX_UPDATE" $MAX_UPDATE
-
 mkdir seedpop
-cp "${SOURCE_DIR}/"*"+update=${MAX_UPDATE}+"*".json.cereal" seedpop
+cp "${SOURCE_DIR}/"*".json.cereal" seedpop
 for f in $(ls seedpop); do
   mv "seedpop/${f}" "seedpop/id=$((++id_counter))+${f}";
 done
@@ -119,6 +111,7 @@ echo "-------"
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
 export OMP_NUM_THREADS=2
+export SECONDS
 
 ./dishtiny -SEED $((${SEED} + ${CUR_STEP}      )) -SEED_POP 1                 \
   >run0.log 2>&1 &
@@ -157,13 +150,13 @@ source "/mnt/home/mmore500/myPy/bin/activate"
 j2 -o run_list.slurm.sh run_list.slurm.sh.jinja
 
 if  [ {{ cur_step }} -lt 128 ]; then
-  if [ $(ls *.json.cereal | grep -o "update\=32768" | wc -l) -eq 4 ]; then
+  if [ $(ls *.json.cereal | wc -l) -eq 4 ]; then
     sbatch run_list.slurm.sh                                                   \
     && echo "   job submit success!"                                           \
-    || echo "   job submit failure (FAIL)" && exit 2
+    || echo "   job submit failure (FAIL)" && exit 1
   else
     echo "   missing final population... job incomplete? (FAIL)"
-    exit 32768
+    exit 2
   fi
 else
   echo "   nevermind, all done! (COMPLETE)"

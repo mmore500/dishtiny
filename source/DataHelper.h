@@ -130,119 +130,111 @@ public:
 
     file.flush(H5F_SCOPE_LOCAL);
 
-    dw.OnUpdate([this](const size_t update){
-      if(cfg.TimingFun(update)) {
-        // only log one snapshot of genoypes, not a sequence
-        // because it's space intensive
-        if(update % cfg.SNAPSHOT_FREQUENCY() == 0) {
-          Population();
-          Triggers();
-
-          // save population best
-          const auto org_count = dw.GetDominantInfo();
-          std::ofstream genome_stream(
-            emp::keyname::pack({
-              {"component", "genome"},
-              {"count", emp::to_string(org_count.second)},
-              {"title", "dominant"},
-              {"update", emp::to_string(update)},
-              {"treat", cfg.TREATMENT_DESCRIPTOR()},
-              {"seed", emp::to_string(cfg.SEED())},
-              {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
-              {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
-              {"ext", ".json"}
-            })
-          );
-          cereal::JSONOutputArchive genome_archive(genome_stream);
-          genome_archive(org_count.first);
-
-          emp::Random rand(cfg.SEED());
-          emp::vector<size_t> shuffler(dw.GetSize());
-          std::iota(std::begin(shuffler), std::end(shuffler), 0);
-          emp::Shuffle(rand, shuffler);
-
-          // save the entire population
-          std::ofstream population_stream(
-            emp::keyname::pack({
-              {"title", "population"},
-              {"count", emp::to_string(dw.GetNumOrgs())},
-              {"component", "genomes"},
-              {"update", emp::to_string(update)},
-              {"treat", cfg.TREATMENT_DESCRIPTOR()},
-              {"seed", emp::to_string(cfg.SEED())},
-              {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
-              {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
-              {"ext", ".json.cereal"}
-            })
-          );
-          cereal::JSONOutputArchive population_archive(population_stream);
-          for (const size_t i : shuffler) {
-            if (dw.IsOccupied(i)) {
-              population_archive(dw.GetOrg(i));
-            }
-          }
-
-        }
-        if(update % cfg.COMPUTE_FREQ() == 0) {
-          Regulators();
-          Functions();
-        }
-
-        for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
-        for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ChannelGeneration(lev);
-        for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Expiration(lev);
-        RootID();
-        Stockpile();
-        Live();
-        Apoptosis();
-        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-          InboxActivation(dir);
-        }
-        for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
-          InboxTraffic(dir);
-        }
-        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-          RepOutgoing(dir);
-        }
-        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-          RepIncoming(dir);
-        }
-        TotalContribute();
-        for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
-          ResourceContributed(dir);
-        }
-        for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ResourceHarvested(lev);
-        PrevChan();
-        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-          InResistance(dir);
-        }
-        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-          OutResistance(dir);
-        }
-        for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-          Heir(dir);
-        }
-        ParentPos();
-        CellAge();
-        for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) CellGen(lev);
-        Death();
-        OutgoingConnectionCount();
-        FledglingConnectionCount();
-        IncomingConnectionCount();
-        file.flush(H5F_SCOPE_LOCAL);
-      } else if (update % cfg.ANIMATION_FREQUENCY() < cfg.ENV_TRIG_FREQ()) {
-        // record frequent snapshots of these to stich together ananimations
-        for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
-        RootID();
-        Stockpile();
-        TotalContribute();
-        Live();
-        file.flush(H5F_SCOPE_LOCAL);
-      }
-    });
   }
 
   ~DataHelper() { file.close(); }
+
+  void SnapshotPopulation() {
+
+    // Population();
+    // Triggers();
+
+    // save population best
+    const auto org_count = dw.GetDominantInfo();
+    std::ofstream genome_stream(
+      emp::keyname::pack({
+        {"component", "genome"},
+        {"count", emp::to_string(org_count.second)},
+        {"title", "dominant"},
+        {"update", emp::to_string(dw.GetUpdate())},
+        {"treat", cfg.TREATMENT_DESCRIPTOR()},
+        {"seed", emp::to_string(cfg.SEED())},
+        {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
+        {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
+        {"ext", ".json"}
+      })
+    );
+    cereal::JSONOutputArchive genome_archive(genome_stream);
+    genome_archive(org_count.first);
+
+    emp::Random rand(cfg.SEED());
+    emp::vector<size_t> shuffler(dw.GetSize());
+    std::iota(std::begin(shuffler), std::end(shuffler), 0);
+    emp::Shuffle(rand, shuffler);
+
+    // save the entire population
+    std::ofstream population_stream(
+      emp::keyname::pack({
+        {"title", "population"},
+        {"count", emp::to_string(dw.GetNumOrgs())},
+        {"component", "genomes"},
+        {"update", emp::to_string(dw.GetUpdate())},
+        {"treat", cfg.TREATMENT_DESCRIPTOR()},
+        {"seed", emp::to_string(cfg.SEED())},
+        {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
+        {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
+        {"ext", ".json.cereal"}
+      })
+    );
+    cereal::JSONOutputArchive population_archive(population_stream);
+    for (const size_t i : shuffler) {
+      if (dw.IsOccupied(i)) {
+        population_archive(dw.GetOrg(i));
+      }
+    }
+
+  }
+
+  void SnapshotPhenotypes() {
+
+    if (dw.GetUpdate() % cfg.COMPUTE_FREQ() == 0) {
+      Regulators();
+      Functions();
+    }
+
+    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
+    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ChannelGeneration(lev);
+    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Expiration(lev);
+    RootID();
+    Stockpile();
+    Live();
+    Apoptosis();
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      InboxActivation(dir);
+    }
+    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
+      InboxTraffic(dir);
+    }
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      RepOutgoing(dir);
+    }
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      RepIncoming(dir);
+    }
+    TotalContribute();
+    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
+      ResourceContributed(dir);
+    }
+    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ResourceHarvested(lev);
+    PrevChan();
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      InResistance(dir);
+    }
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      OutResistance(dir);
+    }
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      Heir(dir);
+    }
+    ParentPos();
+    CellAge();
+    for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) CellGen(lev);
+    Death();
+    OutgoingConnectionCount();
+    FledglingConnectionCount();
+    IncomingConnectionCount();
+    file.flush(H5F_SCOPE_LOCAL);
+  }
 
 private:
 

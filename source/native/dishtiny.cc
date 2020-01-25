@@ -1,5 +1,8 @@
 // This is the main function for the NATIVE version of this project.
 
+#include <cstdlib>
+#include <chrono>
+
 #include <omp.h>
 
 #include <cereal/cereal.hpp>
@@ -71,10 +74,82 @@ int main(int argc, char* argv[])
   DataHelper datahelper(world, cfg);
   #endif
 
-  for(size_t ud = 0; ud < cfg.RUN_LENGTH(); ++ud) {
-    if (ud % 20 == 0) std::cout << "Update: " << ud << std::endl;
+
+  const auto begin_time = (
+    std::chrono::steady_clock::now()
+    - std::chrono::seconds{[](){
+      if (const char* SECONDS = std::getenv("SECONDS"); SECONDS) {
+        return std::stoi(SECONDS);
+      } else return 0;
+    }()}
+  );
+
+  auto is_time_expired = [&cfg, begin_time](){
+
+    return (
+      cfg.RUN_SECONDS() // if RUN_SECONDS is zero, never expire
+      && (
+        std::chrono::steady_clock::now() - begin_time
+        > std::chrono::seconds{cfg.RUN_SECONDS()}
+      )
+    );
+
+  };
+
+  size_t expiration_update = 0;
+
+  while (true) {
+
+    // print an intermittent update message
+    if (world.GetUpdate() % 32 == 0) {
+      std::cout << "Update: " << world.GetUpdate() << std::endl;
+    }
+
+    // check to see if the run is expired (time or update count)
+    if (
+      const bool is_expired = (
+        // only check time every 32 updates
+        (world.GetUpdate() % 32 == 0 && is_time_expired())
+        || (cfg.RUN_LENGTH() && world.GetUpdate() >= cfg.RUN_LENGTH())
+      );
+      // if is expired but also not already expired
+      is_expired && !expiration_update
+    ) expiration_update = world.GetUpdate();
+
+    // do one last snapshot before expiring
+    if (
+      expiration_update
+      && world.GetUpdate() >= expiration_update + cfg.SNAPSHOT_LENGTH()
+    ) break;
+
+    // update the simulation
     world.Update();
+
+    // perform snapshot components during run or right after it is expired
+    #ifndef NDATA
+    if (
+      // if we want to do a regular snapshot...
+      (cfg.SNAPSHOT_FREQUENCY()
+        && world.GetUpdate()
+        && world.GetUpdate() % cfg.SNAPSHOT_FREQUENCY() == 0
+      )
+      // ... or if we are wrapping up after expiring
+      || (expiration_update
+        && world.GetUpdate() == expiration_update)
+    ) datahelper.SnapshotPopulation();
+
+    if (
+      // if we want to do a regular snapshot...
+      (cfg.SNAPSHOT_FREQUENCY()
+        && world.GetUpdate() % cfg.SNAPSHOT_FREQUENCY() < cfg.SNAPSHOT_LENGTH()
+      )
+      // ... or if we are wrapping up after expiring
+      || expiration_update
+    ) datahelper.SnapshotPhenotypes();
+    #endif
+
   }
+
   // so that our computations won't get optimized away
   std::cout << world.GetNumOrgs() << std::endl;
 

@@ -359,7 +359,7 @@ void DishWorld::InitSystematics() {
       false
     );
 
-    sf.SetTiming([this](const size_t upd){ return cfg.TimingFun(upd); });
+    sf.SetTiming( [](const size_t update){ return update % 1024 == 0; } );
     sf.AddVar(cfg.SEED(), "seed", "Random generator seed");
     sf.PrintHeaderKeys();
     #endif
