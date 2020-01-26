@@ -16,7 +16,7 @@ EMP_BUILD_CONFIG(
   VALUE(RESOURCE_DECAY, double, 0.995, "How much resource should remain each update?"),
   VALUE(REP_THRESH, double, 1.0, "How much should replication cost?"),
   VALUE(REP_LEAD, double, 0.0, "How more more resource than your target do you need to trample them?"),
-  VALUE(START_RESOURCE, double, 40.0, "How much resource should a cell start with?"),
+  VALUE(START_RESOURCE, double, 0.8, "How much resource should a cell start with?"),
   VALUE(KILL_THRESH, double, -1.25, "What is the minimum resource level required to stay alive?"),
   VALUE(APOP_RECOVERY_FRAC, double, 0.5, "What fraction of REP_THRESH is recovered to heirs after apoptosis?"),
   VALUE(BASE_RESOURCE_INFLOW, double, 0.0051, "What amount of resource should be provided to cells at each update?"),
