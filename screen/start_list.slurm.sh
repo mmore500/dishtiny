@@ -134,7 +134,7 @@ if  [ $CUR_STEP -lt 128 ]; then
   if [ $(ls *.json.cereal | wc -l) -eq 4 ]; then
     sbatch run_list.slurm.sh                                                   \
     && echo "   job submit success!"                                           \
-    || echo "   job submit failure (FAIL)" && exit 1
+    || (echo "   job submit failure (FAIL)" && exit 1)
   else
     echo "   missing final population... job incomplete? (FAIL)"
     exit 2
