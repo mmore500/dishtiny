@@ -164,18 +164,39 @@ fi
 
 ################################################################################
 echo
-echo "Clean Up Source Dir"
-echo "-------------------"
+echo "Clean Up Extraneous Files"
+echo "-------------------------"
 ################################################################################
 
 # remove the executable to save space
-rm ${SOURCE_DIR}/dishtiny*
+rm dishtiny*
 
-# zip up everything else
-tar -czf "${SOURCE_DIR}+ext=.tar.gz" ${SOURCE_DIR}
+# zip up the source population files
+# and remove the originals
+for TARGET in ${SOURCE_DIR}/*.json.cereal; do
+  echo "   TARGET" $TARGET
+  tar -czf "${TARGET}.tar.gz" ${TARGET}
+  rm ${TARGET}
+done
 
-# delete original
-rm -rf ${SOURCE_DIR}
+# clear out this directory's seedpop to save space
+# (SOURCE_DIR has the original copies)
+# replace content with a hash of the file
+for SEEDPOP_FILE in seedpop/*; do
+
+  SEEDPOP_FILE_HASH=$(python3 -c "
+from fileshash import fileshash as fsh
+print(
+  fsh.FilesHash().hash_files(['${SEEDPOP_FILE}'])
+)
+")
+
+  echo "   SEEDPOP_FILE" $SEEDPOP_FILE
+  echo "   SEEDPOP_FILE_HASH" $SEEDPOP_FILE_HASH
+
+  echo $SEEDPOP_FILE_HASH > $SEEDPOP_FILE
+
+done
 
 ################################################################################
 echo
