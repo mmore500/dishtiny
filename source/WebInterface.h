@@ -1272,7 +1272,13 @@ public:
 
   void Download() {
 
-    if(!downloaded && cfg.TimingFun(w.GetUpdate())) {
+    if (
+      const auto render_frequency = std::stoi(
+        button_dash.Input("render_frequency").GetCurrValue()
+      );
+      !downloaded
+      && w.GetUpdate() % render_frequency == 0
+    ) {
 
       const auto namify = [this](const std::string &title) {
         return emp::keyname::pack({
