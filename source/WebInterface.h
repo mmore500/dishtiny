@@ -800,6 +800,157 @@ public:
       }
     ));
 
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+      "Regulation",
+      "Regulation",
+      grid_viewer,
+      [this](const size_t i) -> std::optional<size_t_datum> {
+        size_t count = 0;
+        for (size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
+          const auto & regulators = w.GetFrame(i).GetFrameHardware(
+            d
+          ).GetHardware().GetMatchBin().GetState().regulators;
+          count += std::count_if(
+            std::begin(regulators),
+            std::end(regulators),
+            [](const auto & pair){ return pair.second.View(); }
+          );
+        }
+        const auto & regulators = w.GetFrame(
+          i
+        ).GetSpiker().GetHardware().GetMatchBin().GetState().regulators;
+        count += std::count_if(
+          std::begin(regulators),
+          std::end(regulators),
+          [](const auto & pair){ return pair.second.View(); }
+        );
+        if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
+          count,
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::nullopt;
+      },
+      [](const auto state) -> std::string {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else if (*state == 5) return "gray";
+          else return "yellow";
+        } else return "black";
+      },
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      }
+    ));
+
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+      "Regulation Flow",
+      "Regulation Flow",
+      grid_viewer,
+      [this](const size_t i) -> std::optional<size_t_datum> {
+        size_t count = 0;
+        for (size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
+          const auto & regulators = w.GetFrame(i).GetFrameHardware(
+            d
+          ).GetHardware().GetMatchBin().GetState().regulators;
+          count += std::any_of(
+            std::begin(regulators),
+            std::end(regulators),
+            [](const auto & pair){ return pair.second.View(); }
+          );
+        }
+        const auto & regulators = w.GetFrame(
+          i
+        ).GetSpiker().GetHardware().GetMatchBin().GetState().regulators;
+        count += std::any_of(
+          std::begin(regulators),
+          std::end(regulators),
+          [](const auto & pair){ return pair.second.View(); }
+        );
+        if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
+          count,
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::nullopt;
+      },
+      [](const auto state) -> std::string {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else if (*state == 5) return "gray";
+          else return "yellow";
+        } else return "black";
+      },
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      }
+    ));
+
+    artists.emplace_back();
+    for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
+      artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+        emp::to_string("Regulation Direction ", d),
+        "Regulation Direction",
+        grid_viewer,
+        [this, d](const size_t i) -> std::optional<size_t_datum> {
+
+          const auto & regulators = (
+            d < Cardi::Dir::NumDirs
+            ? w.GetFrame(i).GetFrameHardware(
+                d
+              ).GetHardware().GetMatchBin().GetState().regulators
+            : w.GetFrame(
+              i
+            ).GetSpiker().GetHardware().GetMatchBin().GetState().regulators
+          );
+          const size_t count = std::count_if(
+            std::begin(regulators),
+            std::end(regulators),
+            [](const auto & pair){ return pair.second.View(); }
+          );
+          if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
+            count,
+            *w.man->Channel(i).GetIDs()
+          });
+          else return std::nullopt;
+
+        },
+        [](const auto state) -> std::string {
+          if (state) {
+            if (*state == 0) return "white";
+            else if (*state == 1) return "green";
+            else if (*state == 2) return "blue";
+            else if (*state == 3) return "purple";
+            else if (*state == 4) return "red";
+            else if (*state == 5) return "gray";
+            else return "yellow";
+          } else return "black";
+        },
+        cfg_,
+        [](const auto & datum1, const auto & datum2) -> std::string {
+          if (!datum1|| !datum2) return "black";
+          else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+          else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+          else return "black";
+        }
+      ));
+    }
 
     grid_viewer.SetCSS(
       "min-height",
