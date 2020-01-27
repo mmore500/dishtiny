@@ -139,8 +139,6 @@ public:
 
   void ProcessSharingRequest(const size_t update) {
 
-    emp_assert(update % cfg.ENV_TRIG_FREQ() == 0);
-
     emp_assert(std::all_of(
       std::begin(sharing_fracs),
       std::end(sharing_fracs),
