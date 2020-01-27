@@ -3,7 +3,7 @@
 #include <tuple>
 #include <utility>
 #include <limits>
-#ifdef EMSCRIPTEN
+#ifdef __EMSCRIPTEN__
 #include <experimental/filesystem>
 #else
 #include <filesystem>
@@ -148,7 +148,7 @@ void DishWorld::GeneratePopulation() {
 
 void DishWorld::LoadPopulation() {
 
-  #ifdef EMSCRIPTEN
+  #ifdef __EMSCRIPTEN__
   auto directory = std::experimental::filesystem::directory_iterator("./seedpop/");
   emp::vector<std::string> filenames;
   std::transform(
@@ -345,7 +345,7 @@ void DishWorld::InitSystematics() {
       "systematics"
     );
 
-    #ifndef EMSCRIPTEN
+    #ifndef __EMSCRIPTEN__
     auto& sf = SetupSystematicsFile(
       "systematics",
       emp::keyname::pack({
