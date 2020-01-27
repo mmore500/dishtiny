@@ -673,7 +673,7 @@ public:
           });
           else return std::nullopt;
         },
-        [this](std::optional<double_datum> amt) -> std::string {
+        [this](const auto amt) -> std::string {
           if (amt) {
             if (*amt > cfg.REP_THRESH()) return "yellow";
             else if (*amt > 0) return emp::ColorHSV(

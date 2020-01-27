@@ -31,9 +31,7 @@ FrameHardware::FrameHardware(
     , cpu(inst_lib, event_lib, &local_rng_)
     , membrane(local_rng_)
     , internal_membrane(local_rng_)
-  {
-    cpu.SetTrait(this);
-  }
+  { cpu.SetTrait(this); }
 
 FrameCell& FrameHardware::Cell() { return cell; }
 
