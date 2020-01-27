@@ -1234,7 +1234,9 @@ public:
     }
 
     auto dom_text = dominant_viewer.AddText("dom_text");
-    dom_text << UI::Live([this](){
+    dom_text << UI::Live([this]() -> std::string {
+
+      if (w.GetNumOrgs() == 0) return "COUNT: 0";
 
       const auto dominant = w.GetDominantInfo();
       std::ostringstream buffer;

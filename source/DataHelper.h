@@ -140,22 +140,24 @@ public:
     // Triggers();
 
     // save population best
-    const auto org_count = dw.GetDominantInfo();
-    std::ofstream genome_stream(
-      emp::keyname::pack({
-        {"component", "genome"},
-        {"count", emp::to_string(org_count.second)},
-        {"title", "dominant"},
-        {"update", emp::to_string(dw.GetUpdate())},
-        {"treat", cfg.TREATMENT_DESCRIPTOR()},
-        {"seed", emp::to_string(cfg.SEED())},
-        {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
-        {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
-        {"ext", ".json"}
-      })
-    );
-    cereal::JSONOutputArchive genome_archive(genome_stream);
-    genome_archive(org_count.first);
+    if (dw.GetNumOrgs()) {
+      const auto org_count = dw.GetDominantInfo();
+      std::ofstream genome_stream(
+        emp::keyname::pack({
+          {"component", "genome"},
+          {"count", emp::to_string(org_count.second)},
+          {"title", "dominant"},
+          {"update", emp::to_string(dw.GetUpdate())},
+          {"treat", cfg.TREATMENT_DESCRIPTOR()},
+          {"seed", emp::to_string(cfg.SEED())},
+          {"_emp_hash", STRINGIFY(EMPIRICAL_HASH_)},
+          {"_source_hash", STRINGIFY(DISHTINY_HASH_)},
+          {"ext", ".json"}
+        })
+      );
+      cereal::JSONOutputArchive genome_archive(genome_stream);
+      genome_archive(org_count.first);
+    }
 
     emp::Random rand(cfg.SEED());
     emp::vector<size_t> shuffler(dw.GetSize());
