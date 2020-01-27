@@ -236,10 +236,6 @@ void DishWorld::LoadPopulation() {
 
     cereal::JSONInputArchive genomes_archive(genomes_stream);
 
-    const size_t load_quota = GetSize() / ids.size();
-
-    const size_t load_start = ( load_quota * cfg.SEED_POP() ) % count;
-
     for (size_t i = 0; i < count; ++i) {
       Genome genome(
         cfg,
@@ -253,6 +249,12 @@ void DishWorld::LoadPopulation() {
         mut,
         rand
       );
+
+      // decide whether to inject
+
+      const size_t load_quota = GetSize() / ids.size();
+
+      const size_t load_start = ( load_quota * cfg.SEED_POP() ) % count;
 
       const size_t distance_from_start = (
         i >= load_start
@@ -308,15 +310,9 @@ void DishWorld::LoadPopulation() {
   //
   // }
 
-  // kill everything that's not a target
-  std::unordered_set<size_t> target_set(
-    std::begin(targets),
-    std::end(targets)
-  );
-
+  // clear everything that wasn't injected
   for (size_t i = 0; i < GetSize(); ++i) {
-    if (!target_set.count(i)) {
-      DoDeath(i);
+    if (!IsOccupied(i)) {
       man->Channel(i).ClearIDs();
     }
   }
