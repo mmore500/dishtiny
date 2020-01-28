@@ -62,11 +62,11 @@ echo "----------------"
 SEED_OFFSET=1000
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/ko-spiker-message_sharing/seed=${SEED}+rep=${REP}"
+OUTPUT_DIR="/mnt/scratch/mmore500/ko-spiker-message_sharing/seed=${SEED}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/ko-spiker-message_sharing/"
 # get second most recent source population
 SOURCE_DIR=$(                                                                  \
-  ls -vd "/mnt/home/mmore500/dishtiny-screen/seed=${SEED}+step="*              \
+  ls -vd "/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step="*              \
   | tail -n 2                                                                  \
   | head -n 1                                                                  \
 )
