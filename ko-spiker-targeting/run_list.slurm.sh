@@ -98,6 +98,7 @@ echo "   PWD" $PWD
 module purge; module load GCC/7.3.0-2.30 OpenMPI/3.1.1 Python/3.6.6
 source "/mnt/home/mmore500/myPy/bin/activate"
 
+# extract zipped population files
 for f in "${SOURCE_DIR}/"*".json.cereal.tar.gz"; do
   tar -xf $f &
 done
@@ -189,7 +190,7 @@ for REP in {0..3}; do
     ./dishtiny                                                                 \
       -SEED $(( ${SEED} + ${REP} * 4 + ${CC} + 100 ))                          \
       -SEED_POP $(( ${CC} + 1 ))                                               \
-      >run.log 2>&1& &
+      >run.log 2>&1 &
 
   done
 
