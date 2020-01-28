@@ -178,7 +178,7 @@ for REP in {0..3}; do
     ./dishtiny                                                                 \
       -SEED $(( ${SEED} + ${REP} * 4 + ${CC} + 100 ))                          \
       -SEED_POP $(( ${CC} + 1 ))                                               \
-      >run.log 2>&1 &
+      >"title=run+REP=${REP}+CC=${CC}+ext=.log" 2>&1 &
 
   done
 
