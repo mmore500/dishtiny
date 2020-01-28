@@ -66,7 +66,7 @@ OUTPUT_DIR="/mnt/scratch/mmore500/ko-spiker-message_sharing/seed=${SEED}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/ko-spiker-message_sharing/"
 # get second most recent source population
 SOURCE_DIR=$(                                                                  \
-  ls -vd "/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step="*              \
+  ls -vd "/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step="*           \
   | tail -n 2                                                                  \
   | head -n 1                                                                  \
 )

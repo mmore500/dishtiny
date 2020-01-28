@@ -1,10 +1,10 @@
 #!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --array=0-999
-#SBATCH --mem=16G
+#SBATCH --array=0-63
+#SBATCH --mem=24G
 #SBATCH --ntasks 1
-#SBATCH --cpus-per-task 4
+#SBATCH --cpus-per-task 8
 #SBATCH --job-name ko-spiker-targeting
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
@@ -60,17 +60,18 @@ echo "----------------"
 ################################################################################
 
 SEED_OFFSET=1000
-SEED=$((SLURM_ARRAY_TASK_ID / 10 + SEED_OFFSET))
-REP=$((SLURM_ARRAY_TASK_ID % 10))
-LAST_STEP=24
+SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/ko-spiker-targeting/seed=${SEED}+rep=${REP}"
+OUTPUT_DIR="/mnt/scratch/mmore500/ko-spiker-targeting/seed=${SEED}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/ko-spiker-targeting/"
-SOURCE_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=${LAST_STEP}"
+# get second most recent source population
+SOURCE_DIR=$(                                                                  \
+  ls -vd "/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step="*           \
+  | tail -n 2                                                                  \
+  | head -n 1                                                                  \
+)
 
 echo "   SEED" $SEED
-echo "   REP" $REP
-echo "   LAST_STEP" $LAST_STEP
 echo "   OUTPUT_DIR" $OUTPUT_DIR
 echo "   CONFIG_DIR" $CONFIG_DIR
 echo "   SOURCE_DIR" $SOURCE_DIR
@@ -97,26 +98,37 @@ echo "   PWD" $PWD
 module purge; module load GCC/7.3.0-2.30 OpenMPI/3.1.1 Python/3.6.6
 source "/mnt/home/mmore500/myPy/bin/activate"
 
+for f in "${SOURCE_DIR}/"*".json.cereal.tar.gz"; do
+  tar -xf $f &
+done
+
+wait
+
 # get seed population from preceeding run
-POP_PATH=$(echo "${SOURCE_DIR}/"*".json.cereal")
-POP_FILENAME=$(basename ${POP_PATH})
-KO_PATH="seedpop/id=2+${POP_FILENAME}"
-
-echo "   POP_PATH" $POP_PATH
-echo "   POP_FILENAME" $POP_FILENAME
-echo "   KO_PATH" $KO_PATH
-
-# copy over WT and to-be KO populations
+POP_PATHS=$(echo "${SOURCE_DIR}/"*".json.cereal")
 mkdir seedpop
-cp $POP_PATH "seedpop/id=1+${POP_FILENAME}"
-cp $POP_PATH $KO_PATH
 
-# split into chunks to do knockouts on individual genome components
-  # 0th chunk: nada (ok to still sed it though!)
-  # odd chunks: pointer
-  # even chunks: spiker
-csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'              \
-  > /dev/null # ignore byte counts printed to stdout
+echo "   POP_PATHS" $POP_PATHS
+
+  for POP_PATH in $POP_PATHS; do
+
+  POP_FILENAME=$(basename ${POP_PATH})
+  KO_PATH="seedpop/id=2+${POP_FILENAME}"
+
+  echo "   POP_PATH" $POP_PATH
+  echo "   POP_FILENAME" $POP_FILENAME
+  echo "   KO_PATH" $KO_PATH
+
+  # copy over WT and to-be KO populations
+  cp $POP_PATH "seedpop/id=1+${POP_FILENAME}"
+  cp $POP_PATH $KO_PATH
+
+  # split into chunks to do knockouts on individual genome components
+    # 0th chunk: nada (ok to still sed it though!)
+    # odd chunks: pointer
+    # even chunks: spiker
+  csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'               \
+    > /dev/null # ignore byte counts printed to stdout
 
   # knockout pointer components, genome by genome
   # 27,Nop
@@ -131,29 +143,34 @@ csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'              \
   done
 
 
-# knockout spiker components, genome by genome
-# 27,Nop
-# 80,PruneOutgoingConnection
-# 81,PruneIncomingConnection
-# 82,AddDevoUpQuery
-# 83,AddDevoDownQuery
-# 85,SetConnectionAgingParam
-# 86,SetConnectionExploitParam
-# 87,SetConnectionDevelopmentParam
-# 88,SetConnectionSensingParam
+  # knockout spiker components, genome by genome
+  # 27,Nop
+  # 80,PruneOutgoingConnection
+  # 81,PruneIncomingConnection
+  # 82,AddDevoUpQuery
+  # 83,AddDevoDownQuery
+  # 85,SetConnectionAgingParam
+  # 86,SetConnectionExploitParam
+  # 87,SetConnectionDevelopmentParam
+  # 88,SetConnectionSensingParam
 
-# 98,PutMembraneBringer TODO
-# 99,PutMembraneBlocker TODO
+  # 98,PutMembraneBringer TODO
+  # 99,PutMembraneBlocker TODO
 
-for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-  sed -i -- "s/\"id\": 80\$\|\"id\": 81\$\|\"id\": 82\$\|\"id\": 83\$\|\"id\": 85\$\|\"id\": 86\$\|\"id\": 87\$\|\"id\": 88\$/\"id\": 27/g" $f &
-  while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
+  for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
+    sed -i -- "s/\"id\": 80\$\|\"id\": 81\$\|\"id\": 82\$\|\"id\": 83\$\|\"id\": 85\$\|\"id\": 86\$\|\"id\": 87\$\|\"id\": 88\$/\"id\": 27/g" $f &
+    while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
+  done
+
+  # recombine components and delete fragments
+  wait
+  cat xx* > ${KO_PATH}
+  rm xx*
+
+  echo "   end loop"
+  echo
+
 done
-
-# recombine components and delete fragments
-wait
-cat xx* > ${KO_PATH}
-rm xx*
 
 ################################################################################
 echo
@@ -163,7 +180,22 @@ echo "-------"
 
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
-./dishtiny -SEED $(( ${SEED} + ${REP} + 25 )) -SEED_POP 1 >run.log 2>&1
+export OMP_NUM_THREADS=2
+
+for REP in {0..3}; do
+
+  for CC in {0..3}; do
+
+    ./dishtiny                                                                 \
+      -SEED $(( ${SEED} + ${REP} * 4 + ${CC} + 100 ))                          \
+      -SEED_POP $(( ${CC} + 1 ))                                               \
+      >run.log 2>&1& &
+
+  done
+
+  wait
+
+done
 
 ################################################################################
 echo
