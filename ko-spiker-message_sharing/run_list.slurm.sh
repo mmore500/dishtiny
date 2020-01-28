@@ -98,6 +98,12 @@ echo "   PWD" $PWD
 module purge; module load GCC/7.3.0-2.30 OpenMPI/3.1.1 Python/3.6.6
 source "/mnt/home/mmore500/myPy/bin/activate"
 
+for f in "${SOURCE_DIR}/"*".json.cereal.tar.gz"; do
+  tar -xf $f &
+done
+
+wait
+
 # get seed population from preceeding run
 POP_PATHS=$(echo "${SOURCE_DIR}/"*".json.cereal")
 mkdir seedpop
