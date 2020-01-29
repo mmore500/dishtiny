@@ -99,8 +99,9 @@ module purge; module load GCC/7.3.0-2.30 OpenMPI/3.1.1 Python/3.6.6
 source "/mnt/home/mmore500/myPy/bin/activate"
 
 # extract zipped population files
-for f in "${SOURCE_DIR}/"*".json.cereal.tar.gz"; do
-  tar -xf $f &
+for ZIPPED_PATH in "${SOURCE_DIR}/"*".json.cereal.tar.gz"; do
+  echo "   ZIPPED_PATH" $ZIPPED_PATH
+  tar -C ${SOURCE_DIR} -xf $ZIPPED_PATH &
 done
 
 wait
