@@ -175,7 +175,10 @@ rm dishtiny*
 # and remove the originals
 for TARGET in ${SOURCE_DIR}/*.json.cereal; do
   echo "   TARGET" $TARGET
-  tar -czf "${TARGET}.tar.gz" ${TARGET}
+  # tar with just relative paths
+  # https://stackoverflow.com/a/25932596
+  # 's/.*\///g' (delete everything before '/')
+  tar --transform 's/.*\///g' -czf "${TARGET}.tar.gz" ${TARGET}
   rm ${TARGET}
 done
 
