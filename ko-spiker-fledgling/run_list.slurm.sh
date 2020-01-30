@@ -5,7 +5,7 @@
 #SBATCH --mem=24G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 8
-#SBATCH --job-name ko-spiker-message_sharing
+#SBATCH --job-name ko-spiker-fledgling
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 
@@ -62,8 +62,8 @@ echo "----------------"
 SEED_OFFSET=1000
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/ko-spiker-message_sharing/seed=${SEED}"
-CONFIG_DIR="/mnt/home/mmore500/dishtiny/ko-spiker-message_sharing/"
+OUTPUT_DIR="/mnt/scratch/mmore500/ko-spiker-fledgling/seed=${SEED}"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/ko-spiker-fledgling/"
 # get second most recent source population
 SOURCE_DIR=$(                                                                  \
   ls -vd "/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step="*           \
@@ -132,23 +132,12 @@ echo "   POP_PATHS" $POP_PATHS
   csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'               \
     > /dev/null # ignore byte counts printed to stdout
 
-  # knockout pointer components, genome by genome
-  # 27,Nop
-  # 83,SendSpikeMsg
-
-  for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
-    sed -i -- "s/\"id\": 83\$/\"id\": 27/g" $f &
-    while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
-  done
-
   # knockout spiker components, genome by genome
   # 27,Nop
-  # 74,SendBigFracResource
-  # 75,SendSmallFracResource
-  # 91,SendSpikeMsg
+  # 84,TryAddFledglingConnection
 
   for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-    sed -i -- "s/\"id\": 74\$\|\"id\": 75\$\|\"id\": 91\$/\"id\": 27/g" $f &
+    sed -i -- "s/\"id\": 84\$\/\"id\": 27/g" $f &
     while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
   done
 
