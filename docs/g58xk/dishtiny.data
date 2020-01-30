@@ -448,7 +448,130 @@ Fn-00010110011001011010000001001101:
   Pull[11011010001011011110101100100001](3,0,7)
   Inc[11010101000111000111010001011111](2,0,1)
 
-{"value0":[{"value0":{"value0":3199283055}},{"value0":{"value0":940782386}},{"value0":{"value0":2110105037}},{"value0":{"value0":3362482416}},{"value0":{"value0":3848100983}},{"value0":{"value0":3340579848}},{"value0":{"value0":4119037971}},{"value0":{"value0":497522472}},{"value0":{"value0":2413335125}},{"value0":{"value0":3008669915}},{"value0":{"value0":3889329565}},{"value0":{"value0":4294461310}},{"value0":{"value0":2056245273}},{"value0":{"value0":897293788}},{"value0":{"value0":2877130363}},{"value0":{"value0":1874447047}},{"value0":{"value0":3475649443}},{"value0":{"value0":739681723}},{"value0":{"value0":468116182}},{"value0":{"value0":2918466101}},{"value0":{"value0":3713708679}},{"value0":{"value0":3478331929}},{"value0":{"value0":2286731816}},{"value0":{"value0":2162150008}},{"value0":{"value0":3015266169}},{"value0":{"value0":3377626905}}]}{"value0":{"values":[{"key":9,"value":9},{"key":8,"value":8},{"key":7,"value":7},{"key":6,"value":6},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":5},{"key":2,"value":6},{"key":1,"value":1},{"key":0,"value":2}],"regulators":[{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":9,"value":{"value0":{"value0":375758925}}},{"key":8,"value":{"value0":{"value0":2864384817}}},{"key":7,"value":{"value0":{"value0":3536724154}}},{"key":6,"value":{"value0":{"value0":3802448990}}},{"key":5,"value":{"value0":{"value0":3636637834}}},{"key":4,"value":{"value0":{"value0":2855995961}}},{"key":3,"value":{"value0":{"value0":455701598}}},{"key":2,"value":{"value0":{"value0":1922748873}}},{"key":1,"value":{"value0":{"value0":400925321}}},{"key":0,"value":{"value0":{"value0":3478637861}}}],"uids":[0,1,2,3,4,5,6,7,8,9]}}{"value0":{"values":[{"key":9,"value":9},{"key":8,"value":8},{"key":7,"value":7},{"key":6,"value":6},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":5},{"key":2,"value":6},{"key":1,"value":1},{"key":0,"value":2}],"regulators":[{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":9,"value":{"value0":{"value0":375758925}}},{"key":8,"value":{"value0":{"value0":2864384817}}},{"key":7,"value":{"value0":{"value0":3536724154}}},{"key":6,"value":{"value0":{"value0":3802448990}}},{"key":5,"value":{"value0":{"value0":3636637834}}},{"key":4,"value":{"value0":{"value0":2855995961}}},{"key":3,"value":{"value0":{"value0":455701598}}},{"key":2,"value":{"value0":{"value0":1922748873}}},{"key":1,"value":{"value0":{"value0":400925321}}},{"key":0,"value":{"value0":{"value0":3478637861}}}],"uids":[0,1,2,3,4,5,6,7,8,9]}}{"value0":{"values":[{"key":9,"value":9},{"key":8,"value":8},{"key":7,"value":7},{"key":6,"value":7},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":2},{"key":2,"value":5},{"key":1,"value":1},{"key":0,"value":2}],"regulators":[{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":9,"value":{"value0":{"value0":375758925}}},{"key":8,"value":{"value0":{"value0":2864384817}}},{"key":7,"value":{"value0":{"value0":3536724154}}},{"key":6,"value":{"value0":{"value0":3802448990}}},{"key":5,"value":{"value0":{"value0":3636637834}}},{"key":4,"value":{"value0":{"value0":2855995961}}},{"key":3,"value":{"value0":{"value0":455701598}}},{"key":2,"value":{"value0":{"value0":1922748873}}},{"key":1,"value":{"value0":{"value0":400925321}}},{"key":0,"value":{"value0":{"value0":3478637861}}}],"uids":[0,1,2,3,4,5,6,7,8,9]}}{"value0":{"values":[{"key":9,"value":9},{"key":8,"value":8},{"key":7,"value":7},{"key":6,"value":7},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":2},{"key":2,"value":5},{"key":1,"value":1},{"key":0,"value":2}],"regulators":[{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":9,"value":{"value0":{"value0":375758925}}},{"key":8,"value":{"value0":{"value0":2864384817}}},{"key":7,"value":{"value0":{"value0":3536724154}}},{"key":6,"value":{"value0":{"value0":3802448990}}},{"key":5,"value":{"value0":{"value0":3636637834}}},{"key":4,"value":{"value0":{"value0":2855995961}}},{"key":3,"value":{"value0":{"value0":455701598}}},{"key":2,"value":{"value0":{"value0":1922748873}}},{"key":1,"value":{"value0":{"value0":400925321}}},{"key":0,"value":{"value0":{"value0":3478637861}}}],"uids":[0,1,2,3,4,5,6,7,8,9]}}#!/bin/bash
+{"value0":[{"value0":{"value0":3199283055}},{"value0":{"value0":940782386}},{"value0":{"value0":2110105037}},{"value0":{"value0":3362482416}},{"value0":{"value0":3848100983}},{"value0":{"value0":3340579848}},{"value0":{"value0":4119037971}},{"value0":{"value0":497522472}},{"value0":{"value0":2413335125}},{"value0":{"value0":3008669915}},{"value0":{"value0":3889329565}},{"value0":{"value0":4294461310}},{"value0":{"value0":2056245273}},{"value0":{"value0":897293788}},{"value0":{"value0":2877130363}},{"value0":{"value0":1874447047}},{"value0":{"value0":3475649443}},{"value0":{"value0":739681723}},{"value0":{"value0":468116182}},{"value0":{"value0":2918466101}},{"value0":{"value0":3713708679}},{"value0":{"value0":3478331929}},{"value0":{"value0":2286731816}},{"value0":{"value0":2162150008}},{"value0":{"value0":3015266169}},{"value0":{"value0":3377626905}}]}{"value0":{"values":[{"key":9,"value":9},{"key":8,"value":8},{"key":7,"value":7},{"key":6,"value":6},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":5},{"key":2,"value":6},{"key":1,"value":1},{"key":0,"value":2}],"regulators":[{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":9,"value":{"value0":{"value0":375758925}}},{"key":8,"value":{"value0":{"value0":2864384817}}},{"key":7,"value":{"value0":{"value0":3536724154}}},{"key":6,"value":{"value0":{"value0":3802448990}}},{"key":5,"value":{"value0":{"value0":3636637834}}},{"key":4,"value":{"value0":{"value0":2855995961}}},{"key":3,"value":{"value0":{"value0":455701598}}},{"key":2,"value":{"value0":{"value0":1922748873}}},{"key":1,"value":{"value0":{"value0":400925321}}},{"key":0,"value":{"value0":{"value0":3478637861}}}],"uids":[0,1,2,3,4,5,6,7,8,9]}}{"value0":{"values":[{"key":9,"value":9},{"key":8,"value":8},{"key":7,"value":7},{"key":6,"value":6},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":5},{"key":2,"value":6},{"key":1,"value":1},{"key":0,"value":2}],"regulators":[{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":9,"value":{"value0":{"value0":375758925}}},{"key":8,"value":{"value0":{"value0":2864384817}}},{"key":7,"value":{"value0":{"value0":3536724154}}},{"key":6,"value":{"value0":{"value0":3802448990}}},{"key":5,"value":{"value0":{"value0":3636637834}}},{"key":4,"value":{"value0":{"value0":2855995961}}},{"key":3,"value":{"value0":{"value0":455701598}}},{"key":2,"value":{"value0":{"value0":1922748873}}},{"key":1,"value":{"value0":{"value0":400925321}}},{"key":0,"value":{"value0":{"value0":3478637861}}}],"uids":[0,1,2,3,4,5,6,7,8,9]}}{"value0":{"values":[{"key":9,"value":9},{"key":8,"value":8},{"key":7,"value":7},{"key":6,"value":7},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":2},{"key":2,"value":5},{"key":1,"value":1},{"key":0,"value":2}],"regulators":[{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":9,"value":{"value0":{"value0":375758925}}},{"key":8,"value":{"value0":{"value0":2864384817}}},{"key":7,"value":{"value0":{"value0":3536724154}}},{"key":6,"value":{"value0":{"value0":3802448990}}},{"key":5,"value":{"value0":{"value0":3636637834}}},{"key":4,"value":{"value0":{"value0":2855995961}}},{"key":3,"value":{"value0":{"value0":455701598}}},{"key":2,"value":{"value0":{"value0":1922748873}}},{"key":1,"value":{"value0":{"value0":400925321}}},{"key":0,"value":{"value0":{"value0":3478637861}}}],"uids":[0,1,2,3,4,5,6,7,8,9]}}{"value0":{"values":[{"key":9,"value":9},{"key":8,"value":8},{"key":7,"value":7},{"key":6,"value":7},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":2},{"key":2,"value":5},{"key":1,"value":1},{"key":0,"value":2}],"regulators":[{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":9,"value":{"value0":{"value0":375758925}}},{"key":8,"value":{"value0":{"value0":2864384817}}},{"key":7,"value":{"value0":{"value0":3536724154}}},{"key":6,"value":{"value0":{"value0":3802448990}}},{"key":5,"value":{"value0":{"value0":3636637834}}},{"key":4,"value":{"value0":{"value0":2855995961}}},{"key":3,"value":{"value0":{"value0":455701598}}},{"key":2,"value":{"value0":{"value0":1922748873}}},{"key":1,"value":{"value0":{"value0":400925321}}},{"key":0,"value":{"value0":{"value0":3478637861}}}],"uids":[0,1,2,3,4,5,6,7,8,9]}}### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 8           # How far can a signal propagate?
+set EVENT_RADIUS 2             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0.2         # How much resource benefit does a successful harvest grant?
+#!/bin/bash
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time=167:00:00         # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --array=1-40
+#SBATCH --mem=8G                # memory required per node - amount of memory (in bytes)
+#SBATCH --job-name treat=resource-wave__channelsense-yes__nlev-two     # you can give your job a name for easier identification (same as -J)
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
+
+################################################################################
+echo "Prepare Env Vars"
+################################################################################
+
+SEED_OFFSET=1000
+TREATMENT="treat=resource-wave__channelsense-yes__nlev-two"
+SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
+
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny/"${TREATMENT}"/"${SEED}"/"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/request/"${TREATMENT}
+
+echo "   TREATMENT" $TREATMENT
+echo "   SEED" $SEED
+echo "   OUTPUT_DIR" $OUTPUT_DIR
+echo "   CONFIG_DIR" $CONFIG_DIR
+
+################################################################################
+echo "Setup Work Dir"
+################################################################################
+rm -rf ${OUTPUT_DIR}/*  #If this is a redo, clear the dir
+mkdir -p ${OUTPUT_DIR}
+cp -r ${CONFIG_DIR}/* ${OUTPUT_DIR}
+cd ${OUTPUT_DIR}
+
+################################################################################
+echo "Setup DMTCP"
+# https://wiki.hpcc.msu.edu/display/ITH/Checkpoint+with+DMTCP
+################################################################################
+
+# set a limited stack size so DMTCP could work
+ulimit -s 8192
+
+# save coordinators host info in an environment variable
+export DMTCP_COORD_HOST=$(hostname)
+
+# ask for a uniqe port at runtime
+export DMTCP_COORD_PORT=0
+
+# checkpoint every eight hours
+CKPT_WAIT_SEC=$(( 8 * 60 * 60 ))
+
+# back up checkpoints every hour
+BAK_WAIT_SEC=$(( 1 * 60 * 60 ))
+
+echo "   DMTCP_COORD_HOST" $DMTCP_COORD_HOST
+echo "   DMTCP_COORD_PORT" $DMTCP_COORD_PORT
+echo "   CKPT_WAIT_SEC" $CKPT_WAIT_SEC
+echo "   BAK_WAIT_SEC" $BAK_WAIT_SEC
+
+################################################################################
+echo "Do Work"
+################################################################################
+module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
+
+# set up background loop
+# so we always have at least one previous checkpoint and file state
+# mkdir checkpoint_bak
+# touch checkpoint_bak/init.dmtcp
+# while true; do
+#   echo "   BAK SLEEP" $(date)
+#   sleep $BAK_WAIT_SEC
+#   echo "   BAK WAKE" $(date)
+#   # if we have a new checkpoint, shuffle the backups
+#   if ! diff *.dmtcp checkpoint_bak/*.dmtcp; then
+#     echo "   BAK BEGIN" $(date)
+#     rm -rf checkpoint_bakbak
+#     mv checkpoint_bak checkpoint_bakbak
+#     mkdir checkpoint_bak
+#     cp *.csv *.h5 *dmtcp* checkpoint_bak
+#     echo "   BAK END" $(date)
+#   fi
+# done &
+
+# run job with checkpointing
+dmtcp_launch -i $CKPT_WAIT_SEC                                                 \
+  ./dishtiny -SEED ${SEED} -ANIMATION_FREQUENCY 2097152                        \
+  >run.log 2>&1
+
+# when running job fails or finishes, kill the background loop
+pkill -P $$
+
+###############################################################################
+echo "Done" $(date)
+################################################################################
+### CORE ###
+# Core settings for DISHTINY
+
+set NLEV 2                         # Number hierarchical resource levels
+
+### PROGRAM_GROUP ###
+# SignalGP program Settings
+
+### HARDWARE_GROUP ###
+# SignalGP Hardware Settings
+
+### MUTATION_GROUP ###
+# SignalGP Mutation Settings
+
+### LOGISTICS ###
+# logistics
+
+set TREATMENT_DESCRIPTOR resource-wave__channelsense-yes__nlev-two       # Treatment identifying slug
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 24           # How far can a signal propagate?
+set EVENT_RADIUS 6             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0.2         # How much resource benefit does a successful harvest grant?
+{"value0":{"values":[{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":8},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":11,"value":{"value0":{"value0":1373226110}}},{"key":10,"value":{"value0":{"value0":894240270}}},{"key":9,"value":{"value0":{"value0":1373226110}}},{"key":8,"value":{"value0":{"value0":1631761025}}},{"key":7,"value":{"value0":{"value0":1909164158}}},{"key":6,"value":{"value0":{"value0":289750466}}},{"key":5,"value":{"value0":{"value0":1283400562}}},{"key":4,"value":{"value0":{"value0":1908494462}}},{"key":3,"value":{"value0":{"value0":1594188900}}},{"key":2,"value":{"value0":{"value0":1372180830}}},{"key":1,"value":{"value0":{"value0":240797957}}},{"key":0,"value":{"value0":{"value0":827162636}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11]}}{"value0":[{"value0":{"value0":1487835186}},{"value0":{"value0":1179352753}},{"value0":{"value0":1216575126}},{"value0":{"value0":1208976442}},{"value0":{"value0":3156515659}},{"value0":{"value0":639414838}},{"value0":{"value0":948226753}},{"value0":{"value0":957164413}},{"value0":{"value0":836786286}},{"value0":{"value0":4150779265}},{"value0":{"value0":2543910275}},{"value0":{"value0":2585637802}},{"value0":{"value0":994050193}},{"value0":{"value0":1516670312}},{"value0":{"value0":1716078789}},{"value0":{"value0":1922282293}},{"value0":{"value0":4026818928}},{"value0":{"value0":2210874306}},{"value0":{"value0":3799762180}},{"value0":{"value0":386411205}},{"value0":{"value0":89105332}},{"value0":{"value0":3793464074}},{"value0":{"value0":2681087167}},{"value0":{"value0":2598114682}},{"value0":{"value0":3997369150}},{"value0":{"value0":2995261484}}]}{"value0":{"values":[{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":8},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":11,"value":{"value0":{"value0":1373226110}}},{"key":10,"value":{"value0":{"value0":894240270}}},{"key":9,"value":{"value0":{"value0":1373226110}}},{"key":8,"value":{"value0":{"value0":1631761025}}},{"key":7,"value":{"value0":{"value0":1909164158}}},{"key":6,"value":{"value0":{"value0":289750466}}},{"key":5,"value":{"value0":{"value0":1283400562}}},{"key":4,"value":{"value0":{"value0":1908494462}}},{"key":3,"value":{"value0":{"value0":1594188900}}},{"key":2,"value":{"value0":{"value0":1372180830}}},{"key":1,"value":{"value0":{"value0":240797957}}},{"key":0,"value":{"value0":{"value0":827162636}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11]}}{"value0":{"values":[{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":8},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":11,"value":{"value0":{"value0":1373226110}}},{"key":10,"value":{"value0":{"value0":894240270}}},{"key":9,"value":{"value0":{"value0":1373226110}}},{"key":8,"value":{"value0":{"value0":1631761025}}},{"key":7,"value":{"value0":{"value0":1909164158}}},{"key":6,"value":{"value0":{"value0":289750466}}},{"key":5,"value":{"value0":{"value0":1283400562}}},{"key":4,"value":{"value0":{"value0":1908494462}}},{"key":3,"value":{"value0":{"value0":1594188900}}},{"key":2,"value":{"value0":{"value0":1372180830}}},{"key":1,"value":{"value0":{"value0":240797957}}},{"key":0,"value":{"value0":{"value0":827162636}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11]}}{"value0":{"values":[{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":8},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":11,"value":{"value0":{"value0":1373226110}}},{"key":10,"value":{"value0":{"value0":894240270}}},{"key":9,"value":{"value0":{"value0":1373226110}}},{"key":8,"value":{"value0":{"value0":1631761025}}},{"key":7,"value":{"value0":{"value0":1909164158}}},{"key":6,"value":{"value0":{"value0":289750466}}},{"key":5,"value":{"value0":{"value0":1283400562}}},{"key":4,"value":{"value0":{"value0":1908494462}}},{"key":3,"value":{"value0":{"value0":1594188900}}},{"key":2,"value":{"value0":{"value0":1372180830}}},{"key":1,"value":{"value0":{"value0":240797957}}},{"key":0,"value":{"value0":{"value0":827162636}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11]}}#!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=48:00:00
 #SBATCH --array=1-20
@@ -863,7 +986,130 @@ set SIGNAL_RADIUS 24           # How far can a signal propagate?
 set EVENT_RADIUS 8             # How far from the seed are harvests beneficial?
 set HARVEST_VALUE 0            # How much resource benefit does a successful harvest grant?
 set ACTIVATION_COST 0          # How much resource is spent to attempt a harvest?
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 8           # How far can a signal propagate?
+set EVENT_RADIUS 2             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0.2         # How much resource benefit does a successful harvest grant?
 #!/bin/bash
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time=167:00:00         # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --array=1-40
+#SBATCH --mem=8G                # memory required per node - amount of memory (in bytes)
+#SBATCH --job-name treat=resource-wave__channelsense-yes__nlev-two     # you can give your job a name for easier identification (same as -J)
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
+
+################################################################################
+echo "Prepare Env Vars"
+################################################################################
+
+SEED_OFFSET=1000
+TREATMENT="treat=resource-wave__channelsense-yes__nlev-two"
+SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
+
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny/"${TREATMENT}"/"${SEED}"/"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/request/"${TREATMENT}
+
+echo "   TREATMENT" $TREATMENT
+echo "   SEED" $SEED
+echo "   OUTPUT_DIR" $OUTPUT_DIR
+echo "   CONFIG_DIR" $CONFIG_DIR
+
+################################################################################
+echo "Setup Work Dir"
+################################################################################
+rm -rf ${OUTPUT_DIR}/*  #If this is a redo, clear the dir
+mkdir -p ${OUTPUT_DIR}
+cp -r ${CONFIG_DIR}/* ${OUTPUT_DIR}
+cd ${OUTPUT_DIR}
+
+################################################################################
+echo "Setup DMTCP"
+# https://wiki.hpcc.msu.edu/display/ITH/Checkpoint+with+DMTCP
+################################################################################
+
+# set a limited stack size so DMTCP could work
+ulimit -s 8192
+
+# save coordinators host info in an environment variable
+export DMTCP_COORD_HOST=$(hostname)
+
+# ask for a uniqe port at runtime
+export DMTCP_COORD_PORT=0
+
+# checkpoint every eight hours
+CKPT_WAIT_SEC=$(( 8 * 60 * 60 ))
+
+# back up checkpoints every hour
+BAK_WAIT_SEC=$(( 1 * 60 * 60 ))
+
+echo "   DMTCP_COORD_HOST" $DMTCP_COORD_HOST
+echo "   DMTCP_COORD_PORT" $DMTCP_COORD_PORT
+echo "   CKPT_WAIT_SEC" $CKPT_WAIT_SEC
+echo "   BAK_WAIT_SEC" $BAK_WAIT_SEC
+
+################################################################################
+echo "Do Work"
+################################################################################
+module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
+
+# set up background loop
+# so we always have at least one previous checkpoint and file state
+# mkdir checkpoint_bak
+# touch checkpoint_bak/init.dmtcp
+# while true; do
+#   echo "   BAK SLEEP" $(date)
+#   sleep $BAK_WAIT_SEC
+#   echo "   BAK WAKE" $(date)
+#   # if we have a new checkpoint, shuffle the backups
+#   if ! diff *.dmtcp checkpoint_bak/*.dmtcp; then
+#     echo "   BAK BEGIN" $(date)
+#     rm -rf checkpoint_bakbak
+#     mv checkpoint_bak checkpoint_bakbak
+#     mkdir checkpoint_bak
+#     cp *.csv *.h5 *dmtcp* checkpoint_bak
+#     echo "   BAK END" $(date)
+#   fi
+# done &
+
+# run job with checkpointing
+dmtcp_launch -i $CKPT_WAIT_SEC                                                 \
+  ./dishtiny -SEED ${SEED} -ANIMATION_FREQUENCY 2097152                        \
+  >run.log 2>&1
+
+# when running job fails or finishes, kill the background loop
+pkill -P $$
+
+###############################################################################
+echo "Done" $(date)
+################################################################################
+### CORE ###
+# Core settings for DISHTINY
+
+set NLEV 2                         # Number hierarchical resource levels
+
+### PROGRAM_GROUP ###
+# SignalGP program Settings
+
+### HARDWARE_GROUP ###
+# SignalGP Hardware Settings
+
+### MUTATION_GROUP ###
+# SignalGP Mutation Settings
+
+### LOGISTICS ###
+# logistics
+
+set TREATMENT_DESCRIPTOR resource-wave__channelsense-yes__nlev-two       # Treatment identifying slug
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 24           # How far can a signal propagate?
+set EVENT_RADIUS 6             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0.2         # How much resource benefit does a successful harvest grant?
+{"value0":[{"value0":{"value0":1608817340}},{"value0":{"value0":205891422}},{"value0":{"value0":353229906}},{"value0":{"value0":1289998269}},{"value0":{"value0":1612017405}},{"value0":{"value0":185983699}},{"value0":{"value0":2124403702}},{"value0":{"value0":629010042}},{"value0":{"value0":2456413876}},{"value0":{"value0":23383663}},{"value0":{"value0":2122767081}},{"value0":{"value0":124389511}},{"value0":{"value0":3787878063}},{"value0":{"value0":2662702181}},{"value0":{"value0":1399777240}},{"value0":{"value0":4137545220}},{"value0":{"value0":17869748}},{"value0":{"value0":940784205}},{"value0":{"value0":1465405948}},{"value0":{"value0":3545223171}},{"value0":{"value0":4087532928}},{"value0":{"value0":2193198996}},{"value0":{"value0":3381842335}},{"value0":{"value0":1728659325}},{"value0":{"value0":959851606}},{"value0":{"value0":2827487073}}]}{"value0":{"values":[{"key":13,"value":2},{"key":12,"value":0},{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":2},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":18446744073709551613},{"key":0,"value":0}],"regulators":[{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.1461072456174353},{"key":0,"value":1.0}],"tags":[{"key":13,"value":{"value0":{"value0":3443125414}}},{"key":12,"value":{"value0":{"value0":867020314}}},{"key":11,"value":{"value0":{"value0":3385942940}}},{"key":10,"value":{"value0":{"value0":501239490}}},{"key":9,"value":{"value0":{"value0":3058747417}}},{"key":8,"value":{"value0":{"value0":2256972125}}},{"key":7,"value":{"value0":{"value0":4182706755}}},{"key":6,"value":{"value0":{"value0":445221752}}},{"key":5,"value":{"value0":{"value0":1609968023}}},{"key":4,"value":{"value0":{"value0":1763104028}}},{"key":3,"value":{"value0":{"value0":457973550}}},{"key":2,"value":{"value0":{"value0":1289074461}}},{"key":1,"value":{"value0":{"value0":2463768627}}},{"key":0,"value":{"value0":{"value0":2017810524}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]}}{"value0":{"values":[{"key":13,"value":2},{"key":12,"value":2},{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":2},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":18446744073709551613},{"key":0,"value":2}],"regulators":[{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0051541082419749},{"key":0,"value":1.0}],"tags":[{"key":13,"value":{"value0":{"value0":3443125414}}},{"key":12,"value":{"value0":{"value0":867020314}}},{"key":11,"value":{"value0":{"value0":3385942940}}},{"key":10,"value":{"value0":{"value0":501239490}}},{"key":9,"value":{"value0":{"value0":3058747417}}},{"key":8,"value":{"value0":{"value0":2256972125}}},{"key":7,"value":{"value0":{"value0":4182706755}}},{"key":6,"value":{"value0":{"value0":445221752}}},{"key":5,"value":{"value0":{"value0":1609968023}}},{"key":4,"value":{"value0":{"value0":1763104028}}},{"key":3,"value":{"value0":{"value0":457973550}}},{"key":2,"value":{"value0":{"value0":1289074461}}},{"key":1,"value":{"value0":{"value0":2463768627}}},{"key":0,"value":{"value0":{"value0":2017810524}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]}}{"value0":{"values":[{"key":13,"value":0},{"key":12,"value":1},{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":0},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":18446744073709551613},{"key":0,"value":0}],"regulators":[{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.1604285188233324},{"key":0,"value":1.0}],"tags":[{"key":13,"value":{"value0":{"value0":3443125414}}},{"key":12,"value":{"value0":{"value0":867020314}}},{"key":11,"value":{"value0":{"value0":3385942940}}},{"key":10,"value":{"value0":{"value0":501239490}}},{"key":9,"value":{"value0":{"value0":3058747417}}},{"key":8,"value":{"value0":{"value0":2256972125}}},{"key":7,"value":{"value0":{"value0":4182706755}}},{"key":6,"value":{"value0":{"value0":445221752}}},{"key":5,"value":{"value0":{"value0":1609968023}}},{"key":4,"value":{"value0":{"value0":1763104028}}},{"key":3,"value":{"value0":{"value0":457973550}}},{"key":2,"value":{"value0":{"value0":1289074461}}},{"key":1,"value":{"value0":{"value0":2463768627}}},{"key":0,"value":{"value0":{"value0":2017810524}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]}}{"value0":{"values":[{"key":13,"value":0},{"key":12,"value":1},{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":0},{"key":6,"value":2},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":4},{"key":1,"value":18446744073709551613},{"key":0,"value":0}],"regulators":[{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.2796278009616753},{"key":0,"value":1.0}],"tags":[{"key":13,"value":{"value0":{"value0":3443125414}}},{"key":12,"value":{"value0":{"value0":867020314}}},{"key":11,"value":{"value0":{"value0":3385942940}}},{"key":10,"value":{"value0":{"value0":501239490}}},{"key":9,"value":{"value0":{"value0":3058747417}}},{"key":8,"value":{"value0":{"value0":2256972125}}},{"key":7,"value":{"value0":{"value0":4182706755}}},{"key":6,"value":{"value0":{"value0":445221752}}},{"key":5,"value":{"value0":{"value0":1609968023}}},{"key":4,"value":{"value0":{"value0":1763104028}}},{"key":3,"value":{"value0":{"value0":457973550}}},{"key":2,"value":{"value0":{"value0":1289074461}}},{"key":1,"value":{"value0":{"value0":2463768627}}},{"key":0,"value":{"value0":{"value0":2017810524}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]}}#!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=48:00:00
 #SBATCH --array=1-20
@@ -1628,12 +1874,18 @@ Fn-00001011011000111110110000010110:
   SetHeir[01110101101000011011100110011011](0,1,1)
   Return[01101011100110011101111001011110](3,1,2)
 
-{"value0":{"values":[{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":1,"value":{"value0":{"value0":191097878}}},{"key":0,"value":{"value0":{"value0":4279097550}}}],"uids":[0,1]}}{"value0":{"values":[{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":1,"value":{"value0":{"value0":191097878}}},{"key":0,"value":{"value0":{"value0":4279097550}}}],"uids":[0,1]}}{"value0":{"values":[{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":1,"value":{"value0":{"value0":191097878}}},{"key":0,"value":{"value0":{"value0":4279097550}}}],"uids":[0,1]}}#!/bin/bash
+{"value0":{"values":[{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":1,"value":{"value0":{"value0":191097878}}},{"key":0,"value":{"value0":{"value0":4279097550}}}],"uids":[0,1]}}{"value0":{"values":[{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":1,"value":{"value0":{"value0":191097878}}},{"key":0,"value":{"value0":{"value0":4279097550}}}],"uids":[0,1]}}{"value0":{"values":[{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":1,"value":{"value0":{"value0":191097878}}},{"key":0,"value":{"value0":{"value0":4279097550}}}],"uids":[0,1]}}### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 8           # How far can a signal propagate?
+set EVENT_RADIUS 2             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0.2         # How much resource benefit does a successful harvest grant?
+#!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
-#SBATCH --time=48:00:00
-#SBATCH --array=1-20
-#SBATCH --mem=8G
-#SBATCH --job-name ko-1034-reg
+#SBATCH --time=167:00:00         # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --array=1-40
+#SBATCH --mem=8G                # memory required per node - amount of memory (in bytes)
+#SBATCH --job-name treat=resource-wave__channelsense-yes__nlev-two     # you can give your job a name for easier identification (same as -J)
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 
@@ -1642,11 +1894,11 @@ echo "Prepare Env Vars"
 ################################################################################
 
 SEED_OFFSET=1000
-TREATMENT="seed=1034+title=regulation+treat=resource-wave__channelsense-yes__nlev-two"
+TREATMENT="treat=resource-wave__channelsense-yes__nlev-two"
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/"${SEED}"/"
-CONFIG_DIR="/mnt/home/mmore500/dishtiny/knockout/"${TREATMENT}"/"
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny/"${TREATMENT}"/"${SEED}"/"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/request/"${TREATMENT}
 
 echo "   TREATMENT" $TREATMENT
 echo "   SEED" $SEED
@@ -1662,83 +1914,64 @@ cp -r ${CONFIG_DIR}/* ${OUTPUT_DIR}
 cd ${OUTPUT_DIR}
 
 ################################################################################
-echo "Do Work"
-################################################################################
-module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
-./dishtiny -SEED ${SEED} -RUN_LENGTH 270336 >run.log 2>&1
-
-###############################################################################
-echo "Done"
-################################################################################
-# Source Update
-
-`2**20`
-
-# ID Key
-1. wild type
-2. knockout
-  * Regulation
-
-# Knockout Prep
-
-```
-for f in *; do cp $f id=1+$f; done
-for f in c*; do mv $f id=2+$f; done
-sed -i -- 's/DuplicateAdjOwnRegulator/Nop/g' id\=2+component\=program*
-sed -i -- 's/AdjOwnRegulator/Nop/g' id\=2+component\=program*
-sed -i -- 's/DuplicateSetOwnRegulator/Nop/g' id\=2+component\=program*
-sed -i -- 's/SetOwnRegulator/Nop/g' id\=2+component\=program*
-sed -i -- 's/DuplicateAdjRegulator/Nop/g' id\=2+component\=program*
-sed -i -- 's/AdjRegulator/Nop/g' id\=2+component\=program*
-sed -i -- 's/DuplicateSetRegulator/Nop/g' id\=2+component\=program*
-sed -i -- 's/SetRegulator/Nop/g' id\=2+component\=program*
-```
-### CORE ###
-# Core settings for a DISHTINY level
-
-set SIGNAL_RADIUS 8           # How far can a signal propagate?
-set EVENT_RADIUS 2             # How far from the seed are harvests beneficial?
-set HARVEST_VALUE 0.2         # How much resource benefit does a successful harvest grant?
-#!/bin/bash
-########## Define Resources Needed with SBATCH Lines ##########
-#SBATCH --time=4:00:00
-#SBATCH --array=1-2
-#SBATCH --mem=8G
-#SBATCH --job-name ko-1034-regulation-phenotype
-#SBATCH --account=devolab
-#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
-
-################################################################################
-echo "Prepare Env Vars"
+echo "Setup DMTCP"
+# https://wiki.hpcc.msu.edu/display/ITH/Checkpoint+with+DMTCP
 ################################################################################
 
-TREATMENT="seed=1034+title=regulation+treat=resource-wave__channelsense-yes__nlev-two"
-SEED=1
+# set a limited stack size so DMTCP could work
+ulimit -s 8192
 
-OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-knockout/"${TREATMENT}"/id="${SLURM_ARRAY_TASK_ID}"/"
-CONFIG_DIR="/mnt/home/mmore500/dishtiny/knockout/"${TREATMENT}"/"
+# save coordinators host info in an environment variable
+export DMTCP_COORD_HOST=$(hostname)
 
-echo "   TREATMENT" $TREATMENT
-echo "   SEED" $SEED
-echo "   OUTPUT_DIR" $OUTPUT_DIR
-echo "   CONFIG_DIR" $CONFIG_DIR
+# ask for a uniqe port at runtime
+export DMTCP_COORD_PORT=0
 
-################################################################################
-echo "Setup Work Dir"
-################################################################################
-rm -rf ${OUTPUT_DIR}/*  #If this is a redo, clear the dir
-mkdir -p ${OUTPUT_DIR}
-cp -r ${CONFIG_DIR}/* ${OUTPUT_DIR}
-cd ${OUTPUT_DIR}
+# checkpoint every eight hours
+CKPT_WAIT_SEC=$(( 8 * 60 * 60 ))
+
+# back up checkpoints every hour
+BAK_WAIT_SEC=$(( 1 * 60 * 60 ))
+
+echo "   DMTCP_COORD_HOST" $DMTCP_COORD_HOST
+echo "   DMTCP_COORD_PORT" $DMTCP_COORD_PORT
+echo "   CKPT_WAIT_SEC" $CKPT_WAIT_SEC
+echo "   BAK_WAIT_SEC" $BAK_WAIT_SEC
 
 ################################################################################
 echo "Do Work"
 ################################################################################
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
-./dishtiny -SEED ${SEED} -SEED_POP_ID ${SLURM_ARRAY_TASK_ID} -RUN_LENGTH 8192 >run.log 2>&1
+
+# set up background loop
+# so we always have at least one previous checkpoint and file state
+# mkdir checkpoint_bak
+# touch checkpoint_bak/init.dmtcp
+# while true; do
+#   echo "   BAK SLEEP" $(date)
+#   sleep $BAK_WAIT_SEC
+#   echo "   BAK WAKE" $(date)
+#   # if we have a new checkpoint, shuffle the backups
+#   if ! diff *.dmtcp checkpoint_bak/*.dmtcp; then
+#     echo "   BAK BEGIN" $(date)
+#     rm -rf checkpoint_bakbak
+#     mv checkpoint_bak checkpoint_bakbak
+#     mkdir checkpoint_bak
+#     cp *.csv *.h5 *dmtcp* checkpoint_bak
+#     echo "   BAK END" $(date)
+#   fi
+# done &
+
+# run job with checkpointing
+dmtcp_launch -i $CKPT_WAIT_SEC                                                 \
+  ./dishtiny -SEED ${SEED} -ANIMATION_FREQUENCY 2097152                        \
+  >run.log 2>&1
+
+# when running job fails or finishes, kill the background loop
+pkill -P $$
 
 ###############################################################################
-echo "Done"
+echo "Done" $(date)
 ################################################################################
 ### CORE ###
 # Core settings for DISHTINY
@@ -1756,7 +1989,6 @@ set NLEV 2                         # Number hierarchical resource levels
 
 ### LOGISTICS ###
 # logistics
-set SEED_POP 1
 
 set TREATMENT_DESCRIPTOR resource-wave__channelsense-yes__nlev-two       # Treatment identifying slug
 ### CORE ###
@@ -1765,189 +1997,130 @@ set TREATMENT_DESCRIPTOR resource-wave__channelsense-yes__nlev-two       # Treat
 set SIGNAL_RADIUS 24           # How far can a signal propagate?
 set EVENT_RADIUS 6             # How far from the seed are harvests beneficial?
 set HARVEST_VALUE 0.2         # How much resource benefit does a successful harvest grant?
-{"value0":{"values":[{"key":13,"value":0},{"key":12,"value":1},{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":0},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":18446744073709551613},{"key":0,"value":0}],"regulators":[{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.1604285188233324},{"key":0,"value":1.0}],"tags":[{"key":13,"value":{"value0":{"value0":3443125414}}},{"key":12,"value":{"value0":{"value0":867020314}}},{"key":11,"value":{"value0":{"value0":3385942940}}},{"key":10,"value":{"value0":{"value0":501239490}}},{"key":9,"value":{"value0":{"value0":3058747417}}},{"key":8,"value":{"value0":{"value0":2256972125}}},{"key":7,"value":{"value0":{"value0":4182706755}}},{"key":6,"value":{"value0":{"value0":445221752}}},{"key":5,"value":{"value0":{"value0":1609968023}}},{"key":4,"value":{"value0":{"value0":1763104028}}},{"key":3,"value":{"value0":{"value0":457973550}}},{"key":2,"value":{"value0":{"value0":1289074461}}},{"key":1,"value":{"value0":{"value0":2463768627}}},{"key":0,"value":{"value0":{"value0":2017810524}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]}}Fn-01111000010001010101100001011100:
-  QueryIsExpired0[10001011001001001010010011111111](0,4,2)
-  DuplicateAdjRegulator[01010111001101100011001110110100](4,1,3)
-  Div[01111000001001000010110001011011](4,2,3)
-  QueryChannelGen-Lev1[10000000001001110110010110110000](3,4,4)
-  ClearReproductionReserve[11100111101111010101101010110000](1,4,3)
-  Output[00010010001000000000001110011101](3,1,1)
+{"value0":{"values":[{"key":6,"value":6},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":2},{"key":2,"value":2},{"key":1,"value":3},{"key":0,"value":0}],"regulators":[{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":3.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":6,"value":{"value0":{"value0":1435667611}}},{"key":5,"value":{"value0":{"value0":1184591311}}},{"key":4,"value":{"value0":{"value0":3383619558}}},{"key":3,"value":{"value0":{"value0":843178212}}},{"key":2,"value":{"value0":{"value0":4160862260}}},{"key":1,"value":{"value0":{"value0":3843738151}}},{"key":0,"value":{"value0":{"value0":3239401481}}}],"uids":[0,1,2,3,4,5,6]}}{"value0":{"values":[{"key":6,"value":6},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":3},{"key":2,"value":2},{"key":1,"value":1},{"key":0,"value":0}],"regulators":[{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":6,"value":{"value0":{"value0":1435667611}}},{"key":5,"value":{"value0":{"value0":1184591311}}},{"key":4,"value":{"value0":{"value0":3383619558}}},{"key":3,"value":{"value0":{"value0":843178212}}},{"key":2,"value":{"value0":{"value0":4160862260}}},{"key":1,"value":{"value0":{"value0":3843738151}}},{"key":0,"value":{"value0":{"value0":3239401481}}}],"uids":[0,1,2,3,4,5,6]}}{"value0":[{"value0":{"value0":1556253297}},{"value0":{"value0":2846506345}},{"value0":{"value0":1660016822}},{"value0":{"value0":1877646645}},{"value0":{"value0":3470050696}},{"value0":{"value0":4215401486}},{"value0":{"value0":6715290}},{"value0":{"value0":3038847243}},{"value0":{"value0":998353374}},{"value0":{"value0":555548409}},{"value0":{"value0":3678375300}},{"value0":{"value0":2408685783}},{"value0":{"value0":1734912910}},{"value0":{"value0":379211342}},{"value0":{"value0":3098399363}},{"value0":{"value0":274319802}},{"value0":{"value0":1087005113}},{"value0":{"value0":987513703}},{"value0":{"value0":2551355235}},{"value0":{"value0":587004871}},{"value0":{"value0":2845368907}},{"value0":{"value0":2075095475}},{"value0":{"value0":4268306528}},{"value0":{"value0":914065475}},{"value0":{"value0":3119847797}},{"value0":{"value0":2378547687}}]}{"value0":{"values":[{"key":6,"value":6},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":3},{"key":2,"value":2},{"key":1,"value":1},{"key":0,"value":0}],"regulators":[{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":6,"value":{"value0":{"value0":1435667611}}},{"key":5,"value":{"value0":{"value0":1184591311}}},{"key":4,"value":{"value0":{"value0":3383619558}}},{"key":3,"value":{"value0":{"value0":843178212}}},{"key":2,"value":{"value0":{"value0":4160862260}}},{"key":1,"value":{"value0":{"value0":3843738151}}},{"key":0,"value":{"value0":{"value0":3239401481}}}],"uids":[0,1,2,3,4,5,6]}}{"value0":{"values":[{"key":6,"value":6},{"key":5,"value":5},{"key":4,"value":4},{"key":3,"value":3},{"key":2,"value":2},{"key":1,"value":1},{"key":0,"value":0}],"regulators":[{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":6,"value":{"value0":{"value0":1435667611}}},{"key":5,"value":{"value0":{"value0":1184591311}}},{"key":4,"value":{"value0":{"value0":3383619558}}},{"key":3,"value":{"value0":{"value0":843178212}}},{"key":2,"value":{"value0":{"value0":4160862260}}},{"key":1,"value":{"value0":{"value0":3843738151}}},{"key":0,"value":{"value0":{"value0":3239401481}}}],"uids":[0,1,2,3,4,5,6]}}### CORE ###
+# Core settings for a DISHTINY level
 
-Fn-10010010110110100010000000110011:
-  Not[00001100110000010001111011110110](3,4,3)
-  Nop[11111011001011000011101100001010](3,1,2)
-  SetCellAgeBooster-Lev0[10110010000010000010011111110010](3,0,3)
-  Break[00000011001111010111111111100101](3,0,0)
-  DuplicateClose[10011001011010001101110011001011](1,4,4)
-  QueryChannelMate-Lev1[00010101100101001001011001000000](3,1,2)
-  DuplicateCommit[11100100101101100000111001000100](2,3,2)
-  Rng[11101100101010011111000010010101](7,3,1)
-  SetMembraneRegulator[11110110101111010001010101000101](4,0,0)
-  DuplicateAdjRegulator[01110011001011011001011110011101](1,4,0)
-  SetCellAgeBooster-Lev0[00110100101000001110010001110101](3,1,2)
-  Pull[10001101010011000011100110110000](4,3,0)
-  AdjRegulator[00101010011011011010101100000111](4,4,2)
-  DuplicateSenseRegulator[00110100000010101001011101000100](4,2,4)
+set SIGNAL_RADIUS 8           # How far can a signal propagate?
+set EVENT_RADIUS 2             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0.2         # How much resource benefit does a successful harvest grant?
+#!/bin/bash
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time=167:00:00         # limit of wall clock time - how long the job will run (same as -t)
+#SBATCH --array=1-40
+#SBATCH --mem=8G                # memory required per node - amount of memory (in bytes)
+#SBATCH --job-name treat=resource-wave__channelsense-yes__nlev-two     # you can give your job a name for easier identification (same as -J)
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 
-Fn-01001100110101011011011100011101:
-  DuplicateBreak[01111011011110101110111001011001](6,4,3)
-  PutMembraneBlocker[01100100101011100001011011011111](0,1,4)
-  SetCellAgeBooster-Lev1[10100101100000101101111101001110](0,3,3)
-  Nop[11101000110010101101000101101111](4,1,0)
-  ExtRegulator[00111000101011101000111010110111](2,1,0)
-  TestLess[10101100010010110110010000101011](4,4,1)
-  QueryIsPropaguleChild[01110000000000000000001010010001](4,0,4)
-  Terminal1[11001111101111101010010101001011](3,3,2)
-  QueryIsExpired1[10000011011001101111110001010111](2,3,0)
+################################################################################
+echo "Prepare Env Vars"
+################################################################################
 
-Fn-00011011010011000001111100101110:
-  DuplicateSetRegulator[10011101000110110101000101001111](3,1,4)
-  DuplicateTestLess[00001010110100010011100101000101](2,3,7)
-  SetReproductionReserve[00110000101111001011010000010110](4,1,7)
-  SetGiveSharingFalse[01111101010000010111011101111000](0,2,4)
-  QueryIsPropaguleParent[00010111010110000110101110010000](3,1,4)
-  SetMembraneRegulator[00001010010010101111110111111110](1,4,4)
-  SendMsgInternal[10000011001011101011100111010111](8,8,5)
-  Not[10101110010110110010001011011001](2,4,4)
-  DuplicatePull[10110100011101100010100000101101](2,0,0)
-  QueryOwnStockpile[10100001100011010000100110000001](3,1,1)
-  SetOwnRegulator[11011111101001011000101111001000](2,3,6)
+SEED_OFFSET=1000
+TREATMENT="treat=resource-wave__channelsense-yes__nlev-two"
+SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
-Fn-01101001000101101101010100011100:
-  DuplicateSwapMem[10100101000011100001010010101101](2,1,0)
-  SetStockpileReserve[10010010010111111111001111010011](1,2,4)
-  DuplicateCommit[00011100001100100010001000100101](2,1,1)
-  SetOwnRegulator[11110011000010001110000110100011](2,6,1)
-  TestNEqu[00110011001011011001011000001101](2,0,2)
-  SetStockpileReserve[10010010010111111111001111010111](1,2,4)
-  DuplicateCommit[00011100001100100010001000100101](2,1,1)
-  SetOwnRegulator[11110011010010001110000110100011](2,6,1)
-  TestNEqu[00110011001011011001011000001101](2,0,2)
-  DuplicateNop[11010110111101110101001010100111](1,4,0)
-  DuplicateSetMem[10110000111101111110110000001001](4,0,4)
-  TryReproduce-Lev2[10111101010001111110001000100010](6,1,3)
-  DuplicateCopyMem[10101111001100010111101000111100](1,2,1)
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny/"${TREATMENT}"/"${SEED}"/"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/request/"${TREATMENT}
 
-Fn-01011111111101100010100110010111:
-  QueryChannelGen-Lev1[10000000010000000110110100010010](2,3,4)
-  Nop[11001000111000110100101010001000](0,0,3)
-  SetHeir[00101001010110100110111101001001](0,1,3)
-  QueryChannelMate-Lev1[01001110111110011010110100000111](3,3,1)
-  SetAcceptSharingFalse[00000001001011110101000100110001](2,0,1)
-  PutInternalMembraneBringer[00001001011001000110010000100000](0,3,2)
-  Nop[00101010111000010100101010001101](2,0,2)
-  Terminal0.125[11010100111000111011001111011110](3,1,4)
-  DuplicateDec[10011110001100110000000010011011](5,1,3)
-  ClearStockpileReserve[00111110101010111001111010001111](0,2,2)
-  Add[00000110010000101000100111010101](3,2,2)
-  DuplicateTerminal0.125[10000101110110010001100100111101](1,4,4)
-  QueryIsPoorerThan[10101001010111011001110100101100](4,1,7)
+echo "   TREATMENT" $TREATMENT
+echo "   SEED" $SEED
+echo "   OUTPUT_DIR" $OUTPUT_DIR
+echo "   CONFIG_DIR" $CONFIG_DIR
 
-Fn-00011010100010011000101101111000:
-  DuplicateTestEqu[10101001011010011001011110111011](1,0,0)
-  DuplicateSetOwnRegulator[10010011101110000001101010001101](5,8,2)
-  PutMembraneBlocker[11010110110101001110100010110101](0,4,4)
-  Terminal0.125[11011000010101111110011101101001](4,5,2)
-  PutMembraneBringer[00000001011010001010001110001010](2,2,2)
-  QueryIsPropaguleParent[00010111001011111100101000100000](2,0,1)
-  SenseMembraneRegulator[10011111101001010100111111101001](0,3,4)
-  SetCellAgeBooster-Lev1[10001001011001110101100111100111](1,4,0)
-  SetHeir[10101101110000110011101001001100](3,1,3)
-  AdjOwnRegulator[11111111001001011000111010011111](4,2,1)
-  Sub[00101111110101011011000001011111](1,0,1)
-  Terminal0.125[10100101001001100011101111101100](6,7,8)
-  QueryOwnStockpile[00110010101011101001111011010111](0,1,3)
-  DuplicateExtRegulator[01001110000011101000001010010100](0,1,0)
-  PutInternalMembraneBringer[10101110101110111001100010011001](1,3,1)
+################################################################################
+echo "Setup Work Dir"
+################################################################################
+rm -rf ${OUTPUT_DIR}/*  #If this is a redo, clear the dir
+mkdir -p ${OUTPUT_DIR}
+cp -r ${CONFIG_DIR}/* ${OUTPUT_DIR}
+cd ${OUTPUT_DIR}
 
-Fn-11111001010011110000101001000011:
-  SetCellAgeBooster-Lev1[11011011010101001001001101110011](1,1,3)
-  DuplicateMod[01011110111010011111110001011011](4,3,3)
-  Nop[00110100100010001110011011100001](3,1,0)
-  Terminal1073741824[01100001100110000111000111011001](3,1,0)
-  DuplicateClose[11100000011000010011000001110101](3,5,2)
-  DuplicateTerminal1[01110001001000000000001011011010](0,2,1)
-  QueryIsPoorerThan[11001100001101000111011001000011](1,0,3)
-  QueryStockpile[01001011000101001010100011111111](1,2,7)
-  DuplicateAdjRegulator[10010010000011011011100001011111](0,0,3)
-  BcstMsgExternal[10100000100011000101111010010111](4,4,3)
+################################################################################
+echo "Setup DMTCP"
+# https://wiki.hpcc.msu.edu/display/ITH/Checkpoint+with+DMTCP
+################################################################################
 
-Fn-10000110100001101010100101011101:
-  ActivateInbox[00011111011001111000101001010110](3,3,0)
-  DuplicateExtRegulator[00100110010001100110100100001110](1,2,1)
-  ExtRegulator[11010111110011110011111110110111](1,0,0)
-  TryReproduce-Lev2[00010111111101010010100000100000](1,4,2)
-  SetCellAgeBooster-Lev0[01011001111100010111111101110101](8,3,3)
-  Input[10110001100000011110010110111110](3,2,2)
-  QueryIsExpired0[01111110010101010000100111000101](0,4,4)
-  PutInternalMembraneBlocker[10100100100011111101111111001110](6,4,0)
-  PauseRepr-Lev2[10011010101000011000100011101100](1,1,4)
-  DuplicateTestLess[01111100101111000001110110101101](3,3,3)
-  SetAcceptSharingFalse[10000010101111000100111100111001](1,2,4)
-  DuplicateInput[11100100001000000100111111000101](1,1,2)
-  Return[10100010110001000101101000000101](4,3,1)
-  Nop[00110110100101010000011010111100](7,1,0)
-  DuplicateTerminal1[00101101111100011101101101100101](4,2,6)
-  DuplicateMult[10010011000111100111111101100001](0,3,0)
-  Dec[11000010110011111011010001011000](1,3,4)
+# set a limited stack size so DMTCP could work
+ulimit -s 8192
 
-Fn-10110110010100001100100000011001:
-  DuplicateOutput[01101011110010000001110001011110](3,4,0)
+# save coordinators host info in an environment variable
+export DMTCP_COORD_HOST=$(hostname)
 
-Fn-00011101111000000100111011000010:
-  PauseRepr[00000110111100111111110010110101](8,1,0)
-  DuplicateCommit[10001101000100011011111111111110](1,1,1)
-  SwapMem[10100101011010010001011010100010](3,2,2)
-  QueryIsOlderThan[00010001011110001100100110101001](2,1,2)
-  QueryChannelMate-Lev0[11011010110011000001000110100100](1,1,4)
-  Div[11000010111000111101000001010011](3,0,4)
-  TryReproduce-Lev1[11000111011011011111100100001001](3,1,2)
-  Nop[01100000110110111111011000010010](3,0,0)
-  DuplicateCopyMem[01000011010001001011111111011010](2,2,3)
-  Mult[10011011101101100011001010011101](2,4,2)
-  AdjMembraneRegulator[11111110101111000000101010111100](4,8,6)
-  DuplicateDec[01011101100101101111101111001010](1,6,5)
-  DuplicateClose[11000100000011100110111111011001](0,3,2)
-  QueryOwnStockpile[10100001001000000110101110010110](5,4,3)
-  QueryChannelGen-Lev1[11111110101010111000101011110100](4,3,0)
-  SetCellAgeBooster-Lev1[11011011000110100000011111010011](1,3,4)
-  QueryChannel-Lev0[11111001010010011111101111110111](1,4,4)
+# ask for a uniqe port at runtime
+export DMTCP_COORD_PORT=0
 
-Fn-11001001110100010110001110011100:
-  QueryChannel-Lev1[01110000111001011111111001000000](0,4,4)
-  QueryIsPropaguleParent[01100001011001011011001111000001](1,2,5)
-  QueryIsPropaguleParent[11101101111111110111011100111011](0,3,3)
-  DuplicateMod[00000101101001010010011111101011](3,2,3)
-  Terminate[00110011100111010010010110101010](2,0,0)
-  SendMsgInternal[01000110100111110111111111011000](4,0,3)
+# checkpoint every eight hours
+CKPT_WAIT_SEC=$(( 8 * 60 * 60 ))
 
-Fn-00110011101011011010111000011010:
-  DuplicateIf[11101110110010111000100001000000](4,4,2)
-    DuplicateRng[00001000111110100000110010000010](2,3,0)
-    AdjMembraneRegulator[01101100101011011011100010110001](6,2,3)
-    DuplicateSub[11001010000100001100100010100001](4,3,0)
-    DuplicateSub[10101010000000000100100000000000](4,3,0)
-    QueryStockpile[00010101100111000101011110100011](2,1,3)
+# back up checkpoints every hour
+BAK_WAIT_SEC=$(( 1 * 60 * 60 ))
 
-Fn-11001101001110011110110010100110:
-  Terminal1[11000011000010110001011000100010](1,4,3)
-  PutInternalMembraneBringer[10000101101001100001010110110111](3,4,2)
-  AdjMembraneRegulator[11100101000111110100000100100111](2,3,2)
-  DuplicateAdjOwnRegulator[11011100011000011010101001110001](0,4,0)
-  TryReproduce-Lev1[00101010110100000010101111100110](3,2,1)
-  SenseRegulator[11111000010110011001001011010111](1,1,3)
-  QueryIsOlderThan[00011111000000101000001100101110](0,6,0)
-  SetGiveSharingTrue[11001110101110101100001010111101](4,4,4)
-  Pull[10100010100111011010111100011001](4,2,2)
-  Nop[01000101010100011001110100001101](2,3,0)
-  SetStockpileReserve[11100010000100001101011101111101](3,0,4)
-  UnsetHeir[10110000011111010000010101111111](2,3,2)
-  Div[10001100101111010111011100001110](2,4,3)
-  SetRegulator[11101110111110011001111010110101](2,2,3)
-  SenseMembraneRegulator[10011011101100111101011000101101](3,0,0)
-  DuplicateIf[11010010001001111110011110000101](1,1,3)
+echo "   DMTCP_COORD_HOST" $DMTCP_COORD_HOST
+echo "   DMTCP_COORD_PORT" $DMTCP_COORD_PORT
+echo "   CKPT_WAIT_SEC" $CKPT_WAIT_SEC
+echo "   BAK_WAIT_SEC" $BAK_WAIT_SEC
 
-{"value0":{"values":[{"key":13,"value":0},{"key":12,"value":1},{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":0},{"key":6,"value":2},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":4},{"key":1,"value":18446744073709551613},{"key":0,"value":0}],"regulators":[{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.2796278009616753},{"key":0,"value":1.0}],"tags":[{"key":13,"value":{"value0":{"value0":3443125414}}},{"key":12,"value":{"value0":{"value0":867020314}}},{"key":11,"value":{"value0":{"value0":3385942940}}},{"key":10,"value":{"value0":{"value0":501239490}}},{"key":9,"value":{"value0":{"value0":3058747417}}},{"key":8,"value":{"value0":{"value0":2256972125}}},{"key":7,"value":{"value0":{"value0":4182706755}}},{"key":6,"value":{"value0":{"value0":445221752}}},{"key":5,"value":{"value0":{"value0":1609968023}}},{"key":4,"value":{"value0":{"value0":1763104028}}},{"key":3,"value":{"value0":{"value0":457973550}}},{"key":2,"value":{"value0":{"value0":1289074461}}},{"key":1,"value":{"value0":{"value0":2463768627}}},{"key":0,"value":{"value0":{"value0":2017810524}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]}}{"value0":{"values":[{"key":13,"value":2},{"key":12,"value":0},{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":2},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":18446744073709551613},{"key":0,"value":0}],"regulators":[{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.1461072456174353},{"key":0,"value":1.0}],"tags":[{"key":13,"value":{"value0":{"value0":3443125414}}},{"key":12,"value":{"value0":{"value0":867020314}}},{"key":11,"value":{"value0":{"value0":3385942940}}},{"key":10,"value":{"value0":{"value0":501239490}}},{"key":9,"value":{"value0":{"value0":3058747417}}},{"key":8,"value":{"value0":{"value0":2256972125}}},{"key":7,"value":{"value0":{"value0":4182706755}}},{"key":6,"value":{"value0":{"value0":445221752}}},{"key":5,"value":{"value0":{"value0":1609968023}}},{"key":4,"value":{"value0":{"value0":1763104028}}},{"key":3,"value":{"value0":{"value0":457973550}}},{"key":2,"value":{"value0":{"value0":1289074461}}},{"key":1,"value":{"value0":{"value0":2463768627}}},{"key":0,"value":{"value0":{"value0":2017810524}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]}}{"value0":[{"value0":{"value0":1608817340}},{"value0":{"value0":205891422}},{"value0":{"value0":353229906}},{"value0":{"value0":1289998269}},{"value0":{"value0":1612017405}},{"value0":{"value0":185983699}},{"value0":{"value0":2124403702}},{"value0":{"value0":629010042}},{"value0":{"value0":2456413876}},{"value0":{"value0":23383663}},{"value0":{"value0":2122767081}},{"value0":{"value0":124389511}},{"value0":{"value0":3787878063}},{"value0":{"value0":2662702181}},{"value0":{"value0":1399777240}},{"value0":{"value0":4137545220}},{"value0":{"value0":17869748}},{"value0":{"value0":940784205}},{"value0":{"value0":1465405948}},{"value0":{"value0":3545223171}},{"value0":{"value0":4087532928}},{"value0":{"value0":2193198996}},{"value0":{"value0":3381842335}},{"value0":{"value0":1728659325}},{"value0":{"value0":959851606}},{"value0":{"value0":2827487073}}]}{"value0":{"values":[{"key":13,"value":2},{"key":12,"value":2},{"key":11,"value":0},{"key":10,"value":0},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":2},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":18446744073709551613},{"key":0,"value":2}],"regulators":[{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0051541082419749},{"key":0,"value":1.0}],"tags":[{"key":13,"value":{"value0":{"value0":3443125414}}},{"key":12,"value":{"value0":{"value0":867020314}}},{"key":11,"value":{"value0":{"value0":3385942940}}},{"key":10,"value":{"value0":{"value0":501239490}}},{"key":9,"value":{"value0":{"value0":3058747417}}},{"key":8,"value":{"value0":{"value0":2256972125}}},{"key":7,"value":{"value0":{"value0":4182706755}}},{"key":6,"value":{"value0":{"value0":445221752}}},{"key":5,"value":{"value0":{"value0":1609968023}}},{"key":4,"value":{"value0":{"value0":1763104028}}},{"key":3,"value":{"value0":{"value0":457973550}}},{"key":2,"value":{"value0":{"value0":1289074461}}},{"key":1,"value":{"value0":{"value0":2463768627}}},{"key":0,"value":{"value0":{"value0":2017810524}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13]}}### CORE ###
+################################################################################
+echo "Do Work"
+################################################################################
+module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
+
+# set up background loop
+# so we always have at least one previous checkpoint and file state
+# mkdir checkpoint_bak
+# touch checkpoint_bak/init.dmtcp
+# while true; do
+#   echo "   BAK SLEEP" $(date)
+#   sleep $BAK_WAIT_SEC
+#   echo "   BAK WAKE" $(date)
+#   # if we have a new checkpoint, shuffle the backups
+#   if ! diff *.dmtcp checkpoint_bak/*.dmtcp; then
+#     echo "   BAK BEGIN" $(date)
+#     rm -rf checkpoint_bakbak
+#     mv checkpoint_bak checkpoint_bakbak
+#     mkdir checkpoint_bak
+#     cp *.csv *.h5 *dmtcp* checkpoint_bak
+#     echo "   BAK END" $(date)
+#   fi
+# done &
+
+# run job with checkpointing
+dmtcp_launch -i $CKPT_WAIT_SEC                                                 \
+  ./dishtiny -SEED ${SEED} -ANIMATION_FREQUENCY 2097152                        \
+  >run.log 2>&1
+
+# when running job fails or finishes, kill the background loop
+pkill -P $$
+
+###############################################################################
+echo "Done" $(date)
+################################################################################
+### CORE ###
+# Core settings for DISHTINY
+
+set NLEV 2                         # Number hierarchical resource levels
+
+### PROGRAM_GROUP ###
+# SignalGP program Settings
+
+### HARDWARE_GROUP ###
+# SignalGP Hardware Settings
+
+### MUTATION_GROUP ###
+# SignalGP Mutation Settings
+
+### LOGISTICS ###
+# logistics
+
+set TREATMENT_DESCRIPTOR resource-wave__channelsense-yes__nlev-two       # Treatment identifying slug
+### CORE ###
+# Core settings for a DISHTINY level
+
+set SIGNAL_RADIUS 24           # How far can a signal propagate?
+set EVENT_RADIUS 6             # How far from the seed are harvests beneficial?
+set HARVEST_VALUE 0.2         # How much resource benefit does a successful harvest grant?
+{"value0":{"values":[{"key":15,"value":0},{"key":14,"value":0},{"key":13,"value":0},{"key":12,"value":0},{"key":11,"value":0},{"key":10,"value":2},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":0},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":15,"value":1.0},{"key":14,"value":1.0},{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":15,"value":{"value0":{"value0":3042559076}}},{"key":14,"value":{"value0":{"value0":2807128786}}},{"key":13,"value":{"value0":{"value0":2765612224}}},{"key":12,"value":{"value0":{"value0":4027400695}}},{"key":11,"value":{"value0":{"value0":2565162011}}},{"key":10,"value":{"value0":{"value0":1693322834}}},{"key":9,"value":{"value0":{"value0":2473076969}}},{"key":8,"value":{"value0":{"value0":2434246555}}},{"key":7,"value":{"value0":{"value0":3042567268}}},{"key":6,"value":{"value0":{"value0":2563246309}}},{"key":5,"value":{"value0":{"value0":3583557071}}},{"key":4,"value":{"value0":{"value0":2494797594}}},{"key":3,"value":{"value0":{"value0":3596736889}}},{"key":2,"value":{"value0":{"value0":3658222912}}},{"key":1,"value":{"value0":{"value0":2298838189}}},{"key":0,"value":{"value0":{"value0":2575841389}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]}}{"value0":{"values":[{"key":15,"value":0},{"key":14,"value":0},{"key":13,"value":0},{"key":12,"value":0},{"key":11,"value":0},{"key":10,"value":2},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":0},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":15,"value":1.0},{"key":14,"value":1.0},{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":15,"value":{"value0":{"value0":3042559076}}},{"key":14,"value":{"value0":{"value0":2807128786}}},{"key":13,"value":{"value0":{"value0":2765612224}}},{"key":12,"value":{"value0":{"value0":4027400695}}},{"key":11,"value":{"value0":{"value0":2565162011}}},{"key":10,"value":{"value0":{"value0":1693322834}}},{"key":9,"value":{"value0":{"value0":2473076969}}},{"key":8,"value":{"value0":{"value0":2434246555}}},{"key":7,"value":{"value0":{"value0":3042567268}}},{"key":6,"value":{"value0":{"value0":2563246309}}},{"key":5,"value":{"value0":{"value0":3583557071}}},{"key":4,"value":{"value0":{"value0":2494797594}}},{"key":3,"value":{"value0":{"value0":3596736889}}},{"key":2,"value":{"value0":{"value0":3658222912}}},{"key":1,"value":{"value0":{"value0":2298838189}}},{"key":0,"value":{"value0":{"value0":2575841389}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]}}{"value0":[{"value0":{"value0":3441044667}},{"value0":{"value0":3698960491}},{"value0":{"value0":3539984400}},{"value0":{"value0":2661468849}},{"value0":{"value0":1669572796}},{"value0":{"value0":3260882705}},{"value0":{"value0":2349241902}},{"value0":{"value0":3094155084}},{"value0":{"value0":1403407954}},{"value0":{"value0":4072928428}},{"value0":{"value0":325582685}},{"value0":{"value0":3873015218}},{"value0":{"value0":1615724112}},{"value0":{"value0":1837306658}},{"value0":{"value0":34898435}},{"value0":{"value0":3972480245}},{"value0":{"value0":382947405}},{"value0":{"value0":1061380833}},{"value0":{"value0":2786957555}},{"value0":{"value0":1355247773}},{"value0":{"value0":648818052}},{"value0":{"value0":258358720}},{"value0":{"value0":195704853}},{"value0":{"value0":2028611690}},{"value0":{"value0":3246131996}},{"value0":{"value0":4209097426}}]}{"value0":{"values":[{"key":15,"value":0},{"key":14,"value":0},{"key":13,"value":0},{"key":12,"value":0},{"key":11,"value":0},{"key":10,"value":2},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":0},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":15,"value":1.0},{"key":14,"value":1.0},{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":15,"value":{"value0":{"value0":3042559076}}},{"key":14,"value":{"value0":{"value0":2807128786}}},{"key":13,"value":{"value0":{"value0":2765612224}}},{"key":12,"value":{"value0":{"value0":4027400695}}},{"key":11,"value":{"value0":{"value0":2565162011}}},{"key":10,"value":{"value0":{"value0":1693322834}}},{"key":9,"value":{"value0":{"value0":2473076969}}},{"key":8,"value":{"value0":{"value0":2434246555}}},{"key":7,"value":{"value0":{"value0":3042567268}}},{"key":6,"value":{"value0":{"value0":2563246309}}},{"key":5,"value":{"value0":{"value0":3583557071}}},{"key":4,"value":{"value0":{"value0":2494797594}}},{"key":3,"value":{"value0":{"value0":3596736889}}},{"key":2,"value":{"value0":{"value0":3658222912}}},{"key":1,"value":{"value0":{"value0":2298838189}}},{"key":0,"value":{"value0":{"value0":2575841389}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]}}{"value0":{"values":[{"key":15,"value":0},{"key":14,"value":0},{"key":13,"value":0},{"key":12,"value":0},{"key":11,"value":0},{"key":10,"value":2},{"key":9,"value":0},{"key":8,"value":0},{"key":7,"value":2},{"key":6,"value":0},{"key":5,"value":0},{"key":4,"value":0},{"key":3,"value":0},{"key":2,"value":0},{"key":1,"value":0},{"key":0,"value":0}],"regulators":[{"key":15,"value":1.0},{"key":14,"value":1.0},{"key":13,"value":1.0},{"key":12,"value":1.0},{"key":11,"value":1.0},{"key":10,"value":1.0},{"key":9,"value":1.0},{"key":8,"value":1.0},{"key":7,"value":1.0},{"key":6,"value":1.0},{"key":5,"value":1.0},{"key":4,"value":1.0},{"key":3,"value":1.0},{"key":2,"value":1.0},{"key":1,"value":1.0},{"key":0,"value":1.0}],"tags":[{"key":15,"value":{"value0":{"value0":3042559076}}},{"key":14,"value":{"value0":{"value0":2807128786}}},{"key":13,"value":{"value0":{"value0":2765612224}}},{"key":12,"value":{"value0":{"value0":4027400695}}},{"key":11,"value":{"value0":{"value0":2565162011}}},{"key":10,"value":{"value0":{"value0":1693322834}}},{"key":9,"value":{"value0":{"value0":2473076969}}},{"key":8,"value":{"value0":{"value0":2434246555}}},{"key":7,"value":{"value0":{"value0":3042567268}}},{"key":6,"value":{"value0":{"value0":2563246309}}},{"key":5,"value":{"value0":{"value0":3583557071}}},{"key":4,"value":{"value0":{"value0":2494797594}}},{"key":3,"value":{"value0":{"value0":3596736889}}},{"key":2,"value":{"value0":{"value0":3658222912}}},{"key":1,"value":{"value0":{"value0":2298838189}}},{"key":0,"value":{"value0":{"value0":2575841389}}}],"uids":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]}}### CORE ###
 # Core settings for a DISHTINY level
 
 set SIGNAL_RADIUS 24           # How far can a signal propagate?
