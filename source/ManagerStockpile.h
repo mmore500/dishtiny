@@ -14,8 +14,6 @@ private:
 
   const Config &cfg;
 
-  emp::Random &local_rng;
-
   double resource;
 
   emp::vector<double> contrib_resource;
@@ -32,10 +30,8 @@ public:
 
   ManagerStockpile(
     std::function<size_t(size_t)> expchecker_,
-    emp::Random &local_rng_,
     const Config &cfg_
   ) : cfg(cfg_)
-  , local_rng(local_rng_)
   , contrib_resource(Cardi::Dir::NumDirs+1) // +1 for spiker
   , refund_resource(0.0)
   , harvest_withdrawals(cfg_.NLEV())

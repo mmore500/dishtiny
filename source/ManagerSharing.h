@@ -13,8 +13,6 @@ private:
 
   const Config &cfg;
 
-  emp::Random &local_rng;
-
   emp::vector<double> in_resistance;
   emp::vector<double> in_resistance_pending;
   emp::vector<size_t> in_resistance_fresh;
@@ -41,10 +39,8 @@ public:
     const emp::vector<
       std::function<void(const double)>
     > & external_contribute_,
-    emp::Random &local_rng_,
     const Config &cfg_
   ) : cfg(cfg_)
-  , local_rng(local_rng_)
   , in_resistance(Cardi::Dir::NumDirs+1) // +1 for spiker
   , in_resistance_pending(Cardi::Dir::NumDirs+1) // +1 for spiker
   , in_resistance_fresh(Cardi::Dir::NumDirs+1) // +1 for spiker

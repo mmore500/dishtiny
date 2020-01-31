@@ -106,6 +106,7 @@ Manager::Manager(
                 ); emp_assert(frac >= 0.0); emp_assert(frac <= 1.0);
                 // make sure connections are only linked up
                 // to same-channel cells
+                std::ignore = cfg; // suppress compiler warnings in release mode
                 emp_assert(mcs[i]->CheckMatch(*mcs[loc], cfg.NLEV()-1));
                 Stockpile(loc).ExternalContribute(
                   amt * frac,
@@ -117,14 +118,12 @@ Manager::Manager(
           emp_assert(res.size() == Cardi::Dir::NumDirs + 1);
           return res;
         }(),
-        *local_rngs[i],
         cfg
       )
     );
     mss.push_back(
       emp::NewPtr<ManagerStockpile>(
         mcs.back()->MakeExpChecker(),
-        *local_rngs[i],
         cfg
       )
     );
