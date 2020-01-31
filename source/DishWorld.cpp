@@ -8,6 +8,7 @@
 #else
 #include <filesystem>
 #endif
+#include <stdexcept>
 
 #include "base/vector.h"
 #include "Evolve/World.h"
@@ -168,18 +169,35 @@ void DishWorld::LoadPopulation() {
   );
   #endif
 
+  if (!filenames.size()) {
+    throw std::runtime_error("seedpop directory missing or empty");
+  }
+
+  // for consistency
+  std::sort(std::begin(filenames), std::end(filenames));
+
+  // filter just for filenames with ids
+  std::remove_if(
+    std::begin(filenames),
+    std::end(filenames),
+    [](const auto &f){ return emp::keyname::unpack(f).count("id") == 0; }
+  );
+
   // get ids of seeded cells
   emp::vector<size_t> ids;
-  for (const auto & filename : filenames) {
-    if (
-      const auto res = emp::keyname::unpack(filename);
-      res.count("id")
-    ) {
+  std::transform(
+    std::begin(filenames),
+    std::end(filenames),
+    std::back_inserter(ids),
+    [](const auto &filename) {
       size_t id;
-      std::stringstream(res.at("id")) >> id;
-      emp_assert(id > 0);
-      ids.push_back(id);
+      std::stringstream(emp::keyname::unpack(filename).at("id")) >> id;
+      return id;
     }
+  );
+
+  if (!ids.size()) {
+    throw std::runtime_error("no ids found in seedpop directory");
   }
 
   // remove duplicate ids
@@ -201,6 +219,12 @@ void DishWorld::LoadPopulation() {
     );
   }
 
+  if (!ids.size()) {
+    throw std::runtime_error("target id not found in seedpop directory");
+  } else if (ids.size() > GetSize()) {
+    throw std::runtime_error("too many ids found in seedpop directory");
+  }
+
   // pick where to put seeded cells
   emp::vector<size_t> targets(GetSize());
   std::iota(targets.begin(), targets.end(), 0);
@@ -210,105 +234,133 @@ void DishWorld::LoadPopulation() {
 
   auto target = std::begin(targets);
 
+  const size_t per_id_genome_quota = GetSize() / ids.size();
+
+  // sort filenames by ids
+  std::sort(
+    std::begin(filenames),
+    std::end(filenames),
+    [](const auto &filename_a, const auto &filename_b){
+      size_t id_a;
+      size_t id_b;
+      std::stringstream(emp::keyname::unpack(filename_a).at("id")) >> id_a;
+      std::stringstream(emp::keyname::unpack(filename_b).at("id")) >> id_b;
+      return id_a < id_b;
+    }
+  );
+
   for (const auto & id : ids) {
 
-    const std::string filename{
-      *std::find_if(
-        std::begin(filenames),
-        std::end(filenames),
-        [id](const auto & filename){
-          const auto res = emp::keyname::unpack(filename);
+    std::cout << "id: " << id << std::endl;
 
-          return (
-            res.count("id") && res.at("id") == emp::to_string(id)
-            && res.count("component") && res.at("component") == "genomes"
-            && res.count("count")
-            && res.count("title") && res.at("title") == "population"
-            && res.count("ext") && res.at("ext") == ".json.cereal"
-          );
-        }
-      )
+    struct compare {
+      bool operator()(const std::string& filename_a, const size_t id_b) const {
+        size_t id_a;
+        std::stringstream(emp::keyname::unpack(filename_a).at("id")) >> id_a;
+        return id_a < id_b;
+      }
+      bool operator()(const size_t id_a, const std::string& filename_b) const {
+        size_t id_b;
+        std::stringstream(emp::keyname::unpack(filename_b).at("id")) >> id_b;
+        return id_a < id_b;
+      }
     };
+    const auto cur_filenames = std::equal_range(
+      std::begin(filenames),
+      std::end(filenames),
+      id,
+      compare{}
+    );
+    emp_assert(cur_filenames.first != cur_filenames.second);
 
-    const size_t count = std::stoi(emp::keyname::unpack(filename).at("count"));
+    const size_t per_file_genome_quota = per_id_genome_quota / std::distance(
+      cur_filenames.first,
+      cur_filenames.second
+    );
+    size_t leftover_genome_quota = per_id_genome_quota % std::distance(
+      cur_filenames.first,
+      cur_filenames.second
+    );
 
-    std::ifstream genomes_stream(filename);
+    for (
+      const auto & filename
+      : emp::vector<std::string>{cur_filenames.first, cur_filenames.second}
+    ) {
 
-    cereal::JSONInputArchive genomes_archive(genomes_stream);
-
-    for (size_t i = 0; i < count; ++i) {
-      Genome genome(
-        cfg,
-        LibraryInstruction::Make(cfg),
-        LibraryInstructionSpiker::Make(cfg)
-      );
-      genomes_archive(genome);
-      genome.SetRootID(id);
-
-      if (rand.P(cfg.SEED_MUTATIONS_P())) genome.DoMutations(
-        mut,
-        rand
-      );
-
-      // decide whether to inject
-
-      const size_t load_quota = GetSize() / ids.size();
-
-      const size_t load_start = ( load_quota * cfg.SEED_POP() ) % count;
-
-      const size_t distance_from_start = (
-        i >= load_start
-        ? i - load_start
-        : (count - load_start) + i
+      const size_t genome_count = std::stoi(
+        emp::keyname::unpack(filename).at("count")
       );
 
-      if (distance_from_start < load_quota) InjectAt(
-        genome,
-        emp::WorldPosition(
-          *(target++)
-        )
-      );
-    }
-  }
+      if (genome_count == 0) {
+        throw std::runtime_error("empty population file");
+      }
 
-  // turn off restoring regulator state for now
-  // target = std::begin(targets);
-  //
-  // for (const auto & id : ids) {
-  //
-  //   for (size_t clone = 0; clone < cfg.SEED_POP_CLONECOUNT(); ++clone) {
-  //
-  //     for (size_t dir = 0; dir < Cardi::Dir::NumDirs + 1; ++dir) {
-  //       Config::matchbin_t::state_t state;
-  //       std::ifstream reg_stream(
-  //         *std::find_if(
-  //           std::begin(filenames),
-  //           std::end(filenames),
-  //           [this, id, dir](const auto & filename){
-  //             const auto res = emp::keyname::unpack(filename);
-  //             return (
-  //               res.count("id") && res.at("id") == emp::to_string(id)
-  //               && res.count("treat")
-  //               && res.at("treat") == cfg.TREATMENT_DESCRIPTOR()
-  //               && res.count("dir") && res.at("dir") == emp::to_string(dir)
-  //               && res.count("component") && res.at("component") == "regulator"
-  //               && res.count("ext") && res.at("ext") == ".json"
-  //             );
-  //           }
-  //         )
-  //       );
-  //       cereal::JSONInputArchive reg_archive(reg_stream);
-  //       reg_archive(state);
-  //       frames[*target]->GetFrameHardware(
-  //         dir
-  //       ).SetMatchBinState(state);
-  //     }
-  //
-  //     ++target;
-  //
-  //   }
-  //
-  // }
+      std::ifstream genomes_stream(filename);
+
+      cereal::JSONInputArchive genomes_archive(genomes_stream);
+
+      const size_t load_quota = (
+        per_file_genome_quota
+        + (leftover_genome_quota ? 1 : 0)
+      );
+      if (leftover_genome_quota) --leftover_genome_quota;
+
+      if (genome_count < load_quota) {
+        throw std::runtime_error("insufficient population file");
+      }
+
+      const size_t load_start = (
+        load_quota * cfg.SEED_POP()
+      ) % genome_count;
+
+      std::cout
+        << "   file " << filename
+        << "   with " << genome_count << " genomes, "
+        << " loading " << load_quota
+        << " genomes between population positions "
+        << load_start << " and " << (load_start + load_quota) % genome_count
+        << std::endl;
+
+      for (size_t i = 0; i < genome_count; ++i) {
+        Genome genome(
+          cfg,
+          LibraryInstruction::Make(cfg),
+          LibraryInstructionSpiker::Make(cfg)
+        );
+        genomes_archive(genome);
+        genome.SetRootID(id);
+
+        if (rand.P(cfg.SEED_MUTATIONS_P())) genome.DoMutations(mut, rand);
+
+        // decide whether to inject
+        const size_t distance_from_start = (
+          i >= load_start
+          ? i - load_start
+          : (genome_count - load_start) + i
+        );
+
+        if (distance_from_start < load_quota) InjectAt(
+          genome,
+          emp::WorldPosition(
+            *(target++)
+          )
+        );
+
+      } // end for loop over available genomes in file
+
+    } // end for loop over available files for id
+
+    emp_assert(
+      static_cast<size_t>(std::distance(std::begin(targets), target))
+      % per_id_genome_quota == 0
+    );
+
+  } // end for loop over available ids
+
+  emp_assert(
+    static_cast<size_t>(std::distance(std::begin(targets), target))
+    == GetSize() - GetSize() % ids.size()
+  );
 
   // clear everything that wasn't injected
   for (size_t i = 0; i < GetSize(); ++i) {
