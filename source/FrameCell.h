@@ -89,4 +89,6 @@ public:
 
   size_t GetIncomingConectionCount() const;
 
+  const std::unordered_multiset<size_t> & ViewIncomingConnections() const;
+
 };

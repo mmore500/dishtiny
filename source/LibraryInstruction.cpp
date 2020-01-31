@@ -614,13 +614,26 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
   );
 
   il.AddInst(
-    "SendSpikeMsg",
+    "BcstSpikeMsg",
     [](hardware_t & hw, const inst_t & inst){
       const state_t & state = hw.GetCurState();
-      hw.TriggerEvent("SendSpikeMsg", inst.affinity, state.output_mem);
+      hw.TriggerEvent("BcstSpikeMsg", inst.affinity, state.output_mem);
     },
     0,
-    "Send a single message to connections.",
+    "Broadcast a single message to connections.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "BcstSpikeReverseMsg",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      hw.TriggerEvent("BcstSpikeReverseMsg", inst.affinity, state.output_mem);
+    },
+    0,
+    "Broadcast a single message to connections.",
     emp::ScopeType::BASIC,
     0,
     {"affinity"}

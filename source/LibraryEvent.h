@@ -66,6 +66,31 @@ public:
         "Send message event."
       );
 
+      el.AddEvent(
+        "SendSpikeReverseMsg",
+        [](hardware_t & hw, const event_t & event){
+          hw.SpawnCore(event.affinity, hw.GetMinBindThresh(), event.msg);
+        },
+        "Send message event."
+      );
+
+      el.AddEvent(
+        "BcstSpikeMsg",
+        [](hardware_t & hw, const event_t & event){
+          hw.SpawnCore(event.affinity, hw.GetMinBindThresh(), event.msg);
+        },
+        "Send message event."
+      );
+
+      el.AddEvent(
+        "BcstSpikeReverseMsg",
+        [](hardware_t & hw, const event_t & event){
+          hw.SpawnCore(event.affinity, hw.GetMinBindThresh(), event.msg);
+        },
+        "Send message event."
+      );
+
+
       el.RegisterDispatchFun(
         "SendMsgExternal",
         [](hardware_t & hw, const event_t & event) {
@@ -110,6 +135,53 @@ public:
 
           for (auto & [dest, target] : man.Connection(pos).ViewDeveloped()) {
             man.Inbox(dest).TakeMessage(event, Cardi::Dir::NumDirs);
+          }
+
+        }
+      );
+
+      el.RegisterDispatchFun(
+        "SendSpikeReverseMsg",
+        [](hardware_t & hw, const event_t & event) {
+
+          FrameHardware &fh = *hw.GetTrait();
+          Manager &man = fh.Cell().Man();
+
+          for (auto & dest : fh.Cell().ViewIncomingConnections()) {
+            man.Inbox(dest).TakeMessage(event, Cardi::Dir::NumDirs);
+          }
+
+        }
+      );
+
+      el.RegisterDispatchFun(
+        "BcstSpikeMsg",
+        [](hardware_t & hw, const event_t & event) {
+
+          FrameHardware &fh = *hw.GetTrait();
+          Manager &man = fh.Cell().Man();
+          const size_t pos = fh.Cell().GetPos();
+
+          for (auto & [dest, target] : man.Connection(pos).ViewDeveloped()) {
+            for (size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
+              man.Inbox(dest).TakeMessage(event, dir);
+            }
+          }
+
+        }
+      );
+
+      el.RegisterDispatchFun(
+        "BcstSpikeReverseMsg",
+        [](hardware_t & hw, const event_t & event) {
+
+          FrameHardware &fh = *hw.GetTrait();
+          Manager &man = fh.Cell().Man();
+
+          for (auto & dest : fh.Cell().ViewIncomingConnections()) {
+            for (size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
+              man.Inbox(dest).TakeMessage(event, dir);
+            }
           }
 
         }

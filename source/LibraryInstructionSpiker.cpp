@@ -806,6 +806,45 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
   );
 
   il.AddInst(
+    "SendSpikeReverseMsg",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      hw.TriggerEvent("SendSpikeReverseMsg", inst.affinity, state.output_mem);
+    },
+    0,
+    "Send a single message to connections.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "BcstSpikeMsg",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      hw.TriggerEvent("BcstSpikeMsg", inst.affinity, state.output_mem);
+    },
+    0,
+    "Broadcast a single message to connections.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "BcstSpikeReverseMsg",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      hw.TriggerEvent("BcstSpikeReverseMsg", inst.affinity, state.output_mem);
+    },
+    0,
+    "Broadcast a single message to connections.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
     "BcstMsgInternal",
     [](hardware_t & hw, const inst_t & inst){
       FrameHardware &fh = *hw.GetTrait();

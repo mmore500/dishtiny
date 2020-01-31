@@ -193,3 +193,8 @@ void FrameCell::DoPrune() {
 size_t FrameCell::GetIncomingConectionCount() const {
   return incoming_connections.size();
 }
+
+const std::unordered_multiset<size_t> &
+FrameCell::ViewIncomingConnections() const {
+  return incoming_connections;
+}
