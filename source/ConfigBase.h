@@ -29,7 +29,7 @@ EMP_BUILD_CONFIG(
   VALUE(RESOURCE_ARMOR, bool, false, "Should cells be able to use stockpiled resource to block incoming reproduction?"),
   VALUE(LOCAL_REPRODUCTION, bool, true, "Should cell reproductions be targeted to neighbor cells?"),
   VALUE(RUN_SPIKER, bool, true, "Should the spiker cpu be stepped?"),
-  VALUE(MAX_CONNECTIONS, size_t, 2, "How many cell-cell connections should be allowed outgoing per cell?"),
+  VALUE(MAX_CONNECTIONS, size_t, 3, "How many cell-cell connections should be allowed outgoing per cell?"),
   VALUE(FLEDGLING_COPIES, size_t, 2, "How many copies of fledgling connections should be gemerated?"),
 
   GROUP(PROGRAM_GROUP, "SignalGP program Settings"),

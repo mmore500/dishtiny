@@ -96,7 +96,7 @@ public:
     const double match_impact
   );
 
-  void TryAddFledgling();
+  void TryAddFledgling(const size_t connection_cap);
 
   void SearchAndDevelop();
 
@@ -104,7 +104,7 @@ public:
 
   void RemoveOutgoingConnection(size_t loc);
 
-  void PruneOutgoingConnection();
+  void PruneOutgoingConnection(const size_t connection_floor=0);
 
   void DoPrune();
 

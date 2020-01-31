@@ -73,8 +73,11 @@ void ManagerConnection::AddQuery(
   query[tag] = std::tuple{coundown_timer, match_impact};
 }
 
-void ManagerConnection::TryAddFledgling() {
-  if (fledgling.size() + developed.size() < cfg.MAX_CONNECTIONS()) {
+void ManagerConnection::TryAddFledgling(const size_t connection_cap) {
+  if (
+    fledgling.size() + developed.size()
+    < std::min(cfg.MAX_CONNECTIONS(), connection_cap)
+  ) {
     fledgling.emplace_back();
     for (size_t probe = 0; probe < cfg.FLEDGLING_COPIES(); ++probe) {
       fledgling.back().emplace_back(location, 0.0);
@@ -237,8 +240,10 @@ void ManagerConnection::RemoveOutgoingConnection(size_t loc) {
   DeleteOutgoingConnection(loc);
 }
 
-void ManagerConnection::PruneOutgoingConnection() {
-  connection_prune_count = 1;
+void ManagerConnection::PruneOutgoingConnection(const size_t connection_floor) {
+  if (developed.size() > connection_floor) {
+    connection_prune_count = 1;
+  }
 }
 
 void ManagerConnection::DoPrune() {

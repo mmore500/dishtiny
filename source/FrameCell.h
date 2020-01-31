@@ -81,7 +81,7 @@ public:
 
   void RemoveIncomingConnection(const size_t source);
 
-  void PruneIncomingConnection();
+  void PruneIncomingConnection(const size_t connection_floor=0);
 
   void DoPrune();
 

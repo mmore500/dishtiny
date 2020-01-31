@@ -179,8 +179,10 @@ void FrameCell::RemoveIncomingConnection(const size_t source) {
 
 }
 
-void FrameCell::PruneIncomingConnection() {
-  connection_prune_count = 1;
+void FrameCell::PruneIncomingConnection(const size_t connection_floor) {
+  if (GetIncomingConectionCount() > connection_floor) {
+    connection_prune_count = 1;
+  }
 }
 
 void FrameCell::DoPrune() {

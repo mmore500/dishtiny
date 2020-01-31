@@ -385,12 +385,16 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
 
       const double p = 0.5 * std::tanh(-state.GetLocal(inst.args[0]) - 1) + 0.5;
 
+      const size_t connection_floor = static_cast<size_t>(
+        state.GetLocal(inst.args[1])
+      );
+
       if (hw.GetRandom().P(p)) {
-        man.Connection(pos).PruneOutgoingConnection();
+        man.Connection(pos).PruneOutgoingConnection(connection_floor);
       }
 
     },
-    1,
+    2,
     "TODO"
   );
 
@@ -402,12 +406,16 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
 
       const double p = 0.5 * std::tanh(-state.GetLocal(inst.args[0]) - 1) + 0.5;
 
+      const size_t connection_floor = static_cast<size_t>(
+        state.GetLocal(inst.args[1])
+      );
+
       if (hw.GetRandom().P(p)) {
-        fh.Cell().PruneIncomingConnection();
+        fh.Cell().PruneIncomingConnection(connection_floor);
       }
 
     },
-    1,
+    2,
     "TODO"
   );
 
@@ -470,13 +478,17 @@ void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config 
 
       const double p = 0.5 * std::tanh(state.GetLocal(inst.args[0])) + 0.5;
 
+      const size_t connection_cap = static_cast<size_t>(
+        state.GetLocal(inst.args[1])
+      ) + 1;
+
       const size_t pos = fh.Cell().GetPos();
       if (hw.GetRandom().P(p)) {
-        man.Connection(pos).TryAddFledgling();
+        man.Connection(pos).TryAddFledgling(connection_cap);
       }
 
     },
-    1,
+    2,
     "TODO"
   );
 
