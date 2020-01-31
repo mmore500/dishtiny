@@ -117,7 +117,9 @@ public:
 
   void QueueInternalMessages(Config::inbox_t &inbox);
 
-  void QueueMessages(Config::inbox_t &inbox);
+  void QueueExternalMessage(const Config::event_t &event);
+
+  void QueueExternalMessages(Config::inbox_t &inbox);
 
   size_t CalcDir(const double relative_dir=0.0);
 

@@ -294,15 +294,9 @@ void FrameHardware::QueueInternalMessage(const Config::event_t &event) {
     const auto res = internal_membrane.GetVals(
       internal_membrane.Match(event.affinity)
     );
-    !res.size()
-    || std::count_if(
-      std::begin(res),
-      std::end(res),
-      [](auto & val){ return val; }
-    ) > static_cast<int>(res.size())/2
-  ) {
-    QueueMessage(event);
-  }
+    res.size() == 0
+    || std::all_of(std::begin(res), std::end(res), [](auto a){return a;})
+  ) QueueMessage(event);
 }
 
 void FrameHardware::QueueInternalMessages(Config::inbox_t &inbox) {
@@ -316,25 +310,21 @@ void FrameHardware::QueueMessage(const Config::event_t &event) {
   cpu.QueueEvent(event);
 }
 
-void FrameHardware::QueueMessages(Config::inbox_t &inbox) {
-  while(inbox_active && !inbox.empty()) {
-    if (
-      const auto res = membrane.GetVals(
-        membrane.Match(inbox.front().affinity)
-      );
-      res.size()
-      || std::all_of(
-        std::begin(res),
-        std::end(res),
-        [](auto & val){ return val; }
-      )
-    ) {
-      QueueMessage(inbox.front());
-    }
+void FrameHardware::QueueExternalMessages(Config::inbox_t &inbox) {
+  while(!inbox.empty()) {
+    QueueExternalMessage(inbox.front());
     inbox.pop_front();
   }
-  // clear inactive inboxes, too!
-  inbox.clear();
+}
+
+void FrameHardware::QueueExternalMessage(const Config::event_t &event) {
+  if (
+    const auto res = membrane.GetVals(
+      membrane.Match(event.affinity)
+    );
+    res.size() == 0
+    || std::all_of(std::begin(res), std::end(res), [](auto a){return a;})
+  ) QueueMessage(event);
 }
 
 size_t FrameHardware::CalcDir(const double relative_dir) {
