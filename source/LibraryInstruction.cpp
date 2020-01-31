@@ -1122,22 +1122,6 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
     "Destroy the cell and its channel ID at the end of this update."
   );
 
-  // il.AddInst(
-  //   "DoApoptosisPartial",
-  //   [](hardware_t & hw, const inst_t & inst){
-  //
-  //     FrameHardware &fh = *hw.GetTrait();
-  //
-  //     Manager &man = fh.Cell().Man();
-  //     const size_t pos = fh.Cell().GetPos();
-  //
-  //     man.Apoptosis(pos).MarkPartial();
-  //
-  //   },
-  //   0,
-  //   "Destroy the cell but preserve its channel ID at the end of this update."
-  // );
-
   il.AddInst(
     "SetHeir",
     [](hardware_t &hw, const inst_t &inst){
@@ -1153,24 +1137,9 @@ void LibraryInstruction::InitExternalActions(inst_lib_t &il, const Config &cfg) 
     1,
     "Designate a neighbor to share in recoverable resource if the cell dies."
   );
-  //
+  // just rely on decay instead...
   // il.AddInst(
   //   "UnsetHeir",
-  //   [](hardware_t &hw, const inst_t &inst){
-  //     FrameHardware &fh = *hw.GetTrait();
-  //     const state_t & state = hw.GetCurState();
-  //     const size_t dir = fh.CalcDir();
-  //     Manager &man = fh.Cell().Man();
-  //     const size_t pos = fh.Cell().GetPos();
-  //     const size_t dur = (
-  //       std::max(0.0, state.GetLocal(inst.args[0]))
-  //     );
-  //
-  //     man.Heir(pos).SetHeir(dir, dur);
-  //   },
-  //   1,
-  //   "Prevent neighbor from sharing in recoverable resource if the cell dies."
-  // );
 
 
 }
@@ -1271,24 +1240,6 @@ void InitExternalSensors(
       "Is the neighboring cell expired?"
     );
   }
-
-  // currently irrelevant
-  // il.AddInst(
-  //   "QueryIsOccupied",
-  //   [](hardware_t & hw, const inst_t & inst){
-  //
-  //     state_t & state = hw.GetCurState();
-  //     FrameHardware &fh = *hw.GetTrait();
-  //
-  //     state.SetLocal(
-  //       inst.args[1],
-  //       fh.IsOccupied(state.GetLocal(inst.args[0]))
-  //     );
-  //
-  //   },
-  //   2,
-  //   "Is the neighbor cell occupied (e.g., does it have a channel ID)?"
-  // );
 
   il.AddInst(
     "QueryIsCellChild",
