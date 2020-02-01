@@ -127,13 +127,27 @@ public:
 
       el.RegisterDispatchFun(
         "SendSpikeMsg",
-        [](hardware_t & hw, const event_t & event) {
+        [&cfg](hardware_t & hw, const event_t & event) {
 
           FrameHardware &fh = *hw.GetTrait();
           Manager &man = fh.Cell().Man();
           const size_t pos = fh.Cell().GetPos();
 
           for (auto & [dest, target] : man.Connection(pos).ViewDeveloped()) {
+
+            std::ignore = cfg; // suppress compiler warnings in release mode
+            emp_assert(
+              man.Channel(pos).CheckMatch(man.Channel(dest), cfg.NLEV()-1),
+              "source id",
+              man.Channel(pos).GetID(cfg.NLEV()-1)
+                ? *man.Channel(pos).GetID(cfg.NLEV()-1)
+                : 0,
+              "dest id",
+              man.Channel(dest).GetID(cfg.NLEV()-1)
+                ? *man.Channel(dest).GetID(cfg.NLEV()-1)
+                : 0
+            );
+
             man.Inbox(dest).TakeMessage(event, Cardi::Dir::NumDirs);
           }
 
@@ -142,13 +156,31 @@ public:
 
       el.RegisterDispatchFun(
         "SendSpikeReverseMsg",
-        [](hardware_t & hw, const event_t & event) {
+        [&cfg](hardware_t & hw, const event_t & event) {
 
           FrameHardware &fh = *hw.GetTrait();
           Manager &man = fh.Cell().Man();
 
           for (auto & dest : fh.Cell().ViewIncomingConnections()) {
+
+            std::ignore = cfg; // suppress compiler warnings in release mode
+            emp_assert(
+              man.Channel(fh.Cell().GetPos()).CheckMatch(
+                man.Channel(dest),
+                cfg.NLEV()-1
+              ),
+              "source id",
+              man.Channel(fh.Cell().GetPos()).GetID(cfg.NLEV()-1)
+                ? *man.Channel(fh.Cell().GetPos()).GetID(cfg.NLEV()-1)
+                : 0,
+              "dest id",
+              man.Channel(dest).GetID(cfg.NLEV()-1)
+                ? *man.Channel(dest).GetID(cfg.NLEV()-1)
+                : 0
+            );
+
             man.Inbox(dest).TakeMessage(event, Cardi::Dir::NumDirs);
+
           }
 
         }
@@ -156,13 +188,27 @@ public:
 
       el.RegisterDispatchFun(
         "BcstSpikeMsg",
-        [](hardware_t & hw, const event_t & event) {
+        [&cfg](hardware_t & hw, const event_t & event) {
 
           FrameHardware &fh = *hw.GetTrait();
           Manager &man = fh.Cell().Man();
           const size_t pos = fh.Cell().GetPos();
 
           for (auto & [dest, target] : man.Connection(pos).ViewDeveloped()) {
+
+            std::ignore = cfg; // suppress compiler warnings in release mode
+            emp_assert(
+              man.Channel(pos).CheckMatch(man.Channel(dest), cfg.NLEV()-1),
+              "source id",
+              man.Channel(pos).GetID(cfg.NLEV()-1)
+                ? *man.Channel(pos).GetID(cfg.NLEV()-1)
+                : 0,
+              "dest id",
+              man.Channel(dest).GetID(cfg.NLEV()-1)
+                ? *man.Channel(dest).GetID(cfg.NLEV()-1)
+                : 0
+            );
+
             for (size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
               man.Inbox(dest).TakeMessage(event, dir);
             }
@@ -173,15 +219,32 @@ public:
 
       el.RegisterDispatchFun(
         "BcstSpikeReverseMsg",
-        [](hardware_t & hw, const event_t & event) {
+        [&cfg](hardware_t & hw, const event_t & event) {
 
           FrameHardware &fh = *hw.GetTrait();
           Manager &man = fh.Cell().Man();
 
           for (auto & dest : fh.Cell().ViewIncomingConnections()) {
+
+            std::ignore = cfg; // suppress compiler warnings in release mode
+            emp_assert(
+              man.Channel(fh.Cell().GetPos()).CheckMatch(
+                man.Channel(dest), cfg.NLEV()-1
+              ),
+              "source id",
+              man.Channel(fh.Cell().GetPos()).GetID(cfg.NLEV()-1)
+                ? *man.Channel(fh.Cell().GetPos()).GetID(cfg.NLEV()-1)
+                : 0,
+              "dest id",
+              man.Channel(dest).GetID(cfg.NLEV()-1)
+                ? *man.Channel(dest).GetID(cfg.NLEV()-1)
+                : 0
+            );
+
             for (size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
               man.Inbox(dest).TakeMessage(event, dir);
             }
+
           }
 
         }

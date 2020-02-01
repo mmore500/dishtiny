@@ -107,7 +107,17 @@ Manager::Manager(
                 // make sure connections are only linked up
                 // to same-channel cells
                 std::ignore = cfg; // suppress compiler warnings in release mode
-                emp_assert(mcs[i]->CheckMatch(*mcs[loc], cfg.NLEV()-1));
+                emp_assert(
+                  mcs[i]->CheckMatch(*mcs[loc], cfg.NLEV()-1),
+                  "source id",
+                  mcs[i]->GetID(cfg.NLEV()-1)
+                    ? *mcs[i]->GetID(cfg.NLEV()-1)
+                    : 0,
+                  "dest id",
+                  mcs[loc]->GetID(cfg.NLEV()-1)
+                    ? *mcs[loc]->GetID(cfg.NLEV()-1)
+                    : 0
+                );
                 Stockpile(loc).ExternalContribute(
                   amt * frac,
                   Cardi::Dir::NumDirs
