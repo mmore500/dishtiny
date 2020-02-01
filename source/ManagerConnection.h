@@ -45,10 +45,10 @@ private:
   const size_t location;
   const GeometryHelper geom;
 
-  const double default_exploit_param = 2.0;
-  const double default_development_param = 8.0;
-  const double default_aging_param = 1.0;
-  const double default_sensing_param = 4.0;
+  const double default_exploit_param = 1.0;
+  const double default_development_param = 6.0;
+  const double default_aging_param = 0.5;
+  const double default_sensing_param = 10.0;
   double exploit_param;
   double aging_param;
   double development_param;
