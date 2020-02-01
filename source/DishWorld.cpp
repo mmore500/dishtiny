@@ -104,6 +104,7 @@ DishWorld::DishWorld(const Config &cfg_, size_t uid_offset/*=0*/)
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       man->Priority(neighs[dir]).ClearPauses(Cardi::Opp[dir]);
     }
+    frames[pos]->Reset(); // clear incoming connections
     man->Connection(pos).Reset();
   });
 
