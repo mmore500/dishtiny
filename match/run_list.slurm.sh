@@ -1,10 +1,10 @@
 #!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --array=0-79
+#SBATCH --array=0-195
 #SBATCH --mem=16G
 #SBATCH --ntasks 1
-#SBATCH --cpus-per-task 4
+#SBATCH --cpus-per-task 2
 #SBATCH --job-name match
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
@@ -65,13 +65,14 @@ echo "----------------"
 
 SEED_OFFSET=1000
 SEED=$(( SEED_OFFSET + SLURM_ARRAY_TASK_ID ))
-read -r REP SEED_A SEED_B <<< $(python3 -c "
+read -r REP SEED_A SEED_B IDX_A IDX_B <<< $(python3 -c "
 import itertools as it
-a = [1004, 1017, 1029, 1051, 1071, 1078, 1083, 1085, ]
+a = [1001, 1003, 1016, 1021, 1029, 1030, 1031, 1040, 1041, 1048, 1049, 1056, 1060, 1061, ]
 b = [
-  x for x in range(${SEED_OFFSET}, ${SEED_OFFSET} + 100)
+  x for x in range(${SEED_OFFSET}, ${SEED_OFFSET} + 63)
   if x not in a
-]
+][:len(a)]
+assert(len(a) == len(b))
 combos = [
   (ax, bx)
   for rot_a in ( a[n:] + a[:n] for n in range(len(a)) )
@@ -85,19 +86,27 @@ repped_combos = (
 rep, (ax, bx) = next(
   x for i, x in enumerate(repped_combos) if i == ${SLURM_ARRAY_TASK_ID}
 )
-print(rep, ax, bx)
+print(rep, ax, bx, a.index(ax), b.index(bx))
 ")
-LAST_STEP=24
 
-OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-match/seed_a=${SEED_A}+seed_b=${SEED_B}+rep=${REP}"
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-match/seed_a=${SEED_A}+seed_b=${SEED_B}+idx_a=${IDX_A}+idx_b=${IDX_B}+rep=${REP}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/match/"
-SOURCE_DIR_A="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED_A}+step=${LAST_STEP}"
-SOURCE_DIR_B="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED_B}+step=${LAST_STEP}"
+SOURCE_DIR_A=$(                                                                \
+  ls -vd "/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED_A}+step="*         \
+  | tail -n 2                                                                  \
+  | head -n 1                                                                  \
+)
+SOURCE_DIR_B=$(                                                                \
+  ls -vd "/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED_B}+step="*         \
+  | tail -n 2                                                                  \
+  | head -n 1                                                                  \
+)
 
 echo "   SEED" $SEED_A
 echo "   SEED" $SEED_B
 echo "   REP" $REP
-echo "   LAST_STEP" $LAST_STEP
+echo "   IDX_A" $IDX_A
+echo "   IDX_B" $IDX_B
 echo "   OUTPUT_DIR" $OUTPUT_DIR
 echo "   CONFIG_DIR" $CONFIG_DIR
 echo "   SOURCE_DIR_A" $SOURCE_DIR_A
@@ -151,6 +160,23 @@ echo "-------"
 ################################################################################
 
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
+
+export OMP_NUM_THREADS=2
+
+for EVAL in {0..3}; do
+
+  for CC in {0..0}; do
+
+    ./dishtiny                                                                 \
+      -SEED $(( ${SEED} + ${EVAL} * 4 + ${CC} + 100 ))                         \
+      -SEED_POP $(( ${CC} + ${EVAL} * 4 + 1))                                  \
+      >"title=run+EVAL=${EVAL}+CC=${CC}+ext=.log" 2>&1 &
+
+  done
+
+  wait
+
+done
 
 ./dishtiny -SEED $(( ${SEED} )) -SEED_POP 1 >run.log 2>&1
 
