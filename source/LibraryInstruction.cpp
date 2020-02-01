@@ -1198,6 +1198,51 @@ void LibraryInstruction::InitDevoActions(inst_lib_t &il, const Config &cfg) {
   );
 
   il.AddInst(
+    "PruneOutgoingConnection",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      const double p = 0.5 * std::tanh(-state.GetLocal(inst.args[0]) - 1) + 0.5;
+
+      const size_t connection_floor = static_cast<size_t>(
+        state.GetLocal(inst.args[1])
+      );
+
+      if (hw.GetRandom().P(p)) {
+        man.Connection(pos).PruneOutgoingConnection(connection_floor);
+      }
+
+    },
+    2,
+    "TODO"
+  );
+
+  il.AddInst(
+    "PruneIncomingConnection",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      const double p = 0.5 * std::tanh(-state.GetLocal(inst.args[0]) - 1) + 0.5;
+
+      const size_t connection_floor = static_cast<size_t>(
+        state.GetLocal(inst.args[1])
+      );
+
+      if (hw.GetRandom().P(p)) {
+        fh.Cell().PruneIncomingConnection(connection_floor);
+      }
+
+    },
+    2,
+    "TODO"
+  );
+
+  il.AddInst(
     "AddDevoUpQuery",
     [](hardware_t & hw, const inst_t & inst){
 
