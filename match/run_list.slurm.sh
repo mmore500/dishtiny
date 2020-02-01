@@ -135,23 +135,39 @@ module purge; module load GCC/7.3.0-2.30 OpenMPI/3.1.1 Python/3.6.6
 source "/mnt/home/mmore500/myPy/bin/activate"
 
 # get seed population from preceeding run
-POP_PATH_A=$(echo "${SOURCE_DIR_A}/"*".json.cereal")
-POP_FILENAME_A=$(basename ${POP_PATH_A})
-
-# get seed population from preceeding run
-POP_PATH_B=$(echo "${SOURCE_DIR_B}/"*".json.cereal")
-POP_FILENAME_B=$(basename ${POP_PATH_B})
-
-echo "   POP_PATH_A" $POP_PATH_A
-echo "   POP_FILENAME_A" $POP_FILENAME_A
-
-echo "   POP_PATH_B" $POP_PATH_B
-echo "   POP_FILENAME_B" $POP_FILENAME_B
-
-# copy over competitors
 mkdir seedpop
-cp $POP_PATH_A "seedpop/id=1+${POP_FILENAME_A}"
-cp $POP_PATH_B "seedpop/id=2+${POP_FILENAME_B}"
+POP_PATHS_A=$(echo "${SOURCE_DIR_A}/"*".json.cereal")
+POP_PATHS_B=$(echo "${SOURCE_DIR_B}/"*".json.cereal")
+
+echo "   POP_PATHS_A" $POP_PATHS_A
+echo "   POP_PATHS_B" $POP_PATHS_B
+
+for POP_PATH_A in $POP_PATHS_A; do
+
+  # get seed population from preceeding run
+  POP_FILENAME_A=$(basename ${POP_PATH_A})
+
+  echo "   POP_PATH_A" $POP_PATH_A
+  echo "   POP_FILENAME_A" $POP_FILENAME_A
+
+  # copy over competitors
+  cp $POP_PATH_A "seedpop/id=1+${POP_FILENAME_A}"
+  cp $POP_PATH_B "seedpop/id=2+${POP_FILENAME_B}"
+
+done
+
+for POP_PATH_B in $POP_PATHS_B; do
+
+  # get seed population from preceeding run
+  POP_FILENAME_B=$(basename ${POP_PATH_B})
+
+  echo "   POP_PATH_B" $POP_PATH_B
+  echo "   POP_FILENAME_B" $POP_FILENAME_B
+
+  # copy over competitors
+  cp $POP_PATH_B "seedpop/id=2+${POP_FILENAME_B}"
+
+done
 
 ################################################################################
 echo
