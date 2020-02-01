@@ -129,7 +129,10 @@ void LibraryInstructionSpiker::InitDefaultDup(inst_lib_t &il) {
   );
 }
 
-void LibraryInstructionSpiker::InitInternalActions(inst_lib_t &il, const Config &cfg) {
+void LibraryInstructionSpiker::InitInternalActions(
+  inst_lib_t &il,
+  const Config &cfg
+) {
 
   il.AddInst(
     "SendBigFracResource",
