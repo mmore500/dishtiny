@@ -17,7 +17,7 @@ private:
   // arranged by incoming direction
   emp::vector<Config::inbox_t> inboxes;
 
-  mutable std::mutex spike_mutex;
+  mutable emp::vector<std::mutex> spike_mutex;
 
   const Config &cfg;
 
@@ -39,7 +39,10 @@ private:
 public:
 
   ManagerInbox(const Config &cfg_)
-    : inboxes(Cardi::Dir::NumDirs + 1), cfg(cfg_) { ; } // +1 for spiker
+    : inboxes(Cardi::Dir::NumDirs + 1) // +1 for spiker
+    , spike_mutex(Cardi::Dir::NumDirs + 1) // +1 for spiker
+    , cfg(cfg_)
+  { ; }
 
 
   emp::vector<Config::inbox_t>& GetInboxes() {
@@ -55,12 +58,8 @@ public:
     const size_t incoming_direction
   ) {
 
-    if(incoming_direction < Cardi::Dir::NumDirs) {
-      HandleMessage(event, incoming_direction);
-    } else { // spiker
-      std::lock_guard<std::mutex> lock(spike_mutex);
-      HandleMessage(event, incoming_direction);
-    }
+    std::lock_guard<std::mutex> lock(spike_mutex[incoming_direction]);
+    HandleMessage(event, incoming_direction);
 
   }
 
