@@ -256,3 +256,7 @@ void ManagerConnection::DoPrune() {
 const ManagerConnection::fledgling_t & ManagerConnection::ViewFledgling() const {
   return fledgling;
 }
+
+size_t ManagerConnection::GetOutgoingConnectionCount() const {
+  return developed.size();
+}

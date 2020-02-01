@@ -110,4 +110,6 @@ public:
 
   const fledgling_t & ViewFledgling() const;
 
+  size_t GetOutgoingConnectionCount() const;
+
 };

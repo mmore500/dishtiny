@@ -34,6 +34,12 @@ public:
 
   static void InitInternalSensors(inst_lib_t &il, const Config &cfg);
 
+  static void InitSpikerParams(inst_lib_t &il, const Config &cfg);
+
+  static void InitSpikerActions(inst_lib_t &il, const Config &cfg);
+
+  static void InitDevoActions(inst_lib_t &il, const Config &cfg);
+
   static const inst_lib_t& Make(const Config &cfg);
 
 };

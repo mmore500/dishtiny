@@ -373,208 +373,6 @@ void LibraryInstructionSpiker::InitInternalActions(
   );
 
   il.AddInst(
-    "PruneOutgoingConnection",
-    [](hardware_t & hw, const inst_t & inst){
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      Manager &man = fh.Cell().Man();
-      const size_t pos = fh.Cell().GetPos();
-
-      const double p = 0.5 * std::tanh(-state.GetLocal(inst.args[0]) - 1) + 0.5;
-
-      const size_t connection_floor = static_cast<size_t>(
-        state.GetLocal(inst.args[1])
-      );
-
-      if (hw.GetRandom().P(p)) {
-        man.Connection(pos).PruneOutgoingConnection(connection_floor);
-      }
-
-    },
-    2,
-    "TODO"
-  );
-
-  il.AddInst(
-    "PruneIncomingConnection",
-    [](hardware_t & hw, const inst_t & inst){
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      const double p = 0.5 * std::tanh(-state.GetLocal(inst.args[0]) - 1) + 0.5;
-
-      const size_t connection_floor = static_cast<size_t>(
-        state.GetLocal(inst.args[1])
-      );
-
-      if (hw.GetRandom().P(p)) {
-        fh.Cell().PruneIncomingConnection(connection_floor);
-      }
-
-    },
-    2,
-    "TODO"
-  );
-
-
-  il.AddInst(
-    "AddDevoUpQuery",
-    [](hardware_t & hw, const inst_t & inst){
-
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      Manager &man = fh.Cell().Man();
-      const size_t pos = fh.Cell().GetPos();
-
-      man.Connection(pos).AddQuery(
-        inst.affinity,
-        2 + state.GetLocal(inst.args[0]),
-        std::tanh(state.GetLocal(inst.args[1]) + 1.0)
-      );
-
-    },
-    2,
-    "TODO",
-    emp::ScopeType::BASIC,
-    0,
-    {"affinity"}
-  );
-
-  il.AddInst(
-    "AddDevoDownQuery",
-    [](hardware_t & hw, const inst_t & inst){
-
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      Manager &man = fh.Cell().Man();
-      const size_t pos = fh.Cell().GetPos();
-
-      man.Connection(pos).AddQuery(
-        inst.affinity,
-        2 + state.GetLocal(inst.args[0]),
-        std::tanh(state.GetLocal(inst.args[1]) - 1.0)
-      );
-
-    },
-    2,
-    "TODO",
-    emp::ScopeType::BASIC,
-    0,
-    {"affinity"}
-  );
-
-  il.AddInst(
-    "TryAddFledglingConnection",
-    [](hardware_t & hw, const inst_t & inst){
-      FrameHardware &fh = *hw.GetTrait();
-      const state_t & state = hw.GetCurState();
-
-      Manager &man = fh.Cell().Man();
-
-      const double p = 0.5 * std::tanh(state.GetLocal(inst.args[0])) + 0.5;
-
-      const size_t connection_cap = static_cast<size_t>(
-        state.GetLocal(inst.args[1])
-      ) + 1;
-
-      const size_t pos = fh.Cell().GetPos();
-      if (hw.GetRandom().P(p)) {
-        man.Connection(pos).TryAddFledgling(connection_cap);
-      }
-
-    },
-    2,
-    "TODO"
-  );
-
-  il.AddInst(
-    "SetConnectionAgingParam",
-    [](hardware_t & hw, const inst_t & inst){
-
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      Manager &man = fh.Cell().Man();
-      const size_t pos = fh.Cell().GetPos();
-
-      // note this sets the param relative to default
-      // so zero sets it to default
-      man.Connection(pos).SetAgingParam(
-        state.GetLocal(inst.args[0])
-      );
-
-    },
-    1,
-    "TODO"
-  );
-
-  il.AddInst(
-    "SetConnectionExploitParam",
-    [](hardware_t & hw, const inst_t & inst){
-
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      Manager &man = fh.Cell().Man();
-      const size_t pos = fh.Cell().GetPos();
-
-      // note this sets the param relative to default
-      // so zero sets it to default
-      man.Connection(pos).SetExploitParam(
-        state.GetLocal(inst.args[0])
-      );
-
-    },
-    1,
-    "TODO"
-  );
-
-  il.AddInst(
-    "SetConnectionDevelopmentParam",
-    [](hardware_t & hw, const inst_t & inst){
-
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      Manager &man = fh.Cell().Man();
-      const size_t pos = fh.Cell().GetPos();
-
-      // note this sets the param relative to default
-      // so zero sets it to default
-      man.Connection(pos).SetDevelopmentParam(
-        state.GetLocal(inst.args[0])
-      );
-
-    },
-    1,
-    "TODO"
-  );
-
-  il.AddInst(
-    "SetConnectionSensingParam",
-    [](hardware_t & hw, const inst_t & inst){
-
-      const state_t & state = hw.GetCurState();
-      FrameHardware &fh = *hw.GetTrait();
-
-      Manager &man = fh.Cell().Man();
-      const size_t pos = fh.Cell().GetPos();
-
-      // note this sets the param relative to default
-      // so zero sets it to default
-      man.Connection(pos).SetSensingParam(
-        state.GetLocal(inst.args[0])
-      );
-
-    },
-    1,
-    "TODO"
-  );
-
-  il.AddInst(
     "PutInternalMembraneBringer",
     [](hardware_t & hw, const inst_t & inst){
 
@@ -662,145 +460,144 @@ void LibraryInstructionSpiker::InitInternalActions(
     {"affinity"}
   );
 
-  // il.AddInst(
-  //   "SetInternalMembraneRegulator",
-  //   [](hardware_t & hw, const inst_t & inst){
-  //     const state_t & state = hw.GetCurState();
-  //     FrameHardware &fh = *hw.GetTrait();
-  //
-  //     emp::vector<size_t> best_fun = fh.GetInternalMembrane().MatchRaw(
-  //       inst.affinity
-  //     );
-  //
-  //     for (auto & fun : best_fun) {
-  //       fh.GetInternalMembrane().SetRegulator(
-  //         fun,
-  //         state.GetLocal(inst.args[0])
-  //       );
-  //       fh.GetInternalMembrane().DecayRegulator(
-  //         fun,
-  //         -(state.GetLocal(inst.args[1])+1)
-  //       );
-  //     }
-  //
-  //   },
-  //   2,
-  //   "Sets the regulator of a tag in the membrane."
-  // );
+  il.AddInst(
+    "BcstMsgInternal",
+    [](hardware_t & hw, const inst_t & inst){
+      FrameHardware &fh = *hw.GetTrait();
+      const state_t & state = hw.GetCurState();
 
-  // il.AddInst(
-  //   "PutMembraneBringer",
-  //   [](hardware_t & hw, const inst_t & inst){
-  //
-  //     const state_t & state = hw.GetCurState();
-  //     FrameHardware &fh = *hw.GetTrait();
-  //
-  //     Config::matchbin_t& membrane = fh.GetMembrane();
-  //     auto& membrane_tags = fh.GetMembraneTags();
-  //     auto& membrane_timers = fh.GetMembraneTimers();
-  //
-  //     // if a particular affinity is already in the MatchBin, take it out
-  //     const auto &existing = membrane_tags.find(
-  //       inst.affinity
-  //     );
-  //     if (existing != std::end(membrane_tags)) {
-  //       membrane.Delete(existing->second);
-  //       membrane_timers.erase(existing->second);
-  //       membrane_tags.erase(existing);
-  //     }
-  //
-  //     const auto uid = membrane.Put(
-  //       !state.GetLocal(inst.args[0]),
-  //       inst.affinity
-  //     );
-  //
-  //     membrane_tags.insert({
-  //       inst.affinity,
-  //       uid
-  //     });
-  //
-  //     membrane_timers.insert({
-  //       uid,
-  //       2
-  //     });
-  //
-  //   },
-  //   2,
-  //   "Place a tag that, by default, admits incoming messages it matches with.",
-  //   emp::ScopeType::BASIC,
-  //   0,
-  //   {"affinity"}
-  // );
-  //
-  // il.AddInst(
-  //   "PutMembraneBlocker",
-  //   [](hardware_t & hw, const inst_t & inst){
-  //
-  //     const state_t & state = hw.GetCurState();
-  //     FrameHardware &fh = *hw.GetTrait();
-  //
-  //     Config::matchbin_t& membrane = fh.GetMembrane();
-  //     auto& membrane_tags = fh.GetMembraneTags();
-  //     auto& membrane_timers = fh.GetMembraneTimers();
-  //
-  //     // if a particular affinity is already in the MatchBin, take it out
-  //     const auto &existing = membrane_tags.find(
-  //       inst.affinity
-  //     );
-  //     if (existing != std::end(membrane_tags)) {
-  //       membrane.Delete(existing->second);
-  //       membrane_timers.erase(existing->second);
-  //       membrane_tags.erase(existing);
-  //     }
-  //
-  //     const auto uid = membrane.Put(
-  //       state.GetLocal(inst.args[0]),
-  //       inst.affinity
-  //     );
-  //
-  //     membrane_tags.insert({
-  //       inst.affinity,
-  //       uid
-  //     });
-  //
-  //     membrane_timers.insert({
-  //       uid,
-  //       2
-  //     });
-  //
-  //   },
-  //   2,
-  //   "Place a tag that, by default, blocks incoming messages it matches with.",
-  //   emp::ScopeType::BASIC,
-  //   0,
-  //   {"affinity"}
-  // );
-  //
-  // il.AddInst(
-  //   "SetMembraneRegulator",
-  //   [](hardware_t & hw, const inst_t & inst){
-  //     const state_t & state = hw.GetCurState();
-  //     FrameHardware &fh = *hw.GetTrait();
-  //
-  //     emp::vector<size_t> best_fun = fh.GetMembrane().MatchRaw(
-  //       inst.affinity
-  //     );
-  //
-  //     for (auto & fun : best_fun) {
-  //
-  //       fh.GetMembrane().SetRegulator(
-  //         best_fun[0],
-  //         state.GetLocal(inst.args[0])
-  //       );
-  //       fh.GetMembrane().DecayRegulator(
-  //         fun,
-  //         -(state.GetLocal(inst.args[1])+1)
-  //       );
-  //     }
-  //   },
-  //   1,
-  //   "Sets the regulator of a tag in the membrane."
-  // );
+      for(size_t dir = 0; dir < Cardi::NumDirs; ++dir) {
+        fh.SetMsgDir(dir);
+        hw.TriggerEvent("SendMsgInternal", inst.affinity, state.output_mem);
+      }
+
+    },
+    0,
+    "Send a single message all CPUs within the cell, excluding self.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+}
+
+void LibraryInstructionSpiker::InitExternalActions(
+  inst_lib_t &il,
+  const Config &cfg
+) {
+
+  il.AddInst(
+    "BcstMsgExternal",
+    [](hardware_t & hw, const inst_t & inst){
+      FrameHardware &fh = *hw.GetTrait();
+      const state_t & state = hw.GetCurState();
+
+      for(size_t dir = 0; dir < Cardi::NumDirs; ++dir) {
+        fh.SetMsgDir(dir);
+        hw.TriggerEvent("SendMsgExternal", inst.affinity, state.output_mem);
+      }
+
+    },
+    0,
+    "Send a message to all neighbors.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+}
+
+void LibraryInstructionSpiker::InitInternalSensors(
+  inst_lib_t &il,
+  const Config &cfg
+) {
+
+  il.AddInst(
+    "QueryIncomingConnections",
+    [](hardware_t & hw, const inst_t & inst){
+
+      FrameHardware &fh = *hw.GetTrait();
+
+      state_t & state = hw.GetCurState();
+
+      state.SetLocal(inst.args[0], fh.Cell().GetIncomingConectionCount());
+
+    },
+    1,
+    "How many incoming connections are established?"
+  );
+
+  il.AddInst(
+    "QueryOutgoingConnections",
+    [](hardware_t & hw, const inst_t & inst){
+
+      FrameHardware &fh = *hw.GetTrait();
+      const size_t pos = fh.Cell().GetPos();
+      Manager &man = fh.Cell().Man();
+
+      state_t & state = hw.GetCurState();
+
+      state.SetLocal(
+        inst.args[0],
+        man.Connection(pos).GetOutgoingConnectionCount()
+      );
+
+    },
+    1,
+    "How many outgoing connections are established?"
+  );
+
+  il.AddInst(
+    "QueryOwnStockpile",
+    [](hardware_t & hw, const inst_t & inst){
+
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+      const double amt = man.Stockpile(pos).QueryResource();
+
+      state_t & state = hw.GetCurState();
+
+      state.SetLocal(inst.args[0], amt);
+
+    },
+    1,
+    "How much resource is in my stockpile?"
+  );
+
+  for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+    il.AddInst(
+      "QueryChannelGen-Lev"+emp::to_string(lev),
+      cfg.CHANNELS_VISIBLE() ?
+      std::function<void(hardware_t &, const inst_t &)>(
+        [lev](hardware_t & hw, const inst_t & inst){
+
+          FrameHardware &fh = *hw.GetTrait();
+
+          Manager &man = fh.Cell().Man();
+          const size_t pos = fh.Cell().GetPos();
+          const size_t gen = man.Channel(pos).GetGeneration(lev);
+
+          state_t & state = hw.GetCurState();
+
+          state.SetLocal(inst.args[0], gen);
+
+        }
+      ) : std::function<void(hardware_t &, const inst_t &)>(
+        [](hardware_t & hw, const inst_t & inst){ ; }
+      ),
+      1,
+      "What is my cell age at a particular level?"
+    );
+  }
+
+}
+
+void LibraryInstructionSpiker::InitSpikerActions(
+  inst_lib_t &il,
+  const Config &cfg
+) {
 
   il.AddInst(
     "SendSpikeMsg",
@@ -854,137 +651,310 @@ void LibraryInstructionSpiker::InitInternalActions(
     {"affinity"}
   );
 
-  il.AddInst(
-    "BcstMsgInternal",
-    [](hardware_t & hw, const inst_t & inst){
-      FrameHardware &fh = *hw.GetTrait();
-      const state_t & state = hw.GetCurState();
-
-      for(size_t dir = 0; dir < Cardi::NumDirs; ++dir) {
-        fh.SetMsgDir(dir);
-        hw.TriggerEvent("SendMsgInternal", inst.affinity, state.output_mem);
-      }
-
-    },
-    0,
-    "Send a single message all CPUs within the cell, excluding self.",
-    emp::ScopeType::BASIC,
-    0,
-    {"affinity"}
-  );
-
 }
 
-void LibraryInstructionSpiker::InitExternalActions(inst_lib_t &il, const Config &cfg) {
-
-  il.AddInst(
-    "BcstMsgExternal",
-    [](hardware_t & hw, const inst_t & inst){
-      FrameHardware &fh = *hw.GetTrait();
-      const state_t & state = hw.GetCurState();
-
-      for(size_t dir = 0; dir < Cardi::NumDirs; ++dir) {
-        fh.SetMsgDir(dir);
-        hw.TriggerEvent("SendMsgExternal", inst.affinity, state.output_mem);
-      }
-
-    },
-    0,
-    "Send a message to all neighbors.",
-    emp::ScopeType::BASIC,
-    0,
-    {"affinity"}
-  );
-
-  // il.AddInst(
-  //   "DoApoptosisComplete",
-  //   [](hardware_t & hw, const inst_t & inst){
-  //
-  //     FrameHardware &fh = *hw.GetTrait();
-  //
-  //     Manager &man = fh.Cell().Man();
-  //     const size_t pos = fh.Cell().GetPos();
-  //
-  //     man.Apoptosis(pos).MarkComplete();
-  //
-  //   },
-  //   0,
-  //   "Destroy the cell and its channel ID at the end of this update."
-  // );
-
-  // il.AddInst(
-  //   "DoApoptosisPartial",
-  //   [](hardware_t & hw, const inst_t & inst){
-  //
-  //     FrameHardware &fh = *hw.GetTrait();
-  //
-  //     Manager &man = fh.Cell().Man();
-  //     const size_t pos = fh.Cell().GetPos();
-  //
-  //     man.Apoptosis(pos).MarkPartial();
-  //
-  //   },
-  //   0,
-  //   "Destroy the cell but preserve its channel ID at the end of this update."
-  // );
-
-}
-
-void LibraryInstructionSpiker::InitInternalSensors(
+void LibraryInstructionSpiker::InitDevoActions(
   inst_lib_t &il,
   const Config &cfg
 ) {
+
   il.AddInst(
-    "QueryOwnStockpile",
+    "AddDevoUpQuery",
     [](hardware_t & hw, const inst_t & inst){
 
+      const state_t & state = hw.GetCurState();
       FrameHardware &fh = *hw.GetTrait();
 
       Manager &man = fh.Cell().Man();
       const size_t pos = fh.Cell().GetPos();
-      const double amt = man.Stockpile(pos).QueryResource();
 
-      state_t & state = hw.GetCurState();
-
-      state.SetLocal(inst.args[0], amt);
+      man.Connection(pos).AddQuery(
+        inst.affinity,
+        2 + state.GetLocal(inst.args[0]),
+        std::tanh(state.GetLocal(inst.args[1]) + 1.0)
+      );
 
     },
-    1,
-    "How much resource is in my stockpile?"
+    2,
+    "TODO",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
   );
 
-  for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-    il.AddInst(
-      "QueryChannelGen-Lev"+emp::to_string(lev),
-      cfg.CHANNELS_VISIBLE() ?
-      std::function<void(hardware_t &, const inst_t &)>(
-        [lev](hardware_t & hw, const inst_t & inst){
+  il.AddInst(
+    "AddDevoDownQuery",
+    [](hardware_t & hw, const inst_t & inst){
 
-          FrameHardware &fh = *hw.GetTrait();
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
 
-          Manager &man = fh.Cell().Man();
-          const size_t pos = fh.Cell().GetPos();
-          const size_t gen = man.Channel(pos).GetGeneration(lev);
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
 
-          state_t & state = hw.GetCurState();
+      man.Connection(pos).AddQuery(
+        inst.affinity,
+        2 + state.GetLocal(inst.args[0]),
+        std::tanh(state.GetLocal(inst.args[1]) - 1.0)
+      );
 
-          state.SetLocal(inst.args[0], gen);
+    },
+    2,
+    "TODO",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
 
-        }
-      ) : std::function<void(hardware_t &, const inst_t &)>(
-        [](hardware_t & hw, const inst_t & inst){ ; }
-      ),
-      1,
-      "What is my cell age at a particular level?"
-    );
-  }
+  il.AddInst(
+    "PutDevoMembraneBringer",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Config::matchbin_t& membrane = fh.GetMembrane();
+      auto& membrane_tags = fh.GetMembraneTags();
+      auto& membrane_timers = fh.GetMembraneTimers();
+
+      // if a particular affinity is already in the MatchBin, take it out
+      const auto &existing = membrane_tags.find(
+        inst.affinity
+      );
+      if (existing != std::end(membrane_tags)) {
+        membrane.Delete(existing->second);
+        membrane_timers.erase(existing->second);
+        membrane_tags.erase(existing);
+      }
+
+      const auto uid = membrane.Put(
+        !state.GetLocal(inst.args[0]),
+        inst.affinity
+      );
+
+      membrane_tags.insert({
+        inst.affinity,
+        uid
+      });
+
+      membrane_timers.insert({
+        uid,
+        2
+      });
+
+    },
+    2,
+    "Place a tag that, by default, admits incoming messages it matches with.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "PutDevoMembraneBlocker",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Config::matchbin_t& membrane = fh.GetMembrane();
+      auto& membrane_tags = fh.GetMembraneTags();
+      auto& membrane_timers = fh.GetMembraneTimers();
+
+      // if a particular affinity is already in the MatchBin, take it out
+      const auto &existing = membrane_tags.find(
+        inst.affinity
+      );
+      if (existing != std::end(membrane_tags)) {
+        membrane.Delete(existing->second);
+        membrane_timers.erase(existing->second);
+        membrane_tags.erase(existing);
+      }
+
+      const auto uid = membrane.Put(
+        state.GetLocal(inst.args[0]),
+        inst.affinity
+      );
+
+      membrane_tags.insert({
+        inst.affinity,
+        uid
+      });
+
+      membrane_timers.insert({
+        uid,
+        2
+      });
+
+    },
+    2,
+    "Place a tag that, by default, blocks incoming messages it matches with.",
+    emp::ScopeType::BASIC,
+    0,
+    {"affinity"}
+  );
+
+  il.AddInst(
+    "TryAddFledglingConnection",
+    [](hardware_t & hw, const inst_t & inst){
+      FrameHardware &fh = *hw.GetTrait();
+      const state_t & state = hw.GetCurState();
+
+      Manager &man = fh.Cell().Man();
+
+      const double p = 0.5 * std::tanh(state.GetLocal(inst.args[0])) + 0.5;
+
+      const size_t connection_cap = static_cast<size_t>(
+        state.GetLocal(inst.args[1])
+      ) + 1;
+
+      const size_t pos = fh.Cell().GetPos();
+      if (hw.GetRandom().P(p)) {
+        man.Connection(pos).TryAddFledgling(connection_cap);
+      }
+
+    },
+    2,
+    "TODO"
+  );
+
+  il.AddInst(
+    "PruneOutgoingConnection",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      const double p = 0.5 * std::tanh(-state.GetLocal(inst.args[0]) - 1) + 0.5;
+
+      const size_t connection_floor = static_cast<size_t>(
+        state.GetLocal(inst.args[1])
+      );
+
+      if (hw.GetRandom().P(p)) {
+        man.Connection(pos).PruneOutgoingConnection(connection_floor);
+      }
+
+    },
+    2,
+    "TODO"
+  );
+
+  il.AddInst(
+    "PruneIncomingConnection",
+    [](hardware_t & hw, const inst_t & inst){
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      const double p = 0.5 * std::tanh(-state.GetLocal(inst.args[0]) - 1) + 0.5;
+
+      const size_t connection_floor = static_cast<size_t>(
+        state.GetLocal(inst.args[1])
+      );
+
+      if (hw.GetRandom().P(p)) {
+        fh.Cell().PruneIncomingConnection(connection_floor);
+      }
+
+    },
+    2,
+    "TODO"
+  );
 
 }
 
-// void InitExternalSensors(
-//   inst_lib_t &il,
-//   const Config &cfg
-// ) { /* none */ }
+void LibraryInstructionSpiker::InitSpikerParams(
+  inst_lib_t &il,
+  const Config &cfg
+) {
+
+  il.AddInst(
+    "SetConnectionAgingParam",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      // note this sets the param relative to default
+      // so zero sets it to default
+      man.Connection(pos).SetAgingParam(
+        state.GetLocal(inst.args[0])
+      );
+
+    },
+    1,
+    "TODO"
+  );
+
+  il.AddInst(
+    "SetConnectionExploitParam",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      // note this sets the param relative to default
+      // so zero sets it to default
+      man.Connection(pos).SetExploitParam(
+        state.GetLocal(inst.args[0])
+      );
+
+    },
+    1,
+    "TODO"
+  );
+
+  il.AddInst(
+    "SetConnectionDevelopmentParam",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      // note this sets the param relative to default
+      // so zero sets it to default
+      man.Connection(pos).SetDevelopmentParam(
+        state.GetLocal(inst.args[0])
+      );
+
+    },
+    1,
+    "TODO"
+  );
+
+  il.AddInst(
+    "SetConnectionSensingParam",
+    [](hardware_t & hw, const inst_t & inst){
+
+      const state_t & state = hw.GetCurState();
+      FrameHardware &fh = *hw.GetTrait();
+
+      Manager &man = fh.Cell().Man();
+      const size_t pos = fh.Cell().GetPos();
+
+      // note this sets the param relative to default
+      // so zero sets it to default
+      man.Connection(pos).SetSensingParam(
+        state.GetLocal(inst.args[0])
+      );
+
+    },
+    1,
+    "TODO"
+  );
+
+}
 
 const inst_lib_t& LibraryInstructionSpiker::Make(const Config &cfg) {
 
@@ -1002,7 +972,11 @@ const inst_lib_t& LibraryInstructionSpiker::Make(const Config &cfg) {
 
     InitExternalActions(il, cfg);
 
-    // InitExternalSensors(il, cfg);
+    InitSpikerActions(il, cfg);
+
+    InitDevoActions(il, cfg);
+
+    InitSpikerParams(il, cfg);
 
     // save instruction library
     std::ofstream inst_lib_stream(
