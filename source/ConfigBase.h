@@ -63,9 +63,9 @@ EMP_BUILD_CONFIG(
   VALUE(SLIP__PER_FUNC, double, 0.05, "Per-function rate of slip mutations."),
   VALUE(FUNC_DUP__PER_FUNC, double, 0.01, "Per-function rate of function duplication mutations."),
   VALUE(FUNC_DEL__PER_FUNC, double, 0.01, "Per-function rate of function deletion mutationss."),
-  VALUE(PROGRAM_MAX_FUN_CNT, size_t, 256, "Used for mutating SGP programs. At most, how many functions can we have?"),
+  VALUE(PROGRAM_MAX_FUN_CNT, size_t, 32, "Used for mutating SGP programs. At most, how many functions can we have?"),
   VALUE(PROGRAM_MIN_FUN_CNT, size_t, 1, "Used for mutating SGP programs. At least, how many functions can we have?"),
-  VALUE(PROGRAM_MAX_FUN_LEN, size_t, 64, "Used for mutating SGP programs. At most, for each function how many instructions can we have?"),
+  VALUE(PROGRAM_MAX_FUN_LEN, size_t, 32, "Used for mutating SGP programs. At most, for each function how many instructions can we have?"),
   VALUE(PROGRAM_MIN_FUN_LEN, size_t, 1, "Used for mutating SGP programs. At least, for each function how many instructions can we have?"),
 
   GROUP(LOGISTICS, "logistics"),
