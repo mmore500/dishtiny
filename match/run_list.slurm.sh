@@ -102,8 +102,8 @@ SOURCE_DIR_B=$(                                                                \
   | head -n 1                                                                  \
 )
 
-echo "   SEED" $SEED_A
-echo "   SEED" $SEED_B
+echo "   SEED_A" $SEED_A
+echo "   SEED_B" $SEED_B
 echo "   REP" $REP
 echo "   IDX_A" $IDX_A
 echo "   IDX_B" $IDX_B
@@ -152,7 +152,6 @@ for POP_PATH_A in $POP_PATHS_A; do
 
   # copy over competitors
   cp $POP_PATH_A "seedpop/id=1+${POP_FILENAME_A}"
-  cp $POP_PATH_B "seedpop/id=2+${POP_FILENAME_B}"
 
 done
 
