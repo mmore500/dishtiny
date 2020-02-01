@@ -5,7 +5,7 @@
 #SBATCH --mem=12G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 2
-#SBATCH --job-name match
+#SBATCH --job-name freeforall
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 
@@ -80,8 +80,8 @@ rep, (ax, bx) = next(
 print(rep, ax, bx)
 ")
 
-OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-match/seed_a=${SEED_A}+seed_b=${SEED_B}+rep=${REP}"
-CONFIG_DIR="/mnt/home/mmore500/dishtiny/match/"
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-freeforall/seed_a=${SEED_A}+seed_b=${SEED_B}+rep=${REP}"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/freeforall/"
 SOURCE_DIR_A=$(                                                                \
   ls -vd "/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED_A}+step="*         \
   | tail -n 2                                                                  \
