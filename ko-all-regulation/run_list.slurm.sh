@@ -142,12 +142,14 @@ echo "   POP_PATHS" $POP_PATHS
   # 30,SetOwnRegulator
   # 31,AdjRegulator
   # 32,AdjOwnRegulator
-  # 66,DuplicateSetRegulator
-  # 67,DuplicateSetOwnRegulator
-  # 68,DuplicateExtRegulator
+  # 33,SenseRegulator
+  # 67,DuplicateSetRegulator
+  # 68,DuplicateSetOwnRegulator
+  # 69,DuplicateAdjRegulator
+  # 70,DuplicateAdjOwnRegulator
 
   for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
-    sed -i -- "s/\"id\": 29\$\|\"id\": 30\$\|\"id\": 31\$\|\"id\": 32\$\|\"id\": 66\$\|\"id\": 67\$\|\"id\": 68\$/\"id\": 27/g" $f &
+    sed -i -- "s/\"id\": 29\$\|\"id\": 30\$\|\"id\": 31\$\|\"id\": 32\$\|\"id\": 33\$\|\"id\": 67\$\|\"id\": 68\$\|\"id\": 69\$\|\"id\": 70\$/\"id\": 27/g" $f &
     while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
   done
 
@@ -157,14 +159,15 @@ echo "   POP_PATHS" $POP_PATHS
   # 30,SetOwnRegulator
   # 31,AdjRegulator
   # 32,AdjOwnRegulator
-  # 66,DuplicateSetRegulator
-  # 67,DuplicateSetOwnRegulator
-  # 68,DuplicateAdjRegulator
-  # 69,DuplicateAdjOwnRegulator
+  # 33,SenseRegulator
+  # 67,DuplicateSetRegulator
+  # 68,DuplicateSetOwnRegulator
+  # 69,DuplicateAdjRegulator
+  # 70,DuplicateAdjOwnRegulator
 
 
   for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-    sed -i -- "s/\"id\": 29\$\|\"id\": 30\$\|\"id\": 31\$\|\"id\": 32\$\|\"id\": 66\$\|\"id\": 67\$\|\"id\": 68\$\|\"id\": 69\$/\"id\": 27/g" $f &
+    sed -i -- "s/\"id\": 29\$\|\"id\": 30\$\|\"id\": 31\$\|\"id\": 32\$\|\"id\": 33\$\|\"id\": 67\$\|\"id\": 68\$\|\"id\": 69\$\|\"id\": 70\$/\"id\": 27/g" $f &
     while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
   done
 

@@ -138,21 +138,21 @@ echo "   POP_PATHS" $POP_PATHS
 
   # knockout pointer components, genome by genome
   # 27,Nop
-  # 93,SendBigFracResource
-  # 94,SendSmallFracResource
+  # 90,SendBigFracResource
+  # 91,SendSmallFracResource
 
   for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
-    sed -i -- "s/\"id\": 93\$\|\"id\": 94\$/\"id\": 27/g" $f &
+    sed -i -- "s/\"id\": 90\$\|\"id\": 91\$/\"id\": 27/g" $f &
     while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
   done
 
   # knockout spiker components, genome by genome
   # 27,Nop
-  # 74,SendBigFracResource
-  # 75,SendSmallFracResource
+  # 75,SendBigFracResource
+  # 76,SendSmallFracResource
 
   for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-    sed -i -- "s/\"id\": 74\$\|\"id\": 75\$/\"id\": 27/g" $f &
+    sed -i -- "s/\"id\": 75\$\|\"id\": 76\$/\"id\": 27/g" $f &
     while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
   done
 

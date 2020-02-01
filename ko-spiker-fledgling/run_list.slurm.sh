@@ -136,12 +136,21 @@ echo "   POP_PATHS" $POP_PATHS
   csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'               \
     > /dev/null # ignore byte counts printed to stdout
 
+  # knockout pointer components, genome by genome
+  # 27,Nop
+  # 121,TryAddFledglingConnection
+
+  for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
+    sed -i -- "s/\"id\": 121\$/\"id\": 27/g" $f &
+    while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
+  done
+
   # knockout spiker components, genome by genome
   # 27,Nop
-  # 84,TryAddFledglingConnection
+  # 98,TryAddFledglingConnection
 
   for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-    sed -i -- "s/\"id\": 84\$\/\"id\": 27/g" $f &
+    sed -i -- "s/\"id\": 98\$\/\"id\": 27/g" $f &
     while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
   done
 

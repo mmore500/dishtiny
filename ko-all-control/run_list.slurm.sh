@@ -138,19 +138,19 @@ echo "   POP_PATHS" $POP_PATHS
 
   # knockout pointer components, genome by genome
   # 27,Nop
-  # 64,DuplicateNop
+  # 65,DuplicateNop
 
   for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
-    sed -i -- "s/\"id\": 64\$/\"id\": 27/g" $f &
+    sed -i -- "s/\"id\": 65\$/\"id\": 27/g" $f &
     while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
   done
 
   # knockout spiker components, genome by genome
   # 27,Nop
-  # 64,DuplicateNop
+  # 65,DuplicateNop
 
   for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-    sed -i -- "s/\"id\": 64\$/\"id\": 27/g" $f &
+    sed -i -- "s/\"id\": 65\$/\"id\": 27/g" $f &
     while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
   done
 

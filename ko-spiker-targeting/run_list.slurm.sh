@@ -138,33 +138,36 @@ for POP_PATH in $POP_PATHS; do
 
   # knockout pointer components, genome by genome
   # 27,Nop
-  # 73,AddDevoUpQuery
-  # 74,AddDevoDownQuery
-  # 75,PutDevoMembraneBringer
-  # 76,PutDevoMembraneBlocker
+  # 121,TryAddFledglingConnection
+  # 122,PruneOutgoingConnection
+  # 123,PruneIncomingConnection
+  # 124,AddDevoUpQuery
+  # 125,AddDevoDownQuery
+  # 126,PutDevoMembraneBringer
+  # 127,PutDevoMembraneBlocker
 
   for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
-    sed -i -- "s/\"id\": 73\$\|\"id\": 74\$\|\"id\": 75\$\|\"id\": 76\$/\"id\": 27/g" $f &
+    sed -i -- "s/\"id\": 121\$\|\"id\": 122\$\|\"id\": 123\$\|\"id\": 124\$\|\"id\": 125\$\|\"id\": 126\$\|\"id\": 127\$/\"id\": 27/g" $f &
     while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
   done
 
 
   # knockout spiker components, genome by genome
   # 27,Nop
-  # 80,PruneOutgoingConnection
-  # 81,PruneIncomingConnection
-  # 82,AddDevoUpQuery
-  # 83,AddDevoDownQuery
-  # 85,SetConnectionAgingParam
-  # 86,SetConnectionExploitParam
-  # 87,SetConnectionDevelopmentParam
-  # 88,SetConnectionSensingParam
-
-  # 98,PutMembraneBringer TODO
-  # 99,PutMembraneBlocker TODO
+  # 94,AddDevoUpQuery
+  # 95,AddDevoDownQuery
+  # 96,PutDevoMembraneBringer
+  # 97,PutDevoMembraneBlocker
+  # 98,TryAddFledglingConnection
+  # 99,PruneOutgoingConnection
+  # 100,PruneIncomingConnection
+  # 101,SetConnectionAgingParam
+  # 102,SetConnectionExploitParam
+  # 103,SetConnectionDevelopmentParam
+  # 104,SetConnectionSensingParam
 
   for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-    sed -i -- "s/\"id\": 80\$\|\"id\": 81\$\|\"id\": 82\$\|\"id\": 83\$\|\"id\": 85\$\|\"id\": 86\$\|\"id\": 87\$\|\"id\": 88\$/\"id\": 27/g" $f &
+    sed -i -- "s/\"id\": 94\$\|\"id\": 95\$\|\"id\": 96\$\|\"id\": 97\$\|\"id\": 98\$\|\"id\": 99\$\|\"id\": 100\$\|\"id\": 101\$\|\"id\": 102\$\|\"id\": 103\$\|\"id\": 104\$/\"id\": 27/g" $f &
     while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
   done
 
