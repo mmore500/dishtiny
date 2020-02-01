@@ -106,7 +106,7 @@ public:
             inst_lib.GetName(inst.id) == "DuplicateWhile" ||
             inst_lib.GetName(inst.id) == "DuplicateCall" ||
             inst_lib.GetName(inst.id) == "DuplicateFork" ||
-            inst_lib.GetName(inst.id).find("Apoptosis") != std::string::npos
+            inst_lib.GetName(inst.id).find("Apoptosis") != std::string::npos ||
             inst_lib.GetName(inst.id).find("Prune") != std::string::npos
           ) {
             inst.id = nop_id;
@@ -135,7 +135,7 @@ public:
             inst_lib_spiker.GetName(inst.id) == "DuplicateWhile" ||
             inst_lib_spiker.GetName(inst.id) == "DuplicateCall" ||
             inst_lib_spiker.GetName(inst.id) == "DuplicateFork" ||
-            inst_lib_spiker.GetName(inst.id).find("Apoptosis") != std::string::npos
+            inst_lib_spiker.GetName(inst.id).find("Apoptosis") != std::string::npos ||
             inst_lib_spiker.GetName(inst.id).find("Prune") != std::string::npos
           ) {
             inst.id = nop_id_spiker;
