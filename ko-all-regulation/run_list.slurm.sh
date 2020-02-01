@@ -116,7 +116,7 @@ mkdir seedpop
 
 echo "   POP_PATHS" $POP_PATHS
 
-  for POP_PATH in $POP_PATHS; do
+for POP_PATH in $POP_PATHS; do
 
   POP_FILENAME=$(basename ${POP_PATH})
   KO_PATH="seedpop/id=2+${POP_FILENAME}"
