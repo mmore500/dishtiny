@@ -193,8 +193,6 @@ for EVAL in {0..3}; do
 
 done
 
-./dishtiny -SEED $(( ${SEED} )) -SEED_POP 1 >run.log 2>&1
-
 ################################################################################
 echo
 echo "Done! (SUCCESS)"
