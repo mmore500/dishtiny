@@ -13,6 +13,11 @@ dataframe_filename = sys.argv[1]
 df = pd.read_csv(dataframe_filename)
 
 print(
+    "num trials",
+    len(df)
+)
+
+print(
     "num trials coalsesced",
     len(df[df['Dominant Root Proportion'] == 1])
 )

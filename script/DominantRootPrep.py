@@ -13,9 +13,9 @@ import re
 from collections import Counter
 from joblib import delayed, Parallel
 import json
+from natsort import natsorted
 
-update = int(sys.argv[1])
-filenames = sys.argv[2:]
+filenames = sys.argv[1:]
 
 # check all data is from same software source
 assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
@@ -25,8 +25,10 @@ def Root(filename):
     file = h5py.File(filename, 'r')
     index = np.array(file['Index']['own']).flatten()
 
-    lives = np.array(file['Live']['upd_'+str(update)]).flatten()
-    rootids = np.array(file['RootID']['upd_'+str(update)]).flatten()
+    upd_key = max(natsorted([ k for k in file['Live'] ]))
+
+    lives = np.array(file['Live'][upd_key]).flatten()
+    rootids = np.array(file['RootID'][upd_key]).flatten()
     valid_rootids = list(
         id for live, id in zip(lives, rootids) if live
     )
@@ -43,6 +45,7 @@ def SafeRoot(filename):
         return Root(filename)
     except Exception as e:
         print("warning: corrupt or incomplete data file... skipping")
+        print(filename)
         print("   ", e)
         return None
 
