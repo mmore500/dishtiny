@@ -217,7 +217,7 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       membrane_timers.insert({
         uid,
-        2
+        2 + state.GetLocal(inst.args[1])
       });
 
     },
@@ -261,7 +261,7 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       membrane_timers.insert({
         uid,
-        2
+        2 + state.GetLocal(inst.args[1])
       });
 
     },
@@ -305,7 +305,7 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       membrane_timers.insert({
         uid,
-        2
+        2 + state.GetLocal(inst.args[1])
       });
 
     },
@@ -349,7 +349,7 @@ void LibraryInstruction::InitInternalActions(inst_lib_t &il, const Config &cfg) 
 
       membrane_timers.insert({
         uid,
-        2
+        2 + state.GetLocal(inst.args[1])
       });
 
     },

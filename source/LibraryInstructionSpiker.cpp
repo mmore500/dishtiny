@@ -405,7 +405,7 @@ void LibraryInstructionSpiker::InitInternalActions(
 
       membrane_timers.insert({
         uid,
-        2
+        2 + state.GetLocal(inst.args[1])
       });
 
     },
@@ -449,7 +449,7 @@ void LibraryInstructionSpiker::InitInternalActions(
 
       membrane_timers.insert({
         uid,
-        2
+        2 + state.GetLocal(inst.args[1])
       });
 
     },
@@ -739,7 +739,7 @@ void LibraryInstructionSpiker::InitDevoActions(
 
       membrane_timers.insert({
         uid,
-        2
+        2 + state.GetLocal(inst.args[1])
       });
 
     },
@@ -783,7 +783,7 @@ void LibraryInstructionSpiker::InitDevoActions(
 
       membrane_timers.insert({
         uid,
-        2
+        2 + state.GetLocal(inst.args[1])
       });
 
     },
