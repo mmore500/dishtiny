@@ -210,6 +210,9 @@ void ManagerConnection::SearchAndDevelop() {
       }
       std::get<1>(probe) += aging_param;
 
+      // ensure that cumulative activation doesn't go negative
+      std::get<1>(probe) = std::max(std::get<1>(probe), 0.0);
+
     }
 
   }
