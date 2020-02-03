@@ -30,8 +30,8 @@ ManagerConnection::ManagerConnection(
 }
 
 void ManagerConnection::Reset() {
-  query.clear();
-  fledgling.clear();
+  queries.clear();
+  fledglings.clear();
   while (developed.size()) {
     RemoveOutgoingConnection(std::begin(developed)->first);
   }
@@ -70,7 +70,7 @@ void ManagerConnection::AddQuery(
   const size_t coundown_timer,
   const double match_impact
 ) {
-  query[tag] = std::tuple{coundown_timer, match_impact};
+  queries[tag] = { .timer = coundown_timer, .impact = match_impact };
 }
 
 // only call this at ENV_TRIG_FREQ
@@ -78,28 +78,28 @@ void ManagerConnection::DecayQueries() {
   // decrement query timers and remove them if they're old
   // adapted from https://stackoverflow.com/a/9210110
   for (
-    auto it = std::begin(query);
-    it != std::end(query);
+    auto it = std::begin(queries);
+    it != std::end(queries);
     // advance handled within loop
   ) {
-    auto&& [tag, tup] = *it;
-    if (std::get<0>(tup)) {
-      --std::get<0>(tup);
+    auto&& [tag, query] = *it;
+    if (query.timer) {
+      --query.timer;
       ++it;
     } else {
-      it = query.erase(it);
+      it = queries.erase(it);
     }
   }
 }
 
 void ManagerConnection::TryAddFledgling(const size_t connection_cap) {
   if (
-    fledgling.size() + developed.size()
+    fledglings.size() + developed.size()
     < std::min(cfg.MAX_CONNECTIONS(), connection_cap)
   ) {
-    fledgling.emplace_back();
+    fledglings.emplace_back();
     for (size_t probe = 0; probe < cfg.FLEDGLING_COPIES(); ++probe) {
-      fledgling.back().emplace_back(location, 0.0);
+      fledglings.back().push_back({ .location = location, .activation = 0.0});
     }
   }
 }
@@ -107,9 +107,9 @@ void ManagerConnection::TryAddFledgling(const size_t connection_cap) {
 
 void ManagerConnection::SearchAndDevelop() {
 
-  for (size_t f = 0; f < fledgling.size(); ++f) {
+  for (size_t f = 0; f < fledglings.size(); ++f) {
 
-    auto & probes = fledgling[f];
+    auto & probes = fledglings[f];
 
     // random walk all probes
     for (auto & probe : probes) {
@@ -117,9 +117,9 @@ void ManagerConnection::SearchAndDevelop() {
       emp::Shuffle(local_rng, shuffler);
       for (const auto & dir : shuffler) {
 
-        const size_t dest = geom.CalcLocalNeigh(std::get<0>(probe), dir);
+        const size_t dest = geom.CalcLocalNeigh(probe.location, dir);
         if (mcs[location]->CheckMatch(*mcs[dest], cfg.NLEV()-1)) {
-          std::get<0>(probe) = dest;
+          probe.location = dest;
           emp_assert(dest < geom.GetLocalSize());
           break;
         }
@@ -137,11 +137,11 @@ void ManagerConnection::SearchAndDevelop() {
         // OR the first has drifted out of the channel group but the second
         // hasn't
         return (
-          std::get<1>(first) < std::get<1>(second)
+          first.activation < second.activation
           || (
-            ! mcs[location]->CheckMatch(*mcs[std::get<0>(first)], cfg.NLEV()-1)
+            ! mcs[location]->CheckMatch(*mcs[first.location], cfg.NLEV()-1)
             && mcs[location]->CheckMatch(
-              *mcs[std::get<0>(second)], cfg.NLEV()-1
+              *mcs[second.location], cfg.NLEV()-1
             )
           )
         );
@@ -153,8 +153,8 @@ void ManagerConnection::SearchAndDevelop() {
     // AND it's still in the same channel group as the source cell
     // then it develops
     if (
-      const size_t final_loc = std::get<0>(best_probe);
-      std::get<1>(best_probe) >= development_param
+      const size_t final_loc = best_probe.location;
+      best_probe.activation >= development_param
       && location != final_loc
       && mcs[location]->CheckMatch(*mcs[final_loc], cfg.NLEV()-1)
     ) {
@@ -179,12 +179,12 @@ void ManagerConnection::SearchAndDevelop() {
         );
       }
 
-      // swap 'n pop out fledgling entry
+      // swap 'n pop out fledglings entry
       std::swap(
-        fledgling[f],
-        fledgling.back()
+        fledglings[f],
+        fledglings.back()
       );
-      fledgling.pop_back();
+      fledglings.pop_back();
       --f;
 
       continue;
@@ -194,27 +194,27 @@ void ManagerConnection::SearchAndDevelop() {
       // set worst probes and out of channel group probes
       // to the most successful probe or, failing that, to the spawning cell
       if (
-        std::get<1>(best_probe) - exploit_param > std::get<1>(probe)
-        || ! mcs[location]->CheckMatch(*mcs[std::get<0>(probe)], cfg.NLEV()-1)
+        best_probe.activation - exploit_param > probe.activation
+        || ! mcs[location]->CheckMatch(*mcs[probe.location], cfg.NLEV()-1)
       ) {
         if (
-          mcs[location]->CheckMatch(*mcs[std::get<0>(best_probe)], cfg.NLEV()-1)
+          mcs[location]->CheckMatch(*mcs[best_probe.location], cfg.NLEV()-1)
         ) probe = best_probe;
         else probe = {location, 0.0};
       }
 
       // each probe uses tags to sense the favorability of its current location
-      const size_t loc = std::get<0>(probe);
+      const size_t loc = probe.location;
       auto & dest = cell_getter(loc).GetSpiker().GetExternalMembrane();
-      for (const auto & [tag, tup] : query) {
-        const double match_impact = std::get<1>(tup);
+      for (const auto & [tag, query] : queries) {
+        const double match_impact = query.impact;
         const double activation = dest.LookupProportion(tag);
-        std::get<1>(probe) += activation * sensing_param * match_impact;
+        probe.activation += activation * sensing_param * match_impact;
       }
-      std::get<1>(probe) += aging_param;
+      probe.activation += aging_param;
 
       // ensure that cumulative activation doesn't go negative
-      std::get<1>(probe) = std::max(std::get<1>(probe), 0.0);
+      probe.activation = std::max(probe.activation, 0.0);
 
     }
 
@@ -260,7 +260,7 @@ void ManagerConnection::DoPrune() {
 }
 
 const ManagerConnection::fledgling_t & ManagerConnection::ViewFledgling() const {
-  return fledgling;
+  return fledglings;
 }
 
 size_t ManagerConnection::GetOutgoingConnectionCount() const {

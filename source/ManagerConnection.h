@@ -6,16 +6,23 @@
 
 class FrameCell;
 
+struct Probe {
+  size_t location;
+  double activation;
+};
+
+struct DevoQuery {
+  size_t timer;
+  double impact;
+};
+
 class ManagerConnection {
 
 public:
 
   using fledgling_t = emp::vector<
     emp::vector<
-      std::tuple<
-        size_t, // location
-        double // activation
-      >
+      Probe
     >
   >;
 
@@ -25,16 +32,13 @@ private:
 
   std::unordered_map<
     Config::matchbin_t::query_t,
-    std::tuple<
-      size_t, // countdown timer
-      double // match impact
-    >
-  > query;
+    DevoQuery
+  > queries;
 
   // TODO random walk params
 
   //fledgling
-  fledgling_t fledgling;
+  fledgling_t fledglings;
 
   //developed
   std::unordered_multimap<

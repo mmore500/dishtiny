@@ -654,7 +654,7 @@ public:
             std::begin(set),
             std::end(set),
             std::back_inserter(res),
-            [](const auto & item){ return std::get<0>(item); }
+            [](const auto & item){ return item.location; }
           );
         }
         return res;
