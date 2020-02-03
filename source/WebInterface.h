@@ -22,7 +22,9 @@
 #include "Config.h"
 #include "DishWorld.h"
 #include "Genome.h"
-#include "WebArtist.h"
+#include "WebArtistBase.h"
+#include "WebArtistCell.h"
+#include "WebArtistConnection.h"
 
 namespace UI = emp::web;
 
@@ -182,7 +184,7 @@ public:
     grid_viewer.SetAttr("class", "mx-auto");
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<ChannelPack>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<ChannelPack>>(
       "Channel",
       "Channel",
       grid_viewer,
@@ -220,7 +222,7 @@ public:
     };
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<double_datum>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
       "Resource Stockpile",
       "Resource Stockpile",
       grid_viewer,
@@ -262,7 +264,7 @@ public:
     ));
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<double_datum>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
       "Resource Sharing",
       "Resource Sharing",
       grid_viewer,
@@ -295,7 +297,7 @@ public:
     ));
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
       "Resource Flow",
       "Resource Flow",
       grid_viewer,
@@ -330,7 +332,7 @@ public:
     ));
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
       "Messaging",
       "Messaging",
       grid_viewer,
@@ -361,7 +363,7 @@ public:
     ));
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
       "Messaging Flow",
       "Messaging Flow",
       grid_viewer,
@@ -396,7 +398,7 @@ public:
     ));
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
       "Reproduction",
       "Reproduction",
       grid_viewer,
@@ -426,7 +428,7 @@ public:
     ));
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<int_datum>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<int_datum>>(
       "Apoptosis",
       "Apoptosis",
       grid_viewer,
@@ -455,7 +457,7 @@ public:
     ));
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<emp::Ptr<Genome>>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<emp::Ptr<Genome>>>(
       "Taxa",
       "Taxa",
       grid_viewer,
@@ -476,7 +478,7 @@ public:
 
     artists.emplace_back();
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
-      artists.back().push_back(emp::NewPtr<WebArtist<int_datum>>(
+      artists.back().push_back(emp::NewPtr<WebArtistCell<int_datum>>(
         emp::to_string("Resource Wave Level ", l),
         "Resource Wave",
         grid_viewer,
@@ -514,7 +516,7 @@ public:
 
     artists.emplace_back();
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
-      artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+      artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
         emp::to_string("Channel Generation Level ", l),
         "Channel Generation",
         grid_viewer,
@@ -553,7 +555,7 @@ public:
 
     artists.emplace_back();
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
-      artists.back().push_back(emp::NewPtr<WebArtist<double_datum>>(
+      artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
         emp::to_string("Expiration Level ", l),
         "Expiration",
         grid_viewer,
@@ -589,7 +591,7 @@ public:
 
     artists.emplace_back();
     for (size_t l = 0; l < cfg.NLEV() + 1; ++l) {
-      artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+      artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
         emp::to_string("Reproductive Pause Level ", l),
         "Reproductive Pause",
         grid_viewer,
@@ -662,7 +664,7 @@ public:
 
     artists.emplace_back();
     for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
-      artists.back().push_back(emp::NewPtr<WebArtist<double_datum>>(
+      artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
         emp::to_string("Sharing Fraction Direction ", d),
         "Sharing Fraction",
         grid_viewer,
@@ -697,7 +699,7 @@ public:
 
     artists.emplace_back();
     for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
-      artists.back().push_back(emp::NewPtr<WebArtist<double_datum>>(
+      artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
         emp::to_string("Shared Resource Direction ", d),
         "Shared Resource",
         grid_viewer,
@@ -732,7 +734,7 @@ public:
 
     artists.emplace_back();
     for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
-      artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+      artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
         emp::to_string("Messaging Direction ", d),
         "Messaging",
         grid_viewer,
@@ -766,7 +768,7 @@ public:
     }
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<size_t>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t>>(
       "Root",
       "Root",
       grid_viewer,
@@ -801,7 +803,7 @@ public:
     ));
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
       "Regulation",
       "Regulation",
       grid_viewer,
@@ -852,7 +854,7 @@ public:
     ));
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
       "Regulation Flow",
       "Regulation Flow",
       grid_viewer,
@@ -904,7 +906,7 @@ public:
 
     artists.emplace_back();
     for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
-      artists.back().push_back(emp::NewPtr<WebArtist<size_t_datum>>(
+      artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
         emp::to_string("Regulation Direction ", d),
         "Regulation Direction",
         grid_viewer,
