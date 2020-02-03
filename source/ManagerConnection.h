@@ -96,6 +96,8 @@ public:
     const double match_impact
   );
 
+  void DecayQueries();
+
   void TryAddFledgling(const size_t connection_cap);
 
   void SearchAndDevelop();

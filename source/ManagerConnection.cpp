@@ -73,6 +73,25 @@ void ManagerConnection::AddQuery(
   query[tag] = std::tuple{coundown_timer, match_impact};
 }
 
+// only call this at ENV_TRIG_FREQ
+void ManagerConnection::DecayQueries() {
+  // decrement query timers and remove them if they're old
+  // adapted from https://stackoverflow.com/a/9210110
+  for (
+    auto it = std::begin(query);
+    it != std::end(query);
+    // advance handled within loop
+  ) {
+    auto&& [tag, tup] = *it;
+    if (std::get<0>(tup)) {
+      --std::get<0>(tup);
+      ++it;
+    } else {
+      it = query.erase(it);
+    }
+  }
+}
+
 void ManagerConnection::TryAddFledgling(const size_t connection_cap) {
   if (
     fledgling.size() + developed.size()
@@ -85,19 +104,8 @@ void ManagerConnection::TryAddFledgling(const size_t connection_cap) {
   }
 }
 
-void ManagerConnection::SearchAndDevelop() {
 
-  // decrement query timers and remove them if they're old
-  // adapted from https://stackoverflow.com/a/9210110
-  for (auto it = std::begin(query); it != std::end(query); ) {
-    auto&& [tag, tup] = *it;
-    if (std::get<0>(tup)) {
-      --std::get<0>(tup);
-      ++it;
-    } else {
-      it = query.erase(it);
-    }
-  }
+void ManagerConnection::SearchAndDevelop() {
 
   for (size_t f = 0; f < fledgling.size(); ++f) {
 

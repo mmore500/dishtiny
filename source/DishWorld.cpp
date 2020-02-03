@@ -507,6 +507,7 @@ void DishWorld::Step() {
       man->Apoptosis(i).Reset();
       man->Sharing(i).ResolveNextResistance(GetUpdate());
       man->Connection(i).DoPrune();
+      man->Connection(i).DecayQueries();
     }
 
     for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
