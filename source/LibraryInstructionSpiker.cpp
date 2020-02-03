@@ -379,34 +379,11 @@ void LibraryInstructionSpiker::InitInternalActions(
       const state_t & state = hw.GetCurState();
       FrameHardware &fh = *hw.GetTrait();
 
-      Config::matchbin_t& membrane = fh.GetInternalMembrane();
-      auto& membrane_tags = fh.GetInternalMembraneTags();
-      auto& membrane_timers = fh.GetInternalMembraneTimers();
-
-      // if a particular affinity is already in the MatchBin, take it out
-      const auto &existing = membrane_tags.find(
-        inst.affinity
-      );
-      if (existing != std::end(membrane_tags)) {
-        membrane.Delete(existing->second);
-        membrane_timers.erase(existing->second);
-        membrane_tags.erase(existing);
-      }
-
-      const auto uid = membrane.Put(
-        !state.GetLocal(inst.args[0]),
-        inst.affinity
-      );
-
-      membrane_tags.insert({
+      fh.GetInternalMembrane().Put(
         inst.affinity,
-        uid
-      });
-
-      membrane_timers.insert({
-        uid,
+        !state.GetLocal(inst.args[0]),
         2 + state.GetLocal(inst.args[1])
-      });
+      );
 
     },
     2,
@@ -423,34 +400,11 @@ void LibraryInstructionSpiker::InitInternalActions(
       const state_t & state = hw.GetCurState();
       FrameHardware &fh = *hw.GetTrait();
 
-      Config::matchbin_t& membrane = fh.GetInternalMembrane();
-      auto& membrane_tags = fh.GetInternalMembraneTags();
-      auto& membrane_timers = fh.GetInternalMembraneTimers();
-
-      // if a particular affinity is already in the MatchBin, take it out
-      const auto &existing = membrane_tags.find(
-        inst.affinity
-      );
-      if (existing != std::end(membrane_tags)) {
-        membrane.Delete(existing->second);
-        membrane_timers.erase(existing->second);
-        membrane_tags.erase(existing);
-      }
-
-      const auto uid = membrane.Put(
-        state.GetLocal(inst.args[0]),
-        inst.affinity
-      );
-
-      membrane_tags.insert({
+      fh.GetInternalMembrane().Put(
         inst.affinity,
-        uid
-      });
-
-      membrane_timers.insert({
-        uid,
+        state.GetLocal(inst.args[0]),
         2 + state.GetLocal(inst.args[1])
-      });
+      );
 
     },
     2,
@@ -713,38 +667,15 @@ void LibraryInstructionSpiker::InitDevoActions(
       const state_t & state = hw.GetCurState();
       FrameHardware &fh = *hw.GetTrait();
 
-      Config::matchbin_t& membrane = fh.GetMembrane();
-      auto& membrane_tags = fh.GetMembraneTags();
-      auto& membrane_timers = fh.GetMembraneTimers();
-
-      // if a particular affinity is already in the MatchBin, take it out
-      const auto &existing = membrane_tags.find(
-        inst.affinity
-      );
-      if (existing != std::end(membrane_tags)) {
-        membrane.Delete(existing->second);
-        membrane_timers.erase(existing->second);
-        membrane_tags.erase(existing);
-      }
-
-      const auto uid = membrane.Put(
-        !state.GetLocal(inst.args[0]),
-        inst.affinity
-      );
-
-      membrane_tags.insert({
+      fh.GetExternalMembrane().Put(
         inst.affinity,
-        uid
-      });
-
-      membrane_timers.insert({
-        uid,
+        !state.GetLocal(inst.args[0]),
         2 + state.GetLocal(inst.args[1])
-      });
+      );
 
     },
     2,
-    "Place a tag that, by default, admits incoming messages it matches with.",
+    "Place a tag that, by default, attracts incoming queries it matches with.",
     emp::ScopeType::BASIC,
     0,
     {"affinity"}
@@ -757,38 +688,15 @@ void LibraryInstructionSpiker::InitDevoActions(
       const state_t & state = hw.GetCurState();
       FrameHardware &fh = *hw.GetTrait();
 
-      Config::matchbin_t& membrane = fh.GetMembrane();
-      auto& membrane_tags = fh.GetMembraneTags();
-      auto& membrane_timers = fh.GetMembraneTimers();
-
-      // if a particular affinity is already in the MatchBin, take it out
-      const auto &existing = membrane_tags.find(
-        inst.affinity
-      );
-      if (existing != std::end(membrane_tags)) {
-        membrane.Delete(existing->second);
-        membrane_timers.erase(existing->second);
-        membrane_tags.erase(existing);
-      }
-
-      const auto uid = membrane.Put(
-        state.GetLocal(inst.args[0]),
-        inst.affinity
-      );
-
-      membrane_tags.insert({
+      fh.GetExternalMembrane().Put(
         inst.affinity,
-        uid
-      });
-
-      membrane_timers.insert({
-        uid,
+        state.GetLocal(inst.args[0]),
         2 + state.GetLocal(inst.args[1])
-      });
+      );
 
     },
     2,
-    "Place a tag that, by default, blocks incoming messages it matches with.",
+    "Place a tag that, by default, repels incoming queries it matches with.",
     emp::ScopeType::BASIC,
     0,
     {"affinity"}

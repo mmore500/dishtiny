@@ -197,15 +197,10 @@ void ManagerConnection::SearchAndDevelop() {
 
       // each probe uses tags to sense the favorability of its current location
       const size_t loc = std::get<0>(probe);
-      auto & dest = cell_getter(loc).GetSpiker().GetMembrane();
+      auto & dest = cell_getter(loc).GetSpiker().GetExternalMembrane();
       for (const auto & [tag, tup] : query) {
         const double match_impact = std::get<1>(tup);
-        const auto res = dest.GetVals(dest.Match(tag));
-        const double activation = static_cast<double>(std::count_if(
-          std::begin(res),
-          std::end(res),
-          [](const auto & v){ return v; }
-        )) / static_cast<double>(res.size());
+        const double activation = dest.LookupProportion(tag);
         std::get<1>(probe) += activation * sensing_param * match_impact;
       }
       std::get<1>(probe) += aging_param;

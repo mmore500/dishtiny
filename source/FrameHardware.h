@@ -9,6 +9,7 @@
 #include "FrameHardware.h"
 #include "Manager.h"
 #include "DishWorld.h"
+#include "Membrane.h"
 
 class FrameCell;
 
@@ -36,29 +37,8 @@ private:
 
   size_t msg_dir;
 
-  Config::matchbin_t membrane;
-  Config::matchbin_t internal_membrane;
-
-  std::unordered_map<
-    Config::matchbin_t::tag_t,
-    Config::matchbin_t::uid_t
-  > membrane_tags;
-
-  std::unordered_map<
-    Config::matchbin_t::uid_t,
-    size_t
-  > membrane_timers;
-
-  std::unordered_map<
-    Config::matchbin_t::tag_t,
-    Config::matchbin_t::uid_t
-  > internal_membrane_tags;
-
-  std::unordered_map<
-    Config::matchbin_t::uid_t,
-    size_t
-  > internal_membrane_timers;
-
+  Membrane external_membrane;
+  Membrane internal_membrane;
 
 public:
 
@@ -149,28 +129,8 @@ public:
 
   void SetMatchBinState(const Config::matchbin_t::state_t & state);
 
-  Config::matchbin_t &GetMembrane();
+  Membrane &GetExternalMembrane();
 
-  std::unordered_map<
-    Config::matchbin_t::tag_t,
-    Config::matchbin_t::uid_t
-  > &GetMembraneTags();
-
-  std::unordered_map<
-    Config::matchbin_t::uid_t,
-    size_t
-  > &GetMembraneTimers();
-
-  Config::matchbin_t &GetInternalMembrane();
-
-  std::unordered_map<
-    Config::matchbin_t::tag_t,
-    Config::matchbin_t::uid_t
-  > &GetInternalMembraneTags();
-
-  std::unordered_map<
-    Config::matchbin_t::uid_t,
-    size_t
-  > &GetInternalMembraneTimers();
+  Membrane &GetInternalMembrane();
 
 };
