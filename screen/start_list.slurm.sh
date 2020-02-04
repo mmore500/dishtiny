@@ -138,7 +138,7 @@ source "/mnt/home/mmore500/myPy/bin/activate"
 # run jinja on template
 j2 -o run_list.slurm.sh run_list.slurm.sh.jinja
 
-if  [ $CUR_STEP -lt 128 ]; then
+if  [ $CUR_STEP -lt 2000 ]; then
   if [ $(ls *.json.cereal | wc -l) -eq 4 ]; then
     sbatch run_list.slurm.sh                                                   \
     && echo "   job submit success!"                                           \
