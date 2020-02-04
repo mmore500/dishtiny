@@ -209,9 +209,8 @@ public:
                 : 0
             );
 
-            for (size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
-              man.Inbox(dest).TakeMessage(event, dir);
-            }
+            man.Inbox(dest).TakeSpikeBroadcastMessage(event);
+
           }
 
         }
@@ -241,9 +240,7 @@ public:
                 : 0
             );
 
-            for (size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
-              man.Inbox(dest).TakeMessage(event, dir);
-            }
+            man.Inbox(dest).TakeSpikeBroadcastMessage(event);
 
           }
 
