@@ -9,6 +9,9 @@ class FrameCell;
 struct Probe {
   size_t location;
   double activation;
+  bool operator==(Probe const& other) const {
+    return location == other.location && activation == other.activation;
+  }
 };
 
 struct DevoQuery {
@@ -66,6 +69,13 @@ private:
   emp::Random &local_rng;
 
   size_t connection_prune_count;
+
+  void RandomStepFledgling();
+
+  void DevelopConnection(const size_t destination);
+
+  bool TryDevelopProbe(const Probe & best_probe);
+
 
 public:
 
