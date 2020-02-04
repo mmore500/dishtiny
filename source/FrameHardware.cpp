@@ -108,6 +108,30 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
   } else if (IsLive()) {
     cpu.TriggerEvent("EnvTrigger", g.GetTag(4));
   }
+  } else { // is spiker
+
+    const double mean_connection_length = Cell().Man().Connection(
+      Cell().GetPos()
+    ).CalcMeanConnectionLength();
+
+    emp_assert(mean_connection_length >= 0.0);
+
+    if (mean_connection_length >= 0.0 && mean_connection_length < 4.0) {
+      cpu.TriggerEvent("EnvTrigger", g.GetTag(3));
+    } else if (mean_connection_length >= 4.0 && mean_connection_length < 8.0) {
+      cpu.TriggerEvent("EnvTrigger", g.GetTag(4));
+    } else if (mean_connection_length >= 8.0/*&& mean_connection_length < 12.0*/){
+      cpu.TriggerEvent("EnvTrigger", g.GetTag(5));
+    }
+
+    if (mean_connection_length < 2.0) {
+      cpu.TriggerEvent("EnvTrigger", g.GetTag(6));
+    } else if (mean_connection_length >= 2.0 && mean_connection_length < 6.0) {
+      cpu.TriggerEvent("EnvTrigger", g.GetTag(7));
+    } else if (mean_connection_length >= 6.0 && mean_connection_length < 10.0) {
+      cpu.TriggerEvent("EnvTrigger", g.GetTag(8));
+    }
+
   }
 
   // neighbor is dead or live?

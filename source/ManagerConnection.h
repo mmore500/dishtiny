@@ -128,4 +128,6 @@ public:
 
   size_t GetOutgoingConnectionCount() const;
 
+  double CalcMeanConnectionLength() const;
+
 };

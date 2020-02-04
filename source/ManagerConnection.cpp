@@ -99,7 +99,7 @@ void ManagerConnection::TryAddFledgling(const size_t connection_cap) {
   ) {
     fledglings.emplace_back();
     for (size_t probe = 0; probe < cfg.FLEDGLING_COPIES(); ++probe) {
-      fledglings.back().push_back({ .location = location, .activation = 0.0});
+      fledglings.back().push_back(Probe{.location=location, .activation=0.0});
     }
   }
 }
@@ -288,5 +288,34 @@ bool ManagerConnection::TryDevelopProbe(const Probe & best_probe) {
   }
 
   return false;
+
+}
+
+double ManagerConnection::CalcMeanConnectionLength() const {
+
+  const double x1 = geom.GetLocalX(location);
+  const double y1 = geom.GetLocalY(location);
+
+  double res = 0.0;
+
+  for (const auto & [idx, cell] : developed) {
+
+    const double x2 = geom.GetLocalX(idx);
+    const double y2 = geom.GetLocalY(idx);
+
+    const double dx = std::min(
+      std::abs(x1 - x2),
+      std::min(x1, x2) + cfg.GRID_W() - std::max(x1, x2)
+    );
+    const double dy = std::min(
+      std::abs(y1 - y2),
+      std::min(y1, y2) + cfg.GRID_H() - std::max(y1, y2)
+    );
+
+    res += dx * dx + dy * dy;
+
+  }
+
+  return developed.size() ? res / developed.size() : res;
 
 }

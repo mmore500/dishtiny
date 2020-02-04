@@ -495,10 +495,14 @@ void LibraryInstructionSpiker::InitInternalSensors(
         inst.args[0],
         man.Connection(pos).GetOutgoingConnectionCount()
       );
+      state.SetLocal(
+        inst.args[1],
+        man.Connection(pos).CalcMeanConnectionLength()
+      );
 
     },
-    1,
-    "How many outgoing connections are established?"
+    2,
+    "How many outgoing connections are established? And what is their average length?"
   );
 
   il.AddInst(
