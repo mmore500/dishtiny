@@ -185,14 +185,8 @@ public:
     }
 
     bool operator<(const Genome& other) const {
-      return (
-        (program < other.program)
-        || ((program == other.program)
-            && (program_spiker < other.program_spiker))
-        || ((program == other.program)
-            && (program_spiker == other.program_spiker)
-            && (tags < other.tags))
-      );
+      return std::tie(program, program_spiker, tags)
+        < std::tie(other.program, other.program_spiker, other.tags);
     }
 
     size_t GetRootID() const {
