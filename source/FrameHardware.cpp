@@ -82,7 +82,7 @@ void FrameHardware::TryClearReproductionReserve() {
 
 void FrameHardware::DispatchEnvTriggers(const size_t update){
 
-  // need at least 12 cpus available
+  // need at least 10 cpus available
   emp_assert(cfg.HW_MAX_CORES() > 10);
   // ... so make sure at least 10 are unoccupied
   cpu.SetMaxCores(cfg.HW_MAX_CORES() - 10);
@@ -97,8 +97,6 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
   // was just born trigger
   if (Cell().Man().Family(Cell().GetPos()).GetCellAge(update) == 0) {
     cpu.TriggerEvent("EnvTrigger", g.GetTag(1));
-  } else {
-  // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
   }
 
   if (facing < Cardi::Dir::NumDirs) { // not spiker
@@ -134,63 +132,21 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
 
   }
 
-  // neighbor is dead or live?
-  // if (IsLive()) {
-  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
-  // } else {
-  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
-  // }
-
-  // neighbor cell age older or younger?
-  // if (IsOlderThan() && IsLive()) {
-  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
-  // } else if (IsLive()) {
-  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
-  // }
-
-  // stochastic trigger
-  // if (local_rng.GetDouble() < cfg.STOCHASTIC_TRIGGER_FREQ()) {
-  //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
-  // } else {
-  // // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
-  // }
   if (cfg.CHANNELS_VISIBLE() && facing < Cardi::Dir::NumDirs) { // not spiker
 
-    // is neighbor expired?
-    // if (IsExpired(0)) {
-    //   cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
-    // } else {
-    //   // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
-    // }
-
-    // cell parent trigger
+    // cell parent / child trigger
     // note: mutually exclusive with cell child trigger
     if (IsCellParent()) {
       cpu.TriggerEvent("EnvTrigger", g.GetTag(5));
-    } else {
-      // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
-    }
-
-    // cell child trigger
-    if (IsCellChild()) {
+    } else if (IsCellChild()) {
       cpu.TriggerEvent("EnvTrigger", g.GetTag(6));
-    } else {
-      // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
     }
 
-    // propagule child trigger
+    // propagule parent /child trigger
     if (IsPropaguleChild()) {
       cpu.TriggerEvent("EnvTrigger", g.GetTag(7));
-    } else {
-      // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
-    }
-
-    // propagule parent trigger
-    // note: mutually exclusive with propagule child trigger
-    if (IsPropaguleParent()) {
+    } else if (IsPropaguleParent()) {
       cpu.TriggerEvent("EnvTrigger", g.GetTag(8));
-    } else {
-      // cpu.TriggerEvent("EnvTrigger", g.GetTag(X));
     }
 
   }
