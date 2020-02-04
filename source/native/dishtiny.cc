@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
 
     // print an intermittent update message
     if (world.GetUpdate() % 32 == 0) {
-      std::cout << "Update: " << world.GetUpdate() << std::endl;
+      std::cout << world.GetUpdate() << std::endl;
     }
 
     // check to see if the run is expired (time or update count)
@@ -149,6 +149,8 @@ int main(int argc, char* argv[])
     world.Update();
 
   }
+
+  std::cout << "EXPIRATION_UPDATE " << expiration_update << std::endl;
 
   // so that our computations won't get optimized away
   std::cout << world.GetNumOrgs() << std::endl;
