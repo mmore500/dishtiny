@@ -1,10 +1,10 @@
 #!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --array=0-63
+#SBATCH --array=0-127
 #SBATCH --mem=16G
 #SBATCH --ntasks 1
-#SBATCH --cpus-per-task 8
+#SBATCH --cpus-per-task 4
 #SBATCH --job-name s-start
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
@@ -103,16 +103,16 @@ echo "-------"
 
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
-export OMP_NUM_THREADS=2
+export OMP_NUM_THREADS=1
 export SECONDS
 
-./dishtiny -SEED ${SEED} >run0.log 2>&1 &
+for POPULATION in {1..4}; do
 
-./dishtiny -SEED $(( ${SEED} + 100 )) >run1.log 2>&1 &
+  ./dishtiny                                                                   \
+    -SEED $((${SEED} + ${POPULATION} * ${SEED_OFFSET}))                        \
+    >"title=run+population=${POPULATION}+ext=.log" 2>&1 &
 
-./dishtiny -SEED $(( ${SEED} + 200 )) >run2.log 2>&1 &
-
-./dishtiny -SEED $(( ${SEED} + 300 )) >run3.log 2>&1 &
+done
 
 wait
 
