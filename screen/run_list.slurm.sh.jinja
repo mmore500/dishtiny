@@ -63,6 +63,7 @@ echo "Prepare Env Vars"
 echo "----------------"
 ################################################################################
 
+SEED_OFFSET=1000
 SEED={{ seed }} # jinja
 LAST_STEP={{ last_step }} # jinja
 CUR_STEP={{ cur_step }} # jinja
@@ -70,6 +71,7 @@ OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=${CUR_STEP}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/screen/"
 SOURCE_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=${LAST_STEP}"
 
+echo "   SEED_OFFSET" $SEED_OFFSET
 echo "   SEED" $SEED
 echo "   LAST_STEP" $LAST_STEP
 echo "   CUR_STEP" $CUR_STEP
