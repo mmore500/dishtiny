@@ -1,8 +1,8 @@
 #!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --array=0-127
-#SBATCH --mem=16G
+#SBATCH --array=0-63
+#SBATCH --mem=8G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 4
 #SBATCH --job-name s-start
