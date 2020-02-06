@@ -124,7 +124,7 @@ for POPULATION in {1..4}; do
   ./dishtiny                                                                   \
     -SEED $((${SEED} + ${CUR_STEP} + ${POPULATION} * ${SEED_OFFSET}))          \
     -SEED_POP $POPULATION                                                      \
-    >"title=run0+population=${POPULATION}+ext=.log" 2>&1 &
+    >"title=run+population=${POPULATION}+ext=.log" 2>&1 &
 
 done
 
