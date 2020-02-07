@@ -99,6 +99,9 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
     cpu.TriggerEvent("EnvTrigger", g.GetTag(1));
   }
 
+  // imprinted trigger
+  if (Cell().GetImprint()) cpu.TriggerEvent("EnvTrigger", *Cell().GetImprint());
+
   if (facing < Cardi::Dir::NumDirs) { // not spiker
   // neighbor has more resource or less?
   if (IsPoorerThan() && IsLive()) {

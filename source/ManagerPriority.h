@@ -36,6 +36,8 @@ struct SirePack {
 
   double par_wealth;
 
+  std::optional<Config::tag_t> imprint;
+
 };
 
 class ManagerPriority {

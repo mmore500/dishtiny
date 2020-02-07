@@ -33,6 +33,10 @@ private:
 
   size_t connection_prune_count;
 
+  std::optional<Config::tag_t> imprint;
+
+  std::optional<Config::tag_t> daughter_imprint;
+
 public:
 
   mutable std::mutex incoming_connection_mutex;
@@ -90,5 +94,15 @@ public:
   size_t GetIncomingConectionCount() const;
 
   const std::unordered_multiset<size_t> & ViewIncomingConnections() const;
+
+  void SetImprint(const std::optional<Config::tag_t> & imprint_);
+
+  void SetDaughterImprint(
+    const std::optional<Config::tag_t> & daughter_imprint_
+  );
+
+  const std::optional<Config::tag_t> & GetDaughterImprint() const;
+
+  const std::optional<Config::tag_t> & GetImprint() const;
 
 };

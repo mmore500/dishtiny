@@ -45,7 +45,8 @@ void LibraryInstruction::TRL(
       inherit_regulators
         ? std::optional{fh.Cell().CopyMatchBins()}
         : std::nullopt,
-      man.Stockpile(pos).QueryResource()
+      man.Stockpile(pos).QueryResource(),
+      fh.Cell().GetDaughterImprint()
     };
 
     if (man.Priority(fh.Cell().GetNeigh(dir)).AddRequest(sp)) {
@@ -1267,6 +1268,28 @@ const inst_lib_t& LibraryInstruction::Make(const Config &cfg) {
     InitSpikerActions(il, cfg);
 
     InitDevoActions(il, cfg);
+
+    il.AddInst(
+      "MarkDaughterImprint",
+      [](hardware_t & hw, const inst_t & inst){
+
+        const state_t & state = hw.GetCurState();
+        FrameHardware &fh = *hw.GetTrait();
+        FrameCell &cell = fh.Cell();
+
+        cell.SetDaughterImprint(
+          state.GetLocal(inst.args[0])
+          ? std::nullopt
+          : std::optional{inst.affinity}
+        );
+
+      },
+      1,
+      "Mark or remove an imprint.",
+      emp::ScopeType::BASIC,
+      0,
+      {"affinity"}
+    );
 
     std::cout << "Instruction Library Size: " << il.GetSize() << std::endl;
     // save instruction library

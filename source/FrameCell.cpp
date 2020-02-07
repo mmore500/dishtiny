@@ -64,6 +64,8 @@ void FrameCell::Reset() {
     RemoveIncomingConnection(*std::begin(incoming_connections));
   }
   connection_prune_count = 0;
+  imprint.reset();
+  daughter_imprint.reset();
 }
 
 void FrameCell::Process(const size_t update) {
@@ -199,4 +201,20 @@ size_t FrameCell::GetIncomingConectionCount() const {
 const std::unordered_multiset<size_t> &
 FrameCell::ViewIncomingConnections() const {
   return incoming_connections;
+}
+
+void FrameCell::SetImprint(const std::optional<Config::tag_t> & imprint_) {
+  imprint = imprint_;
+}
+
+void FrameCell::SetDaughterImprint(
+  const std::optional<Config::tag_t> & daughter_imprint_
+) { daughter_imprint = daughter_imprint_; }
+
+const std::optional<Config::tag_t> & FrameCell::GetDaughterImprint() const {
+  return daughter_imprint;
+}
+
+const std::optional<Config::tag_t> & FrameCell::GetImprint() const {
+  return imprint;
 }
