@@ -2,9 +2,9 @@
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
 #SBATCH --array=0-63
-#SBATCH --mem=8G
+#SBATCH --mem=16G
 #SBATCH --ntasks 1
-#SBATCH --cpus-per-task 4
+#SBATCH --cpus-per-task 8
 #SBATCH --job-name s-start
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
@@ -103,7 +103,7 @@ echo "-------"
 
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
-export OMP_NUM_THREADS=1
+export OMP_NUM_THREADS=2
 export SECONDS
 
 for POPULATION in {1..4}; do
