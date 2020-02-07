@@ -43,8 +43,8 @@ void LibraryInstruction::TRL(
       lev < cfg.NLEV() ? man.Family(pos).GetPrevChan() : *man.Channel(pos).GetID(cfg.NLEV() - 1),
       man.DW().GetOrgPtr(pos),
       inherit_regulators
-        ? fh.Cell().CopyMatchBins()
-        : emp::vector<std::shared_ptr<Config::matchbin_t>>(4, nullptr),
+        ? std::optional{fh.Cell().CopyMatchBins()}
+        : std::nullopt,
       man.Stockpile(pos).QueryResource()
     };
 

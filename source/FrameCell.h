@@ -71,9 +71,9 @@ public:
 
   void QueueMessages(emp::vector<Config::inbox_t> &inboxes);
 
-  emp::vector<std::shared_ptr<Config::matchbin_t>> CopyMatchBins();
+  emp::vector<Config::matchbin_t::state_t> CopyMatchBins();
 
-  void SetRegulators(emp::vector<std::shared_ptr<Config::matchbin_t>> targets);
+  void SetRegulators(const emp::vector<Config::matchbin_t::state_t> & targets);
 
   void RegisterIncomingConnection(const size_t source);
 

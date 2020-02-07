@@ -400,10 +400,8 @@ const Config::hardware_t& FrameHardware::GetHardware() {
   return cpu;
 }
 
-void FrameHardware::SetRegulators(Config::matchbin_t & target_mb) {
-
-  cpu.GetMatchBin().ImprintRegulators(target_mb);
-
+void FrameHardware::SetRegulators(const Config::matchbin_t::state_t & target) {
+  cpu.GetMatchBin().ImprintRegulators(target);
 }
 
 void FrameHardware::SetMatchBinState(

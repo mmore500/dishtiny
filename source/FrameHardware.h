@@ -125,7 +125,7 @@ public:
 
   const Config::hardware_t& GetHardware();
 
-  void SetRegulators(Config::matchbin_t & target);
+  void SetRegulators(const Config::matchbin_t::state_t & target);
 
   void SetMatchBinState(const Config::matchbin_t::state_t & state);
 

@@ -126,23 +126,23 @@ void FrameCell::QueueMessages(emp::vector<Config::inbox_t> &inboxes) {
   spiker.QueueInternalMessages(inboxes[Cardi::Dir::NumDirs]);
 }
 
-emp::vector<std::shared_ptr<Config::matchbin_t>> FrameCell::CopyMatchBins() {
-  emp::vector<std::shared_ptr<Config::matchbin_t>> res;
-  for (const auto & fhw : hw) {
-    res.push_back(
-      std::make_shared<Config::matchbin_t>(fhw->GetHardware().GetMatchBin())
-    );
-  }
+emp::vector<Config::matchbin_t::state_t> FrameCell::CopyMatchBins() {
+  emp::vector<Config::matchbin_t::state_t> res;
+  res.reserve(Cardi::Dir::NumDirs);
+  std::transform(
+    std::begin(hw),
+    std::end(hw),
+    std::back_inserter(res),
+    [](const auto & fhw){ return fhw->GetHardware().GetMatchBin().GetState(); }
+  );
   return res;
 }
 
 void FrameCell::SetRegulators(
-  emp::vector<std::shared_ptr<Config::matchbin_t>> target
+  const emp::vector<Config::matchbin_t::state_t> & target
 ) {
   for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-    if (target[dir]) {
-      hw[dir]->SetRegulators(*target[dir]);
-    }
+    hw[dir]->SetRegulators(target[dir]);
   }
 }
 
