@@ -8,6 +8,8 @@
 #SBATCH --job-name ko-spiker-targeting
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=mmore500@msu.edu
 
 ################################################################################
 echo
