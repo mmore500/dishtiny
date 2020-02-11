@@ -2,9 +2,9 @@
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
 #SBATCH --array=0-63
-#SBATCH --mem=24G
+#SBATCH --mem=6G
 #SBATCH --ntasks 1
-#SBATCH --cpus-per-task 8
+#SBATCH --cpus-per-task 2
 #SBATCH --job-name ko-all-control
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
@@ -174,11 +174,11 @@ echo "-------"
 
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
-export OMP_NUM_THREADS=2
+export OMP_NUM_THREADS=1
 
 for REP in {0..3}; do
 
-  for CC in {0..3}; do
+  for CC in {0..1}; do
 
     ./dishtiny                                                                 \
       -SEED $(( ${SEED} + ${REP} * 4 + ${CC} + 100 ))                          \
