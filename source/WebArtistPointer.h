@@ -154,6 +154,39 @@ public:
       );
 
     }
+    // then the 4 subgrids
+    for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
+        // middle vertical edge
+        canvas.Rect(
+          GridXToCanvasX(helper.GetLocalX(i)+1/2),
+          GridYToCanvasY(helper.GetLocalY(i)),
+          0,
+          cell_h,
+          emp::ColorRGB(0,0,0,0),
+          divider(
+            getter(i),
+            getter(helper.GetLocalPos(
+              helper.GetLocalX(i)+1,
+              helper.GetLocalY(i)
+            ))
+          )
+        );
+        // middle horizontal edge
+        canvas.Rect(
+          GridXToCanvasX(helper.GetLocalX(i)),
+          GridYToCanvasY(helper.GetLocalY(i)+1/2),
+          cell_w,
+          0,
+          emp::ColorRGB(0,0,0,0),
+          divider(
+            getter(i),
+            getter(helper.GetLocalPos(
+              helper.GetLocalX(i),
+              helper.GetLocalY(i)+1
+            ))
+          )
+        );
+    }
 
     // and then we draw the boxes around it
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
@@ -187,7 +220,6 @@ public:
             ))
           )
         );
-
     }
 
   }
