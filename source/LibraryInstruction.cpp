@@ -43,8 +43,9 @@ void LibraryInstruction::TRL(
       lev < cfg.NLEV() ? man.Family(pos).GetPrevChan() : *man.Channel(pos).GetID(cfg.NLEV() - 1),
       man.DW().GetOrgPtr(pos),
       inherit_regulators
-        ? std::optional{fh.Cell().CopyMatchBins()}
-        : std::nullopt,
+        ? std::optional<decltype(fh.Cell().CopyMatchBins())>{
+          fh.Cell().CopyMatchBins()
+        } : std::nullopt,
       man.Stockpile(pos).QueryResource(),
       fh.Cell().GetDaughterImprint()
     };
@@ -1280,7 +1281,7 @@ const inst_lib_t& LibraryInstruction::Make(const Config &cfg) {
         cell.SetDaughterImprint(
           state.GetLocal(inst.args[0])
           ? std::nullopt
-          : std::optional{inst.affinity}
+          : std::optional<decltype(inst.affinity)>{inst.affinity}
         );
 
       },
