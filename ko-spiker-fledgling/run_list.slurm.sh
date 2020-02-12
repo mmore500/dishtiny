@@ -152,7 +152,7 @@ for POP_PATH in $POP_PATHS; do
   # 98,TryAddFledglingConnection
 
   for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-    sed -i -- "s/\"id\": 98\$\/\"id\": 27/g" $f &
+    sed -i -- "s/\"id\": 98\$/\"id\": 27/g" $f &
     while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
   done
 
