@@ -306,9 +306,8 @@ void DishWorld::LoadPopulation() {
       );
       if (leftover_genome_quota) --leftover_genome_quota;
 
-      if (genome_count < load_quota) {
-        throw std::runtime_error("insufficient population file");
-      }
+      const size_t base_load_copies = load_quota / genome_count;
+      size_t leftover_load_copies = load_quota % genome_count;
 
       const size_t load_start = (
         load_quota * cfg.SEED_POP()
@@ -317,7 +316,9 @@ void DishWorld::LoadPopulation() {
       std::cout
         << "   file " << filename
         << "   with " << genome_count << " genomes, "
-        << " loading " << load_quota
+        << " loading " << base_load_copies << "x "
+        << " plus " << leftover_load_copies
+        << " copies totaling " << load_quota
         << " genomes between population positions "
         << load_start << " and " << (load_start + load_quota) % genome_count
         << std::endl;
@@ -340,12 +341,20 @@ void DishWorld::LoadPopulation() {
           : (genome_count - load_start) + i
         );
 
-        if (distance_from_start < load_quota) InjectAt(
-          genome,
-          emp::WorldPosition(
-            *(target++)
-          )
-        );
+        if (distance_from_start < load_quota) {
+          const size_t load_copies = (
+            base_load_copies
+            + (leftover_load_copies ? 1 : 0)
+          );
+          if (leftover_load_copies) --leftover_load_copies;
+
+          for (size_t c = 0; c < load_copies; ++c) InjectAt(
+            genome,
+            emp::WorldPosition(
+              *(target++)
+            )
+          );
+        }
 
       } // end for loop over available genomes in file
 
