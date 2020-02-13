@@ -100,6 +100,10 @@ public:
     return inboxes[dir].size();
   }
 
+  size_t GetSpikeBroadcastTraffic() const {
+    return spike_broadcast_inbox.size();
+  }
+
   size_t GetTraffic() const {
     return std::accumulate(
       std::begin(inboxes),

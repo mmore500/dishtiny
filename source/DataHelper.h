@@ -82,7 +82,7 @@ public:
     for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {// <= include spiker
       file.createGroup("/InboxTraffic/dir_"+emp::to_string(dir));
     }
-
+    file.createGroup("/SpikeBroadcastTraffic");
     file.createGroup("/RepOutgoing");
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       file.createGroup("/RepOutgoing/dir_"+emp::to_string(dir));
@@ -207,6 +207,7 @@ public:
     for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
       InboxTraffic(dir);
     }
+    SpikeBroadcastTraffic();
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       RepOutgoing(dir);
     }
@@ -1027,6 +1028,33 @@ private:
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
       data[i] = dw.frames[i]->GetFrameHardware(dir).CheckInboxActivity();
+    }
+
+    ds.write((void*)data, tid);
+
+  }
+
+  void SpikeBroadcastTraffic() {
+
+    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
+
+    H5::DSetCreatPropList plist;
+    plist.setChunk(2, dims);
+    plist.setDeflate(6);
+
+    const auto tid = H5::PredType::NATIVE_UINT32;
+
+    H5::DataSet ds = file.createDataSet(
+      "/SpikeBroadcastTraffic/upd_" + emp::to_string(dw.GetUpdate()),
+      tid,
+      H5::DataSpace(2,dims),
+      plist
+    );
+
+    uint32_t data[dw.GetSize()];
+
+    for (size_t i = 0; i < dw.GetSize(); ++i) {
+      data[i] = dw.man->Inbox(i).GetSpikeBroadcastTraffic();
     }
 
     ds.write((void*)data, tid);
