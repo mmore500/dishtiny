@@ -68,7 +68,7 @@ echo "----------------"
 SEED_OFFSET=1000
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/match-local/job=${SLURM_JOB_ID}"
+OUTPUT_DIR="/mnt/scratch/mmore500/match-local/job=${SLURM_ARRAY_JOB_ID}/rep=${SLURM_ARRAY_TASK_ID}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/match-local"
 
 echo "   SEED" $SEED
