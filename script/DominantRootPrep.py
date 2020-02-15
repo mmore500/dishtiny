@@ -25,7 +25,7 @@ def Root(filename):
     file = h5py.File(filename, 'r')
     index = np.array(file['Index']['own']).flatten()
 
-    upd_key = max(natsorted([ k for k in file['Live'] ]))
+    upd_key = natsorted([ k for k in file['Live'] ])[-1]
 
     lives = np.array(file['Live'][upd_key]).flatten()
     rootids = np.array(file['RootID'][upd_key]).flatten()
