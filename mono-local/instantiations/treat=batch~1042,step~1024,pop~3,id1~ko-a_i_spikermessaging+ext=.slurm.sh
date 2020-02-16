@@ -3,7 +3,7 @@
 #SBATCH --time=1:00:00
 #SBATCH --mem=6G
 #SBATCH --ntasks 1
-#SBATCH --cpus-per-task 2
+#SBATCH --cpus-per-task 1
 #SBATCH --job-name batch~1042,step~1024,pop~3,id1~ko-a_i_spikermessaging
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A.out"

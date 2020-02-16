@@ -3,7 +3,7 @@
 #SBATCH --time=1:00:00
 #SBATCH --mem=6G
 #SBATCH --ntasks 1
-#SBATCH --cpus-per-task 2
+#SBATCH --cpus-per-task 1
 #SBATCH --job-name batch~1006,step~1026,pop~2,id1~ko-p_i_apoptosis
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A.out"
