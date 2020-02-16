@@ -15,6 +15,7 @@
 
 #include "config/command_line.h"
 #include "config/ArgManager.h"
+#include "tools/keyname_utils.h"
 #include "web/UrlParams.h"
 
 #include "../Config.h"
@@ -115,11 +116,10 @@ int main()
 
   std::cout << "treatment_descriptor: " << treatment_descriptor << std::endl;
 
-  const std::string treatment_source{emp::to_string(
-    "treat=",
-    treatment_descriptor,
-    ".tar.gz"
-  )};
+  const std::string treatment_source{emp::keyname::pack({
+    {"treat", treatment_descriptor},
+    {"ext", ".tar.gz"},
+  })};
 
   std::cout << "treatment_source: " << treatment_source << std::endl;
 
