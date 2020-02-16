@@ -5,7 +5,7 @@
 #SBATCH --mem=6G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 2
-#SBATCH --job-name match-local
+#SBATCH --job-name batch~1006,step~1026,pop~2,id1~wt,id2~ko-a_i_devotagging
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 #SBATCH --mail-type=FAIL
@@ -68,7 +68,7 @@ echo "----------------"
 SEED_OFFSET=1000
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/match-local/job=${SLURM_ARRAY_JOB_ID}/rep=${SLURM_ARRAY_TASK_ID}"
+OUTPUT_DIR="/mnt/scratch/mmore500/match-local/treat=batch~1006,step~1026,pop~2,id1~wt,id2~ko-a_i_devotagging/rep=${SLURM_ARRAY_TASK_ID}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/match-local"
 
 echo "   SEED" $SEED
@@ -89,8 +89,12 @@ echo "--------------"
 
 rm -rf ${OUTPUT_DIR}/* || echo "   not a redo"
 mkdir -p ${OUTPUT_DIR}
-cp -r ${CONFIG_DIR}/* ${OUTPUT_DIR}
 cd ${OUTPUT_DIR}
+tar -xvf "${CONFIG_DIR}/treat=batch~1006,step~1026,pop~2,id1~wt,id2~ko-a_i_devotagging+ext=.tar.gz"
+mv treatment_directory/* .
+rm -rf treatment_directory
+cp ${CONFIG_DIR}/dishtiny* . # copy over executable
+
 echo "   PWD" $PWD
 
 ################################################################################
@@ -103,10 +107,7 @@ module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
 export OMP_NUM_THREADS=2
 
-./dishtiny                                                                 \
-  -SEED $SEED                                                              \
-  -SEED_POP $SEED                                                          \
-  >"title=run+seed=${SEED}+ext=.log" 2>&1
+./dishtiny -SEED $SEED -SEED_POP 1 >"title=run+seed=${SEED}+ext=.log" 2>&1
 
 
 ################################################################################
