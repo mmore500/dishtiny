@@ -1,6 +1,6 @@
 #!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
-#SBATCH --time=2:00:00
+#SBATCH --time=4:00:00
 #SBATCH --mem=6G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 1
@@ -106,7 +106,7 @@ module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
 export OMP_NUM_THREADS=1
 
-./dishtiny -SEED $SEED -SEED_POP 1 -RUN_LENGTH 1 -SNAPSHOT_LENGTH 8192 -SNAPSHOT_FREQUENCY 1 \
+./dishtiny -SEED $SEED -SEED_POP 1 -RUN_LENGTH 1 -SNAPSHOT_LENGTH 8192         \
   >"title=run+seed=${SEED}+ext=.log" 2>&1
 
 
