@@ -1,13 +1,12 @@
 #!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --array=0-15
 #SBATCH --mem=6G
 #SBATCH --ntasks 1
-#SBATCH --cpus-per-task 2
-#SBATCH --job-name batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_spikersharing
+#SBATCH --cpus-per-task 1
+#SBATCH --job-name batch~1006,step~1026,pop~2,id1~ko-s_i_spikersharing
 #SBATCH --account=devolab
-#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A.out"
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=mmore500@msu.edu
 
@@ -66,16 +65,16 @@ echo "----------------"
 ################################################################################
 
 SEED_OFFSET=1000
-SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
+SEED=$((SEED_OFFSET))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/match-local/treat=batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_spikersharing/rep=${SLURM_ARRAY_TASK_ID}"
-CONFIG_DIR="/mnt/home/mmore500/dishtiny/match-local"
+OUTPUT_DIR="/mnt/scratch/mmore500/mono-local/treat=batch~1006,step~1026,pop~2,id1~ko-s_i_spikersharing+seed=${SEED}"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/mono-local"
 
 echo "   SEED" $SEED
 echo "   OUTPUT_DIR" $OUTPUT_DIR
 echo "   CONFIG_DIR" $CONFIG_DIR
 
-export SLURM_LOGFILE="slurm-${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}.out"
+export SLURM_LOGFILE="slurm-${SLURM_JOB_ID}.out"
 export SLURM_LOGPATH="/mnt/home/mmore500/slurmlogs/${SLURM_LOGFILE}"
 
 echo "   SLURM_LOGFILE" $SLURM_LOGFILE
@@ -90,7 +89,7 @@ echo "--------------"
 rm -rf ${OUTPUT_DIR}/* || echo "   not a redo"
 mkdir -p ${OUTPUT_DIR}
 cd ${OUTPUT_DIR}
-tar -xvf "${CONFIG_DIR}/treat=batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_spikersharing+ext=.tar.gz"
+tar -xvf "${CONFIG_DIR}/treat=batch~1006,step~1026,pop~2,id1~ko-s_i_spikersharing+ext=.tar.gz"
 mv treatment_directory/* .
 rm -rf treatment_directory
 cp ${CONFIG_DIR}/dishtiny* . # copy over executable
@@ -105,9 +104,10 @@ echo "-------"
 
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
-export OMP_NUM_THREADS=2
+export OMP_NUM_THREADS=1
 
-./dishtiny -SEED $SEED -SEED_POP 1 >"title=run+seed=${SEED}+ext=.log" 2>&1
+./dishtiny -SEED $SEED -SEED_POP 1 -RUN_LENGTH 1 -SNAPSHOT_LENGTH 8192         \
+  >"title=run+seed=${SEED}+ext=.log" 2>&1
 
 
 ################################################################################

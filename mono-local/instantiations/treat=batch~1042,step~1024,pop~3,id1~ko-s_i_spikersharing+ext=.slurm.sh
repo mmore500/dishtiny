@@ -4,7 +4,7 @@
 #SBATCH --mem=6G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 1
-#SBATCH --job-name batch~1042,step~1024,pop~3,id1~ko-a_i_spikersharing
+#SBATCH --job-name batch~1042,step~1024,pop~3,id1~ko-s_i_spikersharing
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A.out"
 #SBATCH --mail-type=FAIL
@@ -67,7 +67,7 @@ echo "----------------"
 SEED_OFFSET=1000
 SEED=$((SEED_OFFSET))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/mono-local/treat=batch~1042,step~1024,pop~3,id1~ko-a_i_spikersharing+seed=${SEED}"
+OUTPUT_DIR="/mnt/scratch/mmore500/mono-local/treat=batch~1042,step~1024,pop~3,id1~ko-s_i_spikersharing+seed=${SEED}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/mono-local"
 
 echo "   SEED" $SEED
@@ -89,7 +89,7 @@ echo "--------------"
 rm -rf ${OUTPUT_DIR}/* || echo "   not a redo"
 mkdir -p ${OUTPUT_DIR}
 cd ${OUTPUT_DIR}
-tar -xvf "${CONFIG_DIR}/treat=batch~1042,step~1024,pop~3,id1~ko-a_i_spikersharing+ext=.tar.gz"
+tar -xvf "${CONFIG_DIR}/treat=batch~1042,step~1024,pop~3,id1~ko-s_i_spikersharing+ext=.tar.gz"
 mv treatment_directory/* .
 rm -rf treatment_directory
 cp ${CONFIG_DIR}/dishtiny* . # copy over executable
