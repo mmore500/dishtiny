@@ -638,7 +638,8 @@ public:
         );
         return res;
       },
-      cfg_
+      cfg_,
+      w
     ));
 
     artists.emplace_back();
@@ -659,7 +660,8 @@ public:
         }
         return res;
       },
-      cfg_
+      cfg_,
+      w
     ));
 
     artists.emplace_back();

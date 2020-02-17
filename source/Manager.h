@@ -52,6 +52,8 @@ public:
 
   ManagerChannel& Channel(size_t pos);
 
+  const ManagerChannel& Channel(const size_t pos) const;
+
   ManagerConnection& Connection(size_t pos);
 
   ManagerFamily& Family(size_t pos);

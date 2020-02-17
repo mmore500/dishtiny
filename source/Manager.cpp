@@ -219,6 +219,10 @@ ManagerChannel& Manager::Channel(size_t pos) {
   return *mcs[pos];
 }
 
+const ManagerChannel& Manager::Channel(const size_t pos) const {
+  return *mcs[pos];
+}
+
 ManagerConnection& Manager::Connection(size_t pos) {
   return *mcos[pos];
 }

@@ -574,3 +574,7 @@ void DishWorld::Step() {
 FrameCell & DishWorld::GetFrame(const size_t loc) {
   return *frames[loc];
 }
+
+const Manager & DishWorld::GetManager() const {
+  return *man;
+}

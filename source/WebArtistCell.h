@@ -59,6 +59,25 @@ public:
     );
   }
 
+  // for use as background in WebArtistConnection
+  WebArtistCell(
+    std::string name_,
+    std::string description_,
+    UI::Canvas &canvas_,
+    std::function<std::optional<T>(size_t)> getter_,
+    std::function<std::string(std::optional<T>)> renderer_,
+    const Config &cfg_,
+    std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
+  ) : name(name_)
+  , canvas(canvas_)
+  , description(emp::to_string(emp::slugify(description_), "-key"))
+  , getter(getter_)
+  , renderer(renderer_)
+  , divider(divider_)
+  , cfg(cfg_)
+  , last_update(std::numeric_limits<size_t>::max())
+  { ; }
+
   void Deactivate() {
     canvas.SetCSS("visibility", "hidden");
     description.SetCSS("display", "none");
