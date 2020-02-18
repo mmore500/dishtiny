@@ -13,6 +13,7 @@ EMP_BUILD_CONFIG(
   VALUE(SEED, int, 1, "Random number generator seed."),
   VALUE(GRID_H, size_t, 45, "How many tiles tall should the grid be?"),
   VALUE(GRID_W, size_t, 45, "How many tiles wide should the grid be?"),
+  VALUE(SUBGRIDS, size_t, 4, "How many subgrids should the grid have?"),
   VALUE(RESOURCE_DECAY, double, 0.995, "How much resource should remain each update?"),
   VALUE(REP_THRESH, double, 1.0, "How much should replication cost?"),
   VALUE(REP_LEAD, double, 0.0, "How more more resource than your target do you need to trample them?"),

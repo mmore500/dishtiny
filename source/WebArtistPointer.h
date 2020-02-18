@@ -35,7 +35,7 @@ public:
     std::string name_,
     std::string description_,
     UI::Document &viewer,
-    std::function<std::optional<T>(size_t)> getter_,
+    std::function<std::optional<T>(size_t, size_t)> getter_,
     std::function<std::string(std::optional<T>)> renderer_,
     const Config &cfg_,
     std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
@@ -64,7 +64,7 @@ public:
     std::string name_,
     std::string description_,
     UI::Canvas &canvas_,
-    std::function<std::optional<T>(size_t)> getter_,
+    std::function<std::optional<T>(size_t, size_t)> getter_,
     std::function<std::string(std::optional<T>)> renderer_,
     const Config &cfg_,
     std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
@@ -126,69 +126,82 @@ public:
 
     GeometryHelper helper(cfg);
 
+    size_t subgrid_size = helper.SubGridSize(); // for now, this returns 4
+
+    // overloaded functions... can lambdas be overloaded?
+    // for subgrids
+    const auto GridXToCanvasX = [cell_w, offset_x](size_t grid_x, size_t subgrid_index){
+      return (subgrid_index % subgrid_size == 0) ? grid_x*cell_w+offset_x : grid_x*cell_w+offset_x + (1.0 / 2.0);
+    };
+    const auto GridYToCanvasY = [cell_h, offset_y](size_t grid_y, size_t subgrid_index){
+      return (subgrid_index < (subgrid_size / 2)) ? grid_y*cell_h+offset_y : grid_y*cell_h+offset_y + (1.0 / 2.0);
+    };
+    // for grids
     const auto GridXToCanvasX = [cell_w, offset_x](size_t grid_x){
       return grid_x*cell_w+offset_x;
     };
     const auto GridYToCanvasY = [cell_h, offset_y](size_t grid_y){
       return grid_y*cell_h+offset_y;
-    };
+    };    
 
 
     /* Fill out the grid! */
 
-    // first we draw the background
+    // first we draw the background color for each subgrid
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
-      // create a new rectangle...
-      canvas.Rect(
-        // ...at pos (x, y)...
-        GridXToCanvasX(helper.GetLocalX(i)),
-        GridYToCanvasY(helper.GetLocalY(i)),
+      for (size_t i = 0; i < subgrid_size; ++j) {
+        // create a new rectangle...
+        canvas.Rect(
+          GridXToCanvasX(helper.GetLocalX(i, j)),
+          GridYToCanvasY(helper.GetLocalY(i, j)),
 
-        // ...with width w and height h...
-        cell_w,
-        cell_h,
+          // ...with width w and height h...
+          cell_w / 2,
+          cell_h / 2,
 
-        // ...and the appropiate face and line colors (optional)
-        renderer(getter(i)),
-        renderer(getter(i))
-      );
-
+          // ...and the appropiate face and line colors (optional)
+          renderer(getter(i, j)),
+          renderer(getter(i, j))
+        );
+      }
     }
     // then the 4 subgrids
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
+      for (size_t i = 0; i < subgrid_size; ++j) {
         // middle vertical edge
         canvas.Rect(
-          GridXToCanvasX(helper.GetLocalX(i)+1/2),
-          GridYToCanvasY(helper.GetLocalY(i)),
+          GridXToCanvasX(helper.GetLocalX(i), j),
+          GridYToCanvasY(helper.GetLocalY(i), j),
           0,
-          cell_h,
+          cell_h / 2,
           emp::ColorRGB(0,0,0,0),
           divider(
-            getter(i),
+            getter(i, j),
             getter(helper.GetLocalPos(
-              helper.GetLocalX(i)+1,
+              helper.GetLocalX(i)+1/2,
               helper.GetLocalY(i)
-            ))
+            ), j)
           )
         );
         // middle horizontal edge
         canvas.Rect(
-          GridXToCanvasX(helper.GetLocalX(i)),
-          GridYToCanvasY(helper.GetLocalY(i)+1/2),
-          cell_w,
+          GridXToCanvasX(helper.GetLocalX(i), j),
+          GridYToCanvasY(helper.GetLocalY(i), j),
+          cell_w / 2,
           0,
           emp::ColorRGB(0,0,0,0),
           divider(
-            getter(i),
+            getter(i, j),
             getter(helper.GetLocalPos(
               helper.GetLocalX(i),
-              helper.GetLocalY(i)+1
-            ))
+              helper.GetLocalY(i)+1/2
+            ), j)
           )
         );
-    }
+      }
+    }  
 
-    // and then we draw the boxes around it
+    // and then we draw the boxes around it (???)
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
         // right edge
         canvas.Rect(
