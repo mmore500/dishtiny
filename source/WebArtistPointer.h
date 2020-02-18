@@ -130,11 +130,11 @@ public:
 
     // overloaded functions... can lambdas be overloaded?
     // for subgrids
-    const auto GridXToCanvasX = [cell_w, offset_x](size_t grid_x, size_t subgrid_index){
-      return (subgrid_index % subgrid_size == 0) ? grid_x*cell_w+offset_x : grid_x*cell_w+offset_x + (1.0 / 2.0);
+    const auto SubGridXToCanvasX = [cell_w, offset_x, subgrid_size](size_t grid_x, size_t subgrid_index){
+      return (subgrid_index % subgrid_size == 0) ? grid_x*cell_w+offset_x : (grid_x + 0.5 ) *cell_w+offset_x;
     };
-    const auto GridYToCanvasY = [cell_h, offset_y](size_t grid_y, size_t subgrid_index){
-      return (subgrid_index < (subgrid_size / 2)) ? grid_y*cell_h+offset_y : grid_y*cell_h+offset_y + (1.0 / 2.0);
+    const auto SubGridYToCanvasY = [cell_h, offset_y, subgrid_size](size_t grid_y, size_t subgrid_index){
+      return (subgrid_index < (subgrid_size / 2)) ? grid_y*cell_h+offset_y : (grid_y + 0.5) *cell_h+offset_y;
     };
     // for grids
     const auto GridXToCanvasX = [cell_w, offset_x](size_t grid_x){
@@ -142,20 +142,20 @@ public:
     };
     const auto GridYToCanvasY = [cell_h, offset_y](size_t grid_y){
       return grid_y*cell_h+offset_y;
-    };    
+    };
 
 
     /* Fill out the grid! */
 
     // first we draw the background color for each subgrid
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
-      for (size_t i = 0; i < subgrid_size; ++j) {
+      for (size_t j = 0; j < subgrid_size; ++j) {
         // create a new rectangle...
         canvas.Rect(
-          GridXToCanvasX(helper.GetLocalX(i, j)),
-          GridYToCanvasY(helper.GetLocalY(i, j)),
+          SubGridXToCanvasX(helper.GetLocalX(i), j),
+          SubGridYToCanvasY(helper.GetLocalY(i), j),
 
-          // ...with width w and height h...
+          // ...witsh width w and height h...
           cell_w / 2,
           cell_h / 2,
 
@@ -167,11 +167,11 @@ public:
     }
     // then the 4 subgrids
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
-      for (size_t i = 0; i < subgrid_size; ++j) {
+      for (size_t j = 0; j < subgrid_size; ++j) {
         // middle vertical edge
         canvas.Rect(
-          GridXToCanvasX(helper.GetLocalX(i), j),
-          GridYToCanvasY(helper.GetLocalY(i), j),
+          SubGridXToCanvasX(helper.GetLocalX(i), j),
+          SubGridYToCanvasY(helper.GetLocalY(i), j),
           0,
           cell_h / 2,
           emp::ColorRGB(0,0,0,0),
@@ -185,8 +185,8 @@ public:
         );
         // middle horizontal edge
         canvas.Rect(
-          GridXToCanvasX(helper.GetLocalX(i), j),
-          GridYToCanvasY(helper.GetLocalY(i), j),
+          SubGridXToCanvasX(helper.GetLocalX(i), j),
+          SubGridYToCanvasY(helper.GetLocalY(i), j),
           cell_w / 2,
           0,
           emp::ColorRGB(0,0,0,0),
@@ -199,41 +199,41 @@ public:
           )
         );
       }
-    }  
-
-    // and then we draw the boxes around it (???)
-    for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
-        // right edge
-        canvas.Rect(
-          GridXToCanvasX(helper.GetLocalX(i)+1),
-          GridYToCanvasY(helper.GetLocalY(i)),
-          0,
-          cell_h,
-          emp::ColorRGB(0,0,0,0),
-          divider(
-            getter(i),
-            getter(helper.GetLocalPos(
-              helper.GetLocalX(i)+1,
-              helper.GetLocalY(i)
-            ))
-          )
-        );
-        // bottom edge
-        canvas.Rect(
-          GridXToCanvasX(helper.GetLocalX(i)),
-          GridYToCanvasY(helper.GetLocalY(i)+1),
-          cell_w,
-          0,
-          emp::ColorRGB(0,0,0,0),
-          divider(
-            getter(i),
-            getter(helper.GetLocalPos(
-              helper.GetLocalX(i),
-              helper.GetLocalY(i)+1
-            ))
-          )
-        );
     }
+
+    // // and then we draw the boxes around it (???)
+    // for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
+    //     // right edge
+    //     canvas.Rect(
+    //       GridXToCanvasX(helper.GetLocalX(i)+1),
+    //       GridYToCanvasY(helper.GetLocalY(i)),
+    //       0,
+    //       cell_h,
+    //       emp::ColorRGB(0,0,0,0),
+    //       divider(
+    //         getter(i),
+    //         getter(helper.GetLocalPos(
+    //           helper.GetLocalX(i)+1,
+    //           helper.GetLocalY(i)
+    //         ))
+    //       )
+    //     );
+    //     // bottom edge
+    //     canvas.Rect(
+    //       GridXToCanvasX(helper.GetLocalX(i)),
+    //       GridYToCanvasY(helper.GetLocalY(i)+1),
+    //       cell_w,
+    //       0,
+    //       emp::ColorRGB(0,0,0,0),
+    //       divider(
+    //         getter(i),
+    //         getter(helper.GetLocalPos(
+    //           helper.GetLocalX(i),
+    //           helper.GetLocalY(i)+1
+    //         ))
+    //       )
+    //     );
+    // }
 
   }
 

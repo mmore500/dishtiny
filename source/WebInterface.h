@@ -24,6 +24,7 @@
 #include "Genome.h"
 #include "WebArtistBase.h"
 #include "WebArtistCell.h"
+#include "WebArtistPointer.h"
 #include "WebArtistConnection.h"
 
 namespace UI = emp::web;
@@ -182,6 +183,25 @@ public:
   {
 
     grid_viewer.SetAttr("class", "mx-auto");
+
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtistPointer<std::string>>(
+      "Tester",
+      "Tester",
+      grid_viewer,
+      [this](const size_t i, const size_t j){
+        return emp::vector<std::optional<std::string>>{
+          std::optional<std::string>{"blue"},
+          std::optional<std::string>{"green"},
+          std::optional<std::string>{"red"},
+          std::optional<std::string>{"yellow"}
+        }[j];
+      },
+      [this](std::optional<std::string> val) {
+        return *val;
+      },
+      cfg_
+    ));
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistCell<ChannelPack>>(
