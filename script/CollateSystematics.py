@@ -22,13 +22,13 @@ dfs = []
 
 for filename in tqdm(filenames):
     df = pd.read_csv(filename)
-    df["seed"] = kn.unpack(Path(filename).parts[-2])["seed"]
-    df["step"] = kn.unpack(Path(filename).parts[-2])["step"]
+    df["seed"] = int(kn.unpack(Path(filename).parts[-2])["seed"])
+    df["step"] = int(kn.unpack(Path(filename).parts[-2])["step"])
     dfs.append(df)
 
 df = pd.concat(dfs)
 
-df = df[df["step"] <= 1049]
+df = df[df["step"] < 1050]
 
 outfile = kn.pack({
     'title' : 'mastersystematics',
