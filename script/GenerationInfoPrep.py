@@ -1,5 +1,8 @@
 # usage:
-# update h5_filenames
+# h5_filenames
+
+# how to run on the big screen directory
+# pwd=${PWD}; for f in seed*step*; do cd ${pwd}; cd $f; python3 ~/dishtiny/script/CalcGenerationInfo.py *.h5 &; while [ $(jobs -r | wc -l) -gt 16 ]; do sleep 1; done; done
 
 import numpy as np
 import h5py
@@ -12,9 +15,11 @@ import os
 from keyname import keyname as kn
 from fileshash import fileshash as fsh
 from joblib import delayed, Parallel
+from natsort import natsorted
 
-update = int(sys.argv[1])
-filenames = sys.argv[2:]
+filenames = sys.argv[1:]
+
+print(filenames)
 
 # check all data is from same software source
 assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
@@ -22,15 +27,19 @@ assert len({kn.unpack(filename)['_source_hash'] for filename in filenames}) == 1
 def CalcMeanCellGen(filename):
     file = h5py.File(filename, 'r')
     nlev = int(file.attrs.get('NLEV'))
+    upd_key = natsorted(
+        [key for key in file['Live']]
+    )[-1]
+
     return [
         np.mean([
             cgen
             for cgen, live in zip(
                 np.array(
-                    file['CellGen']['lev_'+str(lev)]['upd_'+str(update)]
+                    file['CellGen']['lev_'+str(lev)][upd_key]
                 ).flatten(),
                 np.array(
-                    file['Live']['upd_'+str(update)]
+                    file['Live'][upd_key]
                 ).flatten()
             )
             if live
@@ -49,10 +58,8 @@ def SafeCalcMeanCellGen(filename):
 
 df = pd.DataFrame.from_dict([
     {
-        'Treatment' : kn.unpack(filename)['treat'],
-        'Mean Cell Generation' : res,
+        'Generations Elapsed' : res,
         'Level' : lev,
-        'Update' : update
     }
     for filename, cellgen in zip(
         filenames,
@@ -67,28 +74,17 @@ df = pd.DataFrame.from_dict([
 
 print("num files:" , len(filenames))
 
-for lev in df['Level'].unique():
-    print("="*20)
-    print("NLEV", lev)
-    print()
-    for treat in df['Treatment'].unique():
-        fil = df.loc[(df['Treatment'] == treat) & (df['Level'] == lev)]
-        print("TREATMENT:", treat)
-        print(
-            "   ",
-            "nreps:",
-            len(fil)
-        )
-        print(
-            "   ",
-            "Elapsed Cell Generation (mean / std):",
-            np.mean(
-                fil['Mean Cell Generation']
-            ),
-            " / ",
-            np.std(
-                fil['Mean Cell Generation']
-            )
-        )
-        print()
-        print()
+outfile = kn.pack({
+    'title' : 'elapsedgenerations',
+    '_data_hathash_hash' : fsh.FilesHash().hash_files(filenames),
+    '_script_fullcat_hash' : fsh.FilesHash(
+                                file_parcel="full_parcel",
+                                files_join="cat_join"
+                            ).hash_files([sys.argv[0]]),
+    '_source_hash' :kn.unpack(filenames[0])['_source_hash'],
+    'ext' : '.csv',
+})
+
+df.to_csv(outfile, index=False)
+
+print('Output saved to', outfile)
