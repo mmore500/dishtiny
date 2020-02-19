@@ -53,3 +53,10 @@ print("mean update", z["update"].mean())
 print("std update", z["update"].std())
 print("max update", z["update"].max())
 print("min update", z["update"].min())
+
+print()
+
+print("mean ave_depth", z["ave_depth"].mean())
+print("std ave_depth", z["ave_depth"].std())
+print("max ave_depth", z["ave_depth"].max())
+print("min ave_depth", z["ave_depth"].min())
