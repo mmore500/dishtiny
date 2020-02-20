@@ -21,11 +21,23 @@ from joblib import delayed, Parallel
 import json
 from sklearn.decomposition import PCA
 from collections import defaultdict
+from natsort import natsorted
 
 matplotlib.rcParams['pdf.fonttype'] = 42
 
 filename = sys.argv[1]
-updates = (int(v) for v in sys.argv[2:])
+file = h5py.File(
+    filename,
+    'r'
+)
+
+upd_keys = natsorted(
+    upd_key for upd_key in file['Regulators']['dir_0']
+)[-16:]
+
+updates = [ int(upd_key.split("_")[1]) for upd_key in upd_keys ]
+
+print(updates)
 
 def RenderTriangles(
         right,
@@ -112,7 +124,7 @@ def RenderAndSave(upd, filename):
                             for d in archive['regulators']
                         }
                         tags_to_regs.append({
-                            tags[uid] : regulators[uid] for uid in archive['uids']
+                            tags[uid] : regulators[uid]["state"] for uid in archive['uids']
                         })
 
         df = pd.DataFrame.from_records(tags_to_regs).fillna(1)
