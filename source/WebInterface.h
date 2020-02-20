@@ -403,10 +403,11 @@ public:
       "Reproduction",
       grid_viewer,
       [this](const size_t i) -> std::optional<size_t_datum> {
-        return std::make_optional(size_t_datum{
+        if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
           w.man->Priority(i).CountRequests(),
           *w.man->Channel(i).GetIDs()
         });
+        else return std::nullopt;
       },
       [](const auto state) {
         if (state) {
