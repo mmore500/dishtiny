@@ -75,7 +75,7 @@ random.seed(1)
 has = [1000, 1012, 1015, 1018, 1024, 1031, 1045, 1047, 1056, 1059, 1060,]
 hasnot = [
   x for x in range(${SEED_OFFSET}, ${SEED_OFFSET} + 64)
-  if x not in a
+  if x not in has
 ][:len(has)]
 assert(len(has) == len(hasnot))
 
