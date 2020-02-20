@@ -1,10 +1,10 @@
 #!/bin/bash
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --array=0-195
+#SBATCH --array=0-440
 #SBATCH --mem=16G
 #SBATCH --ntasks 1
-#SBATCH --cpus-per-task 2
+#SBATCH --cpus-per-task 1
 #SBATCH --job-name match
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
@@ -67,48 +67,46 @@ echo "----------------"
 
 SEED_OFFSET=1000
 SEED=$(( SEED_OFFSET + SLURM_ARRAY_TASK_ID ))
-read -r REP SEED_A SEED_B IDX_A IDX_B <<< $(python3 -c "
+read -r SEED_A SEED_B GROUP <<< $(python3 -c "
 import itertools as it
-a = [1001, 1003, 1016, 1021, 1029, 1030, 1031, 1040, 1041, 1048, 1049, 1056, 1060, 1061, ]
-b = [
-  x for x in range(${SEED_OFFSET}, ${SEED_OFFSET} + 63)
+import random
+random.seed(1)
+
+has = [1000, 1012, 1015, 1018, 1024, 1031, 1045, 1047, 1056, 1059, 1060,]
+hasnot = [
+  x for x in range(${SEED_OFFSET}, ${SEED_OFFSET} + 64)
   if x not in a
-][:len(a)]
-assert(len(a) == len(b))
-combos = [
-  (ax, bx)
-  for rot_a in ( a[n:] + a[:n] for n in range(len(a)) )
-  for ax, bx in zip(it.cycle(rot_a), b)
-]
-repped_combos = (
-  (rep, combo)
-  for rep, combos in enumerate(it.repeat(combos))
-  for combo in combos
+][:len(has)]
+assert(len(has) == len(hasnot))
+
+measuring_stick = random.sample(
+  list(range(${SEED_OFFSET}, ${SEED_OFFSET} + 64)),
+  20,
 )
-rep, (ax, bx) = next(
-  x for i, x in enumerate(repped_combos) if i == ${SLURM_ARRAY_TASK_ID}
+
+trials = (
+  list(it.product(has, measuring_stick))
+  + list(it.product(hasnot, measuring_stick))
 )
-print(rep, ax, bx, a.index(ax), b.index(bx))
+
+ax, bx = next(
+  trial for i, trial in enumerate(trials) if i == ${SLURM_ARRAY_TASK_ID}
+)
+print(
+  ax,
+  bx,
+  'has' if ax in has else 'hasnot' if ax in hasnot else 'unknown'
+)
 ")
 
-OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-match/seed_a=${SEED_A}+seed_b=${SEED_B}+idx_a=${IDX_A}+idx_b=${IDX_B}+rep=${REP}"
-CONFIG_DIR="/mnt/home/mmore500/dishtiny/match/"
-SOURCE_DIR_A=$(                                                                \
-  ls -vd "/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED_A}+step="*         \
-  | tail -n 2                                                                  \
-  | head -n 1                                                                  \
-)
-SOURCE_DIR_B=$(                                                                \
-  ls -vd "/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED_B}+step="*         \
-  | tail -n 2                                                                  \
-  | head -n 1                                                                  \
-)
+OUTPUT_DIR="/mnt/scratch/mmore500/match-screen-groups/group=${GROUP}+seed_a=${SEED_A}+seed_b=${SEED_B}"
+CONFIG_DIR="/mnt/home/mmore500/dishtiny/match-screen-groups/"
+SOURCE_DIR_A="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED_A}+step=1049"
+SOURCE_DIR_B="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED_B}+step=1049"
 
+echo "   GROUP" $GROUP
 echo "   SEED_A" $SEED_A
 echo "   SEED_B" $SEED_B
-echo "   REP" $REP
-echo "   IDX_A" $IDX_A
-echo "   IDX_B" $IDX_B
 echo "   OUTPUT_DIR" $OUTPUT_DIR
 echo "   CONFIG_DIR" $CONFIG_DIR
 echo "   SOURCE_DIR_A" $SOURCE_DIR_A
@@ -138,8 +136,15 @@ source "/mnt/home/mmore500/myPy/bin/activate"
 
 # get seed population from preceeding run
 mkdir seedpop
-POP_PATHS_A=$(echo "${SOURCE_DIR_A}/"*".json.cereal")
-POP_PATHS_B=$(echo "${SOURCE_DIR_B}/"*".json.cereal")
+# cut to just use dominant from first subpopulation...
+POP_PATHS_A=$(                                                                 \
+  echo "${SOURCE_DIR_A}/"*".json"                                              \
+  | cut -d " " -f1                                                             \
+)
+POP_PATHS_B=$(                                                                 \
+  echo "${SOURCE_DIR_B}/"*".json"                                              \
+  | cut -d " " -f1                                                             \
+)
 
 echo "   POP_PATHS_A" $POP_PATHS_A
 echo "   POP_PATHS_B" $POP_PATHS_B
@@ -147,20 +152,26 @@ echo "   POP_PATHS_B" $POP_PATHS_B
 for POP_PATH_A in $POP_PATHS_A; do
 
   # get seed population from preceeding run
-  POP_FILENAME_A=$(basename ${POP_PATH_A})
+  POP_FILENAME_A=$(                                                            \
+    basename ${POP_PATH_A}                                                     \
+    | sed "s/count=[[:digit:]]\++/count=1+/g"                                  \
+  )
 
   echo "   POP_PATH_A" $POP_PATH_A
   echo "   POP_FILENAME_A" $POP_FILENAME_A
 
   # copy over competitors
-  cp $POP_PATH_A "seedpop/id=1+${POP_FILENAME_A}"
+  cp $POP_PATH_A "seedpop/id=1+${POP_FILENAME_A}.cereal"
 
 done
 
 for POP_PATH_B in $POP_PATHS_B; do
 
   # get seed population from preceeding run
-  POP_FILENAME_B=$(basename ${POP_PATH_B})
+  POP_FILENAME_B=$(                                                            \
+    basename ${POP_PATH_B}                                                     \
+    | sed "s/count=[[:digit:]]\++/count=1+/g"                                  \
+  )
 
   echo "   POP_PATH_B" $POP_PATH_B
   echo "   POP_FILENAME_B" $POP_FILENAME_B
@@ -178,7 +189,7 @@ echo "-------"
 
 module purge; module load GCC/8.2.0-2.31.1 OpenMPI/3.1.3 HDF5/1.10.4;
 
-export OMP_NUM_THREADS=2
+export OMP_NUM_THREADS=1
 
 for EVAL in {0..3}; do
 
