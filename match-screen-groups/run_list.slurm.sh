@@ -5,7 +5,7 @@
 #SBATCH --mem=16G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 1
-#SBATCH --job-name match
+#SBATCH --job-name match-screen-groups
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 #SBATCH --mail-type=FAIL
