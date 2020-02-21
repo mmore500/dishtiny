@@ -83,6 +83,7 @@ public:
     )
   , global_rng(global_rng_)
   , state(ready)
+  , next_state(ready)
   , mc(mc_)
   , ms(ms_)
   , lev(lev_)
