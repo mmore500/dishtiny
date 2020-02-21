@@ -10,6 +10,8 @@
 
 #include "WebArtistBase.h"
 
+#include "Cardi.h"
+
 template <typename T>
 class WebArtistPointer : public WebArtistBase {
 
@@ -126,12 +128,11 @@ public:
 
     GeometryHelper helper(cfg);
 
-    size_t subgrid_size = helper.SubGridSize(); // for now, this returns 4
+    size_t subgrid_size = Cardi::Dir::NumDirs;
 
-    // overloaded functions... can lambdas be overloaded?
     // for subgrids
     const auto SubGridXToCanvasX = [cell_w, offset_x, subgrid_size](size_t grid_x, size_t subgrid_index){
-      return (subgrid_index % subgrid_size == 0) ? grid_x*cell_w+offset_x : (grid_x + 0.5 ) *cell_w+offset_x;
+      return (subgrid_index % subgrid_size == 0) ? grid_x*cell_w+offset_x : (grid_x + 0.5) *cell_w+offset_x;
     };
     const auto SubGridYToCanvasY = [cell_h, offset_y, subgrid_size](size_t grid_y, size_t subgrid_index){
       return (subgrid_index < (subgrid_size / 2)) ? grid_y*cell_h+offset_y : (grid_y + 0.5) *cell_h+offset_y;
