@@ -139,34 +139,84 @@ public:
       return (subgrid_index < 2) ? grid_y*cell_h+offset_y : (grid_y + 0.5) *cell_h+offset_y;
     };
     // for grids
-    const auto GridXToCanvasX = [cell_w, offset_x](size_t grid_x){
+    const auto GridXToCanvasX = [cell_w, offset_x](double grid_x){
       return grid_x*cell_w+offset_x;
     };
-    const auto GridYToCanvasY = [cell_h, offset_y](size_t grid_y){
+    const auto GridYToCanvasY = [cell_h, offset_y](double grid_y){
       return grid_y*cell_h+offset_y;
     };
 
 
     /* Fill out the grid! */
-    /*
-    // first we draw the background color for each subgrid
+    
+    // draw the background color for each subgrid
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
       for (size_t j = 0; j < subgrid_size; ++j) {
-        // create a new rectangle...
-        canvas.Rect(
-          SubGridXToCanvasX(helper.GetLocalX(i), j),
-          SubGridYToCanvasY(helper.GetLocalY(i), j),
-
-          // ...witsh width w and height h...
-          cell_w / 2,
-          cell_h / 2,
-
-          // ...and the appropiate face and line colors (optional)
+        // create a new polygon centered in the middle
+        UI::CanvasPolygon poly(
+          0,
+          0,
           renderer(getter(i, j)),
           renderer(getter(i, j))
         );
+        // add central vertex
+        poly.AddPoint(
+          GridXToCanvasX(helper.GetLocalX(i) + 0.5),
+          GridYToCanvasY(helper.GetLocalY(i) + 0.5)
+        );
+        // pick other two vertices depending on direction 
+        switch (j) {
+          // north triangle
+          case 0:
+            poly.AddPoint(
+              GridXToCanvasX(helper.GetLocalX(i)),
+              GridYToCanvasY(helper.GetLocalY(i))
+            );
+            poly.AddPoint(
+              GridXToCanvasX(helper.GetLocalX(i) + 1),
+              GridYToCanvasY(helper.GetLocalY(i))
+            );
+            break;
+          case 1:
+            // east triangle
+            poly.AddPoint(
+              GridXToCanvasX(helper.GetLocalX(i) + 1),
+              GridYToCanvasY(helper.GetLocalY(i))
+            );
+            poly.AddPoint(
+              GridXToCanvasX(helper.GetLocalX(i) + 1),
+              GridYToCanvasY(helper.GetLocalY(i) + 1)
+            );
+            break;
+          case 2:
+            // south triangle
+            poly.AddPoint(
+              GridXToCanvasX(helper.GetLocalX(i) + 1),
+              GridYToCanvasY(helper.GetLocalY(i) + 1)
+            );
+            poly.AddPoint(
+              GridXToCanvasX(helper.GetLocalX(i)),
+              GridYToCanvasY(helper.GetLocalY(i) + 1)
+            );
+            break;
+          case 3:
+            // west triangle
+            poly.AddPoint(
+              GridXToCanvasX(helper.GetLocalX(i)),
+              GridYToCanvasY(helper.GetLocalY(i) + 1)
+            );
+            poly.AddPoint(
+              GridXToCanvasX(helper.GetLocalX(i)),
+              GridYToCanvasY(helper.GetLocalY(i))
+            );
+            break;
+        }
+
+        // draw the polygon
+        canvas.Draw(poly);
       }
-    }*/
+    }
+    /*
     // draw subgrid edges
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
 
@@ -178,7 +228,7 @@ public:
         GridYToCanvasY(helper.GetLocalY(i)),
         // ...and the appropiate line color and weight (optional)
         "black",
-        0.25
+        
       );
       // create a new line from x1,y1 to x2,y2 (top left to bottom right)
       canvas.Line(
@@ -188,48 +238,11 @@ public:
         GridYToCanvasY(helper.GetLocalY(i)+1),
         // ...and the appropiate line color and weight (optional)
         "black",
-        0.25
+        1.0
       );
       
-      }
-  /*
-    // then the 4 subgrids
-    for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
-      for (size_t j = 0; j < subgrid_size; ++j) {
-        // middle vertical edge
-        canvas.Rect(
-          SubGridXToCanvasX(helper.GetLocalX(i), j),
-          SubGridYToCanvasY(helper.GetLocalY(i), j),
-          0,
-          cell_h / 2,
-          emp::ColorRGB(0,0,0,0),
-          divider(
-            getter(i, j),
-            getter(helper.GetLocalPos(
-              helper.GetLocalX(i)+1/2,
-              helper.GetLocalY(i)
-            ), j)
-          )
-        );
-        // middle horizontal edge
-        canvas.Rect(
-          SubGridXToCanvasX(helper.GetLocalX(i), j),
-          SubGridYToCanvasY(helper.GetLocalY(i), j),
-          cell_w / 2,
-          0,
-          emp::ColorRGB(0,0,0,0),
-          divider(
-            getter(i, j),
-            getter(helper.GetLocalPos(
-              helper.GetLocalX(i),
-              helper.GetLocalY(i)+1/2
-            ), j)
-          )
-        );
-      }
-    }
-*/
-    // and then we draw the boxes around it (???)
+    }*/
+    // and then we draw the boxes around each grid
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
         // right edge
         canvas.Rect(
