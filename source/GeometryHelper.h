@@ -27,6 +27,10 @@ public:
    */
   inline size_t GetLocalY(const size_t pos) const { return pos / cfg.GRID_W(); }
 
+  /*
+   * Return subgrid size.
+   */
+  inline size_t SubGridSize() const { return cfg.SUBGRIDS(); }
 
   /*
    * Local geometry helper function.
