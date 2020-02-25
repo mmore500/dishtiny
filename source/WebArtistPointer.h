@@ -164,7 +164,7 @@ public:
           GridXToCanvasX(helper.GetLocalX(i) + 0.5),
           GridYToCanvasY(helper.GetLocalY(i) + 0.5)
         );
-        // pick other two vertices depending on direction 
+        // pick other two vertices depending on direction
         switch (j) {
           // north triangle
           case 0:
