@@ -139,16 +139,16 @@ public:
       return (subgrid_index < 2) ? grid_y*cell_h+offset_y : (grid_y + 0.5) *cell_h+offset_y;
     };
     // for grids
-    const auto GridXToCanvasX = [cell_w, offset_x](double grid_x){
+    const auto GridXToCanvasX = [cell_w, offset_x](const double grid_x){
       return grid_x*cell_w+offset_x;
     };
-    const auto GridYToCanvasY = [cell_h, offset_y](double grid_y){
+    const auto GridYToCanvasY = [cell_h, offset_y](const double grid_y){
       return grid_y*cell_h+offset_y;
     };
 
 
     /* Fill out the grid! */
-    
+
     // draw the background color for each subgrid
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
       for (size_t j = 0; j < subgrid_size; ++j) {
