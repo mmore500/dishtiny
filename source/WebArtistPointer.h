@@ -159,17 +159,30 @@ public:
         switch (j) {
           // north triangle
           case 0:
-            poly.AddPoint(
-              GridXToCanvasX(helper.GetLocalX(i)),
-              GridYToCanvasY(helper.GetLocalY(i))
-            );
+            // down triangle
             poly.AddPoint(
               GridXToCanvasX(helper.GetLocalX(i) + 1),
-              GridYToCanvasY(helper.GetLocalY(i))
+              GridYToCanvasY(helper.GetLocalY(i) + 1)
+            );
+            poly.AddPoint(
+              GridXToCanvasX(helper.GetLocalX(i)),
+              GridYToCanvasY(helper.GetLocalY(i) + 1)
             );
             break;
           case 1:
-            // east triangle
+            // up triangle
+            poly.AddPoint(
+              GridXToCanvasX(helper.GetLocalX(i)),
+              GridYToCanvasY(helper.GetLocalY(i))
+            );
+            poly.AddPoint(
+              GridXToCanvasX(helper.GetLocalX(i) + 1),
+              GridYToCanvasY(helper.GetLocalY(i))
+            );
+            break;
+          // west triangle
+          case 2:
+            // right triangle
             poly.AddPoint(
               GridXToCanvasX(helper.GetLocalX(i) + 1),
               GridYToCanvasY(helper.GetLocalY(i))
@@ -179,19 +192,9 @@ public:
               GridYToCanvasY(helper.GetLocalY(i) + 1)
             );
             break;
-          case 2:
-            // south triangle
-            poly.AddPoint(
-              GridXToCanvasX(helper.GetLocalX(i) + 1),
-              GridYToCanvasY(helper.GetLocalY(i) + 1)
-            );
-            poly.AddPoint(
-              GridXToCanvasX(helper.GetLocalX(i)),
-              GridYToCanvasY(helper.GetLocalY(i) + 1)
-            );
-            break;
+          // south triangle
           case 3:
-            // west triangle
+            // left triangle
             poly.AddPoint(
               GridXToCanvasX(helper.GetLocalX(i)),
               GridYToCanvasY(helper.GetLocalY(i) + 1)
@@ -219,7 +222,7 @@ public:
         GridYToCanvasY(helper.GetLocalY(i)),
         // ...and the appropiate line color and weight (optional)
         "black",
-        
+
       );
       // create a new line from x1,y1 to x2,y2 (top left to bottom right)
       canvas.Line(
@@ -231,7 +234,7 @@ public:
         "black",
         1.0
       );
-      
+
     }*/
     // and then we draw the boxes around each grid
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
