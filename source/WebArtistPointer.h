@@ -129,15 +129,6 @@ public:
 
     GeometryHelper helper(cfg);
 
-    size_t subgrid_size = Cardi::Dir::NumDirs;
-
-    // for subgrids
-    const auto SubGridXToCanvasX = [cell_w, offset_x](size_t grid_x, size_t subgrid_index){
-      return (subgrid_index % 2 == 0) ? grid_x*cell_w+offset_x : (grid_x + 0.5) *cell_w+offset_x;
-    };
-    const auto SubGridYToCanvasY = [cell_h, offset_y](size_t grid_y, size_t subgrid_index){
-      return (subgrid_index < 2) ? grid_y*cell_h+offset_y : (grid_y + 0.5) *cell_h+offset_y;
-    };
     // for grids
     const auto GridXToCanvasX = [cell_w, offset_x](const double grid_x){
       return grid_x*cell_w+offset_x;
@@ -151,7 +142,7 @@ public:
 
     // draw the background color for each subgrid
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
-      for (size_t j = 0; j < subgrid_size; ++j) {
+      for (size_t j = 0; j < Cardi::Dir::NumDirs; ++j) {
         // create a new polygon centered in the middle
         UI::CanvasPolygon poly(
           0,
