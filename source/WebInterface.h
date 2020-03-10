@@ -203,25 +203,6 @@ public:
     };
 
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistPointer<std::string>>(
-      "Tester",
-      "Tester",
-      grid_viewer,
-      [this](const size_t i, const size_t j){
-        return emp::vector<std::optional<std::string>>{
-          std::optional<std::string>{"blue"},
-          std::optional<std::string>{"green"},
-          std::optional<std::string>{"red"},
-          std::optional<std::string>{"yellow"}
-        }[j];
-      },
-      [this](std::optional<std::string> val) {
-        return *val;
-      },
-      cfg_
-    ));
-
-    artists.emplace_back();
     size_t dir = Cardi::Dir::NumDirs;
     artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
       "Sharing Fraction", // name
@@ -926,7 +907,7 @@ public:
       "Regulation Direction", // name
       "Regulation Direction", // description
       grid_viewer, // viewer
-      [this, dir](const size_t i, const size_t d) -> std::optional<size_t_datum> {
+      [this](const size_t i, const size_t d) -> std::optional<size_t_datum> {
         const auto & regulators = w.GetFrame(i).GetSpiker().GetHardware().GetMatchBin().GetState().regulators;
         const size_t count = std::count_if(
           std::begin(regulators),
