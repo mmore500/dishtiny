@@ -1031,22 +1031,27 @@ public:
       "Regulation Direction", // description
       grid_viewer, // viewer
       [this, dir](const size_t i, const size_t d) -> std::optional<size_t_datum> {
+        const auto & regulators = w.GetFrame(i).GetSpiker().GetHardware().GetMatchBin().GetState().regulators;
+        const size_t count = std::count_if(
+          std::begin(regulators),
+          std::end(regulators),
+          [](const auto & pair){ return pair.second.View(); }
+        );
         if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
-          w.man->Inbox(i).GetTraffic(dir),
+          count,
           *w.man->Channel(i).GetIDs()
         });
         else return std::make_optional(size_t_datum{0});
       }, // getter
-      [this](const auto amt) -> std::string {
-        if (amt) {
-          if (*amt > cfg.REP_THRESH()) return "yellow";
-          else if (*amt > 0) return emp::ColorHSV(
-            240.0-180.0*(*amt)/cfg.REP_THRESH(),
-            1.0,
-            1.0
-          );
-          else if (*amt == 0) return "white";
-          else return "red";
+      [](const auto state) -> std::string {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else if (*state == 5) return "gray";
+          else return "yellow";
         } else return "black";
       }, // renderer
       cfg_,
@@ -1057,7 +1062,7 @@ public:
         else return "black";
       } // divider
     ));
-    
+    /*
     artists.emplace_back();
     for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
       artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
@@ -1066,15 +1071,7 @@ public:
         grid_viewer,
         [this, d](const size_t i) -> std::optional<size_t_datum> {
 
-          const auto & regulators = (
-            d < Cardi::Dir::NumDirs
-            ? w.GetFrame(i).GetFrameHardware(
-                d
-              ).GetHardware().GetMatchBin().GetState().regulators
-            : w.GetFrame(
-              i
-            ).GetSpiker().GetHardware().GetMatchBin().GetState().regulators
-          );
+          const auto & regulators = w.GetFrame(i).GetSpiker().GetHardware().GetMatchBin().GetState().regulators;
           const size_t count = std::count_if(
             std::begin(regulators),
             std::end(regulators),
@@ -1106,7 +1103,7 @@ public:
           else return "black";
         }
       ));
-    }
+    }*/
 
     grid_viewer.SetCSS(
       "min-height",
