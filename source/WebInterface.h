@@ -203,14 +203,13 @@ public:
     };
 
     artists.emplace_back();
-    size_t dir = Cardi::Dir::NumDirs;
     artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
       "Sharing Fraction", // name
       "Sharing Fraction", // description
       grid_viewer, // viewer
-      [this, dir](const size_t i, const size_t d) {
+      [this](const size_t i, const size_t d) {
         if (w.IsOccupied(i)) return std::make_optional(double_datum{
-          w.man->Sharing(i).ViewSharingFrac(dir),
+          w.man->Sharing(i).ViewSharingFrac(d),
           *w.man->Channel(i).GetIDs()
         });
         else return std::make_optional(double_datum{0.0});
@@ -235,6 +234,41 @@ public:
         else return "black";
       } // divider
     ));
+
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
+      "Sharing Fraction Interconnect", // name
+      "Sharing Fraction Interconnect", // description
+      grid_viewer, // viewer
+      [this](const size_t i) {
+        if (w.IsOccupied(i)) return std::make_optional(double_datum{
+          w.man->Sharing(i).ViewSharingFrac(Cardi::Dir::NumDirs),
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::make_optional(double_datum{0.0});
+      }, // getter
+      [this](const auto amt) -> std::string {
+        if (amt) {
+          if (*amt > cfg.REP_THRESH()) return "yellow";
+          else if (*amt > 0) return emp::ColorHSV(
+            240.0-180.0*(*amt)/cfg.REP_THRESH(),
+            1.0,
+            1.0
+          );
+          else if (*amt == 0) return "white";
+          else return "red";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
+    ));
+
+    size_t dir = Cardi::Dir::NumDirs;
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistCell<ChannelPack>>(
@@ -939,7 +973,7 @@ public:
         else return "black";
       } // divider
     ));
-    
+
     grid_viewer.SetCSS(
       "min-height",
       emp::to_string(
