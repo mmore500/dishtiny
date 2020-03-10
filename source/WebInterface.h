@@ -753,7 +753,39 @@ public:
         }
       ));
     }*/
-
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
+      "Shared Resource", // name
+      "Shared Resource", // description
+      grid_viewer, // viewer
+      [this, dir](const size_t i, const size_t d) -> std::optional<double_datum> {
+        if (w.IsOccupied(i)) return std::make_optional(double_datum{
+          w.man->Stockpile(i).QueryExternalContribute(dir),
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::make_optional(double_datum{0.0});
+      }, // getter
+      [this](const auto amt) -> std::string {
+        if (amt) {
+          if (*amt > cfg.REP_THRESH()) return "yellow";
+          else if (*amt > 0) return emp::ColorHSV(
+            240.0-180.0*(*amt)/cfg.REP_THRESH(),
+            1.0,
+            1.0
+          );
+          else if (*amt == 0) return "white";
+          else return "red";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
+    ));
+    /*
     artists.emplace_back();
     for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
       artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
@@ -787,7 +819,7 @@ public:
           else return "black";
         }
       ));
-    }
+    }*/
 
     artists.emplace_back();
     for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
