@@ -2,7 +2,7 @@
 # we assume most inputs are **WELL-FORMED**
 class dishMark():
     # trigger functions
-    
+
     def bold(str):
         return '<b>' + str + '</b>'
 
@@ -24,9 +24,30 @@ class dishMark():
 
         if link[0] == "#":
             # it's a badge!
-            badge = '<span class="badge badge-light" style="background-color: ' + \
-                    link + \
-                    ';">' + text + '</span>'
+
+            # determine brightness to decide background color
+            # based on https://stackoverflow.com/a/3943023
+            (r, g, b) = (link[1:3], link[3:5], link[5:7])
+            colors = []
+            for c in (r, g, b):
+                c = int(c, 16)
+                if (c <= 0.03928):
+                    colors.append(c / 12.92)
+                else:
+                    colors.append(((c + 0.055)/1.055) ** 2.4)
+            L = 0.2126 * colors[0] + 0.7152 * colors[1] + 0.0722 * colors[2]
+
+            if L > 0.179:
+                type = "badge badge-dark"
+            else:
+                type = "badge badge-light"
+
+            # for color string
+            color = "background-color: " + link + ";"
+
+            # form badge!
+            badge = '<span class="' + type + '" style="' + color + '">' + text + '</span>'
+            
             return badge
         else: 
             # otherwise, we treat as link
