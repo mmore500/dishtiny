@@ -1,0 +1,83 @@
+[channel]
+header = "The Channel Viewer shows the arrangement of hereditarily-defined resource-collecing cell groups."
+items = [
+    "Color saturation (e.g., light green vs. intense green ) differentiates low-level groups.",
+    "Color hue (e.g., light blue / intense blue vs. light purple / intense purple ) differentiates high-level groups, which are groups of low-level groups. ",
+    "White borders divide low-level groups that are part of the same high-level group. ",
+    "Black borders divide high-level groups."
+]
+[resource-stockpile]
+header = "The Stockpile Viewer depicts the resource that each cell-like organism has accumulated."
+items = [
+    "Black grid tiles are dead cells. ",
+    "Red indicates a resource defecit (which, if it becomes too extreme, will result in that cell's death).",
+    "White indicates zero resource.",
+    "Blue indicates positive resource, but below the threshold required for reproduction.",
+    "Green indicates enough resource to reproduce.",
+    "Yellow indicates an excess of resource, more than enough to reproduce."
+]
+
+[resource-sharing]
+header = "The Contribution Viewer depicts the amount of resource has received from neighbors during the previous update."
+items = [
+    "Black grid tiles are dead cells.",
+    "White indicates zero resource was received.",
+    "Blue indicates a small amount of resource was received.",
+    "Green indicates an intermediate amount of resource was received.",
+    "Yellow indicates a large amount of resource was received."
+]
+
+[apoptosis]
+header = "The Apoptosis Viewer shows cells that have registered themselves for imminent cellular suicidie."
+items = [
+    "Black grid tiles are dead cells.",
+    "White grid tiles are live cells.",
+    "Blue cells are registered for partial apoptosis, where a underlying cell is destroyed but its channel structure is preserved.",
+    "Red cells are registered for complete apoptosis, where a cell and its channel structure are totally destroyed."
+]
+[taxa]
+header = "The Taxa Viewer depicts the distribution of groups of genetically-identical cells."
+items = [
+    "Black grid tiles are dead cells.",
+    "White grid tiles are live cells.",
+    "White lines divide cells with identical genotypes.",
+    "Red lines divide cells with different genotypes."
+]
+[resource-wave]
+header = ["The Resource Wave Viewer depicts the cells' cooperative resource-collection task.",
+          "Activation propagates outward in same-channel groups from an environmentally-triggered seed."]
+items = [
+    "Green cells are activated within the beneficial radius of the seed and are gaining resource.",
+    "Red cells are activated outside the beneficial radius of the seed and are losing resource.",
+    "White cells are in the ready state, meaning they can be activated by adjacent cooperating cells.",
+    "Blue cells are in a quiescent state, meaning they cannot be activated by adjacent cooperating cells.",
+    "Black grid tiles are dead cells."
+]
+
+[channel-generation]
+header = "The Channel Generation Viewer depicts generation counters that enforce a birth-death lifecycle."
+items = [
+    "White cells are young members of a same-channel group. They are capable of collecting resource and producing offspring that are group members.",
+    "Blue cells are older members of a same-channel group, which still retain all the capabilities of younger cells.",
+    "Red cells are oldest members of a same-channel group. As coloring progress from light to dark red, cells lose their ability to create same-channel offspring and then to collect resource.",
+    "Black grid tiles are dead cells."
+]
+[expiration]
+header = "The Expiration Viewer depicts end-of-the-road channel generation state in greater detail."
+items = [
+    "White cells are young and retain all reproductive and resource-collection capabilities.",
+    "Blue cells are older and have lost same-channel reproductive capability.",
+    "Red cells are oldest and have additionally lost resource-collection capability.",
+    "Black grid tiles are dead cells."
+]
+
+[reproductive-pause]
+header = "The Reproductive Pause Viewer depicts reproductive cooperation."
+items = [
+    "White cells have registered zero reproductive forbearance.",
+    "Green cells have temporarily registred to pause reproduction in one direction.",
+    "Blue cells have temporariliy registered to pause reproduction in two directions.",
+    "Purple cells have temporariliy registered to pause reproduction in three directions.",
+    "Red cells have temporarily registered to pause reproduction in all four directions.",
+    "Black grid tiles are dead cells."
+]
