@@ -240,3 +240,18 @@ items = [
     "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
     "[Black](#000000) borders divide *high-level groups*."
 ]
+[regulation-flow]
+header = [
+  "The *Regulation Flow Viewer* summarizes the directional structure of SignalGP module regulation.",
+  "(SignalGP modules may be either up- or down-regulated).",
+items = [
+    "[White](#FFFFFF) indicates *zero* hardware units with regulated modules.",
+    "[Green](#00FF00) indicates *one* hardware units with regulated modules.",
+    "[Blue](#0000FF) indicates *two* hardware units with regulated modules.",
+    "[Purple](#FF00FF) indicates *three* hardware units with regulated modules.",
+    "[Red](#FF0000) indicates *four* hardware units with regulated modules.",
+    "[Silver](#FF0000) indicates *five* hardware units with regulated modules.",
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+]
