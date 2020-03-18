@@ -184,3 +184,29 @@ items = [
     "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
     "[Black](#000000) borders divide *high-level groups*."
 ]
+[messaging]
+header = "The *Neighbor Messaging Viewer* depicts recent incoming message traffic from each neighbor."
+items = [
+    "[White](#FFFFFF) indicates *zero* incoming message traffic.",
+    "[Green](#00FF00) indicates *one* incoming message.",
+    "[Blue](#0000FF) indicates *two* incoming messages.",
+    "[Purple](#FF00FF) indicates *three* incoming messages.",
+    "[Red](#FF0000) indicates *four* incoming messages.",
+    "[Yellow](#FF0000) indicates *five or more* incoming messages.",
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+]
+[messaging-interconnect]
+header = "The *Interconnect Messaging Viewer* depicts recent incoming message traffic via interconnects."
+items = [
+    "[White](#FFFFFF) indicates *zero* incoming message traffic.",
+    "[Green](#00FF00) indicates *one* incoming message.",
+    "[Blue](#0000FF) indicates *two* incoming messages.",
+    "[Purple](#FF00FF) indicates *three* incoming messages.",
+    "[Red](#FF0000) indicates *four* incoming messages.",
+    "[Yellow](#FF0000) indicates *five or more* incoming messages.",
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+]
