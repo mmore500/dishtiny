@@ -210,3 +210,17 @@ items = [
     "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
     "[Black](#000000) borders divide *high-level groups*."
 ]
+[root]
+header = [
+  "The *Phylogenetic Root* viewer represents the identity of each cell's ancestor at simulation outset.",
+  "If the simuation is seeded with saved genotypes, this represents the file ID of the ancestor strain.",
+  "If the simulation is seeded with generated genotypes, this represents the position ID of the ancestor cell."
+]
+items = [
+    "[Red](#FF0000) indicates *ancestor ID one*.",
+    "[Green](#00FF00) indicates *ancestor ID two*.",
+    "[Blue](#0000FF) indicates *ancestor ID three*.",
+    "[Arbitrarily](#FF00FF) [generated](#BFBFFF) [colors](#BFBFFF) represent other ancestor IDs.",
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[Black](#000000) borders divide cells with *different ancestors*."
+]
