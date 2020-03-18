@@ -1,3 +1,25 @@
+[sharing-fraction]
+header = "The *Sharing Fraction* shows the resource-sharing effort of cells towards each of their neighboring cells."
+items = [
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) indicates *zero resource* was received.",
+    "[Blue](#0000FF) indicates a *small amount* of resource-sharing effort.",
+    "[Green](#00FF00) indicates an *intermediate amount* of resource-sharing.",
+    "[Yellow](#FFFF00) indicates a *large amount* of sharing effort.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+]
+[sharing-fraction-interconnect]
+header = "The *Sharing Fraction* shows the resource-sharing effort of cells towards their outgoing interconnects."
+items = [
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) indicates *zero resource* was received.",
+    "[Blue](#0000FF) indicates a *small amount* of resource-sharing effort.",
+    "[Green](#00FF00) indicates an *intermediate amount* of resource-sharing.",
+    "[Yellow](#FFFF00) indicates a *large amount* of sharing effort.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+]
 [channel]
 header = "The *Channel Viewer* shows the arrangement of hereditarily-defined resource-collecing cell groups."
 items = [
