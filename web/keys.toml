@@ -36,9 +36,10 @@ items = [
     "[White](#FFFFFF) indicates *zero resource*.",
     "[Blue](#0000FF) indicates *positive resource*, but below the threshold required for reproduction.",
     "[Green](#00FF00) indicates *enough resource to reproduce*.",
-    "[Yellow](#FFFF00) indicates an *excess of resource*, more than enough to reproduce."
+    "[Yellow](#FFFF00) indicates an *excess of resource*, more than enough to reproduce.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
 ]
-
 [resource-sharing]
 header = "The *Contribution Viewer* depicts the amount of resource has received from neighbors during the previous update."
 items = [
@@ -46,16 +47,19 @@ items = [
     "[White](#FFFFFF) indicates *zero resource* was received.",
     "[Blue](#0000FF) indicates a *small amount* of resource was received.",
     "[Green](#00FF00) indicates an *intermediate amount* of resource was received.",
-    "[Yellow](#FFFF00) indicates a *large amount* of resource was received."
+    "[Yellow](#FFFF00) indicates a *large amount* of resource was received.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
 ]
-
 [apoptosis]
 header = "The *Apoptosis Viewer* shows cells that have registered themselves for imminent cellular suicidie."
 items = [
     "[Black](#000000) grid tiles are *dead cells*.",
     "[White](#FFFFFF) grid tiles are *live cells*.",
     "[Blue](#0000FF) cells are registered for *partial apoptosis*, where a underlying cell is destroyed but its channel structure is preserved.",
-    "[Red](#FF0000) cells are registered for *complete apoptosis*, where a cell and its channel structure are totally destroyed."
+    "[Red](#FF0000) cells are registered for *complete apoptosis*, where a cell and its channel structure are totally destroyed.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
 ]
 [taxa]
 header = "The *Taxa Viewer* depicts the distribution of groups of genetically-identical cells."
@@ -73,7 +77,10 @@ items = [
     "[Red](#FF0000) cells are activated outside the beneficial radius of the seed and are *losing resource*.",
     "[White](#FFFFFF) cells are in the *ready state*, meaning they can be activated by adjacent cooperating cells.",
     "[Blue](#0000FF) cells are in a *quiescent state*, meaning they cannot be activated by adjacent cooperating cells.",
-    "[Black](#000000) grid tiles are *dead cells*."
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+
 ]
 
 [channel-generation]
@@ -82,7 +89,9 @@ items = [
     "[White](#FFFFFF) cells are *young* members of a same-channel group. They are capable of collecting resource and producing offspring that are group members.",
     "[Blue](#0000FF) cells are *older* members of a same-channel group, which still retain all the capabilities of younger cells.",
     "[Red](#FF0000) cells are *oldest* members of a same-channel group. As coloring progress from light to dark red, cells lose their ability to create same-channel offspring and then to collect resource.",
-    "[Black](#000000) grid tiles are *dead cells*."
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
 ]
 [expiration]
 header = "The *Expiration Viewer* depicts end-of-the-road channel generation state in greater detail."
@@ -90,7 +99,9 @@ items = [
     "[White](#FFFFFF) cells are *young* and retain all reproductive and resource-collection capabilities.",
     "[Blue](#0000FF) cells are *older* and have lost same-channel reproductive capability.",
     "[Red](#FF0000) cells are *oldest* and have additionally lost resource-collection capability.",
-    "[Black](#000000) grid tiles are *dead cells*."
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
 ]
 
 [reproductive-pause]
@@ -101,5 +112,7 @@ items = [
     "[Blue](#0000FF) cells have temporariliy registered to pause reproduction in *two directions*.",
     "[Purple](#FF00FF) cells have temporariliy registered to pause reproduction in *three directions*.",
     "[Red](#FF0000) cells have temporarily registered to pause reproduction in all *four directions*.",
-    "[Black](#000000) grid tiles are *dead cells*."
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
 ]
