@@ -162,3 +162,25 @@ items = [
     "[Light gray](#d3d3d3) borders divide *low-level groups* that are part of the same high-level group. ",
     "[Black](#000000) borders divide *high-level groups*."
 ]
+[shared-resource]
+header = "The *Neighbor Shared Resource Viewer* depicts the amount of resource received from each neighbor during the previous update."
+items = [
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) indicates *zero resource* was received.",
+    "[Blue](#0000FF) indicates a *small amount* of resource was received.",
+    "[Green](#00FF00) indicates an *intermediate amount* of resource was received.",
+    "[Yellow](#FFFF00) indicates a *large amount* of resource was received.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+]
+[shared-resource-interconnect]
+header = "The *Interconnect Shared Resource Viewer* depicts the amount of resource received via interconnect during the previous update."
+items = [
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) indicates *zero resource* was received.",
+    "[Blue](#0000FF) indicates a *small amount* of resource was received.",
+    "[Green](#00FF00) indicates an *intermediate amount* of resource was received.",
+    "[Yellow](#FFFF00) indicates a *large amount* of resource was received.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+]
