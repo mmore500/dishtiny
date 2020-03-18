@@ -224,3 +224,19 @@ items = [
     "[Black](#000000) grid tiles are *dead cells*.",
     "[Black](#000000) borders divide cells with *different ancestors*."
 ]
+[regulation]
+header = [
+  "The *Regulation Viewer* depicts the total number of regulated SignalGP modules, summed across all hardware units in a cell.",
+  "(SignalGP modules may be either up- or down-regulated).",
+items = [
+    "[White](#FFFFFF) indicates *zero* regulated modules.",
+    "[Green](#00FF00) indicates *one* regulated modules.",
+    "[Blue](#0000FF) indicates *two* regulated modules.",
+    "[Purple](#FF00FF) indicates *three* regulated modules.",
+    "[Red](#FF0000) indicates *four* regulated modules.",
+    "[Yellow](#FF0000) indicates *five* regulated modules.",
+    "[Silver](#FF0000) indicates *six or more* regulated modules.",
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+]
