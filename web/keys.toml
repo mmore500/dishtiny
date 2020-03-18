@@ -1,5 +1,5 @@
 [sharing-fraction]
-header = "The *Sharing Fraction* shows the resource-sharing effort of cells towards each of their neighboring cells."
+header = "The *Neighbor Sharing Fraction* shows the resource-sharing effort of cells towards each of their neighboring cells."
 items = [
     "[Black](#000000) grid tiles are *dead cells*.",
     "[White](#FFFFFF) indicates *zero resource* was received.",
@@ -10,7 +10,7 @@ items = [
     "[Black](#000000) borders divide *high-level groups*."
 ]
 [sharing-fraction-interconnect]
-header = "The *Sharing Fraction* shows the resource-sharing effort of cells towards their outgoing interconnects."
+header = "The *Interconnect Sharing Fraction* shows the resource-sharing effort of cells towards their outgoing interconnects."
 items = [
     "[Black](#000000) grid tiles are *dead cells*.",
     "[White](#FFFFFF) indicates *zero resource* was received.",
@@ -41,7 +41,7 @@ items = [
     "[Black](#000000) borders divide *high-level groups*."
 ]
 [resource-sharing]
-header = "The *Contribution Viewer* depicts the amount of resource has received from neighbors during the previous update."
+header = "The *Contributed Resource Viewer* depicts the total amount of resource has received from all neighbors during the previous update."
 items = [
     "[Black](#000000) grid tiles are *dead cells*.",
     "[White](#FFFFFF) indicates *zero resource* was received.",
@@ -226,11 +226,11 @@ items = [
 ]
 [regulation]
 header = [
-  "The *Regulation Viewer* depicts the total number of regulated SignalGP modules, summed across all hardware units in a cell.",
+  "The *Cell-wide Regulation Viewer* depicts the total number of regulated SignalGP modules, summed across all hardware units in a cell.",
   "(SignalGP modules may be either up- or down-regulated).",
 items = [
     "[White](#FFFFFF) indicates *zero* regulated modules.",
-    "[Green](#00FF00) indicates *one* regulated modules.",
+    "[Green](#00FF00) indicates *one* regulated module.",
     "[Blue](#0000FF) indicates *two* regulated modules.",
     "[Purple](#FF00FF) indicates *three* regulated modules.",
     "[Red](#FF0000) indicates *four* regulated modules.",
@@ -246,7 +246,7 @@ header = [
   "(SignalGP modules may be either up- or down-regulated).",
 items = [
     "[White](#FFFFFF) indicates *zero* hardware units with regulated modules.",
-    "[Green](#00FF00) indicates *one* hardware units with regulated modules.",
+    "[Green](#00FF00) indicates *one* hardware unit with regulated modules.",
     "[Blue](#0000FF) indicates *two* hardware units with regulated modules.",
     "[Purple](#FF00FF) indicates *three* hardware units with regulated modules.",
     "[Red](#FF0000) indicates *four* hardware units with regulated modules.",
