@@ -140,3 +140,25 @@ items = [
     "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
     "[Black](#000000) borders divide *high-level groups*."
 ]
+[connection]
+header = "The *Established Interconnect Viewer* depicts direct long-distance intercell connections that have matured and activated."
+items = [
+    "[Light blue](#15f4ee) protrusions with [violet](#8a2be2) outlining represent *established inerconnects* between cells.",
+    "*Squared* interconnect endcaps represent the originating cell of an interconnect.",
+    "*Rounded* interconnect endcaps represent the terminus cell of an interconnect.",
+    "[Grayscale](#888888) coloring differentiates *high-level groups*, which are groups of low-level groups.",
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[Light gray](#d3d3d3) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+]
+[fledgling]
+header = "The *Fledgling Interconnect Viewer* depicts inert, developing long-distance intercell connections."
+items = [
+    "[Light blue](#15f4ee) protrusions with [violet](#8a2be2) outlining represent *fledgling inerconnects* between cells.",
+    "*Squared* interconnect endcaps represent the originating cell of a fledgling interconnect.",
+    "*Rounded* interconnect endcaps represent the terminus cell of a fledgling interconnect.",
+    "[Grayscale](#888888) coloring differentiates *high-level groups*, which are groups of low-level groups.",
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[Light gray](#d3d3d3) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+]
