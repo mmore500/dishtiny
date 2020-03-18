@@ -780,16 +780,14 @@ public:
         });
         else return std::make_optional(size_t_datum{0});
       }, // getter
-      [this](const auto amt) -> std::string {
-        if (amt) {
-          if (*amt > cfg.REP_THRESH()) return "yellow";
-          else if (*amt > 0) return emp::ColorHSV(
-            240.0-180.0*(*amt)/cfg.REP_THRESH(),
-            1.0,
-            1.0
-          );
-          else if (*amt == 0) return "white";
-          else return "red";
+      [](const auto state) -> std::string {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else return "yellow";
         } else return "black";
       }, // renderer
       cfg_,
