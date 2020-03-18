@@ -229,7 +229,8 @@ items = [
 [regulation]
 header = [
   "The *Cell-wide Regulation Viewer* depicts the total number of regulated SignalGP modules, summed across all hardware units in a cell.",
-  "(SignalGP modules may be either up- or down-regulated).",
+  "(SignalGP modules may be either up- or down-regulated)."
+]
 items = [
     "[White](#FFFFFF) indicates *zero* regulated modules.",
     "[Green](#00FF00) indicates *one* regulated module.",
@@ -245,7 +246,8 @@ items = [
 [regulation-flow]
 header = [
   "The *Regulation Flow Viewer* summarizes the directional structure of SignalGP module regulation.",
-  "(SignalGP modules may be either up- or down-regulated).",
+  "(SignalGP modules may be either up- or down-regulated)."
+]
 items = [
     "[White](#FFFFFF) indicates *zero* hardware units with regulated modules.",
     "[Green](#00FF00) indicates *one* hardware unit with regulated modules.",
@@ -260,7 +262,8 @@ items = [
 [regulation-direction]
 header = [
   "The *Directional Regulation Viewer* depicts number of regulated SignalGP modules in hardware modules facing each neighbor.",
-  "(SignalGP modules may be either up- or down-regulated).",
+  "(SignalGP modules may be either up- or down-regulated)."
+]
 items = [
     "[White](#FFFFFF) indicates *zero* regulated modules.",
     "[Green](#00FF00) indicates *one* regulated module.",
@@ -276,7 +279,8 @@ items = [
 [regulation-direction-interconnect]
 header = [
   "The *Interconnect Regulation Viewer* depicts number of regulated SignalGP modules in the hardware module managing the cell's interconnects.",
-  "(SignalGP modules may be either up- or down-regulated).",
+  "(SignalGP modules may be either up- or down-regulated)."
+]
 items = [
     "[White](#FFFFFF) indicates *zero* regulated modules.",
     "[Green](#00FF00) indicates *one* regulated module.",
