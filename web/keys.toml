@@ -63,6 +63,18 @@ items = [
     "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
     "[Black](#000000) borders divide *high-level groups*."
 ]
+[messaging-flow]
+header = "The *Messaging Flow* depicts the spatial structure of intercellular messaging."
+items = [
+    "[White](#FFFFFF) cells received messages from *zero neighbors*.",
+    "[Green](#00FF00) cells received messages from *one neighbor*.",
+    "[Blue](#0000FF) cells received messages from *two neighbors*.",
+    "[Purple](#FF00FF) cells received messages from *three neighbors*.",
+    "[Red](#FF0000) cells received messages from *four neighbors*.",
+    "[Black](#000000) grid tiles are *dead cells*.",
+    "[White](#FFFFFF) borders divide *low-level groups* that are part of the same high-level group. ",
+    "[Black](#000000) borders divide *high-level groups*."
+]
 [apoptosis]
 header = "The *Apoptosis Viewer* shows cells that have registered themselves for imminent cellular suicidie."
 items = [
