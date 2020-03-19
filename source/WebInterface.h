@@ -387,7 +387,8 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else return "yellow";
+          else if (*state == 5) return "orange";
+          else return "gray";
         } else return "black";
       },
       cfg_,
@@ -421,8 +422,8 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else if (*state == 5) return "gray";
-          else return "yellow";
+          else if (*state == 5) return "orange";
+          else return "gray";
         } else return "black";
       },
       cfg_,
@@ -453,7 +454,7 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else return "yellow";
+          else return "orange";
         } else return "black";
       },
       cfg_,
@@ -482,7 +483,7 @@ public:
           if (*state == ManagerApoptosis::unmarked) return "white";
           else if (*state == ManagerApoptosis::partial) return "blue";
           else if (*state == ManagerApoptosis::complete) return "red";
-          else return "yellow";
+          else return "orange";
         } else return "black";
       },
       cfg_,
@@ -647,7 +648,7 @@ public:
             else if (*state == 2) return "blue";
             else if (*state == 3) return "purple";
             else if (*state == 4) return "red";
-            else return "yellow";
+            else return "orange";
           } else return "black";
         },
         cfg_,
@@ -780,16 +781,15 @@ public:
         });
         else return std::make_optional(size_t_datum{0});
       }, // getter
-      [this](const auto amt) -> std::string {
-        if (amt) {
-          if (*amt > cfg.REP_THRESH()) return "yellow";
-          else if (*amt > 0) return emp::ColorHSV(
-            240.0-180.0*(*amt)/cfg.REP_THRESH(),
-            1.0,
-            1.0
-          );
-          else if (*amt == 0) return "white";
-          else return "red";
+      [](const auto state) -> std::string {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else if (*state == 5) return "orange";
+          else return "gray";
         } else return "black";
       }, // renderer
       cfg_,
@@ -907,8 +907,8 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else if (*state == 5) return "gray";
-          else return "yellow";
+          else if (*state == 5) return "orange";
+          else return "gray";
         } else return "black";
       },
       cfg_,
@@ -958,8 +958,8 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else if (*state == 5) return "gray";
-          else return "yellow";
+          else if (*state == 5) return "orange";
+          else return "gray";
         } else return "black";
       },
       cfg_,
@@ -996,8 +996,8 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else if (*state == 5) return "gray";
-          else return "yellow";
+          else if (*state == 5) return "orange";
+          else return "gray";
         } else return "black";
       }, // renderer
       cfg_,
@@ -1034,8 +1034,8 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else if (*state == 5) return "gray";
-          else return "yellow";
+          else if (*state == 5) return "orange";
+          else return "gray";
         } else return "black";
       }, // renderer
       cfg_,
