@@ -204,8 +204,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
-      "Sharing Fraction", // name
-      "Sharing Fraction", // description
+      "Neighbor Sharing Fraction", // name
+      "Neighbor Sharing Fraction", // description
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) {
         if (w.IsOccupied(i)) return std::make_optional(double_datum{
@@ -237,8 +237,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
-      "Sharing Fraction Interconnect", // name
-      "Sharing Fraction Interconnect", // description
+      "Interconnect Sharing Fraction", // name
+      "Interconnect Sharing Fraction", // description
       grid_viewer, // viewer
       [this](const size_t i) {
         if (w.IsOccupied(i)) return std::make_optional(double_datum{
@@ -663,8 +663,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistConnection>(
-      "Connection",
-      "Connection",
+      "Established Interconnect",
+      "Established Interconnect",
       grid_viewer,
       [this](const size_t i){
         emp::vector<size_t> res;
@@ -683,8 +683,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistConnection>(
-      "Fledgling",
-      "Fledgling",
+      "Fledgling Interconnect",
+      "Fledgling Interconnect",
       grid_viewer,
       [this](const size_t i){
         emp::vector<size_t> res;
@@ -705,8 +705,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
-      "Shared Resource", // name
-      "Shared Resource", // description
+      "Neighbor Shared Resource", // name
+      "Neighbor Shared Resource", // description
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) -> std::optional<double_datum> {
         if (w.IsOccupied(i)) return std::make_optional(double_datum{
@@ -738,8 +738,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
-      "Shared Resource Interconnect", // name
-      "Shared Resource Interconnect", // description
+      "Interconnect Shared Resource", // name
+      "Interconnect Shared Resource", // description
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) -> std::optional<double_datum> {
         if (w.IsOccupied(i)) return std::make_optional(double_datum{
@@ -771,8 +771,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
-      "Messaging", // name
-      "Messaging", // description
+      "Neighbor Messaging", // name
+      "Neighbor Messaging", // description
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
         if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
@@ -803,8 +803,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
-      "Messaging Interconnect", // name
-      "Messaging Interconnect", // description
+      "Interconnect Messaging", // name
+      "Interconnect Messaging", // description
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
         if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
@@ -836,8 +836,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistCell<size_t>>(
-      "Root",
-      "Root",
+      "Phylogenetic Root",
+      "Phylogenetic Root",
       grid_viewer,
       [this](const size_t i){
         return w.IsOccupied(i)
@@ -973,8 +973,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
-      "Regulation Direction", // name
-      "Regulation Direction", // description
+      "Directional Regulation", // name
+      "Directional Regulation", // description
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
         const auto & regulators = w.GetFrame(i).GetFrameHardware(j).GetHardware().GetMatchBin().GetState().regulators;
@@ -1011,8 +1011,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
-      "Regulation Direction Interconnect", // name
-      "Regulation Direction Interconnect", // description
+      "Interconnect Regulation", // name
+      "Interconnect Regulation", // description
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
         const auto & regulators = w.GetFrame(i).GetSpiker().GetHardware().GetMatchBin().GetState().regulators;

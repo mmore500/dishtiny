@@ -1,4 +1,4 @@
-[sharing-fraction]
+[neighbor-sharing-fraction]
 header = ["The **Neighbor Sharing Fraction** shows the resource-sharing effort of cells towards each of their neighboring cells."]
 items = [
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
@@ -9,7 +9,7 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[sharing-fraction-interconnect]
+[interconnect-sharing-fraction]
 header = ["The **Interconnect Sharing Fraction** shows the resource-sharing effort of cells towards their outgoing interconnects."]
 items = [
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
@@ -139,7 +139,7 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[connection]
+[established-interconnect]
 header = ["The **Established Interconnect Viewer** depicts direct long-distance intercell connections that have matured and activated."]
 items = [
     "{make_badge('Light blue', '#15F4EE')} protrusions with {make_badge('violet', '#8A2BE2')} outlining represent **established inerconnects** between cells.",
@@ -150,7 +150,7 @@ items = [
     "{make_badge('Light gray', '#D3D3D3')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[fledgling]
+[fledgling-interconnect]
 header = ["The **Fledgling Interconnect Viewer** depicts inert, developing long-distance intercell connections."]
 items = [
     "{make_badge('Light blue', '#15F4EE')} protrusions with {make_badge('violet', '#8A2BE2')} outlining represent **fledgling inerconnects** between cells.",
@@ -161,7 +161,7 @@ items = [
     "{make_badge('Light gray', '#D3D3D3')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[shared-resource]
+[neighbor-shared-resource]
 header = ["The **Neighbor Shared Resource Viewer** depicts the amount of resource received from each neighbor during the previous update."]
 items = [
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
@@ -172,7 +172,7 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[shared-resource-interconnect]
+[interconnect-shared-resource]
 header = ["The **Interconnect Shared Resource Viewer** depicts the amount of resource received via interconnect during the previous update."]
 items = [
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
@@ -183,7 +183,7 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[messaging]
+[neighbor-messaging]
 header = ["The **Neighbor Messaging Viewer** depicts recent incoming message traffic from each neighbor."]
 items = [
     "{make_badge('White', '#FFFFFF')} indicates **zero** incoming message traffic.",
@@ -197,7 +197,7 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[messaging-interconnect]
+[interconnect-messaging]
 header = ["The **Interconnect Messaging Viewer** depicts recent incoming message traffic via interconnects."]
 items = [
     "{make_badge('White', '#FFFFFF')} indicates **zero** incoming message traffic.",
@@ -211,7 +211,7 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[root]
+[phylogenetic-root]
 header = [
   "The **Phylogenetic Root** viewer represents the identity of each cell's ancestor at simulation outset.",
   "If the simuation is seeded with saved genotypes, this represents the file ID of the ancestor strain.",
@@ -259,7 +259,7 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[regulation-direction]
+[directional-regulation]
 header = [
   "The **Directional Regulation Viewer** depicts number of regulated SignalGP modules in hardware modules facing each neighbor.",
   "(SignalGP modules may be either up- or down-regulated)."
@@ -276,7 +276,7 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide ****low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[regulation-direction-interconnect]
+[interconnect-regulation]
 header = [
   "The **Interconnect Regulation Viewer** depicts number of regulated SignalGP modules in the hardware module managing the cell's interconnects.",
   "(SignalGP modules may be either up- or down-regulated)."
