@@ -319,12 +319,12 @@
             <ul class="list-group list-group-flush">
               <li class="list-group-item list-group-item-dark">
                 {% for header in value.header %}
-                  {{ markdown.convert(header) }}
+                  {{ markdown.convert(eval('f' '"' + header + '"', {'make_badge': make_badge})) }}
                 {% endfor %}
               </li>
               {% for item in value['items'] %}
               <li class="list-group-item">
-                {{ markdown.convert(item) }}
+                {{ markdown.convert(eval('f' '"' + item + '"', {'make_badge': make_badge})) }}
               </li>
               {% endfor %}
             </ul>
