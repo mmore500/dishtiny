@@ -1,48 +1,54 @@
 import toml
-from bs4 import BeautifulSoup as bs
+import jinja2
+from markdown2 import Markdown
 
-filename = 'keys.toml'
-output = 'output.html'
-data = {}
+from markup import dishMark
 
-with open(filename, 'r') as file:
+INPUT = 'keys.toml'
+OUTPUT = 'output.html'
+TEMPLATE = "template.html.jinja"
+
+# load our TOML file
+with open(INPUT, 'r') as file:
     data = toml.load(file)
 
-html = '<div id="view_key-body" class="text-large collapse">\n'
+# process and generate badge
+def make_badge(str, color):
+    # it's a badge!
 
-for key_name, key_body in data.items():
-    html += '<div id="' + key_name + '-key">'
-    html += '<ul class="list-group list-group-flush">'
+    # determine brightness to decide background color
+    # based on https://stackoverflow.com/a/3943023
+    (r, g, b) = (color[1:3], color[3:5], color[5:7])
+    colors = [int(x, 16) for x in (r, g, b)]
 
-    if 'header' in key_body:
-        header = key_body['header']
+    L = 0.299 * colors[0] + 0.587 * colors[1] + 0.114 * colors[2]
 
-        html += '<li class="list-group-item list-group-item-dark">'
+    if L > 186:
+        type = "badge badge-light"
+    else:
+        type = "badge badge-dark"
 
-        # single-line header
-        if isinstance(header, str):
-            html += header
-        # multi-line header
-        if isinstance(header, list):
-            for i in key_body['header']:
-                html += i + '\n'
-        
-        html += '</li>'
+    # for color string
+    color_str = "background-color: " + color + ";"
+
+    # form badge!
+    badge = '<span class="' + type + '" style="' + color_str + '">' + str + '</span>'
     
-    if 'items' in key_body:
-        for i in key_body['items']:
-            html += '<li class="list-group-item">'
-            html += i + '\n'
-            html += '</li>'
-    
-#    print(key_body.keys())
+    return badge
 
-    html += '</ul>'
-    html += '</div>'
+# instanciate Markdown 
+markdown = Markdown()
 
-# make html pretty
-pretty_html = bs(html).prettify()  
-print(pretty_html)
+# find template, adapted from https://stackoverflow.com/a/38642558 
+template_loader = jinja2.FileSystemLoader(searchpath="./")
+template_env = jinja2.Environment(loader=template_loader)
+# load template
+template = template_env.get_template(TEMPLATE)
+# output templated html
+# we pass it our data, our markdown instance, and eval() and make_badge(), 
+# since they are all used by it
+outputText = template.render(data=data, markdown=markdown, eval=eval, make_badge=make_badge)
 
-with open(output, 'w') as out:
-    out.write(pretty_html)
+# output to file
+with open(OUTPUT, 'w') as out:
+    out.write(outputText)
