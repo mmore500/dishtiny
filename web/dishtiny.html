@@ -280,9 +280,10 @@
     </div>
   </div>
 
-  <div class="row p-3">
-    <div class="col-lg-8 p-3 mx-auto">
-      <div class="card">
+  <div class="row p-3" style="align-items: flex-start;">
+    <div class="col-lg-8 p-3 mx-auto" style="position: -webkit-sticky; position: sticky; top: 4rem;">
+
+      <div class="card my-3">
         <div class="card-header">
           <span data-toggle="collapse" href="#grid_viewer-body">
             <button
@@ -300,10 +301,31 @@
           <div id="grid_viewer"></div>
         </div>
       </div>
+
+      <div class="card my-3">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#emp_button_dash-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left active"
+              type="button"
+              data-toggle="button"
+              aria-pressed="true"
+              autocomplete="off"
+            >
+              Controls
+            </button>
+          </span>
+        </div>
+        <div id="emp_button_dash-body" class="text-large card-body collapse show">
+          <div id="emp_button_dash"></div>
+        </div>
+      </div>
+
+
     </div>
 
     <div class="col p-3 mx-auto">
-      <div class="card">
+      <div class="card my-3">
         <div class="card-header">
           <span data-toggle="collapse" href="#view_key-body">
             <button
@@ -578,35 +600,12 @@
             </ul>
           </div>
 
+
+
         </div>
       </div>
-    </div>
-  </div>
 
-  <div class="row p-3">
-    <div class="col-lg-8 p-3 mx-auto">
-      <div class="card">
-        <div class="card-header">
-          <span data-toggle="collapse" href="#emp_button_dash-body">
-            <button
-              class="btn btn-lg btn-block btn-primary text-left active"
-              type="button"
-              data-toggle="button"
-              aria-pressed="true"
-              autocomplete="off"
-            >
-              Controls
-            </button>
-          </span>
-        </div>
-        <div id="emp_button_dash-body" class="text-large card-body collapse show">
-          <div id="emp_button_dash"></div>
-        </div>
-      </div>
-    </div>
-
-        <div class="col-lg-4 p-3 mx-auto">
-          <div class="card">
+          <div class="card m-y3">
             <div class="card-header">
               <span data-toggle="collapse" href="#view_selector-body">
                 <button
@@ -624,6 +623,16 @@
               <div id="view_selector"></div>
             </div>
           </div>
+
+
+    </div>
+  </div>
+
+  <div class="row p-3">
+    <div class="col-lg-8 p-3 mx-auto">
+    </div>
+
+        <div class="col-lg-4 p-3 mx-auto">
         </div>
 
 
