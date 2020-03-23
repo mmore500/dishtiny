@@ -1,5 +1,5 @@
 [neighbor-sharing-fraction]
-header = ["The **Neighbor Sharing Fraction** shows the resource-sharing effort of cells towards each of their neighboring cells."]
+header = ["The **Neighbor Sharing Fraction Viewer** shows the resource-sharing effort of cells towards each of their neighboring cells."]
 items = [
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
     "{make_badge('White', '#FFFFFF')} indicates **zero resource** was received.",
@@ -10,7 +10,7 @@ items = [
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
 [interconnect-sharing-fraction]
-header = ["The **Interconnect Sharing Fraction** shows the resource-sharing effort of cells towards their outgoing interconnects."]
+header = ["The **Interconnect Sharing Fraction Viewer** shows the resource-sharing effort of cells towards their outgoing interconnects."]
 items = [
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
     "{make_badge('White', '#FFFFFF')} indicates **zero resource** was received.",
@@ -52,7 +52,7 @@ items = [
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
 [resource-flow]
-header = ["The **Resource Flow** depicts the spatial structure of resource sharing."]
+header = ["The **Resource Flow Viewer** depicts the spatial structure of resource sharing."]
 items = [
     "{make_badge('White', '#FFFFFF')} cells share resource with **zero neighbors**.",
     "{make_badge('Green', '#00FF00')} cells share resource with **one neighbor**.",
@@ -64,7 +64,7 @@ items = [
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
 [messaging-flow]
-header = ["The **Messaging Flow** depicts the spatial structure of intercellular messaging."]
+header = ["The **Messaging Flow Viewer** depicts the spatial structure of intercellular messaging."]
 items = [
     "{make_badge('White', '#FFFFFF')} cells received messages from **zero neighbors**.",
     "{make_badge('Green', '#00FF00')} cells received messages from **one neighbor**.",
@@ -225,7 +225,7 @@ items = [
 ]
 [phylogenetic-root]
 header = [
-  "The **Phylogenetic Root** viewer represents the identity of each cell's ancestor at simulation outset.",
+  "The **Phylogenetic Root Viewer** represents the identity of each cell's ancestor at simulation outset.",
   "If the simuation is seeded with saved genotypes, this represents the file ID of the ancestor strain.",
   "If the simulation is seeded with generated genotypes, this represents the position ID of the ancestor cell."
 ]
