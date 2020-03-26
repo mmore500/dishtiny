@@ -24,6 +24,7 @@ public:
   virtual ~WebArtistBase() {};
   virtual void Deactivate() = 0;
   virtual void Activate() = 0;
+  virtual void Toggle() = 0;
   virtual std::string GetName() const = 0;
   virtual void Redraw(const size_t update) = 0;
   virtual void Download(const std::string & fn) = 0;
