@@ -35,7 +35,7 @@ CFLAGS_nat_profile := -pg -DNDEBUG -fopenmp $(CFLAGS_all)
 
 # Emscripten compiler information
 CXX_web := em++
-OFLAGS_web_all := -s USE_ZLIB=1 -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s TOTAL_MEMORY=2147418112 --js-library $(EMP_DIR)/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0 -s "BINARYEN_TRAP_MODE='clamp'"#--preload-file state_grids #--embed-file configs
+OFLAGS_web_all := -s ALLOW_MEMORY_GROWTH=1 -s USE_ZLIB=1 -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s TOTAL_MEMORY=5242880 --js-library $(EMP_DIR)/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0 -s "BINARYEN_TRAP_MODE='clamp'"#--preload-file state_grids #--embed-file configs
 OFLAGS_web := -O3 -DNDEBUG
 OFLAGS_web_debug := -g4 -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPPORT=1 -s ASSERTIONS=1
 #OFLAGS_web_debug := -g4 -DNDEBUG -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPPORT=1

@@ -184,24 +184,90 @@ public:
 
     grid_viewer.SetAttr("class", "mx-auto");
 
+    struct double_datum {
+      double val;
+      ChannelPack cp;
+      operator double() const { return val; }
+    };
+
+    struct size_t_datum {
+      size_t val;
+      ChannelPack cp;
+      operator size_t() const { return val; }
+    };
+
+    struct int_datum {
+      int val;
+      ChannelPack cp;
+      operator size_t() const { return val; }
+    };
+
     artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistPointer<std::string>>(
-      "Tester",
-      "Tester",
-      grid_viewer,
-      [this](const size_t i, const size_t j){
-        return emp::vector<std::optional<std::string>>{
-          std::optional<std::string>{"blue"},
-          std::optional<std::string>{"green"},
-          std::optional<std::string>{"red"},
-          std::optional<std::string>{"yellow"}
-        }[j];
-      },
-      [this](std::optional<std::string> val) {
-        return *val;
-      },
-      cfg_
+    artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
+      "Neighbor Sharing Fraction", // name
+      "Neighbor Sharing Fraction", // description
+      grid_viewer, // viewer
+      [this](const size_t i, const size_t j) {
+        if (w.IsOccupied(i)) return std::make_optional(double_datum{
+          w.man->Sharing(i).ViewSharingFrac(j),
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::make_optional(double_datum{0.0});
+      }, // getter
+      [this](const auto amt) -> std::string {
+        if (amt) {
+          if (*amt > cfg.REP_THRESH()) return "yellow";
+          else if (*amt > 0) return emp::ColorHSV(
+            240.0-180.0*(*amt)/cfg.REP_THRESH(),
+            1.0,
+            1.0
+          );
+          else if (*amt == 0) return "white";
+          else return "red";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
     ));
+
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
+      "Interconnect Sharing Fraction", // name
+      "Interconnect Sharing Fraction", // description
+      grid_viewer, // viewer
+      [this](const size_t i) {
+        if (w.IsOccupied(i)) return std::make_optional(double_datum{
+          w.man->Sharing(i).ViewSharingFrac(Cardi::Dir::NumDirs),
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::make_optional(double_datum{0.0});
+      }, // getter
+      [this](const auto amt) -> std::string {
+        if (amt) {
+          if (*amt > cfg.REP_THRESH()) return "yellow";
+          else if (*amt > 0) return emp::ColorHSV(
+            240.0-180.0*(*amt)/cfg.REP_THRESH(),
+            1.0,
+            1.0
+          );
+          else if (*amt == 0) return "white";
+          else return "red";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
+    ));
+
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistCell<ChannelPack>>(
@@ -222,24 +288,6 @@ public:
         else return "black";
       }
     ));
-
-    struct double_datum {
-      double val;
-      ChannelPack cp;
-      operator double() const { return val; }
-    };
-
-    struct size_t_datum {
-      size_t val;
-      ChannelPack cp;
-      operator size_t() const { return val; }
-    };
-
-    struct int_datum {
-      int val;
-      ChannelPack cp;
-      operator size_t() const { return val; }
-    };
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
@@ -339,38 +387,8 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else return "yellow";
-        } else return "black";
-      },
-      cfg_,
-      [](const auto & datum1, const auto & datum2) -> std::string {
-        if (!datum1|| !datum2) return "black";
-        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
-        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
-        else return "black";
-      }
-    ));
-
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
-      "Messaging",
-      "Messaging",
-      grid_viewer,
-      [this](const size_t i) -> std::optional<size_t_datum> {
-        if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
-          w.man->Inbox(i).GetTraffic(),
-          *w.man->Channel(i).GetIDs()
-        });
-        else return std::nullopt;
-      },
-      [](const auto state) -> std::string {
-        if (state) {
-          if (*state == 0) return "white";
-          else if (*state == 1) return "green";
-          else if (*state == 2) return "blue";
-          else if (*state == 3) return "purple";
-          else if (*state == 4) return "red";
-          else return "yellow";
+          else if (*state == 5) return "orange";
+          else return "gray";
         } else return "black";
       },
       cfg_,
@@ -404,8 +422,8 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else if (*state == 5) return "gray";
-          else return "yellow";
+          else if (*state == 5) return "orange";
+          else return "gray";
         } else return "black";
       },
       cfg_,
@@ -436,7 +454,7 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else return "yellow";
+          else return "orange";
         } else return "black";
       },
       cfg_,
@@ -465,7 +483,7 @@ public:
           if (*state == ManagerApoptosis::unmarked) return "white";
           else if (*state == ManagerApoptosis::partial) return "blue";
           else if (*state == ManagerApoptosis::complete) return "red";
-          else return "yellow";
+          else return "orange";
         } else return "black";
       },
       cfg_,
@@ -630,7 +648,7 @@ public:
             else if (*state == 2) return "blue";
             else if (*state == 3) return "purple";
             else if (*state == 4) return "red";
-            else return "yellow";
+            else return "orange";
           } else return "black";
         },
         cfg_,
@@ -645,8 +663,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistConnection>(
-      "Connection",
-      "Connection",
+      "Established Interconnect",
+      "Established Interconnect",
       grid_viewer,
       [this](const size_t i){
         emp::vector<size_t> res;
@@ -665,8 +683,8 @@ public:
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistConnection>(
-      "Fledgling",
-      "Fledgling",
+      "Fledgling Interconnect",
+      "Fledgling Interconnect",
       grid_viewer,
       [this](const size_t i){
         emp::vector<size_t> res;
@@ -686,114 +704,140 @@ public:
     ));
 
     artists.emplace_back();
-    for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
-      artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
-        emp::to_string("Sharing Fraction Direction ", d),
-        "Sharing Fraction",
-        grid_viewer,
-        [this, d](const size_t i) -> std::optional<double_datum> {
-          if (w.IsOccupied(i)) return std::make_optional(double_datum{
-            w.man->Sharing(i).ViewSharingFrac(d),
-            *w.man->Channel(i).GetIDs()
-          });
-          else return std::nullopt;
-        },
-        [this](const auto amt) -> std::string {
-          if (amt) {
-            if (*amt > cfg.REP_THRESH()) return "yellow";
-            else if (*amt > 0) return emp::ColorHSV(
-              240.0-180.0*(*amt)/cfg.REP_THRESH(),
-              1.0,
-              1.0
-            );
-            else if (*amt == 0) return "white";
-            else return "red";
-          } else return "black";
-        },
-        cfg_,
-        [](const auto & datum1, const auto & datum2) -> std::string {
-          if (!datum1|| !datum2) return "black";
-          else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
-          else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
-          else return "black";
-        }
-      ));
-    }
+    artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
+      "Neighbor Shared Resource", // name
+      "Neighbor Shared Resource", // description
+      grid_viewer, // viewer
+      [this](const size_t i, const size_t j) -> std::optional<double_datum> {
+        if (w.IsOccupied(i)) return std::make_optional(double_datum{
+          w.man->Stockpile(i).QueryExternalContribute(j),
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::make_optional(double_datum{0.0});
+      }, // getter
+      [this](const auto amt) -> std::string {
+        if (amt) {
+          if (*amt > cfg.REP_THRESH()) return "yellow";
+          else if (*amt > 0) return emp::ColorHSV(
+            240.0-180.0*(*amt)/cfg.REP_THRESH(),
+            1.0,
+            1.0
+          );
+          else if (*amt == 0) return "white";
+          else return "red";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
+    ));
 
     artists.emplace_back();
-    for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
-      artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
-        emp::to_string("Shared Resource Direction ", d),
-        "Shared Resource",
-        grid_viewer,
-        [this, d](const size_t i) -> std::optional<double_datum> {
-          if (w.IsOccupied(i)) return std::make_optional(double_datum{
-            w.man->Stockpile(i).QueryExternalContribute(d),
-            *w.man->Channel(i).GetIDs()
-          });
-          else return std::nullopt;
-        },
-        [this](const auto amt) -> std::string {
-          if (amt) {
-            if (*amt > cfg.REP_THRESH()) return "yellow";
-            else if (*amt > 0) return emp::ColorHSV(
-              240.0-180.0*(*amt)/cfg.REP_THRESH(),
-              1.0,
-              1.0
-            );
-            else if (*amt == 0) return "white";
-            else return "red";
-          } else return "black";
-        },
-        cfg_,
-        [](const auto & datum1, const auto & datum2) -> std::string {
-          if (!datum1|| !datum2) return "black";
-          else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
-          else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
-          else return "black";
-        }
-      ));
-    }
+    artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
+      "Interconnect Shared Resource", // name
+      "Interconnect Shared Resource", // description
+      grid_viewer, // viewer
+      [this](const size_t i, const size_t j) -> std::optional<double_datum> {
+        if (w.IsOccupied(i)) return std::make_optional(double_datum{
+          w.man->Stockpile(i).QueryExternalContribute(Cardi::Dir::NumDirs),
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::make_optional(double_datum{0.0});
+      }, // getter
+      [this](const auto amt) -> std::string {
+        if (amt) {
+          if (*amt > cfg.REP_THRESH()) return "yellow";
+          else if (*amt > 0) return emp::ColorHSV(
+            240.0-180.0*(*amt)/cfg.REP_THRESH(),
+            1.0,
+            1.0
+          );
+          else if (*amt == 0) return "white";
+          else return "red";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
+    ));
 
     artists.emplace_back();
-    for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
-      artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
-        emp::to_string("Messaging Direction ", d),
-        "Messaging",
-        grid_viewer,
-        [this, d](const size_t i) -> std::optional<size_t_datum> {
-          if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
-            w.man->Inbox(i).GetTraffic(d),
-            *w.man->Channel(i).GetIDs()
-          });
-          else return std::nullopt;
-        },
-        [this](const auto amt) -> std::string {
-          if (amt) {
-            if (*amt > cfg.REP_THRESH()) return "yellow";
-            else if (*amt > 0) return emp::ColorHSV(
-              240.0-180.0*(*amt)/cfg.REP_THRESH(),
-              1.0,
-              1.0
-            );
-            else if (*amt == 0) return "white";
-            else return "red";
-          } else return "black";
-        },
-        cfg_,
-        [](const auto & datum1, const auto & datum2) -> std::string {
-          if (!datum1|| !datum2) return "black";
-          else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
-          else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
-          else return "black";
-        }
-      ));
-    }
+    artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
+      "Neighbor Messaging", // name
+      "Neighbor Messaging", // description
+      grid_viewer, // viewer
+      [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
+        if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
+          w.man->Inbox(i).GetTraffic(j),
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::make_optional(size_t_datum{0});
+      }, // getter
+      [](const auto state) -> std::string {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else if (*state == 5) return "orange";
+          else return "gray";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
+    ));
+
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
+      "Interconnect Messaging", // name
+      "Interconnect Messaging", // description
+      grid_viewer, // viewer
+      [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
+        if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
+          w.man->Inbox(i).GetTraffic(Cardi::Dir::NumDirs),
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::make_optional(size_t_datum{0});
+      }, // getter
+      [this](const auto amt) -> std::string {
+        if (amt) {
+          if (*amt > cfg.REP_THRESH()) return "yellow";
+          else if (*amt > 0) return emp::ColorHSV(
+            240.0-180.0*(*amt)/cfg.REP_THRESH(),
+            1.0,
+            1.0
+          );
+          else if (*amt == 0) return "white";
+          else return "red";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
+    ));
 
     artists.emplace_back();
     artists.back().push_back(emp::NewPtr<WebArtistCell<size_t>>(
-      "Root",
-      "Root",
+      "Phylogenetic Root",
+      "Phylogenetic Root",
       grid_viewer,
       [this](const size_t i){
         return w.IsOccupied(i)
@@ -863,8 +907,8 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else if (*state == 5) return "gray";
-          else return "yellow";
+          else if (*state == 5) return "orange";
+          else return "gray";
         } else return "black";
       },
       cfg_,
@@ -914,8 +958,8 @@ public:
           else if (*state == 2) return "blue";
           else if (*state == 3) return "purple";
           else if (*state == 4) return "red";
-          else if (*state == 5) return "gray";
-          else return "yellow";
+          else if (*state == 5) return "orange";
+          else return "gray";
         } else return "black";
       },
       cfg_,
@@ -928,54 +972,80 @@ public:
     ));
 
     artists.emplace_back();
-    for (size_t d = 0; d <= Cardi::Dir::NumDirs; ++d) {
-      artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
-        emp::to_string("Regulation Direction ", d),
-        "Regulation Direction",
-        grid_viewer,
-        [this, d](const size_t i) -> std::optional<size_t_datum> {
+    artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
+      "Directional Regulation", // name
+      "Directional Regulation", // description
+      grid_viewer, // viewer
+      [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
+        const auto & regulators = w.GetFrame(i).GetFrameHardware(j).GetHardware().GetMatchBin().GetState().regulators;
+        const size_t count = std::count_if(
+          std::begin(regulators),
+          std::end(regulators),
+          [](const auto & pair){ return pair.second.View(); }
+        );
+        if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
+          count,
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::make_optional(size_t_datum{0});
+      }, // getter
+      [](const auto state) -> std::string {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else if (*state == 5) return "orange";
+          else return "gray";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
+    ));
 
-          const auto & regulators = (
-            d < Cardi::Dir::NumDirs
-            ? w.GetFrame(i).GetFrameHardware(
-                d
-              ).GetHardware().GetMatchBin().GetState().regulators
-            : w.GetFrame(
-              i
-            ).GetSpiker().GetHardware().GetMatchBin().GetState().regulators
-          );
-          const size_t count = std::count_if(
-            std::begin(regulators),
-            std::end(regulators),
-            [](const auto & pair){ return pair.second.View(); }
-          );
-          if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
-            count,
-            *w.man->Channel(i).GetIDs()
-          });
-          else return std::nullopt;
-
-        },
-        [](const auto state) -> std::string {
-          if (state) {
-            if (*state == 0) return "white";
-            else if (*state == 1) return "green";
-            else if (*state == 2) return "blue";
-            else if (*state == 3) return "purple";
-            else if (*state == 4) return "red";
-            else if (*state == 5) return "gray";
-            else return "yellow";
-          } else return "black";
-        },
-        cfg_,
-        [](const auto & datum1, const auto & datum2) -> std::string {
-          if (!datum1|| !datum2) return "black";
-          else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
-          else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
-          else return "black";
-        }
-      ));
-    }
+    artists.emplace_back();
+    artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
+      "Interconnect Regulation", // name
+      "Interconnect Regulation", // description
+      grid_viewer, // viewer
+      [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
+        const auto & regulators = w.GetFrame(i).GetSpiker().GetHardware().GetMatchBin().GetState().regulators;
+        const size_t count = std::count_if(
+          std::begin(regulators),
+          std::end(regulators),
+          [](const auto & pair){ return pair.second.View(); }
+        );
+        if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
+          count,
+          *w.man->Channel(i).GetIDs()
+        });
+        else return std::make_optional(size_t_datum{0});
+      }, // getter
+      [](const auto state) -> std::string {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else if (*state == 5) return "orange";
+          else return "gray";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
+    ));
 
     grid_viewer.SetCSS(
       "min-height",
