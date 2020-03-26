@@ -13,20 +13,23 @@
     </span>
 </div>
 
-
 <div id="view_selector-body" class="text-large collapse show">
     <div id="view_selector">
       <ul class="list-group list-group-flush">
       <span data-toggle="collapse" href="#group_structure-body">
-      <span data-toggle="active" href="#group_structure-toggle">
       <li
         id="group_structure-toggle"
-        class="list-group-item toggle btn btn-lg btn-block btn-primary active"
+        class="list-group-item btn-lg btn-block btn-flip  text-center"
         style="border-radius: 0;"
       >
           Group Structure
       </li>
-      </span>
+      <script>
+        document.getElementById('group_structure-toggle').onclick = function() {
+            this.classList.toggle('btn-primary');
+            this.classList.toggle('btn-flip');
+        }
+      </script>
       </span>
       <div id="group_structure-body" class="collapse show">
       <li class="list-group-item">
