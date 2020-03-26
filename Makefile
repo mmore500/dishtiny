@@ -75,10 +75,10 @@ $(PROJECT):	source/native/$(PROJECT).cc
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web/$(PROJECT)-web.cc
-	$(CXX_web) $(CFLAGS_web) source/web/$(PROJECT)-web.cc -o web/$(PROJECT).js
+	$(CXX_web) $(CFLAGS_web) source/web/$(PROJECT)-web.cc -o web/$(PROJECT).js && python3 web/make_html.py
 
 clean:
-	rm -f $(PROJECT) web/$(PROJECT).js web/*.js.map web/*.js.mem web/*.wasm *~ source/*.o *.o debug_file
+	rm -f $(PROJECT) web/$(PROJECT).js web/*.js.map web/*.js.mem web/*.wasm *~ source/*.o *.o debug_file web/$(PROJECT).html
 
 # Debugging information
 print-%: ; @echo '$(subst ','\'',$*=$($*))'

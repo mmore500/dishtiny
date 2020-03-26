@@ -2,14 +2,13 @@ import toml
 import jinja2
 from markdown2 import Markdown
 
-from markup import dishMark
-
 INPUT = 'keys.toml'
-OUTPUT = 'output.html'
+OUTPUT = 'dishtiny.html'
 TEMPLATE = "template.html.jinja"
+DIR = "web/"
 
 # load our TOML file
-with open(INPUT, 'r') as file:
+with open(DIR + INPUT, 'r') as file:
     data = toml.load(file)
 
 # process and generate badge
@@ -40,7 +39,7 @@ def make_badge(str, color):
 markdown = Markdown()
 
 # find template, adapted from https://stackoverflow.com/a/38642558 
-template_loader = jinja2.FileSystemLoader(searchpath="./")
+template_loader = jinja2.FileSystemLoader(searchpath=DIR)
 template_env = jinja2.Environment(loader=template_loader)
 # load template
 template = template_env.get_template(TEMPLATE)
@@ -50,5 +49,5 @@ template = template_env.get_template(TEMPLATE)
 outputText = template.render(data=data, markdown=markdown, eval=eval, make_badge=make_badge)
 
 # output to file
-with open(OUTPUT, 'w') as out:
+with open(DIR + OUTPUT, 'w') as out:
     out.write(outputText)
