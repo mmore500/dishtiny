@@ -1086,19 +1086,13 @@ public:
 
     for (auto & [category, series] : artists) {
 
-      std::cout << category << std::endl;
-
       const std::string series_id = emp::to_string(
         emp::slugify(series[0]->GetName()),
         "-outer"
       );
 
-      std::cout << series_id << std::endl;
-
       auto & view_subselector = view_subselectors.at(category);
       view_subselector.SetAttr("class", "btn-group-toggle");
-
-      std::cout << "apple" << std::endl;
 
       view_subselector << UI::Div(
         series_id
@@ -1108,19 +1102,11 @@ public:
         "role", "group"
       );
 
-      std::cout << "bananna" << std::endl;
-
       for (size_t i = 0; i < series.size(); ++i) {
-
-        std::cout << "chicken" << std::endl;
 
         auto & artist = series[i];
 
-        std::cout << "donkey" << std::endl;
-
         const std::string name = artist->GetName();
-
-        std::cout << "name " << name << std::endl;
 
         view_subselector.Div(series_id) << UI::Div(emp::slugify(name)).SetAttr(
             "class",
@@ -1155,15 +1141,9 @@ public:
               "autocomplete", "off"
           );
 
-          std::cout << "giraffe" << std::endl;
-
       }
 
-      std::cout << "hippo" << std::endl;
-
     }
-
-    std::cout << "iguana" << std::endl;
 
     button_dash << UI::Div(
       "button_row"
@@ -1525,8 +1505,6 @@ public:
         ).SetAttr(
           "class", "card-body collapse"
         ) << Config::hardware_t(nullptr, nullptr, &temp).GetMatchBin().name();
-
-    std::cout << "juniper" << std::endl;
 
   }
 
