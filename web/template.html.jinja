@@ -5,7 +5,7 @@
   </head>
   <body>
     {% include 'includes/spinner.html' %}
-    
+
     <style>
     .text-large {
       font-size: 125%;
@@ -59,7 +59,7 @@
 
     <div class="row p-3 container-fluid">
       <div class="col-sm-12 p-3 mx-auto">
-        {% include 'includes/readme.html' %}  
+        {% include 'includes/readme.html' %}
       </div>
     </div>
 
@@ -68,11 +68,11 @@
         {% include 'includes/viewer.html' %}
         {% include 'includes/controls.html' %}
       </div>
-      
+
       <div class="col p-3 mx-auto">
             {% import "includes/view-key.html.jinja" as view_key %}
             {{ view_key.content(data, eval, make_badge, markdown) }}
-            
+
       </div>
     </div>
 
