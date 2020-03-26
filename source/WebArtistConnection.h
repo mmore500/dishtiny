@@ -99,6 +99,11 @@ public:
     description.SetCSS("display", "initial");
   }
 
+  void Toggle() {
+    if (canvas.GetCSS("visibility") == "hidden") Activate();
+    else Deactivate();
+  }
+
   void Download(const std::string & fn) { canvas.DownloadPNG(fn); }
 
   std::string GetName() const { return name; }

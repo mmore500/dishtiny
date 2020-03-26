@@ -91,6 +91,11 @@ public:
     description.SetCSS("display", "initial");
   }
 
+  void Toggle() {
+    if (canvas.GetCSS("visibility") == "hidden") Activate();
+    else Deactivate();
+  }
+
   std::string GetName() const { return name; }
 
   void Redraw(const size_t update) {
