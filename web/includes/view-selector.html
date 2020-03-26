@@ -12,7 +12,44 @@
     </button>
     </span>
 </div>
-<div id="view_selector-body" class="text-large card-body collapse show">
-    <div id="view_selector"></div>
+
+
+<div id="view_selector-body" class="text-large collapse show">
+    <div id="view_selector">
+      <ul class="list-group list-group-flush">
+      <span data-toggle="collapse" href="#group_structure-body">
+      <span data-toggle="active" href="#group_structure-toggle">
+      <li
+        id="group_structure-toggle"
+        class="list-group-item toggle btn btn-lg btn-block btn-primary active"
+        style="border-radius: 0;"
+      >
+          Group Structure
+      </li>
+      </span>
+      </span>
+      <div id="group_structure-body" class="collapse show">
+      <li class="list-group-item">
+      <div id="group_structure_category"></div>
+      </li>
+      </div>
+      DEMOGRAPHICS
+      <div id="demographics_category"></div>
+      RESOURCE COLLECTION
+      <div id="resource_collection_category"></div>
+      CELL BEHAVIOR
+      <div id="cell_behavior_category">
+        SHARING
+        <div id="sharing_category"></div>
+        MESSAGING
+        <div id="messaging_category"></div>
+        REPRODUCTION
+        <div id="reproduction_category"></div>
+        APOPTOSIS
+        <div id="apoptosis_category"></div>
+        REGULATION
+        <div id="regulation_category"></div>
+      </div>
+    </div>
 </div>
 </div>
