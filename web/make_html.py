@@ -2,8 +2,6 @@ import toml
 import jinja2
 from markdown2 import Markdown
 
-from markup import dishMark
-
 INPUT = 'keys.toml'
 OUTPUT = 'dishtiny.html'
 TEMPLATE = "template.html.jinja"
