@@ -195,7 +195,7 @@ public:
     , render(true)
   {
 
-    grid_viewer.SetAttr("class", "mx-auto");
+    grid_viewer.SetAttr("class", "mx-auto card-deck");
 
     struct double_datum {
       double val;
