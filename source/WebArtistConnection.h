@@ -33,6 +33,7 @@ private:
   const std::string name;
 
   UI::Canvas canvas;
+  UI::Document* viewer;
   UI::DocuExtras description;
 
   std::function<emp::vector<size_t>(size_t)> getter;
@@ -48,7 +49,7 @@ public:
   WebArtistConnection(
     std::string name_,
     std::string description_,
-    UI::Document &viewer,
+    UI::Document &viewer_,
     std::function<emp::vector<size_t>(size_t)> getter_,
     const Config &cfg_,
     const DishWorld &w
@@ -57,6 +58,8 @@ public:
   ), canvas(
     std::min(GetViewPortSize() - 100, 500),
     std::min(GetViewPortSize() - 100, 500)
+  ), viewer(
+    &viewer_
   ), description(
     emp::to_string(emp::slugify(description_), "-key")
   ), getter(
@@ -80,27 +83,45 @@ public:
         else if (cp1->size() > 1 && (*cp1)[1] == (*cp2)[1]) return "lightgray";
         else return "black";
       }
-  ) { viewer << canvas.SetCSS(
-      "position", "absolute",
-      "margin-left", "auto",
-      "margin-right", "auto",
-      "left", "0",
-      "right", "0"
-    );
+  ) {
+    viewer_ << UI::Div(
+      emp::slugify(emp::to_string(name, "card-holder"))
+    ) << UI::Div().SetAttr(
+        "class", "card text-center"
+    ).SetAttr(
+        "style", emp::to_string(
+        "width: ",
+        std::min(GetViewPortSize() - 100, 500) + 50,
+        "px;"
+      )
+    ) << UI::Div(
+      emp::slugify(emp::to_string(name, "card-header"))
+    ).SetAttr(
+      "class", "card-header"
+    ) <<  name << UI::Close(
+      emp::slugify(emp::to_string(name, "card-header"))
+    ) << UI::Div().SetAttr(
+      "class", "card-body"
+    ) << canvas;
   }
 
   void Deactivate() {
-    canvas.SetCSS("visibility", "hidden");
+    viewer->Div(
+      emp::slugify(emp::to_string(name, "card-holder"))
+    ).SetAttr("class", "collapse");
     description.SetCSS("display", "none");
   }
 
   void Activate() {
-    canvas.SetCSS("visibility", "visible");
+    viewer->Div(
+      emp::slugify(emp::to_string(name, "card-holder"))
+    ).SetAttr("class", "");
     description.SetCSS("display", "initial");
+    std::cout << "tester" << std::endl;
   }
 
   void Toggle() {
-    if (canvas.GetCSS("visibility") == "hidden") Activate();
+    if (description.GetCSS("display") == "none") Activate();
     else Deactivate();
   }
 
@@ -110,7 +131,7 @@ public:
 
   void Redraw(const size_t update) {
 
-    if (update == last_update || canvas.GetCSS("visibility") == "hidden") {
+    if (update == last_update || description.GetCSS("display") == "none") {
       return;
     }
     else last_update = update;
