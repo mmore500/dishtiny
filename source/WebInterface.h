@@ -1123,10 +1123,7 @@ public:
             )
           ).OnClick(
             [&, artist](){
-              for (auto & [c, s] : artists) {
-                for (auto & a : s) a->Deactivate();
-              }
-              artist->Activate();
+              artist->Toggle();
               artist->Redraw(w.GetUpdate());
             }
           ) << UI::Input(
