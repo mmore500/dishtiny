@@ -1128,7 +1128,7 @@ public:
             }
           ) << UI::Input(
               [](const std::string & state){ ; },
-              "radio",
+              "checkbox",
               i ? emp::to_string(i) : name
             ).SetAttr(
               "name", "view_mode"
