@@ -149,7 +149,9 @@ void FrameHardware::DispatchEnvTriggers(const size_t update){
     if (IsPropaguleChild()) {
       cpu.TriggerEvent("EnvTrigger", g.GetTag(7));
     } else if (IsPropaguleParent()) {
-      cpu.TriggerEvent("EnvTrigger", g.GetTag(8));
+      // disable system-provided is-parent sensing
+      // to destabilize "permanent" cooperator networks
+      // cpu.TriggerEvent("EnvTrigger", g.GetTag(8));
     }
 
   }
