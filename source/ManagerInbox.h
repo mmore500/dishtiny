@@ -16,6 +16,7 @@ private:
 
   // arranged by incoming direction
   emp::vector<Config::inbox_t> inboxes;
+  emp::vector<Config::inbox_t> trusted_inboxes;
 
   Config::inbox_t spike_broadcast_inbox;
 
@@ -42,23 +43,32 @@ private:
 public:
 
   ManagerInbox(const Config &cfg_)
-    : inboxes(Cardi::Dir::NumDirs + 1) // +1 for spiker
+    : inboxes(Cardi::Dir::NumDirs + 1) // +1 for spiker (should be unused)
+    , trusted_inboxes(Cardi::Dir::NumDirs + 1) // +1 for spiker
     , cfg(cfg_)
   { ; }
 
 
-  emp::vector<Config::inbox_t>& GetInboxes() {
+  emp::vector<Config::inbox_t>& GetInboxes() { return inboxes; }
+
+  emp::vector<Config::inbox_t>& GetTrustedInboxes() {
 
     // filter out duplicates
-    std::sort(std::begin(spike_broadcast_inbox), std::end(spike_broadcast_inbox));
+    std::sort(
+      std::begin(spike_broadcast_inbox),
+      std::end(spike_broadcast_inbox)
+    );
     spike_broadcast_inbox.erase(
-      std::unique(std::begin(spike_broadcast_inbox), std::end(spike_broadcast_inbox)),
+      std::unique(
+        std::begin(spike_broadcast_inbox),
+        std::end(spike_broadcast_inbox)
+      ),
       std::end(spike_broadcast_inbox)
     );
 
     // queue up the spike broadcast inbox
     while (spike_broadcast_inbox.size()) {
-      for (auto & inbox : inboxes) HandleMessage(
+      for (auto & inbox : trusted_inboxes) HandleMessage(
         spike_broadcast_inbox.front(),
         inbox
       );
@@ -66,12 +76,13 @@ public:
       spike_broadcast_inbox.pop_front();
     }
 
-    return inboxes;
+    return trusted_inboxes;
 
   }
 
   void ClearInboxes() {
     for(auto &in : inboxes) in.clear();
+    for(auto &in : trusted_inboxes) in.clear();
     spike_broadcast_inbox.clear();
   }
 
@@ -82,9 +93,24 @@ public:
 
     if (incoming_direction >= Cardi::Dir::NumDirs) {
       std::lock_guard<std::mutex> lock(spike_mutex);
-      HandleMessage(event, inboxes[incoming_direction]);
+      emp_assert(false, "all spike messages should be trusted");
+      // HandleMessage(event, inboxes[incoming_direction]);
     } else {
       HandleMessage(event, inboxes[incoming_direction]);
+    }
+
+  }
+
+  void TakeTrustedMessage(
+    const Config::event_t & event,
+    const size_t incoming_direction
+  ) {
+
+    if (incoming_direction >= Cardi::Dir::NumDirs) {
+      std::lock_guard<std::mutex> lock(spike_mutex);
+      HandleMessage(event, trusted_inboxes[incoming_direction]);
+    } else {
+      HandleMessage(event, trusted_inboxes[incoming_direction]);
     }
 
   }
@@ -96,8 +122,12 @@ public:
     HandleMessage(event, spike_broadcast_inbox);
   }
 
-  size_t GetTraffic(size_t dir) const {
+  size_t GetTraffic(const size_t dir) const {
     return inboxes[dir].size();
+  }
+
+  size_t GetTrustedTraffic(const size_t dir) const {
+    return trusted_inboxes[dir].size();
   }
 
   size_t GetSpikeBroadcastTraffic() const {
@@ -112,7 +142,14 @@ public:
       [](const size_t & a, const auto & b){
         return a + b.size();
       }
-    );
+    ) + std::accumulate(
+      std::begin(trusted_inboxes),
+      std::end(trusted_inboxes),
+      0,
+      [](const size_t & a, const auto & b){
+        return a + b.size();
+      }
+    ) + GetSpikeBroadcastTraffic();
   }
 
 };

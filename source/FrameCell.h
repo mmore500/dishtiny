@@ -75,6 +75,8 @@ public:
 
   void QueueMessages(emp::vector<Config::inbox_t> &inboxes);
 
+  void QueueTrustedMessages(emp::vector<Config::inbox_t> &inboxes);
+
   emp::vector<Config::matchbin_t::state_t> CopyMatchBins();
 
   void SetRegulators(const emp::vector<Config::matchbin_t::state_t> & targets);

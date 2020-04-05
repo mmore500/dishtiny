@@ -148,7 +148,7 @@ public:
                 : 0
             );
 
-            man.Inbox(dest).TakeMessage(event, Cardi::Dir::NumDirs);
+            man.Inbox(dest).TakeTrustedMessage(event, Cardi::Dir::NumDirs);
           }
 
         }
@@ -179,7 +179,7 @@ public:
                 : 0
             );
 
-            man.Inbox(dest).TakeMessage(event, Cardi::Dir::NumDirs);
+            man.Inbox(dest).TakeTrustedMessage(event, Cardi::Dir::NumDirs);
 
           }
 
