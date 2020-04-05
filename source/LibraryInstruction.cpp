@@ -1095,7 +1095,7 @@ void LibraryInstruction::InitDevoActions(inst_lib_t &il, const Config &cfg) {
 
       const size_t connection_cap = static_cast<size_t>(
         state.GetLocal(inst.args[1])
-      ) + 1;
+      ) + 2;
 
       const size_t pos = fh.Cell().GetPos();
       if (hw.GetRandom().P(p)) {
