@@ -93,14 +93,21 @@ public:
 
       el.RegisterDispatchFun(
         "SendMsgExternal",
-        [](hardware_t & hw, const event_t & event) {
+        [&cfg](hardware_t & hw, const event_t & event) {
 
           FrameHardware &fh = *hw.GetTrait();
           Manager &man = fh.Cell().Man();
           const size_t outgoing_dir = fh.GetMsgDir();
           const size_t dest = fh.Cell().GetNeigh(outgoing_dir);
 
-          man.Inbox(dest).TakeMessage(event, Cardi::Opp[outgoing_dir]);
+          if (man.Channel(fh.Cell().GetPos()).CheckMatch(
+            man.Channel(dest),
+            cfg.NLEV() - 1
+          )) man.Inbox(dest).TakeTrustedMessage(
+            event,
+            Cardi::Opp[outgoing_dir]
+          );
+          else man.Inbox(dest).TakeMessage(event, Cardi::Opp[outgoing_dir]);
         }
       );
 
