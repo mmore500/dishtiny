@@ -102,9 +102,20 @@ public:
   }
 
   void Activate() {
+    const static auto boot_time {std::chrono::system_clock::now()};
     viewer->Div(
       emp::slugify(emp::to_string(name, "card-holder"))
-    ).SetAttr("class", "");
+    ).SetAttr(
+      "class",
+      ""
+    ).SetCSS(
+      "order",
+      emp::to_string(
+        std::chrono::duration_cast<std::chrono::milliseconds>(
+           std::chrono::system_clock::now()  - boot_time
+        ).count()
+      )
+    );
     description.SetCSS("display", "initial");
   }
 
