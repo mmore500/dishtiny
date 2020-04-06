@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <limits>
+#include <chrono>
 
 #include "web/Animate.h"
 #include "web/Canvas.h"
@@ -105,7 +106,6 @@ public:
       emp::slugify(emp::to_string(name, "card-holder"))
     ).SetAttr("class", "");
     description.SetCSS("display", "initial");
-    std::cout << "tester" << std::endl;
   }
 
   void Toggle() {
