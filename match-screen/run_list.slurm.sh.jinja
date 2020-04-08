@@ -71,7 +71,7 @@ SEED=$((SEED_OFFSET + SLURM_ARRAY_TASK_ID % SEED_COUNT))
 STEP=1010
 REP=$(( SLURM_ARRAY_TASK_ID / SEED_COUNT ))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/match-screen2-{{ knockout }}/seed=${SEED}+step=${STEP}+rep={$REP}"
+OUTPUT_DIR="/mnt/scratch/mmore500/match-screen2-{{ knockout }}/seed=${SEED}+step=${STEP}+rep=${REP}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/match-screen/"
 SOURCE_DIR="/mnt/scratch/mmore500/dishtiny-screen2/seed=${SEED}+step=${STEP}"
 
