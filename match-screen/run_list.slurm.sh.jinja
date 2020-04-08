@@ -69,9 +69,9 @@ SEED_COUNT=64
 SEED_OFFSET=2000
 SEED=$((SEED_OFFSET + SLURM_ARRAY_TASK_ID % SEED_COUNT))
 STEP=1010
-REP=$(( SLURM_ARRAY_TASK_ID / SEED_COUNT ))
+REPEAT=$(( SLURM_ARRAY_TASK_ID / SEED_COUNT ))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/match-screen2-{{ knockout }}/seed=${SEED}+step=${STEP}+rep=${REP}"
+OUTPUT_DIR="/mnt/scratch/mmore500/match-screen2-{{ knockout }}/seed=${SEED}+step=${STEP}+rep=${REPEAT}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/match-screen/"
 SOURCE_DIR="/mnt/scratch/mmore500/dishtiny-screen2/seed=${SEED}+step=${STEP}"
 
@@ -86,7 +86,7 @@ echo "   SEED_COUNT" $SEED_COUNT
 echo "   SEED_OFFSET" $SEED_OFFSET
 echo "   SEED" $SEED
 echo "   STEP" $STEP
-echo "   REP" $REP
+echo "   REPEAT" $REPEAT
 echo "   OUTPUT_DIR" $OUTPUT_DIR
 echo "   CONFIG_DIR" $CONFIG_DIR
 echo "   SOURCE_DIR" $SOURCE_DIR
@@ -176,7 +176,7 @@ for REP in {0..3}; do
   for CC in {0..3}; do
 
     ./dishtiny                                                                 \
-      -SEED $(( ${SEED} + ${REP} * 4 + ${CC} + 100 ))                          \
+      -SEED $(( ${SEED} + ${REP} * 4 + ${CC} + 100 * ${REPEAT} + 1 ))          \
       -SEED_POP $(( ${REP} * 4 + ${CC} + 1 ))                                  \
       >"title=run+REP=${REP}+CC=${CC}+ext=.log" 2>&1 &
 
