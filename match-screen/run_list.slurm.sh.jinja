@@ -65,12 +65,15 @@ echo "Prepare Env Vars"
 echo "----------------"
 ################################################################################
 
-SEED_OFFSET=1000
-SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
+SEED_COUNT=64
+SEED_OFFSET=2000
+SEED=$((SEED_OFFSET + SLURM_ARRAY_TASK_ID % SEED_COUNT))
+STEP=1010
+REP=$(( SLURM_ARRAY_TASK_ID / SEED_COUNT ))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/match-screen-{{ knockout }}/seed=${SEED}"
+OUTPUT_DIR="/mnt/scratch/mmore500/match-screen2-{{ knockout }}/seed=${SEED}+step=${STEP}+rep={$REP}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/match-screen/"
-SOURCE_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=1049"
+SOURCE_DIR="/mnt/scratch/mmore500/dishtiny-screen2/seed=${SEED}+step=${STEP}"
 
 # get second most recent source population
 # SOURCE_DIR=$(                                                                \
@@ -79,7 +82,11 @@ SOURCE_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=1049"
 #   | head -n                                                                  \
 # )
 
+echo "   SEED_COUNT" $SEED_COUNT
+echo "   SEED_OFFSET" $SEED_OFFSET
 echo "   SEED" $SEED
+echo "   STEP" $STEP
+echo "   REP" $REP
 echo "   OUTPUT_DIR" $OUTPUT_DIR
 echo "   CONFIG_DIR" $CONFIG_DIR
 echo "   SOURCE_DIR" $SOURCE_DIR
