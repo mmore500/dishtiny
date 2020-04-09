@@ -30,12 +30,13 @@ done
 
 # knockout spiker components, genome by genome
 # 27,Nop
+# 90,SendSpikeMsg
 # 91,SendSpikeReverseMsg
 # 92,BcstSpikeMsg
 # 93,BcstSpikeReverseMsg
 
 for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-  sed -i -- "/\"id\": 91\$\|\"id\": 92\$\|\"id\": 93\$/{
+  sed -i -- "/\"id\": 90\$\|\"id\": 91\$\|\"id\": 92\$\|\"id\": 93\$/{
     h
     s//\"id\": 27/g
     H
