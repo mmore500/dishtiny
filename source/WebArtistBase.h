@@ -57,8 +57,29 @@ public:
       description(emp::to_string(emp::slugify(description_), "-key")),
       cfg(cfg_),
       last_update(std::numeric_limits<size_t>::max())
-    {}
-
+    { 
+      viewer_ << UI::Div(
+        emp::slugify(emp::to_string(name, "card-holder"))
+      ) << UI::Div().SetAttr(
+          "class", "card text-center"
+      ).SetAttr(
+          "style", emp::to_string(
+          "width: ",
+          std::min(GetViewPortSize() - 100, 500) + 50,
+          "px;"
+        )
+      ) << UI::Div(
+        emp::slugify(emp::to_string(name, "card-header"))
+      ).SetAttr(
+        "class", "card-header"
+      ) <<  name << UI::Close(
+        emp::slugify(emp::to_string(name, "card-header"))
+      ) << UI::Div().SetAttr(
+        "class", "card-body"
+      ) << canvas;
+    }
+  
+  // for use in WebArtistConnection
   WebArtistBase(
     std::string name_,
     std::string description_,
@@ -69,7 +90,7 @@ public:
       description(emp::to_string(emp::slugify(description_), "-key")),
       cfg(cfg_),
       last_update(std::numeric_limits<size_t>::max())
-    {}
+    { ; }
 
 };
 void WebArtistBase::Deactivate() {

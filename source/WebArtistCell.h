@@ -40,27 +40,7 @@ public:
       getter(getter_),
       renderer(renderer_),
       divider(divider_)
-    {
-      viewer_ << UI::Div(
-        emp::slugify(emp::to_string(name, "card-holder"))
-      ) << UI::Div().SetAttr(
-          "class", "card text-center"
-      ).SetAttr(
-          "style", emp::to_string(
-          "width: ",
-          std::min(GetViewPortSize() - 100, 500) + 50,
-          "px;"
-        )
-      ) << UI::Div(
-        emp::slugify(emp::to_string(name, "card-header"))
-      ).SetAttr(
-        "class", "card-header"
-      ) <<  name << UI::Close(
-        emp::slugify(emp::to_string(name, "card-header"))
-      ) << UI::Div().SetAttr(
-        "class", "card-body"
-      ) << canvas;
-    }
+    { ; }
 
   // for use as background in WebArtistConnection
   WebArtistCell(
