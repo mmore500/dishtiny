@@ -59,6 +59,18 @@ public:
       last_update(std::numeric_limits<size_t>::max())
     {}
 
+  WebArtistBase(
+    std::string name_,
+    std::string description_,
+    UI::Canvas &canvas_,
+    const Config &cfg_
+  ) : name(name_),
+      canvas(canvas_),
+      description(emp::to_string(emp::slugify(description_), "-key")),
+      cfg(cfg_),
+      last_update(std::numeric_limits<size_t>::max())
+    {}
+
 };
 void WebArtistBase::Deactivate() {
   viewer->Div(
