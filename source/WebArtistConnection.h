@@ -30,16 +30,7 @@ class WebArtistConnection : public WebArtistBase {
 
 private:
 
-  const std::string name;
-
-  UI::Canvas canvas;
-  UI::DocuExtras description;
-
   std::function<emp::vector<size_t>(size_t)> getter;
-
-  const Config &cfg;
-
-  size_t last_update = 0;
 
   WebArtistCell<ChannelPack> background;
 
@@ -48,69 +39,43 @@ public:
   WebArtistConnection(
     std::string name_,
     std::string description_,
-    UI::Document &viewer,
+    UI::Document &viewer_,
     std::function<emp::vector<size_t>(size_t)> getter_,
     const Config &cfg_,
     const DishWorld &w
-  ) : name(
-    name_
-  ), canvas(
-    std::min(GetViewPortSize() - 100, 500),
-    std::min(GetViewPortSize() - 100, 500)
-  ), description(
-    emp::to_string(emp::slugify(description_), "-key")
-  ), getter(
-    getter_
-  ), cfg(
-    cfg_
-  ), background(
-      "Channel",
-      "Channel",
-      canvas,
-      [&w](const size_t i){
-        return w.GetManager().Channel(i).GetIDs();
-      },
-      [](std::optional<ChannelPack> cp) {
-        return cp ? ChannelGrayscale(*cp) : "black";
-      },
-      cfg_,
-      [](std::optional<ChannelPack> cp1, std::optional<ChannelPack> cp2) -> std::string {
-        if (!cp1 || !cp2) return "black";
-        else if ((*cp1)[0] == (*cp2)[0]) return "transparent";
-        else if (cp1->size() > 1 && (*cp1)[1] == (*cp2)[1]) return "lightgray";
-        else return "black";
-      }
-  ) { viewer << canvas.SetCSS(
-      "position", "absolute",
-      "margin-left", "auto",
-      "margin-right", "auto",
-      "left", "0",
-      "right", "0"
-    );
-  }
+  ) : WebArtistBase(
+        name_,
+        description_,
+        viewer_,
+        cfg_
+      ),
+      getter(getter_),
+      background(
+        "Channel",
+        "Channel",
+        canvas,
+        [&w](const size_t i){
+          return w.GetManager().Channel(i).GetIDs();
+        },
+        [](std::optional<ChannelPack> cp) {
+          return cp ? ChannelGrayscale(*cp) : "black";
+        },
+        cfg_,
+        [](std::optional<ChannelPack> cp1, std::optional<ChannelPack> cp2) -> std::string {
+          if (!cp1 || !cp2) return "black";
+          else if ((*cp1)[0] == (*cp2)[0]) return "transparent";
+          else if (cp1->size() > 1 && (*cp1)[1] == (*cp2)[1]) return "lightgray";
+          else return "black";
+        }
+      )
+    { ; }
 
-  void Deactivate() {
-    canvas.SetCSS("visibility", "hidden");
-    description.SetCSS("display", "none");
-  }
-
-  void Activate() {
-    canvas.SetCSS("visibility", "visible");
-    description.SetCSS("display", "initial");
-  }
-
-  void Toggle() {
-    if (canvas.GetCSS("visibility") == "hidden") Activate();
-    else Deactivate();
-  }
 
   void Download(const std::string & fn) { canvas.DownloadPNG(fn); }
 
-  std::string GetName() const { return name; }
-
   void Redraw(const size_t update) {
 
-    if (update == last_update || canvas.GetCSS("visibility") == "hidden") {
+    if (update == last_update || description.GetCSS("display") == "none") {
       return;
     }
     else last_update = update;

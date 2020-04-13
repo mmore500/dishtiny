@@ -24,8 +24,10 @@
 #include "Genome.h"
 #include "WebArtistBase.h"
 #include "WebArtistCell.h"
+
 #include "WebArtistPointer.h"
 #include "WebArtistConnection.h"
+
 
 namespace UI = emp::web;
 
@@ -195,7 +197,7 @@ public:
     , render(true)
   {
 
-    grid_viewer.SetAttr("class", "mx-auto");
+    grid_viewer.SetAttr("class", "mx-auto card-deck");
 
     struct double_datum {
       double val;
@@ -247,7 +249,7 @@ public:
         else return "black";
       } // divider
     ));
-
+    
     artists.insert({"sharing_category", {}})->second.push_back(
       emp::NewPtr<WebArtistCell<double_datum>>(
       "Interconnect Sharing Fraction", // name
@@ -681,7 +683,7 @@ public:
       ));
     }
     }
-
+    
     artists.insert({"group_structure_category", {}})->second.push_back(
       emp::NewPtr<WebArtistConnection>(
       "Established Interconnect",
@@ -723,7 +725,7 @@ public:
       cfg_,
       w
     ));
-
+    
     artists.insert({"sharing_category", {}})->second.push_back(
       emp::NewPtr<WebArtistPointer<double_datum>>(
       "Neighbor Shared Resource", // name
@@ -853,7 +855,7 @@ public:
         else return "black";
       } // divider
     ));
-
+    
     artists.insert({"demographics_category", {}})->second.push_back(
       emp::NewPtr<WebArtistCell<size_t>>(
       "Phylogenetic Root",
@@ -990,7 +992,7 @@ public:
         else return "black";
       }
     ));
-
+    
     artists.insert({"regulation_category", {}})->second.push_back(
       emp::NewPtr<WebArtistPointer<size_t_datum>>(
       "Directional Regulation", // name
@@ -1028,7 +1030,7 @@ public:
         else return "black";
       } // divider
     ));
-
+    
     artists.insert({"regulation_category", {}})->second.push_back(
       emp::NewPtr<WebArtistPointer<size_t_datum>>(
       "Interconnect Regulation", // name
@@ -1066,7 +1068,7 @@ public:
         else return "black";
       } // divider
     ));
-
+    
     grid_viewer.SetCSS(
       "min-height",
       emp::to_string(
@@ -1122,15 +1124,12 @@ public:
             )
           ).OnClick(
             [&, artist](){
-              for (auto & [c, s] : artists) {
-                for (auto & a : s) a->Deactivate();
-              }
-              artist->Activate();
+              artist->Toggle();
               artist->Redraw(w.GetUpdate());
             }
           ) << UI::Input(
               [](const std::string & state){ ; },
-              "radio",
+              "checkbox",
               i ? emp::to_string(i) : name
             ).SetAttr(
               "name", "view_mode"
