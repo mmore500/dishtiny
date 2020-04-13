@@ -60,6 +60,9 @@ public:
     { 
       viewer_ << UI::Div(
         emp::slugify(emp::to_string(name, "card-holder"))
+      ).SetCSS(
+        "padding-bottom",
+        "1.5em"
       ) << UI::Div().SetAttr(
           "class", "card text-center"
       ).SetAttr(
