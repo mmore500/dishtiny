@@ -53,7 +53,7 @@ public:
       background(
         "Channel",
         "Channel",
-        viewer_,
+        canvas,
         [&w](const size_t i){
           return w.GetManager().Channel(i).GetIDs();
         },
