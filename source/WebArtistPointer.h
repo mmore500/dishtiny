@@ -18,20 +18,10 @@ class WebArtistPointer : public WebArtistBase {
 
 private:
 
-  const std::string name;
-
-  UI::Canvas canvas;
-  UI::Document* viewer;
-  UI::DocuExtras description;
-
   std::function<std::optional<T>(size_t, size_t)> getter;
   std::function<std::string(std::optional<T>)> renderer;
 
   std::function<std::string(std::optional<T>,std::optional<T>)> divider;
-
-  const Config &cfg;
-
-  size_t last_update;
 
 public:
 
@@ -43,40 +33,37 @@ public:
     std::function<std::string(std::optional<T>)> renderer_,
     const Config &cfg_,
     std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
-  ) : name(name_)
-  , canvas(
-    std::min(GetViewPortSize() - 100, 500),
-    std::min(GetViewPortSize() - 100, 500)
-  )
-  , viewer(&viewer_)
-  , description(emp::to_string(emp::slugify(description_), "-key"))
-  , getter(getter_)
-  , renderer(renderer_)
-  , divider(divider_)
-  , cfg(cfg_)
-  , last_update(std::numeric_limits<size_t>::max())
-  {
-    viewer_ << UI::Div(
-      emp::slugify(emp::to_string(name, "card-holder"))
-    ) << UI::Div().SetAttr(
-        "class", "card text-center"
-    ).SetAttr(
-        "style", emp::to_string(
-        "width: ",
-        std::min(GetViewPortSize() - 100, 500) + 50,
-        "px;"
-      )
-    ) << UI::Div(
-      emp::slugify(emp::to_string(name, "card-header"))
-    ).SetAttr(
-      "class", "card-header"
-    ) <<  name << UI::Close(
-      emp::slugify(emp::to_string(name, "card-header"))
-    ) << UI::Div().SetAttr(
-      "class", "card-body"
-    ) << canvas;
-  }
-
+  ) : WebArtistBase(
+        name_,
+        description_,
+        viewer_,
+        cfg_
+      ),
+      getter(getter_),
+      renderer(renderer_),
+      divider(divider_)
+    {
+      viewer_ << UI::Div(
+        emp::slugify(emp::to_string(name, "card-holder"))
+      ) << UI::Div().SetAttr(
+          "class", "card text-center"
+      ).SetAttr(
+          "style", emp::to_string(
+          "width: ",
+          std::min(GetViewPortSize() - 100, 500) + 50,
+          "px;"
+        )
+      ) << UI::Div(
+        emp::slugify(emp::to_string(name, "card-header"))
+      ).SetAttr(
+        "class", "card-header"
+      ) <<  name << UI::Close(
+        emp::slugify(emp::to_string(name, "card-header"))
+      ) << UI::Div().SetAttr(
+        "class", "card-body"
+      ) << canvas;
+    }
+  /*
   // for use as background in WebArtistConnection
   WebArtistPointer(
     std::string name_,
@@ -95,29 +82,7 @@ public:
   , cfg(cfg_)
   , last_update(std::numeric_limits<size_t>::max())
   { ; }
-
-  void Deactivate() {
-    viewer->Div(
-      emp::slugify(emp::to_string(name, "card-holder"))
-    ).SetAttr("class", "collapse");
-    description.SetCSS("display", "none");
-  }
-
-  void Activate() {
-    viewer->Div(
-      emp::slugify(emp::to_string(name, "card-holder"))
-    ).SetAttr("class", "");
-    description.SetCSS("display", "initial");
-    std::cout << "tester" << std::endl;
-  }
-
-  void Toggle() {
-    if (description.GetCSS("display") == "none") Activate();
-    else Deactivate();
-  }
-
-  std::string GetName() const { return name; }
-
+  */
   void Redraw(const size_t update) {
 
     if (update == last_update || description.GetCSS("display") == "none") {
@@ -235,32 +200,6 @@ public:
         canvas.Draw(poly);
       }
     }
-    /*
-    // draw subgrid edges
-    for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
-
-      // make a new line from x1,y1 to x2,y2 (bottom left to top right)
-      canvas.Line(
-        GridXToCanvasX(helper.GetLocalX(i)),
-        GridYToCanvasY(helper.GetLocalY(i)+1),
-        GridXToCanvasX(helper.GetLocalX(i)+1),
-        GridYToCanvasY(helper.GetLocalY(i)),
-        // ...and the appropiate line color and weight (optional)
-        "black",
-
-      );
-      // create a new line from x1,y1 to x2,y2 (top left to bottom right)
-      canvas.Line(
-        GridXToCanvasX(helper.GetLocalX(i)),
-        GridYToCanvasY(helper.GetLocalY(i)),
-        GridXToCanvasX(helper.GetLocalX(i)+1),
-        GridYToCanvasY(helper.GetLocalY(i)+1),
-        // ...and the appropiate line color and weight (optional)
-        "black",
-        1.0
-      );
-
-    }*/
     // and then we draw the boxes around each grid
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
         // right edge
