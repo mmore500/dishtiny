@@ -64,8 +64,6 @@ public:
       ) << canvas;
     }
 
-  std::string GetName() const { return name; }
-
   void Redraw(const size_t update) {
 
     if (update == last_update || description.GetCSS("display") == "none") {
