@@ -21,8 +21,6 @@ private:
 
   std::function<std::string(std::optional<T>,std::optional<T>)> divider;
 
-
-
 public:
 
   WebArtistCell(
@@ -63,6 +61,26 @@ public:
         "class", "card-body"
       ) << canvas;
     }
+
+  // for use as background in WebArtistConnection
+  WebArtistCell(
+    std::string name_,
+    std::string description_,
+    UI::Canvas &canvas_,
+    std::function<std::optional<T>(size_t)> getter_,
+    std::function<std::string(std::optional<T>)> renderer_,
+    const Config &cfg_,
+    std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
+  ) : WebArtistBase(
+        name_,
+        description_,
+        canvas_,
+        cfg_
+      ),
+      getter(getter_),
+      renderer(renderer_),
+      divider(divider_)
+  { ; }
 
   void Redraw(const size_t update) {
 
