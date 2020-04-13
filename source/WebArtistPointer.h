@@ -63,26 +63,6 @@ public:
         "class", "card-body"
       ) << canvas;
     }
-  /*
-  // for use as background in WebArtistConnection
-  WebArtistPointer(
-    std::string name_,
-    std::string description_,
-    UI::Canvas &canvas_,
-    std::function<std::optional<T>(size_t, size_t)> getter_,
-    std::function<std::string(std::optional<T>)> renderer_,
-    const Config &cfg_,
-    std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
-  ) : name(name_)
-  , canvas(canvas_)
-  , description(emp::to_string(emp::slugify(description_), "-key"))
-  , getter(getter_)
-  , renderer(renderer_)
-  , divider(divider_)
-  , cfg(cfg_)
-  , last_update(std::numeric_limits<size_t>::max())
-  { ; }
-  */
   void Redraw(const size_t update) {
 
     if (update == last_update || description.GetCSS("display") == "none") {
