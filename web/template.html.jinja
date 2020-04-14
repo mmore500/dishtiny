@@ -61,7 +61,8 @@
       <div class="col p-3 mx-auto">
             {% import "includes/view-key.html.jinja" as view_key %}
             {{ view_key.content(data, eval, make_badge, markdown) }}
-      </div>
+            {% include 'includes/view-selector.html' %}
+	  </div>
     </div>
 
     <div class="row p-3 container-fluid">
