@@ -24,8 +24,10 @@
 #include "Genome.h"
 #include "WebArtistBase.h"
 #include "WebArtistCell.h"
+
 #include "WebArtistPointer.h"
 #include "WebArtistConnection.h"
+
 
 namespace UI = emp::web;
 
@@ -829,23 +831,22 @@ public:
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
         if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
-          w.man->Inbox(i).GetTraffic(Cardi::Dir::NumDirs),
+          w.man->Inbox(i).GetTraffic(Cardi::Dir::NumDirs)
+            + w.man->Inbox(i).GetSpikeBroadcastTraffic(),
           *w.man->Channel(i).GetIDs()
         });
         else return std::make_optional(size_t_datum{0});
       }, // getter
-      [this](const auto amt) -> std::string {
-        if (amt) {
-          if (*amt > cfg.REP_THRESH()) return "yellow";
-          else if (*amt > 0) return emp::ColorHSV(
-            240.0-180.0*(*amt)/cfg.REP_THRESH(),
-            1.0,
-            1.0
-          );
-          else if (*amt == 0) return "white";
-          else return "red";
+      [](const auto state) {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else return "orange";
         } else return "black";
-      }, // renderer
+      },
       cfg_,
       [](const auto & datum1, const auto & datum2) -> std::string {
         if (!datum1|| !datum2) return "black";
@@ -1531,7 +1532,11 @@ public:
     for (auto & [category, series] : artists) {
       for (auto & artist : series) artist->Deactivate();
     }
-    artists.begin()->second[0]->Activate();
+	std::find_if(
+	  std::begin(artists),
+	  std::end(artists),
+	  [](const auto &v){ return v.second[0]->GetName() == "Channel"; }
+	)->second[0]->Activate();
   }
 
   void Redraw(const size_t update) {

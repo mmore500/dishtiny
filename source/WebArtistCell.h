@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <limits>
+#include <chrono>
 
 #include "web/Animate.h"
 #include "web/Canvas.h"
@@ -15,20 +16,10 @@ class WebArtistCell : public WebArtistBase {
 
 private:
 
-  const std::string name;
-
-  UI::Canvas canvas;
-  UI::Document* viewer;
-  UI::DocuExtras description;
-
   std::function<std::optional<T>(size_t)> getter;
   std::function<std::string(std::optional<T>)> renderer;
 
   std::function<std::string(std::optional<T>,std::optional<T>)> divider;
-
-  const Config &cfg;
-
-  size_t last_update;
 
 public:
 
@@ -40,39 +31,16 @@ public:
     std::function<std::string(std::optional<T>)> renderer_,
     const Config &cfg_,
     std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
-  ) : name(name_)
-  , canvas(
-    std::min(GetViewPortSize() - 100, 500),
-    std::min(GetViewPortSize() - 100, 500)
-  )
-  , viewer(&viewer_)
-  , description(emp::to_string(emp::slugify(description_), "-key"))
-  , getter(getter_)
-  , renderer(renderer_)
-  , divider(divider_)
-  , cfg(cfg_)
-  , last_update(std::numeric_limits<size_t>::max())
-  {
-    viewer_ << UI::Div(
-      emp::slugify(emp::to_string(name, "card-holder"))
-    ) << UI::Div().SetAttr(
-        "class", "card text-center"
-    ).SetAttr(
-        "style", emp::to_string(
-        "width: ",
-        std::min(GetViewPortSize() - 100, 500) + 50,
-        "px;"
-      )
-    ) << UI::Div(
-      emp::slugify(emp::to_string(name, "card-header"))
-    ).SetAttr(
-      "class", "card-header"
-    ) <<  name << UI::Close(
-      emp::slugify(emp::to_string(name, "card-header"))
-    ) << UI::Div().SetAttr(
-      "class", "card-body"
-    ) << canvas;
-  }
+  ) : WebArtistBase(
+        name_,
+        description_,
+        viewer_,
+        cfg_
+      ),
+      getter(getter_),
+      renderer(renderer_),
+      divider(divider_)
+    { ; }
 
   // for use as background in WebArtistConnection
   WebArtistCell(
@@ -83,37 +51,16 @@ public:
     std::function<std::string(std::optional<T>)> renderer_,
     const Config &cfg_,
     std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
-  ) : name(name_)
-  , canvas(canvas_)
-  , description(emp::to_string(emp::slugify(description_), "-key"))
-  , getter(getter_)
-  , renderer(renderer_)
-  , divider(divider_)
-  , cfg(cfg_)
-  , last_update(std::numeric_limits<size_t>::max())
+  ) : WebArtistBase(
+        name_,
+        description_,
+        canvas_,
+        cfg_
+      ),
+      getter(getter_),
+      renderer(renderer_),
+      divider(divider_)
   { ; }
-
-  void Deactivate() {
-    viewer->Div(
-      emp::slugify(emp::to_string(name, "card-holder"))
-    ).SetAttr("class", "collapse");
-    description.SetCSS("display", "none");
-  }
-
-  void Activate() {
-    viewer->Div(
-      emp::slugify(emp::to_string(name, "card-holder"))
-    ).SetAttr("class", "");
-    description.SetCSS("display", "initial");
-    std::cout << "tester" << std::endl;
-  }
-
-  void Toggle() {
-    if (description.GetCSS("display") == "none") Activate();
-    else Deactivate();
-  }
-
-  std::string GetName() const { return name; }
 
   void Redraw(const size_t update) {
 

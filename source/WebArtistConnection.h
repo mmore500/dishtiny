@@ -30,17 +30,7 @@ class WebArtistConnection : public WebArtistBase {
 
 private:
 
-  const std::string name;
-
-  UI::Canvas canvas;
-  UI::Document* viewer;
-  UI::DocuExtras description;
-
   std::function<emp::vector<size_t>(size_t)> getter;
-
-  const Config &cfg;
-
-  size_t last_update = 0;
 
   WebArtistCell<ChannelPack> background;
 
@@ -53,81 +43,35 @@ public:
     std::function<emp::vector<size_t>(size_t)> getter_,
     const Config &cfg_,
     const DishWorld &w
-  ) : name(
-    name_
-  ), canvas(
-    std::min(GetViewPortSize() - 100, 500),
-    std::min(GetViewPortSize() - 100, 500)
-  ), viewer(
-    &viewer_
-  ), description(
-    emp::to_string(emp::slugify(description_), "-key")
-  ), getter(
-    getter_
-  ), cfg(
-    cfg_
-  ), background(
-      "Channel",
-      "Channel",
-      canvas,
-      [&w](const size_t i){
-        return w.GetManager().Channel(i).GetIDs();
-      },
-      [](std::optional<ChannelPack> cp) {
-        return cp ? ChannelGrayscale(*cp) : "black";
-      },
-      cfg_,
-      [](std::optional<ChannelPack> cp1, std::optional<ChannelPack> cp2) -> std::string {
-        if (!cp1 || !cp2) return "black";
-        else if ((*cp1)[0] == (*cp2)[0]) return "transparent";
-        else if (cp1->size() > 1 && (*cp1)[1] == (*cp2)[1]) return "lightgray";
-        else return "black";
-      }
-  ) {
-    viewer_ << UI::Div(
-      emp::slugify(emp::to_string(name, "card-holder"))
-    ) << UI::Div().SetAttr(
-        "class", "card text-center"
-    ).SetAttr(
-        "style", emp::to_string(
-        "width: ",
-        std::min(GetViewPortSize() - 100, 500) + 50,
-        "px;"
+  ) : WebArtistBase(
+        name_,
+        description_,
+        viewer_,
+        cfg_
+      ),
+      getter(getter_),
+      background(
+        "Channel",
+        "Channel",
+        canvas,
+        [&w](const size_t i){
+          return w.GetManager().Channel(i).GetIDs();
+        },
+        [](std::optional<ChannelPack> cp) {
+          return cp ? ChannelGrayscale(*cp) : "black";
+        },
+        cfg_,
+        [](std::optional<ChannelPack> cp1, std::optional<ChannelPack> cp2) -> std::string {
+          if (!cp1 || !cp2) return "black";
+          else if ((*cp1)[0] == (*cp2)[0]) return "transparent";
+          else if (cp1->size() > 1 && (*cp1)[1] == (*cp2)[1]) return "lightgray";
+          else return "black";
+        }
       )
-    ) << UI::Div(
-      emp::slugify(emp::to_string(name, "card-header"))
-    ).SetAttr(
-      "class", "card-header"
-    ) <<  name << UI::Close(
-      emp::slugify(emp::to_string(name, "card-header"))
-    ) << UI::Div().SetAttr(
-      "class", "card-body"
-    ) << canvas;
-  }
+    { ; }
 
-  void Deactivate() {
-    viewer->Div(
-      emp::slugify(emp::to_string(name, "card-holder"))
-    ).SetAttr("class", "collapse");
-    description.SetCSS("display", "none");
-  }
-
-  void Activate() {
-    viewer->Div(
-      emp::slugify(emp::to_string(name, "card-holder"))
-    ).SetAttr("class", "");
-    description.SetCSS("display", "initial");
-    std::cout << "tester" << std::endl;
-  }
-
-  void Toggle() {
-    if (description.GetCSS("display") == "none") Activate();
-    else Deactivate();
-  }
 
   void Download(const std::string & fn) { canvas.DownloadPNG(fn); }
-
-  std::string GetName() const { return name; }
 
   void Redraw(const size_t update) {
 
