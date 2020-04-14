@@ -1115,13 +1115,8 @@ public:
               std::string(
                 "btn btn-lg m-1 btn-primary"
               ) + std::string(i ? " w-25" : " w-100"),
-              [](){
-                static bool first = true;
-                const bool res = first;
-                first = false;
-                return res;
-              }() ? " active" : ""
-            )
+              name == "Channel" ? " active" : ""
+			)
           ).OnClick(
             [&, artist](){
               artist->Toggle();
