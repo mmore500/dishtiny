@@ -1532,7 +1532,11 @@ public:
     for (auto & [category, series] : artists) {
       for (auto & artist : series) artist->Deactivate();
     }
-    artists.begin()->second[0]->Activate();
+	std::find_if(
+	  std::begin(artists),
+	  std::end(artists),
+	  [](const auto &v){ return v.second[0]->GetName() == "Channel"; }
+	)->second[0]->Activate();
   }
 
   void Redraw(const size_t update) {
