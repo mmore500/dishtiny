@@ -1,0 +1,192 @@
+<div class="card my-3">
+<div class="card-header">
+    <span data-toggle="collapse" href="#view_selector-body">
+    <button
+        class="btn btn-lg btn-block btn-primary text-left active"
+        type="button"
+        data-toggle="button"
+        aria-pressed="true"
+        autocomplete="off"
+    >
+        View Selector
+    </button>
+    </span>
+</div>
+
+<div id="view_selector-body" class="text-large collapse show">
+    <div id="view_selector">
+      <ul class="list-group list-group-flush">
+
+      <span data-toggle="collapse" href="#group_structure-body">
+      <li
+        id="group_structure-toggle"
+        class="list-group-item btn-lg btn-block btn-flip  text-center"
+        style="border-radius: 0;"
+      >
+          Group Structure
+      </li>
+      <script>
+        document.getElementById('group_structure-toggle').onclick = function() {
+            this.classList.toggle('btn-primary');
+            this.classList.toggle('btn-flip');
+        }
+      </script>
+      </span>
+      <div id="group_structure-body" class="collapse show">
+      <li class="list-group-item">
+      <div id="group_structure_category"></div>
+      </li>
+      </div>
+
+      <span data-toggle="collapse" href="#demographics-body">
+      <li
+        id="demographics-toggle"
+        class="list-group-item btn-lg btn-block btn-flip  text-center"
+        style="border-radius: 0; border-top: 1px solid black;"
+      >
+          Demographics
+      </li>
+      <script>
+        document.getElementById('demographics-toggle').onclick = function() {
+            this.classList.toggle('btn-primary');
+            this.classList.toggle('btn-flip');
+        }
+      </script>
+      </span>
+      <div id="demographics-body" class="collapse show">
+      <li class="list-group-item">
+      <div id="demographics_category"></div>
+      </li>
+      </div>
+
+      <span data-toggle="collapse" href="#resource_collection-body">
+      <li
+        id="resource_collection-toggle"
+        class="list-group-item btn-lg btn-block btn-flip  text-center"
+        style="border-radius: 0; border-top: 1px solid black;"
+      >
+          Resource Collection
+      </li>
+      <script>
+        document.getElementById('resource_collection-toggle').onclick = function() {
+            this.classList.toggle('btn-primary');
+            this.classList.toggle('btn-flip');
+        }
+      </script>
+      </span>
+      <div id="resource_collection-body" class="collapse show">
+      <li class="list-group-item">
+      <div id="resource_collection_category"></div>
+      </li>
+      </div>
+
+      <span data-toggle="collapse" href="#cell_behavior-body">
+      <li
+        id="cell_behavior-toggle"
+        class="list-group-item btn-lg btn-block btn-flip  text-center"
+        style="border-radius: 0; border-top: 1px solid black;"
+      >
+          Cell Behavior
+      </li>
+      <script>
+        document.getElementById('cell_behavior-toggle').onclick = function() {
+            this.classList.toggle('btn-primary');
+            this.classList.toggle('btn-flip');
+        }
+      </script>
+      </span>
+      <div id="cell_behavior-body" class="collapse show">
+      <div id="cell_behavior_category">
+
+        <span data-toggle="collapse" href="#sharing-body">
+        <li
+          id="sharing-toggle"
+          class="list-group-item btn-lg btn-block btn-flip  text-center"
+          style="border-radius: 0; border-top: 1px solid black;"
+        >
+            Resource Sharing
+        </li>
+        <script>
+          document.getElementById('sharing-toggle').onclick = function() {
+              this.classList.toggle('btn-primary');
+              this.classList.toggle('btn-flip');
+          }
+        </script>
+        </span>
+        <div id="sharing-body" class="collapse show">
+        <li class="list-group-item">
+        <div id="sharing_category"></div>
+        </li>
+        </div>
+
+        <span data-toggle="collapse" href="#messaging-body">
+        <li
+          id="messaging-toggle"
+          class="list-group-item btn-lg btn-block btn-flip  text-center"
+          style="border-radius: 0; border-top: 1px solid black;"
+        >
+            Messaging
+        </li>
+        <script>
+          document.getElementById('messaging-toggle').onclick = function() {
+              this.classList.toggle('btn-primary');
+              this.classList.toggle('btn-flip');
+          }
+        </script>
+        </span>
+        <div id="messaging-body" class="collapse show">
+        <li class="list-group-item">
+        <div id="messaging_category"></div>
+        </li>
+        </div>
+
+
+        <span data-toggle="collapse" href="#reproduction-body">
+        <li
+          id="reproduction-toggle"
+          class="list-group-item btn-lg btn-block btn-flip  text-center"
+          style="border-radius: 0; border-top: 1px solid black;"
+        >
+            Reproduction and Apoptosis
+        </li>
+        <script>
+          document.getElementById('reproduction-toggle').onclick = function() {
+              this.classList.toggle('btn-primary');
+              this.classList.toggle('btn-flip');
+          }
+        </script>
+        </span>
+        <div id="reproduction-body" class="collapse show">
+        <li class="list-group-item">
+        <div id="reproduction_category"></div>
+        <div id="apoptosis_category"></div>
+        </li>
+        </div>
+
+        <span data-toggle="collapse" href="#regulation-body">
+        <li
+          id="regulation-toggle"
+          class="list-group-item btn-lg btn-block btn-flip  text-center"
+          style="border-radius: 0; border-top: 1px solid black;"
+        >
+            Regulation
+        </li>
+        <script>
+          document.getElementById('regulation-toggle').onclick = function() {
+              this.classList.toggle('btn-primary');
+              this.classList.toggle('btn-flip');
+          }
+        </script>
+        </span>
+        <div id="regulation-body" class="collapse show">
+        <li class="list-group-item">
+        <div id="regulation_category"></div>
+        </li>
+        </div>
+
+      </div>
+
+    </div>
+</div>
+</div>
+</div>

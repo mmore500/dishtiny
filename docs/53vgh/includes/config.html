@@ -1,0 +1,37 @@
+<div class="card">
+<div class="card-header">
+    <span data-toggle="collapse" href="#configuration-body">
+    <button
+        class="btn btn-lg btn-block btn-primary text-left"
+        type="button"
+        data-toggle="button"
+        autocomplete="off"
+    >
+        Configuration
+    </button>
+    </span>
+</div>
+<div id="configuration-body" class="text-large collapse">
+<ul class="list-group list-group-flush">
+<li class="list-group-item list-group-item-success">
+    Hey!
+    You can adjust any of these parameters right in your web browser using URL query parameters.
+    For example, appending
+    <a href="?SEED=2&MUTATION_RATE=0.1"><b>
+    ?SEED=2&MUTATION_RATE=0.1
+    </b></a>
+    in your web browser's URL bar and refreshing will change the random number generator seed and mutation rate.
+</li>
+<li class="list-group-item">
+    <div id="emp_dynamic_config"> </div>
+</li>
+<li class="list-group-item list-group-item-warning">
+    Parameters below are locked in at compile time, so you can't adjust them here...
+    :(
+</li>
+<li class="list-group-item">
+    <div id="emp_static_config"></div>
+</li>
+</ul>
+</div>
+</div>
