@@ -53,15 +53,24 @@
       </div>
     </div>
 
-    <div class="row p-3 container-fluid" style="align-items: flex-start;">
-      <div class="col-lg-8 mx-auto" style="position: -webkit-sticky; position: sticky; top: 0rem;">
-        {% include 'includes/viewer.html' %}
-        {% include 'includes/controls.html' %}
-      </div>
-      <div class="col p-3 mx-auto">
+    <div class="row p-3 container-fluid">
+	  <div
+	    style="display: flex; align-self: stretch;"
+		class="col-lg-8 mx-auto p-3"
+	  >
+	    <div
+		  style="position: -webkit-sticky; position: sticky; bottom: 0rem; align-self: flex-end;"
+		  class="w-100"
+		>
+            {% include 'includes/viewer.html' %}
+            {% include 'includes/controls.html' %}
+        </div>
+	  </div>
+      <div class="col-lg-4 p-3 mx-auto">
             {% import "includes/view-key.html.jinja" as view_key %}
             {{ view_key.content(data, eval, make_badge, markdown) }}
-      </div>
+            {% include 'includes/view-selector.html' %}
+	  </div>
     </div>
 
     <div class="row p-3 container-fluid">
