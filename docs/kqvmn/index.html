@@ -283,16 +283,9 @@ $('.modal').modal('hide');
       </div>
     </div>
 
-    <div class="row p-3 container-fluid">
-	  <div
-	    style="display: flex; align-self: stretch;"
-		class="col-lg-8 mx-auto p-3"
-	  >
-	    <div
-		  style="position: -webkit-sticky; position: sticky; bottom: 0rem; align-self: flex-end;"
-		  class="w-100"
-		>
-            <div class="card my-3">
+    <div class="row p-3 container-fluid" style="align-items: flex-start;">
+      <div class="col-lg-8 mx-auto" style="position: -webkit-sticky; position: sticky; top: 0rem;">
+        <div class="card my-3">
   <div class="card-header">
     <span data-toggle="collapse" href="#grid_viewer-body">
       <button
@@ -310,7 +303,7 @@ $('.modal').modal('hide');
     <div id="grid_viewer"></div>
   </div>
 </div>
-                  <div class="card">
+              <div class="card">
         <div class="card-header">
           <span data-toggle="collapse" href="#emp_button_dash-body">
             <button
@@ -328,18 +321,14 @@ $('.modal').modal('hide');
           <div id="emp_button_dash"></div>
         </div>
       </div>
-        </div>
-	  </div>
-      <div class="col-lg-4 p-3 mx-auto">
-
-            <div class="card my-3">
-    <div class="card-header">
+      </div>
+      <div class="col p-3 mx-auto">
+            
+            <div class="card-header">
     <span data-toggle="collapse" href="#view_key-body">
         <button
         class="btn btn-lg btn-block btn-primary text-left"
         type="button"
-        data-toggle="button"
-        aria-pressed="true"
         autocomplete="off"
         >
         View Key
@@ -347,1263 +336,1262 @@ $('.modal').modal('hide');
     </span>
     </div>
     <div id="view_key-body" class="text-large collapse">
-
+    
     <div id="neighbor-sharing-fraction-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Neighbor Sharing Fraction Viewer</strong> shows the resource-sharing effort of cells towards each of their neighboring cells.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero resource</strong> was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates a <strong>small amount</strong> of resource-sharing effort.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates an <strong>intermediate amount</strong> of resource-sharing.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFF00;">Yellow</span> indicates a <strong>large amount</strong> of sharing effort.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="interconnect-sharing-fraction-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Interconnect Sharing Fraction Viewer</strong> shows the resource-sharing effort of cells towards their outgoing interconnects.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero resource</strong> was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates a <strong>small amount</strong> of resource-sharing effort.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates an <strong>intermediate amount</strong> of resource-sharing.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFF00;">Yellow</span> indicates a <strong>large amount</strong> of sharing effort.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="channel-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Channel Viewer</strong> shows the arrangement of hereditarily-defined resource-collecing cell groups.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><strong>Color saturation</strong> (e.g., <span class="badge badge-light" style="background-color: #BFFFBF;">light green</span> vs. <span class="badge badge-dark" style="background-color: #00FF00;">intense green</span> ) differentiates <strong>low-level groups</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><strong>Color hue</strong> (e.g., <span class="badge badge-light" style="background-color: #BFBFFF;">light blue</span> / <span class="badge badge-dark" style="background-color: #0000FF;">intense blue</span> vs. <span class="badge badge-light" style="background-color: #FFBFFF;">light purple</span> / <span class="badge badge-dark" style="background-color: #FF00FF;">intense purple</span> ) differentiates <strong>high-level groups</strong>, which are groups of low-level groups. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="resource-stockpile-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Stockpile Viewer</strong> depicts the resource that each cell-like organism has accumulated.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> indicates a <strong>resource defecit</strong> (which, if it becomes too extreme, will result in that cell's death).</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero resource</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates <strong>positive resource</strong>, but below the threshold required for reproduction.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates <strong>enough resource to reproduce</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFF00;">Yellow</span> indicates an <strong>excess of resource</strong>, more than enough to reproduce.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="resource-sharing-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Contributed Resource Viewer</strong> depicts the total amount of resource has received from all neighbors during the previous update.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero resource</strong> was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates a <strong>small amount</strong> of resource was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates an <strong>intermediate amount</strong> of resource was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFF00;">Yellow</span> indicates a <strong>large amount</strong> of resource was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="resource-flow-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Resource Flow Viewer</strong> depicts the spatial structure of resource sharing.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> cells share resource with <strong>zero neighbors</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> cells share resource with <strong>one neighbor</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> cells share resource with <strong>two neighbors</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF00FF;">Purple</span> cells share resource with <strong>three neighbors</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> cells share resource with <strong>four neighbors</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="messaging-flow-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Messaging Flow Viewer</strong> depicts the spatial structure of intercellular messaging.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> cells received messages from <strong>zero neighbors</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> cells received messages from <strong>one neighbor</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> cells received messages from <strong>two neighbors</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF00FF;">Purple</span> cells received messages from <strong>three neighbors</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> cells received messages from <strong>four neighbors</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="reproduction-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Cell Reproduction Viewer</strong> depicts attempted cellular reproductions.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> cells had <strong>zero</strong> neighbors attempt to place offspring there.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> cells had <strong>one</strong> neighbor attempt to place offspring there.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> cells had <strong>two</strong> neighbors attempt to place offspring there.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF00FF;">Purple</span> cells had <strong>three</strong> neighbors attempt to place offspring there.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> cells had <strong>four</strong> neighbors attempt to place offspring there.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="apoptosis-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Apoptosis Viewer</strong> shows cells that have registered themselves for imminent cellular suicidie.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> grid tiles are <strong>live cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> cells are registered for <strong>partial apoptosis</strong>, where a underlying cell is destroyed but its channel structure is preserved.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> cells are registered for <strong>complete apoptosis</strong>, where a cell and its channel structure are totally destroyed.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="taxa-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Taxa Viewer</strong> depicts the distribution of groups of genetically-identical cells.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> grid tiles are <strong>live cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> lines divide cells with <strong>identical genotypes</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> lines divide cells with <strong>different genotypes</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="resource-wave-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Resource Wave Viewer</strong> depicts the cells' cooperative resource-collection task. Activation propagates outward in same-channel groups from an environmentally-triggered seed.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> cells are activated within the beneficial radius of the seed and are <strong>gaining resource</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> cells are activated outside the beneficial radius of the seed and are <strong>losing resource</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> cells are in the <strong>ready state</strong>, meaning they can be activated by adjacent cooperating cells.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> cells are in a <strong>quiescent state</strong>, meaning they cannot be activated by adjacent cooperating cells.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="channel-generation-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Channel Generation Viewer</strong> depicts generation counters that enforce a birth-death lifecycle.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> cells are <strong>young</strong> members of a same-channel group. They are capable of collecting resource and producing offspring that are group members.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> cells are <strong>older</strong> members of a same-channel group, which still retain all the capabilities of younger cells.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> cells are <strong>oldest</strong> members of a same-channel group. As coloring progress from light to dark red, cells lose their ability to create same-channel offspring and then to collect resource.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="expiration-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Expiration Viewer</strong> depicts end-of-the-road channel generation state in greater detail.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> cells are <strong>young</strong> and retain all reproductive and resource-collection capabilities.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> cells are <strong>older</strong> and have lost same-channel reproductive capability.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> cells are <strong>oldest</strong> and have additionally lost resource-collection capability.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="reproductive-pause-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Reproductive Pause Viewer</strong> depicts reproductive cooperation.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> cells have registered <strong>zero</strong> reproductive forbearance.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> cells have temporarily registred to pause reproduction in <strong>one direction</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> cells have temporariliy registered to pause reproduction in <strong>two directions</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF00FF;">Purple</span> cells have temporariliy registered to pause reproduction in <strong>three directions</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> cells have temporarily registered to pause reproduction in all <strong>four directions</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="established-interconnect-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Established Interconnect Viewer</strong> depicts direct long-distance intercell connections that have matured and activated.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #15F4EE;">Light blue</span> protrusions with <span class="badge badge-dark" style="background-color: #8A2BE2;">violet</span> outlining represent <strong>established inerconnects</strong> between cells.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><strong>Squared</strong> interconnect endcaps represent the originating cell of an interconnect.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><strong>Rounded</strong> interconnect endcaps represent the terminus cell of an interconnect.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #808080;">Grayscale</span> coloring differentiates <strong>high-level groups</strong>, which are groups of low-level groups.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #D3D3D3;">Light gray</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="fledgling-interconnect-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Fledgling Interconnect Viewer</strong> depicts inert, developing long-distance intercell connections.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #15F4EE;">Light blue</span> protrusions with <span class="badge badge-dark" style="background-color: #8A2BE2;">violet</span> outlining represent <strong>fledgling inerconnects</strong> between cells.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><strong>Squared</strong> interconnect endcaps represent the originating cell of a fledgling interconnect.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><strong>Rounded</strong> interconnect endcaps represent the terminus cell of a fledgling interconnect.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #808080;">Grayscale</span> coloring differentiates <strong>high-level groups</strong>, which are groups of low-level groups.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #D3D3D3;">Light gray</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="neighbor-shared-resource-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Neighbor Shared Resource Viewer</strong> depicts the amount of resource received from each neighbor during the previous update.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero resource</strong> was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates a <strong>small amount</strong> of resource was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates an <strong>intermediate amount</strong> of resource was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFF00;">Yellow</span> indicates a <strong>large amount</strong> of resource was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="interconnect-shared-resource-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Interconnect Shared Resource Viewer</strong> depicts the amount of resource received via interconnect during the previous update.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero resource</strong> was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates a <strong>small amount</strong> of resource was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates an <strong>intermediate amount</strong> of resource was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFF00;">Yellow</span> indicates a <strong>large amount</strong> of resource was received.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="neighbor-messaging-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Neighbor Messaging Viewer</strong> depicts recent incoming message traffic from each neighbor.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero</strong> incoming message traffic.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates <strong>one</strong> incoming message.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates <strong>two</strong> incoming messages.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF00FF;">Purple</span> indicates <strong>three</strong> incoming messages.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> indicates <strong>four</strong> incoming messages.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FFA500;">Orange</span> indicates <strong>five</strong> incoming messages.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #C0C0C0;">Silver</span> indicates <strong>six or more</strong> incoming messages.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="interconnect-messaging-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Interconnect Messaging Viewer</strong> depicts recent incoming message traffic via interconnects.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero</strong> incoming message traffic.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates <strong>one</strong> incoming message.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates <strong>two</strong> incoming messages.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF00FF;">Purple</span> indicates <strong>three</strong> incoming messages.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> indicates <strong>four</strong> incoming messages.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FFA500;">Orange</span> indicates <strong>five</strong> incoming messages.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #C0C0C0;">Silver</span> indicates <strong>six or more</strong> incoming messages.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="phylogenetic-root-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Phylogenetic Root Viewer</strong> represents the identity of each cell's ancestor at simulation outset.</p>
 
-
+            
                 <p>If the simuation is seeded with saved genotypes, this represents the file ID of the ancestor strain.</p>
 
-
+            
                 <p>If the simulation is seeded with generated genotypes, this represents the position ID of the ancestor cell.</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> indicates <strong>ancestor ID one</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates <strong>ancestor ID two</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates <strong>ancestor ID three</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF00FF;">Arbitrarily</span> <span class="badge badge-light" style="background-color: #BFBFFF;">generated</span> <span class="badge badge-light" style="background-color: #BFBFFF;">colors</span> represent other ancestor IDs.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide cells with <strong>different ancestors</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="regulation-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Cell-wide Regulation Viewer</strong> depicts the total number of regulated SignalGP modules, summed across all hardware units in a cell.</p>
 
-
+            
                 <p>(SignalGP modules may be either up- or down-regulated).</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates <strong>one</strong> regulated module.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates <strong>two</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF00FF;">Purple</span> indicates <strong>three</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> indicates <strong>four</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FFA500;">Orange</span> indicates <strong>five</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #C0C0C0;">Silver</span> indicates <strong>six or more</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="regulation-flow-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Regulation Flow Viewer</strong> summarizes the directional structure of SignalGP module regulation.</p>
 
-
+            
                 <p>(SignalGP modules may be either up- or down-regulated).</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero</strong> hardware units with regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates <strong>one</strong> hardware unit with regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates <strong>two</strong> hardware units with regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF00FF;">Purple</span> indicates <strong>three</strong> hardware units with regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> indicates <strong>four</strong> hardware units with regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FFA500;">Orange</span> indicates <strong>five</strong> hardware units with regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="directional-regulation-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Directional Regulation Viewer</strong> depicts number of regulated SignalGP modules in hardware modules facing each neighbor.</p>
 
-
+            
                 <p>(SignalGP modules may be either up- or down-regulated).</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates <strong>one</strong> regulated module.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates <strong>two</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF00FF;">Purple</span> indicates <strong>three</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> indicates <strong>four</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FFA500;">Orange</span> indicates <strong>five</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #C0C0C0;">Silver</span> indicates <strong>six or more**</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong><em>*dead cells</em>*</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>**low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     <div id="interconnect-regulation-key">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
-
+            
                 <p>The <strong>Interconnect Regulation Viewer</strong> depicts number of regulated SignalGP modules in the hardware module managing the cell's interconnects.</p>
 
-
+            
                 <p>(SignalGP modules may be either up- or down-regulated).</p>
 
-
+            
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> indicates <strong>zero</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #00FF00;">Green</span> indicates <strong>one</strong> regulated module.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates <strong>two</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF00FF;">Purple</span> indicates <strong>three</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> indicates <strong>four</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #FFA500;">Orange</span> indicates <strong>five</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #C0C0C0;">Silver</span> indicates <strong>six or more</strong> regulated modules.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
 
             </li>
-
+            
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
 
             </li>
-
+            
         </ul>
     </div>
-
+    
     </div>
-    </div>
-            <div class="card my-3">
+    <div class="card my-3">
 <div class="card-header">
     <span data-toggle="collapse" href="#view_selector-body">
     <button
@@ -1795,7 +1783,7 @@ $('.modal').modal('hide');
 </div>
 </div>
 </div>
-	  </div>
+      </div>
     </div>
 
     <div class="row p-3 container-fluid">
@@ -1862,142 +1850,53 @@ $('.modal').modal('hide');
   Click a link to restart the viewer and seed the population with pre-evolved strains.
 </li>
 <li class="list-group-item">
-    <a href="?TREATMENT_DESCRIPTOR=batch~1000,step~1049,pop~0,id1~wt" role="button" class="btn btn-light btn-lg">
-    batch~1000,step~1049,pop~0,id1~wt
-    </a>
-    <a href="?TREATMENT_DESCRIPTOR=batch~1000,step~1049,pop~0,id1~wt,id2~ko_all_regulation" role="button" class="btn btn-light btn-lg">
-    batch~1000,step~1049,pop~0,id1~wt,id2~ko_all_regulation
-    </a>
-    <a href="?TREATMENT_DESCRIPTOR=batch~1000,step~1049,pop~0,id1~wt,id2~ko_f14_i21" role="button" class="btn btn-light btn-lg">
-    batch~1000,step~1049,pop~0,id1~wt,id2~ko_f14_i21
-    </a>
-    <a href="?TREATMENT_DESCRIPTOR=batch~1000,step~1049,pop~0,id1~wt,id2~ko_f2_i1,20" role="button" class="btn btn-light btn-lg">
-    batch~1000,step~1049,pop~0,id1~wt,id2~ko_f2_i1,20
-    </a>
-    <a href="?TREATMENT_DESCRIPTOR=batch~1000,step~1049,pop~0,id1~wt,id2~ko_f2_i14" role="button" class="btn btn-light btn-lg">
-    batch~1000,step~1049,pop~0,id1~wt,id2~ko_f2_i14
-    </a>
-    <a href="?TREATMENT_DESCRIPTOR=batch~1000,step~1049,pop~0,id1~wt,id2~ko_f2_i15" role="button" class="btn btn-light btn-lg">
-    batch~1000,step~1049,pop~0,id1~wt,id2~ko_f2_i15
-    </a>
-    <a href="?TREATMENT_DESCRIPTOR=batch~1000,step~1049,pop~0,id1~wt,id2~ko_f2_i3" role="button" class="btn btn-light btn-lg">
-    batch~1000,step~1049,pop~0,id1~wt,id2~ko_f2_i3
-    </a>
-    <a href="?TREATMENT_DESCRIPTOR=batch~1000,step~1049,pop~0,id1~wt,id2~ko_f2_i8" role="button" class="btn btn-light btn-lg">
-    batch~1000,step~1049,pop~0,id1~wt,id2~ko_f2_i8
-    </a>
-    <a href="?TREATMENT_DESCRIPTOR=batch~1000,step~1049,pop~0,id1~wt,id2~ko_t15" role="button" class="btn btn-light btn-lg">
-    batch~1000,step~1049,pop~0,id1~wt,id2~ko_t15
-    </a>
-    <a href="?TREATMENT_DESCRIPTOR=batch~1000,step~1049,pop~0,id1~wt,id2~ko_t19" role="button" class="btn btn-light btn-lg">
-    batch~1000,step~1049,pop~0,id1~wt,id2~ko_t19
-    </a>
-    <a href="?TREATMENT_DESCRIPTOR=batch~1000,step~1049,pop~0,id1~wt,id2~ko_t3" role="button" class="btn btn-light btn-lg">
-    batch~1000,step~1049,pop~0,id1~wt,id2~ko_t3
-    </a>
-</li>
-<li class="list-group-item">
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ki-a_i_addfledgling" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ki-a_i_addfledgling
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ki-a_i_nop" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ki-a_i_nop
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~wt" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~wt
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-a_i_addfledgling" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-a_i_addfledgling
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-a_i_complete" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-a_i_complete
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-a_i_devotagging" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-a_i_devotagging
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m15_i0" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m15_i0
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-a_i_intercellmessaging" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-a_i_intercellmessaging
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m24_i0" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m24_i0
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-a_i_intracellmessaging" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-a_i_intracellmessaging
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i18" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i18
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-a_i_nopfornop" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-a_i_nopfornop
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstexternal" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-a_i_regulation" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-a_i_regulation
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstfwdspiker" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-a_i_removeconnection" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-a_i_removeconnection
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstinternal" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-a_i_spikermessaging" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-a_i_spikermessaging
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_call" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_call
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-p_i_apoptosis" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-p_i_apoptosis
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-p_i_pointersharing" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-p_i_pointersharing
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_fork" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_fork
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-p_i_tagimprinting" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-p_i_tagimprinting
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_sendexternal" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_send
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-s_i_spikersharing" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-s_i_spikersharing
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_sendinternal" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_send
   </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~ko-s_i_walkparameters" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~ko-s_i_walkparameters
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ki-a_i_addfledgling" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ki-a_i_addfledgling
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ki-a_i_nop" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ki-a_i_nop
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_addfledgling" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_addfledgling
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_complete" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_complete
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_devotagging" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_devotagging
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_intercellmessaging" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_intercellmessaging
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_intracellmessaging" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_intracellmessaging
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_nopfornop" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_nopfornop
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_regulation" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_regulation
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_removeconnection" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_removeconnection
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_spikermessaging" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-a_i_spikermessaging
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-p_i_apoptosis" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-p_i_apoptosis
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-p_i_pointersharing" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-p_i_pointersharing
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-p_i_tagimprinting" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-p_i_tagimprinting
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-s_i_spikersharing" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-s_i_spikersharing
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~ko-s_i_walkparameters" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~ko-s_i_walkparameters
-  </a>
-  <a href="?TREATMENT_DESCRIPTOR=batch~1042,step~1024,pop~3,id1~wt,id2~wt" role="button" class="btn btn-light btn-lg">
-    batch~1042,step~1024,pop~3,id1~wt,id2~wt
+  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~sm0_i1" role="button" class="btn btn-light btn-lg">
+    batch~2032,step~1018,pop~1,id1~wt,id2~sm0_i1
   </a>
 </li>
 </ul>
