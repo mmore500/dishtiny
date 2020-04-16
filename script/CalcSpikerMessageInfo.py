@@ -31,13 +31,28 @@ def CalcCountSpikerMessage(filename):
             [key for key in file['InboxTraffic']['dir_4']]
         )[-16:]
     ))
-    proportion = sum([
+    zips2 = zip(*(
+        zip(
+            np.array(file['Live'][upd_key]).flatten(),
+            np.array(
+                file['SpikeBroadcastTraffic'][upd_key]
+            ).flatten(),
+        ) for upd_key in natsorted(
+            [key for key in file['SpikeBroadcastTraffic']]
+        )[-16:]
+    ))
+
+    count = sum([
         any(val for live, val in z)
         for z in zips
         if any(live for live, val in z)
+    ]) + sum([
+        any(val for live, val in z)
+        for z in zips2
+        if any(live for live, val in z)
     ])
 
-    return proportion
+    return count
 
 def SafeCalcCountSpikerMessage(filename):
     try:

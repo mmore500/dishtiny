@@ -18,84 +18,34 @@ class WebArtistPointer : public WebArtistBase {
 
 private:
 
-  const std::string name;
-
-  UI::Canvas canvas;
-  UI::DocuExtras description;
-
   std::function<std::optional<T>(size_t, size_t)> getter;
   std::function<std::string(std::optional<T>)> renderer;
 
   std::function<std::string(std::optional<T>,std::optional<T>)> divider;
-
-  const Config &cfg;
-
-  size_t last_update;
 
 public:
 
   WebArtistPointer(
     std::string name_,
     std::string description_,
-    UI::Document &viewer,
+    UI::Document &viewer_,
     std::function<std::optional<T>(size_t, size_t)> getter_,
     std::function<std::string(std::optional<T>)> renderer_,
     const Config &cfg_,
     std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
-  ) : name(name_)
-  , canvas(
-    std::min(GetViewPortSize() - 100, 500),
-    std::min(GetViewPortSize() - 100, 500)
-  )
-  , description(emp::to_string(emp::slugify(description_), "-key"))
-  , getter(getter_)
-  , renderer(renderer_)
-  , divider(divider_)
-  , cfg(cfg_)
-  , last_update(std::numeric_limits<size_t>::max())
-  { viewer << canvas.SetCSS(
-      "position", "absolute",
-      "margin-left", "auto",
-      "margin-right", "auto",
-      "left", "0",
-      "right", "0"
-    );
-  }
-
-  // for use as background in WebArtistConnection
-  WebArtistPointer(
-    std::string name_,
-    std::string description_,
-    UI::Canvas &canvas_,
-    std::function<std::optional<T>(size_t, size_t)> getter_,
-    std::function<std::string(std::optional<T>)> renderer_,
-    const Config &cfg_,
-    std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
-  ) : name(name_)
-  , canvas(canvas_)
-  , description(emp::to_string(emp::slugify(description_), "-key"))
-  , getter(getter_)
-  , renderer(renderer_)
-  , divider(divider_)
-  , cfg(cfg_)
-  , last_update(std::numeric_limits<size_t>::max())
-  { ; }
-
-  void Deactivate() {
-    canvas.SetCSS("visibility", "hidden");
-    description.SetCSS("display", "none");
-  }
-
-  void Activate() {
-    canvas.SetCSS("visibility", "visible");
-    description.SetCSS("display", "initial");
-  }
-
-  std::string GetName() const { return name; }
-
+  ) : WebArtistBase(
+        name_,
+        description_,
+        viewer_,
+        cfg_
+      ),
+      getter(getter_),
+      renderer(renderer_),
+      divider(divider_)
+    { ; }
   void Redraw(const size_t update) {
 
-    if (update == last_update || canvas.GetCSS("visibility") == "hidden") {
+    if (update == last_update || description.GetCSS("display") == "none") {
       return;
     }
     else last_update = update;
@@ -210,32 +160,6 @@ public:
         canvas.Draw(poly);
       }
     }
-    /*
-    // draw subgrid edges
-    for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
-
-      // make a new line from x1,y1 to x2,y2 (bottom left to top right)
-      canvas.Line(
-        GridXToCanvasX(helper.GetLocalX(i)),
-        GridYToCanvasY(helper.GetLocalY(i)+1),
-        GridXToCanvasX(helper.GetLocalX(i)+1),
-        GridYToCanvasY(helper.GetLocalY(i)),
-        // ...and the appropiate line color and weight (optional)
-        "black",
-
-      );
-      // create a new line from x1,y1 to x2,y2 (top left to bottom right)
-      canvas.Line(
-        GridXToCanvasX(helper.GetLocalX(i)),
-        GridYToCanvasY(helper.GetLocalY(i)),
-        GridXToCanvasX(helper.GetLocalX(i)+1),
-        GridYToCanvasY(helper.GetLocalY(i)+1),
-        // ...and the appropiate line color and weight (optional)
-        "black",
-        1.0
-      );
-
-    }*/
     // and then we draw the boxes around each grid
     for (size_t i = 0; i < helper.GetLocalSize(); ++i) {
         // right edge

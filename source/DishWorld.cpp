@@ -538,6 +538,7 @@ void DishWorld::Step() {
         }
       }
       if (GetUpdate() % cfg.COMPUTE_FREQ() == 0) {
+        frames[i]->QueueTrustedMessages(man->Inbox(i).GetTrustedInboxes());
         frames[i]->QueueMessages(man->Inbox(i).GetInboxes());
       }
 

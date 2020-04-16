@@ -24,8 +24,10 @@
 #include "Genome.h"
 #include "WebArtistBase.h"
 #include "WebArtistCell.h"
+
 #include "WebArtistPointer.h"
 #include "WebArtistConnection.h"
+
 
 namespace UI = emp::web;
 
@@ -149,8 +151,21 @@ class WebInterface : public UI::Animate {
   DishWorld w;
 
   UI::Document grid_viewer;
-  UI::Document view_selector;
-  emp::vector<emp::vector<emp::Ptr<WebArtistBase>>> artists;
+  UI::DocuExtras view_selector;
+  std::unordered_map<std::string, UI::Document> view_subselectors{
+    {"group_structure_category", UI::Document("group_structure_category")},
+    {"demographics_category", UI::Document("demographics_category")},
+    {"resource_collection_category", UI::Document("resource_collection_category")},
+    {"sharing_category", UI::Document("sharing_category")},
+    {"reproduction_category", UI::Document("reproduction_category")},
+    {"apoptosis_category", UI::Document("apoptosis_category")},
+    {"regulation_category", UI::Document("regulation_category")},
+    {"messaging_category", UI::Document("messaging_category")}
+  };
+  std::multimap<
+    std::string, // category names
+    emp::vector<emp::Ptr<WebArtistBase>> // series of artists
+  > artists;
 
   bool downloaded;
   bool download;
@@ -182,7 +197,7 @@ public:
     , render(true)
   {
 
-    grid_viewer.SetAttr("class", "mx-auto");
+    grid_viewer.SetAttr("class", "mx-auto card-deck");
 
     struct double_datum {
       double val;
@@ -202,8 +217,8 @@ public:
       operator size_t() const { return val; }
     };
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
+    artists.insert({"sharing_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistPointer<double_datum>>(
       "Neighbor Sharing Fraction", // name
       "Neighbor Sharing Fraction", // description
       grid_viewer, // viewer
@@ -235,8 +250,8 @@ public:
       } // divider
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
+    artists.insert({"sharing_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistCell<double_datum>>(
       "Interconnect Sharing Fraction", // name
       "Interconnect Sharing Fraction", // description
       grid_viewer, // viewer
@@ -269,8 +284,8 @@ public:
     ));
 
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<ChannelPack>>(
+    artists.insert({"group_structure_category", {}})->second.push_back(
+    emp::NewPtr<WebArtistCell<ChannelPack>>(
       "Channel",
       "Channel",
       grid_viewer,
@@ -289,8 +304,8 @@ public:
       }
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
+    artists.insert({"resource_collection_category", {}})->second.push_back(
+    emp::NewPtr<WebArtistCell<double_datum>>(
       "Resource Stockpile",
       "Resource Stockpile",
       grid_viewer,
@@ -331,8 +346,8 @@ public:
       }
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
+    artists.insert({"sharing_category", {}})->second.push_back(
+    emp::NewPtr<WebArtistCell<double_datum>>(
       "Resource Sharing",
       "Resource Sharing",
       grid_viewer,
@@ -364,8 +379,8 @@ public:
       }
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
+    artists.insert({"sharing_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistCell<size_t_datum>>(
       "Resource Flow",
       "Resource Flow",
       grid_viewer,
@@ -400,8 +415,8 @@ public:
       }
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
+    artists.insert({"messaging_category", {}})->second.push_back(
+    emp::NewPtr<WebArtistCell<size_t_datum>>(
       "Messaging Flow",
       "Messaging Flow",
       grid_viewer,
@@ -435,8 +450,8 @@ public:
       }
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
+    artists.insert({"reproduction_category", {}})->second.push_back(
+    emp::NewPtr<WebArtistCell<size_t_datum>>(
       "Reproduction",
       "Reproduction",
       grid_viewer,
@@ -466,8 +481,8 @@ public:
       }
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<int_datum>>(
+    artists.insert({"apoptosis_category", {}})->second.push_back(
+    emp::NewPtr<WebArtistCell<int_datum>>(
       "Apoptosis",
       "Apoptosis",
       grid_viewer,
@@ -495,8 +510,8 @@ public:
       }
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<emp::Ptr<Genome>>>(
+    artists.insert({"demographics_category", {}})->second.push_back(
+    emp::NewPtr<WebArtistCell<emp::Ptr<Genome>>>(
       "Taxa",
       "Taxa",
       grid_viewer,
@@ -515,9 +530,10 @@ public:
       }
     ));
 
-    artists.emplace_back();
+    {
+      auto & res = artists.insert({"resource_collection_category", {}})->second;
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
-      artists.back().push_back(emp::NewPtr<WebArtistCell<int_datum>>(
+      res.push_back(emp::NewPtr<WebArtistCell<int_datum>>(
         emp::to_string("Resource Wave Level ", l),
         "Resource Wave",
         grid_viewer,
@@ -552,10 +568,12 @@ public:
         }
       ));
     }
+    }
 
-    artists.emplace_back();
+    {
+      auto & res = artists.insert({"demographics_category", {}})->second;
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
-      artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
+      res.push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
         emp::to_string("Channel Generation Level ", l),
         "Channel Generation",
         grid_viewer,
@@ -591,10 +609,12 @@ public:
         }
       ));
     }
+    }
 
-    artists.emplace_back();
+    {
+      auto & res = artists.insert({"demographics_category", {}})->second;
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
-      artists.back().push_back(emp::NewPtr<WebArtistCell<double_datum>>(
+      res.push_back(emp::NewPtr<WebArtistCell<double_datum>>(
         emp::to_string("Expiration Level ", l),
         "Expiration",
         grid_viewer,
@@ -627,10 +647,12 @@ public:
         }
       ));
     }
+    }
 
-    artists.emplace_back();
+    {
+      auto & res = artists.insert({"reproduction_category", {}})->second;
     for (size_t l = 0; l < cfg.NLEV() + 1; ++l) {
-      artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
+      res.push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
         emp::to_string("Reproductive Pause Level ", l),
         "Reproductive Pause",
         grid_viewer,
@@ -660,9 +682,10 @@ public:
         }
       ));
     }
+    }
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistConnection>(
+    artists.insert({"group_structure_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistConnection>(
       "Established Interconnect",
       "Established Interconnect",
       grid_viewer,
@@ -681,8 +704,8 @@ public:
       w
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistConnection>(
+    artists.insert({"group_structure_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistConnection>(
       "Fledgling Interconnect",
       "Fledgling Interconnect",
       grid_viewer,
@@ -703,8 +726,8 @@ public:
       w
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
+    artists.insert({"sharing_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistPointer<double_datum>>(
       "Neighbor Shared Resource", // name
       "Neighbor Shared Resource", // description
       grid_viewer, // viewer
@@ -736,8 +759,8 @@ public:
       } // divider
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistPointer<double_datum>>(
+    artists.insert({"sharing_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistPointer<double_datum>>(
       "Interconnect Shared Resource", // name
       "Interconnect Shared Resource", // description
       grid_viewer, // viewer
@@ -769,8 +792,8 @@ public:
       } // divider
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
+    artists.insert({"messaging_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistPointer<size_t_datum>>(
       "Neighbor Messaging", // name
       "Neighbor Messaging", // description
       grid_viewer, // viewer
@@ -801,30 +824,29 @@ public:
       } // divider
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
+    artists.insert({"messaging_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistPointer<size_t_datum>>(
       "Interconnect Messaging", // name
       "Interconnect Messaging", // description
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
         if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
-          w.man->Inbox(i).GetTraffic(Cardi::Dir::NumDirs),
+          w.man->Inbox(i).GetTraffic(Cardi::Dir::NumDirs)
+            + w.man->Inbox(i).GetSpikeBroadcastTraffic(),
           *w.man->Channel(i).GetIDs()
         });
         else return std::make_optional(size_t_datum{0});
       }, // getter
-      [this](const auto amt) -> std::string {
-        if (amt) {
-          if (*amt > cfg.REP_THRESH()) return "yellow";
-          else if (*amt > 0) return emp::ColorHSV(
-            240.0-180.0*(*amt)/cfg.REP_THRESH(),
-            1.0,
-            1.0
-          );
-          else if (*amt == 0) return "white";
-          else return "red";
+      [](const auto state) {
+        if (state) {
+          if (*state == 0) return "white";
+          else if (*state == 1) return "green";
+          else if (*state == 2) return "blue";
+          else if (*state == 3) return "purple";
+          else if (*state == 4) return "red";
+          else return "orange";
         } else return "black";
-      }, // renderer
+      },
       cfg_,
       [](const auto & datum1, const auto & datum2) -> std::string {
         if (!datum1|| !datum2) return "black";
@@ -834,8 +856,8 @@ public:
       } // divider
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t>>(
+    artists.insert({"demographics_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistCell<size_t>>(
       "Phylogenetic Root",
       "Phylogenetic Root",
       grid_viewer,
@@ -869,8 +891,8 @@ public:
       }
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
+    artists.insert({"regulation_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistCell<size_t_datum>>(
       "Regulation",
       "Regulation",
       grid_viewer,
@@ -920,8 +942,8 @@ public:
       }
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
+    artists.insert({"regulation_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistCell<size_t_datum>>(
       "Regulation Flow",
       "Regulation Flow",
       grid_viewer,
@@ -971,8 +993,8 @@ public:
       }
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
+    artists.insert({"regulation_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistPointer<size_t_datum>>(
       "Directional Regulation", // name
       "Directional Regulation", // description
       grid_viewer, // viewer
@@ -1009,8 +1031,8 @@ public:
       } // divider
     ));
 
-    artists.emplace_back();
-    artists.back().push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
+    artists.insert({"regulation_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistPointer<size_t_datum>>(
       "Interconnect Regulation", // name
       "Interconnect Regulation", // description
       grid_viewer, // viewer
@@ -1057,58 +1079,63 @@ public:
 
     view_selector.SetAttr(
       "class", "btn-group-toggle"
-    ).SetAttr(
+    );
+
+    view_selector.SetAttr(
       "data-toggle", "buttons"
     );
-    for (auto & series : artists) {
+
+    for (auto & [category, series] : artists) {
+
       const std::string series_id = emp::to_string(
         emp::slugify(series[0]->GetName()),
         "-outer"
       );
-      view_selector << UI::Div(
+
+      auto & view_subselector = view_subselectors.at(category);
+      view_subselector.SetAttr("class", "btn-group-toggle");
+
+      view_subselector << UI::Div(
         series_id
       ).SetAttr(
         "class", "btn-group d-flex"
       ).SetAttr(
         "role", "group"
       );
+
       for (size_t i = 0; i < series.size(); ++i) {
+
         auto & artist = series[i];
-        const std::string target = artist->GetName();
-        view_selector.Div(series_id) << UI::Div(emp::slugify(target)).SetAttr(
+
+        const std::string name = artist->GetName();
+
+        view_subselector.Div(series_id) << UI::Div(emp::slugify(name)).SetAttr(
             "class",
             emp::to_string(
               std::string(
                 "btn btn-lg m-1 btn-primary"
               ) + std::string(i ? " w-25" : " w-100"),
-              [](){
-                static bool first = true;
-                const bool res = first;
-                first = false;
-                return res;
-              }() ? " active" : ""
-            )
+              name == "Channel" ? " active" : ""
+			)
           ).OnClick(
             [&, artist](){
-              for (auto & s : artists) {
-                for (auto & a : s) a->Deactivate();
-              }
-              artist->Activate();
+              artist->Toggle();
               artist->Redraw(w.GetUpdate());
             }
           ) << UI::Input(
               [](const std::string & state){ ; },
-              "radio",
-              i ? emp::to_string(i) : target
+              "checkbox",
+              i ? emp::to_string(i) : name
             ).SetAttr(
               "name", "view_mode"
             ).Value(
-              emp::slugify(target)
+              emp::slugify(name)
             ).SetAttr(
               "autocomplete", "off"
           );
 
       }
+
     }
 
     button_dash << UI::Div(
@@ -1475,7 +1502,7 @@ public:
   }
 
   ~WebInterface() {
-    for (auto & series : artists) for (auto & ptr : series) ptr.Delete();
+    for (auto & [category, series] : artists) for (auto & ptr : series) ptr.Delete();
   }
 
   void DoFrame() {
@@ -1497,10 +1524,14 @@ public:
   }
 
   void InitializeViewers(const size_t update) {
-    for (auto & series : artists) {
+    for (auto & [category, series] : artists) {
       for (auto & artist : series) artist->Deactivate();
     }
-    artists[0][0]->Activate();
+	std::find_if(
+	  std::begin(artists),
+	  std::end(artists),
+	  [](const auto &v){ return v.second[0]->GetName() == "Channel"; }
+	)->second[0]->Activate();
   }
 
   void Redraw(const size_t update) {
@@ -1511,7 +1542,7 @@ public:
 
     systematics_dash.Redraw();
     dominant_viewer.Text("dom_text").Redraw();
-    for (auto & series : artists) {
+    for (auto & [category, series] : artists) {
       for (auto & artist : series) artist->Redraw(update);
     }
 
@@ -1541,7 +1572,7 @@ public:
       };
 
       Redraw(w.GetUpdate());
-      for (auto & series : artists) {
+      for (auto & [category, series] : artists) {
         for (auto & artist : series) {
           artist->Download(namify(emp::slugify(artist->GetName())));
         }

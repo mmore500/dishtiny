@@ -89,11 +89,11 @@ void LibraryInstruction::InitDefault(inst_lib_t &il) {
   il.AddInst("Terminate", Config::hardware_t::Inst_Terminate, 0, "Terminate current thread.");
   il.AddInst("Nop", Config::hardware_t::Inst_Nop, 0, "No operation.");
   il.AddInst("Rng", Config::hardware_t::Inst_RngDouble, 1, "Draw from onboard random number generator.");
-  il.AddInst("SetRegulator", Config::hardware_t::Inst_SetRegulator, 1, "Sets the regulator of a tag in the matchbin.");
+  il.AddInst("SetRegulator", Config::hardware_t::Inst_SetRegulator, 1, "Sets the regulator of a tag in the matchbin.", emp::ScopeType::BASIC, 0, {"affinity"});
   il.AddInst("SetOwnRegulator", Config::hardware_t::Inst_SetOwnRegulator, 1, "Sets the regulator the currently executing function.");
-  il.AddInst("AdjRegulator", Config::hardware_t::Inst_AdjRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.");
+  il.AddInst("AdjRegulator", Config::hardware_t::Inst_AdjRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.", emp::ScopeType::BASIC, 0, {"affinity"});
   il.AddInst("AdjOwnRegulator", Config::hardware_t::Inst_AdjOwnRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.");
-  il.AddInst("SenseRegulator", Config::hardware_t::Inst_SenseRegulator, 1, "Senses the regulator of a tag in the matchbin.");
+  il.AddInst("SenseRegulator", Config::hardware_t::Inst_SenseRegulator, 1, "Senses the regulator of a tag in the matchbin.", emp::ScopeType::BASIC, 0, {"affinity"});
 
   il.AddInst(
     emp::to_string("Terminal", 1073741824),
@@ -152,9 +152,9 @@ void LibraryInstruction::InitDefaultDup(inst_lib_t &il) {
   il.AddInst("DuplicateTerminate", Config::hardware_t::Inst_Terminate, 0, "Terminate current thread.");
   il.AddInst("DuplicateNop", Config::hardware_t::Inst_Nop, 0, "No operation.");
   il.AddInst("DuplicateRng", Config::hardware_t::Inst_RngDouble, 1, "Draw from onboard random number generator.");
-  il.AddInst("DuplicateSetRegulator", Config::hardware_t::Inst_SetRegulator, 1, "Sets the regulator of a tag in the matchbin.");
+  il.AddInst("DuplicateSetRegulator", Config::hardware_t::Inst_SetRegulator, 1, "Sets the regulator of a tag in the matchbin.", emp::ScopeType::BASIC, 0, {"affinity"});
   il.AddInst("DuplicateSetOwnRegulator", Config::hardware_t::Inst_SetOwnRegulator, 1, "Sets the regulator the currently executing function.");
-  il.AddInst("DuplicateAdjRegulator", Config::hardware_t::Inst_AdjRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.");
+  il.AddInst("DuplicateAdjRegulator", Config::hardware_t::Inst_AdjRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.", emp::ScopeType::BASIC, 0, {"affinity"});
   il.AddInst("DuplicateAdjOwnRegulator", Config::hardware_t::Inst_AdjOwnRegulator, 2, "Adjusts the regulator of a tag in the matchbin towards a target.");
 
 
@@ -1095,7 +1095,7 @@ void LibraryInstruction::InitDevoActions(inst_lib_t &il, const Config &cfg) {
 
       const size_t connection_cap = static_cast<size_t>(
         state.GetLocal(inst.args[1])
-      ) + 1;
+      ) + 2;
 
       const size_t pos = fh.Cell().GetPos();
       if (hw.GetRandom().P(p)) {

@@ -5,24 +5,14 @@
   </head>
   <body>
     {% include 'includes/spinner.html' %}
-    
+
     <style>
     .text-large {
       font-size: 125%;
     }
     </style>
 
-    <div class="jumbotron">
-      <h1 class="display-4">dishtiny</h1>
-      <p class="lead">
-        <b>dis</b>tributed
-        <b>h</b>ierarchical
-        <b>t</b>ransitions
-        of
-        <b>in</b>dividualit<b>y</b>
-      </p>
-      <iframe src="https://ghbtns.com/github-btn.html?user=mmore500&repo=dishtiny&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
-    </div>
+    {% include 'includes/jumbotron.html' %}
 
     <style>
     .carousel-control-prev-icon {
@@ -59,24 +49,29 @@
 
     <div class="row p-3 container-fluid">
       <div class="col-sm-12 p-3 mx-auto">
-        {% include 'includes/readme.html' %}  
+        {% include 'includes/readme.html' %}
       </div>
     </div>
 
-    <div class="row p-3 container-fluid" style="align-items: flex-start;">
-      <div class="col-lg-8 p-3 mx-auto" style="position: -webkit-sticky; position: sticky; top: 4rem;">
-        {% include 'includes/viewer.html' %}
-        {% include 'includes/controls.html' %}
-      </div>
-      
-      <div class="col p-3 mx-auto">
+    <div class="row p-3 container-fluid">
+	  <div
+	    style="display: flex; align-self: stretch;"
+		class="col-lg-8 mx-auto p-3"
+	  >
+	    <div
+		  style="position: -webkit-sticky; position: sticky; bottom: 0rem; align-self: flex-end;"
+		  class="w-100"
+		>
+            {% include 'includes/viewer.html' %}
+            {% include 'includes/controls.html' %}
+        </div>
+	  </div>
+      <div class="col-lg-4 p-3 mx-auto">
             {% import "includes/view-key.html.jinja" as view_key %}
             {{ view_key.content(data, eval, make_badge, markdown) }}
-            
-      </div>
+            {% include 'includes/view-selector.html' %}
+	  </div>
     </div>
-
-
 
     <div class="row p-3 container-fluid">
       <div class="col-lg-6 p-3">
@@ -84,6 +79,12 @@
       </div>
       <div class="col-lg-6 p-3 mx-auto">
         {% include 'includes/dominant-viewer.html' %}
+      </div>
+    </div>
+
+    <div class="row p-3 container-fluid">
+      <div class="col-lg-12 p-3">
+        {% include 'includes/population-loader.html' %}
       </div>
     </div>
 

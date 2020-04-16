@@ -16,7 +16,7 @@ EMPIRICAL_DIRTY := $(shell \
   )
 
 # Flags to use regardless of compiler
-CFLAGS_all := -std=c++17 -Wall -Wno-unused-function \
+CFLAGS_all := -std=c++17 -Wall -Wno-unused-function -Wno-unused-private-field \
                 -I$(EMP_DIR)/ \
                 -I$(EMP_DIR)/../third-party/cereal/include \
                 -DDISHTINY_HASH_=$(DISHTINY_HASH)$(DISHTINY_DIRTY) \
@@ -46,7 +46,7 @@ CFLAGS_web_debug := $(CFLAGS_all) $(OFLAGS_web_debug) $(OFLAGS_web_all)
 
 default: $(PROJECT)
 native: $(PROJECT)
-web: $(PROJECT).js
+web: $(PROJECT).js $(PROJECT).html
 all: $(PROJECT) $(PROJECT).js
 
 ndata: CXX_nat := g++
@@ -75,7 +75,10 @@ $(PROJECT):	source/native/$(PROJECT).cc
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web/$(PROJECT)-web.cc
-	$(CXX_web) $(CFLAGS_web) source/web/$(PROJECT)-web.cc -o web/$(PROJECT).js && python3 web/make_html.py
+	$(CXX_web) $(CFLAGS_web) source/web/$(PROJECT)-web.cc -o web/$(PROJECT).js
+
+$(PROJECT).html: web/includes
+	python3 web/make_html.py
 
 clean:
 	rm -f $(PROJECT) web/$(PROJECT).js web/*.js.map web/*.js.mem web/*.wasm *~ source/*.o *.o debug_file web/$(PROJECT).html

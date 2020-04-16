@@ -2,6 +2,7 @@
 
 #include <optional>
 #include <limits>
+#include <chrono>
 
 #include "web/Animate.h"
 #include "web/Canvas.h"
@@ -15,49 +16,31 @@ class WebArtistCell : public WebArtistBase {
 
 private:
 
-  const std::string name;
-
-  UI::Canvas canvas;
-  UI::DocuExtras description;
-
   std::function<std::optional<T>(size_t)> getter;
   std::function<std::string(std::optional<T>)> renderer;
 
   std::function<std::string(std::optional<T>,std::optional<T>)> divider;
-
-  const Config &cfg;
-
-  size_t last_update;
 
 public:
 
   WebArtistCell(
     std::string name_,
     std::string description_,
-    UI::Document &viewer,
+    UI::Document & viewer_,
     std::function<std::optional<T>(size_t)> getter_,
     std::function<std::string(std::optional<T>)> renderer_,
     const Config &cfg_,
     std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
-  ) : name(name_)
-  , canvas(
-    std::min(GetViewPortSize() - 100, 500),
-    std::min(GetViewPortSize() - 100, 500)
-  )
-  , description(emp::to_string(emp::slugify(description_), "-key"))
-  , getter(getter_)
-  , renderer(renderer_)
-  , divider(divider_)
-  , cfg(cfg_)
-  , last_update(std::numeric_limits<size_t>::max())
-  { viewer << canvas.SetCSS(
-      "position", "absolute",
-      "margin-left", "auto",
-      "margin-right", "auto",
-      "left", "0",
-      "right", "0"
-    );
-  }
+  ) : WebArtistBase(
+        name_,
+        description_,
+        viewer_,
+        cfg_
+      ),
+      getter(getter_),
+      renderer(renderer_),
+      divider(divider_)
+    { ; }
 
   // for use as background in WebArtistConnection
   WebArtistCell(
@@ -68,31 +51,20 @@ public:
     std::function<std::string(std::optional<T>)> renderer_,
     const Config &cfg_,
     std::function<std::string(std::optional<T>,std::optional<T>)> divider_=[](std::optional<T>,std::optional<T>){ return "gray"; }
-  ) : name(name_)
-  , canvas(canvas_)
-  , description(emp::to_string(emp::slugify(description_), "-key"))
-  , getter(getter_)
-  , renderer(renderer_)
-  , divider(divider_)
-  , cfg(cfg_)
-  , last_update(std::numeric_limits<size_t>::max())
+  ) : WebArtistBase(
+        name_,
+        description_,
+        canvas_,
+        cfg_
+      ),
+      getter(getter_),
+      renderer(renderer_),
+      divider(divider_)
   { ; }
-
-  void Deactivate() {
-    canvas.SetCSS("visibility", "hidden");
-    description.SetCSS("display", "none");
-  }
-
-  void Activate() {
-    canvas.SetCSS("visibility", "visible");
-    description.SetCSS("display", "initial");
-  }
-
-  std::string GetName() const { return name; }
 
   void Redraw(const size_t update) {
 
-    if (update == last_update || canvas.GetCSS("visibility") == "hidden") {
+    if (update == last_update || description.GetCSS("display") == "none") {
       return;
     }
     else last_update = update;

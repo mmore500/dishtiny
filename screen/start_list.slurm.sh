@@ -67,11 +67,11 @@ echo "Prepare Env Vars"
 echo "----------------"
 ################################################################################
 
-SEED_OFFSET=1000
+SEED_OFFSET=2000
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 CUR_STEP=1000
 
-OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-screen/seed=${SEED}+step=${CUR_STEP}"
+OUTPUT_DIR="/mnt/scratch/mmore500/dishtiny-screen2/seed=${SEED}+step=${CUR_STEP}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/screen/"
 
 echo "   SEED" $SEED
