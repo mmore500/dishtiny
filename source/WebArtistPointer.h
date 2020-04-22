@@ -196,6 +196,8 @@ public:
 
   }
 
-  void Download(const std::string & fn) { canvas.DownloadPNG(fn); }
+  void Download(const std::string & fn) {
+    if (description.GetCSS("display") != "none") canvas.DownloadPNG(fn);
+  }
 
 };
