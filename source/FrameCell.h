@@ -69,6 +69,8 @@ public:
 
   Manager& Man();
 
+  const Manager& Man() const;
+
   FrameHardware& GetFrameHardware(const size_t dir);
 
   size_t GetNeigh(const size_t dir) const;

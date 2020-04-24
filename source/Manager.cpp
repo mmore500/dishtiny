@@ -243,6 +243,10 @@ ManagerPriority& Manager::Priority(size_t pos) {
   return *mps[pos];
 }
 
+const ManagerPriority& Manager::Priority(size_t pos) const {
+  return *mps[pos];
+}
+
 ManagerStockpile& Manager::Stockpile(size_t pos) {
   return *mss[pos];
 }

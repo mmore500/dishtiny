@@ -108,10 +108,9 @@ size_t FrameCell::GetPauseSum(const size_t lev) const {
   return res;
 }
 
+Manager& FrameCell::Man() { return man; }
 
-Manager& FrameCell::Man() {
-  return man;
-}
+const Manager& FrameCell::Man() const { return man; }
 
 FrameHardware& FrameCell::GetFrameHardware(const size_t dir) {
   return *hw[dir];

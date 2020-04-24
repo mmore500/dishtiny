@@ -35,6 +35,8 @@ FrameHardware::FrameHardware(
 
 FrameCell& FrameHardware::Cell() { return cell; }
 
+const FrameCell& FrameHardware::Cell() const { return cell; }
+
 void FrameHardware::Reset() {
   inbox_active = true;
 
@@ -50,6 +52,17 @@ void FrameHardware::Reset() {
 
   external_membrane.Reset();
   internal_membrane.Reset();
+}
+
+bool FrameHardware::IsReprPaused(const size_t lev) const {
+    return Cell().Man().Priority(
+	  Cell().GetNeigh(
+	    GetFacing()
+	  )
+	).IsReprPaused(
+	  Cardi::Opp[GetFacing()],
+      lev
+	);
 }
 
 double FrameHardware::CheckStockpileReserve() const {

@@ -156,15 +156,23 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-
-[reproductive-pause]
-header = ["The **Reproductive Pause Viewer** depicts reproductive cooperation."]
+[reproductive-pause-flow]
+header = ["The **Reproductive Pause Flow Viewer** depicts reproductive cooperation."]
 items = [
     "{make_badge('White', '#FFFFFF')} cells have registered **zero** reproductive forbearance.",
     "{make_badge('Green', '#00FF00')} cells have temporarily registred to pause reproduction in **one direction**.",
     "{make_badge('Blue', '#0000FF')} cells have temporariliy registered to pause reproduction in **two directions**.",
     "{make_badge('Purple', '#FF00FF')} cells have temporariliy registered to pause reproduction in **three directions**.",
     "{make_badge('Red', '#FF0000')} cells have temporarily registered to pause reproduction in all **four directions**.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[reproductive-pause]
+header = ["The **Reproductive Pause Viewer** depicts reproductive cooperation."]
+items = [
+    "{make_badge('White', '#FFFFFF')} coloring indicates a cell **has not** registered reproductive forbearance in a direction.",
+    "{make_badge('Red', '#FF0000')} highlighting indicates a cell **has** temporarily registered to pause reproduction a direction.",
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."

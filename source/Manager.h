@@ -64,6 +64,8 @@ public:
 
   ManagerPriority& Priority(size_t pos);
 
+  const ManagerPriority& Priority (size_t pos) const;
+
   ManagerSharing& Sharing(size_t pos);
 
   ManagerStockpile& Stockpile(size_t pos);

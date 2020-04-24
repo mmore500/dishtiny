@@ -713,8 +713,8 @@ public:
       auto & res = artists.insert({"reproduction_category", {}})->second;
     for (size_t l = 0; l < cfg.NLEV() + 1; ++l) {
       res.push_back(emp::NewPtr<WebArtistCell<size_t_datum>>(
-        emp::to_string("Reproductive Pause Level ", l),
-        "Reproductive Pause",
+        emp::to_string("Reproductive Pause Flow Level ", l),
+        "Reproductive Pause Flow",
         grid_viewer,
         [this, l](const size_t i) -> std::optional<size_t_datum> {
           if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
@@ -731,6 +731,37 @@ public:
             else if (*state == 3) return "purple";
             else if (*state == 4) return "red";
             else return "orange";
+          } else return "black";
+        },
+        cfg_,
+        [](const auto & datum1, const auto & datum2) -> std::string {
+          if (!datum1|| !datum2) return "black";
+          else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+          else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+          else return "black";
+        }
+      ));
+    }
+    }
+
+    {
+      auto & res = artists.insert({"reproduction_category", {}})->second;
+    for (size_t l = 0; l < cfg.NLEV() + 1; ++l) {
+      res.push_back(emp::NewPtr<WebArtistPointer<size_t_datum>>(
+        emp::to_string("Reproductive Pause Level ", l),
+        "Reproductive Pause",
+        grid_viewer,
+        [this, l](const size_t i, const size_t j) -> std::optional<size_t_datum> {
+          return  w.IsOccupied(i)
+		  ? std::make_optional(size_t_datum{
+            w.GetFrame(i).GetFrameHardware(j).IsReprPaused(l),
+            *w.man->Channel(i).GetIDs()
+          }) :  std::nullopt;
+        },
+        [](const auto state) -> std::string {
+          if (state) {
+            if (*state) return "red";
+            else return "white";
           } else return "black";
         },
         cfg_,

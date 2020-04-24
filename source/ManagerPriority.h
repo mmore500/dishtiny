@@ -96,7 +96,7 @@ public:
     }
   }
 
-  bool IsReprPaused(const size_t incoming_dir, const size_t rep_lev) {
+  bool IsReprPaused(const size_t incoming_dir, const size_t rep_lev) const {
     return pauses[incoming_dir][rep_lev];
   }
 

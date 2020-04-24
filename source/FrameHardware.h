@@ -55,6 +55,8 @@ public:
 
   FrameCell& Cell();
 
+  const FrameCell& Cell() const;
+
   void Reset();
 
   double CheckStockpileReserve() const;
