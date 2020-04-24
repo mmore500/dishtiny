@@ -105,6 +105,24 @@ items = [
     "{make_badge('White', '#FFFFFF')} lines divide cells with **identical genotypes**.",
     "{make_badge('Red', '#FF0000')} lines divide cells with **different genotypes**."
 ]
+[parent-cell-of]
+header = ["The **Parent Cell Of** viewer depicts cell kinship relationships."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Red', '#FF0000')} highlighting indicates a cell is the **parent of** its neighbor.",
+    "{make_badge('White', '#FFFFFF')} indicates a cell is **not** the parent of its neighbor.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+
+[child-cell-of]
+header = ["The **Child Cell Of** viewer depicts cell kinship relationships."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Red', '#FF0000')} highlighting indicates a cell is the **child of** its neighbor.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
 [resource-wave]
 header = ["The **Resource Wave Viewer** depicts the cells' cooperative resource-collection task. Activation propagates outward in same-channel groups from an environmentally-triggered seed."]
 items = [

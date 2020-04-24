@@ -530,6 +530,66 @@ public:
       }
     ));
 
+    artists.insert({"demographics_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistPointer<size_t_datum>>(
+      "Parent Cell Of", // name
+      "Parent Cell Of", // description
+      grid_viewer, // viewer
+      [this](const size_t i, const size_t j) {
+       return w.IsOccupied(i)
+	    ? std::make_optional(size_t_datum{
+            w.GetFrame(i).GetFrameHardware(
+		      j
+		    ).IsCellChild(),
+            *w.man->Channel(i).GetIDs()
+          })
+		: std::nullopt;
+      }, // getter
+      [](const auto amt) -> std::string {
+        if (amt) {
+          if (*amt) return "red";
+          else return "white";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
+    ));
+
+    artists.insert({"demographics_category", {}})->second.push_back(
+      emp::NewPtr<WebArtistPointer<size_t_datum>>(
+      "Child Cell Of", // name
+      "Child Cell Of", // description
+      grid_viewer, // viewer
+      [this](const size_t i, const size_t j) {
+       return w.IsOccupied(i)
+	    ? std::make_optional(size_t_datum{
+            w.GetFrame(i).GetFrameHardware(
+		      j
+		    ).IsCellParent(),
+            *w.man->Channel(i).GetIDs()
+          })
+		: std::nullopt;
+      }, // getter
+      [](const auto amt) -> std::string {
+        if (amt) {
+          if (*amt) return "red";
+          else return "white";
+        } else return "black";
+      }, // renderer
+      cfg_,
+      [](const auto & datum1, const auto & datum2) -> std::string {
+        if (!datum1|| !datum2) return "black";
+        else if ((datum1->cp)[0] == (datum2->cp)[0]) return "transparent";
+        else if (datum1->cp.size() > 1 && (datum1->cp)[1] == (datum2->cp)[1]) return "white";
+        else return "black";
+      } // divider
+    ));
+
     {
       auto & res = artists.insert({"resource_collection_category", {}})->second;
     for (size_t l = 0; l < cfg.NLEV(); ++l) {
