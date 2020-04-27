@@ -1,6 +1,6 @@
 #!/bin/bash
 
-KO_PATH="seedpop/id=1+component=genome+count=1+seed=5066+title=dominant+treat=standard+update=328832+_emp_hash=1874d2a-clean+_source_hash=aa98eba-clean+ext=.json.cereal"
+KO_PATH=$1
 
 # split into chunks to do knockouts on individual genome components
   # 0th chunk: nada (ok to still sed it though!)

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-KO_PATH=seedpop/*.json.cereal
+KO_PATH=$1
 
 # split into chunks to do knockouts on individual genome components
   # 0th chunk: nada (ok to still sed it though!)
@@ -15,7 +15,15 @@ csplit --suffix-format="%09d" ${KO_PATH} '/program.*{$/' '{*}'               \
 # 123,PruneIncomingConnection
 
 for f in xx*1 xx*3 xx*5 xx*7 xx*9; do
-  sed -i -- "s/\"id\": 122\$\|\"id\": 123\$/\"id\": 27/g" $f &
+  sed -i -- "/\"id\": 122\$\|\"id\": 123\$/{
+    h
+    s//\"id\": 27/g
+    H
+    x
+    s/\n/ >>> /
+    w changelog${f}
+    x
+  }" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
 
@@ -26,7 +34,15 @@ done
 # 100,PruneIncomingConnection
 
 for f in xx*0 xx*2 xx*4 xx*6 xx*8; do
-  sed -i -- "s/\"id\": 99\$\|\"id\": 100\$/\"id\": 27/g" $f &
+  sed -i -- "/\"id\": 99\$\|\"id\": 100\$/{
+    h
+    s//\"id\": 27/g
+    H
+    x
+    s/\n/ >>> /
+    w changelog${f}
+    x
+  }" $f &
   while [ $(jobs -r | wc -l) -gt 100 ]; do sleep 1; done
 done
 
@@ -34,3 +50,7 @@ done
 wait
 cat xx* > ${KO_PATH}
 rm xx*
+
+cat changelogxx* > "${KO_PATH}___knockout_changelog+ext=.txt"
+rm changelogxx*
+
