@@ -5,7 +5,7 @@
 #SBATCH --mem=6G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 2
-#SBATCH --job-name batch~1042,step~1024,pop~3,id1~wt,id2~ko_m6_i3
+#SBATCH --job-name batch~2032,step~1018,pop~1,id1~wt,id2~ko_m6_i3
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A_%a.out"
 #SBATCH --mail-type=FAIL
@@ -68,7 +68,7 @@ echo "----------------"
 SEED_OFFSET=1000
 SEED=$((SLURM_ARRAY_TASK_ID + SEED_OFFSET))
 
-OUTPUT_DIR="/mnt/scratch/mmore500/match-local/treat=batch~1042,step~1024,pop~3,id1~wt,id2~ko_m6_i3/rep=${SLURM_ARRAY_TASK_ID}"
+OUTPUT_DIR="/mnt/scratch/mmore500/match-local/treat=batch~2032,step~1018,pop~1,id1~wt,id2~ko_m6_i3/rep=${SLURM_ARRAY_TASK_ID}"
 CONFIG_DIR="/mnt/home/mmore500/dishtiny/match-local"
 
 echo "   SEED" $SEED
@@ -90,7 +90,7 @@ echo "--------------"
 rm -rf ${OUTPUT_DIR}/* || echo "   not a redo"
 mkdir -p ${OUTPUT_DIR}
 cd ${OUTPUT_DIR}
-tar -xvf "${CONFIG_DIR}/treat=batch~1042,step~1024,pop~3,id1~wt,id2~ko_m6_i3+ext=.tar.gz"
+tar -xvf "${CONFIG_DIR}/treat=batch~2032,step~1018,pop~1,id1~wt,id2~ko_m6_i3+ext=.tar.gz"
 mv treatment_directory/* .
 rm -rf treatment_directory
 cp ${CONFIG_DIR}/dishtiny* . # copy over executable
