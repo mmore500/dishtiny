@@ -279,7 +279,7 @@ private:
       "START_TIMESTAMP", H5::PredType::NATIVE_INT, timestamp_dataspace
     );
 
-    const long timestamp_data[] = {time(0)};
+    const long timestamp_data[] = { 0 };
 
     timestamp_attribute.write(H5::PredType::NATIVE_LONG, timestamp_data);
 
@@ -441,10 +441,14 @@ private:
 
     const auto tid = H5::PredType::NATIVE_UINT32;
 
+    H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
+
     H5::DataSet ds_idx = file.createDataSet(
       "/Index/own",
       tid,
-      H5::DataSpace(2, chunk_dims)
+      H5::DataSpace(2, chunk_dims),
+      plist
     );
 
     uint32_t data[dw.GetSize()];
@@ -458,7 +462,8 @@ private:
       H5::DataSet ds_dir = file.createDataSet(
         "/Index/dir_" + emp::to_string(dir),
         tid,
-        H5::DataSpace(2, chunk_dims)
+        H5::DataSpace(2, chunk_dims),
+        plist
       );
 
       for (size_t i = 0; i < dw.GetSize(); ++i) {
@@ -473,6 +478,7 @@ private:
   void RootID() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -532,6 +538,7 @@ private:
 
     {
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -550,6 +557,8 @@ private:
     const hsize_t dims[] = { decoder.size() };
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
+
     plist.setChunk(1, dims);
     plist.setDeflate(6);
 
@@ -608,6 +617,8 @@ private:
 
     {
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
+
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -626,6 +637,8 @@ private:
     const hsize_t dims[] = { decoder.size() };
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
+
     plist.setChunk(1, dims);
     plist.setDeflate(6);
 
@@ -690,6 +703,8 @@ private:
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       H5::DSetCreatPropList plist;
+      H5Pset_obj_track_times(plist.getId(), false);
+
       plist.setChunk(2, chunk_dims);
       plist.setDeflate(6);
 
@@ -710,6 +725,8 @@ private:
     const hsize_t dims[] = { decoder.size() };
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
+
     plist.setChunk(1, dims);
     plist.setDeflate(6);
 
@@ -782,6 +799,8 @@ private:
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       H5::DSetCreatPropList plist;
+      H5Pset_obj_track_times(plist.getId(), false);
+
       plist.setChunk(2, chunk_dims);
       plist.setDeflate(6);
 
@@ -802,6 +821,8 @@ private:
     const hsize_t dims[] = { decoder.size() };
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
+
     plist.setChunk(1, dims);
     plist.setDeflate(6);
 
@@ -828,6 +849,8 @@ private:
   void Channel(const size_t lev) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
+
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -856,6 +879,8 @@ private:
   void Expiration(const size_t lev) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
+
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -890,6 +915,8 @@ private:
   void ChannelGeneration(const size_t lev) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
+
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -917,6 +944,8 @@ private:
   void Stockpile() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
+
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -944,6 +973,7 @@ private:
   void Live() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -969,6 +999,7 @@ private:
   void Apoptosis() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -994,6 +1025,7 @@ private:
   void InboxActivation(const size_t dir) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1020,6 +1052,7 @@ private:
   void SpikeBroadcastTraffic() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1045,6 +1078,7 @@ private:
   void InboxTraffic(const size_t dir) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1071,6 +1105,7 @@ private:
   void TrustedInboxTraffic(const size_t dir) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1097,6 +1132,7 @@ private:
   void RepOutgoing(const size_t dir) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1127,6 +1163,7 @@ private:
   void RepIncoming(const size_t dir) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1153,6 +1190,7 @@ private:
  void TotalContribute() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1177,6 +1215,7 @@ private:
   void ResourceContributed(const size_t dir) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1203,6 +1242,7 @@ private:
   void ResourceHarvested(const size_t lev) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1232,6 +1272,7 @@ private:
   void PrevChan() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1259,6 +1300,7 @@ private:
   void InResistance(const size_t dir) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1285,6 +1327,7 @@ private:
   void OutResistance(const size_t dir) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1311,6 +1354,7 @@ private:
   void Heir(const size_t dir) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1337,6 +1381,7 @@ private:
   void ParentPos() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1363,6 +1408,7 @@ private:
   void CellAge() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1388,6 +1434,7 @@ private:
   void CellGen(const size_t lev) {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1414,6 +1461,7 @@ private:
   void Death() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1450,6 +1498,7 @@ private:
   void OutgoingConnectionCount() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1475,6 +1524,7 @@ private:
   void FledglingConnectionCount() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
@@ -1500,6 +1550,7 @@ private:
   void IncomingConnectionCount() {
 
     H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
