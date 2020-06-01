@@ -26,6 +26,9 @@ private:
 
   H5::H5File file;
 
+//  const hsize_t chunk_dims[2]{cfg.GRID_W(), cfg.GRID_H()};
+  const hsize_t chunk_dims[2]{cfg.GRID_W(), cfg.GRID_H()};
+
 public:
 
   DataHelper(DishWorld &dw_, const Config &cfg_)
@@ -436,13 +439,12 @@ private:
 
   void InitReference() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
     const auto tid = H5::PredType::NATIVE_UINT32;
 
     H5::DataSet ds_idx = file.createDataSet(
       "/Index/own",
       tid,
-      H5::DataSpace(2,dims)
+      H5::DataSpace(2, chunk_dims)
     );
 
     uint32_t data[dw.GetSize()];
@@ -456,7 +458,7 @@ private:
       H5::DataSet ds_dir = file.createDataSet(
         "/Index/dir_" + emp::to_string(dir),
         tid,
-        H5::DataSpace(2,dims)
+        H5::DataSpace(2, chunk_dims)
       );
 
       for (size_t i = 0; i < dw.GetSize(); ++i) {
@@ -470,10 +472,8 @@ private:
 
   void RootID() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
@@ -481,7 +481,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/RootID/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2,chunk_dims),
       plist
     );
 
@@ -531,17 +531,15 @@ private:
     }
 
     {
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
     H5::DataSet ds = file.createDataSet(
       "/Population/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2,chunk_dims),
       plist
     );
 
@@ -609,17 +607,15 @@ private:
     }
 
     {
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
     H5::DataSet ds = file.createDataSet(
       "/Triggers/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -693,10 +689,8 @@ private:
     }
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
       H5::DSetCreatPropList plist;
-      plist.setChunk(2, dims);
+      plist.setChunk(2, chunk_dims);
       plist.setDeflate(6);
 
       const auto tid = H5::PredType::NATIVE_UINT32;
@@ -704,7 +698,7 @@ private:
         "/Regulators/dir_" + emp::to_string(dir)
           + "/upd_"+emp::to_string(dw.GetUpdate()),
         tid,
-        H5::DataSpace(2,dims),
+        H5::DataSpace(2, chunk_dims),
         plist
       );
 
@@ -787,10 +781,8 @@ private:
     }
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
       H5::DSetCreatPropList plist;
-      plist.setChunk(2, dims);
+      plist.setChunk(2, chunk_dims);
       plist.setDeflate(6);
 
       const auto tid = H5::PredType::NATIVE_UINT32;
@@ -798,7 +790,7 @@ private:
         "/Functions/dir_" + emp::to_string(dir)
           + "/upd_"+emp::to_string(dw.GetUpdate()),
         tid,
-        H5::DataSpace(2,dims),
+        H5::DataSpace(2, chunk_dims),
         plist
       );
 
@@ -835,10 +827,8 @@ private:
 
   void Channel(const size_t lev) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT64;
@@ -846,7 +836,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/Channel/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -865,10 +855,8 @@ private:
 
   void Expiration(const size_t lev) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_CHAR;
@@ -876,7 +864,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/Expiration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -901,10 +889,8 @@ private:
 
   void ChannelGeneration(const size_t lev) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
@@ -912,7 +898,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/ChannelGeneration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -930,10 +916,8 @@ private:
 
   void Stockpile() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_DOUBLE;
@@ -941,7 +925,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/Stockpile/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -959,10 +943,8 @@ private:
 
   void Live() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_CHAR;
@@ -970,7 +952,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/Live/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -986,10 +968,8 @@ private:
 
   void Apoptosis() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_CHAR;
@@ -997,7 +977,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/Apoptosis/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1013,10 +993,8 @@ private:
 
   void InboxActivation(const size_t dir) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_CHAR;
@@ -1025,7 +1003,7 @@ private:
       "/InboxActivation/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1041,10 +1019,8 @@ private:
 
   void SpikeBroadcastTraffic() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
@@ -1052,7 +1028,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/SpikeBroadcastTraffic/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1068,10 +1044,8 @@ private:
 
   void InboxTraffic(const size_t dir) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
@@ -1080,7 +1054,7 @@ private:
       "/InboxTraffic/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1096,10 +1070,8 @@ private:
 
   void TrustedInboxTraffic(const size_t dir) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
@@ -1108,7 +1080,7 @@ private:
       "/TrustedInboxTraffic/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1124,10 +1096,8 @@ private:
 
   void RepOutgoing(const size_t dir) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_INT;
@@ -1136,7 +1106,7 @@ private:
       "/RepOutgoing/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1156,10 +1126,8 @@ private:
 
   void RepIncoming(const size_t dir) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_INT;
@@ -1168,7 +1136,7 @@ private:
       "/RepIncoming/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1184,17 +1152,15 @@ private:
 
  void TotalContribute() {
 
-   const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
    const auto tid = H5::PredType::NATIVE_DOUBLE;
    H5::DataSet ds = file.createDataSet(
      "/TotalContribute/upd_" + emp::to_string(dw.GetUpdate()),
      tid,
-     H5::DataSpace(2,dims),
+     H5::DataSpace(2, chunk_dims),
      plist
    );
 
@@ -1210,10 +1176,8 @@ private:
 
   void ResourceContributed(const size_t dir) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_DOUBLE;
@@ -1222,7 +1186,7 @@ private:
       "/ResourceContributed/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1238,10 +1202,8 @@ private:
 
   void ResourceHarvested(const size_t lev) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_DOUBLE;
@@ -1250,7 +1212,7 @@ private:
       "/ResourceHarvested/lev_" + emp::to_string(lev)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1269,10 +1231,8 @@ private:
 
   void PrevChan() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT64;
@@ -1280,7 +1240,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/PrevChan/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1298,10 +1258,8 @@ private:
 
   void InResistance(const size_t dir) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_DOUBLE;
@@ -1310,7 +1268,7 @@ private:
       "/InResistance/dir_" + emp::to_string(dir)
       + "/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1326,10 +1284,8 @@ private:
 
   void OutResistance(const size_t dir) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_DOUBLE;
@@ -1338,7 +1294,7 @@ private:
       "/OutResistance/dir_" + emp::to_string(dir)
       + "/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1354,10 +1310,8 @@ private:
 
   void Heir(const size_t dir) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_CHAR;
@@ -1366,7 +1320,7 @@ private:
       "/Heir/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1382,10 +1336,8 @@ private:
 
   void ParentPos() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
@@ -1393,7 +1345,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/ParentPos/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1410,10 +1362,8 @@ private:
 
   void CellAge() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
@@ -1421,7 +1371,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/CellAge/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1437,10 +1387,8 @@ private:
 
   void CellGen(const size_t lev) {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
@@ -1449,7 +1397,7 @@ private:
       "/CellGen/lev_" + emp::to_string(lev)
       + "/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1465,10 +1413,8 @@ private:
 
   void Death() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_CHAR;
@@ -1476,7 +1422,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/Death/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1503,10 +1449,8 @@ private:
 
   void OutgoingConnectionCount() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
@@ -1514,7 +1458,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/OutgoingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1530,10 +1474,8 @@ private:
 
   void FledglingConnectionCount() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
@@ -1541,7 +1483,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/FledglingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
@@ -1557,10 +1499,8 @@ private:
 
   void IncomingConnectionCount() {
 
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
     H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
+    plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
     const auto tid = H5::PredType::NATIVE_UINT32;
@@ -1568,7 +1508,7 @@ private:
     H5::DataSet ds = file.createDataSet(
       "/IncomingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
       tid,
-      H5::DataSpace(2,dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
