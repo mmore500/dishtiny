@@ -28,6 +28,7 @@ private:
 
 //  const hsize_t chunk_dims[2]{cfg.GRIDS_PER_CHUNK() * cfg.GRID_W(), cfg.GRIDS_PER_CHUNK() * cfg.GRID_H()};
   const hsize_t chunk_dims[2]{cfg.GRID_W(), cfg.GRID_H()};
+  const size_t compression_level = cfg.CHUNK_COMPRESSION();
 
 public:
 
@@ -490,7 +491,7 @@ private:
     H5::DSetCreatPropList plist;
     H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
+    plist.setDeflate(compression_level);
 
     const H5::PredType tid = hid_from_type<T>();
 
@@ -568,7 +569,7 @@ private:
     H5Pset_obj_track_times(plist.getId(), false);
 
     plist.setChunk(1, dims);
-    plist.setDeflate(6);
+    plist.setDeflate(compression_level);
 
     const H5::StrType tid(0, H5T_VARIABLE);
     H5::DataSet ds = file.createDataSet(
@@ -638,7 +639,7 @@ private:
     H5Pset_obj_track_times(plist.getId(), false);
 
     plist.setChunk(1, dims);
-    plist.setDeflate(6);
+    plist.setDeflate(compression_level);
 
     const H5::StrType tid(0, H5T_VARIABLE);
     H5::DataSet ds = file.createDataSet(
@@ -721,7 +722,7 @@ private:
     H5Pset_obj_track_times(plist.getId(), false);
 
     plist.setChunk(1, dims);
-    plist.setDeflate(6);
+    plist.setDeflate(compression_level);
 
     const H5::StrType tid(0, H5T_VARIABLE);
     H5::DataSet ds = file.createDataSet(
@@ -812,7 +813,7 @@ private:
     H5Pset_obj_track_times(plist.getId(), false);
 
     plist.setChunk(1, dims);
-    plist.setDeflate(6);
+    plist.setDeflate(compression_level);
 
     const H5::StrType tid(0, H5T_VARIABLE);
     H5::DataSet ds = file.createDataSet(
