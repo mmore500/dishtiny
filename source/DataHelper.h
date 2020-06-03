@@ -510,6 +510,17 @@ private:
     ds.write((void*)data, tid);
  }
 
+  void RootID() {
+    WriteTemplate<uint32_t>(
+      "/RootID/upd_" + emp::to_string(dw.GetUpdate()),
+      [this](const size_t i){
+        if(dw.IsOccupied(i)) {
+          return dw.GetOrg(i).GetRootID();
+        } else {
+          return 0UL;
+        }
+      }
+    );
   }
 
   void Population() {
@@ -520,7 +531,8 @@ private:
     uid_map_t uids;
     emp::vector<uid_map_t::const_iterator> decoder;
 
-    uint32_t data[dw.GetSize()];
+    emp::vector<uint32_t> decoder_ids;
+    decoder_ids.reserve(dw.GetSize());
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
 
@@ -537,26 +549,17 @@ private:
       if (did_insert) {
         decoder.push_back(node);
       }
-      data[i] = node->second;
+      decoder_ids.push_back(node->second);
 
     }
 
-    {
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/Population/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,chunk_dims),
-      plist
+      [&decoder_ids](const size_t i) {
+        return decoder_ids[i];
+      }
     );
 
-    ds.write((void*)data, tid);
-    }
 
     {
     const hsize_t dims[] = { decoder.size() };
@@ -595,7 +598,8 @@ private:
     uid_map_t uids;
     emp::vector<uid_map_t::const_iterator> decoder;
 
-    uint32_t data[dw.GetSize()];
+    emp::vector<uint32_t> decoder_ids;
+    decoder_ids.reserve(dw.GetSize());
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
 
@@ -616,27 +620,16 @@ private:
       if (did_insert) {
         decoder.push_back(node);
       }
-      data[i] = node->second;
+      decoder_ids[i] = node->second;
 
     }
 
-    {
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/Triggers/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [&decoder_ids](const size_t i) {
+        return decoder_ids[i];
+      }
     );
-
-    ds.write((void*)data, tid);
-    }
 
     {
     const hsize_t dims[] = { decoder.size() };
@@ -675,7 +668,11 @@ private:
     uid_map_t uids;
     emp::vector<uid_map_t::const_iterator> decoder;
 
-    uint32_t data[Cardi::Dir::NumDirs][dw.GetSize()];
+    emp::vector<emp::vector<uint32_t>> decoder_ids(Cardi::Dir::NumDirs);
+
+    for (auto& x : decoder_ids) {
+      x.reserve(dw.GetSize());
+    }
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       for (size_t i = 0; i < dw.GetSize(); ++i) {
@@ -701,28 +698,19 @@ private:
         if (did_insert) {
           decoder.push_back(node);
         }
-        data[dir][i] = node->second;
+        decoder_ids[dir].push_back(node->second);
 
       }
     }
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      H5::DSetCreatPropList plist;
-      H5Pset_obj_track_times(plist.getId(), false);
-
-      plist.setChunk(2, chunk_dims);
-      plist.setDeflate(6);
-
-      const auto tid = H5::PredType::NATIVE_UINT32;
-      H5::DataSet ds = file.createDataSet(
+      WriteTemplate<uint32_t>(
         "/Regulators/dir_" + emp::to_string(dir)
           + "/upd_"+emp::to_string(dw.GetUpdate()),
-        tid,
-        H5::DataSpace(2, chunk_dims),
-        plist
+        [&decoder_ids, &dir](const size_t i) {
+          return decoder_ids[dir][i];
+        }
       );
-
-      ds.write((void*)data[dir], tid);
     }
 
 
@@ -763,7 +751,11 @@ private:
     uid_map_t uids;
     emp::vector<uid_map_t::const_iterator> decoder;
 
-    uint32_t data[Cardi::Dir::NumDirs][dw.GetSize()];
+    emp::vector<emp::vector<uint32_t>> decoder_ids(Cardi::Dir::NumDirs);
+
+    for (auto& x: decoder_ids) {
+      x.reserve(dw.GetSize());
+    }
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       for (size_t i = 0; i < dw.GetSize(); ++i) {
@@ -797,28 +789,19 @@ private:
         if (did_insert) {
           decoder.push_back(node);
         }
-        data[dir][i] = node->second;
+        decoder_ids[dir].push_back(node->second);
 
       }
     }
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      H5::DSetCreatPropList plist;
-      H5Pset_obj_track_times(plist.getId(), false);
-
-      plist.setChunk(2, chunk_dims);
-      plist.setDeflate(6);
-
-      const auto tid = H5::PredType::NATIVE_UINT32;
-      H5::DataSet ds = file.createDataSet(
+      WriteTemplate<uint32_t>(
         "/Functions/dir_" + emp::to_string(dir)
           + "/upd_"+emp::to_string(dw.GetUpdate()),
-        tid,
-        H5::DataSpace(2, chunk_dims),
-        plist
+        [&decoder_ids, &dir](const size_t i) {
+          return decoder_ids[dir][i];
+        }
       );
-
-      ds.write((void*)data[dir], tid);
     }
 
 
@@ -852,731 +835,274 @@ private:
   }
 
   void Channel(const size_t lev) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT64;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint64_t>(
       "/Channel/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this, &lev](const size_t i){
+        const auto res = dw.man->Channel(i).GetID(lev);
+        return res ? *res : 0;
+      }
     );
-
-    Config::chanid_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      const auto res = dw.man->Channel(i).GetID(lev);
-      data[i] = res ? *res : 0;
-
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Expiration(const size_t lev) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<char>(
       "/Expiration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
-    );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      const auto res = dw.man->Channel(i).IsExpired(lev);
-      if (!res) {
-        data[i] = 0;
-      } else if (res <= cfg.EXP_GRACE_PERIOD()) {
-        data[i] = 1;
-      } else {
-        data[i] = 2;
+      [this, &lev](const size_t i){
+        const auto res = dw.man->Channel(i).IsExpired(lev);
+        if (!res) {
+          return 0;
+        } else if (res <= cfg.EXP_GRACE_PERIOD()) {
+          return 1;
+        } else {
+          return 2;
+        }
       }
-
-    }
-
-    ds.write((void*)data, tid);
-
+    );
   }
 
   void ChannelGeneration(const size_t lev) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/ChannelGeneration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this, &lev](const size_t i){
+        return dw.man->Channel(i).GetGeneration(lev);
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      data[i] = dw.man->Channel(i).GetGeneration(lev);
-
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Stockpile() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_DOUBLE;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<double>(
       "/Stockpile/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this](const size_t i){
+        return dw.man->Stockpile(i).QueryResource();
+      }
     );
-
-    double data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      data[i] = dw.man->Stockpile(i).QueryResource();
-
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Live() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<char>(
       "/Live/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this](const size_t i){
+        return dw.IsOccupied(i);
+      }
     );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.IsOccupied(i);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Apoptosis() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<char>(
       "/Apoptosis/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this](const size_t i){
+        return dw.man->Apoptosis(i).GetState();
+      }
     );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Apoptosis(i).GetState();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void InboxActivation(const size_t dir) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<char>(
       "/InboxActivation/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this, &dir](const size_t i){
+        return dw.frames[i]->GetFrameHardware(dir).CheckInboxActivity();
+      }
     );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.frames[i]->GetFrameHardware(dir).CheckInboxActivity();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void SpikeBroadcastTraffic() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/SpikeBroadcastTraffic/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this](const size_t i){
+        return dw.man->Inbox(i).GetSpikeBroadcastTraffic();
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Inbox(i).GetSpikeBroadcastTraffic();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void InboxTraffic(const size_t dir) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/InboxTraffic/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this, &dir](const size_t i){
+        return dw.man->Inbox(i).GetTraffic(dir);
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Inbox(i).GetTraffic(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void TrustedInboxTraffic(const size_t dir) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/TrustedInboxTraffic/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this, &dir](const size_t i){
+        return dw.man->Inbox(i).GetTrustedTraffic(dir);
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Inbox(i).GetTrustedTraffic(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void RepOutgoing(const size_t dir) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_INT;
-
-    H5::DataSet ds = file.createDataSet(
-      "/RepOutgoing/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
-    );
-
-    int data[dw.GetSize()];
-
     GeometryHelper gh(cfg);
 
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Priority(
-          gh.CalcLocalNeighs(i)[dir]
-        ).ViewRepState(Cardi::Opp[dir]);
-    }
-
-    ds.write((void*)data, tid);
-
+    WriteTemplate<int>(
+      "/RepOutgoing/dir_" + emp::to_string(dir)
+        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      [this, &gh, &dir](const size_t i){
+        return dw.man->Priority(
+            gh.CalcLocalNeighs(i)[dir]
+          ).ViewRepState(Cardi::Opp[dir]);
+      }
+    );
   }
 
   void RepIncoming(const size_t dir) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_INT;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<int>(
       "/RepIncoming/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this, &dir](const size_t i){
+        return dw.man->Priority(i).ViewRepStateDup(dir);
+      }
     );
-
-    int data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Priority(i).ViewRepStateDup(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
  void TotalContribute() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-   const auto tid = H5::PredType::NATIVE_DOUBLE;
-   H5::DataSet ds = file.createDataSet(
-     "/TotalContribute/upd_" + emp::to_string(dw.GetUpdate()),
-     tid,
-     H5::DataSpace(2, chunk_dims),
-     plist
-   );
-
-   double data[dw.GetSize()];
-
-   for (size_t i = 0; i < dw.GetSize(); ++i) {
-     data[i] = dw.man->Stockpile(i).QueryTotalContribute();
-   }
-
-   ds.write((void*)data, tid);
-
+    WriteTemplate<double>(
+      "/TotalContribute/upd_" + emp::to_string(dw.GetUpdate()),
+      [this](const size_t i){
+        return dw.man->Stockpile(i).QueryTotalContribute();
+      }
+    );
  }
 
   void ResourceContributed(const size_t dir) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_DOUBLE;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<double>(
       "/ResourceContributed/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this, &dir](const size_t i){
+        return dw.man->Stockpile(i).QueryExternalContribute(dir);
+      }
     );
-
-    double data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Stockpile(i).QueryExternalContribute(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void ResourceHarvested(const size_t lev) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_DOUBLE;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<double>(
       "/ResourceHarvested/lev_" + emp::to_string(lev)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
-    );
-
-    double data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = 0.0;
-      for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
-        data[i] += dw.man->Wave(r, i,lev).GetLastHarvest();
+      [this, &lev](const size_t i){
+        double ret = 0.0;
+        for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
+          ret += dw.man->Wave(r, i,lev).GetLastHarvest();
+        }
+        return ret;
       }
-    }
-
-    ds.write((void*)data, tid);
-
+    );
   }
 
   void PrevChan() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT64;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<Config::chanid_t>(
       "/PrevChan/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this](const size_t i){
+        return dw.man->Family(i).GetPrevChan();
+      }
     );
-
-    Config::chanid_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      data[i] = dw.man->Family(i).GetPrevChan();
-
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void InResistance(const size_t dir) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_DOUBLE;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<double>(
       "/InResistance/dir_" + emp::to_string(dir)
       + "/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this, &dir](const size_t i){
+        return dw.man->Sharing(i).CheckInResistance(dir);
+      }
     );
-
-    double data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Sharing(i).CheckInResistance(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void OutResistance(const size_t dir) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_DOUBLE;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<double>(
       "/OutResistance/dir_" + emp::to_string(dir)
       + "/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this, &dir](const size_t i){
+        return dw.man->Sharing(i).CheckOutResistance(dir);
+      }
     );
-
-    double data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Sharing(i).CheckOutResistance(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Heir(const size_t dir) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<char>(
       "/Heir/dir_" + emp::to_string(dir)
         + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this, &dir](const size_t i){
+        return dw.man->Heir(i).IsHeir(dir);
+      }
     );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Heir(i).IsHeir(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void ParentPos() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/ParentPos/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this](const size_t i){
+        return dw.man->Family(dw.man->Family(i).GetParentPos()).HasChildPos(i)
+          ? dw.man->Family(i).GetParentPos() : -1;
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Family(dw.man->Family(i).GetParentPos()).HasChildPos(i)
-        ? dw.man->Family(i).GetParentPos() : -1;
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void CellAge() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/CellAge/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this](const size_t i){
+        return dw.GetUpdate() - dw.man->Family(i).GetBirthUpdate();
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.GetUpdate() - dw.man->Family(i).GetBirthUpdate();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void CellGen(const size_t lev) {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/CellGen/lev_" + emp::to_string(lev)
-      + "/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+        + "/upd_"+emp::to_string(dw.GetUpdate()),
+      [this, &lev](const size_t i){
+        return dw.man->Family(i).GetCellGen()[lev];
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Family(i).GetCellGen()[lev];
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Death() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<char>(
       "/Death/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
-    );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      // trampled = 3;
-      // bankrupt = 2;
-      // apoptosis = 1;
-      // none = 0;
-
-      data[i] = 0;
-      if (0 == (dw.GetUpdate() + 1) % cfg.ENV_TRIG_FREQ()) {
-        if (dw.man->Apoptosis(i).IsMarked()) data[i] = 1;
-        else if (dw.man->Stockpile(i).IsBankrupt()) data[i] = 2;
-        else if (dw.man->Priority(i).QueryPendingGenome()) data[i] = 3;
+      [this](const size_t i){
+        // trampled = 3;
+        // bankrupt = 2;
+        // apoptosis = 1;
+        // none = 0;
+        if (0 == (dw.GetUpdate() + 1) % cfg.ENV_TRIG_FREQ()) {
+          if (dw.man->Apoptosis(i).IsMarked()) { return 1; }
+          else if (dw.man->Stockpile(i).IsBankrupt()) { return 2; }
+          else if (dw.man->Priority(i).QueryPendingGenome()) { return 3; }
+        }
+        return 0;
       }
-    }
-
-    ds.write((void*)data, tid);
-
+    );
   }
 
   void OutgoingConnectionCount() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/OutgoingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this](const size_t i){
+        return dw.man->Connection(i).ViewDeveloped().size();
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Connection(i).ViewDeveloped().size();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void FledglingConnectionCount() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/FledglingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this](const size_t i){
+        return dw.man->Connection(i).ViewFledgling().size();
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Connection(i).ViewFledgling().size();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void IncomingConnectionCount() {
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
+    WriteTemplate<uint32_t>(
       "/IncomingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+      [this](const size_t i){
+        return dw.frames[i]->GetIncomingConectionCount();
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.frames[i]->GetIncomingConectionCount();
-    }
-
-    ds.write((void*)data, tid);
-
   }
-
 
 };
