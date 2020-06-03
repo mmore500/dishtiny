@@ -475,35 +475,40 @@ private:
 
   }
 
-  void RootID() {
+  // idea taken from https://forum.hdfgroup.org/t/templatized-instantiation-of-h5-native-xxx-types/4168/2
+  H5::PredType hid_from_type_t(const char &) { return H5::PredType::NATIVE_CHAR; }
+  H5::PredType hid_from_type_t(const uint32_t &) { return H5::PredType::NATIVE_UINT32; }
+  H5::PredType hid_from_type_t(const uint64_t &) { return H5::PredType::NATIVE_UINT64; }
+  H5::PredType hid_from_type_t(const int &) { return H5::PredType::NATIVE_INT; }
+  H5::PredType hid_from_type_t(const double &) { return H5::PredType::NATIVE_DOUBLE; }
 
+  template <typename T>
+  H5::PredType hid_from_type() { return hid_from_type_t(T()); }
+
+  template <typename T, typename Function>
+  void WriteTemplate(const std::string& str, Function&& getData) {
     H5::DSetCreatPropList plist;
     H5Pset_obj_track_times(plist.getId(), false);
     plist.setChunk(2, chunk_dims);
     plist.setDeflate(6);
 
-    const auto tid = H5::PredType::NATIVE_UINT32;
+    const H5::PredType tid = hid_from_type<T>();
 
     H5::DataSet ds = file.createDataSet(
-      "/RootID/upd_" + emp::to_string(dw.GetUpdate()),
+      str,
       tid,
-      H5::DataSpace(2,chunk_dims),
+      H5::DataSpace(2, chunk_dims),
       plist
     );
 
-    uint32_t data[dw.GetSize()];
+    T data[dw.GetSize()];
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      if(dw.IsOccupied(i)) {
-        data[i] = dw.GetOrg(i).GetRootID();
-      } else {
-        data[i] = 0;
-      }
-
+      data[i] = getData(i);
     }
 
     ds.write((void*)data, tid);
+ }
 
   }
 
