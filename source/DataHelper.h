@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <sstream>
-#include <time.h>
+#include <chrono>
 
 #include "H5Cpp.h"
 
