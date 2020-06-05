@@ -46,92 +46,77 @@ public:
     , H5F_ACC_TRUNC
   )
   {
+    enum subdir{dir, lev, lev_1, none};
 
-    file.createGroup("/RootID");
-    file.createGroup("/Population");
-    file.createGroup("/Population/decoder");
-    file.createGroup("/Triggers");
-    file.createGroup("/Triggers/decoder");
-    file.createGroup("/Regulators");
-    file.createGroup("/Regulators/decoder");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/Regulators/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/Functions");
-    file.createGroup("/Functions/decoder");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/Functions/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/Index");
-    file.createGroup("/Channel");
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      file.createGroup("/Channel/lev_"+emp::to_string(lev));
-    }
-    file.createGroup("/Expiration");
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      file.createGroup("/Expiration/lev_"+emp::to_string(lev));
-    }
-    file.createGroup("/ChannelGeneration");
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      file.createGroup("/ChannelGeneration/lev_"+emp::to_string(lev));
-    }
-    file.createGroup("/Stockpile");
-    file.createGroup("/Live");
-    file.createGroup("/Apoptosis");
-    file.createGroup("/InboxActivation");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {// <= include spiker
-      file.createGroup("/InboxActivation/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/InboxTraffic");
-    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {// <= include spiker
-      file.createGroup("/InboxTraffic/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/TrustedInboxTraffic");
-    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {// <= include spiker
-      file.createGroup("/TrustedInboxTraffic/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/SpikeBroadcastTraffic");
-    file.createGroup("/RepOutgoing");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/RepOutgoing/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/RepIncoming");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/RepIncoming/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/TotalContribute/");
-    file.createGroup("/ResourceContributed/");
-    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {// <= include spiker
-      file.createGroup("/ResourceContributed/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/ResourceHarvested/");
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      file.createGroup("/ResourceHarvested/lev_"+emp::to_string(lev));
-    }
-    file.createGroup("/PrevChan/");
-    file.createGroup("/InResistance/");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/InResistance/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/OutResistance/");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/OutResistance/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/Heir");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/Heir/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/ParentPos");
-    file.createGroup("/CellAge");
-    file.createGroup("/CellGen");
-    for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) {
-      file.createGroup("/CellGen/lev_"+emp::to_string(lev));
-    }
-    file.createGroup("/Death");
-    file.createGroup("/OutgoingConnectionCount");
-    file.createGroup("/FledglingConnectionCount");
-    file.createGroup("/IncomingConnectionCount");
+    std::vector<std::tuple<
+      std::string,
+      subdir
+      >
+    > folders {
+        {"/RootID", subdir::none}
+      , {"/Population", subdir::none}
+      , {"/Population/decoder", subdir::none}
+      , {"/Triggers", subdir::none}
+      , {"/Triggers/decoder", subdir::none}
+      , {"/Regulators", subdir::dir}
+      , {"/Regulators/decoder", subdir::none}
+      , {"/Functions", subdir::dir}
+      , {"/Functions/decoder", subdir::none}
+      , {"/Index", subdir::none}
+      , {"/Channel", subdir::lev}
+      , {"/Expiration", subdir::lev}
+      , {"/ChannelGeneration", subdir::lev}
+      , {"/Stockpile", subdir::none}
+      , {"/Live", subdir::none}
+      , {"/Apoptosis", subdir::none}
+      , {"/InboxActivation", subdir::dir}
+      , {"/InboxTraffic", subdir::dir}
+      , {"/TrustedInboxTraffic", subdir::dir}
+      , {"/SpikeBroadcastTraffic", subdir::none}
+      , {"/RepOutgoing", subdir::dir}
+      , {"/RepIncoming", subdir::dir}
+      , {"/TotalContribute", subdir::none}
+      , {"/ResourceContributed", subdir::dir}
+      , {"/ResourceHarvested", subdir::lev}
+      , {"/PrevChan", subdir::none}
+      , {"/InResistance", subdir::dir}
+      , {"/OutResistance", subdir::dir}
+      , {"/Heir", subdir::dir}
+      , {"/ParentPos", subdir::none}
+      , {"/CellAge", subdir::none}
+      , {"/CellGen", subdir::lev_1}
+      , {"/Death", subdir::none}
+      , {"/OutgoingConnectionCount", subdir::none}
+      , {"/FledglingConnectionCount", subdir::none}
+      , {"/IncomingConnectionCount", subdir::none}
+    };
 
+    // create groups from vector
+    for (const auto& [name, subtype] : folders) {
+      // set up folder in file
+      file.createGroup(name);
+
+      // set up subfolders, if any
+      switch(subtype) {
+        case none:
+          break;
+        case dir:
+          for(size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
+            file.createGroup("/" + name + "/dir_" + emp::to_string(d));
+          }
+          break;
+        case lev:
+          for(size_t l = 0; l < cfg.NLEV(); ++l) {
+            file.createGroup("/" + name + "/lev_" + emp::to_string(l));
+          }
+          break;
+        case lev_1:
+          for(size_t l = 0; l < cfg.NLEV() + 1; ++l) {
+            file.createGroup("/" + name + "/lev_" + emp::to_string(l));
+          }
+          break;
+      }
+    }
 
     InitAttributes();
     InitReference();
