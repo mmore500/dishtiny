@@ -187,278 +187,176 @@ public:
       Functions();
     }
 
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ChannelGeneration(lev);
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Expiration(lev);
+    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      Channel(lev);
+      ChannelGeneration(lev);
+      Expiration(lev);
+      ResourceHarvested(lev);
+    }
+
+    for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) CellGen(lev);
+
     RootID();
     Stockpile();
     Live();
     Apoptosis();
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      InboxActivation(dir);
-    }
-    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
-      InboxTraffic(dir);
-      TrustedInboxTraffic(dir);
-    }
-    SpikeBroadcastTraffic();
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      RepOutgoing(dir);
-    }
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      RepIncoming(dir);
-    }
     TotalContribute();
-    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
-      ResourceContributed(dir);
-    }
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ResourceHarvested(lev);
     PrevChan();
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      InResistance(dir);
-    }
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      OutResistance(dir);
-    }
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      Heir(dir);
-    }
     ParentPos();
     CellAge();
-    for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) CellGen(lev);
+    SpikeBroadcastTraffic();
     Death();
     OutgoingConnectionCount();
     FledglingConnectionCount();
     IncomingConnectionCount();
+
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      InboxActivation(dir);
+      InboxTraffic(dir);
+      TrustedInboxTraffic(dir);
+      RepOutgoing(dir);
+      RepIncoming(dir);
+      ResourceContributed(dir);
+      InResistance(dir);
+      OutResistance(dir);
+      Heir(dir);
+    }
+
     file.flush(H5F_SCOPE_LOCAL);
   }
 
 private:
+  template <typename T>
+  void WriteAttribute(const std::string& name, const T& data, const std::string group="/") {
+    constexpr hsize_t dataspace_dims[] = { 1 };
+
+    H5::DataSpace dspace(1, dataspace_dims);
+    H5::PredType pred = hid_from_type<T>();
+
+    H5::Attribute attr = file.openGroup(group).createAttribute(
+      name, pred, dspace
+    );
+
+    attr.write(pred, &data);
+  }
+
+  void WriteAttribute(const std::string& name, const std::string& data, const std::string group="/") {
+    constexpr hsize_t dataspace_dims[] = { 1 };
+
+    H5::DataSpace dspace(1, dataspace_dims);
+    H5::StrType pred(0, H5T_VARIABLE);
+
+    H5::Attribute attr = file.openGroup(group).createAttribute(
+      name, pred, dspace
+    );
+
+    attr.write(pred, &data);
+  }
 
   void InitAttributes() {
-    constexpr hsize_t seed_dims[] = { 1 };
-    H5::DataSpace seed_dataspace(1, seed_dims);
-
-    H5::Attribute seed_attribute = file.createAttribute(
-      "SEED", H5::PredType::NATIVE_INT, seed_dataspace
+    WriteAttribute(
+      "SEED",
+      cfg.SEED()
     );
 
-    const int seed_data[] = {cfg.SEED()};
-
-    seed_attribute.write(H5::PredType::NATIVE_INT, seed_data);
-
-    constexpr hsize_t nlev_dims[] = { 1 };
-    H5::DataSpace nlev_dataspace(1, nlev_dims);
-
-    H5::Attribute nlev_attribute = file.createAttribute(
-      "NLEV", H5::PredType::NATIVE_INT, nlev_dataspace
+    WriteAttribute(
+      "NLEV",
+      cfg.NLEV()
     );
 
-    const int nlev_data[] = {(int)cfg.NLEV()};
-
-    nlev_attribute.write(H5::PredType::NATIVE_INT, nlev_data);
-
-    constexpr hsize_t timestamp_dims[] = { 1 };
-    H5::DataSpace timestamp_dataspace(1, timestamp_dims);
-
-    H5::Attribute timestamp_attribute = file.createAttribute(
-      "START_TIMESTAMP", H5::PredType::NATIVE_INT, timestamp_dataspace
+    WriteAttribute(
+      "START_TIMESTAMP",
+      static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>
+        (std::chrono::system_clock::now().time_since_epoch()).count())
     );
 
-    const long timestamp_data[] = { 0 };
-
-    timestamp_attribute.write(H5::PredType::NATIVE_LONG, timestamp_data);
-
-    constexpr hsize_t dishtiny_hash_dims[] = { 1 };
-    H5::DataSpace dishtiny_hash_dataspace(1, dishtiny_hash_dims);
-
-    H5::Attribute dishtiny_hash_attribute = file.createAttribute(
-      "SOURCE_HASH", H5::StrType(0, H5T_VARIABLE), dishtiny_hash_dataspace
+    WriteAttribute(
+      "SOURCE_HASH",
+      std::string{STRINGIFY(DISHTINY_HASH_)}
     );
 
-    const char *dishtiny_hash_data[] = {STRINGIFY(DISHTINY_HASH_)};
-
-    dishtiny_hash_attribute.write(H5::StrType(0, H5T_VARIABLE), dishtiny_hash_data);
-
-    constexpr hsize_t empirical_hash_dims[] = { 1 };
-    H5::DataSpace empirical_hash_dataspace(1, empirical_hash_dims);
-
-    H5::Attribute empirical_hash_attribute = file.createAttribute(
-      "EMP_HASH", H5::StrType(0, H5T_VARIABLE), empirical_hash_dataspace
-    );
-
-    const char *empirical_hash_data[] = {STRINGIFY(EMPIRICAL_HASH_)};
-
-    empirical_hash_attribute.write(H5::StrType(0, H5T_VARIABLE), empirical_hash_data);
-
-    constexpr hsize_t config_dims[] = { 1 };
-    H5::DataSpace config_dataspace(1,config_dims);
-
-    H5::Attribute config_attribute = file.createAttribute(
-      "config", H5::StrType(0, H5T_VARIABLE),config_dataspace
+    WriteAttribute(
+      "EMP_HASH",
+      std::string{STRINGIFY(EMPIRICAL_HASH_)}
     );
 
     std::ostringstream config_stream;
     cfg.WriteMe(config_stream);
-    std::string config_string = config_stream.str();
-
-    const char *config_data[] = { config_string.c_str() };
-
-   config_attribute.write(H5::StrType(0, H5T_VARIABLE),config_data);
-
-   constexpr hsize_t expiration_key_dims[] = { 1 };
-   H5::DataSpace expiration_key_dataspace(1, expiration_key_dims);
-
-   H5::Attribute expiration_key_attribute = file.openGroup("/Expiration").createAttribute(
-     "KEY", H5::StrType(0, H5T_VARIABLE), expiration_key_dataspace
-   );
-
-   const char *expiration_key_data[] = {"0: unexpired, 1: within grace period, 2: expired"};
-
-   expiration_key_attribute.write(H5::StrType(0, H5T_VARIABLE), expiration_key_data);
-
-    constexpr hsize_t live_key_dims[] = { 1 };
-    H5::DataSpace live_key_dataspace(1, live_key_dims);
-
-    H5::Attribute live_key_attribute = file.openGroup("/Live").createAttribute(
-      "KEY", H5::StrType(0, H5T_VARIABLE), live_key_dataspace
+    WriteAttribute(
+      "config",
+      config_stream.str()
     );
 
-    const char *live_key_data[] = {"0: dead, 1: live"};
+    WriteAttribute(
+      "KEY",
+      std::string{"0: unexpired, 1: within grace period, 2: expired"},
+      "/Expiration"
+    );
 
-    live_key_attribute.write(H5::StrType(0, H5T_VARIABLE), live_key_data);
+    WriteAttribute(
+      "KEY",
+      std::string{"0: dead, 1: live"},
+      "/Live"
+    );
 
-    constexpr hsize_t apoptosis_key_dims[] = { 1 };
-    H5::DataSpace apoptosis_key_dataspace(1, apoptosis_key_dims);
-
-    H5::Attribute apoptosis_key_attribute = file.openGroup(
+    WriteAttribute(
+      "KEY",
+      std::string{"0: none, 1: partial, 2: complete"},
       "/Apoptosis"
-    ).createAttribute(
-      "KEY", H5::StrType(0, H5T_VARIABLE), apoptosis_key_dataspace
     );
 
-    const char *apoptosis_key_data[] = {"0: none, 1: partial, 2: complete"};
-
-    apoptosis_key_attribute.write(
-      H5::StrType(0, H5T_VARIABLE), apoptosis_key_data
+    WriteAttribute(
+      "KEY",
+      std::string{"-1: no current parent, >=0: parent index"},
+      "/ParentPos"
     );
 
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      constexpr hsize_t inbox_activation_key_dims[] = { 1 };
-      H5::DataSpace inbox_activation_key_dataspace(1, inbox_activation_key_dims);
-
-      H5::Attribute inbox_activation_key_attribute = file.openGroup("/InboxActivation/dir_"+emp::to_string(dir)).createAttribute(
-        "KEY", H5::StrType(0, H5T_VARIABLE), inbox_activation_key_dataspace
-      );
-
-      const char *inbox_activation_key_data[] = {"0: off, 1: on"};
-
-      inbox_activation_key_attribute.write(H5::StrType(0, H5T_VARIABLE), inbox_activation_key_data);
-    }
-
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      constexpr hsize_t acceptsharing_key_dims[] = { 1 };
-      H5::DataSpace acceptsharing_key_dataspace(1, acceptsharing_key_dims);
-
-      H5::Attribute acceptsharing_key_attribute = file.openGroup("/InResistance/dir_"+emp::to_string(dir)).createAttribute(
-        "KEY", H5::StrType(0, H5T_VARIABLE), acceptsharing_key_dataspace
-      );
-
-      const char *acceptsharing_key_data[] = {"0: false, 1: true"};
-
-      acceptsharing_key_attribute.write(H5::StrType(0, H5T_VARIABLE), acceptsharing_key_data);
-    }
-
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      constexpr hsize_t acceptsharing_key_dims[] = { 1 };
-      H5::DataSpace acceptsharing_key_dataspace(1, acceptsharing_key_dims);
-
-      H5::Attribute acceptsharing_key_attribute = file.openGroup("/OutResistance/dir_"+emp::to_string(dir)).createAttribute(
-        "KEY", H5::StrType(0, H5T_VARIABLE), acceptsharing_key_dataspace
-      );
-
-      const char *acceptsharing_key_data[] = {"0: false, 1: true"};
-
-      acceptsharing_key_attribute.write(H5::StrType(0, H5T_VARIABLE), acceptsharing_key_data);
-    }
-
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      constexpr hsize_t heir_key_dims[] = { 1 };
-      H5::DataSpace heir_key_dataspace(1, heir_key_dims);
-
-      H5::Attribute heir_key_attribute = file.openGroup("/Heir/dir_"+emp::to_string(dir)).createAttribute(
-        "KEY", H5::StrType(0, H5T_VARIABLE), heir_key_dataspace
-      );
-
-      const char *heir_key_data[] = {"0: false, 1: true"};
-
-      heir_key_attribute.write(H5::StrType(0, H5T_VARIABLE), heir_key_data);
-    }
-
-    constexpr hsize_t parentpos_key_dims[] = { 1 };
-    H5::DataSpace parentpos_key_dataspace(1, parentpos_key_dims);
-
-    H5::Attribute parentpos_key_attribute = file.openGroup("/ParentPos").createAttribute(
-      "KEY", H5::StrType(0, H5T_VARIABLE), parentpos_key_dataspace
-    );
-
-    const char *parentpos_key_data[] = {"-1: no current parent, >=0: parent index"};
-
-    parentpos_key_attribute.write(H5::StrType(0, H5T_VARIABLE), parentpos_key_data);
-
-    constexpr hsize_t death_key_dims[] = { 1 };
-    H5::DataSpace death_key_dataspace(1, death_key_dims);
-
-    H5::Attribute death_key_attribute = file.openGroup(
+    WriteAttribute(
+      "KEY",
+      std::string{"0: none, 1: apoptosis, 2: bankrupt, 3: trampled"},
       "/Death"
-    ).createAttribute(
-      "KEY", H5::StrType(0, H5T_VARIABLE), death_key_dataspace
     );
 
-    const char *death_key_data[] = {"0: none, 1: apoptosis, 2: bankrupt, 3: trampled"};
-
-    death_key_attribute.write(
-      H5::StrType(0, H5T_VARIABLE), death_key_data
-    );
-
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      WriteAttribute(
+        "KEY",
+        std::string{"0: off, 1: on"},
+        "/InboxActivation/dir_" + emp::to_string(dir)
+      );
+      WriteAttribute(
+        "KEY",
+        std::string{"0: false, 1: true"},
+        "/InResistance/dir_" + emp::to_string(dir)
+      );
+      WriteAttribute(
+        "KEY",
+        std::string{"0: false, 1: true"},
+        "/OutResistance/dir_" + emp::to_string(dir)
+      );
+      WriteAttribute(
+        "KEY",
+        std::string{"0: false, 1: true"},
+        "/Heir/dir_" + emp::to_string(dir)
+      );
+    }
   }
 
   void InitReference() {
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-
-    H5::DataSet ds_idx = file.createDataSet(
-      "/Index/own",
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
+    WriteTemplate<uint32_t>(
+     "/Index/own",
+      [](const size_t i){
+        return i;
+      }
     );
 
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) data[i] = i;
-
-    ds_idx.write((void*)data, tid);
-
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-
-      H5::DataSet ds_dir = file.createDataSet(
+      WriteTemplate<uint32_t>(
         "/Index/dir_" + emp::to_string(dir),
-        tid,
-        H5::DataSpace(2, chunk_dims),
-        plist
+        [this, &dir](const size_t i){
+          return GeometryHelper(cfg).CalcLocalNeighs(i)[dir];
+        }
       );
-
-      for (size_t i = 0; i < dw.GetSize(); ++i) {
-        data[i] = GeometryHelper(cfg).CalcLocalNeighs(i)[dir];
-      }
-      ds_dir.write((void*)data, tid);
-
     }
-
   }
 
   // idea taken from https://forum.hdfgroup.org/t/templatized-instantiation-of-h5-native-xxx-types/4168/2
