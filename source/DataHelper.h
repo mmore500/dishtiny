@@ -360,6 +360,13 @@ private:
     }
   }
 
+  /// Create a full path for a dataset
+  std::string makeFullPath(const std::string& path) {
+    const size_t dataset_index = dw.GetUpdate() / updates_per_chunk;
+    const size_t dataset_update = dataset_index * updates_per_chunk;
+    return emp::to_string(path, dataset_update);
+  }
+
   // idea taken from https://forum.hdfgroup.org/t/templatized-instantiation-of-h5-native-xxx-types/4168/2
   H5::PredType hid_from_type_t(const char &) { return H5::PredType::NATIVE_CHAR; }
   H5::PredType hid_from_type_t(const uint32_t &) { return H5::PredType::NATIVE_UINT32; }
