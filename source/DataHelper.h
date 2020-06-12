@@ -378,20 +378,8 @@ private:
   H5::PredType hid_from_type() { return hid_from_type_t(T()); }
 
   template <typename T, typename Function>
-  void WriteTemplate(const std::string& str, Function&& getData) {
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setChunk(2, chunk_dims);
-    plist.setDeflate(compression_level);
-
-    const H5::PredType tid = hid_from_type<T>();
-
-    H5::DataSet ds = file.createDataSet(
-      str,
-      tid,
-      H5::DataSpace(2, chunk_dims),
-      plist
-    );
+  void WriteTemplate(const std::string& path, Function&& getData) {
+    std::string full_path = makeFullPath(path);
 
     T data[dw.GetSize()];
 
@@ -399,8 +387,63 @@ private:
       data[i] = getData(i);
     }
 
-    ds.write((void*)data, tid);
- }
+    const H5::PredType tid = hid_from_type<T>();
+
+    if (!file.nameExists(full_path)) {
+      H5::DSetCreatPropList plist;
+      H5Pset_obj_track_times(plist.getId(), false);
+      plist.setLayout(H5D_CHUNKED);
+      plist.setChunk(2, grid_dims);
+      plist.setDeflate(compression_level);
+
+      hsize_t max_dims[2]{H5S_UNLIMITED, H5S_UNLIMITED};
+      H5::DataSpace memspace(2, grid_dims, max_dims);
+
+      H5::DataSet ds = file.createDataSet(
+        full_path,
+        tid,
+        memspace,
+        plist
+      );
+    }
+      // get current dataset as ds
+      H5::DataSet ds = file.openDataSet(full_path);
+
+      // get dataspace from dataset
+      H5::DataSpace file_space = ds.getSpace();
+
+      // get number of things we've written
+      // hssize_t is a signed long long, and the library uses unsigned long longs
+      // for the rest of its variables
+      // should we use gsl::narrow to warn in case of precision loss?
+
+      // what region are we writing to now?
+      hsize_t start[2]{
+        file_space.getSimpleExtentNpoints() / cfg.GRID_H() - cfg.GRID_H(),
+        0
+      };
+
+      // extend dataset
+      hsize_t extent[2] = {
+        file_space.getSimpleExtentNpoints() / cfg.GRID_H() + cfg.GRID_H(),
+        cfg.GRID_W()
+      };
+      ds.extend(extent);
+      file_space = ds.getSpace();
+
+      // create new dataspace with dimensions of grid to store our data in memory
+      H5::DataSpace memspace(2, grid_dims);
+
+      // the following links explain what a hyperslab is.
+      // basically, it is an n-dimensional selection of a space
+      // in this case, it is simply a 2D selection.
+      // https://support.hdfgroup.org/HDF5/Tutor/phypecont.html
+      // https://support.hdfgroup.org/HDF5/Tutor/select.html
+      file_space.selectHyperslab(H5S_SELECT_SET, grid_dims, start);
+
+      ds.write((void*)data, tid, memspace, file_space);
+
+  }
 
   void RootID() {
     WriteTemplate<uint32_t>(
