@@ -447,7 +447,7 @@ private:
 
   void RootID() {
     WriteTemplate<uint32_t>(
-      "/RootID/upd_" + emp::to_string(dw.GetUpdate()),
+      "/RootID/upd_",
       [this](const size_t i){
         if(dw.IsOccupied(i)) {
           return dw.GetOrg(i).GetRootID();
@@ -489,7 +489,7 @@ private:
     }
 
     WriteTemplate<uint32_t>(
-      "/Population/upd_"+emp::to_string(dw.GetUpdate()),
+      "/Population/upd_",
       [&decoder_ids](const size_t i) {
         return decoder_ids[i];
       }
@@ -560,7 +560,7 @@ private:
     }
 
     WriteTemplate<uint32_t>(
-      "/Triggers/upd_"+emp::to_string(dw.GetUpdate()),
+      "/Triggers/upd_",
       [&decoder_ids](const size_t i) {
         return decoder_ids[i];
       }
@@ -640,8 +640,7 @@ private:
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       WriteTemplate<uint32_t>(
-        "/Regulators/dir_" + emp::to_string(dir)
-          + "/upd_"+emp::to_string(dw.GetUpdate()),
+        emp::to_string("/Regulators/dir_", dir, "/upd_"),
         [&decoder_ids, &dir](const size_t i) {
           return decoder_ids[dir][i];
         }
@@ -731,8 +730,7 @@ private:
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       WriteTemplate<uint32_t>(
-        "/Functions/dir_" + emp::to_string(dir)
-          + "/upd_"+emp::to_string(dw.GetUpdate()),
+        emp::to_string("/Functions/dir_", dir, "/upd_"),
         [&decoder_ids, &dir](const size_t i) {
           return decoder_ids[dir][i];
         }
@@ -771,7 +769,7 @@ private:
 
   void Channel(const size_t lev) {
     WriteTemplate<uint64_t>(
-      "/Channel/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
+      emp::to_string("/Channel/lev_", lev, "/upd_"),
       [this, &lev](const size_t i){
         const auto res = dw.man->Channel(i).GetID(lev);
         return res ? *res : 0;
@@ -781,7 +779,7 @@ private:
 
   void Expiration(const size_t lev) {
     WriteTemplate<char>(
-      "/Expiration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
+      emp::to_string("/Expiration/lev_", lev, "/upd_"),
       [this, &lev](const size_t i){
         const auto res = dw.man->Channel(i).IsExpired(lev);
         if (!res) {
@@ -797,7 +795,7 @@ private:
 
   void ChannelGeneration(const size_t lev) {
     WriteTemplate<uint32_t>(
-      "/ChannelGeneration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
+      emp::to_string("/ChannelGeneration/lev_", lev, "/upd_"),
       [this, &lev](const size_t i){
         return dw.man->Channel(i).GetGeneration(lev);
       }
@@ -806,7 +804,7 @@ private:
 
   void Stockpile() {
     WriteTemplate<double>(
-      "/Stockpile/upd_"+emp::to_string(dw.GetUpdate()),
+      "/Stockpile/upd_",
       [this](const size_t i){
         return dw.man->Stockpile(i).QueryResource();
       }
@@ -815,7 +813,7 @@ private:
 
   void Live() {
     WriteTemplate<char>(
-      "/Live/upd_"+emp::to_string(dw.GetUpdate()),
+      "/Live/upd_",
       [this](const size_t i){
         return dw.IsOccupied(i);
       }
@@ -824,7 +822,7 @@ private:
 
   void Apoptosis() {
     WriteTemplate<char>(
-      "/Apoptosis/upd_"+emp::to_string(dw.GetUpdate()),
+      "/Apoptosis/upd_",
       [this](const size_t i){
         return dw.man->Apoptosis(i).GetState();
       }
@@ -833,8 +831,7 @@ private:
 
   void InboxActivation(const size_t dir) {
     WriteTemplate<char>(
-      "/InboxActivation/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      emp::to_string("/InboxActivation/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.frames[i]->GetFrameHardware(dir).CheckInboxActivity();
       }
@@ -843,7 +840,7 @@ private:
 
   void SpikeBroadcastTraffic() {
     WriteTemplate<uint32_t>(
-      "/SpikeBroadcastTraffic/upd_" + emp::to_string(dw.GetUpdate()),
+      "/SpikeBroadcastTraffic/upd_",
       [this](const size_t i){
         return dw.man->Inbox(i).GetSpikeBroadcastTraffic();
       }
@@ -852,8 +849,7 @@ private:
 
   void InboxTraffic(const size_t dir) {
     WriteTemplate<uint32_t>(
-      "/InboxTraffic/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      emp::to_string("/InboxTraffic/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Inbox(i).GetTraffic(dir);
       }
@@ -862,8 +858,7 @@ private:
 
   void TrustedInboxTraffic(const size_t dir) {
     WriteTemplate<uint32_t>(
-      "/TrustedInboxTraffic/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      emp::to_string("/TrustedInboxTraffic/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Inbox(i).GetTrustedTraffic(dir);
       }
@@ -874,8 +869,7 @@ private:
     GeometryHelper gh(cfg);
 
     WriteTemplate<int>(
-      "/RepOutgoing/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      emp::to_string("/RepOutgoing/dir_", dir, "/upd_"),
       [this, &gh, &dir](const size_t i){
         return dw.man->Priority(
             gh.CalcLocalNeighs(i)[dir]
@@ -886,8 +880,7 @@ private:
 
   void RepIncoming(const size_t dir) {
     WriteTemplate<int>(
-      "/RepIncoming/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      emp::to_string("/RepIncoming/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Priority(i).ViewRepStateDup(dir);
       }
@@ -896,7 +889,7 @@ private:
 
  void TotalContribute() {
     WriteTemplate<double>(
-      "/TotalContribute/upd_" + emp::to_string(dw.GetUpdate()),
+      "/TotalContribute/upd_",
       [this](const size_t i){
         return dw.man->Stockpile(i).QueryTotalContribute();
       }
@@ -905,8 +898,7 @@ private:
 
   void ResourceContributed(const size_t dir) {
     WriteTemplate<double>(
-      "/ResourceContributed/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      emp::to_string("/ResourceContributed/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Stockpile(i).QueryExternalContribute(dir);
       }
@@ -915,8 +907,7 @@ private:
 
   void ResourceHarvested(const size_t lev) {
     WriteTemplate<double>(
-      "/ResourceHarvested/lev_" + emp::to_string(lev)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      emp::to_string("/ResourceHarvested/lev_", lev, "/upd_"),
       [this, &lev](const size_t i){
         double ret = 0.0;
         for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
@@ -929,7 +920,7 @@ private:
 
   void PrevChan() {
     WriteTemplate<Config::chanid_t>(
-      "/PrevChan/upd_"+emp::to_string(dw.GetUpdate()),
+      "/PrevChan/upd_",
       [this](const size_t i){
         return dw.man->Family(i).GetPrevChan();
       }
@@ -938,8 +929,7 @@ private:
 
   void InResistance(const size_t dir) {
     WriteTemplate<double>(
-      "/InResistance/dir_" + emp::to_string(dir)
-      + "/upd_"+emp::to_string(dw.GetUpdate()),
+      emp::to_string("/InResistance/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Sharing(i).CheckInResistance(dir);
       }
@@ -948,8 +938,7 @@ private:
 
   void OutResistance(const size_t dir) {
     WriteTemplate<double>(
-      "/OutResistance/dir_" + emp::to_string(dir)
-      + "/upd_"+emp::to_string(dw.GetUpdate()),
+      emp::to_string("/OutResistance/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Sharing(i).CheckOutResistance(dir);
       }
@@ -958,8 +947,7 @@ private:
 
   void Heir(const size_t dir) {
     WriteTemplate<char>(
-      "/Heir/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
+      emp::to_string("/Heir/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Heir(i).IsHeir(dir);
       }
@@ -968,7 +956,7 @@ private:
 
   void ParentPos() {
     WriteTemplate<uint32_t>(
-      "/ParentPos/upd_"+emp::to_string(dw.GetUpdate()),
+      "/ParentPos/upd_",
       [this](const size_t i){
         return dw.man->Family(dw.man->Family(i).GetParentPos()).HasChildPos(i)
           ? dw.man->Family(i).GetParentPos() : -1;
@@ -978,7 +966,7 @@ private:
 
   void CellAge() {
     WriteTemplate<uint32_t>(
-      "/CellAge/upd_"+emp::to_string(dw.GetUpdate()),
+      "/CellAge/upd_",
       [this](const size_t i){
         return dw.GetUpdate() - dw.man->Family(i).GetBirthUpdate();
       }
@@ -987,8 +975,7 @@ private:
 
   void CellGen(const size_t lev) {
     WriteTemplate<uint32_t>(
-      "/CellGen/lev_" + emp::to_string(lev)
-        + "/upd_"+emp::to_string(dw.GetUpdate()),
+      emp::to_string("/CellGen/lev_", lev, "/upd_"),
       [this, &lev](const size_t i){
         return dw.man->Family(i).GetCellGen()[lev];
       }
@@ -997,7 +984,7 @@ private:
 
   void Death() {
     WriteTemplate<char>(
-      "/Death/upd_"+emp::to_string(dw.GetUpdate()),
+      "/Death/upd_",
       [this](const size_t i){
         // trampled = 3;
         // bankrupt = 2;
@@ -1015,7 +1002,7 @@ private:
 
   void OutgoingConnectionCount() {
     WriteTemplate<uint32_t>(
-      "/OutgoingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
+      "/OutgoingConnectionCount/upd_",
       [this](const size_t i){
         return dw.man->Connection(i).ViewDeveloped().size();
       }
@@ -1024,7 +1011,7 @@ private:
 
   void FledglingConnectionCount() {
     WriteTemplate<uint32_t>(
-      "/FledglingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
+      "/FledglingConnectionCount/upd_",
       [this](const size_t i){
         return dw.man->Connection(i).ViewFledgling().size();
       }
@@ -1033,7 +1020,7 @@ private:
 
   void IncomingConnectionCount() {
     WriteTemplate<uint32_t>(
-      "/IncomingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
+      "/IncomingConnectionCount/upd_",
       [this](const size_t i){
         return dw.frames[i]->GetIncomingConectionCount();
       }
