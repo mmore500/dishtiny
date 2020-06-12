@@ -406,42 +406,42 @@ private:
         plist
       );
     }
-      // get current dataset as ds
-      H5::DataSet ds = file.openDataSet(full_path);
+    // get current dataset as ds
+    H5::DataSet ds = file.openDataSet(full_path);
 
-      // get dataspace from dataset
-      H5::DataSpace file_space = ds.getSpace();
+    // get dataspace from dataset
+    H5::DataSpace file_space = ds.getSpace();
 
-      // get number of things we've written
-      // hssize_t is a signed long long, and the library uses unsigned long longs
-      // for the rest of its variables
-      // should we use gsl::narrow to warn in case of precision loss?
+    // get number of things we've written
+    // hssize_t is a signed long long, and the library uses unsigned long longs
+    // for the rest of its variables
+    // should we use gsl::narrow to warn in case of precision loss?
 
-      // what region are we writing to now?
-      hsize_t start[2]{
-        file_space.getSimpleExtentNpoints() / cfg.GRID_H() - cfg.GRID_H(),
-        0
-      };
+    // what region are we writing to now?
+    hsize_t start[2]{
+      file_space.getSimpleExtentNpoints() / cfg.GRID_H() - cfg.GRID_H(),
+      0
+    };
 
-      // extend dataset
-      hsize_t extent[2] = {
-        file_space.getSimpleExtentNpoints() / cfg.GRID_H() + cfg.GRID_H(),
-        cfg.GRID_W()
-      };
-      ds.extend(extent);
-      file_space = ds.getSpace();
+    // extend dataset
+    hsize_t extent[2] = {
+      file_space.getSimpleExtentNpoints() / cfg.GRID_H() + cfg.GRID_H(),
+      cfg.GRID_W()
+    };
+    ds.extend(extent);
+    file_space = ds.getSpace();
 
-      // create new dataspace with dimensions of grid to store our data in memory
-      H5::DataSpace memspace(2, grid_dims);
+    // create new dataspace with dimensions of grid to store our data in memory
+    H5::DataSpace memspace(2, grid_dims);
 
-      // the following links explain what a hyperslab is.
-      // basically, it is an n-dimensional selection of a space
-      // in this case, it is simply a 2D selection.
-      // https://support.hdfgroup.org/HDF5/Tutor/phypecont.html
-      // https://support.hdfgroup.org/HDF5/Tutor/select.html
-      file_space.selectHyperslab(H5S_SELECT_SET, grid_dims, start);
+    // the following links explain what a hyperslab is.
+    // basically, it is an n-dimensional selection of a space
+    // in this case, it is simply a 2D selection.
+    // https://support.hdfgroup.org/HDF5/Tutor/phypecont.html
+    // https://support.hdfgroup.org/HDF5/Tutor/select.html
+    file_space.selectHyperslab(H5S_SELECT_SET, grid_dims, start);
 
-      ds.write((void*)data, tid, memspace, file_space);
+    ds.write((void*)data, tid, memspace, file_space);
 
   }
 
