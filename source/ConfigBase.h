@@ -14,7 +14,7 @@ EMP_BUILD_CONFIG(
   VALUE(GRID_H, size_t, 60, "How many tiles tall should the grid be?"),
   VALUE(GRID_W, size_t, 60, "How many tiles wide should the grid be?"),
   VALUE(SUBGRIDS, size_t, 4, "How many subgrids should the grid have?"),
-  VALUE(UPDATES_PER_CHUNK, size_t, 8, "How many updates should we save in each dimension per dataset chunk? Total number will be this parameter squared."),
+  VALUE(UPDATES_PER_CHUNK, size_t, 64, "How many updates should we save in each dimension per dataset chunk? Total number will be this parameter squared."),
   VALUE(CHUNK_COMPRESSION, size_t, 6, "What should the compression level for the .h5 files be?"),
   VALUE(RESOURCE_DECAY, double, 0.995, "How much resource should remain each update?"),
   VALUE(REP_THRESH, double, 1.0, "How much should replication cost?"),
