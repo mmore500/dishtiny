@@ -389,6 +389,7 @@ private:
     const H5::PredType tid = hid_from_type<T>();
 
     if (!file.nameExists(full_path)) {
+      // set properties for dataset
       H5::DSetCreatPropList plist;
       H5Pset_obj_track_times(plist.getId(), false);
       plist.setLayout(H5D_CHUNKED);
@@ -397,9 +398,11 @@ private:
       plist.setChunk(2, chunk_dims);
       plist.setDeflate(compression_level);
 
+      // create dataspace for dataset
       hsize_t max_dims[2]{H5S_UNLIMITED, cfg.GRID_W()};
       H5::DataSpace memspace(2, grid_dims, max_dims);
 
+      // create dataset
       H5::DataSet ds = file.createDataSet(
         full_path,
         tid,
@@ -413,23 +416,25 @@ private:
     // get dataspace from dataset
     H5::DataSpace file_space = ds.getSpace();
 
-    // get number of things we've written
-    // hssize_t is a signed long long, and the library uses unsigned long longs
-    // for the rest of its variables
-    // should we use gsl::narrow to warn in case of precision loss?
+    // figure out what region we are writing to now.
+    // this is done by getting the current number of points written and
+    // dividing it by the width of a single grid.
+    const hsize_t height_written = file_space.getSimpleExtentNpoints() / cfg.GRID_W();
 
-    // what region are we writing to now?
+    // we then subtract the height of a single grid to write inside the extent.
     hsize_t start[2]{
-      file_space.getSimpleExtentNpoints() / cfg.GRID_H() - cfg.GRID_H(),
+      height_written - cfg.GRID_H(),
       0
     };
 
-    // extend dataset
+    // extend dataset by one grid height
     hsize_t extent[2] = {
-      file_space.getSimpleExtentNpoints() / cfg.GRID_H() + cfg.GRID_H(),
+      height_written + cfg.GRID_H(),
       cfg.GRID_W()
     };
     ds.extend(extent);
+
+    // refresh the dataspace
     file_space = ds.getSpace();
 
     // create new dataspace with dimensions of grid to store our data in memory
@@ -442,6 +447,7 @@ private:
     // https://support.hdfgroup.org/HDF5/Tutor/select.html
     file_space.selectHyperslab(H5S_SELECT_SET, grid_dims, start);
 
+    // finally, write data inside selected hyperslab
     ds.write((void*)data, tid, memspace, file_space);
 
   }
