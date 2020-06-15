@@ -392,10 +392,12 @@ private:
       H5::DSetCreatPropList plist;
       H5Pset_obj_track_times(plist.getId(), false);
       plist.setLayout(H5D_CHUNKED);
-      plist.setChunk(2, grid_dims);
+
+      hsize_t chunk_dims[2] = {updates_per_chunk * grid_dims[0], grid_dims[1]};
+      plist.setChunk(2, chunk_dims);
       plist.setDeflate(compression_level);
 
-      hsize_t max_dims[2]{H5S_UNLIMITED, H5S_UNLIMITED};
+      hsize_t max_dims[2]{H5S_UNLIMITED, cfg.GRID_W()};
       H5::DataSpace memspace(2, grid_dims, max_dims);
 
       H5::DataSet ds = file.createDataSet(
