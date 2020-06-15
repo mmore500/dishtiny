@@ -27,8 +27,7 @@ private:
   H5::H5File file;
 
   const hsize_t grid_dims[2]{cfg.GRID_W(), cfg.GRID_H()};
-  // todo: rename config parameter
-  const size_t updates_per_chunk = cfg.GRIDS_PER_CHUNK();
+  const size_t updates_per_chunk = cfg.UPDATES_PER_CHUNK();
   const size_t compression_level = cfg.CHUNK_COMPRESSION();
 
 public:
