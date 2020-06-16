@@ -26,7 +26,7 @@ private:
 
   H5::H5File file;
 
-  const hsize_t grid_dims[2]{cfg.GRID_W(), cfg.GRID_H()};
+  const hsize_t grid_dims[2]{cfg.GRID_H(), cfg.GRID_W()};
   const size_t updates_per_chunk = cfg.UPDATES_PER_CHUNK();
   const size_t compression_level = cfg.CHUNK_COMPRESSION();
 
@@ -388,19 +388,25 @@ private:
 
     const H5::PredType tid = hid_from_type<T>();
 
+    const hsize_t single_update[3] = {cfg.GRID_H(), cfg.GRID_W(), 1};
+
     if (!file.nameExists(full_path)) {
       // set properties for dataset
       H5::DSetCreatPropList plist;
       H5Pset_obj_track_times(plist.getId(), false);
       plist.setLayout(H5D_CHUNKED);
 
-      hsize_t chunk_dims[2] = {updates_per_chunk * grid_dims[0], grid_dims[1]};
-      plist.setChunk(2, chunk_dims);
+      //hsize_t chunk_dims[2] = {updates_per_chunk * grid_dims[0], grid_dims[1]};
+      hsize_t chunk_dims[3] = {cfg.GRID_H(), cfg.GRID_W(), updates_per_chunk};
+      plist.setChunk(3, chunk_dims);
       plist.setDeflate(compression_level);
 
+
       // create dataspace for dataset
-      hsize_t max_dims[2]{H5S_UNLIMITED, cfg.GRID_W()};
-      H5::DataSpace memspace(2, grid_dims, max_dims);
+      const hsize_t max_dims[3]{cfg.GRID_H(), cfg.GRID_W(), H5S_UNLIMITED};
+      const hsize_t start_dims[3] = {0, 0, 0};
+
+      H5::DataSpace memspace(3, start_dims, max_dims);
 
       // create dataset
       H5::DataSet ds = file.createDataSet(
@@ -419,18 +425,23 @@ private:
     // figure out what region we are writing to now.
     // this is done by getting the current number of points written and
     // dividing it by the width of a single grid.
-    const hsize_t height_written = file_space.getSimpleExtentNpoints() / cfg.GRID_W();
+    const hsize_t updates_written = file_space.getSimpleExtentNpoints()
+          / (cfg.GRID_W() * cfg.GRID_H());
 
     // we then subtract the height of a single grid to write inside the extent.
-    hsize_t start[2]{
-      height_written - cfg.GRID_H(),
-      0
+    hsize_t start[3]{
+      0,
+      0,
+      updates_written
     };
 
+    std::cout << "written " << updates_written << std::endl;
+
     // extend dataset by one grid height
-    hsize_t extent[2] = {
-      height_written + cfg.GRID_H(),
-      cfg.GRID_W()
+    hsize_t extent[3] = {
+      cfg.GRID_H(),
+      cfg.GRID_W(),
+      updates_written + 1
     };
     ds.extend(extent);
 
@@ -438,18 +449,17 @@ private:
     file_space = ds.getSpace();
 
     // create new dataspace with dimensions of grid to store our data in memory
-    H5::DataSpace memspace(2, grid_dims);
+    H5::DataSpace memspace(3, single_update);
 
     // the following links explain what a hyperslab is.
     // basically, it is an n-dimensional selection of a space
     // in this case, it is simply a 2D selection.
     // https://support.hdfgroup.org/HDF5/Tutor/phypecont.html
     // https://support.hdfgroup.org/HDF5/Tutor/select.html
-    file_space.selectHyperslab(H5S_SELECT_SET, grid_dims, start);
+    file_space.selectHyperslab(H5S_SELECT_SET, single_update, start);
 
     // finally, write data inside selected hyperslab
     ds.write((void*)data, tid, memspace, file_space);
-
   }
 
   void RootID() {
