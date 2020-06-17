@@ -435,8 +435,6 @@ private:
       updates_written
     };
 
-    std::cout << "written " << updates_written << std::endl;
-
     // extend dataset by one grid height
     hsize_t extent[3] = {
       cfg.GRID_H(),
