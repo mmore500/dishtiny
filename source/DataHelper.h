@@ -120,6 +120,10 @@ public:
 
     InitAttributes();
     InitReference();
+    InitDecoder("/Population/decoder");
+    InitDecoder("/Triggers/decoder");
+    InitDecoder("/Regulators/decoder");
+    InitDecoder("/Functions/decoder");
 
     file.flush(H5F_SCOPE_LOCAL);
 
@@ -472,8 +476,29 @@ private:
       }
     );
   }
+  void InitDecoder(const std::string& path) {
+    const hsize_t chunk_dims[1] = { 100 };
+    const hsize_t start_dims[1] = { 0 };
+    const hsize_t max_dims[1] = { H5S_UNLIMITED };
 
-  void Population() {
+    H5::DSetCreatPropList plist;
+    H5Pset_obj_track_times(plist.getId(), false);
+    plist.setLayout(H5D_CHUNKED);
+
+    plist.setChunk(1, chunk_dims);
+    plist.setDeflate(compression_level);
+
+    H5::DataSpace memspace(1, start_dims, max_dims);
+
+    const H5::StrType tid(0, H5T_VARIABLE);
+
+    H5::DataSet ds = file.createDataSet(
+      path,
+      tid,
+      memspace,
+      plist
+    );
+  }
 
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
