@@ -11,6 +11,7 @@
 #include "data/DataNode.h"
 #include "tools/keyname_utils.h"
 #include "tools/string_utils.h"
+#include "tools/QueueCache.h"
 
 #include "Config.h"
 #include "DishWorld.h"
@@ -55,13 +56,9 @@ public:
     > folders {
         {"/RootID", subdir::none}
       , {"/Population", subdir::none}
-      , {"/Population/decoder", subdir::none}
       , {"/Triggers", subdir::none}
-      , {"/Triggers/decoder", subdir::none}
       , {"/Regulators", subdir::dir}
-      , {"/Regulators/decoder", subdir::none}
       , {"/Functions", subdir::dir}
-      , {"/Functions/decoder", subdir::none}
       , {"/Index", subdir::none}
       , {"/Channel", subdir::lev}
       , {"/Expiration", subdir::lev}
@@ -499,33 +496,86 @@ private:
       plist
     );
   }
+  void WriteBuffer(const std::ostringstream& buffer, const std::string& path) {
+    H5::DataSet ds = file.openDataSet(path);
 
+    // get dataspace from dataset
+    H5::DataSpace file_space = ds.getSpace();
+
+    const hsize_t entries_written = file_space.getSimpleExtentNpoints();
+
+    // we then subtract the height of a single grid to write inside the extent.
+    hsize_t start[]{
+      entries_written
+    };
+
+    // extend dataset by one grid height
+    hsize_t extent[] = {
+      entries_written + 1
+    };
+
+    ds.extend(extent);
+
+    // refresh the dataspace
+    file_space = ds.getSpace();
+
+    const hsize_t single_update[1] = {1};
+
+    // create new dataspace with dimensions of grid to store our data in memory
+    H5::DataSpace memspace(1, single_update);
+
+    file_space.selectHyperslab(H5S_SELECT_SET, single_update, start);
+
+
+    /*
+    std::vector<const char*> res;
+    std::transform(
+      std::begin(decoder),
+      std::end(decoder),
+      std::back_inserter(res),
+      [](const auto & it){ return it->first.c_str(); }
+    );
+    */
+    std::string temp_data{buffer.str()};
+    const char* data[] = {temp_data.c_str()};
+
+    const H5::StrType tid(0, H5T_VARIABLE);
+
+    ds.write((void*)data, tid, memspace, file_space);
+  }
+
+  using uid_map_t = emp::QueueCache<std::string, size_t, 10000>;
+  std::unordered_map<std::string, uid_map_t> decoders;
+  std::unordered_map<std::string, size_t> counters;
+
+  void Population() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    using uid_map_t = std::unordered_map<std::string, size_t>;
-    uid_map_t uids;
     emp::vector<uid_map_t::const_iterator> decoder;
 
     emp::vector<uint32_t> decoder_ids;
     decoder_ids.reserve(dw.GetSize());
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
-
       std::ostringstream buffer;
 
+      // put data in buffer
       if(dw.IsOccupied(i)) {
         Genome & g = dw.GetOrg(i);
         g.GetProgram().PrintProgramFull(buffer);
       }
 
-      const auto & [node, did_insert] = uids.insert(
-        {buffer.str(), uids.size()}
-      );
-      if (did_insert) {
+      if (!decoders["Population"].Contains(buffer.str())) {
+        const auto& node = decoders["Population"].Put(
+          buffer.str(), counters["Population"]
+        );
+        counters["Population"]++;
         decoder.push_back(node);
-      }
-      decoder_ids.push_back(node->second);
 
+        WriteBuffer(buffer, "/Population/decoder");
+      }
+      const auto& node = decoders["Population"].Get(buffer.str());
+      decoder_ids.push_back(node);
     }
 
     WriteTemplate<uint32_t>(
@@ -534,50 +584,17 @@ private:
         return decoder_ids[i];
       }
     );
-
-
-    {
-    const hsize_t dims[] = { decoder.size() };
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-
-    plist.setChunk(1, dims);
-    plist.setDeflate(compression_level);
-
-    const H5::StrType tid(0, H5T_VARIABLE);
-    H5::DataSet ds = file.createDataSet(
-      "/Population/decoder/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(1,dims),
-      plist
-    );
-
-    std::vector<const char*> res;
-    std::transform(
-      std::begin(decoder),
-      std::end(decoder),
-      std::back_inserter(res),
-      [](const auto & it){ return it->first.c_str(); }
-    );
-    ds.write((void*)res.data(), tid);
-    }
-
   }
 
   void Triggers() {
-
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    using uid_map_t = std::unordered_map<std::string, size_t>;
-    uid_map_t uids;
     emp::vector<uid_map_t::const_iterator> decoder;
 
     emp::vector<uint32_t> decoder_ids;
     decoder_ids.reserve(dw.GetSize());
 
     for (size_t i = 0; i < dw.GetSize(); ++i) {
-
       std::ostringstream buffer;
 
       if(dw.IsOccupied(i)) {
@@ -591,11 +608,17 @@ private:
       std::string string = buffer.str();
       emp::remove_whitespace(string);
 
-      const auto & [node, did_insert] = uids.insert({string, uids.size()});
-      if (did_insert) {
+      if (!decoders["Triggers"].Contains(string)) {
+        const auto& node = decoders["Triggers"].Put(
+          string, counters["Triggers"]
+        );
+        counters["Triggers"]++;
         decoder.push_back(node);
+
+        WriteBuffer(buffer, "/Triggers/decoder/");
       }
-      decoder_ids[i] = node->second;
+      const auto& node = decoders["Triggers"].Get(buffer.str());
+      decoder_ids.push_back(node);
 
     }
 
@@ -605,42 +628,11 @@ private:
         return decoder_ids[i];
       }
     );
-
-    {
-    const hsize_t dims[] = { decoder.size() };
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-
-    plist.setChunk(1, dims);
-    plist.setDeflate(compression_level);
-
-    const H5::StrType tid(0, H5T_VARIABLE);
-    H5::DataSet ds = file.createDataSet(
-      "/Triggers/decoder/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(1,dims),
-      plist
-    );
-
-    std::vector<const char*> res;
-    std::transform(
-      std::begin(decoder),
-      std::end(decoder),
-      std::back_inserter(res),
-      [](const auto & it){ return it->first.c_str(); }
-    );
-    ds.write((void*)res.data(), tid);
-    }
-
   }
 
   void Regulators() {
-
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    using uid_map_t = std::unordered_map<std::string, size_t>;
-    uid_map_t uids;
     emp::vector<uid_map_t::const_iterator> decoder;
 
     emp::vector<emp::vector<uint32_t>> decoder_ids(Cardi::Dir::NumDirs);
@@ -651,9 +643,9 @@ private:
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       for (size_t i = 0; i < dw.GetSize(); ++i) {
-
         std::ostringstream buffer;
 
+        // put data in buffer
         if(dw.IsOccupied(i)) {
           cereal::JSONOutputArchive oarchive(
             buffer,
@@ -669,12 +661,19 @@ private:
         std::string string = buffer.str();
         emp::remove_whitespace(string);
 
-        const auto & [node, did_insert] = uids.insert({string, uids.size()});
-        if (did_insert) {
-          decoder.push_back(node);
-        }
-        decoder_ids[dir].push_back(node->second);
 
+        if (!decoders["Regulators"].Contains(string)) {
+          const auto& node = decoders["Regulators"].Put(
+            string, counters["Regulators"]
+          );
+          counters["Regulators"]++;
+          decoder.push_back(node);
+
+          WriteBuffer(buffer, "/Regulators/decoder");
+        }
+
+        const auto& node = decoders["Regulators"].Get(string);
+        decoder_ids[dir].push_back(node);
       }
     }
 
@@ -686,43 +685,11 @@ private:
         }
       );
     }
-
-
-    {
-    const hsize_t dims[] = { decoder.size() };
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-
-    plist.setChunk(1, dims);
-    plist.setDeflate(compression_level);
-
-    const H5::StrType tid(0, H5T_VARIABLE);
-    H5::DataSet ds = file.createDataSet(
-      "/Regulators/decoder/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(1,dims),
-      plist
-    );
-
-    std::vector<const char*> res;
-    std::transform(
-      std::begin(decoder),
-      std::end(decoder),
-      std::back_inserter(res),
-      [](const auto & it){ return it->first.c_str(); }
-    );
-    ds.write((void*)res.data(), tid);
-    }
-
   }
 
   void Functions() {
-
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    using uid_map_t = std::unordered_map<std::string, size_t>;
-    uid_map_t uids;
     emp::vector<uid_map_t::const_iterator> decoder;
 
     emp::vector<emp::vector<uint32_t>> decoder_ids(Cardi::Dir::NumDirs);
@@ -733,9 +700,9 @@ private:
 
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       for (size_t i = 0; i < dw.GetSize(); ++i) {
-
         std::ostringstream buffer;
 
+        // put data in buffer
         if(dw.IsOccupied(i)) {
           cereal::JSONOutputArchive oarchive(
             buffer,
@@ -759,11 +726,18 @@ private:
         std::string string = buffer.str();
         emp::remove_whitespace(string);
 
-        const auto & [node, did_insert] = uids.insert({string, uids.size()});
-        if (did_insert) {
+        if (!decoders["Functions"].Contains(string)) {
+          const auto& node = decoders["Functions"].Put(
+            string, counters["Functions"]
+          );
+
+          counters["Functions"]++;
           decoder.push_back(node);
+
+          WriteBuffer(buffer, "/Functions/decoder");
         }
-        decoder_ids[dir].push_back(node->second);
+        const auto& node = decoders["Functions"].Get(string);
+        decoder_ids[dir].push_back(node);
 
       }
     }
@@ -776,35 +750,6 @@ private:
         }
       );
     }
-
-
-    {
-    const hsize_t dims[] = { decoder.size() };
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-
-    plist.setChunk(1, dims);
-    plist.setDeflate(compression_level);
-
-    const H5::StrType tid(0, H5T_VARIABLE);
-    H5::DataSet ds = file.createDataSet(
-      "/Functions/decoder/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(1,dims),
-      plist
-    );
-
-    std::vector<const char*> res;
-    std::transform(
-      std::begin(decoder),
-      std::end(decoder),
-      std::back_inserter(res),
-      [](const auto & it){ return it->first.c_str(); }
-    );
-    ds.write((void*)res.data(), tid);
-    }
-
   }
 
   void Channel(const size_t lev) {
