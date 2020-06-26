@@ -505,14 +505,10 @@ private:
     const hsize_t entries_written = file_space.getSimpleExtentNpoints();
 
     // we then subtract the height of a single grid to write inside the extent.
-    hsize_t start[]{
-      entries_written
-    };
+    hsize_t start[]{entries_written};
 
     // extend dataset by one grid height
-    hsize_t extent[] = {
-      entries_written + 1
-    };
+    hsize_t extent[] = {entries_written + 1};
 
     ds.extend(extent);
 
@@ -526,16 +522,6 @@ private:
 
     file_space.selectHyperslab(H5S_SELECT_SET, single_update, start);
 
-
-    /*
-    std::vector<const char*> res;
-    std::transform(
-      std::begin(decoder),
-      std::end(decoder),
-      std::back_inserter(res),
-      [](const auto & it){ return it->first.c_str(); }
-    );
-    */
     std::string temp_data{buffer.str()};
     const char* data[] = {temp_data.c_str()};
 
@@ -551,8 +537,6 @@ private:
   void Population() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    emp::vector<uid_map_t::const_iterator> decoder;
-
     emp::vector<uint32_t> decoder_ids;
     decoder_ids.reserve(dw.GetSize());
 
@@ -566,16 +550,15 @@ private:
       }
 
       if (!decoders["Population"].Contains(buffer.str())) {
-        const auto& node = decoders["Population"].Put(
+        decoders["Population"].Put(
           buffer.str(), counters["Population"]
         );
         counters["Population"]++;
-        decoder.push_back(node);
-
         WriteBuffer(buffer, "/Population/decoder");
       }
-      const auto& node = decoders["Population"].Get(buffer.str());
-      decoder_ids.push_back(node);
+      decoder_ids.push_back(
+        decoders["Population"].Get(buffer.str())
+      );
     }
 
     WriteTemplate<uint32_t>(
@@ -633,8 +616,6 @@ private:
   void Regulators() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    emp::vector<uid_map_t::const_iterator> decoder;
-
     emp::vector<emp::vector<uint32_t>> decoder_ids(Cardi::Dir::NumDirs);
 
     for (auto& x : decoder_ids) {
@@ -661,14 +642,11 @@ private:
         std::string string = buffer.str();
         emp::remove_whitespace(string);
 
-
         if (!decoders["Regulators"].Contains(string)) {
           const auto& node = decoders["Regulators"].Put(
             string, counters["Regulators"]
           );
           counters["Regulators"]++;
-          decoder.push_back(node);
-
           WriteBuffer(buffer, "/Regulators/decoder");
         }
 
