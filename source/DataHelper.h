@@ -474,7 +474,7 @@ private:
     );
   }
   void InitDecoder(const std::string& path) {
-    const hsize_t chunk_dims[1] = { 100 };
+    const hsize_t chunk_dims[1] = { 1000 };
     const hsize_t start_dims[1] = { 0 };
     const hsize_t max_dims[1] = { H5S_UNLIMITED };
 
