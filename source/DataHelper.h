@@ -530,7 +530,7 @@ private:
     ds.write((void*)data, tid, memspace, file_space);
   }
 
-  using uid_map_t = emp::QueueCache<std::string, size_t, 10000>;
+  using uid_map_t = emp::QueueCache<std::string, size_t, 100000>;
   std::unordered_map<std::string, uid_map_t> decoders;
   std::unordered_map<std::string, size_t> counters;
 
