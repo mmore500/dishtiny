@@ -378,25 +378,30 @@ private:
       "Triggers"
     );
   }
+
   void Regulators() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      util.WriteDecoder(
+      util.WriteMultiset(
         [this, dir](const size_t i) {
-          std::ostringstream buffer;
-          cereal::JSONOutputArchive oarchive(
-              buffer,
-              cereal::JSONOutputArchive::Options::NoIndent()
+          std::multiset<Config::tag_t> multi;
+
+          const auto& tag_map = dw.frames[i]->GetFrameHardware(
+            dir
+          ).GetHardware().GetMatchBin().GetState().tags;
+
+          // insert tags into set
+          std::transform(
+            tag_map.begin(),
+            tag_map.end(),
+            std::inserter(multi, multi.end()),
+            [](const auto& pair) {
+              return pair.second;
+            }
           );
-          oarchive(
-              dw.frames[i]->GetFrameHardware(
-                dir
-              ).GetHardware().GetMatchBin().GetState()
-          );
-          std::string res = buffer.str();
-          emp::remove_whitespace(res);
-          return res;
+
+          return multi;
         },
         emp::to_string("/Regulators/dir_", dir),
         "Regulators"
