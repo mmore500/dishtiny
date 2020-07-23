@@ -362,17 +362,12 @@ private:
       "Population"
     );
   }
+*/
   void Triggers() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
     util.WriteMultiset(
       [this](const size_t i) {
-        std::unordered_map<
-          std::multiset<Config::tag_t>,
-          size_t,
-          emp::ContainerHash<std::multiset<Config::tag_t>>
-        > tag_map;
-
         const auto& tag_vector = dw.GetOrg(i).GetTags();
 
         return std::multiset<Config::tag_t>(
