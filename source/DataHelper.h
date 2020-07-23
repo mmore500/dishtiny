@@ -19,6 +19,8 @@
 #include "DishWorld.h"
 #include "Genome.h"
 
+#include "polyfill/span.h"
+
 class DataHelper {
 
 private:
