@@ -345,194 +345,64 @@ private:
       }
     );
   }
-  void InitDecoder(const std::string& path) {
-    const hsize_t chunk_dims[1] = { 1000 };
-    const hsize_t start_dims[1] = { 0 };
-    const hsize_t max_dims[1] = { H5S_UNLIMITED };
-
-    H5::DSetCreatPropList plist;
-    H5Pset_obj_track_times(plist.getId(), false);
-    plist.setLayout(H5D_CHUNKED);
-
-    plist.setChunk(1, chunk_dims);
-    plist.setDeflate(compression_level);
-
-    H5::DataSpace memspace(1, start_dims, max_dims);
-
-    const H5::StrType tid(0, H5T_VARIABLE);
-
-    H5::DataSet ds = file.createDataSet(
-      path,
-      tid,
-      memspace,
-      plist
-    );
-  }
-  void WriteBuffer(const std::ostringstream& buffer, const std::string& path) {
-    H5::DataSet ds = file.openDataSet(path);
-
-    // get dataspace from dataset
-    H5::DataSpace file_space = ds.getSpace();
-
-    const hsize_t entries_written = file_space.getSimpleExtentNpoints();
-
-    // we then subtract the height of a single grid to write inside the extent.
-    hsize_t start[]{entries_written};
-
-    // extend dataset by one grid height
-    hsize_t extent[] = {entries_written + 1};
-
-    ds.extend(extent);
-
-    // refresh the dataspace
-    file_space = ds.getSpace();
-
-    const hsize_t single_update[1] = {1};
-
-    // create new dataspace with dimensions of grid to store our data in memory
-    H5::DataSpace memspace(1, single_update);
-
-    file_space.selectHyperslab(H5S_SELECT_SET, single_update, start);
-
-    std::string temp_data{buffer.str()};
-    const char* data[] = {temp_data.c_str()};
-
-    const H5::StrType tid(0, H5T_VARIABLE);
-
-    ds.write((void*)data, tid, memspace, file_space);
-  }
-
-  using uid_map_t = emp::QueueCache<std::string, size_t, 100000>;
-  std::unordered_map<std::string, uid_map_t> decoders;
-  std::unordered_map<std::string, size_t> counters;
-
   void Population() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    emp::vector<uint32_t> decoder_ids;
-    decoder_ids.reserve(dw.GetSize());
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      std::ostringstream buffer;
-
-      // put data in buffer
-      if(dw.IsOccupied(i)) {
-        Genome & g = dw.GetOrg(i);
-        g.GetProgram().PrintProgramFull(buffer);
-      }
-
-      if (!decoders["Population"].Contains(buffer.str())) {
-        decoders["Population"].Put(
-          buffer.str(), counters["Population"]
-        );
-        counters["Population"]++;
-        WriteBuffer(buffer, "/Population/decoder");
-      }
-      decoder_ids.push_back(
-        decoders["Population"].Get(buffer.str())
-      );
-    }
-
-    WriteTemplate<uint32_t>(
-      "/Population/upd_",
-      [&decoder_ids](const size_t i) {
-        return decoder_ids[i];
-      }
+    util.WriteDecoder(
+      [this](const size_t i) {
+        std::ostringstream buffer;
+        if(dw.IsOccupied(i)) {
+          Genome & g = dw.GetOrg(i);
+          g.GetProgram().PrintProgramFull(buffer);
+        }
+        return buffer.str();
+      },
+      "Population"
     );
   }
-
   void Triggers() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    emp::vector<uid_map_t::const_iterator> decoder;
+    util.WriteMultiset(
+      [this](const size_t i) {
+        std::unordered_map<
+          std::multiset<Config::tag_t>,
+          size_t,
+          emp::ContainerHash<std::multiset<Config::tag_t>>
+        > tag_map;
 
-    emp::vector<uint32_t> decoder_ids;
-    decoder_ids.reserve(dw.GetSize());
+        const auto& tag_vector = dw.GetOrg(i).GetTags();
 
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      std::ostringstream buffer;
-
-      if(dw.IsOccupied(i)) {
-        cereal::JSONOutputArchive oarchive(
-          buffer,
-          cereal::JSONOutputArchive::Options::NoIndent()
+        return std::multiset<Config::tag_t>(
+          tag_vector.begin(),
+          tag_vector.end()
         );
-        oarchive(dw.GetOrg(i).GetTags());
-      }
-
-      std::string string = buffer.str();
-      emp::remove_whitespace(string);
-
-      if (!decoders["Triggers"].Contains(string)) {
-        const auto& node = decoders["Triggers"].Put(
-          string, counters["Triggers"]
-        );
-        counters["Triggers"]++;
-        decoder.push_back(node);
-
-        WriteBuffer(buffer, "/Triggers/decoder/");
-      }
-      const auto& node = decoders["Triggers"].Get(buffer.str());
-      decoder_ids.push_back(node);
-
-    }
-
-    WriteTemplate<uint32_t>(
-      "/Triggers/upd_",
-      [&decoder_ids](const size_t i) {
-        return decoder_ids[i];
-      }
+      },
+      "Triggers"
     );
   }
-
   void Regulators() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    emp::vector<emp::vector<uint32_t>> decoder_ids(Cardi::Dir::NumDirs);
-
-    for (auto& x : decoder_ids) {
-      x.reserve(dw.GetSize());
-    }
-
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      for (size_t i = 0; i < dw.GetSize(); ++i) {
-        std::ostringstream buffer;
-
-        // put data in buffer
-        if(dw.IsOccupied(i)) {
+      util.WriteDecoder(
+        [this, dir](const size_t i) {
+          std::ostringstream buffer;
           cereal::JSONOutputArchive oarchive(
-            buffer,
-            cereal::JSONOutputArchive::Options::NoIndent()
+              buffer,
+              cereal::JSONOutputArchive::Options::NoIndent()
           );
           oarchive(
-            dw.frames[i]->GetFrameHardware(
-              dir
-            ).GetHardware().GetMatchBin().GetState()
+              dw.frames[i]->GetFrameHardware(
+                dir
+              ).GetHardware().GetMatchBin().GetState()
           );
-        }
-
-        std::string string = buffer.str();
-        emp::remove_whitespace(string);
-
-        if (!decoders["Regulators"].Contains(string)) {
-          const auto& node = decoders["Regulators"].Put(
-            string, counters["Regulators"]
-          );
-          counters["Regulators"]++;
-          WriteBuffer(buffer, "/Regulators/decoder");
-        }
-
-        const auto& node = decoders["Regulators"].Get(string);
-        decoder_ids[dir].push_back(node);
-      }
-    }
-
-    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      WriteTemplate<uint32_t>(
-        emp::to_string("/Regulators/dir_", dir, "/upd_"),
-        [&decoder_ids, &dir](const size_t i) {
-          return decoder_ids[dir][i];
-        }
+          std::string res = buffer.str();
+          emp::remove_whitespace(res);
+          return res;
+        },
+        emp::to_string("/Regulators/dir_", dir),
+        "Regulators"
       );
     }
   }
@@ -540,27 +410,20 @@ private:
   void Functions() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    emp::vector<uid_map_t::const_iterator> decoder;
-
-    emp::vector<emp::vector<uint32_t>> decoder_ids(Cardi::Dir::NumDirs);
-
-    for (auto& x: decoder_ids) {
-      x.reserve(dw.GetSize());
-    }
-
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      for (size_t i = 0; i < dw.GetSize(); ++i) {
-        std::ostringstream buffer;
+      util.WriteDecoder(
+        [this, dir](  const size_t i) {
+          std::ostringstream buffer;
 
-        // put data in buffer
-        if(dw.IsOccupied(i)) {
           cereal::JSONOutputArchive oarchive(
             buffer,
             cereal::JSONOutputArchive::Options::NoIndent()
           );
+
           const auto & hw = dw.frames[i]->GetFrameHardware(
             dir
           ).GetHardware();
+
           emp::vector<Config::tag_t> res;
           for (const auto & stack : hw.GetCores()) {
             if (stack.size()) res.push_back(
@@ -571,37 +434,16 @@ private:
             std::sort(std::begin(res), std::end(res));
           }
           oarchive(res);
-        }
 
-        std::string string = buffer.str();
-        emp::remove_whitespace(string);
-
-        if (!decoders["Functions"].Contains(string)) {
-          const auto& node = decoders["Functions"].Put(
-            string, counters["Functions"]
-          );
-
-          counters["Functions"]++;
-          decoder.push_back(node);
-
-          WriteBuffer(buffer, "/Functions/decoder");
-        }
-        const auto& node = decoders["Functions"].Get(string);
-        decoder_ids[dir].push_back(node);
-
-      }
-    }
-
-    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      WriteTemplate<uint32_t>(
-        emp::to_string("/Functions/dir_", dir, "/upd_"),
-        [&decoder_ids, &dir](const size_t i) {
-          return decoder_ids[dir][i];
-        }
+          std::string ret = buffer.str();
+          emp::remove_whitespace(ret);
+          return ret;
+        },
+        emp::to_string("/Functions/dir_", dir),
+        "Functions"
       );
     }
   }
-
   void Channel(const size_t lev) {
     util.WriteToDataset<uint64_t>(
       emp::to_string("/Channel/lev_", lev, "/upd_"),
