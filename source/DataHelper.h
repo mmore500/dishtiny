@@ -347,6 +347,11 @@ private:
       }
     );
   }
+/*
+  // TODO: use serialize() to store serialized data
+  // TODO: write utility to de-serialize data, feed it to a SignalGP program
+  //       and finally call PrintProgramFull().
+  // TODO: note this as a string attribute on H5 file
   void Population() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
@@ -387,10 +392,14 @@ private:
         [this, dir](const size_t i) {
           const auto& tag_map = dw.frames[i]->GetFrameHardware(
             dir
+            // actually, get values instead
           ).GetHardware().GetMatchBin().GetState().tags;
 
           std::multiset<Config::tag_t> multi;
           // insert tags into set
+          // todo: insert values into vector
+          // refactor WriteMultiset to take Container<T>
+          // use tid-style lambas to figure out internal H5 type for T
           std::transform(
             tag_map.begin(),
             tag_map.end(),
