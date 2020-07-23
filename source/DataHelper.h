@@ -408,37 +408,27 @@ private:
     }
   }
 
+
   void Functions() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      util.WriteDecoder(
+      util.WriteMultiset(
         [this, dir](  const size_t i) {
-          std::ostringstream buffer;
-
-          cereal::JSONOutputArchive oarchive(
-            buffer,
-            cereal::JSONOutputArchive::Options::NoIndent()
-          );
-
           const auto & hw = dw.frames[i]->GetFrameHardware(
             dir
           ).GetHardware();
 
-          emp::vector<Config::tag_t> res;
+          std::multiset<Config::tag_t> res;
           for (const auto & stack : hw.GetCores()) {
-            if (stack.size()) res.push_back(
+            if (stack.size()) res.insert(
               hw.GetMatchBin().GetState().tags.find(
                 stack.back().GetFP()
               )->second
             );
-            std::sort(std::begin(res), std::end(res));
           }
-          oarchive(res);
 
-          std::string ret = buffer.str();
-          emp::remove_whitespace(ret);
-          return ret;
+          return res;
         },
         emp::to_string("/Functions/dir_", dir),
         "Functions"
