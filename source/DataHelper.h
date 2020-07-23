@@ -385,12 +385,11 @@ private:
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
       util.WriteMultiset(
         [this, dir](const size_t i) {
-          std::multiset<Config::tag_t> multi;
-
           const auto& tag_map = dw.frames[i]->GetFrameHardware(
             dir
           ).GetHardware().GetMatchBin().GetState().tags;
 
+          std::multiset<Config::tag_t> multi;
           // insert tags into set
           std::transform(
             tag_map.begin(),
