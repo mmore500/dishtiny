@@ -13,6 +13,8 @@
 #include "tools/string_utils.h"
 #include "tools/QueueCache.h"
 
+#include "datahelper_tools.h"
+
 #include "Config.h"
 #include "DishWorld.h"
 #include "Genome.h"
@@ -27,9 +29,7 @@ private:
 
   H5::H5File file;
 
-  const hsize_t grid_dims[2]{cfg.GRID_H(), cfg.GRID_W()};
-  const size_t updates_per_chunk = cfg.UPDATES_PER_CHUNK();
-  const size_t compression_level = cfg.CHUNK_COMPRESSION();
+  H5Utils util;
 
 public:
 
@@ -45,7 +45,8 @@ public:
       {"ext", ".h5"}
     })
     , H5F_ACC_TRUNC
-  )
+    )
+  , util(dw, cfg, file)
   {
     enum subdir{dir, lev, lev_1, none};
 
@@ -117,10 +118,10 @@ public:
 
     InitAttributes();
     InitReference();
-    InitDecoder("/Population/decoder");
-    InitDecoder("/Triggers/decoder");
-    InitDecoder("/Regulators/decoder");
-    InitDecoder("/Functions/decoder");
+    util.InitDecoder("/Population/decoder");
+    util.InitDecoder("/Triggers/decoder");
+    util.InitDecoder("/Regulators/decoder");
+    util.InitDecoder("/Functions/decoder");
 
     file.flush(H5F_SCOPE_LOCAL);
 
@@ -227,114 +228,87 @@ public:
   }
 
 private:
-  template <typename T>
-  void WriteAttribute(const std::string& name, const T& data, const std::string group="/") {
-    constexpr hsize_t dataspace_dims[] = { 1 };
-
-    H5::DataSpace dspace(1, dataspace_dims);
-    H5::PredType pred = hid_from_type<T>();
-
-    H5::Attribute attr = file.openGroup(group).createAttribute(
-      name, pred, dspace
-    );
-
-    attr.write(pred, &data);
-  }
-
-  void WriteAttribute(const std::string& name, const std::string& data, const std::string group="/") {
-    constexpr hsize_t dataspace_dims[] = { 1 };
-
-    H5::DataSpace dspace(1, dataspace_dims);
-    H5::StrType pred(0, H5T_VARIABLE);
-
-    H5::Attribute attr = file.openGroup(group).createAttribute(
-      name, pred, dspace
-    );
-
-    attr.write(pred, &data);
-  }
-
   void InitAttributes() {
-    WriteAttribute(
+    util.WriteAttribute(
       "SEED",
       cfg.SEED()
     );
 
-    WriteAttribute(
+    util.WriteAttribute(
       "NLEV",
       cfg.NLEV()
     );
 
-    WriteAttribute(
+    util.WriteAttribute(
       "START_TIMESTAMP",
       static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>
         (std::chrono::system_clock::now().time_since_epoch()).count())
     );
 
-    WriteAttribute(
+    util.WriteAttribute(
       "SOURCE_HASH",
       std::string{STRINGIFY(DISHTINY_HASH_)}
     );
 
-    WriteAttribute(
+    util.WriteAttribute(
       "EMP_HASH",
       std::string{STRINGIFY(EMPIRICAL_HASH_)}
     );
 
     std::ostringstream config_stream;
     cfg.WriteMe(config_stream);
-    WriteAttribute(
+    util.WriteAttribute(
       "config",
       config_stream.str()
     );
 
-    WriteAttribute(
+    util.WriteAttribute(
       "KEY",
       std::string{"0: unexpired, 1: within grace period, 2: expired"},
       "/Expiration"
     );
 
-    WriteAttribute(
+    util.WriteAttribute(
       "KEY",
       std::string{"0: dead, 1: live"},
       "/Live"
     );
 
-    WriteAttribute(
+    util.WriteAttribute(
       "KEY",
       std::string{"0: none, 1: partial, 2: complete"},
       "/Apoptosis"
     );
 
-    WriteAttribute(
+    util.WriteAttribute(
       "KEY",
       std::string{"-1: no current parent, >=0: parent index"},
       "/ParentPos"
     );
 
-    WriteAttribute(
+    util.WriteAttribute(
       "KEY",
       std::string{"0: none, 1: apoptosis, 2: bankrupt, 3: trampled"},
       "/Death"
     );
 
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      WriteAttribute(
+      util.WriteAttribute(
         "KEY",
         std::string{"0: off, 1: on"},
         "/InboxActivation/dir_" + emp::to_string(dir)
       );
-      WriteAttribute(
+      util.WriteAttribute(
         "KEY",
         std::string{"0: false, 1: true"},
         "/InResistance/dir_" + emp::to_string(dir)
       );
-      WriteAttribute(
+      util.WriteAttribute(
         "KEY",
         std::string{"0: false, 1: true"},
         "/OutResistance/dir_" + emp::to_string(dir)
       );
-      WriteAttribute(
+      util.WriteAttribute(
         "KEY",
         std::string{"0: false, 1: true"},
         "/Heir/dir_" + emp::to_string(dir)
@@ -343,7 +317,7 @@ private:
   }
 
   void InitReference() {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
      "/Index/own",
       [](const size_t i){
         return i;
@@ -351,7 +325,7 @@ private:
     );
 
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      WriteTemplate<uint32_t>(
+      util.WriteToDataset<uint32_t>(
         "/Index/dir_" + emp::to_string(dir),
         [this, &dir](const size_t i){
           return GeometryHelper(cfg).CalcLocalNeighs(i)[dir];
@@ -359,110 +333,8 @@ private:
       );
     }
   }
-
-  /// Create a full path for a dataset
-  std::string makeFullPath(const std::string& path) {
-    const size_t dataset_index = dw.GetUpdate() / updates_per_chunk;
-    const size_t dataset_update = dataset_index * updates_per_chunk;
-    return emp::to_string(path, dataset_update);
-  }
-
-  // idea taken from https://forum.hdfgroup.org/t/templatized-instantiation-of-h5-native-xxx-types/4168/2
-  H5::PredType hid_from_type_t(const char &) { return H5::PredType::NATIVE_CHAR; }
-  H5::PredType hid_from_type_t(const uint32_t &) { return H5::PredType::NATIVE_UINT32; }
-  H5::PredType hid_from_type_t(const uint64_t &) { return H5::PredType::NATIVE_UINT64; }
-  H5::PredType hid_from_type_t(const int &) { return H5::PredType::NATIVE_INT; }
-  H5::PredType hid_from_type_t(const double &) { return H5::PredType::NATIVE_DOUBLE; }
-
-  template <typename T>
-  H5::PredType hid_from_type() { return hid_from_type_t(T()); }
-
-  template <typename T, typename Function>
-  void WriteTemplate(const std::string& path, Function&& getData) {
-    std::string full_path = makeFullPath(path);
-
-    T data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = getData(i);
-    }
-
-    const H5::PredType tid = hid_from_type<T>();
-
-    const hsize_t single_update[3] = {cfg.GRID_H(), cfg.GRID_W(), 1};
-
-    if (!file.nameExists(full_path)) {
-      // set properties for dataset
-      H5::DSetCreatPropList plist;
-      H5Pset_obj_track_times(plist.getId(), false);
-      plist.setLayout(H5D_CHUNKED);
-
-      //hsize_t chunk_dims[2] = {updates_per_chunk * grid_dims[0], grid_dims[1]};
-      hsize_t chunk_dims[3] = {cfg.GRID_H(), cfg.GRID_W(), updates_per_chunk};
-      plist.setChunk(3, chunk_dims);
-      plist.setDeflate(compression_level);
-
-
-      // create dataspace for dataset
-      const hsize_t max_dims[3]{cfg.GRID_H(), cfg.GRID_W(), H5S_UNLIMITED};
-      const hsize_t start_dims[3] = {0, 0, 0};
-
-      H5::DataSpace memspace(3, start_dims, max_dims);
-
-      // create dataset
-      H5::DataSet ds = file.createDataSet(
-        full_path,
-        tid,
-        memspace,
-        plist
-      );
-    }
-    // get current dataset as ds
-    H5::DataSet ds = file.openDataSet(full_path);
-
-    // get dataspace from dataset
-    H5::DataSpace file_space = ds.getSpace();
-
-    // figure out what region we are writing to now.
-    // this is done by getting the current number of points written and
-    // dividing it by the width of a single grid.
-    const hsize_t updates_written = file_space.getSimpleExtentNpoints()
-          / (cfg.GRID_W() * cfg.GRID_H());
-
-    // we then subtract the height of a single grid to write inside the extent.
-    hsize_t start[3]{
-      0,
-      0,
-      updates_written
-    };
-
-    // extend dataset by one grid height
-    hsize_t extent[3] = {
-      cfg.GRID_H(),
-      cfg.GRID_W(),
-      updates_written + 1
-    };
-    ds.extend(extent);
-
-    // refresh the dataspace
-    file_space = ds.getSpace();
-
-    // create new dataspace with dimensions of grid to store our data in memory
-    H5::DataSpace memspace(3, single_update);
-
-    // the following links explain what a hyperslab is.
-    // basically, it is an n-dimensional selection of a space
-    // in this case, it is simply a 2D selection.
-    // https://support.hdfgroup.org/HDF5/Tutor/phypecont.html
-    // https://support.hdfgroup.org/HDF5/Tutor/select.html
-    file_space.selectHyperslab(H5S_SELECT_SET, single_update, start);
-
-    // finally, write data inside selected hyperslab
-    ds.write((void*)data, tid, memspace, file_space);
-  }
-
   void RootID() {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
       "/RootID/upd_",
       [this](const size_t i){
         if(dw.IsOccupied(i)) {
@@ -731,7 +603,7 @@ private:
   }
 
   void Channel(const size_t lev) {
-    WriteTemplate<uint64_t>(
+    util.WriteToDataset<uint64_t>(
       emp::to_string("/Channel/lev_", lev, "/upd_"),
       [this, &lev](const size_t i){
         const auto res = dw.man->Channel(i).GetID(lev);
@@ -741,7 +613,7 @@ private:
   }
 
   void Expiration(const size_t lev) {
-    WriteTemplate<char>(
+    util.WriteToDataset<char>(
       emp::to_string("/Expiration/lev_", lev, "/upd_"),
       [this, &lev](const size_t i){
         const auto res = dw.man->Channel(i).IsExpired(lev);
@@ -757,7 +629,7 @@ private:
   }
 
   void ChannelGeneration(const size_t lev) {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
       emp::to_string("/ChannelGeneration/lev_", lev, "/upd_"),
       [this, &lev](const size_t i){
         return dw.man->Channel(i).GetGeneration(lev);
@@ -766,7 +638,7 @@ private:
   }
 
   void Stockpile() {
-    WriteTemplate<double>(
+    util.WriteToDataset<double>(
       "/Stockpile/upd_",
       [this](const size_t i){
         return dw.man->Stockpile(i).QueryResource();
@@ -775,7 +647,7 @@ private:
   }
 
   void Live() {
-    WriteTemplate<char>(
+    util.WriteToDataset<char>(
       "/Live/upd_",
       [this](const size_t i){
         return dw.IsOccupied(i);
@@ -784,7 +656,7 @@ private:
   }
 
   void Apoptosis() {
-    WriteTemplate<char>(
+    util.WriteToDataset<char>(
       "/Apoptosis/upd_",
       [this](const size_t i){
         return dw.man->Apoptosis(i).GetState();
@@ -793,7 +665,7 @@ private:
   }
 
   void InboxActivation(const size_t dir) {
-    WriteTemplate<char>(
+    util.WriteToDataset<char>(
       emp::to_string("/InboxActivation/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.frames[i]->GetFrameHardware(dir).CheckInboxActivity();
@@ -802,7 +674,7 @@ private:
   }
 
   void SpikeBroadcastTraffic() {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
       "/SpikeBroadcastTraffic/upd_",
       [this](const size_t i){
         return dw.man->Inbox(i).GetSpikeBroadcastTraffic();
@@ -811,7 +683,7 @@ private:
   }
 
   void InboxTraffic(const size_t dir) {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
       emp::to_string("/InboxTraffic/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Inbox(i).GetTraffic(dir);
@@ -820,7 +692,7 @@ private:
   }
 
   void TrustedInboxTraffic(const size_t dir) {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
       emp::to_string("/TrustedInboxTraffic/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Inbox(i).GetTrustedTraffic(dir);
@@ -831,7 +703,7 @@ private:
   void RepOutgoing(const size_t dir) {
     GeometryHelper gh(cfg);
 
-    WriteTemplate<int>(
+    util.WriteToDataset<int>(
       emp::to_string("/RepOutgoing/dir_", dir, "/upd_"),
       [this, &gh, &dir](const size_t i){
         return dw.man->Priority(
@@ -842,7 +714,7 @@ private:
   }
 
   void RepIncoming(const size_t dir) {
-    WriteTemplate<int>(
+    util.WriteToDataset<int>(
       emp::to_string("/RepIncoming/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Priority(i).ViewRepStateDup(dir);
@@ -851,7 +723,7 @@ private:
   }
 
  void TotalContribute() {
-    WriteTemplate<double>(
+    util.WriteToDataset<double>(
       "/TotalContribute/upd_",
       [this](const size_t i){
         return dw.man->Stockpile(i).QueryTotalContribute();
@@ -860,7 +732,7 @@ private:
  }
 
   void ResourceContributed(const size_t dir) {
-    WriteTemplate<double>(
+    util.WriteToDataset<double>(
       emp::to_string("/ResourceContributed/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Stockpile(i).QueryExternalContribute(dir);
@@ -869,7 +741,7 @@ private:
   }
 
   void ResourceHarvested(const size_t lev) {
-    WriteTemplate<double>(
+    util.WriteToDataset<double>(
       emp::to_string("/ResourceHarvested/lev_", lev, "/upd_"),
       [this, &lev](const size_t i){
         double ret = 0.0;
@@ -882,7 +754,7 @@ private:
   }
 
   void PrevChan() {
-    WriteTemplate<Config::chanid_t>(
+    util.WriteToDataset<Config::chanid_t>(
       "/PrevChan/upd_",
       [this](const size_t i){
         return dw.man->Family(i).GetPrevChan();
@@ -891,7 +763,7 @@ private:
   }
 
   void InResistance(const size_t dir) {
-    WriteTemplate<double>(
+    util.WriteToDataset<double>(
       emp::to_string("/InResistance/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Sharing(i).CheckInResistance(dir);
@@ -900,7 +772,7 @@ private:
   }
 
   void OutResistance(const size_t dir) {
-    WriteTemplate<double>(
+    util.WriteToDataset<double>(
       emp::to_string("/OutResistance/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Sharing(i).CheckOutResistance(dir);
@@ -909,7 +781,7 @@ private:
   }
 
   void Heir(const size_t dir) {
-    WriteTemplate<char>(
+    util.WriteToDataset<char>(
       emp::to_string("/Heir/dir_", dir, "/upd_"),
       [this, &dir](const size_t i){
         return dw.man->Heir(i).IsHeir(dir);
@@ -918,7 +790,7 @@ private:
   }
 
   void ParentPos() {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
       "/ParentPos/upd_",
       [this](const size_t i){
         return dw.man->Family(dw.man->Family(i).GetParentPos()).HasChildPos(i)
@@ -928,7 +800,7 @@ private:
   }
 
   void CellAge() {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
       "/CellAge/upd_",
       [this](const size_t i){
         return dw.GetUpdate() - dw.man->Family(i).GetBirthUpdate();
@@ -937,7 +809,7 @@ private:
   }
 
   void CellGen(const size_t lev) {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
       emp::to_string("/CellGen/lev_", lev, "/upd_"),
       [this, &lev](const size_t i){
         return dw.man->Family(i).GetCellGen()[lev];
@@ -946,7 +818,7 @@ private:
   }
 
   void Death() {
-    WriteTemplate<char>(
+    util.WriteToDataset<char>(
       "/Death/upd_",
       [this](const size_t i){
         // trampled = 3;
@@ -964,7 +836,7 @@ private:
   }
 
   void OutgoingConnectionCount() {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
       "/OutgoingConnectionCount/upd_",
       [this](const size_t i){
         return dw.man->Connection(i).ViewDeveloped().size();
@@ -973,7 +845,7 @@ private:
   }
 
   void FledglingConnectionCount() {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
       "/FledglingConnectionCount/upd_",
       [this](const size_t i){
         return dw.man->Connection(i).ViewFledgling().size();
@@ -982,7 +854,7 @@ private:
   }
 
   void IncomingConnectionCount() {
-    WriteTemplate<uint32_t>(
+    util.WriteToDataset<uint32_t>(
       "/IncomingConnectionCount/upd_",
       [this](const size_t i){
         return dw.frames[i]->GetIncomingConectionCount();
