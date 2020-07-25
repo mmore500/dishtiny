@@ -187,7 +187,7 @@ public:
   void SnapshotPhenotypes() {
 
     if (dw.GetUpdate() % cfg.COMPUTE_FREQ() == 0) {
-      Regulators();
+      // Regulators();
       Functions();
     }
 
