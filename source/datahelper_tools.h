@@ -1,5 +1,4 @@
-#ifndef DATAHELPER_TOOLS
-#define DATAHELPER_TOOLS
+#pragma once
 
 #include <iostream>
 #include <sstream>
@@ -440,5 +439,3 @@ class H5Utils {
     }
     */
 };
-
-#endif
