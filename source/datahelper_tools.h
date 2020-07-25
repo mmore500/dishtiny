@@ -17,6 +17,8 @@
 #include "DishWorld.h"
 #include "Genome.h"
 
+#include "datahelper_types.h"
+
 class H5Utils {
   private:
     const DishWorld& dw;
