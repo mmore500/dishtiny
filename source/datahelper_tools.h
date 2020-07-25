@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <chrono>
+#include <any>
 
 #include "H5Cpp.h"
 
@@ -185,16 +186,19 @@ class H5Utils {
       );
     }
 
-    using uid_map_t = emp::QueueCache<std::multiset<Config::tag_t>, size_t, 100000, emp::ContainerHash<std::multiset<Config::tag_t>>>;
-    std::unordered_map<std::string, uid_map_t> decoders;
+    // TODO: make 100000 a config param
+    template <typename T>
+    using uid_map_t = emp::QueueCache<T, size_t, 100000, emp::ContainerHash<T>>;
+    std::unordered_map<std::string, std::any> decoders;
     std::unordered_map<std::string, size_t> counters;
 
+    template <typename Function>
     void WriteMultiset(
-      const std::function<std::multiset<Config::tag_t>(const size_t)>& getter,
+      const Function&& getter,
       const std::string& data_path,
       std::string decoder_path = ""
     ) {
-      auto WriteBuffer = [this](const std::multiset<Config::tag_t>& str, const std::string& path) {
+      auto WriteBuffer = [this](const auto& str, const std::string& path) {
         H5::DataSet ds = file.openDataSet(path);
 
         // get dataspace from dataset
@@ -220,21 +224,20 @@ class H5Utils {
 
         file_space.selectHyperslab(H5S_SELECT_SET, single_update, start);
 
-        const size_t len = Config::tag_t::GetNumBytes();
-        emp::vector<std::array<unsigned char, len>> data;
+        emp::vector<decltype(
+            convert_type(
+              std::declval<
+                typename std::decay<decltype(str)>::type::value_type
+              >()
+            )
+          )
+        > data;
         std::transform(
           str.begin(),
           str.end(),
           std::back_inserter(data),
-          [](const Config::tag_t& a) {
-            std::array<unsigned char, len> temp;
-
-            std::copy(
-              (char*)a.GetBytes().begin(),
-              (char*)a.GetBytes().end(),
-              temp.begin()
-            );
-            return temp;
+          [](const auto& a) {
+            return convert_type(a);
           }
         );
 
@@ -255,15 +258,23 @@ class H5Utils {
       for (size_t i = 0; i < dw.GetSize(); ++i) {
         auto ret = getter(i);
 
-        if (!decoders[decoder_path].Contains(ret)) {
-          decoders[decoder_path].Put(
+        if (!decoders[decoder_path].has_value()) {
+          decoders[decoder_path].emplace<uid_map_t<decltype(ret)>>();
+        }
+
+        auto decoder = std::any_cast<
+          uid_map_t<decltype(ret)>
+        >(decoders[decoder_path]);
+
+        if (!decoder.Contains(ret)) {
+          decoder.Put(
             ret, counters[decoder_path]
           );
           counters[decoder_path]++;
           WriteBuffer(ret, decoder_path + "/decoder");
         }
         decoder_ids.push_back(
-          decoders[decoder_path].Get(ret)
+          decoder.Get(ret)
         );
       }
 
