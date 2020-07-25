@@ -384,38 +384,34 @@ private:
     );
   }
 
-  void Regulators() {
-    // goal: reduce redundant data by giving each observed value a UID
-    // then storing UIDs positionally & providing a UID-to-value map
-    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      util.WriteMultiset(
-        [this, dir](const size_t i) {
-          const auto& tag_map = dw.frames[i]->GetFrameHardware(
-            dir
-            // actually, get values instead
-          ).GetHardware().GetMatchBin().GetState().tags;
+  // void Regulators() {
+  //   // goal: reduce redundant data by giving each observed value a UID
+  //   // then storing UIDs positionally & providing a UID-to-value map
+  //   for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+  //     util.WriteMultiset(
+  //       [this, dir](const size_t i) {
+  //         // GetState() returns a MatchBinState
+  //         const auto& state = dw.frames[i]->GetFrameHardware(
+  //           dir
+  //         ).GetHardware().GetMatchBin().GetState();
 
-          std::multiset<Config::tag_t> multi;
-          // insert tags into set
-          // todo: insert values into vector
-          // refactor WriteMultiset to take Container<T>
-          // use tid-style lambas to figure out internal H5 type for T
-          std::transform(
-            tag_map.begin(),
-            tag_map.end(),
-            std::inserter(multi, multi.end()),
-            [](const auto& pair) {
-              return pair.second;
-            }
-          );
+  //         std::vector<bundles::RegulatorData> data;
+  //         // todo: use tid-style lambas to figure out internal H5 type for T
+  //         for (const auto& uid : state.uids) {
+  //           data.emplace_back(
+  //             state.values.at(uid),
+  //             state.regulators.at(uid),
+  //             state.tags.at(uid)
+  //           );
+  //         }
 
-          return multi;
-        },
-        emp::to_string("/Regulators/dir_", dir),
-        "Regulators"
-      );
-    }
-  }
+  //         return data;
+  //       },
+  //       emp::to_string("/Regulators/dir_", dir),
+  //       "Regulators"
+  //     );
+  //   }
+  // }
 
 
   void Functions() {
