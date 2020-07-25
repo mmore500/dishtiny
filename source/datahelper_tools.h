@@ -36,14 +36,6 @@ class H5Utils {
       return emp::to_string(path, dataset_update);
     }
 
-    // idea taken from https://forum.hdfgroup.org/t/templatized-instantiation-of-h5-native-xxx-types/4168/2
-    H5::PredType hid_from_type_t(const char &) { return H5::PredType::NATIVE_CHAR; }
-    H5::PredType hid_from_type_t(const uint32_t &) { return H5::PredType::NATIVE_UINT32; }
-    H5::PredType hid_from_type_t(const uint64_t &) { return H5::PredType::NATIVE_UINT64; }
-    H5::PredType hid_from_type_t(const int &) { return H5::PredType::NATIVE_INT; }
-    H5::PredType hid_from_type_t(const double &) { return H5::PredType::NATIVE_DOUBLE; }
-
-
   public:
 
     H5Utils(const DishWorld& dw_, const Config& cfg_, H5::H5File& file_)
@@ -55,9 +47,7 @@ class H5Utils {
       , compression_level(cfg.CHUNK_COMPRESSION())
     { ; }
 
-    /// Determine HID type
-    template <typename T>
-    H5::PredType hid_from_type() { return hid_from_type_t(T()); }
+
 
     template <typename T, typename Function>
     void WriteToDataset(const std::string& path, Function&& getData) {
@@ -69,7 +59,7 @@ class H5Utils {
         data[i] = getData(i);
       }
 
-      const H5::PredType tid = hid_from_type<T>();
+      const H5::PredType tid = filetype::hid_from_type<T>();
 
       const hsize_t single_update[3] = {cfg.GRID_H(), cfg.GRID_W(), 1};
 
@@ -143,97 +133,12 @@ class H5Utils {
       ds.write((void*)data, tid, memspace, file_space);
     }
 
-    template <typename T, typename Function>
-    void WriteSet(const std::string& path, Function&& getData) {
-      std::string full_path = makeFullPath(path);
-
-      T data[dw.GetSize()];
-
-      for (size_t i = 0; i < dw.GetSize(); ++i) {
-        data[i] = getData(i);
-      }
-
-
-      const hsize_t single_update[3] = {cfg.GRID_H(), cfg.GRID_W(), 1};
-
-      if (!file.nameExists(full_path)) {
-        // set properties for dataset
-        H5::DSetCreatPropList plist;
-        H5Pset_obj_track_times(plist.getId(), false);
-
-        /*
-        plist.setLayout(H5D_CHUNKED);
-
-        hsize_t chunk_dims[3] = {cfg.GRID_H(), cfg.GRID_W(), updates_per_chunk};
-        plist.setChunk(3, chunk_dims);
-        plist.setDeflate(compression_level);
-        */
-
-        // create dataspace for dataset
-        const hsize_t max_dims[2]{H5S_UNLIMITED, 1};
-        const hsize_t start_dims[2] = {0, 1};
-
-        H5::DataSpace memspace(2, start_dims, max_dims);
-
-        auto tid = H5::ArrayType(H5T_STD_U8BE, 1, 10000);
-
-        // create dataset
-        H5::DataSet ds = file.createDataSet(
-          full_path,
-          tid,
-          memspace,
-          plist
-        );
-      }
-      // get current dataset as ds
-      H5::DataSet ds = file.openDataSet(full_path);
-
-      // get dataspace from dataset
-      H5::DataSpace file_space = ds.getSpace();
-
-      auto tid = H5::ArrayType(H5T_NATIVE_UCHAR, 1, 10000);
-
-      // figure out what region we are writing to now.
-      // this is done by getting the current number of points written and
-      // dividing it by the width of a single grid.
-      const hsize_t updates_written = file_space.getSimpleExtentNpoints();
-
-      // we then subtract the height of a single grid to write inside the extent.
-      hsize_t start[2]{
-        updates_written,
-        0
-      };
-
-      // extend dataset by one grid height
-      hsize_t extent[2] = {
-        updates_written + 1,
-        1
-      };
-
-      ds.extend(extent);
-
-      // refresh the dataspace
-      file_space = ds.getSpace();
-
-      // create new dataspace with dimensions of grid to store our data in memory
-      H5::DataSpace memspace(2, single_update);
-
-      // the following links explain what a hyperslab is.
-      // basically, it is an n-dimensional selection of a space
-      // in this case, it is simply a 2D selection.
-      // https://support.hdfgroup.org/HDF5/Tutor/phypecont.html
-      // https://support.hdfgroup.org/HDF5/Tutor/select.html
-      file_space.selectHyperslab(H5S_SELECT_SET, single_update, start);
-
-      // finally, write data inside selected hyperslab
-      ds.write((void*)data, tid, memspace, file_space);
-    }
     template <typename T>
     void WriteAttribute(const std::string& name, const T& data, const std::string group="/") {
       constexpr hsize_t dataspace_dims[] = { 1 };
 
       H5::DataSpace dspace(1, dataspace_dims);
-      H5::PredType pred = hid_from_type<T>();
+      H5::PredType pred = memtype::hid_from_type<T>();
 
       H5::Attribute attr = file.openGroup(group).createAttribute(
         name, pred, dspace
@@ -274,7 +179,7 @@ class H5Utils {
 
       H5::DataSet ds = file.createDataSet(
         path,
-        tid,
+        filetype::var_array,
         memspace,
         plist
       );
@@ -283,6 +188,7 @@ class H5Utils {
     using uid_map_t = emp::QueueCache<std::multiset<Config::tag_t>, size_t, 100000, emp::ContainerHash<std::multiset<Config::tag_t>>>;
     std::unordered_map<std::string, uid_map_t> decoders;
     std::unordered_map<std::string, size_t> counters;
+
     void WriteMultiset(
       const std::function<std::multiset<Config::tag_t>(const size_t)>& getter,
       const std::string& data_path,
@@ -331,15 +237,12 @@ class H5Utils {
             return temp;
           }
         );
+
         hvl_t hdf_buffer;
         hdf_buffer.p = data.data();
         hdf_buffer.len = data.size();
 
-        hsize_t dims[1]{len};
-        const H5::ArrayType arr(H5::PredType::STD_U8BE, 1, dims);
-        const H5::VarLenType tid(&arr);
-
-        ds.write(&hdf_buffer, tid, memspace, file_space);
+        ds.write(&hdf_buffer, memtype::var_array, memspace, file_space);
       };
 
       if (!decoder_path.size()) {
