@@ -17,13 +17,28 @@ struct TagBytes {
             arr.begin()
         );
     }
+
+    bool operator==(const TagBytes& rhs) const {
+        return arr == rhs.arr;
+    }
+
 };
 namespace bundles {
     struct RegulatorData {
         const size_t value;
-        // SRP: I don't think regulators are doubles
         double regulator;
         const TagBytes tag;
+
+        RegulatorData(size_t value_, double regulator_, const TagBytes& tag_)
+        : value(value_)
+        , regulator(regulator_)
+        , tag(tag_)
+        { ; }
+
+        bool operator==(const RegulatorData& rhs) const {
+            return std::tuple{value, regulator, tag}
+                == std::tuple{rhs.value, rhs.regulator, rhs.tag};
+        }
     };
 };
 namespace std {
