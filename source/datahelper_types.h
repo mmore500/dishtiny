@@ -26,9 +26,31 @@ namespace bundles {
         const TagBytes tag;
     };
 };
-namespace internal {
-    /* static constexpr */ hsize_t dims[1]{Config::tag_t::GetNumBytes()};
+namespace std {
+    template<>
+    struct hash<TagBytes> {
+        size_t operator()(const TagBytes& data) const {
+            return emp::murmur_hash(std::span<std::byte>(
+                (std::byte*)data.arr.begin(),
+                (std::byte*)data.arr.end()
+            ));
+        }
+    };
+
+    template<>
+    struct hash<bundles::RegulatorData> {
+        size_t operator()(const bundles::RegulatorData& data) const {
+            return emp::TupleHash<size_t, double, TagBytes>{}(
+                std::tuple{
+                    data.value,
+                    data.regulator,
+                    data.tag
+                }
+            );
+        }
+    };
 };
+
 namespace memtype {
     // idea taken from https://forum.hdfgroup.org/t/templatized-instantiation-of-h5-native-xxx-types/4168/2
     H5::PredType hid_from_type_t(const char &) { return H5::PredType::NATIVE_CHAR; }
