@@ -78,11 +78,21 @@ namespace memtype {
     template <typename T>
     H5::PredType hid_from_type() { return hid_from_type_t(T()); }
 
-    /* inline static */ const H5::ArrayType arr(H5::PredType::NATIVE_CHAR, 1, internal::dims);
-    /* inline static */ const H5::VarLenType var_array{&arr};
+    H5::ArrayType MakeArrayType() {
+        const hsize_t dims[1]{Config::tag_t::GetNumBytes()};
+        return H5::ArrayType(H5::PredType::NATIVE_CHAR, 1, dims);
+    }
 
-    H5::CompType make_regulator_data() {
-        H5::CompType regulator_data;
+    H5::VarLenType MakeVarLenTypeSpec(const H5::DataType& type) {
+        // SRP: don't use H5::PredType unless you want to cry
+        /* inline static */ const H5::VarLenType var_array{type};
+        return var_array;
+    }
+
+    H5::CompType MakeRegulatorData() {
+        H5::CompType regulator_data(
+            sizeof(bundles::RegulatorData)
+        );
 
         regulator_data.insertMember(
             "value",
@@ -97,16 +107,12 @@ namespace memtype {
         );
 
         regulator_data.insertMember(
-            "regulator",
+            "tag",
             HOFFSET(bundles::RegulatorData, tag),
-            arr
+            MakeArrayType()
         );
-
         return regulator_data;
     }
-
-    H5::CompType regulator_data(make_regulator_data());
-
 };
 
 namespace filetype {
@@ -126,8 +132,6 @@ namespace filetype {
     }
     H5::PredType hid_from_type_t(const double &) { return H5::PredType::IEEE_F64LE; }
 
-    /* inline static */ const H5::ArrayType arr(H5::PredType::STD_U8BE, 1, internal::dims);
-    /* inline static */ const H5::VarLenType var_array{&arr};
 
 
     /// Determine HID type
