@@ -189,13 +189,13 @@ class H5Utils {
     std::unordered_map<std::string, size_t> counters;
 
     template <typename Function>
-    void WriteMultiset(
+    void WriteDecoder(
       const Function&& getter,
       const H5::DataType& type,
       const std::string& data_path,
       std::string decoder_path = ""
     ) {
-      auto WriteBuffer = [this, &type, &data_path](const auto& str, const std::string& path) {
+      auto WriteBuffer = [this, &type, &data_path](const auto& data, const std::string& path) {
         H5::DataSet ds = file.openDataSet(path);
 
         // get dataspace from dataset
@@ -224,14 +224,14 @@ class H5Utils {
         emp::vector<decltype(
             convert_type(
               std::declval<
-                typename std::decay<decltype(str)>::type::value_type
+                typename std::decay<decltype(data)>::type::value_type
               >()
             )
           )
         > data;
         std::transform(
-          str.begin(),
-          str.end(),
+          data.begin(),
+          data.end(),
           std::back_inserter(data),
           [](const auto& a) {
             return convert_type(a);

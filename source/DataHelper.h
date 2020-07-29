@@ -371,7 +371,7 @@ private:
   void Triggers() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    util.WriteMultiset(
+    util.WriteDecoder(
       [this](const size_t i) {
         const auto& tag_vector = dw.GetOrg(i).GetTags();
 
@@ -389,7 +389,7 @@ private:
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      util.WriteMultiset(
+      util.WriteDecoder(
         [this, dir](const size_t i) {
           // GetState() returns a MatchBinState
           const auto& state = dw.frames[i]->GetFrameHardware(
@@ -420,7 +420,7 @@ private:
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      util.WriteMultiset(
+      util.WriteDecoder(
         [this, dir](  const size_t i) {
           const auto & hw = dw.frames[i]->GetFrameHardware(
             dir
