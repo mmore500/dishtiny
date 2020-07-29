@@ -195,7 +195,7 @@ class H5Utils {
       const std::string& data_path,
       std::string decoder_path = ""
     ) {
-      auto WriteBuffer = [this, &type, &data_path](const auto& data, const std::string& path) {
+      auto WriteBuffer = [this, &type, &data_path](const auto& raw_data, const std::string& path) {
         H5::DataSet ds = file.openDataSet(path);
 
         // get dataspace from dataset
@@ -224,14 +224,14 @@ class H5Utils {
         emp::vector<decltype(
             convert_type(
               std::declval<
-                typename std::decay<decltype(data)>::type::value_type
+                typename std::decay<decltype(raw_data)>::type::value_type
               >()
             )
           )
         > data;
         std::transform(
-          data.begin(),
-          data.end(),
+          raw_data.begin(),
+          raw_data.end(),
           std::back_inserter(data),
           [](const auto& a) {
             return convert_type(a);
