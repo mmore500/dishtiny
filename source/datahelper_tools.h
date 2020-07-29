@@ -161,7 +161,7 @@ class H5Utils {
       attr.write(pred, &data);
     }
 
-    void InitDecoder(const std::string& path) {
+    void InitDecoder(const std::string& path, const H5::DataType& type) {
       const hsize_t chunk_dims[1] = { 1000 };
       const hsize_t start_dims[1] = { 0 };
       const hsize_t max_dims[1] = { H5S_UNLIMITED };
@@ -174,13 +174,9 @@ class H5Utils {
 
       H5::DataSpace memspace(1, start_dims, max_dims);
 
-      hsize_t dims[1]{Config::tag_t::GetNumBytes()};
-      const H5::ArrayType arr(H5::PredType::STD_U8BE, 1, dims);
-      const H5::VarLenType tid(&arr);
-
       H5::DataSet ds = file.createDataSet(
         path,
-        filetype::var_array,
+        memtype::MakeVarLenTypeSpec(type),
         memspace,
         plist
       );
@@ -195,10 +191,11 @@ class H5Utils {
     template <typename Function>
     void WriteMultiset(
       const Function&& getter,
+      const H5::DataType& type,
       const std::string& data_path,
       std::string decoder_path = ""
     ) {
-      auto WriteBuffer = [this](const auto& str, const std::string& path) {
+      auto WriteBuffer = [this, &type, &data_path](const auto& str, const std::string& path) {
         H5::DataSet ds = file.openDataSet(path);
 
         // get dataspace from dataset
@@ -245,7 +242,7 @@ class H5Utils {
         hdf_buffer.p = data.data();
         hdf_buffer.len = data.size();
 
-        ds.write(&hdf_buffer, memtype::var_array, memspace, file_space);
+        ds.write(&hdf_buffer, memtype::MakeVarLenTypeSpec(type), memspace, file_space);
       };
 
       if (!decoder_path.size()) {

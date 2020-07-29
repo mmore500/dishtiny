@@ -120,10 +120,10 @@ public:
 
     InitAttributes();
     InitReference();
-    util.InitDecoder("/Population/decoder");
-    util.InitDecoder("/Triggers/decoder");
-    util.InitDecoder("/Regulators/decoder");
-    util.InitDecoder("/Functions/decoder");
+    //util.InitDecoder("/Population/decoder", );
+    util.InitDecoder("/Triggers/decoder", memtype::MakeArrayType());
+    util.InitDecoder("/Regulators/decoder", memtype::MakeRegulatorData());
+    util.InitDecoder("/Functions/decoder", memtype::MakeArrayType());
 
     file.flush(H5F_SCOPE_LOCAL);
 
@@ -435,6 +435,7 @@ private:
 
           return res;
         },
+        memtype::MakeArrayType(),
         emp::to_string("/Functions/dir_", dir),
         "Functions"
       );
