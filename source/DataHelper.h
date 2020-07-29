@@ -380,38 +380,40 @@ private:
           tag_vector.end()
         );
       },
+      memtype::MakeArrayType(),
       "Triggers"
     );
   }
 
-  // void Regulators() {
-  //   // goal: reduce redundant data by giving each observed value a UID
-  //   // then storing UIDs positionally & providing a UID-to-value map
-  //   for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-  //     util.WriteMultiset(
-  //       [this, dir](const size_t i) {
-  //         // GetState() returns a MatchBinState
-  //         const auto& state = dw.frames[i]->GetFrameHardware(
-  //           dir
-  //         ).GetHardware().GetMatchBin().GetState();
+  void Regulators() {
+    // goal: reduce redundant data by giving each observed value a UID
+    // then storing UIDs positionally & providing a UID-to-value map
+    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      util.WriteMultiset(
+        [this, dir](const size_t i) {
+          // GetState() returns a MatchBinState
+          const auto& state = dw.frames[i]->GetFrameHardware(
+            dir
+          ).GetHardware().GetMatchBin().GetState();
 
-  //         std::vector<bundles::RegulatorData> data;
-  //         // todo: use tid-style lambas to figure out internal H5 type for T
-  //         for (const auto& uid : state.uids) {
-  //           data.emplace_back(
-  //             state.values.at(uid),
-  //             state.regulators.at(uid),
-  //             state.tags.at(uid)
-  //           );
-  //         }
+          std::vector<bundles::RegulatorData> data;
+          // todo: use tid-style lambas to figure out internal H5 type for T
+          for (const auto& uid : state.uids) {
+            data.emplace_back(
+              state.values.at(uid),
+              state.regulators.at(uid).View(),
+              state.tags.at(uid)
+            );
+          }
 
-  //         return data;
-  //       },
-  //       emp::to_string("/Regulators/dir_", dir),
-  //       "Regulators"
-  //     );
-  //   }
-  // }
+          return data;
+        },
+        memtype::MakeRegulatorData(),
+        emp::to_string("/Regulators/dir_", dir),
+        "Regulators"
+      );
+    }
+  }
 
 
   void Functions() {
