@@ -132,9 +132,10 @@ public:
   ~DataHelper() { file.close(); }
 
   void SnapshotPopulation() {
+    const size_t update = dw.GetUpdate();
 
-    // Population();
-    // Triggers();
+    if (update % cfg.POPULATION() == 0) Population();
+    if (update % cfg.TRIGGERS() == 0) Triggers();
 
     // save population best
     if (dw.GetNumOrgs()) {
@@ -185,45 +186,48 @@ public:
   }
 
   void SnapshotPhenotypes() {
+    const size_t update = dw.GetUpdate();
 
-    if (dw.GetUpdate() % cfg.COMPUTE_FREQ() == 0) {
+    if (update % cfg.COMPUTE_FREQ() == 0) {
       // Regulators();
       Functions();
     }
 
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      Channel(lev);
-      ChannelGeneration(lev);
-      Expiration(lev);
-      ResourceHarvested(lev);
+    for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      if (update % cfg.CHANNEL() == 0) Channel(lev);
+      if (update % cfg.CHANNEL_GENERATION() == 0) ChannelGeneration(lev);
+      if (update % cfg.EXPIRATION() == 0) Expiration(lev);
+      if (update % cfg.RESOURCE_HARVESTED() == 0) ResourceHarvested(lev);
     }
 
-    for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) CellGen(lev);
+    for (size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) {
+      if (update % cfg.CELL_GEN() == 0) CellGen(lev);
+    }
 
-    RootID();
-    Stockpile();
-    Live();
-    Apoptosis();
-    TotalContribute();
-    PrevChan();
-    ParentPos();
-    CellAge();
-    SpikeBroadcastTraffic();
-    Death();
-    OutgoingConnectionCount();
-    FledglingConnectionCount();
-    IncomingConnectionCount();
+    if (update % cfg.ROOT_ID() == 0) RootID();
+    if (update % cfg.STOCKPILE()== 0) Stockpile();
+    if (update % cfg.LIVE() == 0) Live();
+    if (update % cfg.APOPTOSIS() == 0) Apoptosis();
+    if (update % cfg.TOTAL_CONTRIBUTE() == 0) TotalContribute();
+    if (update % cfg.PREV_CHAN() == 0) PrevChan();
+    if (update % cfg.PARENT_POS() == 0) ParentPos();
+    if (update % cfg.CELL_AGE() == 0) CellAge();
+    if (update % cfg.SPIKE_BROADCAST_TRAFFIC() == 0) SpikeBroadcastTraffic();
+    if (update % cfg.DEATH() == 0) Death();
+    if (update % cfg.OUTGOING_CONNECTION_COUNT() == 0) OutgoingConnectionCount();
+    if (update % cfg.FLEDGING_CONNECTION_COUNT() == 0) FledglingConnectionCount();
+    if (update % cfg.INCOMING_CONNECTION_COUNT() == 0) IncomingConnectionCount();
 
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      InboxActivation(dir);
-      InboxTraffic(dir);
-      TrustedInboxTraffic(dir);
-      RepOutgoing(dir);
-      RepIncoming(dir);
-      ResourceContributed(dir);
-      InResistance(dir);
-      OutResistance(dir);
-      Heir(dir);
+    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      if (update % cfg.INBOX_ACTIVATION() == 0) InboxActivation(dir);
+      if (update % cfg.INBOX_TRAFFIC() == 0) InboxTraffic(dir);
+      if (update % cfg.TRUSTED_INBOX_TRAFFIC() == 0) TrustedInboxTraffic(dir);
+      if (update % cfg.REP_OUTGOING() == 0) RepOutgoing(dir);
+      if (update % cfg.REP_INCOMING() == 0) RepIncoming(dir);
+      if (update % cfg.RESOURCE_CONTRIBUTED() == 0) ResourceContributed(dir);
+      if (update % cfg.IN_RESISTANCE() == 0) InResistance(dir);
+      if (update % cfg.OUT_RESISTANCE() == 0) OutResistance(dir);
+      if (update % cfg.HEIR() == 0) Heir(dir);
     }
 
     file.flush(H5F_SCOPE_LOCAL);
