@@ -70,7 +70,6 @@ class H5Utils {
         H5Pset_obj_track_times(plist.getId(), false);
         plist.setLayout(H5D_CHUNKED);
 
-        //hsize_t chunk_dims[2] = {updates_per_chunk * grid_dims[0], grid_dims[1]};
         hsize_t chunk_dims[3] = {cfg.GRID_H(), cfg.GRID_W(), updates_per_chunk};
         plist.setChunk(3, chunk_dims);
         plist.setDeflate(compression_level);
