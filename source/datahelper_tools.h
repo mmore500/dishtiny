@@ -282,4 +282,77 @@ class H5Utils {
         }
       );
     }
+
+    void WriteDecoder(
+      const std::function<std::string(const size_t)>& getter,
+      const std::string& data_path,
+      std::string decoder_path = ""
+    ) {
+      auto WriteBuffer = [this](const std::string& str, const std::string& path) {
+        H5::DataSet ds = file.openDataSet(path);
+
+        // get dataspace from dataset
+        H5::DataSpace file_space = ds.getSpace();
+        const hsize_t entries_written = file_space.getSimpleExtentNpoints();
+
+        // we then subtract the height of a single grid to write inside the extent.
+        hsize_t start[]{entries_written};
+
+        // extend dataset by one grid height
+        hsize_t extent[] = {entries_written + 1};
+        ds.extend(extent);
+
+        // refresh the dataspace
+        file_space = ds.getSpace();
+        const hsize_t single_update[1] = {1};
+
+        // create new dataspace with dimensions of grid to store our data in memory
+        H5::DataSpace memspace(1, single_update);
+
+        file_space.selectHyperslab(H5S_SELECT_SET, single_update, start);
+
+        const char* data[] = {str.c_str()};
+        const H5::StrType tid(0, H5T_VARIABLE);
+
+        ds.write((void*)data, tid, memspace, file_space);
+      };
+
+      if (!decoder_path.size()) {
+        decoder_path = data_path;
+      }
+
+      emp::vector<uint32_t> decoder_ids;
+      decoder_ids.reserve(dw.GetSize());
+
+      for (size_t i = 0; i < dw.GetSize(); ++i) {
+        std::string string = getter(i);
+
+        if (!decoders[decoder_path].has_value()) {
+          decoders[decoder_path].emplace<uid_map_t<std::string>>();
+        }
+
+        auto decoder = std::any_cast<
+          uid_map_t<std::string>
+        >(decoders[decoder_path]);
+
+        if (!decoder.Contains(string)) {
+          decoder.Put(
+            string, counters[decoder_path]
+          );
+          counters[decoder_path]++;
+          WriteBuffer(string, decoder_path + "/decoder");
+        }
+        decoder_ids.push_back(
+          decoder.Get(string)
+        );
+      }
+
+      WriteToDataset<uint32_t>(
+        data_path + "/upd_",
+        [&decoder_ids](const size_t i) {
+          return decoder_ids[i];
+        }
+      );
+    }
+
 };

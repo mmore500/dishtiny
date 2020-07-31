@@ -351,7 +351,7 @@ private:
       }
     );
   }
-/*
+
   // TODO: use serialize() to store serialized data
   // TODO: write utility to de-serialize data, feed it to a SignalGP program
   //       and finally call PrintProgramFull().
@@ -371,7 +371,7 @@ private:
       "Population"
     );
   }
-*/
+
   void Triggers() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
