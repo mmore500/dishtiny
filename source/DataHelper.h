@@ -205,7 +205,7 @@ public:
     }
 
     if (update % cfg.ROOT_ID() == 0) RootID();
-    if (update % cfg.STOCKPILE()== 0) Stockpile();
+    if (update % cfg.STOCKPILE() == 0) Stockpile();
     if (update % cfg.LIVE() == 0) Live();
     if (update % cfg.APOPTOSIS() == 0) Apoptosis();
     if (update % cfg.TOTAL_CONTRIBUTE() == 0) TotalContribute();
