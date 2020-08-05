@@ -20,6 +20,15 @@
 
 #include "datahelper_types.h"
 
+namespace internal {
+  template <class T> struct uid_map_partner_t {
+    using type = emp::QueueCache<T, size_t, Config::DATAFILE_CACHE_SIZE, emp::ContainerHash<T>>;
+  };
+  template <> struct uid_map_partner_t<std::string> {
+    using type = emp::QueueCache<std::string, size_t, Config::DATAFILE_CACHE_SIZE, std::hash<std::string>>;
+  };
+}
+
 class H5Utils {
   private:
     const DishWorld& dw;
@@ -181,9 +190,9 @@ class H5Utils {
       );
     }
 
-    // TODO: make 100000 a config param
-    template <typename T>
-    using uid_map_t = emp::QueueCache<T, size_t, 100000, emp::ContainerHash<T>>;
+    template <class T>
+    using uid_map_t = typename internal::uid_map_partner_t<T>::type;
+
     std::unordered_map<std::string, std::any> decoders;
     std::unordered_map<std::string, size_t> counters;
 
