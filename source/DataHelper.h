@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <sstream>
-#include <time.h>
+#include <chrono>
 
 #include "H5Cpp.h"
 
@@ -11,10 +11,15 @@
 #include "data/DataNode.h"
 #include "tools/keyname_utils.h"
 #include "tools/string_utils.h"
+#include "tools/QueueCache.h"
+
+#include "datahelper_tools.h"
 
 #include "Config.h"
 #include "DishWorld.h"
 #include "Genome.h"
+
+#include "polyfill/span.h"
 
 class DataHelper {
 
@@ -25,6 +30,8 @@ private:
   DishWorld &dw;
 
   H5::H5File file;
+
+  H5Utils util;
 
 public:
 
@@ -40,97 +47,83 @@ public:
       {"ext", ".h5"}
     })
     , H5F_ACC_TRUNC
-  )
+    )
+  , util(dw, cfg, file)
   {
+    enum subdir{dir, lev, lev_1, none};
 
-    file.createGroup("/RootID");
-    file.createGroup("/Population");
-    file.createGroup("/Population/decoder");
-    file.createGroup("/Triggers");
-    file.createGroup("/Triggers/decoder");
-    file.createGroup("/Regulators");
-    file.createGroup("/Regulators/decoder");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/Regulators/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/Functions");
-    file.createGroup("/Functions/decoder");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/Functions/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/Index");
-    file.createGroup("/Channel");
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      file.createGroup("/Channel/lev_"+emp::to_string(lev));
-    }
-    file.createGroup("/Expiration");
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      file.createGroup("/Expiration/lev_"+emp::to_string(lev));
-    }
-    file.createGroup("/ChannelGeneration");
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      file.createGroup("/ChannelGeneration/lev_"+emp::to_string(lev));
-    }
-    file.createGroup("/Stockpile");
-    file.createGroup("/Live");
-    file.createGroup("/Apoptosis");
-    file.createGroup("/InboxActivation");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {// <= include spiker
-      file.createGroup("/InboxActivation/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/InboxTraffic");
-    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {// <= include spiker
-      file.createGroup("/InboxTraffic/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/TrustedInboxTraffic");
-    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {// <= include spiker
-      file.createGroup("/TrustedInboxTraffic/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/SpikeBroadcastTraffic");
-    file.createGroup("/RepOutgoing");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/RepOutgoing/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/RepIncoming");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/RepIncoming/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/TotalContribute/");
-    file.createGroup("/ResourceContributed/");
-    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {// <= include spiker
-      file.createGroup("/ResourceContributed/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/ResourceHarvested/");
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) {
-      file.createGroup("/ResourceHarvested/lev_"+emp::to_string(lev));
-    }
-    file.createGroup("/PrevChan/");
-    file.createGroup("/InResistance/");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/InResistance/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/OutResistance/");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/OutResistance/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/Heir");
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      file.createGroup("/Heir/dir_"+emp::to_string(dir));
-    }
-    file.createGroup("/ParentPos");
-    file.createGroup("/CellAge");
-    file.createGroup("/CellGen");
-    for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) {
-      file.createGroup("/CellGen/lev_"+emp::to_string(lev));
-    }
-    file.createGroup("/Death");
-    file.createGroup("/OutgoingConnectionCount");
-    file.createGroup("/FledglingConnectionCount");
-    file.createGroup("/IncomingConnectionCount");
+    std::vector<std::tuple<
+      std::string,
+      subdir
+      >
+    > folders {
+        {"/RootID", subdir::none}
+      , {"/Population", subdir::none}
+      , {"/Triggers", subdir::none}
+      , {"/Regulators", subdir::dir}
+      , {"/Functions", subdir::dir}
+      , {"/Index", subdir::none}
+      , {"/Channel", subdir::lev}
+      , {"/Expiration", subdir::lev}
+      , {"/ChannelGeneration", subdir::lev}
+      , {"/Stockpile", subdir::none}
+      , {"/Live", subdir::none}
+      , {"/Apoptosis", subdir::none}
+      , {"/InboxActivation", subdir::dir}
+      , {"/InboxTraffic", subdir::dir}
+      , {"/TrustedInboxTraffic", subdir::dir}
+      , {"/SpikeBroadcastTraffic", subdir::none}
+      , {"/RepOutgoing", subdir::dir}
+      , {"/RepIncoming", subdir::dir}
+      , {"/TotalContribute", subdir::none}
+      , {"/ResourceContributed", subdir::dir}
+      , {"/ResourceHarvested", subdir::lev}
+      , {"/PrevChan", subdir::none}
+      , {"/InResistance", subdir::dir}
+      , {"/OutResistance", subdir::dir}
+      , {"/Heir", subdir::dir}
+      , {"/ParentPos", subdir::none}
+      , {"/CellAge", subdir::none}
+      , {"/CellGen", subdir::lev_1}
+      , {"/Death", subdir::none}
+      , {"/OutgoingConnectionCount", subdir::none}
+      , {"/FledglingConnectionCount", subdir::none}
+      , {"/IncomingConnectionCount", subdir::none}
+    };
 
+    // create groups from vector
+    for (const auto& [name, subtype] : folders) {
+      // set up folder in file
+      file.createGroup(name);
+
+      // set up subfolders, if any
+      switch(subtype) {
+        case none:
+          break;
+        case dir:
+          for(size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
+            file.createGroup("/" + name + "/dir_" + emp::to_string(d));
+          }
+          break;
+        case lev:
+          for(size_t l = 0; l < cfg.NLEV(); ++l) {
+            file.createGroup("/" + name + "/lev_" + emp::to_string(l));
+          }
+          break;
+        case lev_1:
+          for(size_t l = 0; l < cfg.NLEV() + 1; ++l) {
+            file.createGroup("/" + name + "/lev_" + emp::to_string(l));
+          }
+          break;
+      }
+    }
 
     InitAttributes();
     InitReference();
+    //util.InitDecoder("/Population/decoder", );
+    util.InitDecoder("/Triggers/decoder", memtype::MakeArrayType());
+    util.InitDecoder("/Regulators/decoder", memtype::MakeRegulatorData());
+    util.InitDecoder("/Functions/decoder", memtype::MakeArrayType());
 
     file.flush(H5F_SCOPE_LOCAL);
 
@@ -139,9 +132,10 @@ public:
   ~DataHelper() { file.close(); }
 
   void SnapshotPopulation() {
+    const size_t update = dw.GetUpdate();
 
-    // Population();
-    // Triggers();
+    if (update % cfg.POPULATION() == 0) Population();
+    if (update % cfg.TRIGGERS() == 0) Triggers();
 
     // save population best
     if (dw.GetNumOrgs()) {
@@ -192,1395 +186,525 @@ public:
   }
 
   void SnapshotPhenotypes() {
+    const size_t update = dw.GetUpdate();
 
-    if (dw.GetUpdate() % cfg.COMPUTE_FREQ() == 0) {
-      Regulators();
+    if (update % cfg.COMPUTE_FREQ() == 0) {
+      // Regulators();
       Functions();
     }
 
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Channel(lev);
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ChannelGeneration(lev);
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) Expiration(lev);
-    RootID();
-    Stockpile();
-    Live();
-    Apoptosis();
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      InboxActivation(dir);
+    for (size_t lev = 0; lev < cfg.NLEV(); ++lev) {
+      if (update % cfg.CHANNEL() == 0) Channel(lev);
+      if (update % cfg.CHANNEL_GENERATION() == 0) ChannelGeneration(lev);
+      if (update % cfg.EXPIRATION() == 0) Expiration(lev);
+      if (update % cfg.RESOURCE_HARVESTED() == 0) ResourceHarvested(lev);
     }
-    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
-      InboxTraffic(dir);
-      TrustedInboxTraffic(dir);
+
+    for (size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) {
+      if (update % cfg.CELL_GEN() == 0) CellGen(lev);
     }
-    SpikeBroadcastTraffic();
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      RepOutgoing(dir);
+
+    if (update % cfg.ROOT_ID() == 0) RootID();
+    if (update % cfg.STOCKPILE() == 0) Stockpile();
+    if (update % cfg.LIVE() == 0) Live();
+    if (update % cfg.APOPTOSIS() == 0) Apoptosis();
+    if (update % cfg.TOTAL_CONTRIBUTE() == 0) TotalContribute();
+    if (update % cfg.PREV_CHAN() == 0) PrevChan();
+    if (update % cfg.PARENT_POS() == 0) ParentPos();
+    if (update % cfg.CELL_AGE() == 0) CellAge();
+    if (update % cfg.SPIKE_BROADCAST_TRAFFIC() == 0) SpikeBroadcastTraffic();
+    if (update % cfg.DEATH() == 0) Death();
+    if (update % cfg.OUTGOING_CONNECTION_COUNT() == 0) OutgoingConnectionCount();
+    if (update % cfg.FLEDGING_CONNECTION_COUNT() == 0) FledglingConnectionCount();
+    if (update % cfg.INCOMING_CONNECTION_COUNT() == 0) IncomingConnectionCount();
+
+    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      if (update % cfg.INBOX_ACTIVATION() == 0) InboxActivation(dir);
+      if (update % cfg.INBOX_TRAFFIC() == 0) InboxTraffic(dir);
+      if (update % cfg.TRUSTED_INBOX_TRAFFIC() == 0) TrustedInboxTraffic(dir);
+      if (update % cfg.REP_OUTGOING() == 0) RepOutgoing(dir);
+      if (update % cfg.REP_INCOMING() == 0) RepIncoming(dir);
+      if (update % cfg.RESOURCE_CONTRIBUTED() == 0) ResourceContributed(dir);
+      if (update % cfg.IN_RESISTANCE() == 0) InResistance(dir);
+      if (update % cfg.OUT_RESISTANCE() == 0) OutResistance(dir);
+      if (update % cfg.HEIR() == 0) Heir(dir);
     }
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      RepIncoming(dir);
-    }
-    TotalContribute();
-    for(size_t dir = 0; dir <= Cardi::Dir::NumDirs; ++dir) {
-      ResourceContributed(dir);
-    }
-    for(size_t lev = 0; lev < cfg.NLEV(); ++lev) ResourceHarvested(lev);
-    PrevChan();
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      InResistance(dir);
-    }
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      OutResistance(dir);
-    }
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      Heir(dir);
-    }
-    ParentPos();
-    CellAge();
-    for(size_t lev = 0; lev < cfg.NLEV() + 1; ++lev) CellGen(lev);
-    Death();
-    OutgoingConnectionCount();
-    FledglingConnectionCount();
-    IncomingConnectionCount();
+
     file.flush(H5F_SCOPE_LOCAL);
   }
 
 private:
-
   void InitAttributes() {
-    constexpr hsize_t seed_dims[] = { 1 };
-    H5::DataSpace seed_dataspace(1, seed_dims);
-
-    H5::Attribute seed_attribute = file.createAttribute(
-      "SEED", H5::PredType::NATIVE_INT, seed_dataspace
+    util.WriteAttribute(
+      "SEED",
+      cfg.SEED()
     );
 
-    const int seed_data[] = {cfg.SEED()};
-
-    seed_attribute.write(H5::PredType::NATIVE_INT, seed_data);
-
-    constexpr hsize_t nlev_dims[] = { 1 };
-    H5::DataSpace nlev_dataspace(1, nlev_dims);
-
-    H5::Attribute nlev_attribute = file.createAttribute(
-      "NLEV", H5::PredType::NATIVE_INT, nlev_dataspace
+    util.WriteAttribute(
+      "NLEV",
+      cfg.NLEV()
     );
 
-    const int nlev_data[] = {(int)cfg.NLEV()};
-
-    nlev_attribute.write(H5::PredType::NATIVE_INT, nlev_data);
-
-    constexpr hsize_t timestamp_dims[] = { 1 };
-    H5::DataSpace timestamp_dataspace(1, timestamp_dims);
-
-    H5::Attribute timestamp_attribute = file.createAttribute(
-      "START_TIMESTAMP", H5::PredType::NATIVE_INT, timestamp_dataspace
+    util.WriteAttribute(
+      "START_TIMESTAMP",
+      static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>
+        (std::chrono::system_clock::now().time_since_epoch()).count())
     );
 
-    const long timestamp_data[] = {time(0)};
-
-    timestamp_attribute.write(H5::PredType::NATIVE_LONG, timestamp_data);
-
-    constexpr hsize_t dishtiny_hash_dims[] = { 1 };
-    H5::DataSpace dishtiny_hash_dataspace(1, dishtiny_hash_dims);
-
-    H5::Attribute dishtiny_hash_attribute = file.createAttribute(
-      "SOURCE_HASH", H5::StrType(0, H5T_VARIABLE), dishtiny_hash_dataspace
+    util.WriteAttribute(
+      "SOURCE_HASH",
+      std::string{STRINGIFY(DISHTINY_HASH_)}
     );
 
-    const char *dishtiny_hash_data[] = {STRINGIFY(DISHTINY_HASH_)};
-
-    dishtiny_hash_attribute.write(H5::StrType(0, H5T_VARIABLE), dishtiny_hash_data);
-
-    constexpr hsize_t empirical_hash_dims[] = { 1 };
-    H5::DataSpace empirical_hash_dataspace(1, empirical_hash_dims);
-
-    H5::Attribute empirical_hash_attribute = file.createAttribute(
-      "EMP_HASH", H5::StrType(0, H5T_VARIABLE), empirical_hash_dataspace
-    );
-
-    const char *empirical_hash_data[] = {STRINGIFY(EMPIRICAL_HASH_)};
-
-    empirical_hash_attribute.write(H5::StrType(0, H5T_VARIABLE), empirical_hash_data);
-
-    constexpr hsize_t config_dims[] = { 1 };
-    H5::DataSpace config_dataspace(1,config_dims);
-
-    H5::Attribute config_attribute = file.createAttribute(
-      "config", H5::StrType(0, H5T_VARIABLE),config_dataspace
+    util.WriteAttribute(
+      "EMP_HASH",
+      std::string{STRINGIFY(EMPIRICAL_HASH_)}
     );
 
     std::ostringstream config_stream;
     cfg.WriteMe(config_stream);
-    std::string config_string = config_stream.str();
-
-    const char *config_data[] = { config_string.c_str() };
-
-   config_attribute.write(H5::StrType(0, H5T_VARIABLE),config_data);
-
-   constexpr hsize_t expiration_key_dims[] = { 1 };
-   H5::DataSpace expiration_key_dataspace(1, expiration_key_dims);
-
-   H5::Attribute expiration_key_attribute = file.openGroup("/Expiration").createAttribute(
-     "KEY", H5::StrType(0, H5T_VARIABLE), expiration_key_dataspace
-   );
-
-   const char *expiration_key_data[] = {"0: unexpired, 1: within grace period, 2: expired"};
-
-   expiration_key_attribute.write(H5::StrType(0, H5T_VARIABLE), expiration_key_data);
-
-    constexpr hsize_t live_key_dims[] = { 1 };
-    H5::DataSpace live_key_dataspace(1, live_key_dims);
-
-    H5::Attribute live_key_attribute = file.openGroup("/Live").createAttribute(
-      "KEY", H5::StrType(0, H5T_VARIABLE), live_key_dataspace
+    util.WriteAttribute(
+      "config",
+      config_stream.str()
     );
 
-    const char *live_key_data[] = {"0: dead, 1: live"};
+    util.WriteAttribute(
+      "KEY",
+      std::string{"0: unexpired, 1: within grace period, 2: expired"},
+      "/Expiration"
+    );
 
-    live_key_attribute.write(H5::StrType(0, H5T_VARIABLE), live_key_data);
+    util.WriteAttribute(
+      "KEY",
+      std::string{"0: dead, 1: live"},
+      "/Live"
+    );
 
-    constexpr hsize_t apoptosis_key_dims[] = { 1 };
-    H5::DataSpace apoptosis_key_dataspace(1, apoptosis_key_dims);
-
-    H5::Attribute apoptosis_key_attribute = file.openGroup(
+    util.WriteAttribute(
+      "KEY",
+      std::string{"0: none, 1: partial, 2: complete"},
       "/Apoptosis"
-    ).createAttribute(
-      "KEY", H5::StrType(0, H5T_VARIABLE), apoptosis_key_dataspace
     );
 
-    const char *apoptosis_key_data[] = {"0: none, 1: partial, 2: complete"};
-
-    apoptosis_key_attribute.write(
-      H5::StrType(0, H5T_VARIABLE), apoptosis_key_data
+    util.WriteAttribute(
+      "KEY",
+      std::string{"-1: no current parent, >=0: parent index"},
+      "/ParentPos"
     );
 
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      constexpr hsize_t inbox_activation_key_dims[] = { 1 };
-      H5::DataSpace inbox_activation_key_dataspace(1, inbox_activation_key_dims);
-
-      H5::Attribute inbox_activation_key_attribute = file.openGroup("/InboxActivation/dir_"+emp::to_string(dir)).createAttribute(
-        "KEY", H5::StrType(0, H5T_VARIABLE), inbox_activation_key_dataspace
-      );
-
-      const char *inbox_activation_key_data[] = {"0: off, 1: on"};
-
-      inbox_activation_key_attribute.write(H5::StrType(0, H5T_VARIABLE), inbox_activation_key_data);
-    }
-
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      constexpr hsize_t acceptsharing_key_dims[] = { 1 };
-      H5::DataSpace acceptsharing_key_dataspace(1, acceptsharing_key_dims);
-
-      H5::Attribute acceptsharing_key_attribute = file.openGroup("/InResistance/dir_"+emp::to_string(dir)).createAttribute(
-        "KEY", H5::StrType(0, H5T_VARIABLE), acceptsharing_key_dataspace
-      );
-
-      const char *acceptsharing_key_data[] = {"0: false, 1: true"};
-
-      acceptsharing_key_attribute.write(H5::StrType(0, H5T_VARIABLE), acceptsharing_key_data);
-    }
-
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      constexpr hsize_t acceptsharing_key_dims[] = { 1 };
-      H5::DataSpace acceptsharing_key_dataspace(1, acceptsharing_key_dims);
-
-      H5::Attribute acceptsharing_key_attribute = file.openGroup("/OutResistance/dir_"+emp::to_string(dir)).createAttribute(
-        "KEY", H5::StrType(0, H5T_VARIABLE), acceptsharing_key_dataspace
-      );
-
-      const char *acceptsharing_key_data[] = {"0: false, 1: true"};
-
-      acceptsharing_key_attribute.write(H5::StrType(0, H5T_VARIABLE), acceptsharing_key_data);
-    }
-
-    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      constexpr hsize_t heir_key_dims[] = { 1 };
-      H5::DataSpace heir_key_dataspace(1, heir_key_dims);
-
-      H5::Attribute heir_key_attribute = file.openGroup("/Heir/dir_"+emp::to_string(dir)).createAttribute(
-        "KEY", H5::StrType(0, H5T_VARIABLE), heir_key_dataspace
-      );
-
-      const char *heir_key_data[] = {"0: false, 1: true"};
-
-      heir_key_attribute.write(H5::StrType(0, H5T_VARIABLE), heir_key_data);
-    }
-
-    constexpr hsize_t parentpos_key_dims[] = { 1 };
-    H5::DataSpace parentpos_key_dataspace(1, parentpos_key_dims);
-
-    H5::Attribute parentpos_key_attribute = file.openGroup("/ParentPos").createAttribute(
-      "KEY", H5::StrType(0, H5T_VARIABLE), parentpos_key_dataspace
-    );
-
-    const char *parentpos_key_data[] = {"-1: no current parent, >=0: parent index"};
-
-    parentpos_key_attribute.write(H5::StrType(0, H5T_VARIABLE), parentpos_key_data);
-
-    constexpr hsize_t death_key_dims[] = { 1 };
-    H5::DataSpace death_key_dataspace(1, death_key_dims);
-
-    H5::Attribute death_key_attribute = file.openGroup(
+    util.WriteAttribute(
+      "KEY",
+      std::string{"0: none, 1: apoptosis, 2: bankrupt, 3: trampled"},
       "/Death"
-    ).createAttribute(
-      "KEY", H5::StrType(0, H5T_VARIABLE), death_key_dataspace
     );
 
-    const char *death_key_data[] = {"0: none, 1: apoptosis, 2: bankrupt, 3: trampled"};
-
-    death_key_attribute.write(
-      H5::StrType(0, H5T_VARIABLE), death_key_data
-    );
-
+    for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
+      util.WriteAttribute(
+        "KEY",
+        std::string{"0: off, 1: on"},
+        "/InboxActivation/dir_" + emp::to_string(dir)
+      );
+      util.WriteAttribute(
+        "KEY",
+        std::string{"0: false, 1: true"},
+        "/InResistance/dir_" + emp::to_string(dir)
+      );
+      util.WriteAttribute(
+        "KEY",
+        std::string{"0: false, 1: true"},
+        "/OutResistance/dir_" + emp::to_string(dir)
+      );
+      util.WriteAttribute(
+        "KEY",
+        std::string{"0: false, 1: true"},
+        "/Heir/dir_" + emp::to_string(dir)
+      );
+    }
   }
 
   void InitReference() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds_idx = file.createDataSet(
-      "/Index/own",
-      tid,
-      H5::DataSpace(2,dims)
+    util.WriteToDataset<uint32_t>(
+     "/Index/own",
+      [](const size_t i){
+        return i;
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) data[i] = i;
-
-    ds_idx.write((void*)data, tid);
 
     for(size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-
-      H5::DataSet ds_dir = file.createDataSet(
+      util.WriteToDataset<uint32_t>(
         "/Index/dir_" + emp::to_string(dir),
-        tid,
-        H5::DataSpace(2,dims)
+        [this, &dir](const size_t i){
+          return GeometryHelper(cfg).CalcLocalNeighs(i)[dir];
+        }
       );
-
-      for (size_t i = 0; i < dw.GetSize(); ++i) {
-        data[i] = GeometryHelper(cfg).CalcLocalNeighs(i)[dir];
-      }
-      ds_dir.write((void*)data, tid);
-
     }
-
   }
-
   void RootID() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
-      "/RootID/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
-    );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      if(dw.IsOccupied(i)) {
-        data[i] = dw.GetOrg(i).GetRootID();
-      } else {
-        data[i] = 0;
+    util.WriteToDataset<uint32_t>(
+      "/RootID/upd_",
+      [this](const size_t i){
+        if(dw.IsOccupied(i)) {
+          return dw.GetOrg(i).GetRootID();
+        } else {
+          return 0UL;
+        }
       }
-
-    }
-
-    ds.write((void*)data, tid);
-
+    );
   }
 
+  // TODO: use serialize() to store serialized data
+  // TODO: write utility to de-serialize data, feed it to a SignalGP program
+  //       and finally call PrintProgramFull().
+  // TODO: note this as a string attribute on H5 file
   void Population() {
-
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    using uid_map_t = std::unordered_map<std::string, size_t>;
-    uid_map_t uids;
-    emp::vector<uid_map_t::const_iterator> decoder;
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      std::ostringstream buffer;
-
-      if(dw.IsOccupied(i)) {
-        Genome & g = dw.GetOrg(i);
-        g.GetProgram().PrintProgramFull(buffer);
-      }
-
-      const auto & [node, did_insert] = uids.insert(
-        {buffer.str(), uids.size()}
-      );
-      if (did_insert) {
-        decoder.push_back(node);
-      }
-      data[i] = node->second;
-
-    }
-
-    {
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-    H5::DataSet ds = file.createDataSet(
-      "/Population/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteDecoder(
+      [this](const size_t i) {
+        std::ostringstream buffer;
+        if(dw.IsOccupied(i)) {
+          Genome & g = dw.GetOrg(i);
+          g.GetProgram().PrintProgramFull(buffer);
+        }
+        return buffer.str();
+      },
+      "Population"
     );
-
-    ds.write((void*)data, tid);
-    }
-
-    {
-    const hsize_t dims[] = { decoder.size() };
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(1, dims);
-    plist.setDeflate(6);
-
-    const H5::StrType tid(0, H5T_VARIABLE);
-    H5::DataSet ds = file.createDataSet(
-      "/Population/decoder/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(1,dims),
-      plist
-    );
-
-    std::vector<const char*> res;
-    std::transform(
-      std::begin(decoder),
-      std::end(decoder),
-      std::back_inserter(res),
-      [](const auto & it){ return it->first.c_str(); }
-    );
-    ds.write((void*)res.data(), tid);
-    }
-
   }
 
   void Triggers() {
-
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    using uid_map_t = std::unordered_map<std::string, size_t>;
-    uid_map_t uids;
-    emp::vector<uid_map_t::const_iterator> decoder;
+    util.WriteDecoder(
+      [this](const size_t i) {
+        const auto& tag_vector = dw.GetOrg(i).GetTags();
 
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      std::ostringstream buffer;
-
-      if(dw.IsOccupied(i)) {
-        cereal::JSONOutputArchive oarchive(
-          buffer,
-          cereal::JSONOutputArchive::Options::NoIndent()
+        return std::multiset<Config::tag_t>(
+          tag_vector.begin(),
+          tag_vector.end()
         );
-        oarchive(dw.GetOrg(i).GetTags());
-      }
-
-      std::string string = buffer.str();
-      emp::remove_whitespace(string);
-
-      const auto & [node, did_insert] = uids.insert({string, uids.size()});
-      if (did_insert) {
-        decoder.push_back(node);
-      }
-      data[i] = node->second;
-
-    }
-
-    {
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-    H5::DataSet ds = file.createDataSet(
-      "/Triggers/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+      },
+      memtype::MakeArrayType(),
+      "Triggers"
     );
-
-    ds.write((void*)data, tid);
-    }
-
-    {
-    const hsize_t dims[] = { decoder.size() };
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(1, dims);
-    plist.setDeflate(6);
-
-    const H5::StrType tid(0, H5T_VARIABLE);
-    H5::DataSet ds = file.createDataSet(
-      "/Triggers/decoder/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(1,dims),
-      plist
-    );
-
-    std::vector<const char*> res;
-    std::transform(
-      std::begin(decoder),
-      std::end(decoder),
-      std::back_inserter(res),
-      [](const auto & it){ return it->first.c_str(); }
-    );
-    ds.write((void*)res.data(), tid);
-    }
-
   }
 
   void Regulators() {
-
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    using uid_map_t = std::unordered_map<std::string, size_t>;
-    uid_map_t uids;
-    emp::vector<uid_map_t::const_iterator> decoder;
-
-    uint32_t data[Cardi::Dir::NumDirs][dw.GetSize()];
-
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      for (size_t i = 0; i < dw.GetSize(); ++i) {
+      util.WriteDecoder(
+        [this, dir](const size_t i) {
+          // GetState() returns a MatchBinState
+          const auto& state = dw.frames[i]->GetFrameHardware(
+            dir
+          ).GetHardware().GetMatchBin().GetState();
 
-        std::ostringstream buffer;
+          std::vector<bundles::RegulatorData> data;
+          // todo: use tid-style lambas to figure out internal H5 type for T
+          for (const auto& uid : state.uids) {
+            data.emplace_back(
+              state.values.at(uid),
+              state.regulators.at(uid).View(),
+              state.tags.at(uid)
+            );
+          }
 
-        if(dw.IsOccupied(i)) {
-          cereal::JSONOutputArchive oarchive(
-            buffer,
-            cereal::JSONOutputArchive::Options::NoIndent()
-          );
-          oarchive(
-            dw.frames[i]->GetFrameHardware(
-              dir
-            ).GetHardware().GetMatchBin().GetState()
-          );
-        }
-
-        std::string string = buffer.str();
-        emp::remove_whitespace(string);
-
-        const auto & [node, did_insert] = uids.insert({string, uids.size()});
-        if (did_insert) {
-          decoder.push_back(node);
-        }
-        data[dir][i] = node->second;
-
-      }
-    }
-
-    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-      H5::DSetCreatPropList plist;
-      plist.setChunk(2, dims);
-      plist.setDeflate(6);
-
-      const auto tid = H5::PredType::NATIVE_UINT32;
-      H5::DataSet ds = file.createDataSet(
-        "/Regulators/dir_" + emp::to_string(dir)
-          + "/upd_"+emp::to_string(dw.GetUpdate()),
-        tid,
-        H5::DataSpace(2,dims),
-        plist
+          return data;
+        },
+        memtype::MakeRegulatorData(),
+        emp::to_string("/Regulators/dir_", dir),
+        "Regulators"
       );
-
-      ds.write((void*)data[dir], tid);
     }
-
-
-    {
-    const hsize_t dims[] = { decoder.size() };
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(1, dims);
-    plist.setDeflate(6);
-
-    const H5::StrType tid(0, H5T_VARIABLE);
-    H5::DataSet ds = file.createDataSet(
-      "/Regulators/decoder/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(1,dims),
-      plist
-    );
-
-    std::vector<const char*> res;
-    std::transform(
-      std::begin(decoder),
-      std::end(decoder),
-      std::back_inserter(res),
-      [](const auto & it){ return it->first.c_str(); }
-    );
-    ds.write((void*)res.data(), tid);
-    }
-
   }
 
-  void Functions() {
 
+  void Functions() {
     // goal: reduce redundant data by giving each observed value a UID
     // then storing UIDs positionally & providing a UID-to-value map
-    using uid_map_t = std::unordered_map<std::string, size_t>;
-    uid_map_t uids;
-    emp::vector<uid_map_t::const_iterator> decoder;
-
-    uint32_t data[Cardi::Dir::NumDirs][dw.GetSize()];
-
     for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-        std::ostringstream buffer;
-
-        if(dw.IsOccupied(i)) {
-          cereal::JSONOutputArchive oarchive(
-            buffer,
-            cereal::JSONOutputArchive::Options::NoIndent()
-          );
+      util.WriteDecoder(
+        [this, dir](  const size_t i) {
           const auto & hw = dw.frames[i]->GetFrameHardware(
             dir
           ).GetHardware();
-          emp::vector<Config::tag_t> res;
+
+          std::multiset<Config::tag_t> res;
           for (const auto & stack : hw.GetCores()) {
-            if (stack.size()) res.push_back(
+            if (stack.size()) res.insert(
               hw.GetMatchBin().GetState().tags.find(
                 stack.back().GetFP()
               )->second
             );
-            std::sort(std::begin(res), std::end(res));
           }
-          oarchive(res);
-        }
 
-        std::string string = buffer.str();
-        emp::remove_whitespace(string);
-
-        const auto & [node, did_insert] = uids.insert({string, uids.size()});
-        if (did_insert) {
-          decoder.push_back(node);
-        }
-        data[dir][i] = node->second;
-
-      }
-    }
-
-    for (size_t dir = 0; dir < Cardi::Dir::NumDirs; ++dir) {
-      const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-      H5::DSetCreatPropList plist;
-      plist.setChunk(2, dims);
-      plist.setDeflate(6);
-
-      const auto tid = H5::PredType::NATIVE_UINT32;
-      H5::DataSet ds = file.createDataSet(
-        "/Functions/dir_" + emp::to_string(dir)
-          + "/upd_"+emp::to_string(dw.GetUpdate()),
-        tid,
-        H5::DataSpace(2,dims),
-        plist
+          return res;
+        },
+        memtype::MakeArrayType(),
+        emp::to_string("/Functions/dir_", dir),
+        "Functions"
       );
-
-      ds.write((void*)data[dir], tid);
     }
-
-
-    {
-    const hsize_t dims[] = { decoder.size() };
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(1, dims);
-    plist.setDeflate(6);
-
-    const H5::StrType tid(0, H5T_VARIABLE);
-    H5::DataSet ds = file.createDataSet(
-      "/Functions/decoder/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(1,dims),
-      plist
-    );
-
-    std::vector<const char*> res;
-    std::transform(
-      std::begin(decoder),
-      std::end(decoder),
-      std::back_inserter(res),
-      [](const auto & it){ return it->first.c_str(); }
-    );
-    ds.write((void*)res.data(), tid);
-    }
-
   }
-
   void Channel(const size_t lev) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT64;
-
-    H5::DataSet ds = file.createDataSet(
-      "/Channel/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<uint64_t>(
+      emp::to_string("/Channel/lev_", lev, "/upd_"),
+      [this, &lev](const size_t i){
+        const auto res = dw.man->Channel(i).GetID(lev);
+        return res ? *res : 0;
+      }
     );
-
-    Config::chanid_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      const auto res = dw.man->Channel(i).GetID(lev);
-      data[i] = res ? *res : 0;
-
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Expiration(const size_t lev) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
-      "/Expiration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
-    );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      const auto res = dw.man->Channel(i).IsExpired(lev);
-      if (!res) {
-        data[i] = 0;
-      } else if (res <= cfg.EXP_GRACE_PERIOD()) {
-        data[i] = 1;
-      } else {
-        data[i] = 2;
+    util.WriteToDataset<char>(
+      emp::to_string("/Expiration/lev_", lev, "/upd_"),
+      [this, &lev](const size_t i){
+        const auto res = dw.man->Channel(i).IsExpired(lev);
+        if (!res) {
+          return 0;
+        } else if (res <= cfg.EXP_GRACE_PERIOD()) {
+          return 1;
+        } else {
+          return 2;
+        }
       }
-
-    }
-
-    ds.write((void*)data, tid);
-
+    );
   }
 
   void ChannelGeneration(const size_t lev) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
-      "/ChannelGeneration/lev_"+emp::to_string(lev)+"/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<uint32_t>(
+      emp::to_string("/ChannelGeneration/lev_", lev, "/upd_"),
+      [this, &lev](const size_t i){
+        return dw.man->Channel(i).GetGeneration(lev);
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      data[i] = dw.man->Channel(i).GetGeneration(lev);
-
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Stockpile() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_DOUBLE;
-
-    H5::DataSet ds = file.createDataSet(
-      "/Stockpile/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<double>(
+      "/Stockpile/upd_",
+      [this](const size_t i){
+        return dw.man->Stockpile(i).QueryResource();
+      }
     );
-
-    double data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      data[i] = dw.man->Stockpile(i).QueryResource();
-
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Live() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
-      "/Live/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<char>(
+      "/Live/upd_",
+      [this](const size_t i){
+        return dw.IsOccupied(i);
+      }
     );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.IsOccupied(i);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Apoptosis() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
-      "/Apoptosis/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<char>(
+      "/Apoptosis/upd_",
+      [this](const size_t i){
+        return dw.man->Apoptosis(i).GetState();
+      }
     );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Apoptosis(i).GetState();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void InboxActivation(const size_t dir) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
-      "/InboxActivation/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<char>(
+      emp::to_string("/InboxActivation/dir_", dir, "/upd_"),
+      [this, &dir](const size_t i){
+        return dw.frames[i]->GetFrameHardware(dir).CheckInboxActivity();
+      }
     );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.frames[i]->GetFrameHardware(dir).CheckInboxActivity();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void SpikeBroadcastTraffic() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
-      "/SpikeBroadcastTraffic/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<uint32_t>(
+      "/SpikeBroadcastTraffic/upd_",
+      [this](const size_t i){
+        return dw.man->Inbox(i).GetSpikeBroadcastTraffic();
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Inbox(i).GetSpikeBroadcastTraffic();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void InboxTraffic(const size_t dir) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
-      "/InboxTraffic/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<uint32_t>(
+      emp::to_string("/InboxTraffic/dir_", dir, "/upd_"),
+      [this, &dir](const size_t i){
+        return dw.man->Inbox(i).GetTraffic(dir);
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Inbox(i).GetTraffic(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void TrustedInboxTraffic(const size_t dir) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
-      "/TrustedInboxTraffic/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<uint32_t>(
+      emp::to_string("/TrustedInboxTraffic/dir_", dir, "/upd_"),
+      [this, &dir](const size_t i){
+        return dw.man->Inbox(i).GetTrustedTraffic(dir);
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Inbox(i).GetTrustedTraffic(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void RepOutgoing(const size_t dir) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_INT;
-
-    H5::DataSet ds = file.createDataSet(
-      "/RepOutgoing/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
-    );
-
-    int data[dw.GetSize()];
-
     GeometryHelper gh(cfg);
 
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Priority(
-          gh.CalcLocalNeighs(i)[dir]
-        ).ViewRepState(Cardi::Opp[dir]);
-    }
-
-    ds.write((void*)data, tid);
-
+    util.WriteToDataset<int>(
+      emp::to_string("/RepOutgoing/dir_", dir, "/upd_"),
+      [this, &gh, &dir](const size_t i){
+        return dw.man->Priority(
+            gh.CalcLocalNeighs(i)[dir]
+          ).ViewRepState(Cardi::Opp[dir]);
+      }
+    );
   }
 
   void RepIncoming(const size_t dir) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_INT;
-
-    H5::DataSet ds = file.createDataSet(
-      "/RepIncoming/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<int>(
+      emp::to_string("/RepIncoming/dir_", dir, "/upd_"),
+      [this, &dir](const size_t i){
+        return dw.man->Priority(i).ViewRepStateDup(dir);
+      }
     );
-
-    int data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Priority(i).ViewRepStateDup(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
  void TotalContribute() {
-
-   const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-   const auto tid = H5::PredType::NATIVE_DOUBLE;
-   H5::DataSet ds = file.createDataSet(
-     "/TotalContribute/upd_" + emp::to_string(dw.GetUpdate()),
-     tid,
-     H5::DataSpace(2,dims),
-     plist
-   );
-
-   double data[dw.GetSize()];
-
-   for (size_t i = 0; i < dw.GetSize(); ++i) {
-     data[i] = dw.man->Stockpile(i).QueryTotalContribute();
-   }
-
-   ds.write((void*)data, tid);
-
+    util.WriteToDataset<double>(
+      "/TotalContribute/upd_",
+      [this](const size_t i){
+        return dw.man->Stockpile(i).QueryTotalContribute();
+      }
+    );
  }
 
   void ResourceContributed(const size_t dir) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_DOUBLE;
-
-    H5::DataSet ds = file.createDataSet(
-      "/ResourceContributed/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<double>(
+      emp::to_string("/ResourceContributed/dir_", dir, "/upd_"),
+      [this, &dir](const size_t i){
+        return dw.man->Stockpile(i).QueryExternalContribute(dir);
+      }
     );
-
-    double data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Stockpile(i).QueryExternalContribute(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void ResourceHarvested(const size_t lev) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_DOUBLE;
-
-    H5::DataSet ds = file.createDataSet(
-      "/ResourceHarvested/lev_" + emp::to_string(lev)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
-    );
-
-    double data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = 0.0;
-      for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
-        data[i] += dw.man->Wave(r, i,lev).GetLastHarvest();
+    util.WriteToDataset<double>(
+      emp::to_string("/ResourceHarvested/lev_", lev, "/upd_"),
+      [this, &lev](const size_t i){
+        double ret = 0.0;
+        for (size_t r = 0; r < cfg.WAVE_REPLICATES(); ++r) {
+          ret += dw.man->Wave(r, i,lev).GetLastHarvest();
+        }
+        return ret;
       }
-    }
-
-    ds.write((void*)data, tid);
-
+    );
   }
 
   void PrevChan() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT64;
-
-    H5::DataSet ds = file.createDataSet(
-      "/PrevChan/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<Config::chanid_t>(
+      "/PrevChan/upd_",
+      [this](const size_t i){
+        return dw.man->Family(i).GetPrevChan();
+      }
     );
-
-    Config::chanid_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      data[i] = dw.man->Family(i).GetPrevChan();
-
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void InResistance(const size_t dir) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_DOUBLE;
-
-    H5::DataSet ds = file.createDataSet(
-      "/InResistance/dir_" + emp::to_string(dir)
-      + "/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<double>(
+      emp::to_string("/InResistance/dir_", dir, "/upd_"),
+      [this, &dir](const size_t i){
+        return dw.man->Sharing(i).CheckInResistance(dir);
+      }
     );
-
-    double data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Sharing(i).CheckInResistance(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void OutResistance(const size_t dir) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_DOUBLE;
-
-    H5::DataSet ds = file.createDataSet(
-      "/OutResistance/dir_" + emp::to_string(dir)
-      + "/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<double>(
+      emp::to_string("/OutResistance/dir_", dir, "/upd_"),
+      [this, &dir](const size_t i){
+        return dw.man->Sharing(i).CheckOutResistance(dir);
+      }
     );
-
-    double data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Sharing(i).CheckOutResistance(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Heir(const size_t dir) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
-      "/Heir/dir_" + emp::to_string(dir)
-        + "/upd_" + emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<char>(
+      emp::to_string("/Heir/dir_", dir, "/upd_"),
+      [this, &dir](const size_t i){
+        return dw.man->Heir(i).IsHeir(dir);
+      }
     );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Heir(i).IsHeir(dir);
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void ParentPos() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
-      "/ParentPos/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<uint32_t>(
+      "/ParentPos/upd_",
+      [this](const size_t i){
+        return dw.man->Family(dw.man->Family(i).GetParentPos()).HasChildPos(i)
+          ? dw.man->Family(i).GetParentPos() : -1;
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Family(dw.man->Family(i).GetParentPos()).HasChildPos(i)
-        ? dw.man->Family(i).GetParentPos() : -1;
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void CellAge() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
-      "/CellAge/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<uint32_t>(
+      "/CellAge/upd_",
+      [this](const size_t i){
+        return dw.GetUpdate() - dw.man->Family(i).GetBirthUpdate();
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.GetUpdate() - dw.man->Family(i).GetBirthUpdate();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void CellGen(const size_t lev) {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
-      "/CellGen/lev_" + emp::to_string(lev)
-      + "/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<uint32_t>(
+      emp::to_string("/CellGen/lev_", lev, "/upd_"),
+      [this, &lev](const size_t i){
+        return dw.man->Family(i).GetCellGen()[lev];
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Family(i).GetCellGen()[lev];
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void Death() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_CHAR;
-
-    H5::DataSet ds = file.createDataSet(
-      "/Death/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
-    );
-
-    char data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-
-      // trampled = 3;
-      // bankrupt = 2;
-      // apoptosis = 1;
-      // none = 0;
-
-      data[i] = 0;
-      if (0 == (dw.GetUpdate() + 1) % cfg.ENV_TRIG_FREQ()) {
-        if (dw.man->Apoptosis(i).IsMarked()) data[i] = 1;
-        else if (dw.man->Stockpile(i).IsBankrupt()) data[i] = 2;
-        else if (dw.man->Priority(i).QueryPendingGenome()) data[i] = 3;
+    util.WriteToDataset<char>(
+      "/Death/upd_",
+      [this](const size_t i){
+        // trampled = 3;
+        // bankrupt = 2;
+        // apoptosis = 1;
+        // none = 0;
+        if (0 == (dw.GetUpdate() + 1) % cfg.ENV_TRIG_FREQ()) {
+          if (dw.man->Apoptosis(i).IsMarked()) { return 1; }
+          else if (dw.man->Stockpile(i).IsBankrupt()) { return 2; }
+          else if (dw.man->Priority(i).QueryPendingGenome()) { return 3; }
+        }
+        return 0;
       }
-    }
-
-    ds.write((void*)data, tid);
-
+    );
   }
 
   void OutgoingConnectionCount() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
-      "/OutgoingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<uint32_t>(
+      "/OutgoingConnectionCount/upd_",
+      [this](const size_t i){
+        return dw.man->Connection(i).ViewDeveloped().size();
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Connection(i).ViewDeveloped().size();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void FledglingConnectionCount() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
-      "/FledglingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<uint32_t>(
+      "/FledglingConnectionCount/upd_",
+      [this](const size_t i){
+        return dw.man->Connection(i).ViewFledgling().size();
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.man->Connection(i).ViewFledgling().size();
-    }
-
-    ds.write((void*)data, tid);
-
   }
 
   void IncomingConnectionCount() {
-
-    const hsize_t dims[] = {cfg.GRID_W(), cfg.GRID_H()};
-
-    H5::DSetCreatPropList plist;
-    plist.setChunk(2, dims);
-    plist.setDeflate(6);
-
-    const auto tid = H5::PredType::NATIVE_UINT32;
-
-    H5::DataSet ds = file.createDataSet(
-      "/IncomingConnectionCount/upd_"+emp::to_string(dw.GetUpdate()),
-      tid,
-      H5::DataSpace(2,dims),
-      plist
+    util.WriteToDataset<uint32_t>(
+      "/IncomingConnectionCount/upd_",
+      [this](const size_t i){
+        return dw.frames[i]->GetIncomingConectionCount();
+      }
     );
-
-    uint32_t data[dw.GetSize()];
-
-    for (size_t i = 0; i < dw.GetSize(); ++i) {
-      data[i] = dw.frames[i]->GetIncomingConectionCount();
-    }
-
-    ds.write((void*)data, tid);
-
   }
-
 
 };

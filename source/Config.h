@@ -32,6 +32,7 @@ private:
 public:
 
   static constexpr size_t TAG_WIDTH = 32;
+  static constexpr size_t DATAFILE_CACHE_SIZE = 100000;
 
   using TRAIT_TYPE = emp::Ptr<FrameHardware>;
   using chanid_t = uint64_t;

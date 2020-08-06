@@ -37,3 +37,15 @@
 
 
 # End of https://www.gitignore.io/api/c++
+
+# Log files
+*.h5
+*.csv
+*.cereal
+*.json
+
+# Hidden files
+.*
+
+# Executables
+dishtiny

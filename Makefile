@@ -1,3 +1,6 @@
+# Set up commands
+.PHONY : default native web all ndata debug static sanitize profile debug-web web-debug clean cleanlogs cleanall print-% serve
+
 # Project-specific settings
 PROJECT := dishtiny
 EMP_DIR := ../Empirical/source
@@ -82,6 +85,12 @@ $(PROJECT).html: web/includes
 
 clean:
 	rm -f $(PROJECT) web/$(PROJECT).js web/*.js.map web/*.js.mem web/*.wasm *~ source/*.o *.o debug_file web/$(PROJECT).html
+
+clean-logs:
+	rm -f *.h5 *.csv *.json *.cereal
+
+clean-all:
+	cleanlogs clean
 
 # Debugging information
 print-%: ; @echo '$(subst ','\'',$*=$($*))'

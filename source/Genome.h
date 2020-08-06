@@ -4,7 +4,7 @@
 #include "hardware/EventDrivenGP.h"
 #include "hardware/signalgp_utils.h"
 #include "tools/Random.h"
-#include "tools/Binomial.h"
+#include "tools/Distribution.h"
 
 #include "Mutator.h"
 #include "Config.h"
