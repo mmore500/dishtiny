@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGERSHARING_HPP_INCLUDE
+#define DISHTINY_MANAGERSHARING_HPP_INCLUDE
 
 #include <numeric>
 #include <limits>
@@ -249,3 +251,5 @@ public:
   }
 
 };
+
+#endif // #ifndef DISHTINY_MANAGERSHARING_HPP_INCLUDE

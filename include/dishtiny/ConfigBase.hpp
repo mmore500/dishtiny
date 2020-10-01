@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_CONFIGBASE_HPP_INCLUDE
+#define DISHTINY_CONFIGBASE_HPP_INCLUDE
 
 #include <float.h>
 #include <string>
@@ -123,3 +125,5 @@ EMP_BUILD_CONFIG(
   VALUE(OUT_RESISTANCE, size_t, COMPUTE_FREQ_DEFAULT, "[NATIVE] How often should we save out resistance during a snapshot?"),
   VALUE(HEIR, size_t, COMPUTE_FREQ_DEFAULT, "[NATIVE] How often should we save heirs during a snapshot?"),
 )
+
+#endif // #ifndef DISHTINY_CONFIGBASE_HPP_INCLUDE

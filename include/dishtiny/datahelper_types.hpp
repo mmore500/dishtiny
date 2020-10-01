@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_DATAHELPER_TYPES_HPP_INCLUDE
+#define DISHTINY_DATAHELPER_TYPES_HPP_INCLUDE
 
 #include <array>
 #include <cassert>
@@ -149,3 +151,5 @@ T convert_type(const T& a) {
 std::array<char, Config::tag_t::GetNumBytes()> convert_type(const Config::tag_t& a) {
     return TagBytes(a).arr;
 }
+
+#endif // #ifndef DISHTINY_DATAHELPER_TYPES_HPP_INCLUDE

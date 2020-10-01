@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_FRAMEHARDWARE_HPP_INCLUDE
+#define DISHTINY_FRAMEHARDWARE_HPP_INCLUDE
 
 #include <algorithm>
 
@@ -136,3 +138,5 @@ public:
   Membrane &GetInternalMembrane();
 
 };
+
+#endif // #ifndef DISHTINY_FRAMEHARDWARE_HPP_INCLUDE

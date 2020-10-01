@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_LIBRARYINSTRUCTIONSPIKER_HPP_INCLUDE
+#define DISHTINY_LIBRARYINSTRUCTIONSPIKER_HPP_INCLUDE
 
 #include <functional>
 #include <cmath>
@@ -43,3 +45,5 @@ public:
   static const inst_lib_t& Make(const Config &cfg);
 
 };
+
+#endif // #ifndef DISHTINY_LIBRARYINSTRUCTIONSPIKER_HPP_INCLUDE

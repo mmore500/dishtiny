@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGERINBOX_HPP_INCLUDE
+#define DISHTINY_MANAGERINBOX_HPP_INCLUDE
 
 #include <optional>
 #include <functional>
@@ -153,3 +155,5 @@ public:
   }
 
 };
+
+#endif // #ifndef DISHTINY_MANAGERINBOX_HPP_INCLUDE

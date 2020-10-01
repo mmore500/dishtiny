@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_CONFIGLEVEL_HPP_INCLUDE
+#define DISHTINY_CONFIGLEVEL_HPP_INCLUDE
 
 #include <limits>
 
@@ -12,3 +14,5 @@ EMP_BUILD_CONFIG(
   VALUE(HARVEST_VALUE, double, 0.2, "How much resource benefit does a successful harvest grant?"),
   VALUE(ACTIVATION_COST, double, 0.0, "How much resource is spent to attempt a harvest?")
 )
+
+#endif // #ifndef DISHTINY_CONFIGLEVEL_HPP_INCLUDE

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_LIBRARYINSTRUCTION_CPP_INCLUDE
+#define DISHTINY_LIBRARYINSTRUCTION_CPP_INCLUDE
 
 #include <cmath>
 
@@ -1309,3 +1311,5 @@ const inst_lib_t& LibraryInstruction::Make(const Config &cfg) {
   return il;
 
 }
+
+#endif // #ifndef DISHTINY_LIBRARYINSTRUCTION_CPP_INCLUDE

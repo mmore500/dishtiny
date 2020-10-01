@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGER_HPP_INCLUDE
+#define DISHTINY_MANAGER_HPP_INCLUDE
 
 #include <algorithm>
 
@@ -75,3 +77,5 @@ public:
   DishWorld &DW();
 
 };
+
+#endif // #ifndef DISHTINY_MANAGER_HPP_INCLUDE

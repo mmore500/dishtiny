@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGERWAVE_HPP_INCLUDE
+#define DISHTINY_MANAGERWAVE_HPP_INCLUDE
 
 #include <algorithm>
 
@@ -158,3 +160,5 @@ public:
   }
 
 };
+
+#endif // #ifndef DISHTINY_MANAGERWAVE_HPP_INCLUDE

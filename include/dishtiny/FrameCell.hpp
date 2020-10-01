@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_FRAMECELL_HPP_INCLUDE
+#define DISHTINY_FRAMECELL_HPP_INCLUDE
 
 #include <mutex>
 #include <algorithm>
@@ -110,3 +112,5 @@ public:
   const std::optional<Config::tag_t> & GetImprint() const;
 
 };
+
+#endif // #ifndef DISHTINY_FRAMECELL_HPP_INCLUDE

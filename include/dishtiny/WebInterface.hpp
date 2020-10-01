@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_WEBINTERFACE_HPP_INCLUDE
+#define DISHTINY_WEBINTERFACE_HPP_INCLUDE
 
 #include <algorithm>
 #include <optional>
@@ -1675,3 +1677,5 @@ public:
   }
 
 };
+
+#endif // #ifndef DISHTINY_WEBINTERFACE_HPP_INCLUDE

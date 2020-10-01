@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_GEOMETRYHELPER_HPP_INCLUDE
+#define DISHTINY_GEOMETRYHELPER_HPP_INCLUDE
 
 #include "../../third-party/Empirical/source/base/assert.h"
 #include "../../third-party/Empirical/source/base/vector.h"
@@ -93,3 +95,5 @@ public:
   }
 
 };
+
+#endif // #ifndef DISHTINY_GEOMETRYHELPER_HPP_INCLUDE

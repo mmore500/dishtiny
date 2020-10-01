@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_WEBARTISTCONNECTION_HPP_INCLUDE
+#define DISHTINY_WEBARTISTCONNECTION_HPP_INCLUDE
 
 #include <optional>
 #include <limits>
@@ -209,3 +211,5 @@ public:
 
 
 };
+
+#endif // #ifndef DISHTINY_WEBARTISTCONNECTION_HPP_INCLUDE

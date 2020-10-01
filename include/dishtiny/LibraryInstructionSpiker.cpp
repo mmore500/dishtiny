@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_LIBRARYINSTRUCTIONSPIKER_CPP_INCLUDE
+#define DISHTINY_LIBRARYINSTRUCTIONSPIKER_CPP_INCLUDE
 
 #include <cmath>
 
@@ -909,3 +911,5 @@ const inst_lib_t& LibraryInstructionSpiker::Make(const Config &cfg) {
   return il;
 
 }
+
+#endif // #ifndef DISHTINY_LIBRARYINSTRUCTIONSPIKER_CPP_INCLUDE

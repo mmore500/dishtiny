@@ -84,12 +84,11 @@ jobs:
     script:
     - sudo docker run -e CXX --cap-add=SYS_ADMIN mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny && make test"
 
-  - name: Docs
+ - name: Docs, Miscellaneous
     install:
-    - docker build -t mmore500/dishtiny .
+    - docker build -t mmore500/conduit .
     - docker ps -a
-    script:
-    - sudo docker run mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny && make docs"
+    script: docker run mmore500/conduit /bin/bash -c "cd /opt/conduit && ./ci/test_trailing_whitespace.sh && ./ci/test_tabs.sh && make docs && ./ci/test_headerguards.sh && python3 ci/test_readme_snippets.py"
 
 
   - stage: Deploy

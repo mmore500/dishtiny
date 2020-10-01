@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGERFAMILY_HPP_INCLUDE
+#define DISHTINY_MANAGERFAMILY_HPP_INCLUDE
 
 #include <unordered_set>
 
@@ -59,3 +61,5 @@ public:
 
   const emp::vector<size_t> & GetCellGen() const { return cell_gen; }
 };
+
+#endif // #ifndef DISHTINY_MANAGERFAMILY_HPP_INCLUDE

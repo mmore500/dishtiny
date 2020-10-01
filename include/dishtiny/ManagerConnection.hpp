@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGERCONNECTION_HPP_INCLUDE
+#define DISHTINY_MANAGERCONNECTION_HPP_INCLUDE
 
 #include "FrameCell.hpp"
 #include "GeometryHelper.hpp"
@@ -131,3 +133,5 @@ public:
   double CalcMeanConnectionLength() const;
 
 };
+
+#endif // #ifndef DISHTINY_MANAGERCONNECTION_HPP_INCLUDE

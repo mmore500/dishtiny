@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_DISHWORLD_CPP_INCLUDE
+#define DISHTINY_DISHWORLD_CPP_INCLUDE
 
 #include <tuple>
 #include <utility>
@@ -564,3 +566,5 @@ FrameCell & DishWorld::GetFrame(const size_t loc) {
 const Manager & DishWorld::GetManager() const {
   return *man;
 }
+
+#endif // #ifndef DISHTINY_DISHWORLD_CPP_INCLUDE

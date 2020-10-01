@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGERAPOPTOSIS_HPP_INCLUDE
+#define DISHTINY_MANAGERAPOPTOSIS_HPP_INCLUDE
 
 class ManagerApoptosis {
 
@@ -29,3 +31,5 @@ public:
   int GetState() { return state; }
 
 };
+
+#endif // #ifndef DISHTINY_MANAGERAPOPTOSIS_HPP_INCLUDE

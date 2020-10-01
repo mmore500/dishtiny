@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_FRAMECELL_CPP_INCLUDE
+#define DISHTINY_FRAMECELL_CPP_INCLUDE
 
 #include <algorithm>
 #include <list>
@@ -224,3 +226,5 @@ const std::optional<Config::tag_t> & FrameCell::GetDaughterImprint() const {
 const std::optional<Config::tag_t> & FrameCell::GetImprint() const {
   return imprint;
 }
+
+#endif // #ifndef DISHTINY_FRAMECELL_CPP_INCLUDE

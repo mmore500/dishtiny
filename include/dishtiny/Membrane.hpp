@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MEMBRANE_HPP_INCLUDE
+#define DISHTINY_MEMBRANE_HPP_INCLUDE
 
 #include <algorithm>
 #include <unordered_map>
@@ -124,3 +126,5 @@ public:
   }
 
 };
+
+#endif // #ifndef DISHTINY_MEMBRANE_HPP_INCLUDE

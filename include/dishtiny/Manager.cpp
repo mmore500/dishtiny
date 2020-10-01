@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGER_CPP_INCLUDE
+#define DISHTINY_MANAGER_CPP_INCLUDE
 
 #include <algorithm>
 
@@ -260,3 +262,5 @@ ManagerWave& Manager::Wave(size_t rep, size_t pos, size_t lev) {
 }
 
 DishWorld& Manager::DW() { return dw; }
+
+#endif // #ifndef DISHTINY_MANAGER_CPP_INCLUDE

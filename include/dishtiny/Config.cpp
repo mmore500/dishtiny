@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_CONFIG_CPP_INCLUDE
+#define DISHTINY_CONFIG_CPP_INCLUDE
 
 #include <string>
 #include <deque>
@@ -64,3 +66,5 @@ void Config::WriteMe(std::ostream & out) const {
   }
 
 }
+
+#endif // #ifndef DISHTINY_CONFIG_CPP_INCLUDE

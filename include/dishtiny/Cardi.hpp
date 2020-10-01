@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_CARDI_HPP_INCLUDE
+#define DISHTINY_CARDI_HPP_INCLUDE
 
 #include "../../third-party/Empirical/source/tools/Random.h"
 
@@ -21,3 +23,5 @@ constexpr Cardi::Dir Cardi::Cw[];
 constexpr Cardi::Dir Cardi::Ccw[];
 constexpr int Cardi::Dx[];
 constexpr int Cardi::Dy[];
+
+#endif // #ifndef DISHTINY_CARDI_HPP_INCLUDE

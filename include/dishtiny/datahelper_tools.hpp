@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_DATAHELPER_TOOLS_HPP_INCLUDE
+#define DISHTINY_DATAHELPER_TOOLS_HPP_INCLUDE
 
 #include <iostream>
 #include <sstream>
@@ -363,3 +365,5 @@ class H5Utils {
     }
 
 };
+
+#endif // #ifndef DISHTINY_DATAHELPER_TOOLS_HPP_INCLUDE

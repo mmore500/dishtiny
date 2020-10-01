@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGERCHANNEL_HPP_INCLUDE
+#define DISHTINY_MANAGERCHANNEL_HPP_INCLUDE
 
 #include <optional>
 
@@ -189,3 +191,5 @@ public:
   }
 
 };
+
+#endif // #ifndef DISHTINY_MANAGERCHANNEL_HPP_INCLUDE

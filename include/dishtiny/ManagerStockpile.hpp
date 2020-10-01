@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGERSTOCKPILE_HPP_INCLUDE
+#define DISHTINY_MANAGERSTOCKPILE_HPP_INCLUDE
 
 #include <numeric>
 #include <limits>
@@ -187,3 +189,5 @@ public:
   }
 
 };
+
+#endif // #ifndef DISHTINY_MANAGERSTOCKPILE_HPP_INCLUDE

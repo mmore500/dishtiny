@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_FRAMEHARDWARE_CPP_INCLUDE
+#define DISHTINY_FRAMEHARDWARE_CPP_INCLUDE
 
 #include <algorithm>
 
@@ -438,3 +440,5 @@ Membrane & FrameHardware::GetExternalMembrane() {
 Membrane & FrameHardware::GetInternalMembrane() {
   return internal_membrane;
 }
+
+#endif // #ifndef DISHTINY_FRAMEHARDWARE_CPP_INCLUDE

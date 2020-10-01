@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_WEBARTISTBASE_HPP_INCLUDE
+#define DISHTINY_WEBARTISTBASE_HPP_INCLUDE
 
 #include <optional>
 #include <limits>
@@ -124,3 +126,5 @@ void WebArtistBase::Toggle() {
   else Deactivate();
 }
 std::string WebArtistBase::GetName() const { return name; }
+
+#endif // #ifndef DISHTINY_WEBARTISTBASE_HPP_INCLUDE

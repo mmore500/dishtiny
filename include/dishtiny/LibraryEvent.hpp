@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_LIBRARYEVENT_HPP_INCLUDE
+#define DISHTINY_LIBRARYEVENT_HPP_INCLUDE
 
 #include "../../third-party/Empirical/source/base/Ptr.h"
 
@@ -263,3 +265,5 @@ public:
   }
 
 };
+
+#endif // #ifndef DISHTINY_LIBRARYEVENT_HPP_INCLUDE

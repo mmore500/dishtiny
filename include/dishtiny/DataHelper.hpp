@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_DATAHELPER_HPP_INCLUDE
+#define DISHTINY_DATAHELPER_HPP_INCLUDE
 
 #include <iostream>
 #include <sstream>
@@ -708,3 +710,5 @@ private:
   }
 
 };
+
+#endif // #ifndef DISHTINY_DATAHELPER_HPP_INCLUDE

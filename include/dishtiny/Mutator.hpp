@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MUTATOR_HPP_INCLUDE
+#define DISHTINY_MUTATOR_HPP_INCLUDE
 
 #include "../../third-party/Empirical/source/hardware/signalgp_utils.h"
 
@@ -35,3 +37,5 @@ class Mutator : public emp::SignalGPMutator<
     }
 
 };
+
+#endif // #ifndef DISHTINY_MUTATOR_HPP_INCLUDE

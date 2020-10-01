@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_DISHWORLD_HPP_INCLUDE
+#define DISHTINY_DISHWORLD_HPP_INCLUDE
 
 #include <tuple>
 #include <utility>
@@ -56,3 +58,5 @@ public:
   FrameCell & GetFrame(const size_t loc);
 
 };
+
+#endif // #ifndef DISHTINY_DISHWORLD_HPP_INCLUDE

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGERCONNECTION_CPP_INCLUDE
+#define DISHTINY_MANAGERCONNECTION_CPP_INCLUDE
 
 #include <mutex>
 
@@ -319,3 +321,5 @@ double ManagerConnection::CalcMeanConnectionLength() const {
   return developed.size() ? res / developed.size() : res;
 
 }
+
+#endif // #ifndef DISHTINY_MANAGERCONNECTION_CPP_INCLUDE

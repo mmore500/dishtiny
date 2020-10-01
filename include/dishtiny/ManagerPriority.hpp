@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_MANAGERPRIORITY_HPP_INCLUDE
+#define DISHTINY_MANAGERPRIORITY_HPP_INCLUDE
 
 #include <algorithm>
 #include <optional>
@@ -234,3 +236,5 @@ public:
   }
 
 };
+
+#endif // #ifndef DISHTINY_MANAGERPRIORITY_HPP_INCLUDE

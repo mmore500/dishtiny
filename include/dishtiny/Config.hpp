@@ -1,4 +1,6 @@
 #pragma once
+#ifndef DISHTINY_CONFIG_HPP_INCLUDE
+#define DISHTINY_CONFIG_HPP_INCLUDE
 
 #define STRINGVIEWIFY(s) std::string_view(IFY(s))
 #define STRINGIFY(s) IFY(s)
@@ -122,3 +124,5 @@ public:
   void WriteMe(std::ostream & out) const;
 
 };
+
+#endif // #ifndef DISHTINY_CONFIG_HPP_INCLUDE
