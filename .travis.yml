@@ -19,7 +19,7 @@ jobs:
     script:
     - sudo docker run -e CXX --cap-add=SYS_ADMIN -e CXX -i mmore500/dishtiny /bin/bash -c "set -x && cd /opt/dishtiny/tests && make"
 
-    name: Unit Tests (gcc, debug mode)
+  - name: Unit Tests (gcc, debug mode)
     env: CXX=g++
     install:
     - docker build -t mmore500/dishtiny .
@@ -84,7 +84,7 @@ jobs:
     script:
     - sudo docker run -e CXX --cap-add=SYS_ADMIN mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny && make test"
 
- - name: Docs, Miscellaneous
+  - name: Docs, Miscellaneous
     install:
     - docker build -t mmore500/conduit .
     - docker ps -a
@@ -100,11 +100,17 @@ jobs:
     script:
     - docker run -e GH_TOKEN -e TRAVIS_BUILD_NUMBER mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny && ./ci/deploy_gh_pages.sh"
 
-  # - name: DockerHub
-  #   if: (type = push AND branch IN (master))
-  #   install:
-  #   - docker build -t mmore500/dishtiny .
-  #   - docker ps -a
-  #   script:
-  #   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  #   - docker push mmore500/dishtiny
+  - name: DockerHub
+    if: (type = push AND branch IN (master))
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - docker push mmore500/dishtiny
+
+env:
+  global:
+  - secure: gblaGJKWxavqZxJYe6+E0Z9taszJdqtisvFWuJ7+k3OhEALint6Q3GyXxCbG6XWX7MzMlA9Hs6fe2FopnSCRtvqDZkl/0Yv+u95PG3W5/kX8WfpHNAsWpRBMj3ELyVuECHe2S0MYyn6mscacMF45s5MHQmiXeU9uAMwW12XC0afn1NbMu1EK8f14AkuyIETmGOrgExR81QeK9oHlWKdCN8v5n34xWrhncN93phnnbaVzvV/l8kIMVadMw+ZmUCCCnXJfvhzZkwk6+36o9PrY3nnojy+p6jpp3l2975bs3vOiryh1D4hyVWtch/kcm1hploG1UUElDz2LbnXSAxDgL3Y7dSKuvQtJrccrzKgd0C7wGq3MIuHs27hty/hcX5pslyRDTy2UKMLHnoyVJBpA308mAK+T9w+mKV36LlIg2dXDkj3nYyDxxuc6n8UJNS2Qoo2A2J+Ctbj8D75SkV1jFQpl7YamcJ12RWPp4VvG09RR6UfeXOsQw1v5yUldYAmrUqFRjh9Ylyy+LSHo23IYbpRLVBqY+oR1TbSHDW0xs6AfNtOhQ3kMZflov6tyIiY1P7kTtCU/ZwscbSbiZ6alnU6X6BMzcDd3HiqSPKX4e/vVjggtHr/2l3jBZshSjv63Z7R0hwHXHgtayuDhkUr1mR0mIVeOuryiUSrIfmLlbOI=
+  - secure: bgFiRQ1O7qaxXVHDlTyf83v/24QSrjoEmxXaQIoK615XzJxMsvd5snQQadwigqqVVOWLtQNyO/NmGRtr0OCND5l/oCyzpjjjNL8DLvwU8+mqdCHN802Tn0YTkyvTxrbSc+AIihkeIgA935pasm85PCS3u3Rzjq9gvAgOGkPuIlAZl/yhLoCZx5fu9M5Z2c6OlrYFs3TsoOheZu66VaBqHm1xX7asFRXrPW0Q0gFxzw7UL+3O9xdXZEKjoTZR9qDx2MCpCqTmRtrW95FKg9G2f/G5t/8xxk8HU9qsSq4VK8whyFFfU22P6p0zW3qI5C7bZUJro5vdBWTicORRYXQWLdtpYzcxbgahVrVWknXDYtHucccAXa6pBedqs9Walj2MQO3lpFXJvh6ZTmXtqwLLKxT0ML+wU3nsZFY73tzuqGdTxm3Vr+QguwQL14WXHu0UDNsTNYfz8c4cA73zsGAsFWPgjfe1vKPbl3gsVs+3U12e4JvXhY6b1No4O7f0oxuVad+YGO0iAqQvouI10PxTOdhPhH3YVc736OpabyD7/QkjAW4Gjd6oFjam7tiw5mdzuot0LbIjjGP74bENvp8fNgxK3WORplhcQfTGE8p1Rym4xy0AAw38+7x6+XaWUXdBiA6k6vvWHDIRbjpbq+Q7jjycgocFEJe0eyc16rkvyH4=
+  - secure: aCpIKl6SWhJ2mQE1GMnDV1FYxB2Hs7wX9u4Q1W/x8W75yDu9oqlz3EtGfG80RmjtaSb/4DwDj17vKDoRTPoMlFfiD8r+wa/56hp7Ct4qoVMsIjL4aih26CqGWH6wBDfDa4QBc9EspzRYDkLHIIC7nAML7oez3rqcNkX/w0Jg3V89NetsePYFYE6VdbZQSzyRvxTCbHOX2fiFpBthoqMPPH49NKzVxv0K/Fvq0yyzRqUvn5btZpnEtqxIvj7A0CZj/SnhcMlPgwTBVofiU1xgafuV5Ygd4GoqjTfGhRroDR8zebZbS+8POZVOLjj1/zHDjyPDWv3cbRRSqsZ5fU+/dHdqys4k0Mr4kxufBpl91KIfyyQZozJXl9nThcnCvk6q6CvbOJky1xQVPVEFiFFlaui6Qp2i8F/Ivl6qjfw4BGts0pDiJEZvr4YwD+fc223YJO6DdUeZj7qNG06ak3VSv7LPNcPBlN82Wq+fOjBcUSr/cyjmFj9HSdzaOvM1XlJjHOdKa8XaP6dnUfaApacP5S/O4I+FzziSqJyPW3Z+sxcAjOBfndoBG1lgHzJmUH0DVqeFg9MquFF3Vmm+8nBjIgNNskuoeGbLiiAFW8Zf/jO0uwenW/sNIrBNaF+qLTLP22c57MJqkTKlt0fGkuJd2dSlUX2PrSToiQrLutrYnNU=
