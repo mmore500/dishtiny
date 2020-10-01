@@ -3,7 +3,7 @@
   },
   "devDependencies": {
     "express": "4.16.3",
-    "puppeteer": "1.9.0"
+    "puppeteer": "5.3.1"
   },
   "main": "index.js",
   "name": "dishtiny",
