@@ -1,51 +1,26 @@
-
-# Created by https://www.gitignore.io/api/c++
-
-### C++ ###
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
+*~
+*.debug
+*.dSYM
+*.gcov
+*.js.mem
+*.map
+*.mp4
 *.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
 *.out
-*.app
+*.pyc
+*.swp
+*.swo
+*.wasm
+*.wast
+*-bak.cpp
+*tmp.*
 
+.DS_Store
+a.out
+a.out.js
 
-# End of https://www.gitignore.io/api/c++
+build/
+doc/_build/
 
-# Log files
-*.h5
-*.csv
-*.cereal
-*.json
-
-# Hidden files
-.*
-
-# Executables
-dishtiny
+package-lock.json
+node_modules/

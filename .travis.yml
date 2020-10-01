@@ -1,0 +1,111 @@
+# only build pull requests and merges to master or dev
+# adapted from https://stackoverflow.com/a/31882307
+if: (type = push AND branch IN (master, dev)) OR (type = pull_request AND NOT branch =~ /no-ci/)
+dist: xenial
+sudo: required
+
+services:
+- docker
+
+jobs:
+  include:
+  - stage: Tests
+
+    name: Unit Tests (clang, debug mode)
+    env: CXX=clang++
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - sudo docker run -e CXX --cap-add=SYS_ADMIN -e CXX -i mmore500/dishtiny /bin/bash -c "set -x && cd /opt/dishtiny/tests && make"
+
+    name: Unit Tests (gcc, debug mode)
+    env: CXX=g++
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - sudo docker run -e CXX --cap-add=SYS_ADMIN -e CXX -i mmore500/dishtiny /bin/bash -c "set -x && cd /opt/dishtiny/tests && make"
+
+  - name: Unit Tests (clang, full debug mode)
+    env: CXX=clang++
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - sudo docker run -e CXX --cap-add=SYS_ADMIN -e CXX -i mmore500/dishtiny /bin/bash -c "set -x && cd /opt/dishtiny/tests && make fulldebug"
+
+  - name: Unit Tests (gcc, full debug mode)
+    env: CXX=g++
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - sudo docker run -e CXX --cap-add=SYS_ADMIN -e CXX -i mmore500/dishtiny /bin/bash -c "set -x && cd /opt/dishtiny/tests && make fulldebug"
+
+  - name: Unit Tests (clang, opt mode)
+    env: CXX=clang++
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - sudo docker run -e CXX --cap-add=SYS_ADMIN -e CXX -i mmore500/dishtiny /bin/bash -c "set -x && cd /opt/dishtiny/tests && make opt"
+
+  - name: Unit Tests (gcc, opt mode)
+    env: CXX=g++
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - sudo docker run -e CXX --cap-add=SYS_ADMIN -e CXX -i mmore500/dishtiny /bin/bash -c "set -x && cd /opt/dishtiny/tests && make opt"
+
+  - name: Coverage
+    env: CXX=clang++
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - ci_env=`bash <(curl -s https://codecov.io/env)`
+    - sudo docker run $ci_env -e CXX mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny && make coverage && bash <(curl -s https://codecov.io/bash)"
+
+  - name: Source (clang)
+    env: CXX=clang++
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - sudo docker run -e CXX --cap-add=SYS_ADMIN mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny && make test"
+
+  - name: Source (gcc)
+    env: CXX=g++
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - sudo docker run -e CXX --cap-add=SYS_ADMIN mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny && make test"
+
+  - name: Docs
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - sudo docker run mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny && make docs"
+
+
+  - stage: Deploy
+    name: GitHub Pages
+    if: (type = push AND branch IN (master))
+    install:
+    - docker build -t mmore500/dishtiny .
+    - docker ps -a
+    script:
+    - docker run -e GH_TOKEN -e TRAVIS_BUILD_NUMBER mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny && ./ci/deploy_gh_pages.sh"
+
+  # - name: DockerHub
+  #   if: (type = push AND branch IN (master))
+  #   install:
+  #   - docker build -t mmore500/dishtiny .
+  #   - docker ps -a
+  #   script:
+  #   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  #   - docker push mmore500/dishtiny
