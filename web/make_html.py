@@ -35,7 +35,7 @@ def make_badge(str, color):
 
     return badge
 
-# instanciate Markdown
+# instantiate Markdown
 markdown = Markdown()
 
 # find template, adapted from https://stackoverflow.com/a/38642558
