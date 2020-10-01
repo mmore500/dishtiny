@@ -32,19 +32,19 @@ def make_badge(str, color):
 
     # form badge!
     badge = '<span class="' + type + '" style="' + color_str + '">' + str + '</span>'
-    
+
     return badge
 
-# instanciate Markdown 
+# instanciate Markdown
 markdown = Markdown()
 
-# find template, adapted from https://stackoverflow.com/a/38642558 
+# find template, adapted from https://stackoverflow.com/a/38642558
 template_loader = jinja2.FileSystemLoader(searchpath=DIR)
 template_env = jinja2.Environment(loader=template_loader)
 # load template
 template = template_env.get_template(TEMPLATE)
 # output templated html
-# we pass it our data, our markdown instance, and eval() and make_badge(), 
+# we pass it our data, our markdown instance, and eval() and make_badge(),
 # since they are all used by it
 outputText = template.render(data=data, markdown=markdown, eval=eval, make_badge=make_badge)
 
