@@ -86,9 +86,9 @@ jobs:
 
   - name: Docs, Miscellaneous
     install:
-    - docker build -t mmore500/conduit .
+    - docker build -t mmore500/dishtiny .
     - docker ps -a
-    script: docker run mmore500/conduit /bin/bash -c "cd /opt/conduit && ./ci/test_trailing_whitespace.sh && ./ci/test_tabs.sh && ./ci/test_missing_newlines.sh && make docs && ./ci/test_headerguards.sh && python3 ci/test_readme_snippets.py"
+    script: docker run mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny && ./ci/test_trailing_whitespace.sh && ./ci/test_tabs.sh && ./ci/test_missing_newlines.sh && make docs && ./ci/test_headerguards.sh && python3 ci/test_readme_snippets.py"
 
 
   - stage: Deploy
