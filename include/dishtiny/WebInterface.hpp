@@ -539,13 +539,13 @@ public:
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) {
        return w.IsOccupied(i)
-	    ? std::make_optional(size_t_datum{
-            w.GetFrame(i).GetFrameHardware(
-		      j
-		    ).IsCellChild(),
-            *w.man->Channel(i).GetIDs()
-          })
-		: std::nullopt;
+        ? std::make_optional(size_t_datum{
+          w.GetFrame(i).GetFrameHardware(
+            j
+          ).IsCellChild(),
+          *w.man->Channel(i).GetIDs()
+        })
+        : std::nullopt;
       }, // getter
       [](const auto amt) -> std::string {
         if (amt) {
@@ -569,13 +569,13 @@ public:
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) {
        return w.IsOccupied(i)
-	    ? std::make_optional(size_t_datum{
-            w.GetFrame(i).GetFrameHardware(
-		      j
-		    ).IsCellParent(),
-            *w.man->Channel(i).GetIDs()
-          })
-		: std::nullopt;
+        ? std::make_optional(size_t_datum{
+          w.GetFrame(i).GetFrameHardware(
+            j
+          ).IsCellParent(),
+          *w.man->Channel(i).GetIDs()
+        })
+        : std::nullopt;
       }, // getter
       [](const auto amt) -> std::string {
         if (amt) {
@@ -755,10 +755,11 @@ public:
         grid_viewer,
         [this, l](const size_t i, const size_t j) -> std::optional<size_t_datum> {
           return  w.IsOccupied(i)
-		  ? std::make_optional(size_t_datum{
+          ? std::make_optional(size_t_datum{
             w.GetFrame(i).GetFrameHardware(j).IsReprPaused(l),
             *w.man->Channel(i).GetIDs()
-          }) :  std::nullopt;
+          })
+          : std::nullopt;
         },
         [](const auto state) -> std::string {
           if (state) {
@@ -1209,7 +1210,7 @@ public:
                 "btn btn-lg m-1 btn-primary"
               ) + std::string(i ? " w-25" : " w-100"),
               name == "Channel" ? " active" : ""
-			)
+            )
           ).OnClick(
             [&, artist](){
               artist->Toggle();
@@ -1620,11 +1621,11 @@ public:
     for (auto & [category, series] : artists) {
       for (auto & artist : series) artist->Deactivate();
     }
-	std::find_if(
-	  std::begin(artists),
-	  std::end(artists),
-	  [](const auto &v){ return v.second[0]->GetName() == "Channel"; }
-	)->second[0]->Activate();
+    std::find_if(
+      std::begin(artists),
+      std::end(artists),
+      [](const auto &v){ return v.second[0]->GetName() == "Channel"; }
+    )->second[0]->Activate();
   }
 
   void Redraw(const size_t update) {

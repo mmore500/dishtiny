@@ -58,13 +58,13 @@ void FrameHardware::Reset() {
 
 bool FrameHardware::IsReprPaused(const size_t lev) const {
     return Cell().Man().Priority(
-	  Cell().GetNeigh(
-	    GetFacing()
-	  )
-	).IsReprPaused(
-	  Cardi::Opp[GetFacing()],
+    Cell().GetNeigh(
+      GetFacing()
+    )
+  ).IsReprPaused(
+    Cardi::Opp[GetFacing()],
       lev
-	);
+  );
 }
 
 double FrameHardware::CheckStockpileReserve() const {
