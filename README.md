@@ -12,7 +12,7 @@
 
 Framework for digital multicellularity research.
 
-Check out the live in-browser web app at [https://mmore500.github.io/dishtiny][].
+Check out the live in-browser web app at <https://mmore500.com/dishtiny>.
 
 
 -   Free software: MIT license
@@ -35,7 +35,5 @@ This package uses [Empirical](https://github.com/devosoft/Empirical#readme), a l
 To install [Empirical](https://github.com/devosoft/Empirical), pull down a clone of the Empirical repository.  See [Quick Start Guides](https://empirical.readthedocs.io/en/latest/QuickStartGuides) for directions on cloning and using the library.
 
 
-  [https://mmore500.github.io/dishtiny]:
-    https://mmore500.github.io/dishtiny
   [Cookiecutter]: https://github.com/audreyr/cookiecutter
   [devosoft/cookiecutter-empirical-project]: https://github.com/devosoft/cookiecutter-empirical-project
