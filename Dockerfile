@@ -18,6 +18,11 @@ RUN \
     && \
   echo "installed third party dependencies"
 
+RUN apt-get install -y \
+  libhdf5-dev \
+    && \
+  echo "installed hdf dependencies"
+
 # make sure unprivileged user has access to new files in opt
 # adapted from https://stackoverflow.com/a/27703359
 # and https://superuser.com/a/235398
