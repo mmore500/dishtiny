@@ -12,7 +12,7 @@ RUN \
   echo "installed python requirements"
 
 RUN \
-  cd /opt/conduit/third-party \
+  cd /opt/dishtiny/third-party \
     && \
   ./install_dependencies.sh \
     && \
