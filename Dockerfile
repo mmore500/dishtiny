@@ -11,6 +11,15 @@ RUN \
     && \
   echo "installed python requirements"
 
+RUN \
+  cd /opt/conduit/ \
+    && \
+  cd third-party \
+    && \
+  ./install_dependencies.sh \
+    && \
+  echo "installed third party dependencies"
+
 # make sure unprivileged user has access to new files in opt
 # adapted from https://stackoverflow.com/a/27703359
 # and https://superuser.com/a/235398
