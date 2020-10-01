@@ -19,7 +19,7 @@ CFLAGS_all := -std=c++17 -Wall -Wno-unused-function -Wno-unused-private-field \
 	$(ARGS)
 
 # Native compiler information
-CXX ?= h5c++
+CXX := h5c++
 CFLAGS_nat := -O3 -DNDEBUG $(CFLAGS_all) -fopenmp
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
 CFLAGS_nat_debug := -g -DEMP_TRACK_MEM -fopenmp $(CFLAGS_all)
@@ -50,6 +50,7 @@ debug-web:	$(PROJECT).js
 web-debug:	debug-web
 
 $(PROJECT):	source/native.cpp include/
+	@echo CXX $(CXX)
 	$(CXX) $(CFLAGS_nat) source/native.cpp -o $(PROJECT)
 	@echo To build the web version use: make web
 
