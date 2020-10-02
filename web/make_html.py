@@ -3,7 +3,7 @@ import jinja2
 from markdown2 import Markdown
 
 INPUT = 'keys.toml'
-OUTPUT = 'dishtiny.html'
+OUTPUT = 'index.html'
 TEMPLATE = "template.html.jinja"
 DIR = "web/"
 

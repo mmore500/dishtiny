@@ -37,14 +37,14 @@ CFLAGS_web_debug := $(CFLAGS_all) $(OFLAGS_web_debug) $(OFLAGS_web_all)
 
 default: $(PROJECT)
 native: $(PROJECT)
-web: $(PROJECT).js $(PROJECT).html
-all: $(PROJECT) $(PROJECT).js $(PROJECT).html
+web: $(PROJECT).js web/index.html
+all: $(PROJECT) $(PROJECT).js web/index.html
 
 debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
 debug:	$(PROJECT)
 
 debug-web:	CFLAGS_web := $(CFLAGS_web_debug)
-debug-web:	$(PROJECT).js $(PROJECT).html
+debug-web:	$(PROJECT).js web/index.html
 
 web-debug:	debug-web
 
@@ -56,7 +56,7 @@ $(PROJECT):	source/native.cpp include/
 $(PROJECT).js: source/web.cpp include/
 	cd third-party/emsdk && . ./emsdk_env.sh && cd - && $(CXX_web) $(CFLAGS_web) source/web.cpp -o web/$(PROJECT).js
 
-$(PROJECT).html: web/includes
+web/index.html: web/includes
 	python3 web/make_html.py
 
 docs:
@@ -85,8 +85,8 @@ clean:
 test: debug web
 	timeout 30 ./dishtiny | grep -q "^32$$" && echo 'matched!' || exit 1
 	npm install
-	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch(); const page = await browser.newPage(); await page.goto('http://localhost:3000/dishtiny.html'); await sleep(30000); const html = await page.content(); console.log(html); browser.close(); process.exit(0); } run();" | node | grep -q "Update 0" && echo "matched!" ||  exit 1
-	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch(); const page = await browser.newPage(); page.on('console', msg => console.log(msg.text())); await page.goto('http://localhost:3000/dishtiny.html'); await sleep(30000); await page.content(); browser.close(); process.exit(0); } run();" | node | grep -q "web viewer load SUCCESS" && echo "matched!"|| exit 1
+	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch(); const page = await browser.newPage(); await page.goto('http://localhost:3000/index.html'); await sleep(30000); const html = await page.content(); console.log(html); browser.close(); process.exit(0); } run();" | node | grep -q "Update 0" && echo "matched!" ||  exit 1
+	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch(); const page = await browser.newPage(); page.on('console', msg => console.log(msg.text())); await page.goto('http://localhost:3000/index.html'); await sleep(30000); await page.content(); browser.close(); process.exit(0); } run();" | node | grep -q "web viewer load SUCCESS" && echo "matched!"|| exit 1
 
 tests:
 	cd tests && make
