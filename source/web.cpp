@@ -66,7 +66,7 @@ void run() {
   i->InitializeViewers(0);
   i->Redraw(0);
 
-  std::cout << "web viewer load SUCCESS" << treatment_source << std::endl;
+  std::cout << "web viewer load SUCCESS" << std::endl;
 
   // once we're done setting up, turn off the loading modal
   emscripten_run_script("$('.modal').modal('hide');");
