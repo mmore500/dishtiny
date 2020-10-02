@@ -57,3 +57,6 @@ RUN \
   echo "user granted permissions to /opt/dishtiny"
 
 USER user
+
+# Define default working directory.
+WORKDIR /opt/dishtiny
