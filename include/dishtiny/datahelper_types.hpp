@@ -88,7 +88,7 @@ namespace memtype {
 
     H5::VarLenType MakeVarLenTypeSpec(const H5::DataType& type) {
         // SRP: don't use H5::PredType unless you want to cry
-        /* inline static */ const H5::VarLenType var_array{ &type };
+        /* inline static */ const H5::VarLenType var_array{type};
         return var_array;
     }
 
