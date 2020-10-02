@@ -74,7 +74,8 @@ class H5Utils {
 
       const hsize_t single_update[3] = {cfg.GRID_H(), cfg.GRID_W(), 1};
 
-      if (!file.nameExists(full_path)) {
+      // adapted from https://stackoverflow.com/a/53445653
+      if ( H5Lexists( file.getId(), full_path.c_str(), H5P_DEFAULT ) == 0 ) {
         // set properties for dataset
         H5::DSetCreatPropList plist;
         H5Pset_obj_track_times(plist.getId(), false);
