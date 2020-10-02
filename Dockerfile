@@ -18,17 +18,33 @@ RUN \
     && \
   echo "installed third party dependencies"
 
-
 RUN \
-  TEMP_DEB="$(mktemp)" \
+  echo "deb http://archive.ubuntu.com/ubuntu focal main restricted universe multiverse" >> "/etc/apt/sources.list" \
     && \
-  wget -O "$TEMP_DEB" 'http://launchpadlibrarian.net/333132059/libhdf5-dev_1.10.0-patch1+docs-4_amd64.deb' \
+  echo "Package: libhdf5-dev" >> "/etc/apt/preferences" \
     && \
-  dpkg -i "$TEMP_DEB" \
+  echo "Pin: release n=bionic" >> "/etc/apt/preferences" \
     && \
-  rm -f "$TEMP_DEB" \
+  echo "Pin-priority: -10" >> "/etc/apt/preferences" \
     && \
-  echo "installed hdf dependencies"
+  echo >> "/etc/apt/preferences" \
+    && \
+  echo "Package: libhdf5-dev" >> "/etc/apt/preferences" \
+    && \
+  echo "Pin: release n=focal" >> "/etc/apt/preferences" \
+    && \
+  echo "Pin-priority: 900" >> "/etc/apt/preferences" \
+    && \
+  apt-get update \
+    && \
+  apt-get upgrade -y \
+    && \
+  apt-get install -y aptitude \
+    && \
+  apt-get purge -y libhdf5-dev \
+    && \
+  aptitude install -y libhdf5-dev \
+    &&  echo "upgrade success"
 
 # make sure unprivileged user has access to new files in opt
 # adapted from https://stackoverflow.com/a/27703359
