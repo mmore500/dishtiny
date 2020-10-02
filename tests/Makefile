@@ -25,7 +25,7 @@ cov-%: %.cpp ../third-party/Catch/single_include/catch2/catch.hpp
 	llvm-profdata merge default.profraw -o default.profdata
 	llvm-cov show ./$@.out -instr-profile=default.profdata > coverage_$@.txt
 	python $(TO_ROOT)/third-party/force-cover/fix_coverage.py coverage_$@.txt
-	rm "hfc++"
+	rm "h5c++"
 
 # Test in debug mode without pointer tracker
 test: $(addprefix test-, $(TEST_NAMES))
