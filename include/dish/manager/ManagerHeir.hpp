@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_MANAGERHEIR_HPP_INCLUDE
-#define DISH_MANAGERHEIR_HPP_INCLUDE
+#ifndef DISH_MANAGER_MANAGERHEIR_HPP_INCLUDE
+#define DISH_MANAGER_MANAGERHEIR_HPP_INCLUDE
 
 #include <algorithm>
 
@@ -40,4 +40,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_MANAGERHEIR_HPP_INCLUDE
+#endif // #ifndef DISH_MANAGER_MANAGERHEIR_HPP_INCLUDE

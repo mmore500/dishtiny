@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_FRAMEHARDWARE_HPP_INCLUDE
-#define DISH_FRAMEHARDWARE_HPP_INCLUDE
+#ifndef DISH_TRAIT_FRAMEHARDWARE_HPP_INCLUDE
+#define DISH_TRAIT_FRAMEHARDWARE_HPP_INCLUDE
 
 #include <algorithm>
 
@@ -143,4 +143,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_FRAMEHARDWARE_HPP_INCLUDE
+#endif // #ifndef DISH_TRAIT_FRAMEHARDWARE_HPP_INCLUDE

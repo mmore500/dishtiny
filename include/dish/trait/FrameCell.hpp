@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_FRAMECELL_HPP_INCLUDE
-#define DISH_FRAMECELL_HPP_INCLUDE
+#ifndef DISH_TRAIT_FRAMECELL_HPP_INCLUDE
+#define DISH_TRAIT_FRAMECELL_HPP_INCLUDE
 
 #include <mutex>
 #include <algorithm>
@@ -117,4 +117,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_FRAMECELL_HPP_INCLUDE
+#endif // #ifndef DISH_TRAIT_FRAMECELL_HPP_INCLUDE

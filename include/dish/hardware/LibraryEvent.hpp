@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_LIBRARYEVENT_HPP_INCLUDE
-#define DISH_LIBRARYEVENT_HPP_INCLUDE
+#ifndef DISH_HARDWARE_LIBRARYEVENT_HPP_INCLUDE
+#define DISH_HARDWARE_LIBRARYEVENT_HPP_INCLUDE
 
 #include "../../../third-party/Empirical/source/base/Ptr.h"
 
@@ -270,4 +270,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_LIBRARYEVENT_HPP_INCLUDE
+#endif // #ifndef DISH_HARDWARE_LIBRARYEVENT_HPP_INCLUDE

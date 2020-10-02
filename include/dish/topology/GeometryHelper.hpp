@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_GEOMETRYHELPER_HPP_INCLUDE
-#define DISH_GEOMETRYHELPER_HPP_INCLUDE
+#ifndef DISH_TOPOLOGY_GEOMETRYHELPER_HPP_INCLUDE
+#define DISH_TOPOLOGY_GEOMETRYHELPER_HPP_INCLUDE
 
 #include "../../../third-party/Empirical/source/base/assert.h"
 #include "../../../third-party/Empirical/source/base/vector.h"
@@ -100,4 +100,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_GEOMETRYHELPER_HPP_INCLUDE
+#endif // #ifndef DISH_TOPOLOGY_GEOMETRYHELPER_HPP_INCLUDE

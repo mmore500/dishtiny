@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_GENOME_HPP_INCLUDE
-#define DISH_GENOME_HPP_INCLUDE
+#ifndef DISH_GENOME_GENOME_HPP_INCLUDE
+#define DISH_GENOME_GENOME_HPP_INCLUDE
 
 #include "../../../third-party/Empirical/source/base/assert.h"
 #include "../../../third-party/Empirical/source/hardware/EventDrivenGP.h"
@@ -215,4 +215,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_GENOME_HPP_INCLUDE
+#endif // #ifndef DISH_GENOME_GENOME_HPP_INCLUDE

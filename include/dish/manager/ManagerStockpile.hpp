@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_MANAGERSTOCKPILE_HPP_INCLUDE
-#define DISH_MANAGERSTOCKPILE_HPP_INCLUDE
+#ifndef DISH_MANAGER_MANAGERSTOCKPILE_HPP_INCLUDE
+#define DISH_MANAGER_MANAGERSTOCKPILE_HPP_INCLUDE
 
 #include <numeric>
 #include <limits>
@@ -194,4 +194,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_MANAGERSTOCKPILE_HPP_INCLUDE
+#endif // #ifndef DISH_MANAGER_MANAGERSTOCKPILE_HPP_INCLUDE

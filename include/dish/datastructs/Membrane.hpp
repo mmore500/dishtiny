@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_MEMBRANE_HPP_INCLUDE
-#define DISH_MEMBRANE_HPP_INCLUDE
+#ifndef DISH_DATASTRUCTS_MEMBRANE_HPP_INCLUDE
+#define DISH_DATASTRUCTS_MEMBRANE_HPP_INCLUDE
 
 namespace dish {
 
@@ -131,4 +131,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_MEMBRANE_HPP_INCLUDE
+#endif // #ifndef DISH_DATASTRUCTS_MEMBRANE_HPP_INCLUDE

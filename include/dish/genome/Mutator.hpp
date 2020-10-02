@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_MUTATOR_HPP_INCLUDE
-#define DISH_MUTATOR_HPP_INCLUDE
+#ifndef DISH_GENOME_MUTATOR_HPP_INCLUDE
+#define DISH_GENOME_MUTATOR_HPP_INCLUDE
 
 #include "../../../third-party/Empirical/source/hardware/signalgp_utils.h"
 
@@ -42,4 +42,4 @@ class Mutator : public emp::SignalGPMutator<
 
 } // namespace dish
 
-#endif // #ifndef DISH_MUTATOR_HPP_INCLUDE
+#endif // #ifndef DISH_GENOME_MUTATOR_HPP_INCLUDE

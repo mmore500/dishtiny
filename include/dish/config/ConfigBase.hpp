@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_CONFIGBASE_HPP_INCLUDE
-#define DISH_CONFIGBASE_HPP_INCLUDE
+#ifndef DISH_CONFIG_CONFIGBASE_HPP_INCLUDE
+#define DISH_CONFIG_CONFIGBASE_HPP_INCLUDE
 
 #include <float.h>
 #include <string>
@@ -130,4 +130,4 @@ EMP_BUILD_CONFIG(
 
 } // namespace dish
 
-#endif // #ifndef DISH_CONFIGBASE_HPP_INCLUDE
+#endif // #ifndef DISH_CONFIG_CONFIGBASE_HPP_INCLUDE

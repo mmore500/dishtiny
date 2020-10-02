@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_MANAGERPRIORITY_HPP_INCLUDE
-#define DISH_MANAGERPRIORITY_HPP_INCLUDE
+#ifndef DISH_MANAGER_MANAGERPRIORITY_HPP_INCLUDE
+#define DISH_MANAGER_MANAGERPRIORITY_HPP_INCLUDE
 
 #include <algorithm>
 #include <optional>
@@ -241,4 +241,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_MANAGERPRIORITY_HPP_INCLUDE
+#endif // #ifndef DISH_MANAGER_MANAGERPRIORITY_HPP_INCLUDE

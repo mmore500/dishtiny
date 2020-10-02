@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_WEBARTISTBASE_HPP_INCLUDE
-#define DISH_WEBARTISTBASE_HPP_INCLUDE
+#ifndef DISH_WEB_WEBARTISTBASE_HPP_INCLUDE
+#define DISH_WEB_WEBARTISTBASE_HPP_INCLUDE
 
 #include <optional>
 #include <limits>
@@ -131,4 +131,4 @@ std::string WebArtistBase::GetName() const { return name; }
 
 } // namepsace dish
 
-#endif // #ifndef DISH_WEBARTISTBASE_HPP_INCLUDE
+#endif // #ifndef DISH_WEB_WEBARTISTBASE_HPP_INCLUDE

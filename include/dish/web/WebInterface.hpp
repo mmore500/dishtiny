@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_WEBINTERFACE_HPP_INCLUDE
-#define DISH_WEBINTERFACE_HPP_INCLUDE
+#ifndef DISH_WEB_WEBINTERFACE_HPP_INCLUDE
+#define DISH_WEB_WEBINTERFACE_HPP_INCLUDE
 
 #include <algorithm>
 #include <optional>
@@ -1682,4 +1682,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_WEBINTERFACE_HPP_INCLUDE
+#endif // #ifndef DISH_WEB_WEBINTERFACE_HPP_INCLUDE

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_CHANNELPACK_HPP_INCLUDE
-#define DISH_CHANNELPACK_HPP_INCLUDE
+#ifndef DISH_GENOME_CHANNELPACK_HPP_INCLUDE
+#define DISH_GENOME_CHANNELPACK_HPP_INCLUDE
 
 #include "../../../third-party/Empirical/source/base/vector.h"
 
@@ -12,4 +12,4 @@ using ChannelPack = emp::vector<Config::chanid_t>;
 
 } // namespace dish
 
-#endif // #ifndef DISH_CHANNELPACK_HPP_INCLUDE
+#endif // #ifndef DISH_GENOME_CHANNELPACK_HPP_INCLUDE

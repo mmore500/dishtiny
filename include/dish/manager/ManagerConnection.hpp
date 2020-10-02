@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_MANAGERCONNECTION_HPP_INCLUDE
-#define DISH_MANAGERCONNECTION_HPP_INCLUDE
+#ifndef DISH_MANAGER_MANAGERCONNECTION_HPP_INCLUDE
+#define DISH_MANAGER_MANAGERCONNECTION_HPP_INCLUDE
 
 #include "../trait/FrameCell.hpp"
 #include "../topology/GeometryHelper.hpp"
@@ -138,4 +138,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_MANAGERCONNECTION_HPP_INCLUDE
+#endif // #ifndef DISH_MANAGER_MANAGERCONNECTION_HPP_INCLUDE

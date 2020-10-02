@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_DATAHELPER_TOOLS_HPP_INCLUDE
-#define DISH_DATAHELPER_TOOLS_HPP_INCLUDE
+#ifndef DISH_DATA_DATAHELPER_TOOLS_HPP_INCLUDE
+#define DISH_DATA_DATAHELPER_TOOLS_HPP_INCLUDE
 
 #include <iostream>
 #include <sstream>
@@ -370,4 +370,4 @@ class H5Utils {
 
 } // namespace dish
 
-#endif // #ifndef DISH_DATAHELPER_TOOLS_HPP_INCLUDE
+#endif // #ifndef DISH_DATA_DATAHELPER_TOOLS_HPP_INCLUDE

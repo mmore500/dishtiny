@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_WEBARTISTCELL_HPP_INCLUDE
-#define DISH_WEBARTISTCELL_HPP_INCLUDE
+#ifndef DISH_WEB_WEBARTISTCELL_HPP_INCLUDE
+#define DISH_WEB_WEBARTISTCELL_HPP_INCLUDE
 
 #include <optional>
 #include <limits>
@@ -167,4 +167,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_WEBARTISTCELL_HPP_INCLUDE
+#endif // #ifndef DISH_WEB_WEBARTISTCELL_HPP_INCLUDE

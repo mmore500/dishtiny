@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_CONFIG_HPP_INCLUDE
-#define DISH_CONFIG_HPP_INCLUDE
+#ifndef DISH_CONFIG_CONFIG_HPP_INCLUDE
+#define DISH_CONFIG_CONFIG_HPP_INCLUDE
 
 #define STRINGVIEWIFY(s) std::string_view(IFY(s))
 #define STRINGIFY(s) IFY(s)
@@ -129,4 +129,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_CONFIG_HPP_INCLUDE
+#endif // #ifndef DISH_CONFIG_CONFIG_HPP_INCLUDE

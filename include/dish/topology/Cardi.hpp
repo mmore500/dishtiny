@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_CARDI_HPP_INCLUDE
-#define DISH_CARDI_HPP_INCLUDE
+#ifndef DISH_TOPOLOGY_CARDI_HPP_INCLUDE
+#define DISH_TOPOLOGY_CARDI_HPP_INCLUDE
 
 #include "../../../third-party/Empirical/source/tools/Random.h"
 
@@ -28,4 +28,4 @@ constexpr int Cardi::Dy[];
 
 } // dish
 
-#endif // #ifndef DISH_CARDI_HPP_INCLUDE
+#endif // #ifndef DISH_TOPOLOGY_CARDI_HPP_INCLUDE

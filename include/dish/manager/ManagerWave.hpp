@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_MANAGERWAVE_HPP_INCLUDE
-#define DISH_MANAGERWAVE_HPP_INCLUDE
+#ifndef DISH_MANAGER_MANAGERWAVE_HPP_INCLUDE
+#define DISH_MANAGER_MANAGERWAVE_HPP_INCLUDE
 
 #include <algorithm>
 
@@ -165,4 +165,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_MANAGERWAVE_HPP_INCLUDE
+#endif // #ifndef DISH_MANAGER_MANAGERWAVE_HPP_INCLUDE

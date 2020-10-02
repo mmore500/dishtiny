@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_DISHWORLD_HPP_INCLUDE
-#define DISH_DISHWORLD_HPP_INCLUDE
+#ifndef DISH_WORLD_DISHWORLD_HPP_INCLUDE
+#define DISH_WORLD_DISHWORLD_HPP_INCLUDE
 
 #include <tuple>
 #include <utility>
@@ -63,4 +63,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_DISHWORLD_HPP_INCLUDE
+#endif // #ifndef DISH_WORLD_DISHWORLD_HPP_INCLUDE

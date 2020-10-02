@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_DATAHELPER_TYPES_HPP_INCLUDE
-#define DISH_DATAHELPER_TYPES_HPP_INCLUDE
+#ifndef DISH_DATA_DATAHELPER_TYPES_HPP_INCLUDE
+#define DISH_DATA_DATAHELPER_TYPES_HPP_INCLUDE
 
 #include <array>
 #include <cassert>
@@ -161,4 +161,4 @@ std::array<char, Config::tag_t::GetNumBytes()> convert_type(const Config::tag_t&
 
 } // namespace dish
 
-#endif // #ifndef DISH_DATAHELPER_TYPES_HPP_INCLUDE
+#endif // #ifndef DISH_DATA_DATAHELPER_TYPES_HPP_INCLUDE

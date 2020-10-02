@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_DATAHELPER_HPP_INCLUDE
-#define DISH_DATAHELPER_HPP_INCLUDE
+#ifndef DISH_DATA_DATAHELPER_HPP_INCLUDE
+#define DISH_DATA_DATAHELPER_HPP_INCLUDE
 
 #include <iostream>
 #include <sstream>
@@ -715,4 +715,4 @@ private:
 
 } // namespace dish
 
-#endif // #ifndef DISH_DATAHELPER_HPP_INCLUDE
+#endif // #ifndef DISH_DATA_DATAHELPER_HPP_INCLUDE

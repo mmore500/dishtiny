@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH_MANAGERFAMILY_HPP_INCLUDE
-#define DISH_MANAGERFAMILY_HPP_INCLUDE
+#ifndef DISH_MANAGER_MANAGERFAMILY_HPP_INCLUDE
+#define DISH_MANAGER_MANAGERFAMILY_HPP_INCLUDE
 
 #include <unordered_set>
 
@@ -66,4 +66,4 @@ public:
 
 } // namespace dish
 
-#endif // #ifndef DISH_MANAGERFAMILY_HPP_INCLUDE
+#endif // #ifndef DISH_MANAGER_MANAGERFAMILY_HPP_INCLUDE
