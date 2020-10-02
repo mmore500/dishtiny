@@ -17,7 +17,7 @@ test-%: %.cpp ../third-party/Catch/single_include/catch2/catch.hpp
 
 cov-%: %.cpp ../third-party/Catch/single_include/catch2/catch.hpp
 	cp "/usr/bin/h5c++" .
-	sed -i "s/g++/clang++/g" "/usr/bin/h5c++"
+	sed -i "s/g++/clang++/g" "h5c++"
 	./h5c++ $(FLAGS) $< -o $@.out
 	#echo "running $@.out"
 	# execute test
