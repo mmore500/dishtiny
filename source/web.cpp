@@ -19,18 +19,18 @@
 #include "Empirical/source/tools/keyname_utils.h"
 #include "Empirical/source/web/UrlParams.h"
 
-#include "dish/Config.hpp"
-#include "dish/DishWorld.hpp"
-#include "dish/WebInterface.hpp"
+#include "dish/config/Config.hpp"
+#include "dish/world/DishWorld.hpp"
+#include "dish/web/WebInterface.hpp"
 
-#include "dish/Config.cpp"
-#include "dish/DishWorld.cpp"
-#include "dish/FrameHardware.cpp"
-#include "dish/FrameCell.cpp"
-#include "dish/Manager.cpp"
-#include "dish/LibraryInstruction.cpp"
-#include "dish/LibraryInstructionSpiker.cpp"
-#include "dish/ManagerConnection.cpp"
+#include "dish/config/Config.cpp"
+#include "dish/world/DishWorld.cpp"
+#include "dish/trait/FrameHardware.cpp"
+#include "dish/trait/FrameCell.cpp"
+#include "dish/manager/Manager.cpp"
+#include "dish/hardware/LibraryInstruction.cpp"
+#include "dish/hardware/LibraryInstructionSpiker.cpp"
+#include "dish/manager/ManagerConnection.cpp"
 
 dish::Config cfg;
 

@@ -2,7 +2,7 @@
 
 #include "Catch/single_include/catch2/catch.hpp"
 
-#include "dish/ChannelPack.hpp"
+#include "dish/genome/ChannelPack.hpp"
 
 TEST_CASE("Test ChannelPack") {
   dish::ChannelPack{};
