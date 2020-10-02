@@ -38,7 +38,7 @@ CFLAGS_web_debug := $(CFLAGS_all) $(OFLAGS_web_debug) $(OFLAGS_web_all)
 default: $(PROJECT)
 native: $(PROJECT)
 web: $(PROJECT).js $(PROJECT).html
-all: $(PROJECT) $(PROJECT).js
+all: $(PROJECT) $(PROJECT).js $(PROJECT).html
 
 debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
 debug:	$(PROJECT)
