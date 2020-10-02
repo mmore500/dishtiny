@@ -16,20 +16,20 @@
 #include "Empirical/source/config/command_line.h"
 #include "Empirical/source/config/ArgManager.h"
 
-#include "dishtiny/Config.hpp"
-#include "dishtiny/DishWorld.hpp"
+#include "dish/Config.hpp"
+#include "dish/DishWorld.hpp"
 #ifndef NDATA
-#include "dishtiny/DataHelper.hpp"
+#include "dish/DataHelper.hpp"
 #endif
 
-#include "dishtiny/Config.cpp"
-#include "dishtiny/DishWorld.cpp"
-#include "dishtiny/FrameHardware.cpp"
-#include "dishtiny/FrameCell.cpp"
-#include "dishtiny/Manager.cpp"
-#include "dishtiny/LibraryInstruction.cpp"
-#include "dishtiny/LibraryInstructionSpiker.cpp"
-#include "dishtiny/ManagerConnection.cpp"
+#include "dish/Config.cpp"
+#include "dish/DishWorld.cpp"
+#include "dish/FrameHardware.cpp"
+#include "dish/FrameCell.cpp"
+#include "dish/Manager.cpp"
+#include "dish/LibraryInstruction.cpp"
+#include "dish/LibraryInstructionSpiker.cpp"
+#include "dish/ManagerConnection.cpp"
 
 int main(int argc, char* argv[]) {
 
@@ -37,10 +37,10 @@ int main(int argc, char* argv[]) {
   std::cout << "EMP HASH " << STRINGIFY(EMPIRICAL_HASH_) << std::endl;
   emp::Random temp(1); // need this to prevent a memory leak
   std::cout << "MATCHBIN "
-    << Config::hardware_t(nullptr, nullptr, &temp).GetMatchBin().name()
+    << dish::Config::hardware_t(nullptr, nullptr, &temp).GetMatchBin().name()
     << std::endl;
 
-  Config cfg;
+  dish::Config cfg;
   cfg.LoadFromFile();
   const auto specs = emp::ArgManager::make_builtin_specs(&cfg);
   emp::ArgManager am(argc, argv, specs);
@@ -66,9 +66,9 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  DishWorld world(cfg);
+  dish::DishWorld world(cfg);
   #ifndef NDATA
-  DataHelper datahelper(world, cfg);
+  dish::DataHelper datahelper(world, cfg);
   #endif
 
 

@@ -19,21 +19,20 @@
 #include "Empirical/source/tools/keyname_utils.h"
 #include "Empirical/source/web/UrlParams.h"
 
-#include "dishtiny/Config.hpp"
-#include "dishtiny/DishWorld.hpp"
-#include "dishtiny/WebInterface.hpp"
+#include "dish/Config.hpp"
+#include "dish/DishWorld.hpp"
+#include "dish/WebInterface.hpp"
 
-#include "dishtiny/Config.cpp"
-#include "dishtiny/DishWorld.cpp"
-#include "dishtiny/FrameHardware.cpp"
-#include "dishtiny/FrameCell.cpp"
-#include "dishtiny/Manager.cpp"
-#include "dishtiny/LibraryInstruction.cpp"
-#include "dishtiny/LibraryInstructionSpiker.cpp"
-#include "dishtiny/ManagerConnection.cpp"
+#include "dish/Config.cpp"
+#include "dish/DishWorld.cpp"
+#include "dish/FrameHardware.cpp"
+#include "dish/FrameCell.cpp"
+#include "dish/Manager.cpp"
+#include "dish/LibraryInstruction.cpp"
+#include "dish/LibraryInstructionSpiker.cpp"
+#include "dish/ManagerConnection.cpp"
 
-
-Config cfg;
+dish::Config cfg;
 
 // for logging
 void pwd() {
@@ -60,7 +59,7 @@ void run() {
   std::cout << "==============================\n" << std::endl;
 
   // initialize persistent web interface
-  auto i = new WebInterface(cfg);
+  auto i = new dish::WebInterface(cfg);
 
   // set up web interface
   i->InitializeViewers(0);

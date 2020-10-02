@@ -2,8 +2,8 @@
 
 #include "Catch/single_include/catch2/catch.hpp"
 
-#include "dishtiny/ChannelPack.hpp"
+#include "dish/ChannelPack.hpp"
 
 TEST_CASE("Test ChannelPack") {
-  ChannelPack{};
+  dish::ChannelPack{};
 }
