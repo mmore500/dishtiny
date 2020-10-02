@@ -18,8 +18,15 @@ RUN \
     && \
   echo "installed third party dependencies"
 
-RUN apt-get install -y \
-  libhdf5-dev \
+
+RUN \
+  TEMP_DEB="$(mktemp)" \
+    && \
+  wget -O "$TEMP_DEB" 'http://launchpadlibrarian.net/333132059/libhdf5-dev_1.10.0-patch1+docs-4_amd64.deb' \
+    && \
+  dpkg -i "$TEMP_DEB" \
+    && \
+  rm -f "$TEMP_DEB" \
     && \
   echo "installed hdf dependencies"
 
