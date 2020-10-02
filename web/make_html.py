@@ -49,5 +49,5 @@ template = template_env.get_template(TEMPLATE)
 outputText = template.render(data=data, markdown=markdown, eval=eval, make_badge=make_badge)
 
 # output to file
-with open(DIR + OUTPUT, 'w') as out:
-    out.write(outputText)
+with open(DIR + OUTPUT, 'wb+') as out:
+    out.write( outputText.encode('utf8') )
