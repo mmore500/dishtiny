@@ -44,7 +44,7 @@ debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
 debug:	$(PROJECT)
 
 debug-web:	CFLAGS_web := $(CFLAGS_web_debug)
-debug-web:	$(PROJECT).js
+debug-web:	$(PROJECT).js $(PROJECT).html
 
 web-debug:	debug-web
 
