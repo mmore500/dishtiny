@@ -11,15 +11,15 @@ FLAGS = -std=c++17 -pthread -Wall -Wno-unused-function -Wno-unused-private-field
 default: test
 
 test-%: %.cpp ../third-party/Catch/single_include/catch2/catch.hpp
-	$(CXX) $(FLAGS) $< -o $@.out
+	sed "s/g++/${CXX}/g" "/usr/bin/h5c++" > "h5c++" && chmod +x "h5c++"
+	./h5c++ $(FLAGS) $< -o $@.out
 	# execute test
 	./$@.out
+	rm "h5c++"
 
-cov-%: %.cpp ../third-party/Catch/single_include/catch2/catch.hpp
-	cp "/usr/bin/h5c++" .
-	sed -i "s/g++/clang++/g" "h5c++"
+cov-%: %.cpp ../coverage_include ../third-party/Catch/single_include/catch2/catch.hpp
+	sed "s/g++/clang++/g" "/usr/bin/h5c++" > "h5c++" && chmod +x "h5c++"
 	./h5c++ $(FLAGS) $< -o $@.out
-	#echo "running $@.out"
 	# execute test
 	./$@.out
 	llvm-profdata merge default.profraw -o default.profdata
@@ -53,7 +53,7 @@ cranky: $(addprefix test-, $(TEST_NAMES))
 	git submodule update
 
 coverage: FLAGS := -std=c++17 -pthread -g -Wall -Wno-unused-function -I$(TO_ROOT)/coverage_include/ -I$(TO_ROOT)/third-party/ -DEMP_TRACK_MEM -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -ftemplate-backtrace-limit=0 -fprofile-instr-generate -fcoverage-mapping -fno-inline -fno-elide-constructors -O0
-coverage: ../coverage_include $(addprefix cov-, $(TEST_NAMES))
+coverage: $(addprefix cov-, $(TEST_NAMES))
 
 clean:
 	rm -f *.out
