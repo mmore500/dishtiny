@@ -1,6 +1,3 @@
-# Set up commands
-.PHONY : default native web all ndata debug static sanitize profile debug-web web-debug clean cleanlogs cleanall print-% serve
-
 # Project-specific settings
 PROJECT := dishtiny
 EMP_DIR := third-party/Empirical/source
@@ -99,4 +96,25 @@ coverage:
 install-test-dependencies:
 	git submodule update --init && cd third-party && bash ./install_emsdk.sh && bash ./install_force_cover.sh
 
-.PHONY: tests clean test serve debug native web tests install-test-dependencies documentation-coverage documentation-coverage-badge.json version-badge.json doto-badge.json
+.PHONY: all
+.PHONY: clean
+.PHONY: cleanall
+.PHONY: cleanlogs
+.PHONY: debug
+.PHONY:	debug-web
+.PHONY:	default
+.PHONY:	documentation-coverage
+.PHONY:	documentation-coverage-badge.json
+.PHONY:	doto-badge.json
+.PHONY:	install-test-dependencies
+.PHONY:	native
+.PHONY:	ndata
+.PHONY:	profile
+.PHONY:	sanitize
+.PHONY:	serve
+.PHONY:	static
+.PHONY:	test
+.PHONY:	tests
+.PHONY:	version-badge.json
+.PHONY:	web
+.PHONY:	web-debug
