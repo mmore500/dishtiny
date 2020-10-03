@@ -77,7 +77,9 @@ doto-badge.json:
 badges: documentation-coverage-badge.json version-badge.json doto-badge.json
 
 clean:
-	rm -f $(PROJECT) web/$(PROJECT).js web/*.js.map web/*.js.map *~ source/*.o web/*.wasm web/*.wast
+	rm -rf $(PROJECT) web/$(PROJECT).js web/*.js.map web/*.js.map *~ source/*.o web/*.wasm web/*.wast coverage_include web/*.json
+	cd docs && make clean
+	cd tests && make clean
 
 test: debug web
 	timeout 30 ./dishtiny | grep -q "^32$$" && echo 'matched!' || exit 1
