@@ -11,13 +11,13 @@ DISHTINY_DIRTY := $(shell \
 # make ARGS="-DMETRIC=streak -DSELECTOR=roulette"
 
 # Flags to use regardless of compiler
-CFLAGS_all := -std=c++17 -Wall -Wno-unused-function -Wno-unused-private-field \
+CFLAGS_all := -std=c++17 -pipe -Wall -Wno-unused-function -Wno-unused-private-field \
   -Iinclude -Ithird-party/ -DDISHTINY_HASH_=$(DISHTINY_HASH)$(DISHTINY_DIRTY) \
 	$(ARGS)
 
 # Native compiler information
 CXX := h5c++
-CFLAGS_nat := -O3 -DNDEBUG $(CFLAGS_all) -fopenmp
+CFLAGS_nat := -O3 -march=native -flto -DNDEBUG $(CFLAGS_all) -fopenmp
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
 CFLAGS_nat_debug := -g -DEMP_TRACK_MEM -fopenmp $(CFLAGS_all)
 CFLAGS_nat_sanitize := -fsanitize=address -fsanitize=undefined $(CFLAGS_nat_debug)
