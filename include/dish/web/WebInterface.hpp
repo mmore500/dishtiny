@@ -23,10 +23,10 @@
 
 #include "../config/Config.hpp"
 #include "../genome/Genome.hpp"
-#include "WebArtistBase.hpp"
-#include "WebArtistCell.hpp"
 #include "../world/DishWorld.hpp"
 
+#include "WebArtistBase.hpp"
+#include "WebArtistCell.hpp"
 #include "WebArtistConnection.hpp"
 #include "WebArtistPointer.hpp"
 

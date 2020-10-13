@@ -11,9 +11,9 @@
 #include "../../../third-party/Empirical/source/web/color_map.h"
 #include "../../../third-party/Empirical/source/web/DocuExtras.h"
 
-#include "WebArtistBase.hpp"
-
 #include "../topology/Cardi.hpp"
+
+#include "WebArtistBase.hpp"
 
 namespace dish {
 

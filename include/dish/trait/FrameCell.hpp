@@ -11,11 +11,14 @@
 #include "../../../third-party/Empirical/source/tools/random_utils.h"
 
 #include "../config/Config.hpp"
-#include "FrameHardware.hpp"
 #include "../topology/Cardi.hpp"
 #include "../topology/GeometryHelper.hpp"
 
+#include "FrameHardware.hpp"
+
 namespace dish {
+
+class Manager;
 
 class FrameCell {
 

@@ -7,6 +7,8 @@
 #include "../../../third-party/Empirical/source/tools/Random.h"
 
 #include "../config/Config.hpp"
+#include "../world/DishWorld.hpp"
+
 #include "ManagerApoptosis.hpp"
 #include "ManagerChannel.hpp"
 #include "ManagerFamily.hpp"
@@ -15,7 +17,6 @@
 #include "ManagerPriority.hpp"
 #include "ManagerStockpile.hpp"
 #include "ManagerWave.hpp"
-#include "../world/DishWorld.hpp"
 
 namespace dish {
 

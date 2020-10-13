@@ -16,12 +16,11 @@
 #include "../../../third-party/Empirical/source/tools/QueueCache.h"
 #include "../../../third-party/Empirical/source/tools/string_utils.h"
 
-#include "datahelper_tools.hpp"
-
 #include "../config/Config.hpp"
 #include "../genome/Genome.hpp"
 #include "../world/DishWorld.hpp"
 
+#include "datahelper_tools.hpp"
 
 namespace dish {
 

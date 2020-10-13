@@ -18,7 +18,6 @@
 #include "../../../third-party/Empirical/source/tools/string_utils.h"
 
 #include "../config/Config.hpp"
-#include "DishWorld.hpp"
 #include "../genome/Genome.hpp"
 #include "../genome/Mutator.hpp"
 #include "../hardware/LibraryEvent.hpp"
@@ -27,6 +26,8 @@
 #include "../manager/Manager.hpp"
 #include "../topology/Cardi.hpp"
 #include "../trait/FrameCell.hpp"
+
+#include "DishWorld.hpp"
 
 namespace dish {
 

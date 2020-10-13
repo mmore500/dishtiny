@@ -9,9 +9,10 @@
 
 #include "../config/Config.hpp"
 #include "../datastructs/Membrane.hpp"
-#include "FrameHardware.hpp"
 #include "../manager/Manager.hpp"
 #include "../world/DishWorld.hpp"
+
+#include "FrameHardware.hpp"
 
 namespace dish {
 

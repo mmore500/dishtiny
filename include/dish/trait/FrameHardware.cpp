@@ -8,11 +8,12 @@
 #include "../../../third-party/Empirical/source/base/vector.h"
 
 #include "../config/Config.hpp"
-#include "FrameCell.hpp"
-#include "FrameHardware.hpp"
 #include "../genome/Genome.hpp"
 #include "../manager/Manager.hpp"
 #include "../world/DishWorld.hpp"
+
+#include "FrameCell.hpp"
+#include "FrameHardware.hpp"
 
 namespace dish {
 
