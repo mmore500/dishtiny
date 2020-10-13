@@ -2,19 +2,19 @@
 #ifndef DISH_HARDWARE_LIBRARYINSTRUCTION_HPP_INCLUDE
 #define DISH_HARDWARE_LIBRARYINSTRUCTION_HPP_INCLUDE
 
-#include <functional>
 #include <cmath>
+#include <functional>
 #include <limits>
 #include <memory>
 
 #include "../../../third-party/Empirical/source/base/assert.h"
+#include "../../../third-party/Empirical/source/hardware/InstLib.h"
 #include "../../../third-party/Empirical/source/tools/Random.h"
 #include "../../../third-party/Empirical/source/tools/string_utils.h"
-#include "../../../third-party/Empirical/source/hardware/InstLib.h"
 
-#include "../trait/FrameHardware.hpp"
 #include "../config/Config.hpp"
 #include "../topology/GeometryHelper.hpp"
+#include "../trait/FrameHardware.hpp"
 #include "../world/DishWorld.hpp"
 
 namespace dish {

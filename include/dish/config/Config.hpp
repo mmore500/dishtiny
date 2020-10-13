@@ -6,16 +6,16 @@
 #define STRINGIFY(s) IFY(s)
 #define IFY(s) #s
 
-#include <string>
 #include <deque>
-#include <type_traits>
-#include <string_view>
 #include <ratio>
+#include <string>
+#include <string_view>
+#include <type_traits>
 
-#include "../../../third-party/Empirical/source/base/vector.h"
 #include "../../../third-party/Empirical/source/base/Ptr.h"
-#include "../../../third-party/Empirical/source/config/command_line.h"
+#include "../../../third-party/Empirical/source/base/vector.h"
 #include "../../../third-party/Empirical/source/config/ArgManager.h"
+#include "../../../third-party/Empirical/source/config/command_line.h"
 #include "../../../third-party/Empirical/source/hardware/EventDrivenGP.h"
 #include "../../../third-party/Empirical/source/tools/MatchBin.h"
 #include "../../../third-party/Empirical/source/tools/matchbin_utils.h"

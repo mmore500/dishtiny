@@ -4,31 +4,31 @@
 
 #include <algorithm>
 #include <optional>
-#include <string>
 #include <stdexcept>
+#include <string>
 
 #include "../../../third-party/Empirical/source/base/vector.h"
-#include "../../../third-party/Empirical/source/web/Div.h"
-#include "../../../third-party/Empirical/source/web/Element.h"
-#include "../../../third-party/Empirical/source/web/Button.h"
-#include "../../../third-party/Empirical/source/web/Input.h"
-#include "../../../third-party/Empirical/source/web/web.h"
-#include "../../../third-party/Empirical/source/web/commands.h"
-#include "../../../third-party/Empirical/source/web/Animate.h"
-#include "../../../third-party/Empirical/source/web/Text.h"
+#include "../../../third-party/Empirical/source/tools/hash_utils.h"
+#include "../../../third-party/Empirical/source/tools/keyname_utils.h"
 #include "../../../third-party/Empirical/source/tools/math.h"
 #include "../../../third-party/Empirical/source/tools/Random.h"
-#include "../../../third-party/Empirical/source/tools/keyname_utils.h"
-#include "../../../third-party/Empirical/source/tools/hash_utils.h"
+#include "../../../third-party/Empirical/source/web/Animate.h"
+#include "../../../third-party/Empirical/source/web/Button.h"
+#include "../../../third-party/Empirical/source/web/commands.h"
+#include "../../../third-party/Empirical/source/web/Div.h"
+#include "../../../third-party/Empirical/source/web/Element.h"
+#include "../../../third-party/Empirical/source/web/Input.h"
+#include "../../../third-party/Empirical/source/web/Text.h"
+#include "../../../third-party/Empirical/source/web/web.h"
 
 #include "../config/Config.hpp"
-#include "../world/DishWorld.hpp"
 #include "../genome/Genome.hpp"
 #include "WebArtistBase.hpp"
 #include "WebArtistCell.hpp"
+#include "../world/DishWorld.hpp"
 
-#include "WebArtistPointer.hpp"
 #include "WebArtistConnection.hpp"
+#include "WebArtistPointer.hpp"
 
 namespace dish {
 

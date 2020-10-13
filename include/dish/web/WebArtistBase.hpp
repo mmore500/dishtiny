@@ -2,13 +2,13 @@
 #ifndef DISH_WEB_WEBARTISTBASE_HPP_INCLUDE
 #define DISH_WEB_WEBARTISTBASE_HPP_INCLUDE
 
-#include <optional>
 #include <limits>
+#include <optional>
 
 #include "../../../third-party/Empirical/source/web/Animate.h"
 #include "../../../third-party/Empirical/source/web/Canvas.h"
-#include "../../../third-party/Empirical/source/web/DocuExtras.h"
 #include "../../../third-party/Empirical/source/web/color_map.h"
+#include "../../../third-party/Empirical/source/web/DocuExtras.h"
 
 namespace dish {
 

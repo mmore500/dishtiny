@@ -2,8 +2,8 @@
 #ifndef DISH_MANAGER_MANAGERSHARING_HPP_INCLUDE
 #define DISH_MANAGER_MANAGERSHARING_HPP_INCLUDE
 
-#include <numeric>
 #include <limits>
+#include <numeric>
 
 #include "../../../third-party/Empirical/source/base/assert.h"
 

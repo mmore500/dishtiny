@@ -9,10 +9,10 @@
 #include "../../../third-party/Empirical/source/tools/Random.h"
 #include "../../../third-party/Empirical/source/tools/random_utils.h"
 
-#include "../topology/Cardi.hpp"
 #include "../config/Config.hpp"
-#include "../topology/GeometryHelper.hpp"
 #include "FrameCell.hpp"
+#include "../topology/Cardi.hpp"
+#include "../topology/GeometryHelper.hpp"
 
 namespace dish {
 

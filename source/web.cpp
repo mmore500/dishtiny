@@ -4,33 +4,33 @@
 #include <emscripten.h>
 #include <zlib.h>
 
-#include "cereal/include/cereal/cereal.hpp"
 #include "cereal/include/cereal/archives/json.hpp"
+#include "cereal/include/cereal/cereal.hpp"
 #include "cereal/include/cereal/types/array.hpp"
-#include "cereal/include/cereal/types/vector.hpp"
 #include "cereal/include/cereal/types/map.hpp"
-#include "cereal/include/cereal/types/unordered_map.hpp"
 #include "cereal/include/cereal/types/string.hpp"
+#include "cereal/include/cereal/types/unordered_map.hpp"
+#include "cereal/include/cereal/types/vector.hpp"
 #include "conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "conduit/include/uitsl/utility/inflate.hpp"
 #include "conduit/include/uitsl/utility/untar.hpp"
-#include "Empirical/source/config/command_line.h"
 #include "Empirical/source/config/ArgManager.h"
+#include "Empirical/source/config/command_line.h"
 #include "Empirical/source/tools/keyname_utils.h"
 #include "Empirical/source/web/UrlParams.h"
 
 #include "dish/config/Config.hpp"
-#include "dish/world/DishWorld.hpp"
 #include "dish/web/WebInterface.hpp"
+#include "dish/world/DishWorld.hpp"
 
 #include "dish/config/Config.cpp"
-#include "dish/world/DishWorld.cpp"
-#include "dish/trait/FrameHardware.cpp"
-#include "dish/trait/FrameCell.cpp"
-#include "dish/manager/Manager.cpp"
 #include "dish/hardware/LibraryInstruction.cpp"
 #include "dish/hardware/LibraryInstructionSpiker.cpp"
 #include "dish/manager/ManagerConnection.cpp"
+#include "dish/manager/Manager.cpp"
+#include "dish/trait/FrameCell.cpp"
+#include "dish/trait/FrameHardware.cpp"
+#include "dish/world/DishWorld.cpp"
 
 dish::Config cfg;
 

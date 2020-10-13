@@ -5,11 +5,11 @@
 #include "../../../third-party/Empirical/source/base/assert.h"
 #include "../../../third-party/Empirical/source/hardware/EventDrivenGP.h"
 #include "../../../third-party/Empirical/source/hardware/signalgp_utils.h"
-#include "../../../third-party/Empirical/source/tools/Random.h"
 #include "../../../third-party/Empirical/source/tools/Distribution.h"
+#include "../../../third-party/Empirical/source/tools/Random.h"
 
-#include "Mutator.hpp"
 #include "../config/Config.hpp"
+#include "Mutator.hpp"
 
 namespace dish {
 

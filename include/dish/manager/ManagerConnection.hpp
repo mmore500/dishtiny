@@ -2,9 +2,9 @@
 #ifndef DISH_MANAGER_MANAGERCONNECTION_HPP_INCLUDE
 #define DISH_MANAGER_MANAGERCONNECTION_HPP_INCLUDE
 
-#include "../trait/FrameCell.hpp"
-#include "../topology/GeometryHelper.hpp"
 #include "../manager/ManagerChannel.hpp"
+#include "../topology/GeometryHelper.hpp"
+#include "../trait/FrameCell.hpp"
 
 namespace dish {
 

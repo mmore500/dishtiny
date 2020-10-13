@@ -2,15 +2,15 @@
 #ifndef DISH_MANAGER_MANAGERINBOX_HPP_INCLUDE
 #define DISH_MANAGER_MANAGERINBOX_HPP_INCLUDE
 
-#include <optional>
 #include <functional>
 #include <mutex>
+#include <optional>
 
 #include "../../../third-party/Empirical/source/tools/Random.h"
 #include "../../../third-party/Empirical/source/tools/random_utils.h"
 
-#include "../topology/Cardi.hpp"
 #include "../config/Config.hpp"
+#include "../topology/Cardi.hpp"
 
 namespace dish {
 

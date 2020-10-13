@@ -6,8 +6,8 @@
 
 #include "../../../third-party/Empirical/source/tools/Random.h"
 
-#include "../genome/ChannelPack.hpp"
 #include "../config/Config.hpp"
+#include "../genome/ChannelPack.hpp"
 
 namespace dish {
 

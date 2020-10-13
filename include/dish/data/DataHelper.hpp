@@ -2,9 +2,9 @@
 #ifndef DISH_DATA_DATAHELPER_HPP_INCLUDE
 #define DISH_DATA_DATAHELPER_HPP_INCLUDE
 
+#include <chrono>
 #include <iostream>
 #include <sstream>
-#include <chrono>
 
 #include "H5Cpp.h"
 
@@ -13,14 +13,14 @@
 #include "../../../third-party/Empirical/source/data/DataNode.h"
 #include "../../../third-party/Empirical/source/polyfill/span.h"
 #include "../../../third-party/Empirical/source/tools/keyname_utils.h"
-#include "../../../third-party/Empirical/source/tools/string_utils.h"
 #include "../../../third-party/Empirical/source/tools/QueueCache.h"
+#include "../../../third-party/Empirical/source/tools/string_utils.h"
 
 #include "datahelper_tools.hpp"
 
 #include "../config/Config.hpp"
-#include "../world/DishWorld.hpp"
 #include "../genome/Genome.hpp"
+#include "../world/DishWorld.hpp"
 
 
 namespace dish {

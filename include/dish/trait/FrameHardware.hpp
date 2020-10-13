@@ -4,14 +4,14 @@
 
 #include <algorithm>
 
-#include "../../../third-party/Empirical/source/base/vector.h"
 #include "../../../third-party/Empirical/source/base/Ptr.h"
+#include "../../../third-party/Empirical/source/base/vector.h"
 
 #include "../config/Config.hpp"
+#include "../datastructs/Membrane.hpp"
 #include "FrameHardware.hpp"
 #include "../manager/Manager.hpp"
 #include "../world/DishWorld.hpp"
-#include "../datastructs/Membrane.hpp"
 
 namespace dish {
 

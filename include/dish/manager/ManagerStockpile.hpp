@@ -2,9 +2,9 @@
 #ifndef DISH_MANAGER_MANAGERSTOCKPILE_HPP_INCLUDE
 #define DISH_MANAGER_MANAGERSTOCKPILE_HPP_INCLUDE
 
-#include <numeric>
 #include <limits>
 #include <mutex>
+#include <numeric>
 
 #include "../../../third-party/Empirical/source/base/assert.h"
 

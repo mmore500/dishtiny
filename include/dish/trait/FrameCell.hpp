@@ -2,18 +2,18 @@
 #ifndef DISH_TRAIT_FRAMECELL_HPP_INCLUDE
 #define DISH_TRAIT_FRAMECELL_HPP_INCLUDE
 
-#include <mutex>
 #include <algorithm>
 #include <list>
 #include <memory>
+#include <mutex>
 
 #include "../../../third-party/Empirical/source/tools/Random.h"
 #include "../../../third-party/Empirical/source/tools/random_utils.h"
 
-#include "../topology/Cardi.hpp"
 #include "../config/Config.hpp"
-#include "../topology/GeometryHelper.hpp"
 #include "FrameHardware.hpp"
+#include "../topology/Cardi.hpp"
+#include "../topology/GeometryHelper.hpp"
 
 namespace dish {
 

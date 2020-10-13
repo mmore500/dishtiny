@@ -2,31 +2,31 @@
 #ifndef DISHTINY_DISHWORLD_CPP_INCLUDE
 #define DISHTINY_DISHWORLD_CPP_INCLUDE
 
-#include <tuple>
-#include <utility>
 #include <limits>
 #include <stdexcept>
+#include <tuple>
+#include <utility>
 
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/Empirical/source/base/vector.h"
 #include "../../../third-party/Empirical/source/Evolve/World.h"
-#include "../../../third-party/Empirical/source/tools/Random.h"
-#include "../../../third-party/Empirical/source/tools/hash_utils.h"
 #include "../../../third-party/Empirical/source/tools/BitSet.h"
+#include "../../../third-party/Empirical/source/tools/hash_utils.h"
 #include "../../../third-party/Empirical/source/tools/keyname_utils.h"
-#include "../../../third-party/Empirical/source/tools/string_utils.h"
+#include "../../../third-party/Empirical/source/tools/Random.h"
 #include "../../../third-party/Empirical/source/tools/random_utils.h"
+#include "../../../third-party/Empirical/source/tools/string_utils.h"
 
-#include "../topology/Cardi.hpp"
-#include "DishWorld.hpp"
 #include "../config/Config.hpp"
-#include "../trait/FrameCell.hpp"
+#include "DishWorld.hpp"
 #include "../genome/Genome.hpp"
+#include "../genome/Mutator.hpp"
 #include "../hardware/LibraryEvent.hpp"
 #include "../hardware/LibraryInstruction.hpp"
 #include "../hardware/LibraryInstructionSpiker.hpp"
 #include "../manager/Manager.hpp"
-#include "../genome/Mutator.hpp"
+#include "../topology/Cardi.hpp"
+#include "../trait/FrameCell.hpp"
 
 namespace dish {
 

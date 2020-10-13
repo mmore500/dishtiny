@@ -5,8 +5,8 @@
 #include "../../../third-party/Empirical/source/base/Ptr.h"
 
 #include "../config/Config.hpp"
-#include "../trait/FrameHardware.hpp"
 #include "../manager/Manager.hpp"
+#include "../trait/FrameHardware.hpp"
 
 namespace dish {
 

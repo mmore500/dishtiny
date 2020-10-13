@@ -2,22 +2,22 @@
 #ifndef DISH_DATA_DATAHELPER_TOOLS_HPP_INCLUDE
 #define DISH_DATA_DATAHELPER_TOOLS_HPP_INCLUDE
 
+#include <any>
+#include <chrono>
 #include <iostream>
 #include <sstream>
-#include <chrono>
-#include <any>
 
 #include "H5Cpp.h"
 
 #include "../../../third-party/cereal/include/cereal/archives/json.hpp"
 #include "../../../third-party/Empirical/source/data/DataNode.h"
 #include "../../../third-party/Empirical/source/tools/keyname_utils.h"
-#include "../../../third-party/Empirical/source/tools/string_utils.h"
 #include "../../../third-party/Empirical/source/tools/QueueCache.h"
+#include "../../../third-party/Empirical/source/tools/string_utils.h"
 
 #include "../config/Config.hpp"
-#include "../world/DishWorld.hpp"
 #include "../genome/Genome.hpp"
+#include "../world/DishWorld.hpp"
 
 #include "datahelper_types.hpp"
 

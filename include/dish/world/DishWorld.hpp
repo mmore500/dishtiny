@@ -7,18 +7,18 @@
 
 #include "../../../third-party/Empirical/source/base/vector.h"
 #include "../../../third-party/Empirical/source/Evolve/World.h"
-#include "../../../third-party/Empirical/source/tools/Random.h"
-#include "../../../third-party/Empirical/source/tools/hash_utils.h"
 #include "../../../third-party/Empirical/source/tools/BitSet.h"
+#include "../../../third-party/Empirical/source/tools/hash_utils.h"
+#include "../../../third-party/Empirical/source/tools/Random.h"
 
-#include "../topology/Cardi.hpp"
-#include "../trait/FrameCell.hpp"
 #include "../config/Config.hpp"
 #include "../genome/Genome.hpp"
+#include "../genome/Mutator.hpp"
 #include "../hardware/LibraryEvent.hpp"
 #include "../hardware/LibraryInstruction.hpp"
 #include "../manager/Manager.hpp"
-#include "../genome/Mutator.hpp"
+#include "../topology/Cardi.hpp"
+#include "../trait/FrameCell.hpp"
 
 namespace dish {
 

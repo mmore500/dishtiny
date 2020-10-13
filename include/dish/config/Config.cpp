@@ -2,17 +2,17 @@
 #ifndef DISHTINY_CONFIG_CPP_INCLUDE
 #define DISHTINY_CONFIG_CPP_INCLUDE
 
-#include <string>
 #include <deque>
+#include <string>
 
 #include "../../../third-party/Empirical/source/base/Ptr.h"
 #include "../../../third-party/Empirical/source/base/vector.h"
-#include "../../../third-party/Empirical/source/config/command_line.h"
 #include "../../../third-party/Empirical/source/config/ArgManager.h"
+#include "../../../third-party/Empirical/source/config/command_line.h"
 #include "../../../third-party/Empirical/source/hardware/EventDrivenGP.h"
 
-#include "Config.hpp"
 #include "ConfigBase.hpp"
+#include "Config.hpp"
 #include "ConfigLevel.hpp"
 
 namespace dish {

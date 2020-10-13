@@ -3,8 +3,8 @@
 #define DISH_CONFIG_CONFIGBASE_HPP_INCLUDE
 
 #include <float.h>
-#include <string>
 #include <limits>
+#include <string>
 
 #include "../../../third-party/Empirical/source/config/config.h"
 

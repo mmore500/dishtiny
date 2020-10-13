@@ -6,8 +6,8 @@
 #include "../../../third-party/Empirical/source/base/vector.h"
 #include "../../../third-party/Empirical/source/tools/math.h"
 
-#include "../topology/Cardi.hpp"
 #include "../config/Config.hpp"
+#include "../topology/Cardi.hpp"
 
 namespace dish {
 

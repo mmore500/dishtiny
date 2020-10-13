@@ -3,17 +3,17 @@
 #define DISH_MANAGER_MANAGERPRIORITY_HPP_INCLUDE
 
 #include <algorithm>
+#include <memory>
 #include <optional>
 #include <tuple>
-#include <memory>
 
 #include "../../../third-party/Empirical/source/base/Ptr.h"
 #include "../../../third-party/Empirical/source/base/vector.h"
 #include "../../../third-party/Empirical/source/tools/Random.h"
 #include "../../../third-party/Empirical/source/tools/random_utils.h"
 
-#include "../genome/ChannelPack.hpp"
 #include "../config/Config.hpp"
+#include "../genome/ChannelPack.hpp"
 #include "../genome/Genome.hpp"
 #include "../trait/FrameHardware.hpp"
 

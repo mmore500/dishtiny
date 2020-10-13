@@ -7,8 +7,8 @@ namespace dish {
 #include <algorithm>
 #include <unordered_map>
 
-#include "../../../third-party/Empirical/source/tools/Random.h"
 #include "../../../third-party/Empirical/source/tools/MatchBin.h"
+#include "../../../third-party/Empirical/source/tools/Random.h"
 
 class Membrane {
 
