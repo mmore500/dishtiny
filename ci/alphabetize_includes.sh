@@ -18,7 +18,7 @@ do
     read start stop <<< $line
 
     # adapted from https://stackoverflow.com/a/46018238
-    echo "x" | ex -s -c "${start},${stop}!sort" $filename
+    echo "x" | ex -s -c "${start},${stop}!sort -fd" $filename
 
   done
 done
