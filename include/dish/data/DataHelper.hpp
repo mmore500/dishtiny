@@ -405,11 +405,11 @@ private:
 
           std::vector<bundles::RegulatorData> data;
           // todo: use tid-style lambas to figure out internal H5 type for T
-          for (const auto& uid : state.uids) {
+          for (const auto& [uid, entry] : state.data) {
             data.emplace_back(
-              state.values.at(uid),
-              state.regulators.at(uid).View(),
-              state.tags.at(uid)
+              entry.val,
+              entry.regulator.View(),
+              entry.tag
             );
           }
 
@@ -436,9 +436,9 @@ private:
           std::multiset<Config::tag_t> res;
           for (const auto & stack : hw.GetCores()) {
             if (stack.size()) res.insert(
-              hw.GetMatchBin().GetState().tags.find(
+              hw.GetMatchBin().GetState().data.find(
                 stack.back().GetFP()
-              )->second
+              )->second.tag
             );
           }
 
