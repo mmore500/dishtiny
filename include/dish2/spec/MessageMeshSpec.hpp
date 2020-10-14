@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_SPEC_UITMESSAGESPEC_HPP_INCLUDE
-#define DISH2_SPEC_UITMESSAGESPEC_HPP_INCLUDE
+#ifndef DISH2_SPEC_MESSAGEMESHSPEC_HPP_INCLUDE
+#define DISH2_SPEC_MESSAGEMESHSPEC_HPP_INCLUDE
 
 #include "../../../third-party/conduit/include/uit/ducts/proc/put=dropping+get=stepping+type=cereal/aggregated+inlet=RingIsend+outlet=Iprobe_c::AggregatedIriOiDuct.hpp"
 #include "../../../third-party/conduit/include/uit/setup/ImplSelect.hpp"
@@ -30,4 +30,4 @@ using MessageMeshSpec = internal_message_spec::ImplSpec;
 
 }
 
-#endif // #ifndef DISH2_SPEC_UITMESSAGESPEC_HPP_INCLUDE
+#endif // #ifndef DISH2_SPEC_MESSAGEMESHSPEC_HPP_INCLUDE

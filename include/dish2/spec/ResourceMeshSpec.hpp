@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_SPEC_UITRESOURCESPEC_HPP_INCLUDE
-#define DISH2_SPEC_UITRESOURCESPEC_HPP_INCLUDE
+#ifndef DISH2_SPEC_RESOURCEMESHSPEC_HPP_INCLUDE
+#define DISH2_SPEC_RESOURCEMESHSPEC_HPP_INCLUDE
 
 #include "../../../third-party/conduit/include/uit/ducts/intra/accumulating+type=any/a::AccumulatingDuct.hpp"
 #include "../../../third-party/conduit/include/uit/ducts/proc/accumulating+type=fundamental/aggregated+inlet=Raccumulate+outlet=WithdrawingWindow_f::AggregatedIrOwwDuct.hpp"
@@ -32,4 +32,4 @@ using ResourceMeshSpec = internal_resource_spec::ImplSpec;
 
 }
 
-#endif // #ifndef DISH2_SPEC_UITRESOURCESPEC_HPP_INCLUDE
+#endif // #ifndef DISH2_SPEC_RESOURCEMESHSPEC_HPP_INCLUDE
