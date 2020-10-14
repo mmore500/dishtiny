@@ -18,15 +18,15 @@ struct ProcWorld {
   using proc_assigner_t = typename Spec::proc_assigner_t;
 
   netuit::Mesh<message_mesh_spec_t> message_mesh{
-    topology_factory_t{}( dish2::Cfg::N_NODES() ),
-    thread_assigner_t{ dish2::Cfg::N_NODES(), dish2::Cfg::N_NODES() /*FIXME*/ },
-    proc_assigner_t{ dish2::Cfg::N_PROCS(), dish2::Cfg::N_NODES() }
+    topology_factory_t{}( dish2::Cfg::N_CELLS() ),
+    thread_assigner_t{ dish2::Cfg::N_CELLS(), dish2::Cfg::N_CELLS() /*FIXME*/ },
+    proc_assigner_t{ dish2::Cfg::N_PROCS(), dish2::Cfg::N_CELLS() }
   };
 
   netuit::Mesh<resource_mesh_spec_t> resource_mesh{
-    topology_factory_t{}( dish2::Cfg::N_NODES() ),
-    thread_assigner_t{ dish2::Cfg::N_NODES(), dish2::Cfg::N_NODES() /*FIXME*/ },
-    proc_assigner_t{ dish2::Cfg::N_PROCS(), dish2::Cfg::N_NODES() }
+    topology_factory_t{}( dish2::Cfg::N_CELLS() ),
+    thread_assigner_t{ dish2::Cfg::N_CELLS(), dish2::Cfg::N_CELLS() /*FIXME*/ },
+    proc_assigner_t{ dish2::Cfg::N_PROCS(), dish2::Cfg::N_CELLS() }
   };
 
   dish2::ThreadWorld<Spec> MakeThreadWorld(const uitsl::thread_id_t thread_id) {

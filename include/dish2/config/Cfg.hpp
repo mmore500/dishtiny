@@ -10,8 +10,6 @@ struct Cfg {
 
   static size_t N_PROCS() { return 1; }
 
-  static size_t N_NODES() { return 1; }
-
   static size_t N_CELLS() { return 100; }
 
 };
