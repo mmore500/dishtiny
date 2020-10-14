@@ -11,13 +11,21 @@ namespace dish2 {
 template<typename Spec>
 struct ThreadWorld {
 
-  using uit_resource_spec_t = typename Spec::uit_resource_spec_t;
-  using submesh_t = typename netuit::Mesh<uit_resource_spec_t>::submesh_t;
+  using message_mesh_spec_t = typename Spec::message_mesh_spec_t;
+  using message_submesh_t
+    = typename netuit::Mesh<message_mesh_spec_t>::submesh_t;
+  message_submesh_t message_submesh;
 
-  submesh_t resource_submesh;
+  using resource_mesh_spec_t = typename Spec::resource_mesh_spec_t;
+  using resource_submesh_t
+    = typename netuit::Mesh<resource_mesh_spec_t>::submesh_t;
+  resource_submesh_t resource_submesh;
 
-  explicit ThreadWorld(const submesh_t& resource_submesh_)
-  : resource_submesh(resource_submesh_)
+  explicit ThreadWorld(
+    const message_submesh_t& message_submesh_,
+    const resource_submesh_t& resource_submesh_
+  ) : message_submesh(message_submesh_)
+  , resource_submesh(resource_submesh_)
   {}
 
 };
