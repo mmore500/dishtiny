@@ -10,8 +10,8 @@ test-%: %.cpp $(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp
 	./$@.out
 
 cov-%: %.cpp $(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp
-	sed "s/g++/clang++/g" "/usr/bin/h5c++" > "h5c++" && chmod +x "h5c++"
-	./h5c++ $(FLAGS) $< -o $@.out
+	sed "s/g++/mpicxx.openmpi/g" "/usr/bin/h5c++" > "h5c++" && chmod +x "h5c++"
+	export OMPI_CXX=clang++; ./h5c++ $(FLAGS) $< -o $@.out
 	#echo "running $@.out"
 	# execute test
 	./$@.out
