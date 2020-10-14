@@ -6,8 +6,8 @@
 #include "../../../third-party/conduit/include/uit/ducts/proc/accumulating+type=fundamental/aggregated+inlet=Raccumulate+outlet=WithdrawingWindow_f::AggregatedIrOwwDuct.hpp"
 #include "../../../third-party/conduit/include/uit/ducts/proc/accumulating+type=trivial/inlet=Isend+outlet=Irecv_t::IiOiDuct.hpp"
 #include "../../../third-party/conduit/include/uit/ducts/thread/accumulating+type=any/a::MutexAccumulatingDuct.hpp"
-#include "../../../third-party/conduit/include/uit/setup/ImplSpec.hpp"
 #include "../../../third-party/conduit/include/uit/setup/ImplSelect.hpp"
+#include "../../../third-party/conduit/include/uit/setup/ImplSpec.hpp"
 
 namespace dish2 {
 
