@@ -994,22 +994,22 @@ public:
       [this](const size_t i) -> std::optional<size_t_datum> {
         size_t count = 0;
         for (size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
-          const auto & regulators = w.GetFrame(i).GetFrameHardware(
+          const auto & entries = w.GetFrame(i).GetFrameHardware(
             d
-          ).GetHardware().GetMatchBin().GetState().regulators;
+          ).GetHardware().GetMatchBin().GetState().data;
           count += std::count_if(
-            std::begin(regulators),
-            std::end(regulators),
-            [](const auto & pair){ return pair.second.View(); }
+            std::begin(entries),
+            std::end(entries),
+            [](const auto & pair){ return pair.second.regulator.View(); }
           );
         }
-        const auto & regulators = w.GetFrame(
+        const auto & entries = w.GetFrame(
           i
-        ).GetSpiker().GetHardware().GetMatchBin().GetState().regulators;
+        ).GetSpiker().GetHardware().GetMatchBin().GetState().data;
         count += std::count_if(
-          std::begin(regulators),
-          std::end(regulators),
-          [](const auto & pair){ return pair.second.View(); }
+          std::begin(entries),
+          std::end(entries),
+          [](const auto & pair){ return pair.second.regulator.View(); }
         );
         if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
           count,
@@ -1045,22 +1045,22 @@ public:
       [this](const size_t i) -> std::optional<size_t_datum> {
         size_t count = 0;
         for (size_t d = 0; d < Cardi::Dir::NumDirs; ++d) {
-          const auto & regulators = w.GetFrame(i).GetFrameHardware(
+          const auto & entries = w.GetFrame(i).GetFrameHardware(
             d
-          ).GetHardware().GetMatchBin().GetState().regulators;
+          ).GetHardware().GetMatchBin().GetState().data;
           count += std::any_of(
-            std::begin(regulators),
-            std::end(regulators),
-            [](const auto & pair){ return pair.second.View(); }
+            std::begin(entries),
+            std::end(entries),
+            [](const auto & pair){ return pair.second.regulator.View(); }
           );
         }
-        const auto & regulators = w.GetFrame(
+        const auto & entries = w.GetFrame(
           i
-        ).GetSpiker().GetHardware().GetMatchBin().GetState().regulators;
+        ).GetSpiker().GetHardware().GetMatchBin().GetState().data;
         count += std::any_of(
-          std::begin(regulators),
-          std::end(regulators),
-          [](const auto & pair){ return pair.second.View(); }
+          std::begin(entries),
+          std::end(entries),
+          [](const auto & pair){ return pair.second.regulator.View(); }
         );
         if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
           count,
@@ -1094,11 +1094,11 @@ public:
       "Directional Regulation", // description
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
-        const auto & regulators = w.GetFrame(i).GetFrameHardware(j).GetHardware().GetMatchBin().GetState().regulators;
+        const auto & entries = w.GetFrame(i).GetFrameHardware(j).GetHardware().GetMatchBin().GetState().data;
         const size_t count = std::count_if(
-          std::begin(regulators),
-          std::end(regulators),
-          [](const auto & pair){ return pair.second.View(); }
+          std::begin(entries),
+          std::end(entries),
+          [](const auto & pair){ return pair.second.regulator.View(); }
         );
         if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
           count,
@@ -1132,11 +1132,11 @@ public:
       "Interconnect Regulation", // description
       grid_viewer, // viewer
       [this](const size_t i, const size_t j) -> std::optional<size_t_datum> {
-        const auto & regulators = w.GetFrame(i).GetSpiker().GetHardware().GetMatchBin().GetState().regulators;
+        const auto & entries = w.GetFrame(i).GetSpiker().GetHardware().GetMatchBin().GetState().data;
         const size_t count = std::count_if(
-          std::begin(regulators),
-          std::end(regulators),
-          [](const auto & pair){ return pair.second.View(); }
+          std::begin(entries),
+          std::end(entries),
+          [](const auto & pair){ return pair.second.regulator.View(); }
         );
         if (w.IsOccupied(i)) return std::make_optional(size_t_datum{
           count,
