@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH__PERIPHERAL_READABLESTATE_READABLESTATE_HPP_INCLUDE
-#define DISH__PERIPHERAL_READABLESTATE_READABLESTATE_HPP_INCLUDE
+#ifndef DISH2_PERIPHERAL_READABLE_STATE_READABLESTATE_HPP_INCLUDE
+#define DISH2_PERIPHERAL_READABLE_STATE_READABLESTATE_HPP_INCLUDE
 
 #include "../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
 #include "../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
@@ -15,4 +15,4 @@ struct ReadableState
 
 } // namespace dish2
 
-#endif // #ifndef DISH__PERIPHERAL_READABLESTATE_READABLESTATE_HPP_INCLUDE
+#endif // #ifndef DISH2_PERIPHERAL_READABLE_STATE_READABLESTATE_HPP_INCLUDE

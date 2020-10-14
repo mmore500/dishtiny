@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH__CELL_CARDINAL_HPP_INCLUDE
-#define DISH__CELL_CARDINAL_HPP_INCLUDE
+#ifndef DISH2_CELL_CARDINAL_HPP_INCLUDE
+#define DISH2_CELL_CARDINAL_HPP_INCLUDE
 
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 
@@ -21,4 +21,4 @@ struct Cardinal {
 
 } // namespace dish2
 
-#endif // #ifndef DISH__CELL_CARDINAL_HPP_INCLUDE
+#endif // #ifndef DISH2_CELL_CARDINAL_HPP_INCLUDE

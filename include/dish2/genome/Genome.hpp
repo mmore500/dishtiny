@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH__GENOME_GENOME_HPP_INCLUDE
-#define DISH__GENOME_GENOME_HPP_INCLUDE
+#ifndef DISH2_GENOME_GENOME_HPP_INCLUDE
+#define DISH2_GENOME_GENOME_HPP_INCLUDE
 
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
@@ -17,4 +17,4 @@ class Genome {
 
 } // namespace dish2
 
-#endif // #ifndef DISH__GENOME_GENOME_HPP_INCLUDE
+#endif // #ifndef DISH2_GENOME_GENOME_HPP_INCLUDE

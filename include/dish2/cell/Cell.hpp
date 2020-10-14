@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH__CELL_CELL_HPP_INCLUDE
-#define DISH__CELL_CELL_HPP_INCLUDE
+#ifndef DISH2_CELL_CELL_HPP_INCLUDE
+#define DISH2_CELL_CELL_HPP_INCLUDE
 
 #include "../../../third-party/Empirical/source/base/vector.h"
 
@@ -21,4 +21,4 @@ struct Cell {
 
 } // namespace dish2
 
-#endif // #ifndef DISH__CELL_CELL_HPP_INCLUDE
+#endif // #ifndef DISH2_CELL_CELL_HPP_INCLUDE

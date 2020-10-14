@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH__PERIPHERAL_PERIPHERAL_HPP_INCLUDE
-#define DISH__PERIPHERAL_PERIPHERAL_HPP_INCLUDE
+#ifndef DISH2_PERIPHERAL_PERIPHERAL_HPP_INCLUDE
+#define DISH2_PERIPHERAL_PERIPHERAL_HPP_INCLUDE
 
 #include "readable_state/ReadableState.hpp"
 
@@ -14,4 +14,4 @@ struct Peripheral {
 
 } // namespace dish2
 
-#endif // #ifndef DISH__PERIPHERAL_PERIPHERAL_HPP_INCLUDE
+#endif // #ifndef DISH2_PERIPHERAL_PERIPHERAL_HPP_INCLUDE
