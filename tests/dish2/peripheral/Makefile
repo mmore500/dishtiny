@@ -1,5 +1,5 @@
-TARGET_NAMES += dish
-TARGET_NAMES += dish2
+TARGET_NAMES += peripheral
+TARGET_NAMES += readable_state
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
 
