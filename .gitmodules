@@ -18,5 +18,5 @@
   path = third-party/cereal
   url = https://github.com/mmore500/cereal
 [submodule "third-party/signalgp-lite"]
-	path = third-party/signalgp-lite
-	url = https://github.com/mmore500/signalgp-lite
+  path = third-party/signalgp-lite
+  url = https://github.com/mmore500/signalgp-lite
