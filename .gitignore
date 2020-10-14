@@ -19,6 +19,9 @@
 a.out
 a.out.js
 
+web/dishtiny.js
+web/index.html
+
 build/
 doc/_build/
 
