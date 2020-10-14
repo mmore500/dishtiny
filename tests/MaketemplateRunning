@@ -1,4 +1,4 @@
-CXX ?= g++
+CXX ?= mpicxx
 
 FLAGS = -std=c++17 -g -pipe -pthread -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/
 
