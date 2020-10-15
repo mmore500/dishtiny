@@ -11,6 +11,7 @@
 
 #include "MessageMeshSpec.hpp"
 #include "ResourceMeshSpec.hpp"
+#include "StateMeshSpec.hpp"
 
 namespace dish2 {
 
@@ -22,8 +23,8 @@ struct Spec {
   >;
 
   using message_mesh_spec_t = dish2::MessageMeshSpec;
-
   using resource_mesh_spec_t = dish2::ResourceMeshSpec;
+  using state_mesh_spec_t = dish2::StateMeshSpec;
 
   using topology_factory_t = netuit::RingTopologyFactory;
 

@@ -8,5 +8,5 @@
 using Spec = dish2::Spec;
 
 TEST_CASE("Test Cell") {
-  dish2::Cell<Spec>{};
+  // dish2::Cell<Spec>{};
 }

@@ -8,5 +8,5 @@
 using Spec = dish2::Spec;
 
 TEST_CASE("Test Cardinal") {
-  dish2::Cardinal<Spec>{};
+  // dish2::Cardinal<Spec>{};
 }

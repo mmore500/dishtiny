@@ -5,5 +5,5 @@
 #include "dish2/peripheral/Peripheral.hpp"
 
 TEST_CASE("Test Peripheral") {
-  dish2::Peripheral{};
+  // dish2::Peripheral{};
 }
