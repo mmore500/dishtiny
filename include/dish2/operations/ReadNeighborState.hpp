@@ -22,7 +22,7 @@ struct ReadNeighborState {
 
     constexpr size_t num_addrs
       = decltype(peripheral.readable_state)::GetSize();
-    const size_t addr = inst.tag.GetUInt() % num_addrs;
+    const size_t addr = inst.tag.GetUInt(0) % num_addrs;
 
     core.registers[ inst.args[0] ] = neighbor_state.Read(addr);
 
