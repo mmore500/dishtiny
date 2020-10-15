@@ -17,12 +17,12 @@ struct WriteOwnState {
     sgpl::Core<Spec>& core,
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>&,
-    const typename Spec::peripheral_t& peripheral
+    typename Spec::peripheral_t& peripheral
   ) {
 
     constexpr size_t num_addrs
       = decltype(peripheral.readable_state)::GetSize();
-    const size_t addr = inst.tag.GetUInt() % num_addrs;
+    const size_t addr = inst.tag.GetUInt(0) % num_addrs;
 
     peripheral.readable_state.template Get<dish2::WritableState>().Write(
       addr,

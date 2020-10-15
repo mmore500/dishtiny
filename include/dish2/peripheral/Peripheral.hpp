@@ -3,7 +3,6 @@
 #define DISH2_PERIPHERAL_PERIPHERAL_HPP_INCLUDE
 
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeInput.hpp"
-#include "../../../third-party/conduit/include/netuit/mesh/MeshNodeOutput.hpp"
 
 #include "../spec/StateMeshSpec.hpp"
 
@@ -17,7 +16,6 @@ struct Peripheral {
 
   using state_mesh_spec_t = dish2::StateMeshSpec;
   using state_node_input_t = netuit::MeshNodeInput<state_mesh_spec_t>;
-  using state_node_output_t = netuit::MeshNodeOutput<state_mesh_spec_t>;
 
   void RefreshInput() { neighbor_state.Jump(); }
 
