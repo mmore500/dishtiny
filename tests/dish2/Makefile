@@ -1,5 +1,6 @@
 TARGET_NAMES += cell
 TARGET_NAMES += genome
+TARGET_NAMES += operations
 TARGET_NAMES += peripheral
 TARGET_NAMES += spec
 

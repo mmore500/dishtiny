@@ -6,4 +6,5 @@
 
 TEST_CASE("Test WritableState") {
   dish2::WritableState{};
+  dish2::WritableState{}.Write( 0, 27.0 );
 }
