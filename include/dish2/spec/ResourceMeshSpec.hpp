@@ -26,10 +26,11 @@ namespace internal_resource_spec {
     2, // N
     16 // B
   >;
-}
+
+} // namespace internal_resource_spec
 
 using ResourceMeshSpec = internal_resource_spec::ImplSpec;
 
-}
+} // namespace dish2
 
 #endif // #ifndef DISH2_SPEC_RESOURCEMESHSPEC_HPP_INCLUDE

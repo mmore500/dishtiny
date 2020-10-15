@@ -14,6 +14,10 @@ namespace dish2 {
 template<typename Spec>
 struct Cardinal {
 
+  using genome_mesh_spec_t = typename Spec::genome_mesh_spec_t;
+  using genome_node_input_t = netuit::MeshNodeInput<genome_mesh_spec_t>;
+  using genome_node_output_t = netuit::MeshNodeOutput<genome_mesh_spec_t>;
+
   using message_mesh_spec_t = typename Spec::message_mesh_spec_t;
   using message_node_input_t = netuit::MeshNodeInput<message_mesh_spec_t>;
   using message_node_output_t = netuit::MeshNodeOutput<message_mesh_spec_t>;
@@ -33,6 +37,8 @@ struct Cardinal {
   dish2::Peripheral peripheral;
 
   Cardinal(
+    const genome_node_input_t& genome_node_input,
+    const genome_node_output_t& genome_node_output,
     const message_node_input_t& message_node_input,
     const message_node_output_t& message_node_output,
     const resource_node_input_t& resource_node_input,

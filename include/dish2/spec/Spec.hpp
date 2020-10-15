@@ -9,6 +9,7 @@
 
 #include "../peripheral/Peripheral.hpp"
 
+#include "GenomeMeshSpec.hpp"
 #include "MessageMeshSpec.hpp"
 #include "ResourceMeshSpec.hpp"
 #include "StateMeshSpec.hpp"
@@ -22,6 +23,7 @@ struct Spec {
     dish2::Peripheral
   >;
 
+  using genome_mesh_spec_t = dish2::GenomeMeshSpec<Spec>;
   using message_mesh_spec_t = dish2::MessageMeshSpec;
   using resource_mesh_spec_t = dish2::ResourceMeshSpec;
   using state_mesh_spec_t = dish2::StateMeshSpec;

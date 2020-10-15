@@ -15,6 +15,13 @@ struct ProcWorld {
   using thread_assigner_t = typename Spec::thread_assigner_t;
   using proc_assigner_t = typename Spec::proc_assigner_t;
 
+  using genome_mesh_spec_t = typename Spec::genome_mesh_spec_t;
+  netuit::Mesh<genome_mesh_spec_t> genome_mesh{
+    topology_factory_t{}( dish2::Cfg::N_CELLS() ),
+    thread_assigner_t{ dish2::Cfg::N_CELLS(), dish2::Cfg::N_CELLS() /*FIXME*/ },
+    proc_assigner_t{ dish2::Cfg::N_PROCS(), dish2::Cfg::N_CELLS() }
+  };
+
   using message_mesh_spec_t = typename Spec::message_mesh_spec_t;
   netuit::Mesh<message_mesh_spec_t> message_mesh{
     topology_factory_t{}( dish2::Cfg::N_CELLS() ),
@@ -38,6 +45,7 @@ struct ProcWorld {
 
   dish2::ThreadWorld<Spec> MakeThreadWorld(const uitsl::thread_id_t thread_id) {
     return dish2::ThreadWorld<Spec>(
+      genome_mesh.GetSubmesh( thread_id ),
       message_mesh.GetSubmesh( thread_id ),
       resource_mesh.GetSubmesh( thread_id ),
       state_mesh.GetSubmesh( thread_id )

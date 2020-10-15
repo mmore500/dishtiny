@@ -28,6 +28,6 @@ namespace internal_message_spec {
 
 using MessageMeshSpec = internal_message_spec::ImplSpec;
 
-}
+} // namespace dish2
 
 #endif // #ifndef DISH2_SPEC_MESSAGEMESHSPEC_HPP_INCLUDE

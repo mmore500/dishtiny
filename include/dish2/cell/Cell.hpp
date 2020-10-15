@@ -18,6 +18,9 @@ class Cell {
 
   dish2::Genome<Spec> genome;
 
+  using genome_mesh_spec_t = typename Spec::genome_mesh_spec_t;
+  using genome_node_t = netuit::MeshNode<genome_mesh_spec_t>;
+
   using message_mesh_spec_t = typename Spec::message_mesh_spec_t;
   using message_node_t = netuit::MeshNode<message_mesh_spec_t>;
 
@@ -30,15 +33,18 @@ class Cell {
 public:
 
   Cell(
+    const genome_node_t& genome_node,
     const message_node_t& message_node,
     const resource_node_t& resource_node,
     const state_node_t& state_node
   ) {
 
     emp_assert(( 1 == std::set<size_t>{
+      genome_node.GetNumInputs(),
       message_node.GetNumInputs(),
       resource_node.GetNumInputs(),
       state_node.GetNumInputs(),
+      genome_node.GetNumOutputs(),
       message_node.GetNumOutputs(),
       resource_node.GetNumOutputs(),
       state_node.GetNumOutputs(),
@@ -46,6 +52,8 @@ public:
 
     for (size_t i{}; i < message_node.GetNumInputs(); ++i) {
       cardinals.emplace_back(
+        genome_node.GetInput(i),
+        genome_node.GetOutput(i),
         message_node.GetInput(i),
         message_node.GetOutput(i),
         resource_node.GetInput(i),
