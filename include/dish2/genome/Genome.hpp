@@ -44,7 +44,7 @@ size_t operator()( const dish2::Genome<Spec>& genome ) const {
   return emp::murmur_hash( std::span<const std::byte>(
     reinterpret_cast<const std::byte*>( program.data() ),
     // only bother hashing up to the first 32 bytes
-    std::min( program.size() * sizeof( program.front() ), 32 )
+    std::min( program.size() * sizeof( program.front() ), 32ul )
   ) );
 }
 
