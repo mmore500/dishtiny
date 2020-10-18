@@ -31,9 +31,11 @@ void Cell<Spec>::ResourceSendingService() {
 
   // initialize available amount to entire stockpile
   thread_local emp::vector<float> send_amounts;
-  send_amounts = emp::vector<float>(
+  send_amounts.clear();
+  std::copy(
     begin<dish2::ResourceStockpileWrapper<Spec>>(),
-    end<dish2::ResourceStockpileWrapper<Spec>>()
+    end<dish2::ResourceStockpileWrapper<Spec>>(),
+    std::back_inserter( send_amounts )
   );
 
   // subtract out how much each cardinal wants to stockpile
