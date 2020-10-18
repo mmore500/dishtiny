@@ -9,6 +9,8 @@
 #include "ResourceReserveRequest.hpp"
 #include "ResourceSendLimit.hpp"
 #include "ResourceSendRequest.hpp"
+#include "SpawnArrest.hpp"
+#include "SpawnRequest.hpp"
 
 namespace dish2 {
 
@@ -18,7 +20,9 @@ struct ControllerMappedState
   dish2::ResourceReceiveResistance,
   dish2::ResourceReserveRequest,
   dish2::ResourceSendLimit,
-  dish2::ResourceSendRequest
+  dish2::ResourceSendRequest,
+  dish2::SpawnArrest,
+  dish2::SpawnRequest
 >
 {};
 
