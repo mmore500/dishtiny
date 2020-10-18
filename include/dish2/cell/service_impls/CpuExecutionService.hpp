@@ -5,6 +5,8 @@
 #include "../../../../third-party/conduit/include/uitsl/debug/WarnOnce.hpp"
 #include "../../../../third-party/signalgp-lite/include/sgpl/algorithm/execute_cpu.hpp"
 
+#include "../../config/cfg.hpp"
+
 #include "../cardinal_iterators/CpuWrapper.hpp"
 
 namespace dish2 {
@@ -14,11 +16,10 @@ void Cell<Spec>::CpuExecutionService() {
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
 
-  // TODO parameterize
-  for (size_t rep = 0; rep < 4; ++rep) {
+  for (size_t rep = 0; rep < dish2::cfg.HARDWARE_EXECUTION_ROUNDS(); ++rep) {
     // TODO should these be shuffled?
     for (auto& cardinal : cardinals) sgpl::execute_cpu<sgpl_spec_t>(
-      4, // TODO parameterize
+      dish2::cfg.HARDWARE_EXECUTION_CYCLES(),
       cardinal.cpu,
       genome->program,
       cardinal.peripheral

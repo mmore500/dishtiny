@@ -8,7 +8,7 @@
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
 
 #include "../cell/Cell.hpp"
-#include "../config/Cfg.hpp"
+#include "../config/cfg.hpp"
 
 namespace dish2 {
 

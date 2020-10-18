@@ -44,8 +44,7 @@ protected:
   // out of class implementations
   void ApoptosisService();
   void BirthSetupService();
-  void ConduitPullService();
-  void ConduitPushService();
+  void ConduitFlushService();
   void CpuExecutionService();
   void EventLaunchingService();
   void InterMessageLaunchingService();
@@ -55,6 +54,7 @@ protected:
   void ResourceReceivingService();
   void ResourceSendingService();
   void SpawnSendingService();
+  void StateInputJumpService();
 
 public:
 
@@ -124,12 +124,8 @@ public:
       BirthSetupService();
     }
 
-    if ( dish2::conduit_pull_should_run( update, is_alive ) ) {
-      ConduitPullService();
-    }
-
-    if ( dish2::conduit_push_should_run( update, is_alive ) ) {
-      ConduitPushService();
+    if ( dish2::conduit_flush_should_run( update, is_alive ) ) {
+      ConduitFlushService();
     }
 
     if ( dish2::cpu_execution_should_run( update, is_alive ) ) {
@@ -166,6 +162,10 @@ public:
 
     if ( dish2::spawn_sending_should_run( update, is_alive ) ) {
       SpawnSendingService();
+    }
+
+    if ( dish2::spawn_sending_should_run( update, is_alive ) ) {
+      StateInputJumpService();
     }
 
   }

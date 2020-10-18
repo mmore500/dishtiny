@@ -13,6 +13,7 @@ TARGET_NAMES += ResourceSendRequestWrapper
 TARGET_NAMES += ResourceStockpileWrapper
 TARGET_NAMES += SpawnArrestWrapper
 TARGET_NAMES += SpawnRequestWrapper
+TARGET_NAMES += StateNodeInputWrapper
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
 

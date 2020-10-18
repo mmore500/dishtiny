@@ -4,8 +4,7 @@
 
 #include "apoptosis_should_run.hpp"
 #include "birth_setup_should_run.hpp"
-#include "conduit_pull_should_run.hpp"
-#include "conduit_push_should_run.hpp"
+#include "conduit_flush_should_run.hpp"
 #include "cpu_execution_should_run.hpp"
 #include "event_launching_should_run.hpp"
 #include "inter_message_launching_should_run.hpp"

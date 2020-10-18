@@ -24,9 +24,7 @@ void Cell<Spec>::ResourceReceivingService() {
     begin<dish2::ResourceNodeInputWrapper<Spec>>(),
     end<dish2::ResourceNodeInputWrapper<Spec>>(),
     0.0f,
-    [](const auto& cumulative_sum, auto& addend){
-      return std::exchange( addend.Get(), 0.0f );
-    }
+    [](const auto& cumulative_sum, auto& addend){ return addend.JumpGet(); }
   );
 
   // how much do we already have?

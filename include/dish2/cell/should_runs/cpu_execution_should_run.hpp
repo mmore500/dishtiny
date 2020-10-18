@@ -3,11 +3,20 @@
 #define DISH2_CELL_SHOULD_RUNS_CPU_EXECUTION_SHOULD_RUN_HPP_INCLUDE
 
 #include <cstddef>
+#include <limits>
+
+#include "../../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+
+#include "../../config/cfg.hpp"
 
 namespace dish2 {
 
-constexpr bool cpu_execution_should_run(const size_t update, const bool alive) {
-  return alive; // TODO paramaterize
+bool cpu_execution_should_run(const size_t update, const bool alive) {
+  const size_t freq = dish2::cfg.CPU_EXECUTION_SERVICE_FREQUENCY();
+  return
+    alive
+    && freq > 0
+    && uitsl::shift_mod( update, freq ) == 0;
 }
 
 } // namespace dish2

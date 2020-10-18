@@ -25,6 +25,8 @@ struct Genome {
     return program == other.program;
   }
 
+  void Mutate() { /* TODO */ }
+
   template <class Archive>
   void serialize( Archive & ar ) {
     ar( program );
