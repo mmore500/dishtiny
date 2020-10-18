@@ -1,3 +1,4 @@
+TARGET_NAMES += introspective_state
 TARGET_NAMES += readable_state
 TARGET_NAMES += writable_state
 

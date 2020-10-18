@@ -7,8 +7,7 @@
 #include "../../../../third-party/Empirical/source/base/macros.h"
 #include "../../../../third-party/signalgp-lite/include/sgpl/utility/ByteEnumeration.hpp"
 
-#include "IntrospectiveState.hpp"
-
+#include "introspective_state/IntrospectiveState.hpp"
 #include "writable_state/WritableState.hpp"
 
 namespace dish2 {

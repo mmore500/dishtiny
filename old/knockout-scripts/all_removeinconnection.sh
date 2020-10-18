@@ -52,4 +52,3 @@ rm xx*
 
 cat changelogxx* > "${KO_PATH}___knockout_changelog+ext=.txt"
 rm changelogxx*
-

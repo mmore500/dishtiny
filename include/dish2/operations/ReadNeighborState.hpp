@@ -18,7 +18,7 @@ struct ReadNeighborState {
     typename Spec::peripheral_t& peripheral
   ) {
 
-    const auto& neighbor_state = peripheral.neighbor_state.Get();
+    const auto& neighbor_state = peripheral.state_node_input.Get();
 
     constexpr size_t num_addrs
       = decltype(peripheral.readable_state)::GetSize();

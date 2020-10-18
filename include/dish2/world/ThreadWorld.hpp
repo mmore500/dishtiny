@@ -51,16 +51,18 @@ struct ThreadWorld {
       state_submesh.size()
     }.size() ));
 
-    for (size_t i{}; i < message_submesh.size(); ++i) {
-      population.emplace_back(
-        genome_submesh[i],
-        message_submesh[i],
-        resource_submesh[i],
-        state_submesh[i]
-      );
-    }
+    for (size_t i{}; i < message_submesh.size(); ++i) population.emplace_back(
+      genome_submesh[i],
+      message_submesh[i],
+      resource_submesh[i],
+      state_submesh[i]
+    );
 
   }
+
+  size_t update{};
+
+  void Update() { for (auto& cell : population) cell.Update(update++); }
 
 };
 

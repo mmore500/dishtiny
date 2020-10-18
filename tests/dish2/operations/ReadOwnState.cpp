@@ -71,10 +71,17 @@ TEST_CASE("Test ReadOwnState") {
   program_t program{ make_program() };
   cpu.InitializeAnchors( program );
 
-  // set up peripheral
-  uit::Conduit<dish2::StateMeshSpec> conduit;
+  // conduit
+  uit::Conduit<dish2::MessageMeshSpec> message_conduit;
+  uit::Conduit<dish2::StateMeshSpec> state_conduit;
+
+  using message_node_output_t = netuit::MeshNodeOutput<dish2::MessageMeshSpec>;
   using state_node_input_t = netuit::MeshNodeInput<dish2::StateMeshSpec>;
-  dish2::Peripheral peripheral{ state_node_input_t{ conduit.GetOutlet(), 0 } };
+  message_node_output_t message_node_output{ message_conduit.GetInlet(), 0 };
+  state_node_input_t state_node_input{ state_conduit.GetOutlet(), 0 };
+
+  // peripheral
+  dish2::Peripheral peripheral{ message_node_output, state_node_input };
   auto& readable_state = peripheral.readable_state;
 
   // readable state should be zero-initialized

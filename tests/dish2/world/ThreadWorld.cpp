@@ -11,5 +11,9 @@
 const uitsl::MpiGuard guard;
 
 TEST_CASE("Test ThreadWorld") {
-  dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
+
+  auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
+
+  for (size_t i{}; i < std::centi::num; ++i) tw.Update();
+
 }

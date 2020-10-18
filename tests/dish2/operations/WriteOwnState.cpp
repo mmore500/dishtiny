@@ -56,7 +56,7 @@ program_t make_program() {
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "00000000000000000100000000000000"
+      "bitstring": "00000000000000000000000000000001"
     }
   ] } )" };
 
@@ -81,12 +81,17 @@ TEST_CASE("Test WriteOwnState") {
   cpu.InitializeAnchors( program );
 
   // conduit
-  uit::Conduit<dish2::StateMeshSpec> conduit;
+  uit::Conduit<dish2::MessageMeshSpec> message_conduit;
+  uit::Conduit<dish2::StateMeshSpec> state_conduit;
+
+  using message_node_output_t = netuit::MeshNodeOutput<dish2::MessageMeshSpec>;
+  using state_node_input_t = netuit::MeshNodeInput<dish2::StateMeshSpec>;
+  message_node_output_t message_node_output{ message_conduit.GetInlet(), 0 };
+  state_node_input_t state_node_input{ state_conduit.GetOutlet(), 0 };
 
   // peripheral
-  using state_node_input_t = netuit::MeshNodeInput<dish2::StateMeshSpec>;
-  dish2::Peripheral peripheral{ state_node_input_t{ conduit.GetOutlet(), 0 } };
-  const auto& readable_state = peripheral.readable_state;
+  dish2::Peripheral peripheral{ message_node_output, state_node_input };
+  auto& readable_state = peripheral.readable_state;
   const auto& writable_state = readable_state.template Get<
     dish2::WritableState
   >();
