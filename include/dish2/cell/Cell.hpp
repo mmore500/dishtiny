@@ -101,10 +101,10 @@ public:
   }
 
   template<typename T=dish2::IdentityWrapper<Spec>>
-  T begin() { T res( cardinals.begin() ); return res; }
+  T begin() { return T{ cardinals.begin() }; }
 
   template<typename T=dish2::IdentityWrapper<Spec>>
-  T end() { T res( cardinals.end() ); return res; }
+  T end() { return T{ cardinals.end() }; }
 
   bool IsAlive() const {
     return cardinals.front().peripheral.readable_state.template Get<
