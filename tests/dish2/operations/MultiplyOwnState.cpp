@@ -20,7 +20,7 @@
 using library_t = sgpl::OpLibrary<
   dish2::MultiplyOwnState,
   dish2::WriteOwnState,
-  sgpl::Terminal<std::ratio<1>, std::ratio<-1>>
+  sgpl::Terminal<std::ratio<2>, std::ratio<0>>
 >;
 
 using sgpl_spec_t = sgpl::Spec<
@@ -41,7 +41,7 @@ program_t make_program() {
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "11111111111111111111111111111111"
+      "bitstring": "01111111111111111111111111111111"
     },
     {
       "operation": "WriteOwnState",
@@ -68,7 +68,7 @@ program_t make_program() {
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "11000000000000000000000000000000"
+      "bitstring": "11111111111111111111111111111111"
     },
     {
       "operation": "MultiplyOwnState",
@@ -132,7 +132,7 @@ TEST_CASE("Test MultiplyOwnState") {
     REQUIRE( readable_state.Read( i ) == 0 );
   }
 
-  sgpl::Terminal<std::ratio<1>, std::ratio<-1>>::run(
+  sgpl::Terminal<std::ratio<2>, std::ratio<0>>::run(
     cpu.GetActiveCore(),
     program[0],
     program,
@@ -163,15 +163,18 @@ TEST_CASE("Test MultiplyOwnState") {
 
   REQUIRE( counter == 2 );
 
-  sgpl::Terminal<std::ratio<1>, std::ratio<-1>>::run(
+  sgpl::Terminal<std::ratio<2>, std::ratio<0>>::run(
     cpu.GetActiveCore(),
     program[3],
     program,
     peripheral
   );
 
+  REQUIRE( cpu.GetActiveCore().registers[0] == 2 );
+
   REQUIRE( writable_state.Get<0>() == 1 );
   REQUIRE( writable_state.Get<1>() == 1 );
+  REQUIRE( writable_state.Get<2>() == 0 );
 
   dish2::MultiplyOwnState::run(
     cpu.GetActiveCore(),
@@ -180,25 +183,27 @@ TEST_CASE("Test MultiplyOwnState") {
     peripheral
   );
 
-  REQUIRE( writable_state.Get<0>() == 0.5 );
+  REQUIRE( writable_state.Get<0>() == 2 );
   REQUIRE( writable_state.Get<1>() == 1 );
+  REQUIRE( writable_state.Get<2>() == 0 );
 
   dish2::MultiplyOwnState::run(
     cpu.GetActiveCore(),
-    program[4],
+    program[5],
     program,
     peripheral
   );
 
-  REQUIRE( writable_state.Get<0>() == 0.25 );
+  REQUIRE( writable_state.Get<0>() == 4 );
   REQUIRE( writable_state.Get<1>() == 1 );
+  REQUIRE( writable_state.Get<2>() == 0 );
 
   counter = 0;
   for ( size_t i{}; i < readable_state.GetSize(); ++i ) {
     counter += readable_state.Read( i );
   }
 
-  REQUIRE( counter == 1.25 );
+  REQUIRE( counter == 5 );
 
 
 }
