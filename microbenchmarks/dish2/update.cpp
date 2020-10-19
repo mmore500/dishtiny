@@ -1,7 +1,10 @@
+#include <atomic>
+
 #include <benchmark/benchmark.h>
 
 #include "conduit/include/uitsl/debug/benchmark_utils.hpp"
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
+#include "conduit/include/uitsl/polyfill/barrier.hpp"
 #include "Empirical/source/tools/string_utils.h"
 
 #include "dish2/config/cfg.hpp"
@@ -11,26 +14,37 @@
 
 const uitsl::MpiGuard guard;
 
+dish2::ProcWorld<dish2::Spec> proc_world;
+std::atomic<size_t> flag{false};
+
 template<size_t NUM_CELLS>
 static void DoBench(benchmark::State& state) {
 
+  if (state.thread_index == 0) {
+    dish2::cfg.Set("N_CELLS", emp::to_string(NUM_CELLS));
+    dish2::cfg.Set("N_THREADS", emp::to_string(state.threads));
+    proc_world = dish2::ProcWorld<dish2::Spec>{};
+    flag = true;
+  } else while (flag == false);
+
   // Perform setup here
-  dish2::cfg.Set("N_CELLS", emp::to_string(NUM_CELLS));
-  auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
+  auto tw = proc_world.MakeThreadWorld(state.thread_index);
 
   // benchmark goes here
   for (auto _ : state) tw.Update();
 
-  state.counters["num cells"] = NUM_CELLS;
-  state.counters["num threads"] = dish2::cfg.N_THREADS();
+  flag = false;
+
+  state.counters["Num Cells"] = tw.GetSize(); // summed over threads
+  state.counters["Num Threads"] = 1; // summed over threads
   state.counters["Core-Nanoseconds per Cell Update"] = benchmark::Counter(
-    static_cast<double>( NUM_CELLS ) * tw.GetUpdate() / std::nano::den,
+    static_cast<double>( tw.GetSize() ) * tw.GetUpdate() / std::nano::den,
     benchmark::Counter::kAvgThreadsRate | benchmark::Counter::kInvert
   );
 
 }
 
-template<size_t NUM_CELLS>
+template<size_t NUM_CELLS, size_t NUM_THREADS=1>
 struct Setup {
 
   Setup() {
@@ -42,16 +56,26 @@ struct Setup {
       DoBench<NUM_CELLS>
     );
 
+    res->Threads( NUM_THREADS );
+
     uitsl::report_confidence<10>( res );
 
   }
 
 };
 
-Setup<1> s1;
-Setup<32> s32;
-Setup<1024> s1024;
-Setup<32768> s32768;
+Setup<1> a;
+Setup<32> b;
+Setup<1024> c;
+Setup<32768> d;
+
+Setup<32, 2> e;
+Setup<1024, 2> f;
+Setup<32768, 2> g;
+
+Setup<32, 4> h;
+Setup<1024, 4> i;
+Setup<32768, 4> j;
 
 // Run the benchmark
 BENCHMARK_MAIN();

@@ -69,6 +69,8 @@ struct ThreadWorld {
 
   size_t GetUpdate() const { return update; }
 
+  size_t GetSize() const { return population.size(); }
+
 };
 
 } // namespace dish2

@@ -20,7 +20,7 @@ for filename, entry in [
         res[frozendict({
             'run_type' : benchmark['run_type'],
         })].append({
-            'Execution' : kn.unpack(filename)['execution'],
+            'Task' : kn.unpack(filename)['task'],
             'Statistic' : (
                 benchmark['aggregate_name']
                 if 'aggregate_name' in benchmark
@@ -28,9 +28,10 @@ for filename, entry in [
             ),
             'Wall Nanoseconds' : benchmark['real_time'],
             'CPU Nanoseconds' : benchmark['cpu_time'],
-            'num cells' : benchmark['num cells'],
-            'num threads' : benchmark['num threads'],
-            'Core-Nanoseconds per Cell Update' : benchmark['Core-Nanoseconds per Cell Update'],
+            'Num Cells' : int(benchmark['Num Cells']),
+            'Num Threads' : int(benchmark['Num Threads']),
+            'Core-Nanoseconds per Cell Update'
+                : benchmark['Core-Nanoseconds per Cell Update'],
         })
 
 for run_specs, rows in res.items():

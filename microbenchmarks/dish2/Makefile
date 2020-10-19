@@ -1,4 +1,4 @@
-TARGET_NAMES += serial
+TARGET_NAMES += update
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
 

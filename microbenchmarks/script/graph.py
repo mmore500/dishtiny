@@ -10,7 +10,7 @@ from iterpop import iterpop as ip
 def facet(df):
     return sns.FacetGrid(
         df,
-        col='Execution',
+        col='Task',
         margin_titles="true",
         sharey=False,
     )
@@ -20,12 +20,12 @@ def draw_plots(measurement, df):
 
     facet(df).map(
         sns.barplot,
-        'num cells',
+        'Num Cells',
         measurement,
-        'Execution',
-        hue_order=sorted(df['Execution'].unique()),
+        'Num Threads',
+        hue_order=sorted(df['Num Threads'].unique()),
         palette=sns.color_palette(),
-    )
+    ).add_legend().legend.set_title("Num Threads")
 
     plt.savefig(
       kn.pack({
@@ -41,13 +41,13 @@ def draw_plots(measurement, df):
     for showfliers in True, False:
         facet(df).map(
             sns.boxplot,
-            'num cells',
+            'Num Cells',
             measurement,
-            'Execution',
-            hue_order=sorted(df['Execution'].unique()),
+            'Num Threads',
+            hue_order=sorted(df['Num Threads'].unique()),
             palette=sns.color_palette(),
             showfliers=showfliers,
-        ).add_legend()
+        ).add_legend().legend.set_title("Num Threads")
 
         plt.savefig(
           kn.pack({
@@ -70,7 +70,7 @@ df = pd.read_csv(filename)
 for k, v in kn.unpack(filename).items():
     df[k] = v
 
-df = df.astype({ 'num cells' : int })
+df = df.astype({ 'Num Cells' : int })
 
 for measurement in [
         'Wall Nanoseconds',

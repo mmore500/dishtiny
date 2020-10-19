@@ -11,7 +11,7 @@ default: bench
 bench-%: %.cpp
 	$(CXX) $(FLAGS) $< -lbenchmark -lpthread -o $@.out
 	# execute bench
-	./$@.out --benchmark_counters_tabular=true --benchmark_format=json --benchmark_out="execution=$*+ext=.json" | $(TO_ROOT)/microbenchmarks/script/headtail.sh;
+	./$@.out --benchmark_counters_tabular=true --benchmark_format=json --benchmark_out="task=$*+ext=.json" | $(TO_ROOT)/microbenchmarks/script/headtail.sh;
 
 # Test in debug mode without pointer tracker
 bench: $(addprefix bench-, $(TARGET_NAMES))
