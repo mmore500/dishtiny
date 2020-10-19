@@ -56,7 +56,7 @@ jobs:
 
   - name: Fuzzing
     script:
-    - sudo docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -e CXX mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny/fuzzing && make && make opt"
+    - sudo docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -e CXX mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER} /bin/bash -c "cd /opt/dishtiny/fuzzing && make && make opt"
 
   - name: Microbenchmarks
     script:
