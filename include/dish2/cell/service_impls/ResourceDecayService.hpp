@@ -5,6 +5,8 @@
 #include <set>
 #include <utility>
 
+#include "../../config/cfg.hpp"
+
 #include "../cardinal_iterators/ResourceStockpileWrapper.hpp"
 
 namespace dish2 {
@@ -18,9 +20,7 @@ void Cell<Spec>::ResourceDecayService() {
       end<dish2::ResourceStockpileWrapper<Spec>>()
   ).size() == 1 ));
 
-  // how much resource have we harvested
-  // TODO paramaterize
-  const float decay_rate = 0.999;
+  const float decay_rate = dish2::cfg.RESOURCE_DECAY();
 
   // update stockpiles to reflect harvested amount
   std::transform(

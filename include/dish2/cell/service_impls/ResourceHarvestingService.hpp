@@ -5,6 +5,8 @@
 #include <set>
 #include <utility>
 
+#include "../../config/cfg.hpp"
+
 #include "../cardinal_iterators/ResourceStockpileWrapper.hpp"
 
 namespace dish2 {
@@ -19,8 +21,7 @@ void Cell<Spec>::ResourceHarvestingService() {
   ).size() == 1 ));
 
   // how much resource have we harvested
-  // TODO paramaterize and base on the number of cpu cycles elapsed
-  const float harvest = 0.005;
+  const float harvest = dish2::cfg.HARVEST_RATE();
 
   // update stockpiles to reflect harvested amount
   std::transform(

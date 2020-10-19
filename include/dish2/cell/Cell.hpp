@@ -6,6 +6,7 @@
 #include "../../../third-party/Empirical/source/base/optional.h"
 #include "../../../third-party/Empirical/source/base/vector.h"
 
+#include "../config/cfg.hpp"
 #include "../genome/Genome.hpp"
 
 #include "Cardinal.hpp"
@@ -20,7 +21,7 @@ class Cell {
 
   emp::vector< dish2::Cardinal<Spec> > cardinals;
 
-  emp::optional< dish2::Genome<Spec> > genome{ 100 /* TODO paramaterize */ };
+  emp::optional< dish2::Genome<Spec> > genome{ dish2::cfg.PROGRAM_START_SIZE()};
 
   using genome_mesh_spec_t = typename Spec::genome_mesh_spec_t;
   using genome_node_t = netuit::MeshNode<genome_mesh_spec_t>;
