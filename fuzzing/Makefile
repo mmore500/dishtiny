@@ -2,14 +2,14 @@ TARGET_NAMES += update
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
 
-CXX ?= mpicxx
+DISH_MPICXX ?= mpicxx
 
 FLAGS = -std=c++17 -g -pipe -pthread -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/
 
 default: fuzz
 
 fuzz-%: %.cpp
-	$(CXX) $(FLAGS) $< -o $@.out
+	$(DISH_MPICXX) $(FLAGS) $< -o $@.out
 	# execute fuzz
 	gdb ./$@.out --ex="set print thread-events off" --ex="run -N_THREADS 2" --ex=bt --ex=quit
 

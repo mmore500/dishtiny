@@ -46,8 +46,8 @@ debug-web:	$(PROJECT).js web/index.html
 web-debug:	debug-web
 
 $(PROJECT):	source/native.cpp include/
-	@echo CXX $(CXX)
-	$(CXX) $(CFLAGS_nat) source/native.cpp -o $(PROJECT)
+	@echo CXX $(DISH_MPICXX)
+	$(DISH_MPICXX) $(CFLAGS_nat) source/native.cpp -o $(PROJECT)
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/

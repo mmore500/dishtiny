@@ -1,11 +1,11 @@
-CXX ?= mpicxx
+DISH_MPICXX ?= mpicxx
 
 FLAGS = -std=c++17 -g -pipe -pthread -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/
 
 default: test
 
 test-%: %.cpp $(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp
-	$(CXX) $(FLAGS) $< -o $@.out
+	$(DISH_MPICXX) $(FLAGS) $< -o $@.out
 	# execute test
 	./$@.out
 

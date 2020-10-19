@@ -19,40 +19,40 @@ jobs:
   - stage: Tests
 
     name: Unit Tests (clang, debug mode)
-    env: CXX=mpicxx.openmpi OMPI_CXX=clang++
+    env: DISH_MPICXX=mpicxx.openmpi OMPI_CXX=clang++
     script:
-    - sudo docker run -e CXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make"
+    - sudo docker run -e CXX -e DISH_MPICXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make"
 
   - name: Unit Tests (gcc, debug mode)
-    env: CXX=mpicxx.openmpi OMPI_CXX=g++
+    env: DISH_MPICXX=mpicxx.openmpi OMPI_CXX=g++
     script:
-    - sudo docker run -e CXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make"
+    - sudo docker run -e CXX -e DISH_MPICXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make"
 
   - name: Unit Tests (clang, full debug mode)
-    env: CXX=mpicxx.openmpi OMPI_CXX=clang++
+    env: DISH_MPICXX=mpicxx.openmpi OMPI_CXX=clang++
     script:
-    - sudo docker run -e CXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make fulldebug"
+    - sudo docker run -e CXX -e DISH_MPICXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make fulldebug"
 
   - name: Unit Tests (gcc, full debug mode)
-    env: CXX=mpicxx.openmpi OMPI_CXX=g++
+    env: DISH_MPICXX=mpicxx.openmpi OMPI_CXX=g++
     script:
-    - sudo docker run -e CXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make fulldebug"
+    - sudo docker run -e CXX -e DISH_MPICXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make fulldebug"
 
   - name: Unit Tests (clang, opt mode)
-    env: CXX=mpicxx.openmpi OMPI_CXX=clang++
+    env: DISH_MPICXX=mpicxx.openmpi OMPI_CXX=clang++
     script:
-    - sudo docker run -e CXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make opt"
+    - sudo docker run -e CXX -e DISH_MPICXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make opt"
 
   - name: Unit Tests (gcc, opt mode)
-    env: CXX=mpicxx.openmpi OMPI_CXX=g++
+    env: DISH_MPICXX=mpicxx.openmpi OMPI_CXX=g++
     script:
-    - sudo docker run -e CXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make opt"
+    - sudo docker run -e CXX -e DISH_MPICXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make opt"
 
   - name: Coverage
-    env: CXX=mpicxx.openmpi OMPI_CXX=clang++
+    env: DISH_MPICXX=mpicxx.openmpi OMPI_CXX=clang++
     script:
     - ci_env=`bash <(curl -s https://codecov.io/env)`
-    - sudo docker run $ci_env -e OMPI_CXX "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny && make coverage && bash <(curl -s https://codecov.io/bash)"
+    - sudo docker run $ci_env -e DISH_MPICXX -e OMPI_CXX "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny && make coverage && bash <(curl -s https://codecov.io/bash)"
 
   - name: Fuzzing
     script:
@@ -63,14 +63,14 @@ jobs:
     - sudo docker run -e OSF_USERNAME -e OSF_PASSWORD -e CONTEXT=travis "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny/microbenchmarks && make"
 
   - name: Source (clang)
-    env: CXX=mpicxx.openmpi OMPI_CXX=clang++
+    env: DISH_MPICXX=mpicxx.openmpi OMPI_CXX=clang++
     script:
-    - sudo docker run -e OMPI_CXX --cap-add=SYS_ADMIN "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny && make test"
+    - sudo docker run -e DISH_MPICXX -e OMPI_CXX --cap-add=SYS_ADMIN "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny && make test"
 
   - name: Source (gcc)
-    env: CXX=mpicxx.openmpi OMPI_CXX=g++
+    env: DISH_MPICXX=mpicxx.openmpi OMPI_CXX=g++
     script:
-    - sudo docker run -e OMPI_CXX --cap-add=SYS_ADMIN "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny && make test"
+    - sudo docker run -e DISH_MPICXX -e OMPI_CXX --cap-add=SYS_ADMIN "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny && make test"
 
   - name: Docs, Miscellaneous
     script: docker run "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny && ./ci/test_trailing_whitespace.sh && ./ci/test_tabs.sh && ./ci/test_missing_newlines.sh && make docs && ./ci/test_headerguards.sh && ./ci/test_alphabetize_includes.sh && python3 ci/test_readme_snippets.py"
