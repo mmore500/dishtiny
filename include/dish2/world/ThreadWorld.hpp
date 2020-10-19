@@ -62,7 +62,12 @@ struct ThreadWorld {
 
   size_t update{};
 
-  void Update() { for (auto& cell : population) cell.Update(update++); }
+  void Update() {
+    for (auto& cell : population) cell.Update(update);
+    ++update;
+  }
+
+  size_t GetUpdate() const { return update; }
 
 };
 
