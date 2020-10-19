@@ -4,6 +4,6 @@
 
 #include "DeathRoutine.hpp"
 #include "HeirPayoutRoutine.hpp"
-#include "MarkAliveRoutine.hpp"
+#include "MakeAliveRoutine.hpp"
 
 #endif // #ifndef DISH2_CELL_ROUTINE_IMPLS__INDEX_HPP_INCLUDE

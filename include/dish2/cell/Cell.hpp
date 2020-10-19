@@ -40,7 +40,7 @@ protected:
   // out of class implementations
   void DeathRoutine();
   void HeirPayoutRoutine();
-  void MarkAliveRoutine();
+  void MakeAliveroutine();
 
   // out of class implementations
   void ApoptosisService();
@@ -92,7 +92,7 @@ public:
       );
     }
 
-    MarkAliveRoutine();
+    MakeAliveroutine();
 
   }
 
