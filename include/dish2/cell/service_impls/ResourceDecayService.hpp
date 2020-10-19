@@ -16,7 +16,7 @@ void Cell<Spec>::ResourceDecayService() {
 
   // check resource stockpile consistency
   emp_assert((
-    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
+    std::set<typename dish2::ResourceStockpileWrapper<Spec>::value_type>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
     ).size() == 1
@@ -34,7 +34,7 @@ void Cell<Spec>::ResourceDecayService() {
 
   // check resource stockpile consistency
   emp_assert((
-    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
+    std::set<typename dish2::ResourceStockpileWrapper<Spec>::value_type>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
     ).size() == 1

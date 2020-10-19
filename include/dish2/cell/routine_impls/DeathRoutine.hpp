@@ -11,6 +11,12 @@ namespace dish2 {
 template <class Spec>
 void Cell<Spec>::DeathRoutine() {
 
+  // check is alive consistency
+  emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(
+    begin<dish2::IsAliveWrapper<Spec>>(),
+    end<dish2::IsAliveWrapper<Spec>>()
+  ).size() == 1 ));
+
   HeirPayoutRoutine();
 
   Clear();
@@ -20,6 +26,12 @@ void Cell<Spec>::DeathRoutine() {
     end<dish2::IsAliveWrapper<Spec>>(),
     false
   );
+
+  // check is alive consistency
+  emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(
+    begin<dish2::IsAliveWrapper<Spec>>(),
+    end<dish2::IsAliveWrapper<Spec>>()
+  ).size() == 1 ));
 
 }
 

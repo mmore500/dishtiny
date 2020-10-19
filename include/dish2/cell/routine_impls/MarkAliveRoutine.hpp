@@ -13,7 +13,7 @@ template <class Spec>
 void Cell<Spec>::MarkAliveRoutine() {
 
   // check is alive consistency
-  emp_assert(( std::set<decltype(*begin<dish2::IsAliveWrapper<Spec>>())>(
+  emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(
     begin<dish2::IsAliveWrapper<Spec>>(),
     end<dish2::IsAliveWrapper<Spec>>()
   ).size() == 1 ));
@@ -25,7 +25,7 @@ void Cell<Spec>::MarkAliveRoutine() {
   );
 
   // check is alive consistency
-  emp_assert(( std::set<decltype(*begin<dish2::IsAliveWrapper<Spec>>())>(
+  emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(
     begin<dish2::IsAliveWrapper<Spec>>(),
     end<dish2::IsAliveWrapper<Spec>>()
   ).size() == 1 ));
