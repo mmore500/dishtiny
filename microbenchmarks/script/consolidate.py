@@ -30,8 +30,16 @@ for filename, entry in [
             'CPU Nanoseconds' : benchmark['cpu_time'],
             'Num Cells' : int(benchmark['Num Cells']),
             'Num Threads' : int(benchmark['Num Threads']),
-            'Core-Nanoseconds per Cell Update'
-                : benchmark['Core-Nanoseconds per Cell Update'],
+            'Cell-Updates Executed' : int(benchmark['Cell-Updates Executed']),
+            'CPU Core-Nanoseconds per Cell Update' : (
+                benchmark['cpu_time'] * benchmark['iterations']
+                / ( benchmark['Cell-Updates Executed'] or 1 )
+            ) ,
+            'Wall Core-Nanoseconds per Cell Update' : (
+                benchmark['Num Threads']
+                * benchmark['real_time'] * benchmark['iterations']
+                / ( benchmark['Cell-Updates Executed'] or 1 )
+            ) ,
         })
 
 for run_specs, rows in res.items():

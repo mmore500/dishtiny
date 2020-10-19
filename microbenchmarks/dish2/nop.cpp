@@ -30,15 +30,17 @@ static void DoBench(benchmark::State& state) {
   // Perform setup here
   auto tw = proc_world.MakeThreadWorld(state.thread_index);
 
+  size_t cell_update_counter{};
+
   // benchmark goes here
-  for (auto _ : state) tw.Update();
+  for (auto _ : state) ++cell_update_counter;
 
   flag = false;
 
   // these are summed over threads
   state.counters["Num Cells"] = tw.GetSize();
   state.counters["Num Threads"] = 1;
-  state.counters["Cell-Updates Executed"] = tw.GetUpdate() * tw.GetSize();
+  state.counters["Cell-Updates Executed"] = cell_update_counter;
 
 }
 

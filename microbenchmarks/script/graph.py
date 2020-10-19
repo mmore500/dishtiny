@@ -75,6 +75,7 @@ df = df.astype({ 'Num Cells' : int })
 for measurement in [
         'Wall Nanoseconds',
         'CPU Nanoseconds',
-        'Core-Nanoseconds per Cell Update',
+        'Wall Core-Nanoseconds per Cell Update',
+        'CPU Core-Nanoseconds per Cell Update',
     ]:
         draw_plots(measurement, df)
