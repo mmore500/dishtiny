@@ -79,6 +79,7 @@ public:
     }.size() ));
 
     // set up cardinals, one for each cell neighbor
+    cardinals.reserve( message_node.GetNumInputs() );
     for (size_t i{}; i < message_node.GetNumInputs(); ++i) {
       cardinals.emplace_back(
         genome_node.GetInput(i),
