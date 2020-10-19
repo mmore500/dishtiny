@@ -3,6 +3,7 @@
 #define DISH2_CELL_ROUTINE_IMPLS_MARKALIVEROUTINE_HPP_INCLUDE
 
 #include <algorithm>
+#include <set>
 
 #include "../cardinal_iterators/IsAliveWrapper.hpp"
 
@@ -12,9 +13,9 @@ template <class Spec>
 void Cell<Spec>::MarkAliveRoutine() {
 
   // check is alive consistency
-  emp_assert(( std::set(
-      begin<dish2::IsAliveWrapper<Spec>>(),
-      end<dish2::IsAliveWrapper<Spec>>()
+  emp_assert(( std::set<decltype(*begin<dish2::IsAliveWrapper<Spec>>())>(
+    begin<dish2::IsAliveWrapper<Spec>>(),
+    end<dish2::IsAliveWrapper<Spec>>()
   ).size() == 1 ));
 
   std::fill(
@@ -24,9 +25,9 @@ void Cell<Spec>::MarkAliveRoutine() {
   );
 
   // check is alive consistency
-  emp_assert(( std::set(
-      begin<dish2::IsAliveWrapper<Spec>>(),
-      end<dish2::IsAliveWrapper<Spec>>()
+  emp_assert(( std::set<decltype(*begin<dish2::IsAliveWrapper<Spec>>())>(
+    begin<dish2::IsAliveWrapper<Spec>>(),
+    end<dish2::IsAliveWrapper<Spec>>()
   ).size() == 1 ));
 
 }

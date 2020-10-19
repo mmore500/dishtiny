@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_SERVICE_IMPLS_SPAWNSENDINGSERVICE_HPP_INCLUDE
 #define DISH2_CELL_SERVICE_IMPLS_SPAWNSENDINGSERVICE_HPP_INCLUDE
 
+#include <set>
+
 #include "../../../../third-party/conduit/include/uitsl/algorithm/copy_if.hpp"
 #include "../../../../third-party/Empirical/source/base/vector.h"
 #include "../../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
@@ -17,10 +19,12 @@ template <class Spec>
 void Cell<Spec>::SpawnSendingService() {
 
   // check resource stockpile consistency
-  emp_assert(( std::set(
+  emp_assert((
+    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
-  ).size() == 1 ));
+    ).size() == 1
+  ));
 
   auto available_resource{ *begin<dish2::ResourceStockpileWrapper<Spec>>() };
 
@@ -64,10 +68,12 @@ void Cell<Spec>::SpawnSendingService() {
   );
 
   // check resource stockpile consistency
-  emp_assert(( std::set(
+  emp_assert((
+    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
-  ).size() == 1 ));
+    ).size() == 1
+  ));
 
 
 }

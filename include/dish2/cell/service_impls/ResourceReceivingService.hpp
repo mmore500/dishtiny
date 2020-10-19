@@ -14,10 +14,12 @@ template <class Spec>
 void Cell<Spec>::ResourceReceivingService() {
 
   // check resource stockpile consistency
-  emp_assert(( std::set(
+  emp_assert((
+    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
-  ).size() == 1 ));
+    ).size() == 1
+  ));
 
   // how much resource have we received across all cardinals?
   const float received_amount = std::accumulate(
@@ -38,10 +40,12 @@ void Cell<Spec>::ResourceReceivingService() {
   );
 
   // check resource stockpile consistency
-  emp_assert(( std::set(
+  emp_assert((
+    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
-  ).size() == 1 ));
+    ).size() == 1
+  ));
 
 }
 

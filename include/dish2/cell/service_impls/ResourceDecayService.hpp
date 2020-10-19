@@ -15,10 +15,12 @@ template <class Spec>
 void Cell<Spec>::ResourceDecayService() {
 
   // check resource stockpile consistency
-  emp_assert(( std::set(
+  emp_assert((
+    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
-  ).size() == 1 ));
+    ).size() == 1
+  ));
 
   const float decay_rate = dish2::cfg.RESOURCE_DECAY();
 
@@ -31,10 +33,12 @@ void Cell<Spec>::ResourceDecayService() {
   );
 
   // check resource stockpile consistency
-  emp_assert(( std::set(
+  emp_assert((
+    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
-  ).size() == 1 ));
+    ).size() == 1
+  ));
 
 }
 

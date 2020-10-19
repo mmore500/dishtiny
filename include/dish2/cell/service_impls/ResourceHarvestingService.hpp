@@ -15,10 +15,12 @@ template <class Spec>
 void Cell<Spec>::ResourceHarvestingService() {
 
   // check resource stockpile consistency
-  emp_assert(( std::set(
+  emp_assert((
+    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
-  ).size() == 1 ));
+    ).size() == 1
+  ));
 
   // how much resource have we harvested
   const float harvest = dish2::cfg.HARVEST_RATE();
@@ -32,10 +34,12 @@ void Cell<Spec>::ResourceHarvestingService() {
   );
 
   // check resource stockpile consistency
-  emp_assert(( std::set(
+  emp_assert((
+    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
-  ).size() == 1 ));
+    ).size() == 1
+  ));
 
 }
 

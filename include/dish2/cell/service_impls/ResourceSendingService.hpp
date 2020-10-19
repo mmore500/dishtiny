@@ -24,10 +24,12 @@ template <class Spec>
 void Cell<Spec>::ResourceSendingService() {
 
   // check resource stockpile consistency
-  emp_assert(( std::set(
+  emp_assert((
+    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
-  ).size() == 1 ));
+    ).size() == 1
+  ));
 
   // initialize available amount to entire stockpile
   thread_local emp::vector<float> send_amounts;
@@ -136,10 +138,12 @@ void Cell<Spec>::ResourceSendingService() {
   );
 
   // check resource stockpile consistency
-  emp_assert(( std::set(
+  emp_assert((
+    std::set<decltype(*begin<dish2::ResourceStockpileWrapper<Spec>>())>(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
-  ).size() == 1 ));
+    ).size() == 1
+  ));
 
 }
 
