@@ -2,8 +2,8 @@
 #ifndef DISH2_SPEC_MESSAGEMESHSPEC_HPP_INCLUDE
 #define DISH2_SPEC_MESSAGEMESHSPEC_HPP_INCLUDE
 
-#include "../../../third-party/conduit/include/uit/ducts/proc/put=dropping+get=stepping+type=cereal/aggregated+inlet=RingIsend+outlet=Iprobe_c::AggregatedIriOiDuct.hpp"
 #include "../../../third-party/cereal/include/cereal/types/array.hpp"
+#include "../../../third-party/conduit/include/uit/ducts/proc/put=dropping+get=stepping+type=cereal/aggregated+inlet=RingIsend+outlet=Iprobe_c::AggregatedIriOiDuct.hpp"
 #include "../../../third-party/conduit/include/uit/setup/ImplSelect.hpp"
 #include "../../../third-party/conduit/include/uit/setup/ImplSpec.hpp"
 #include "../../../third-party/Empirical/source/tools/BitSet.h"

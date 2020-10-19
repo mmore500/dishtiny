@@ -7,9 +7,9 @@
 #include "../../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "../cardinal_iterators/GenomeNodeOutputWrapper.hpp"
+#include "../cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../cardinal_iterators/SpawnArrestWrapper.hpp"
 #include "../cardinal_iterators/SpawnRequestWrapper.hpp"
-#include "../cardinal_iterators/ResourceStockpileWrapper.hpp"
 
 namespace dish2 {
 

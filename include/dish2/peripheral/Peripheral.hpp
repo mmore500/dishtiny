@@ -5,11 +5,11 @@
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeInput.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeOutput.hpp"
 
-#include "../spec/StateMeshSpec.hpp"
 #include "../spec/MessageMeshSpec.hpp"
+#include "../spec/StateMeshSpec.hpp"
 
-#include "readable_state/ReadableState.hpp"
 #include "readable_state/introspective_state/IsAlive.hpp"
+#include "readable_state/ReadableState.hpp"
 
 namespace dish2 {
 

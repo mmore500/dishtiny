@@ -2,8 +2,8 @@
 
 #include "conduit/include/uitsl/countdown/ProgressBar.hpp"
 #include "conduit/include/uitsl/countdown/Timer.hpp"
-#include "conduit/include/uitsl/parallel/ThreadTeam.hpp"
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
+#include "conduit/include/uitsl/parallel/ThreadTeam.hpp"
 #include "Empirical/source/config/ArgManager.h"
 #include "Empirical/source/config/command_line.h"
 #include "Empirical/source/tools/Random.h"

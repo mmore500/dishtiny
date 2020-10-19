@@ -14,8 +14,8 @@
 #include "dish2/operations/MultiplyOwnState.hpp"
 #include "dish2/operations/WriteOwnState.hpp"
 #include "dish2/peripheral/Peripheral.hpp"
-#include "dish2/spec/StateMeshSpec.hpp"
 #include "dish2/spec/MessageMeshSpec.hpp"
+#include "dish2/spec/StateMeshSpec.hpp"
 
 using library_t = sgpl::OpLibrary<
   dish2::MultiplyOwnState,
