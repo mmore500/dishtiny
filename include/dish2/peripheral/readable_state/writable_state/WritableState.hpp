@@ -26,7 +26,7 @@ struct WritableState : public internal::writable_state_parent_t {
 
   // https://stackoverflow.com/a/63046442
   template<size_t Templateify=0>
-  void AddTo(const size_t idx, const double val) {
+  void AddTo(const size_t idx, const float val) {
 
     #define DISH2_ADD_TO_STATE_CASE_PAYLOAD(N) \
       case N: \
@@ -48,7 +48,7 @@ struct WritableState : public internal::writable_state_parent_t {
 
   // https://stackoverflow.com/a/63046442
   template<size_t Templateify=0>
-  void Multiply(const size_t idx, const double val) {
+  void Multiply(const size_t idx, const float val) {
 
     #define DISH2_MULTIPLY_STATE_CASE_PAYLOAD(N) \
       case N: \
@@ -70,7 +70,7 @@ struct WritableState : public internal::writable_state_parent_t {
 
   // https://stackoverflow.com/a/63046442
   template<size_t Templateify=0>
-  void Write(const size_t idx, const double val) {
+  void Write(const size_t idx, const float val) {
 
     #define DISH2_WRITABLE_STATE_CASE_PAYLOAD(N) \
       case N: \
