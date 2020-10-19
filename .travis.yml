@@ -54,6 +54,10 @@ jobs:
     - ci_env=`bash <(curl -s https://codecov.io/env)`
     - sudo docker run $ci_env -e OMPI_CXX "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny && make coverage && bash <(curl -s https://codecov.io/bash)"
 
+  - name: Fuzzing
+    script:
+    - sudo docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -e CXX mmore500/dishtiny /bin/bash -c "cd /opt/dishtiny/fuzzing && make && make opt"
+
   - name: Source (clang)
     env: CXX=mpicxx.openmpi OMPI_CXX=clang++
     script:
