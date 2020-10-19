@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_CELL_ROUTINE_IMPLS_MakeAliveroutine_HPP_INCLUDE
-#define DISH2_CELL_ROUTINE_IMPLS_MakeAliveroutine_HPP_INCLUDE
+#ifndef DISH2_CELL_ROUTINE_IMPLS_MAKEALIVEROUTINE_HPP_INCLUDE
+#define DISH2_CELL_ROUTINE_IMPLS_MAKEALIVEROUTINE_HPP_INCLUDE
 
 #include <algorithm>
 #include <set>
@@ -11,7 +11,7 @@
 namespace dish2 {
 
 template <class Spec>
-void Cell<Spec>::MakeAliveroutine() {
+void Cell<Spec>::MakeAliveRoutine() {
 
   // check is alive consistency
   emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(
@@ -43,4 +43,4 @@ void Cell<Spec>::MakeAliveroutine() {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_CELL_ROUTINE_IMPLS_MakeAliveroutine_HPP_INCLUDE
+#endif // #ifndef DISH2_CELL_ROUTINE_IMPLS_MAKEALIVEROUTINE_HPP_INCLUDE
