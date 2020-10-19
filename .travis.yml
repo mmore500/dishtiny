@@ -18,7 +18,11 @@ jobs:
 
   - stage: Tests
 
-    name: Unit Tests (clang, debug mode)
+    name: Docs, Miscellaneous
+    script: docker run "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny && ./ci/test_trailing_whitespace.sh && ./ci/test_tabs.sh && ./ci/test_missing_newlines.sh && make docs && ./ci/test_headerguards.sh && ./ci/test_alphabetize_includes.sh && python3 ci/test_readme_snippets.py"
+
+
+  - name: Unit Tests (clang, debug mode)
     env: DISH_MPICXX=mpicxx.openmpi OMPI_CXX=clang++
     script:
     - sudo docker run -e CXX -e DISH_MPICXX -e OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make"
@@ -71,9 +75,6 @@ jobs:
     env: DISH_MPICXX=mpicxx.openmpi OMPI_CXX=g++
     script:
     - sudo docker run -e DISH_MPICXX -e OMPI_CXX --cap-add=SYS_ADMIN "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny && make test"
-
-  - name: Docs, Miscellaneous
-    script: docker run "mmore500/dishtiny:TRAVIS_BUILD_${TRAVIS_BUILD_NUMBER}" /bin/bash -c "cd /opt/dishtiny && ./ci/test_trailing_whitespace.sh && ./ci/test_tabs.sh && ./ci/test_missing_newlines.sh && make docs && ./ci/test_headerguards.sh && ./ci/test_alphabetize_includes.sh && python3 ci/test_readme_snippets.py"
 
 
   - stage: Deploy
