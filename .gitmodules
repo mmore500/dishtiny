@@ -3,7 +3,7 @@
   url = https://github.com/philsquared/Catch.git
 [submodule "third-party/Empirical"]
   path = third-party/Empirical
-  url = https://github.com/mmore500/Empirical.git
+  url = https://github.com/devosoft/Empirical.git
   branch = master
 [submodule "third-party/force-cover"]
   path = third-party/force-cover
