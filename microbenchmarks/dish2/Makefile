@@ -1,3 +1,4 @@
+TARGET_NAMES += generic_work
 TARGET_NAMES += nop
 TARGET_NAMES += update
 
