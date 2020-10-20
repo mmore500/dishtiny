@@ -14,31 +14,17 @@
 
 const uitsl::MpiGuard guard;
 
-dish2::ProcWorld<dish2::Spec> proc_world;
-std::atomic<size_t> flag{false};
-
 template<size_t NUM_CELLS>
 static void DoBench(benchmark::State& state) {
 
-  if (state.thread_index == 0) {
-    dish2::cfg.Set("N_CELLS", emp::to_string(NUM_CELLS));
-    dish2::cfg.Set("N_THREADS", emp::to_string(state.threads));
-    proc_world = dish2::ProcWorld<dish2::Spec>{};
-    flag = true;
-  } else while (flag == false);
-
   // Perform setup here
-  auto tw = proc_world.MakeThreadWorld(state.thread_index);
-
   size_t cell_update_counter{};
 
   // benchmark goes here
   for (auto _ : state) ++cell_update_counter;
 
-  flag = false;
-
   // these are summed over threads
-  state.counters["Num Cells"] = tw.GetSize();
+  state.counters["Num Cells"] = NUM_CELLS / state.threads;
   state.counters["Num Threads"] = 1;
   state.counters["Cell-Updates Executed"] = cell_update_counter;
 
