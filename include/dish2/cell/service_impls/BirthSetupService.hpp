@@ -33,6 +33,7 @@ void Cell<Spec>::BirthSetupService() {
     genome = fresh_inputs[
       sgpl::ThreadLocalRandom::Get().GetUInt( fresh_inputs.size() )
     ].get().Get();
+    genome->ElapseGeneration( 0 ); // TODO FIXME
     MakeAliveRoutine();
   }
 

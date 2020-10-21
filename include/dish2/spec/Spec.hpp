@@ -18,6 +18,8 @@ namespace dish2 {
 
 struct Spec {
 
+  constexpr inline static size_t NLEV{ 1 };
+
   using sgpl_spec_t = sgpl::Spec<
     sgpl::CompleteOpLibrary,
     dish2::Peripheral

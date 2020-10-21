@@ -4,7 +4,14 @@
 
 namespace dish2 {
 
+template<typename Spec>
 struct EventTags {
+
+  bool operator==(const EventTags& other) const { return true; }
+
+
+  template<typename Archive> void serialize( Archive & ar ) { /*ar(
+  );*/ }
 
 
 };

@@ -4,9 +4,20 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <utility>
 
 #include "../../../third-party/Empirical/source/polyfill/span.h"
+#include "../../../third-party/signalgp-lite/include/sgpl/algorithm/sloppy_copy.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
+
+#include "../config/cfg.hpp"
+
+#include "EventTags.hpp"
+#include "GenerationCounter.hpp"
+#include "Genome.hpp"
+#include "KinGroupID.hpp"
+#include "MutationCounter.hpp"
+#include "RootID.hpp"
 
 namespace dish2 {
 
@@ -15,22 +26,79 @@ struct Genome {
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
 
-  sgpl::Program<sgpl_spec_t> program;
+  dish2::GenerationCounter<Spec> generation_counter;
+  dish2::KinGroupID<Spec> kin_group_id;
+  dish2::MutationCounter mutation_counter;
+  using program_t = sgpl::Program<sgpl_spec_t>;
+  program_t program;
+  dish2::RootID root_id;
 
   Genome() = default;
 
-  Genome(const size_t len) : program(len) {}
+  Genome(std::in_place_t)
+  : kin_group_id( std::in_place )
+  , program( dish2::cfg.PROGRAM_START_SIZE() )
+  , root_id( std::in_place ) {}
 
   bool operator==(const Genome& other) const {
     return program == other.program;
   }
 
-  void Mutate() { /* TODO */ }
+  void ElapseGeneration(const size_t rep_lev) {
+
+    generation_counter.ElapseGeneration( rep_lev );
+    kin_group_id.ApplyInheritance( rep_lev );
+
+    if ( sgpl::ThreadLocalRandom::Get().P( dish2::cfg.MUTATION_RATE() ) ) {
+      MutateProgram();
+    }
+
+    // root_id doesn't change
+
+  }
+
+  void MutateProgram() {
+    DoProgramSequenceMutation();
+    mutation_counter.RecordPointMutation( program.ApplyPointMutations(
+      dish2::cfg.POINT_MUTATION_RATE()
+    ) );
+  }
+
+  void DoProgramSequenceMutation() {
+    using inst_t = typename program_t::value_type;
+
+    // TODO perform the sloppy copy elsewhere for efficiency's sake?
+    if ( sgpl::ThreadLocalRandom::Get().P(
+      dish2::cfg.SEVERE_SEQUENCE_MUTATION_RATE()
+    ) ) {
+      // do severe sequence mutation
+      auto [copy, num_muts] = sgpl::sloppy_copy<inst_t, 0>(
+        program,
+        dish2::cfg.SEQUENCE_DEFECT_RATE(),
+        program.size()
+      );
+      mutation_counter.RecordInsertionDeletion( num_muts );
+      program = std::move( copy );
+    } else {
+      // do minor sequence mutation
+      auto [copy, num_muts] = sgpl::sloppy_copy<inst_t, 1>(
+        program,
+        dish2::cfg.MINOR_SEQUENCE_MUTATION_BOUND(),
+        dish2::cfg.SEQUENCE_DEFECT_RATE()
+      );
+      mutation_counter.RecordInsertionDeletion( num_muts );
+      program = std::move( copy );
+    }
+  }
 
   template <class Archive>
-  void serialize( Archive & ar ) {
-    ar( program );
-  }
+  void serialize( Archive & ar ) { ar(
+    generation_counter,
+    mutation_counter,
+    kin_group_id,
+    program,
+    root_id
+  ); }
 
 };
 

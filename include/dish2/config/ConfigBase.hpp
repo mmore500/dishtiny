@@ -53,14 +53,20 @@ EMP_BUILD_CONFIG(
 
   GROUP(GENOME, "GENOME"),
   VALUE(PROGRAM_START_SIZE, size_t, 100, "How big should initial programs be?"),
+  VALUE(MUTATION_RATE, float, 0.1,
+    "What fraction of cells should be mutated at all?"
+  ),
   VALUE(POINT_MUTATION_RATE, float, 0.01,
     "What fraction of bytes should be scrambled?"
   ),
-  // VALUE(SEQUENCE_MUTATION_RATE, float, 0.01,
-  //   "How often should sloppy copy events occur?"
-  // ),
-  VALUE(PROPAGULE_MUTATION_RATE, float, 0.5,
-    "What fraction of propagule cells should experience additional mutations?"
+  VALUE(SEQUENCE_DEFECT_RATE, float, 0.01,
+    "How often should sloppy copy defect occur?"
+  ),
+  VALUE(MINOR_SEQUENCE_MUTATION_BOUND, size_t, 8,
+    "TODO"
+  ),
+  VALUE(SEVERE_SEQUENCE_MUTATION_RATE, float, 0.01,
+    "TODO"
   ),
 
 

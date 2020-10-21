@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CELL_HPP_INCLUDE
 #define DISH2_CELL_CELL_HPP_INCLUDE
 
+#include <utility>
+
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
 #include "../../../third-party/Empirical/source/base/optional.h"
 #include "../../../third-party/Empirical/source/base/vector.h"
@@ -21,7 +23,7 @@ class Cell {
 
   emp::vector< dish2::Cardinal<Spec> > cardinals;
 
-  emp::optional< dish2::Genome<Spec> > genome{ dish2::cfg.PROGRAM_START_SIZE()};
+  emp::optional< dish2::Genome<Spec> > genome{ std::in_place };
 
   using genome_mesh_spec_t = typename Spec::genome_mesh_spec_t;
   using genome_node_t = netuit::MeshNode<genome_mesh_spec_t>;
