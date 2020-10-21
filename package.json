@@ -1,6 +1,5 @@
 {
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "express": "4.16.3",
     "puppeteer": "1.9.0"
