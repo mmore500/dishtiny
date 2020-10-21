@@ -14,6 +14,8 @@ namespace dish2 {
 template <class Spec>
 void Cell<Spec>::CpuExecutionService() {
 
+  if ( genome->program.empty() ) return;
+
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
 
   for (size_t rep = 0; rep < dish2::cfg.HARDWARE_EXECUTION_ROUNDS(); ++rep) {
