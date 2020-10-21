@@ -11,7 +11,7 @@ default: fuzz
 fuzz-%: %.cpp
 	$(DISH_MPICXX) $(FLAGS) $< -o $@.out
 	# execute fuzz
-	gdb ./$@.out --ex="set print thread-events off" --ex="run -N_THREADS 2" --ex=bt --ex=quit
+	gdb ./$@.out --ex="set print thread-events off" --ex="run -N_THREADS 2" --ex=bt --ex='quit $$_exitcode'
 
 # Test in debug mode without pointer tracker
 fuzz: $(addprefix fuzz-, $(TARGET_NAMES))
