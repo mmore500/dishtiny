@@ -3,8 +3,8 @@
 #define CATCH_CONFIG_MAIN
 
 #include "Catch/single_include/catch2/catch.hpp"
-#include "cereal/include/cereal/archives/json.hpp"
 #include "cereal/include/cereal/archives/binary.hpp"
+#include "cereal/include/cereal/archives/json.hpp"
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 
 #include "dish2/genome/EventTags.hpp"
