@@ -3,6 +3,7 @@ TARGET_NAMES += genome
 TARGET_NAMES += operations
 TARGET_NAMES += peripheral
 TARGET_NAMES += spec
+TARGET_NAMES += web
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
 
