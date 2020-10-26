@@ -6,7 +6,6 @@
 #include "dish2/web/getters/PhylogeneticRootGetter.hpp"
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
-
 #include "dish2/spec/Spec.hpp"
 
 const uitsl::MpiGuard guard;
