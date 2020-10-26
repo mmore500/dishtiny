@@ -36,7 +36,10 @@ TEST_CASE("Test CellBorderRenderer") {
     setTimeout(function() { exec(
       'cmp -s CellBorderRenderer.png assets/CellBorderRenderer.png',
       function(err, stdout, stderr) {
-        if ( err ) { process.exit( err.code ); }
+        if ( err ) {
+          console.log( 'mismatch between generated and expected pngs' );
+          process.exit( err.code );
+        }
       }
     ) }, 1000);
 

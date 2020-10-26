@@ -35,7 +35,10 @@ TEST_CASE("Test CellFillRenderer") {
     setTimeout(function() { exec(
       'cmp -s CellFillRenderer.png assets/CellFillRenderer.png',
       function(err, stdout, stderr) {
-        if ( err ) { process.exit( err.code ); }
+        if ( err ) {
+          console.log( 'mismatch between generated and expected pngs' );
+          process.exit( err.code );
+        }
       }
     ) }, 1000);
 
