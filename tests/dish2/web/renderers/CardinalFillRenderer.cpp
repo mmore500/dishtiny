@@ -20,12 +20,11 @@ TEST_CASE("Test CardinalFillRenderer") {
   emp_base << canvas;
 
   using getter_t = dish2::DummyGetter<size_t>;
-  const getter_t getter;
 
   dish2::CardinalFillRenderer<
     dish2::DummyFillColorMap<getter_t, 255, 0, 0>,
     getter_t
-  > renderer{ {} };
+  > renderer{ getter_t{} };
 
   renderer.Render( canvas );
 

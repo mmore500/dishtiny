@@ -18,12 +18,11 @@ TEST_CASE("Test CellFillRenderer") {
   emp_base << canvas;
 
   using getter_t = dish2::DummyGetter<size_t>;
-  const getter_t getter;
 
   dish2::CellFillRenderer<
     dish2::DummyFillColorMap<getter_t, 255, 0, 0>,
     getter_t
-  > renderer{ {} };
+  > renderer{ getter_t{} };
 
   renderer.Render( canvas );
 
