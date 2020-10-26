@@ -41,7 +41,9 @@ public:
   size_t GetCanvasX(const size_t grid_x) const {
 
     emp_assert( GetGridWidth() <= canvas_width );
-    const size_t offset_x = (canvas_width - GetGridWidth()) / 2;
+    const size_t offset_x = (
+      canvas_width - GetCellWidthPx() * GetGridWidth()
+    ) / 2;
 
     return grid_x * GetCellWidthPx() + offset_x;
 
@@ -50,7 +52,9 @@ public:
   size_t GetCanvasY(const size_t grid_y) const {
 
     emp_assert( GetGridHeight() <= canvas_height );
-    const size_t offset_y = (canvas_height - GetGridHeight()) / 2;
+    const size_t offset_y = (
+      canvas_height - GetCellHeightPx() * GetGridHeight()
+    ) / 2;
 
     return grid_y * GetCellHeightPx() + offset_y;
 
