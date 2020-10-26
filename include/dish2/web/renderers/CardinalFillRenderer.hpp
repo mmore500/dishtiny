@@ -12,6 +12,8 @@ class CardinalFillRenderer {
 
 public:
 
+  using getter_t = Getter;
+
   CardinalFillRenderer( Getter getter_ )
   : color_map( getter_ )
   , getter( getter_ )

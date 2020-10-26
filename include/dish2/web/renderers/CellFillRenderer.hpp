@@ -16,6 +16,8 @@ class CellFillRenderer {
 
 public:
 
+  using getter_t = Getter;
+
   CellFillRenderer( Getter getter_ )
   : color_map( getter_ )
   , getter( getter_ )
