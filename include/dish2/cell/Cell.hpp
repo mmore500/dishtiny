@@ -23,7 +23,8 @@ class Cell {
 
   emp::vector< dish2::Cardinal<Spec> > cardinals;
 
-  emp::optional< dish2::Genome<Spec> > genome{ std::in_place };
+  using genome_t = dish2::Genome<Spec>;
+  emp::optional< genome_t > genome{ std::in_place };
 
   using genome_mesh_spec_t = typename Spec::genome_mesh_spec_t;
   using genome_node_t = netuit::MeshNode<genome_mesh_spec_t>;
@@ -115,6 +116,10 @@ public:
       dish2::IsAlive
     >().Get();
   }
+
+  size_t GetNumCardinals() const { return cardinals.size(); }
+
+  const genome_t& GetGenome() const { return *genome; }
 
   void Update(const size_t update) {
     const bool is_alive{ IsAlive() };

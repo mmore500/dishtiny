@@ -71,6 +71,10 @@ struct ThreadWorld {
 
   size_t GetSize() const { return population.size(); }
 
+  const dish2::Cell<Spec>& GetCell(const size_t idx) const {
+    return population[idx];
+  }
+
 };
 
 } // namespace dish2
