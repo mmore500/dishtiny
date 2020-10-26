@@ -1,9 +1,11 @@
 #pragma once
-#ifndef DISH2_WEB_CANVASMATHHELPER_HPP_INCLUDE
-#define DISH2_WEB_CANVASMATHHELPER_HPP_INCLUDE
+#ifndef DISH2_WEB_UTIL_CANVASMATHHELPER_HPP_INCLUDE
+#define DISH2_WEB_UTIL_CANVASMATHHELPER_HPP_INCLUDE
 
 #include <cmath>
 
+#include "../../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
+#include "../../../../third-party/Empirical/source/tools/math.h"
 #include "../../../../third-party/Empirical/source/web/Canvas.h"
 
 #include "../../config/cfg.hpp"
@@ -36,7 +38,7 @@ public:
     return canvas_width / GetGridHeight();
   }
 
-  size_t GetCanvasXPx(const size_t grid_x) const {
+  size_t GetCanvasX(const size_t grid_x) const {
 
     emp_assert( GetGridWidth() <= canvas_width );
     const size_t offset_x = (canvas_width - GetGridWidth()) / 2;
@@ -45,7 +47,7 @@ public:
 
   }
 
-  size_t GetCanvasYPx(const size_t grid_y) const {
+  size_t GetCanvasY(const size_t grid_y) const {
 
     emp_assert( GetGridHeight() <= canvas_height );
     const size_t offset_y = (canvas_height - GetGridHeight()) / 2;
@@ -54,8 +56,21 @@ public:
 
   }
 
+  size_t GetGridX(const size_t pos) const { return pos % GetGridWidth(); }
+
+  size_t GetGridY(const size_t pos) const { return pos / GetGridHeight(); }
+
+  size_t GetPopulationPos(const int x, const int y) const {
+
+    const int h = uitsl::audit_cast<int>( GetGridWidth() );
+    const int w = uitsl::audit_cast<int>( GetGridHeight() );
+
+    return emp::Mod(y, h) * w + emp::Mod(x, w);
+
+  }
+
 };
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WEB_CANVASMATHHELPER_HPP_INCLUDE
+#endif // #ifndef DISH2_WEB_UTIL_CANVASMATHHELPER_HPP_INCLUDE

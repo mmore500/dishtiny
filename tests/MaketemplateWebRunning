@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 DISH_CXX ?= emcc
 
-FLAGS = -std=c++17 -g -pipe -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/
+FLAGS = -std=c++17 -g -pipe -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" --js-library $(TO_ROOT)/third-party/Empirical/source/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0
 
 default: test
 
@@ -21,7 +21,7 @@ cov-%: %.cpp $(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp
 	python $(TO_ROOT)/third-party/force-cover/fix_coverage.py coverage_$@.txt
 
 # Test in debug mode withjs pointer tracker
-test: $(addprefix test-, $(TARGET_NAMES))
+test:: $(addprefix test-, $(TARGET_NAMES))
 	rm -rf test*.js
 
 # Test optimized version without debug features
