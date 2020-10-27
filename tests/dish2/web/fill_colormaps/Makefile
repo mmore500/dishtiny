@@ -1,4 +1,5 @@
 TARGET_NAMES += DummyFillColorMap
+TARGET_NAMES += IsAliveColorMap
 TARGET_NAMES += PhylogeneticRootColorMap
 TARGET_NAMES += ResourceStockpileColorMap
 
