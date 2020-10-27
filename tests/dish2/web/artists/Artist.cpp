@@ -17,7 +17,7 @@ const emp::web::NodeDomShim shim;
 
 emp::web::Document emp_base{ "emp_base" };
 
-TEST_CASE("Test CardinalFillRenderer") {
+TEST_CASE("Test Artist") {
 
   emp::web::Canvas canvas(500, 500);
   emp_base << canvas;
