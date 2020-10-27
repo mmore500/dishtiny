@@ -10,7 +10,7 @@
 
 namespace dish2 {
 
-template<size_t R=0, size_t G=0, size_t B=0>
+template<unsigned char R=0, unsigned char G=0, unsigned char B=0>
 struct DummyBorderColorMap {
 
   template<typename... Args>
