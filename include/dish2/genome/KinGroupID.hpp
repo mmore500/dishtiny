@@ -12,11 +12,9 @@
 namespace dish2 {
 
 template<typename Spec>
-class KinGroupID {
+struct KinGroupID {
 
   emp::array< size_t, Spec::NLEV > data;
-
-public:
 
   KinGroupID() = default;
 

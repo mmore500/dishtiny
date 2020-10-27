@@ -1,5 +1,6 @@
 TARGET_NAMES += Artist
 TARGET_NAMES += IsAliveArtist
+TARGET_NAMES += KinGroupIDArtist
 TARGET_NAMES += PhylogeneticRootArtist
 TARGET_NAMES += ResourceStockpileArtist
 
