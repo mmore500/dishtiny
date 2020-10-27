@@ -28,7 +28,7 @@ TEST_CASE("Test ResourceStockpileArtist") {
 
   using getter_t = dish2::ResourceStockpileGetter<dish2::Spec>;
 
-  dish2::ResourceStockpileArtist<getter_t> artist{ getter_t{ tw } };
+  dish2::ResourceStockpileArtist<getter_t> artist{ tw };
 
   artist.Draw( canvas );
 

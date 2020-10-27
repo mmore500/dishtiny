@@ -22,7 +22,7 @@ TEST_CASE("Test CardinalFillRenderer") {
   using getter_t = dish2::DummyGetter<size_t>;
 
   dish2::CardinalFillRenderer<
-    dish2::DummyFillColorMap<getter_t, 255, 0, 0>,
+    dish2::DummyFillColorMap<255, 0, 0>,
     getter_t
   > renderer{ getter_t{} };
 

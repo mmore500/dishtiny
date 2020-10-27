@@ -7,14 +7,13 @@
 
 namespace dish2 {
 
-template<typename Getter>
 struct ResourceStockpileColorMap {
 
-  using value_type = typename Getter::value_type;
+  template<typename... Args>
+  ResourceStockpileColorMap( Args&&... ){}
 
-  ResourceStockpileColorMap(Getter&){}
-
-  std::string Paint(const value_type& leaf) const {
+  template<typename ValueType>
+  std::string Paint(const ValueType& leaf) const {
     const auto val = leaf.Get();
     if (val > 1.0) return emp::ColorRGB(
         std::min(255.0, (val - 1.0) * 25),

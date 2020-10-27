@@ -14,9 +14,10 @@ public:
 
   using getter_t = Getter;
 
-  CardinalFillRenderer( Getter getter_ )
-  : color_map( getter_ )
-  , getter( getter_ )
+  template<typename... Args>
+  CardinalFillRenderer( Args&&... args )
+  : color_map( std::forward<Args>(args)... )
+  , getter( std::forward<Args>(args)... )
   {}
 
   void Render( emp::web::Canvas& canvas ) {}

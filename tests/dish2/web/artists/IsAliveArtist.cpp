@@ -28,7 +28,7 @@ TEST_CASE("Test IsAliveArtist") {
 
   using getter_t = dish2::IsAliveGetter<dish2::Spec>;
 
-  dish2::IsAliveArtist<getter_t> artist{ getter_t{ tw } };
+  dish2::IsAliveArtist<getter_t> artist{ tw };
 
   artist.Draw( canvas );
 

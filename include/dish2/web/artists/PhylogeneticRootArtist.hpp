@@ -16,11 +16,11 @@ namespace internal::phylogenetic_root_artist {
   template<typename Getter>
   using parent_t = dish2::Artist<
     dish2::CellFillRenderer<
-      dish2::PhylogeneticRootColorMap< Getter >,
+      dish2::PhylogeneticRootColorMap,
       Getter
     >,
     dish2::CellBorderRenderer<
-      dish2::DummyBorderColorMap< Getter >,
+      dish2::DummyBorderColorMap<>,
       Getter
     >
   >;

@@ -21,7 +21,7 @@ TEST_CASE("Test CellBorderRenderer") {
   using getter_t = dish2::DummyGetter<size_t>;
 
   dish2::CellBorderRenderer<
-    dish2::DummyBorderColorMap<getter_t, 255, 0, 0>,
+    dish2::DummyBorderColorMap<255, 0, 0>,
     getter_t
   > renderer{ getter_t{} };
 

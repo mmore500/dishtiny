@@ -16,11 +16,11 @@ namespace internal::resource_stockpile_artist {
   template<typename Getter>
   using parent_t = dish2::Artist<
     dish2::CellFillRenderer<
-      dish2::ResourceStockpileColorMap< Getter >,
+      dish2::ResourceStockpileColorMap,
       Getter
     >,
     dish2::CellBorderRenderer<
-      dish2::DummyBorderColorMap< Getter >,
+      dish2::DummyBorderColorMap<>,
       Getter
     >
   >;

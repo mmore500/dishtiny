@@ -7,14 +7,13 @@
 
 namespace dish2 {
 
-template<typename Getter>
 struct PhylogeneticRootColorMap {
 
-  using value_type = typename Getter::value_type;
+  template<typename... Args>
+  PhylogeneticRootColorMap( Args&&... ){}
 
-  PhylogeneticRootColorMap(Getter&){}
-
-  std::string Paint(const value_type& val) const {
+  template<typename ValueType>
+  std::string Paint(const ValueType& val) const {
     if ( val == 1 ) return "red";
     else if ( val == 2 ) return "green";
     else if ( val == 3 ) return "blue";

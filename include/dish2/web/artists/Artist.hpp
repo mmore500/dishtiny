@@ -2,14 +2,16 @@
 #ifndef DISH2_WEB_ARTISTS_ARTIST_HPP_INCLUDE
 #define DISH2_WEB_ARTISTS_ARTIST_HPP_INCLUDE
 
+#include <utility>
+
 #include "../../../../third-party/Empirical/source/web/Canvas.h"
 
 namespace dish2 {
 
 // base case
 template<typename... Renderer> struct Artist {
-  template<typename Getter>
-  explicit Artist(Getter getter) {}
+  template<typename... Args>
+  explicit Artist( Args&&... args ) {}
 };
 
 // adapted from https://stackoverflow.com/a/35284581
@@ -24,9 +26,10 @@ class Artist<FirstRenderer, SubsequentRenderers...> {
 
 public:
 
-  explicit Artist( getter_t getter )
-  : first_renderer( getter )
-  , subsequent_artist( getter )
+  template<typename... Args>
+  explicit Artist( Args&&... args )
+  : first_renderer( std::forward<Args>(args)... )
+  , subsequent_artist( std::forward<Args>(args)... )
   {}
 
   template<bool ClearCanvas=true>

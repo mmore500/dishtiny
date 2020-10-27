@@ -28,7 +28,7 @@ TEST_CASE("Test PhylogeneticRootArtist") {
 
   using getter_t = dish2::PhylogeneticRootGetter<dish2::Spec>;
 
-  dish2::PhylogeneticRootArtist<getter_t> artist{ getter_t{ tw } };
+  dish2::PhylogeneticRootArtist<getter_t> artist{ tw };
 
   artist.Draw( canvas );
 

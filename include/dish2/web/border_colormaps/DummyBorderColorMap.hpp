@@ -3,20 +3,21 @@
 #define DISH2_WEB_BORDER_COLORMAPS_DUMMYBORDERCOLORMAP_HPP_INCLUDE
 
 #include <string>
+#include <utility>
 
 #include "../../../../third-party/Empirical/source/tools/math.h"
 #include "../../../../third-party/Empirical/source/web/color_map.h"
 
 namespace dish2 {
 
-template<typename Getter, size_t R=0, size_t G=0, size_t B=0>
+template<size_t R=0, size_t G=0, size_t B=0>
 struct DummyBorderColorMap {
 
-  using value_type = typename Getter::value_type;
+  template<typename... Args>
+  DummyBorderColorMap( Args&&... ){}
 
-  DummyBorderColorMap(Getter){}
-
-  std::string Paint(const value_type&, const value_type&) const {
+  template<typename ValueType>
+  std::string Paint(const ValueType&, const ValueType&) const {
     return emp::ColorRGB( R, G, B );
   }
 

@@ -25,16 +25,16 @@ TEST_CASE("Test Artist") {
   using getter_t = dish2::DummyGetter<size_t>;
 
   using border_renderer_t = dish2::CellBorderRenderer<
-    dish2::DummyBorderColorMap<getter_t>,
+    dish2::DummyBorderColorMap<>,
     getter_t
   >;
 
   using fill_renderer_t = dish2::CellFillRenderer<
-    dish2::DummyFillColorMap<getter_t, 255, 0, 0>,
+    dish2::DummyFillColorMap<255, 0, 0>,
     getter_t
   >;
 
-  dish2::Artist<fill_renderer_t, border_renderer_t> artist{ {} };
+  dish2::Artist<fill_renderer_t, border_renderer_t> artist;
 
   artist.Draw( canvas );
 

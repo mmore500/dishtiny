@@ -9,14 +9,14 @@
 
 namespace dish2 {
 
-template<typename Getter, size_t R=0, size_t G=0, size_t B=0>
+template<size_t R=0, size_t G=0, size_t B=0>
 struct DummyFillColorMap {
 
-  using value_type = typename Getter::value_type;
+  template<typename... Args>
+  DummyFillColorMap( Args&&... ){}
 
-  DummyFillColorMap(Getter){}
-
-  std::string Paint(const value_type&) const {
+  template<typename ValueType>
+  std::string Paint(const ValueType&) const {
     return emp::ColorRGB( R, G, B );
   }
 

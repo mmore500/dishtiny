@@ -2,6 +2,8 @@
 #ifndef DISH2_WEB_RENDERERS_CELLBORDERRENDERER_HPP_INCLUDE
 #define DISH2_WEB_RENDERERS_CELLBORDERRENDERER_HPP_INCLUDE
 
+#include <utility>
+
 #include "../../../../third-party/Empirical/source/web/Canvas.h"
 
 #include "../util/CanvasMathHelper.hpp"
@@ -18,9 +20,10 @@ public:
 
   using getter_t = Getter;
 
-  CellBorderRenderer( Getter getter_ )
-  : color_map( getter_ )
-  , getter( getter_ )
+  template<typename... Args>
+  CellBorderRenderer( Args&&... args )
+  : color_map( std::forward<Args>(args)... )
+  , getter( std::forward<Args>(args)... )
   {}
 
   void Render( emp::web::Canvas& canvas ) {

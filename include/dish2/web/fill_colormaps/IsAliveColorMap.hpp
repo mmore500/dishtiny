@@ -7,14 +7,13 @@
 
 namespace dish2 {
 
-template<typename Getter>
 struct IsAliveColorMap {
 
-  using value_type = typename Getter::value_type;
+  template<typename... Args>
+  IsAliveColorMap( Args&&... ){}
 
-  IsAliveColorMap(Getter&){}
-
-  std::string Paint(const value_type& leaf) const {
+  template<typename ValueType>
+  std::string Paint(const ValueType& leaf) const {
     const auto val = leaf.Get();
     if (val) return "transparent";
     else return "black";
