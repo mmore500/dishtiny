@@ -24,7 +24,7 @@ class Cell {
   emp::vector< dish2::Cardinal<Spec> > cardinals;
 
   using genome_t = dish2::Genome<Spec>;
-  emp::optional< genome_t > genome{ std::in_place };
+  emp::optional< genome_t > genome{ std::in_place, std::in_place };
 
   using genome_mesh_spec_t = typename Spec::genome_mesh_spec_t;
   using genome_node_t = netuit::MeshNode<genome_mesh_spec_t>;
