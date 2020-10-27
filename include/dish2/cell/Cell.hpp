@@ -108,8 +108,16 @@ public:
   template<typename T=dish2::IdentityWrapper<Spec>>
   T begin() { return T{ cardinals.begin() }; }
 
+  // TODO fix bad const_cast
+  template<typename T=dish2::IdentityWrapper<Spec>>
+  T begin() const { return T{ const_cast<Cell*>(this)->cardinals.begin() }; }
+
   template<typename T=dish2::IdentityWrapper<Spec>>
   T end() { return T{ cardinals.end() }; }
+
+  // TODO fix bad const_cast
+  template<typename T=dish2::IdentityWrapper<Spec>>
+  T end() const { return T{ const_cast<Cell*>(this)->cardinals.end() }; }
 
   bool IsAlive() const {
     return cardinals.front().peripheral.readable_state.template Get<
