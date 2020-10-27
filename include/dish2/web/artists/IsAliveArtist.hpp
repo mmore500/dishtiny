@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_WEB_ARTISTS_RESOURCESTOCKPILEARTIST_HPP_INCLUDE
-#define DISH2_WEB_ARTISTS_RESOURCESTOCKPILEARTIST_HPP_INCLUDE
+#ifndef DISH2_WEB_ARTISTS_ISALIVEARTIST_HPP_INCLUDE
+#define DISH2_WEB_ARTISTS_ISALIVEARTIST_HPP_INCLUDE
 
 #include "../border_colormaps/DummyBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -42,4 +42,4 @@ public:
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WEB_ARTISTS_RESOURCESTOCKPILEARTIST_HPP_INCLUDE
+#endif // #ifndef DISH2_WEB_ARTISTS_ISALIVEARTIST_HPP_INCLUDE
