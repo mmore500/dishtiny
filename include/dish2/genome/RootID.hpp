@@ -23,8 +23,8 @@ public:
   RootID() = default;
 
   RootID(std::in_place_t) : id( uitsl::sidebyside_hash(
-      root_id_counter++,
-      uitsl::audit_cast<size_t>( uitsl::get_proc_id() )
+    root_id_counter++,
+    uitsl::audit_cast<size_t>( uitsl::get_proc_id() )
   ) ) {}
 
   RootID(const size_t id_) : id( id_ ) {}
