@@ -35,6 +35,8 @@ public:
 
   template <class Archive> void serialize( Archive & ar ) { ar( id ); }
 
+  size_t GetID() const { return id; }
+
 };
 
 } // namespace dish2

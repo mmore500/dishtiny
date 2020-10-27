@@ -1,4 +1,5 @@
 TARGET_NAMES += Artist
+TARGET_NAMES += PhylogeneticRootArtist
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
 

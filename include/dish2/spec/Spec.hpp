@@ -2,9 +2,8 @@
 #ifndef DISH2_SPEC_SPEC_HPP_INCLUDE
 #define DISH2_SPEC_SPEC_HPP_INCLUDE
 
-#include "../../../third-party/conduit/include/netuit/topology/RingTopologyFactory.hpp"
-#include "../../../third-party/conduit/include/uitsl/distributed/assign_utils.hpp"
-#include "../../../third-party/conduit/include/uitsl/utility/assign_utils.hpp"
+#include "../../../third-party/conduit/include/netuit/arrange/RingTopologyFactory.hpp"
+#include "../../../third-party/conduit/include/netuit/assign/AssignRoundRobin.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/config/Spec.hpp"
 
 #include "../peripheral/Peripheral.hpp"

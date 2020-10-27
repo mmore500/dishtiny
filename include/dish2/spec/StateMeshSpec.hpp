@@ -3,6 +3,7 @@
 #define DISH2_SPEC_STATEMESHSPEC_HPP_INCLUDE
 
 #include "../../../third-party/conduit/include/uit/ducts/intra/put=growing+get=skipping+type=any/a::SconceDuct.hpp"
+#include "../../../third-party/conduit/include/uit/ducts/mock/EmpAssertDuct.hpp"
 #include "../../../third-party/conduit/include/uit/ducts/proc/put=dropping+get=skipping+type=trivial/pooled+inlet=RingIsend+outlet=BlockIrecv_t::PooledIriObiDuct.hpp"
 #include "../../../third-party/conduit/include/uit/ducts/thread/put=growing+get=skipping+type=any/a::MutexSconceDuct.hpp"
 #include "../../../third-party/conduit/include/uit/setup/ImplSelect.hpp"
@@ -16,8 +17,17 @@ namespace internal_state_spec {
 
 using ImplSel = uit::ImplSelect<
   uit::a::SconceDuct,
-  uit::a::MutexSconceDuct,
-  uit::t::PooledIriObiDuct
+  #ifndef __EMSCRIPTEN__
+    uit::a::MutexSconceDuct
+  #else
+    uit::EmpAssertDuct
+  #endif
+  ,
+  #ifndef __EMSCRIPTEN__
+    uit::t::PooledIriObiDuct
+  #else
+    uit::EmpAssertDuct
+  #endif
 >;
 
 using ImplSpec = uit::ImplSpec<
