@@ -14,7 +14,7 @@
 
 namespace dish2 {
 
-namespace internal::resource_stockpile_artist {
+namespace internal::is_alive_artist {
 
   template<typename IsAliveGetter>
   using parent_t = dish2::Artist<
@@ -28,13 +28,13 @@ namespace internal::resource_stockpile_artist {
     >
   >;
 
-} // namespace internal::resource_stockpile_artist
+} // namespace internal::is_alive_artist
 
 template<typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>>
 class IsAliveArtist
-: public internal::resource_stockpile_artist::parent_t<IsAliveGetter> {
+: public internal::is_alive_artist::parent_t<IsAliveGetter> {
 
-  using parent_t = internal::resource_stockpile_artist::parent_t<IsAliveGetter>;
+  using parent_t = internal::is_alive_artist::parent_t<IsAliveGetter>;
 
 public:
 
