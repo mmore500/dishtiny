@@ -2,49 +2,43 @@
 
 #include "Catch/single_include/catch2/catch.hpp"
 #include "conduit/include/uitsl/debug/compare_files.hpp"
+#include "conduit/include/uitsl/polyfill/ompi_mpi_comm_world.hpp"
 #include "Empirical/source/web/Canvas.h"
 #include "Empirical/source/web/Document.h"
 #include "Empirical/source/web/NodeDomShim.h"
 
-#include "dish2/web/artists/Artist.hpp"
-#include "dish2/web/border_colormaps/DummyBorderColorMap.hpp"
-#include "dish2/web/fill_colormaps/DummyFillColorMap.hpp"
-#include "dish2/web/getters/DummyGetter.hpp"
-#include "dish2/web/renderers/CellFillRenderer.hpp"
-#include "dish2/web/renderers/CellBorderRenderer.hpp"
+#include "dish2/viz/artists/IsAliveArtist.hpp"
+#include "dish2/viz/getters/IsAliveGetter.hpp"
+#include "dish2/viz/renderers/CellFillRenderer.hpp"
+#include "dish2/viz/renderers/CellBorderRenderer.hpp"
+#include "dish2/world/ProcWorld.hpp"
+#include "dish2/world/ThreadWorld.hpp"
+#include "dish2/spec/Spec.hpp"
 
 const emp::web::NodeDomShim shim;
 
 emp::web::Document emp_base{ "emp_base" };
 
-TEST_CASE("Test Artist") {
+TEST_CASE("Test IsAliveArtist") {
 
   emp::web::Canvas canvas(500, 500);
   emp_base << canvas;
 
-  using getter_t = dish2::DummyGetter<size_t>;
+  auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
 
-  using border_renderer_t = dish2::CellBorderRenderer<
-    dish2::DummyBorderColorMap<>,
-    getter_t
-  >;
+  using getter_t = dish2::IsAliveGetter<dish2::Spec>;
 
-  using fill_renderer_t = dish2::CellFillRenderer<
-    dish2::DummyFillColorMap<255, 0, 0>,
-    getter_t
-  >;
-
-  dish2::Artist<fill_renderer_t, border_renderer_t> artist;
+  dish2::IsAliveArtist<getter_t> artist{ tw };
 
   artist.Draw( canvas );
 
-  canvas.SavePNG( "Artist.png" );
+  canvas.SavePNG( "IsAliveArtist.png" );
 
   emscripten_run_script(R"(
     var exec = require('child_process').exec;
 
     setTimeout(function() { exec(
-      'cmp -s Artist.png assets/Artist.png',
+      'cmp -s IsAliveArtist.png assets/IsAliveArtist.png',
       function(err, stdout, stderr) {
         if ( err ) {
           console.log( 'mismatch between generated and expected pngs' );

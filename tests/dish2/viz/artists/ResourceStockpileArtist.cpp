@@ -7,10 +7,10 @@
 #include "Empirical/source/web/Document.h"
 #include "Empirical/source/web/NodeDomShim.h"
 
-#include "dish2/web/artists/PhylogeneticRootArtist.hpp"
-#include "dish2/web/getters/PhylogeneticRootGetter.hpp"
-#include "dish2/web/renderers/CellFillRenderer.hpp"
-#include "dish2/web/renderers/CellBorderRenderer.hpp"
+#include "dish2/viz/artists/ResourceStockpileArtist.hpp"
+#include "dish2/viz/getters/ResourceStockpileGetter.hpp"
+#include "dish2/viz/renderers/CellFillRenderer.hpp"
+#include "dish2/viz/renderers/CellBorderRenderer.hpp"
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
 #include "dish2/spec/Spec.hpp"
@@ -19,26 +19,26 @@ const emp::web::NodeDomShim shim;
 
 emp::web::Document emp_base{ "emp_base" };
 
-TEST_CASE("Test PhylogeneticRootArtist") {
+TEST_CASE("Test ResourceStockpileArtist") {
 
   emp::web::Canvas canvas(500, 500);
   emp_base << canvas;
 
   auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
 
-  using getter_t = dish2::PhylogeneticRootGetter<dish2::Spec>;
+  using getter_t = dish2::ResourceStockpileGetter<dish2::Spec>;
 
-  dish2::PhylogeneticRootArtist<getter_t> artist{ tw };
+  dish2::ResourceStockpileArtist<getter_t> artist{ tw };
 
   artist.Draw( canvas );
 
-  canvas.SavePNG( "PhylogeneticRootArtist.png" );
+  canvas.SavePNG( "ResourceStockpileArtist.png" );
 
   emscripten_run_script(R"(
     var exec = require('child_process').exec;
 
     setTimeout(function() { exec(
-      'cmp -s PhylogeneticRootArtist.png assets/PhylogeneticRootArtist.png',
+      'cmp -s ResourceStockpileArtist.png assets/ResourceStockpileArtist.png',
       function(err, stdout, stderr) {
         if ( err ) {
           console.log( 'mismatch between generated and expected pngs' );

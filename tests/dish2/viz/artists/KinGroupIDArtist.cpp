@@ -6,11 +6,12 @@
 #include "Empirical/source/web/Canvas.h"
 #include "Empirical/source/web/Document.h"
 #include "Empirical/source/web/NodeDomShim.h"
+#include "signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
-#include "dish2/web/artists/IsAliveArtist.hpp"
-#include "dish2/web/getters/IsAliveGetter.hpp"
-#include "dish2/web/renderers/CellFillRenderer.hpp"
-#include "dish2/web/renderers/CellBorderRenderer.hpp"
+#include "dish2/viz/artists/KinGroupIDArtist.hpp"
+#include "dish2/viz/getters/KinGroupIDGetter.hpp"
+#include "dish2/viz/renderers/CellFillRenderer.hpp"
+#include "dish2/viz/renderers/CellBorderRenderer.hpp"
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
 #include "dish2/spec/Spec.hpp"
@@ -19,26 +20,29 @@ const emp::web::NodeDomShim shim;
 
 emp::web::Document emp_base{ "emp_base" };
 
-TEST_CASE("Test IsAliveArtist") {
+TEST_CASE("Test KinGroupIDArtist") {
+
+  // set RNG to ensure consistent output
+  sgpl::ThreadLocalRandom::Get() = emp::Random{ 1 };
 
   emp::web::Canvas canvas(500, 500);
   emp_base << canvas;
 
   auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
 
-  using getter_t = dish2::IsAliveGetter<dish2::Spec>;
+  using getter_t = dish2::KinGroupIDGetter<dish2::Spec>;
 
-  dish2::IsAliveArtist<getter_t> artist{ tw };
+  dish2::KinGroupIDArtist<getter_t> artist{ tw };
 
   artist.Draw( canvas );
 
-  canvas.SavePNG( "IsAliveArtist.png" );
+  canvas.SavePNG( "KinGroupIDArtist.png" );
 
   emscripten_run_script(R"(
     var exec = require('child_process').exec;
 
     setTimeout(function() { exec(
-      'cmp -s IsAliveArtist.png assets/IsAliveArtist.png',
+      'cmp -s KinGroupIDArtist.png assets/KinGroupIDArtist.png',
       function(err, stdout, stderr) {
         if ( err ) {
           console.log( 'mismatch between generated and expected pngs' );

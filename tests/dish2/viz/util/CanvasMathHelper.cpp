@@ -4,7 +4,7 @@
 #include "Empirical/source/web/Canvas.h"
 
 #include "dish2/config/cfg.hpp"
-#include "dish2/web/util/CanvasMathHelper.hpp"
+#include "dish2/viz/util/CanvasMathHelper.hpp"
 
 TEST_CASE("Test CanvasMathHelper") {
 
