@@ -13,12 +13,12 @@
 
 namespace dish2 {
 
-class ViewerCollection : public std::tuple<
+using ViewerCollection = std::tuple<
   dish2::GridViewer<dish2::IsAliveArtist<>>,
   dish2::GridViewer<dish2::KinGroupIDArtist<>>,
   dish2::GridViewer<dish2::PhylogeneticRootArtist<>>,
   dish2::GridViewer<dish2::ResourceStockpileArtist<>>
-> {};
+>;
 
 } // namespace dish2
 

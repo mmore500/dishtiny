@@ -18,8 +18,6 @@ TEST_CASE("Test GridViewer") {
 
   auto thread_world = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
 
-  dish2::GridViewer<dish2::DummyArtist> viewer1{};
-
   dish2::GridViewer<dish2::DummyArtist> viewer2{ thread_world, emp_base };
 
 }

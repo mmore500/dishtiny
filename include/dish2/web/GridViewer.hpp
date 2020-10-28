@@ -18,7 +18,7 @@ namespace dish2 {
 template<typename Artist>
 class GridViewer {
 
-  emp::optional< Artist > artist;
+  Artist artist;
 
   emp::web::Canvas canvas{
     static_cast<double>( std::min(emp::GetViewPortSize() - 100, 500) ),
@@ -27,12 +27,10 @@ class GridViewer {
 
 public:
 
-  GridViewer() = default;
-
   GridViewer(
     const dish2::ThreadWorld<dish2::Spec>& thread_world,
     emp::web::Document& parent
-  ) : artist( std::in_place, thread_world )
+  ) : artist( thread_world )
   {
 
     parent << emp::web::Div(
@@ -60,7 +58,7 @@ public:
 
   }
 
-  void Redraw() { artist->Draw( canvas ); }
+  void Redraw() { artist.Draw( canvas ); }
 
 };
 

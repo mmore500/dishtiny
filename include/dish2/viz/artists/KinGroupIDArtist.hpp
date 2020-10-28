@@ -2,6 +2,8 @@
 #ifndef DISH2_VIZ_ARTISTS_KINGROUPIDARTIST_HPP_INCLUDE
 #define DISH2_VIZ_ARTISTS_KINGROUPIDARTIST_HPP_INCLUDE
 
+#include <string>
+
 #include "../../spec/Spec.hpp"
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
@@ -40,6 +42,8 @@ public:
 
   // inherit constructors
   using parent_t::parent_t;
+
+  static std::string GetName() { return "Kin Group ID"; }
 
 };
 

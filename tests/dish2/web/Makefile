@@ -1,6 +1,7 @@
 TARGET_NAMES += Animator
 TARGET_NAMES += GridViewer
 TARGET_NAMES += ViewerCollection
+TARGET_NAMES += ViewerPanel
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
 

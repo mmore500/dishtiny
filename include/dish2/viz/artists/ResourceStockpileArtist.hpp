@@ -2,6 +2,8 @@
 #ifndef DISH2_VIZ_ARTISTS_RESOURCESTOCKPILEARTIST_HPP_INCLUDE
 #define DISH2_VIZ_ARTISTS_RESOURCESTOCKPILEARTIST_HPP_INCLUDE
 
+#include <string>
+
 #include "../../spec/Spec.hpp"
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
