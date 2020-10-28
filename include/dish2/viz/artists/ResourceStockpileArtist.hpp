@@ -9,7 +9,7 @@
 #include "../fill_colormaps/ResourceStockpileColorMap.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
-#include "../getters/PhylogeneticRootGetter.hpp"
+#include "../getters/ResourceStockpileGetter.hpp"
 #include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
 
@@ -47,14 +47,24 @@ template<
   typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
 >
 class ResourceStockpileArtist
-: public internal::resource_stockpile_artist::parent_t<Getter> {
+: public internal::resource_stockpile_artist::parent_t<
+  ResourceStockpileGetter,
+  IsAliveGetter,
+  KinGroupIDGetter
+> {
 
-  using parent_t = internal::resource_stockpile_artist::parent_t<Getter>;
+  using parent_t = internal::resource_stockpile_artist::parent_t<
+    ResourceStockpileGetter,
+    IsAliveGetter,
+    KinGroupIDGetter
+  >;
 
 public:
 
   // inherit constructors
   using parent_t::parent_t;
+
+  static std::string GetName() { return "Resource Stockpile"; }
 
 };
 

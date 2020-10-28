@@ -49,14 +49,14 @@ template<
 class PhylogeneticRootArtist
 : public internal::phylogenetic_root_artist::parent_t<
   PhylogeneticRootGetter,
-  KinGroupIDGetter,
-  IsAliveGetter
+  IsAliveGetter,
+  KinGroupIDGetter
 > {
 
   using parent_t = internal::phylogenetic_root_artist::parent_t<
     PhylogeneticRootGetter,
-    KinGroupIDGetter,
-    IsAliveGetter
+    IsAliveGetter,
+    KinGroupIDGetter
   >;
 
 public:
