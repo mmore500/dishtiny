@@ -26,9 +26,7 @@ TEST_CASE("Test ResourceStockpileArtist") {
 
   auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
 
-  using getter_t = dish2::ResourceStockpileGetter<dish2::Spec>;
-
-  dish2::ResourceStockpileArtist<getter_t> artist{ tw };
+  dish2::ResourceStockpileArtist<> artist{ tw };
 
   artist.Draw( canvas );
 

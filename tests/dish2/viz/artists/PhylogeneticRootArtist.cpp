@@ -26,9 +26,7 @@ TEST_CASE("Test PhylogeneticRootArtist") {
 
   auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
 
-  using getter_t = dish2::PhylogeneticRootGetter<dish2::Spec>;
-
-  dish2::PhylogeneticRootArtist<getter_t> artist{ tw };
+  dish2::PhylogeneticRootArtist<> artist{ tw };
 
   artist.Draw( canvas );
 

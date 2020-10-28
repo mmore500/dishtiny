@@ -26,9 +26,7 @@ TEST_CASE("Test IsAliveArtist") {
 
   auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
 
-  using getter_t = dish2::IsAliveGetter<dish2::Spec>;
-
-  dish2::IsAliveArtist<getter_t> artist{ tw };
+  dish2::IsAliveArtist<> artist{ tw };
 
   artist.Draw( canvas );
 
