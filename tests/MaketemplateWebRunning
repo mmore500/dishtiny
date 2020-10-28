@@ -50,6 +50,10 @@ coverage: $(TO_ROOT)/coverage_include $(addprefix cov-, $(TARGET_NAMES))
 
 clean:
 	rm -f *.js
+	rm -f *.wasm
+	rm -f *.wasm.map
+	rm -f *.wast
+	rm -f *.png
 	rm -f *.o
 	rm -f *.gcda
 	rm -f *.gcno
