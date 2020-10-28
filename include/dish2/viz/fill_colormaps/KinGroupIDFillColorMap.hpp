@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_WEB_FILL_COLORMAPS_KINGROUPIDFILLCOLORMAP_HPP_INCLUDE
-#define DISH2_WEB_FILL_COLORMAPS_KINGROUPIDFILLCOLORMAP_HPP_INCLUDE
+#ifndef DISH2_VIZ_FILL_COLORMAPS_KINGROUPIDFILLCOLORMAP_HPP_INCLUDE
+#define DISH2_VIZ_FILL_COLORMAPS_KINGROUPIDFILLCOLORMAP_HPP_INCLUDE
 
 #include "../../../../third-party/Empirical/source/tools/math.h"
 #include "../../../../third-party/Empirical/source/web/color_map.h"
@@ -28,4 +28,4 @@ struct KinGroupIDFillColorMap {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WEB_FILL_COLORMAPS_KINGROUPIDFILLCOLORMAP_HPP_INCLUDE
+#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_KINGROUPIDFILLCOLORMAP_HPP_INCLUDE

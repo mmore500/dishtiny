@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_WEB_ARTISTS_ARTIST_HPP_INCLUDE
-#define DISH2_WEB_ARTISTS_ARTIST_HPP_INCLUDE
+#ifndef DISH2_VIZ_ARTISTS_ARTIST_HPP_INCLUDE
+#define DISH2_VIZ_ARTISTS_ARTIST_HPP_INCLUDE
 
 #include <utility>
 
@@ -47,4 +47,4 @@ public:
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WEB_ARTISTS_ARTIST_HPP_INCLUDE
+#endif // #ifndef DISH2_VIZ_ARTISTS_ARTIST_HPP_INCLUDE

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_WEB_GETTERS_CARDINALITERATORADAPTER_HPP_INCLUDE
-#define DISH2_WEB_GETTERS_CARDINALITERATORADAPTER_HPP_INCLUDE
+#ifndef DISH2_VIZ_GETTERS_CARDINALITERATORADAPTER_HPP_INCLUDE
+#define DISH2_VIZ_GETTERS_CARDINALITERATORADAPTER_HPP_INCLUDE
 
 #include "../../../../third-party/Empirical/source/tools/hash_utils.h"
 #include "../../../../third-party/Empirical/source/tools/math.h"
@@ -43,4 +43,4 @@ public:
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WEB_GETTERS_CARDINALITERATORADAPTER_HPP_INCLUDE
+#endif // #ifndef DISH2_VIZ_GETTERS_CARDINALITERATORADAPTER_HPP_INCLUDE
