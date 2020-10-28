@@ -21,7 +21,11 @@ public:
 
   using value_type = dish2::KinGroupID<Spec>;
 
-  KinGroupIDGetter(const dish2::ThreadWorld<Spec>& thread_world_)
+  template< typename... Args >
+  KinGroupIDGetter(
+    const dish2::ThreadWorld<Spec>& thread_world_,
+    Args&&...
+  )
   : thread_world(thread_world_)
   {}
 

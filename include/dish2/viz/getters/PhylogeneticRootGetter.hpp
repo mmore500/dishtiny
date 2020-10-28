@@ -21,7 +21,11 @@ public:
 
   using value_type = size_t;
 
-  PhylogeneticRootGetter(const dish2::ThreadWorld<Spec>& thread_world_)
+  template< typename... Args >
+  PhylogeneticRootGetter(
+    const dish2::ThreadWorld<Spec>& thread_world_,
+    Args&&...
+  )
   : thread_world(thread_world_)
   {}
 
