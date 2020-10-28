@@ -1,4 +1,5 @@
 TARGET_NAMES += Artist
+TARGET_NAMES += DummyArtist
 TARGET_NAMES += IsAliveArtist
 TARGET_NAMES += KinGroupIDArtist
 TARGET_NAMES += PhylogeneticRootArtist
