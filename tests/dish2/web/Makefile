@@ -1,4 +1,5 @@
 TARGET_NAMES += Animator
+TARGET_NAMES += ControlPanel
 TARGET_NAMES += GridViewer
 TARGET_NAMES += ViewerCollection
 TARGET_NAMES += ViewerPanel
