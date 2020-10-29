@@ -19,11 +19,11 @@ struct Peripheral {
 
   using message_mesh_spec_t = dish2::MessageMeshSpec;
   using message_node_output_t = netuit::MeshNodeOutput<message_mesh_spec_t>;
-  message_node_output_t& message_node_output;
+  message_node_output_t message_node_output;
 
   using state_mesh_spec_t = dish2::StateMeshSpec;
   using state_node_input_t = netuit::MeshNodeInput<state_mesh_spec_t>;
-  state_node_input_t& state_node_input;
+  state_node_input_t state_node_input;
 
   Peripheral(
     message_node_output_t& message_node_output_,
