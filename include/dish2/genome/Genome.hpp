@@ -83,8 +83,8 @@ struct Genome {
       // do minor sequence mutation
       auto [copy, num_muts] = sgpl::sloppy_copy<inst_t, 1>(
         program,
-        dish2::cfg.MINOR_SEQUENCE_MUTATION_BOUND(),
-        dish2::cfg.SEQUENCE_DEFECT_RATE()
+        dish2::cfg.SEQUENCE_DEFECT_RATE(),
+        dish2::cfg.MINOR_SEQUENCE_MUTATION_BOUND()
       );
       mutation_counter.RecordInsertionDeletion( num_muts );
       program = std::move( copy );
