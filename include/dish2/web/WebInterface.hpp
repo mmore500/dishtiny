@@ -20,7 +20,7 @@ class WebInterface {
   dish2::ControlPanel control_panel{
     [this](const bool render_toggle, const size_t render_freq){
       thread_world.Update();
-      Render( render_toggle, render_freq );
+      Redraw( render_toggle, render_freq );
       return thread_world.GetUpdate();
     }
   };
@@ -29,7 +29,7 @@ class WebInterface {
 public:
 
 
-  void Render( const bool render_toggle, const size_t render_freq ) {
+  void Redraw( const bool render_toggle=true, const size_t render_freq=1 ) {
 
     emp_assert( render_freq );
     if (

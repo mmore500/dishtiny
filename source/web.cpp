@@ -4,14 +4,8 @@
 #include <emscripten.h>
 #include <zlib.h>
 
-#include "cereal/include/cereal/archives/json.hpp"
-#include "cereal/include/cereal/cereal.hpp"
-#include "cereal/include/cereal/types/array.hpp"
-#include "cereal/include/cereal/types/map.hpp"
-#include "cereal/include/cereal/types/string.hpp"
-#include "cereal/include/cereal/types/unordered_map.hpp"
-#include "cereal/include/cereal/types/vector.hpp"
-#include "conduit/include/uitsl/polyfill/filesystem.hpp"
+#include "conduit/include/uitsl/debug/list_cwd.hpp"
+#include "conduit/include/uitsl/polyfill/ompi_mpi_comm_world.hpp"
 #include "conduit/include/uitsl/utility/inflate.hpp"
 #include "conduit/include/uitsl/utility/untar.hpp"
 #include "Empirical/source/config/ArgManager.h"
@@ -19,35 +13,16 @@
 #include "Empirical/source/tools/keyname_utils.h"
 #include "Empirical/source/web/UrlParams.h"
 
-#include "dish/config/Config.hpp"
-#include "dish/web/WebInterface.hpp"
-#include "dish/world/DishWorld.hpp"
-
-#include "dish/config/Config.cpp"
-#include "dish/hardware/LibraryInstruction.cpp"
-#include "dish/hardware/LibraryInstructionSpiker.cpp"
-#include "dish/manager/ManagerConnection.cpp"
-#include "dish/manager/Manager.cpp"
-#include "dish/trait/FrameCell.cpp"
-#include "dish/trait/FrameHardware.cpp"
-#include "dish/world/DishWorld.cpp"
-
-dish::Config cfg;
-
-// for logging
-void pwd() {
-  std::cout << std::filesystem::absolute(".") << std::endl;
-  for (auto& p: std::filesystem::directory_iterator(".")) {
-    std::cout << p.path() << std::endl;
-  }
-}
+#include "dish2/config/cfg.hpp"
+#include "dish2/web/WebInterface.hpp"
+#include "dish2/world/ProcWorld.hpp"
 
 void run() {
 
   // apply configuration query params and config files to Config
-  auto specs = emp::ArgManager::make_builtin_specs(&cfg);
-  emp::ArgManager am(emp::web::GetUrlParams(), specs);
-  cfg.LoadFromFile();
+  auto specs = emp::ArgManager::make_builtin_specs( &dish2::cfg );
+  emp::ArgManager am( emp::web::GetUrlParams(), specs );
+  // cfg.LoadFromFile();
   am.UseCallbacks();
   if (am.HasUnused()) std::exit(EXIT_FAILURE);
 
@@ -55,20 +30,20 @@ void run() {
   std::cout << "==============================" << std::endl;
   std::cout << "|    How am I configured?    |" << std::endl;
   std::cout << "==============================" << std::endl;
-  cfg.WriteMe(std::cout);
+  // cfg.WriteMe(std::cout);
   std::cout << "==============================\n" << std::endl;
 
   // initialize persistent web interface
-  auto i = new dish::WebInterface(cfg);
+  auto interface = new dish2::WebInterface;
 
   // set up web interface
-  i->InitializeViewers(0);
-  i->Redraw(0);
+  interface->Redraw();
 
   std::cout << "web viewer load SUCCESS" << std::endl;
 
   // once we're done setting up, turn off the loading modal
   emscripten_run_script("$('.modal').modal('hide');");
+
 }
 
 // unpack treatment directory and jump in there, then call run
@@ -80,14 +55,13 @@ void treatget_callback(const char *filename) {
 
   std::cout << "changing directory..." << std::endl;
   chdir("treatment_directory");
-  pwd();
+  uitsl::list_cwd();
 
   run();
 
 }
 
-int main()
-{
+int main() {
 
   const std::string treatment_descriptor{
   (
