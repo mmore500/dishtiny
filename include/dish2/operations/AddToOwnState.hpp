@@ -20,8 +20,7 @@ struct AddToOwnState {
     typename Spec::peripheral_t& peripheral
   ) {
 
-    constexpr size_t num_addrs
-      = decltype(peripheral.readable_state)::GetSize();
+    constexpr size_t num_addrs = dish2::WritableState::GetSize();
     const size_t addr = inst.tag.GetUInt(0) % num_addrs;
 
     peripheral.readable_state.template Get<dish2::WritableState>().AddTo(
