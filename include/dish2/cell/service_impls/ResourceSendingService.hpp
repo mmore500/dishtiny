@@ -96,7 +96,7 @@ void Cell<Spec>::ResourceSendingService() {
     std::begin( send_amounts ),
     std::end( send_amounts ),
     std::begin( send_amounts ),
-    [total_requested](const auto amt){ return amt / total_requested; }
+    [total_requested](const auto amt){ return amt * (amt / total_requested); }
   );
 
   // check that all send amounts are non-negative and finite
