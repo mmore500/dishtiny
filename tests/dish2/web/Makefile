@@ -3,6 +3,7 @@ TARGET_NAMES += ControlPanel
 TARGET_NAMES += GridViewer
 TARGET_NAMES += ViewerCollection
 TARGET_NAMES += ViewerPanel
+TARGET_NAMES += WebInterface
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
 
