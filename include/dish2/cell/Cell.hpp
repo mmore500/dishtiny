@@ -134,10 +134,6 @@ public:
     const bool is_alive{ IsAlive() };
 
     // TODO put these in order
-    if ( dish2::apoptosis_should_run( update, is_alive ) ) {
-      ApoptosisService();
-    }
-
     if ( dish2::birth_setup_should_run( update, is_alive ) ) {
       BirthSetupService();
     }
@@ -184,6 +180,10 @@ public:
 
     if ( dish2::spawn_sending_should_run( update, is_alive ) ) {
       StateInputJumpService();
+    }
+
+    if ( dish2::apoptosis_should_run( update, is_alive ) ) {
+      ApoptosisService();
     }
 
   }
