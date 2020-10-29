@@ -6,6 +6,7 @@
 #include "../../../third-party/conduit/include/netuit/assign/AssignContiguously.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/config/Spec.hpp"
 
+#include "../operations/OpLibrary.hpp"
 #include "../peripheral/Peripheral.hpp"
 
 #include "GenomeMeshSpec.hpp"
@@ -20,7 +21,7 @@ struct Spec {
   constexpr inline static size_t NLEV{ 1 };
 
   using sgpl_spec_t = sgpl::Spec<
-    sgpl::CompleteOpLibrary,
+    dish2::OpLibrary,
     dish2::Peripheral
   >;
 
