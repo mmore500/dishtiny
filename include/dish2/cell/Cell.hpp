@@ -120,9 +120,10 @@ public:
   T end() const { return T{ const_cast<Cell*>(this)->cardinals.end() }; }
 
   bool IsAlive() const {
-    return cardinals.front().peripheral.readable_state.template Get<
+    emp_assert( cardinals.front().peripheral.readable_state.template Get<
       dish2::IsAlive
-    >().Get();
+    >().Get() == genome.has_value() );
+    return genome.has_value();
   }
 
   size_t GetNumCardinals() const { return cardinals.size(); }
