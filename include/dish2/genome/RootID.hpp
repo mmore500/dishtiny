@@ -2,13 +2,14 @@
 #ifndef DISH2_GENOME_ROOTID_HPP_INCLUDE
 #define DISH2_GENOME_ROOTID_HPP_INCLUDE
 
+#include <atomic>
+#include <tuple>
+#include <ratio>
+#include <utility>
+
 #include "../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
-
-#include <atomic>
-#include <tuple>
-#include <utility>
 
 namespace dish2 {
 
@@ -22,9 +23,9 @@ public:
 
   RootID() = default;
 
-  RootID(std::in_place_t) : id( uitsl::sidebyside_hash(
-    root_id_counter++,
-    uitsl::audit_cast<size_t>( uitsl::get_proc_id() )
+  RootID(std::in_place_t) : id( uitsl::sidebyside_hash< std::ratio<3, 4> >(
+    uitsl::audit_cast<size_t>( uitsl::get_proc_id() ),
+    root_id_counter++
   ) ) {}
 
   RootID(const size_t id_) : id( id_ ) {}
