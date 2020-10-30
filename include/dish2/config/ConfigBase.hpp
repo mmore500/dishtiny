@@ -32,6 +32,7 @@ EMP_BUILD_CONFIG(
 
   GROUP(DEMOGRAPHICS, "DEMOGRAPHICS"),
   VALUE(N_CELLS, size_t, 100, "How many cells should be simulated?"),
+  VALUE(N_DIMS, size_t, 2, "What dimensionality should the toroidal mesh have?"),
   // VALUE(AGE_LIMIT_MULTIPLIER, float, 1.0, "What ratio of EVENT_RADIUS should the limit on cell age be?"),
   // VALUE(CHANNELS_VISIBLE, bool, true, "Should channels have any effect in the instruction set and event triggers?"),
   // VALUE(GEN_INCR_FREQ, size_t, 512, "How often should we increase cell generation counters?"),

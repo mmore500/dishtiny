@@ -9,7 +9,7 @@ FLAGS = -std=c++17 -g -pipe -pthread -Wall -Wno-unused-function -Wno-unused-priv
 default: fuzz
 
 fuzz-%: %.cpp
-	$(DISH_MPICXX) $(FLAGS) $< -o $@.out
+	$(DISH_MPICXX) $(FLAGS) $< -lmetis -o $@.out
 	# execute fuzz
 	gdb ./$@.out --ex="set print thread-events off" --ex="run -N_THREADS 2" --ex=bt --ex='quit $$_exitcode'
 

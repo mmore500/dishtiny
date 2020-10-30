@@ -2,8 +2,7 @@
 #ifndef DISH2_SPEC_SPEC_HPP_INCLUDE
 #define DISH2_SPEC_SPEC_HPP_INCLUDE
 
-#include "../../../third-party/conduit/include/netuit/arrange/RingTopologyFactory.hpp"
-#include "../../../third-party/conduit/include/netuit/assign/AssignContiguously.hpp"
+#include "../../../third-party/conduit/include/netuit/arrange/ToroidalTopologyFactory.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/config/Spec.hpp"
 
 #include "../operations/OpLibrary.hpp"
@@ -30,11 +29,7 @@ struct Spec {
   using resource_mesh_spec_t = dish2::ResourceMeshSpec;
   using state_mesh_spec_t = dish2::StateMeshSpec;
 
-  using topology_factory_t = netuit::RingTopologyFactory;
-
-  using thread_assigner_t = netuit::AssignContiguously<uitsl::thread_id_t>;
-
-  using proc_assigner_t = netuit::AssignContiguously<uitsl::proc_id_t>;
+  using topology_factory_t = netuit::ToroidalTopologyFactory;
 
 };
 
