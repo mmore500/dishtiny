@@ -54,6 +54,7 @@ EMP_BUILD_CONFIG(
 
   GROUP(GENOME, "GENOME"),
   VALUE(PROGRAM_START_SIZE, size_t, 100, "How big should initial programs be?"),
+  VALUE(PROGRAM_MAX_SIZE, size_t, 1000, "What size should programs be capped at?"),
   VALUE(MUTATION_RATE, float, 0.1,
     "What fraction of cells should be mutated at all?"
   ),
