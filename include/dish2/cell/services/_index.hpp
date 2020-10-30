@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_CELL_SERVICE_IMPLS__INDEX_HPP_INCLUDE
-#define DISH2_CELL_SERVICE_IMPLS__INDEX_HPP_INCLUDE
+#ifndef DISH2_CELL_SERVICES__INDEX_HPP_INCLUDE
+#define DISH2_CELL_SERVICES__INDEX_HPP_INCLUDE
 
 #include "ApoptosisService.hpp"
 #include "BirthSetupService.hpp"
@@ -16,4 +16,4 @@
 #include "SpawnSendingService.hpp"
 #include "StateInputJumpService.hpp"
 
-#endif // #ifndef DISH2_CELL_SERVICE_IMPLS__INDEX_HPP_INCLUDE
+#endif // #ifndef DISH2_CELL_SERVICES__INDEX_HPP_INCLUDE

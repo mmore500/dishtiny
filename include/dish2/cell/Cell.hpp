@@ -14,12 +14,13 @@
 #include "Cardinal.hpp"
 
 #include "cardinal_iterators/IdentityWrapper.hpp"
-#include "should_runs/_index.hpp"
+#include "services/_index.hpp"
+#include "services/ServiceManager.hpp"
 
 namespace dish2 {
 
 template<typename Spec>
-class Cell {
+struct Cell {
 
   emp::vector< dish2::Cardinal<Spec> > cardinals;
 
@@ -38,29 +39,12 @@ class Cell {
   using state_mesh_spec_t = typename Spec::state_mesh_spec_t;
   using state_node_t = netuit::MeshNode<state_mesh_spec_t>;
 
-protected:
+  using this_t = dish2::Cell<Spec>;
 
   // out of class implementations
   void DeathRoutine();
   void HeirPayoutRoutine();
   void MakeAliveRoutine();
-
-  // out of class implementations
-  void ApoptosisService();
-  void BirthSetupService();
-  void ConduitFlushService();
-  void CpuExecutionService();
-  void EventLaunchingService();
-  void InterMessageLaunchingService();
-  void IntraMessageLaunchingService();
-  void ResourceDecayService();
-  void ResourceHarvestingService();
-  void ResourceReceivingService();
-  void ResourceSendingService();
-  void SpawnSendingService();
-  void StateInputJumpService();
-
-public:
 
   Cell(
     const genome_node_t& genome_node,
@@ -131,60 +115,24 @@ public:
   const genome_t& GetGenome() const { return *genome; }
 
   void Update(const size_t update) {
-    const bool is_alive{ IsAlive() };
 
     // TODO put these in order
-    if ( dish2::birth_setup_should_run( update, is_alive ) ) {
-      BirthSetupService();
-    }
+    using service_manager_t = dish2::ServiceManager<
+      dish2::BirthSetupService,
+      dish2::ConduitFlushService,
+      dish2::CpuExecutionService,
+      dish2::EventLaunchingService,
+      dish2::InterMessageLaunchingService,
+      dish2::IntraMessageLaunchingService,
+      dish2::ResourceDecayService,
+      dish2::ResourceHarvestingService,
+      dish2::ResourceSendingService,
+      dish2::SpawnSendingService,
+      dish2::StateInputJumpService,
+      dish2::ApoptosisService // must run last
+    >;
 
-    if ( dish2::conduit_flush_should_run( update, is_alive ) ) {
-      ConduitFlushService();
-    }
-
-    if ( dish2::cpu_execution_should_run( update, is_alive ) ) {
-      CpuExecutionService();
-    }
-
-    if ( dish2::event_launching_should_run( update, is_alive ) ) {
-      EventLaunchingService();
-    }
-
-    if ( dish2::inter_message_launching_should_run( update, is_alive ) ) {
-      InterMessageLaunchingService();
-    }
-
-    if ( dish2::intra_message_launching_should_run( update, is_alive ) ) {
-      IntraMessageLaunchingService();
-    }
-
-    if ( dish2::resource_decay_should_run( update, is_alive ) ) {
-      ResourceDecayService();
-    }
-
-    if ( dish2::resource_harvesting_should_run( update, is_alive ) ) {
-      ResourceHarvestingService();
-    }
-
-    if ( dish2::resource_receiving_should_run( update, is_alive ) ) {
-      ResourceReceivingService();
-    }
-
-    if ( dish2::resource_sending_should_run( update, is_alive ) ) {
-      ResourceSendingService();
-    }
-
-    if ( dish2::spawn_sending_should_run( update, is_alive ) ) {
-      SpawnSendingService();
-    }
-
-    if ( dish2::spawn_sending_should_run( update, is_alive ) ) {
-      StateInputJumpService();
-    }
-
-    if ( dish2::apoptosis_should_run( update, is_alive ) ) {
-      ApoptosisService();
-    }
+    service_manager_t::template Run<this_t>( *this, update, IsAlive() );
 
   }
 
@@ -194,6 +142,5 @@ public:
 
 // include out of class implementtions
 #include "routine_impls/_index.hpp"
-#include "service_impls/_index.hpp"
 
 #endif // #ifndef DISH2_CELL_CELL_HPP_INCLUDE

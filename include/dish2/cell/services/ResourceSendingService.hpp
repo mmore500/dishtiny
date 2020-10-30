@@ -1,0 +1,278 @@
+#pragma once
+#ifndef DISH2_CELL_SERVICES_RESOURCESENDINGSERVICE_HPP_INCLUDE
+#define DISH2_CELL_SERVICES_RESOURCESENDINGSERVICE_HPP_INCLUDE
+
+#include <cmath>
+#include <functional>
+#include <limits>
+#include <set>
+#include <utility>
+
+#include "../../../../third-party/Empirical/source/base/vector.h"
+#include "../../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
+#include "../../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+
+#include "../../config/cfg.hpp"
+#include "../../util/nan_to_zero.hpp"
+
+#include "../cardinal_iterators/NeighborResourceReceiveResistanceWrapper.hpp"
+#include "../cardinal_iterators/ResourceNodeOutputWrapper.hpp"
+#include "../cardinal_iterators/ResourceReserveRequestWrapper.hpp"
+#include "../cardinal_iterators/ResourceSendLimitWrapper.hpp"
+#include "../cardinal_iterators/ResourceSendRequestWrapper.hpp"
+#include "../cardinal_iterators/ResourceStockpileWrapper.hpp"
+
+namespace dish2 {
+
+struct ResourceSendingService {
+
+  static bool ShouldRun( const size_t update, const bool alive ) {
+    const size_t freq = dish2::cfg.RESOURCE_SENDING_SERVICE_FREQUENCY();
+    return
+      alive
+      && freq > 0
+      && uitsl::shift_mod( update, freq ) == 0;
+  }
+
+  template<typename Cell>
+  static void DoService( Cell& cell ) {
+
+    // check resource stockpile consistency and validity
+    emp_assert((
+      std::set< typename dish2::ResourceStockpileWrapper<Spec>::value_type >(
+        cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
+        cell.template end<dish2::ResourceStockpileWrapper<Spec>>()
+      ).size() == 1
+    ));
+    emp_assert( std::all_of(
+      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<Spec>>(),
+      [](const auto amt){ return std::isfinite(amt) && ( amt >= 0 ); }
+    ) );
+
+    // initialize available amount to entire stockpile
+    thread_local emp::vector<float> send_amounts;
+    send_amounts.clear();
+    std::copy(
+      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<Spec>>(),
+      std::back_inserter( send_amounts )
+    );
+
+    // subtract out how much each cardinal wants to stockpile
+    std::transform(
+      std::begin( send_amounts ),
+      std::end( send_amounts ),
+      cell.template begin<dish2::ResourceReserveRequestWrapper<Spec>>(),
+      std::begin( send_amounts ),
+      [](const auto send_amount, const auto reserve_request_raw){
+        return dish2::nan_to_zero(
+          std::clamp(send_amount - reserve_request_raw.Get(), 0.0f, send_amount)
+        );
+      }
+    );
+
+    // check that each individual send request is leq total available amount
+    // within float tolerance
+    emp_assert( std::none_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [](const auto amt){ return std::isnan(amt); }
+    ), "a" );
+    emp_assert( std::none_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [](const auto amt){ return std::isinf(amt); }
+    ), "a" );
+    emp_assert( std::all_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [&cell](const auto amt){
+        return amt
+          - *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>()
+          <= std::numeric_limits<float>::epsilon();
+      }
+    ), "a" );
+
+    // multiply by fraction requested
+    std::transform(
+      std::begin( send_amounts ),
+      std::end( send_amounts ),
+      cell.template begin<dish2::ResourceSendRequestWrapper<Spec>>(),
+      std::begin( send_amounts ),
+      [](const auto send_amount, const auto send_request_raw){
+        return dish2::nan_to_zero( std::clamp(
+          send_amount * send_request_raw.Get(),
+          0.0f, send_amount
+        ) );
+      }
+    );
+
+    // check that each individual send request is leq total available amount
+    // within float tolerance
+    emp_assert( std::none_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [](const auto amt){ return std::isnan(amt); }
+    ), "b" );
+    emp_assert( std::none_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [](const auto amt){ return std::isinf(amt); }
+    ), "b" );
+    emp_assert( std::all_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [&cell](const auto amt){
+        return amt
+          - *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>()
+          <= std::numeric_limits<float>::epsilon();
+      }
+    ), "b" );
+
+    // if absolute rate limited, cap by it
+    std::transform(
+      std::begin( send_amounts ),
+      std::end( send_amounts ),
+      cell.template begin<dish2::ResourceSendLimitWrapper<Spec>>(),
+      std::begin( send_amounts ),
+      [](const auto send_amount, const auto send_limit_raw){
+        const auto send_limit = dish2::nan_to_zero(
+          std::max( 0.0f, send_limit_raw.Get() )
+        );
+        return send_limit
+          ? std::min( send_amount, send_limit )
+          : send_amount
+        ;
+      }
+    );
+
+    // check that each individual send request is leq total available amount
+    // within float tolerance
+    emp_assert( std::none_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [](const auto amt){ return std::isnan(amt); }
+    ), "c" );
+    emp_assert( std::none_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [](const auto amt){ return std::isinf(amt); }
+    ), "c" );
+    emp_assert( std::all_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [&cell](const auto amt){
+        return amt
+          - *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>()
+          <= std::numeric_limits<float>::epsilon();
+      }
+    ), "c" );
+
+    // check that all send amounts are non-negative and finite
+    emp_assert( std::all_of(
+      std::begin( send_amounts ),
+      std::end( send_amounts ),
+      [](const auto val){ return std::isfinite(val) && ( val >= 0 ); }
+    ) );
+
+    // multiply each send amount by its fraction of sum send amount
+    const auto total_requested = std::accumulate(
+      std::begin( send_amounts ),
+      std::end( send_amounts ),
+      0.0f
+    );
+    if (total_requested) std::transform(
+      std::begin( send_amounts ),
+      std::end( send_amounts ),
+      std::begin( send_amounts ),
+      [total_requested](const auto amt){ return amt * (amt / total_requested); }
+    );
+
+    // check that each individual send request is leq total available amount
+    // within float tolerance
+    emp_assert( std::none_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [](const auto amt){ return std::isnan(amt); }
+    ), "d" );
+    emp_assert( std::none_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [](const auto amt){ return std::isinf(amt); }
+    ), "d" );
+    emp_assert( std::all_of(
+      std::begin(send_amounts),
+      std::end(send_amounts),
+      [&cell](const auto amt){
+        return amt
+          - *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>()
+          <= std::numeric_limits<float>::epsilon();
+      }
+    ), "d" );
+
+    // check that all send amounts are non-negative and finite
+    emp_assert( std::all_of(
+      std::begin( send_amounts ),
+      std::end( send_amounts ),
+      [](const auto val){ return std::isfinite(val) && ( val >= 0 ); }
+    ) );
+
+    // check that sum send amount doesn't exceed stockpiled amount
+    // within float tolerance
+    emp_assert( std::nextafter(
+      std::accumulate(
+        std::begin( send_amounts ), std::end( send_amounts ), 0.0f
+      ),
+      *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>()
+    ) <= *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>() );
+
+    // do the send
+    // TODO write a custom transform-like for_each
+    float stockpile
+      = *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>();
+    for (size_t i{}; i < send_amounts.size(); ++i) {
+      auto& resource_output
+        = *(cell.template begin<dish2::ResourceNodeOutputWrapper<Spec>>() + i);
+      const auto send_amount = *( std::begin( send_amounts ) + i );
+
+      stockpile -= send_amount;
+      uitsl::err_audit(!
+        resource_output.TryPut( send_amount )
+      );
+    }
+
+    // patch for precision errors
+    // could also clamp, but this avoids branching
+    stockpile += std::numeric_limits<float>::epsilon();
+
+    // check that stockpile wasn't overspent or corrupted
+    emp_assert( std::isfinite(stockpile) && ( stockpile >= 0.0f ), stockpile );
+
+    // update stockpile state
+    std::fill(
+      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<Spec>>(),
+      stockpile
+    );
+
+    // check resource stockpile consistency and validity
+    emp_assert((
+      std::set< typename dish2::ResourceStockpileWrapper<Spec>::value_type >(
+        cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
+        cell.template end<dish2::ResourceStockpileWrapper<Spec>>()
+      ).size() == 1
+    ));
+    emp_assert( std::all_of(
+      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<Spec>>(),
+      [](const auto amt){ return std::isfinite(amt) && ( amt >= 0 ); }
+    ) );
+
+  }
+
+};
+
+} // namespace dish2
+
+#endif // #ifndef DISH2_CELL_SERVICES_RESOURCESENDINGSERVICE_HPP_INCLUDE
