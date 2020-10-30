@@ -9,8 +9,9 @@
 #include <utility>
 
 #include "../../../../third-party/Empirical/source/base/vector.h"
-
 #include "../../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
+
+#include "../../util/nan_to_zero.hpp"
 
 #include "../cardinal_iterators/NeighborResourceReceiveResistanceWrapper.hpp"
 #include "../cardinal_iterators/ResourceNodeOutputWrapper.hpp"
@@ -52,20 +53,31 @@ void Cell<Spec>::ResourceSendingService() {
     std::end( send_amounts ),
     begin<dish2::ResourceReserveRequestWrapper<Spec>>(),
     std::begin( send_amounts ),
-    [](const auto send_amount, const auto reserve_request){
-      return std::clamp(send_amount - reserve_request.Get(), 0.0f, send_amount);
+    [](const auto send_amount, const auto reserve_request_raw){
+      return dish2::nan_to_zero(
+        std::clamp(send_amount - reserve_request_raw.Get(), 0.0f, send_amount)
+      );
     }
   );
 
   // check that each individual send request is leq total available amount
   // within float tolerance
+  emp_assert( std::none_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [](const auto amt){ return std::isnan(amt); }
+  ), "a" );
+  emp_assert( std::none_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [](const auto amt){ return std::isinf(amt); }
+  ), "a" );
   emp_assert( std::all_of(
     std::begin(send_amounts),
     std::end(send_amounts),
     [this](const auto amt){
-      return std::nextafter(
-        amt, *begin<dish2::ResourceStockpileWrapper<Spec>>()
-      ) <= *begin<dish2::ResourceStockpileWrapper<Spec>>();
+      return amt - *begin<dish2::ResourceStockpileWrapper<Spec>>()
+        <= std::numeric_limits<float>::epsilon();
     }
   ), "a" );
 
@@ -76,22 +88,31 @@ void Cell<Spec>::ResourceSendingService() {
     begin<dish2::ResourceSendRequestWrapper<Spec>>(),
     std::begin( send_amounts ),
     [](const auto send_amount, const auto send_request_raw){
-      // precision workaround, get next smallest value below 1.0f
-      constexpr float top = 1.0f - std::numeric_limits<float>::epsilon();
-      const auto send_request = std::clamp( send_request_raw.Get(), 0.0f, top );
-      return send_amount * send_request;
+      return dish2::nan_to_zero( std::clamp(
+        send_amount * send_request_raw.Get(),
+        0.0f, send_amount
+      ) );
     }
   );
 
   // check that each individual send request is leq total available amount
   // within float tolerance
+  emp_assert( std::none_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [](const auto amt){ return std::isnan(amt); }
+  ), "b" );
+  emp_assert( std::none_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [](const auto amt){ return std::isinf(amt); }
+  ), "b" );
   emp_assert( std::all_of(
     std::begin(send_amounts),
     std::end(send_amounts),
     [this](const auto amt){
-      return std::nextafter(
-        amt, *begin<dish2::ResourceStockpileWrapper<Spec>>()
-      ) <= *begin<dish2::ResourceStockpileWrapper<Spec>>();
+      return amt - *begin<dish2::ResourceStockpileWrapper<Spec>>()
+        <= std::numeric_limits<float>::epsilon();
     }
   ), "b" );
 
@@ -102,7 +123,9 @@ void Cell<Spec>::ResourceSendingService() {
     begin<dish2::ResourceSendLimitWrapper<Spec>>(),
     std::begin( send_amounts ),
     [](const auto send_amount, const auto send_limit_raw){
-      const auto send_limit = std::max( 0.0f, send_limit_raw.Get() );
+      const auto send_limit = dish2::nan_to_zero(
+        std::max( 0.0f, send_limit_raw.Get() )
+      );
       return send_limit
         ? std::min( send_amount, send_limit )
         : send_amount
@@ -112,13 +135,22 @@ void Cell<Spec>::ResourceSendingService() {
 
   // check that each individual send request is leq total available amount
   // within float tolerance
+  emp_assert( std::none_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [](const auto amt){ return std::isnan(amt); }
+  ), "c" );
+  emp_assert( std::none_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [](const auto amt){ return std::isinf(amt); }
+  ), "c" );
   emp_assert( std::all_of(
     std::begin(send_amounts),
     std::end(send_amounts),
     [this](const auto amt){
-      return std::nextafter(
-        amt, *begin<dish2::ResourceStockpileWrapper<Spec>>()
-      ) <= *begin<dish2::ResourceStockpileWrapper<Spec>>();
+      return amt - *begin<dish2::ResourceStockpileWrapper<Spec>>()
+        <= std::numeric_limits<float>::epsilon();
     }
   ), "c" );
 
@@ -144,13 +176,22 @@ void Cell<Spec>::ResourceSendingService() {
 
   // check that each individual send request is leq total available amount
   // within float tolerance
+  emp_assert( std::none_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [](const auto amt){ return std::isnan(amt); }
+  ), "d" );
+  emp_assert( std::none_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [](const auto amt){ return std::isinf(amt); }
+  ), "d" );
   emp_assert( std::all_of(
     std::begin(send_amounts),
     std::end(send_amounts),
     [this](const auto amt){
-      return std::nextafter(
-        amt, *begin<dish2::ResourceStockpileWrapper<Spec>>()
-      ) <= *begin<dish2::ResourceStockpileWrapper<Spec>>();
+      return amt - *begin<dish2::ResourceStockpileWrapper<Spec>>()
+        <= std::numeric_limits<float>::epsilon();
     }
   ), "d" );
 
