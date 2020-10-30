@@ -2,6 +2,7 @@ TARGET_NAMES += cell
 TARGET_NAMES += genome
 TARGET_NAMES += operations
 TARGET_NAMES += peripheral
+TARGET_NAMES += services
 TARGET_NAMES += spec
 TARGET_NAMES += viz
 TARGET_NAMES += web

@@ -2,11 +2,10 @@
 #ifndef DISH2_CELL_SERVICES_INTERMESSAGELAUNCHINGSERVICE_HPP_INCLUDE
 #define DISH2_CELL_SERVICES_INTERMESSAGELAUNCHINGSERVICE_HPP_INCLUDE
 
-#include "../../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
-#include "../../config/cfg.hpp"
-
-#include "../cardinal_iterators/CpuWrapper.hpp"
+#include "../cell/cardinal_iterators/CpuWrapper.hpp"
+#include "../config/cfg.hpp"
 
 namespace dish2 {
 

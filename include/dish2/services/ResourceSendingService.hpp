@@ -8,19 +8,18 @@
 #include <set>
 #include <utility>
 
-#include "../../../../third-party/Empirical/source/base/vector.h"
-#include "../../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
-#include "../../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/Empirical/source/base/vector.h"
+#include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
+#include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
-#include "../../config/cfg.hpp"
-#include "../../util/nan_to_zero.hpp"
-
-#include "../cardinal_iterators/NeighborResourceReceiveResistanceWrapper.hpp"
-#include "../cardinal_iterators/ResourceNodeOutputWrapper.hpp"
-#include "../cardinal_iterators/ResourceReserveRequestWrapper.hpp"
-#include "../cardinal_iterators/ResourceSendLimitWrapper.hpp"
-#include "../cardinal_iterators/ResourceSendRequestWrapper.hpp"
-#include "../cardinal_iterators/ResourceStockpileWrapper.hpp"
+#include "../cell/cardinal_iterators/NeighborResourceReceiveResistanceWrapper.hpp"
+#include "../cell/cardinal_iterators/ResourceNodeOutputWrapper.hpp"
+#include "../cell/cardinal_iterators/ResourceReserveRequestWrapper.hpp"
+#include "../cell/cardinal_iterators/ResourceSendLimitWrapper.hpp"
+#include "../cell/cardinal_iterators/ResourceSendRequestWrapper.hpp"
+#include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
+#include "../config/cfg.hpp"
+#include "../util/nan_to_zero.hpp"
 
 namespace dish2 {
 

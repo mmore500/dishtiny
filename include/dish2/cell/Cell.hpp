@@ -10,12 +10,12 @@
 
 #include "../config/cfg.hpp"
 #include "../genome/Genome.hpp"
+#include "../services/_index.hpp"
+#include "../services/ServiceManager.hpp"
 
 #include "Cardinal.hpp"
 
 #include "cardinal_iterators/IdentityWrapper.hpp"
-#include "services/_index.hpp"
-#include "services/ServiceManager.hpp"
 
 namespace dish2 {
 

@@ -4,17 +4,16 @@
 
 #include <set>
 
-#include "../../../../third-party/conduit/include/uitsl/algorithm/copy_if.hpp"
-#include "../../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
-#include "../../../../third-party/Empirical/source/base/vector.h"
-#include "../../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
+#include "../../../third-party/conduit/include/uitsl/algorithm/copy_if.hpp"
+#include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/Empirical/source/base/vector.h"
+#include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
-#include "../../config/cfg.hpp"
-
-#include "../cardinal_iterators/GenomeNodeOutputWrapper.hpp"
-#include "../cardinal_iterators/ResourceStockpileWrapper.hpp"
-#include "../cardinal_iterators/SpawnArrestWrapper.hpp"
-#include "../cardinal_iterators/SpawnRequestWrapper.hpp"
+#include "../cell/cardinal_iterators/GenomeNodeOutputWrapper.hpp"
+#include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
+#include "../cell/cardinal_iterators/SpawnArrestWrapper.hpp"
+#include "../cell/cardinal_iterators/SpawnRequestWrapper.hpp"
+#include "../config/cfg.hpp"
 
 namespace dish2 {
 

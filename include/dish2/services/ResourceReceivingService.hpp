@@ -5,12 +5,11 @@
 #include <set>
 #include <utility>
 
-#include "../../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
-#include "../../config/cfg.hpp"
-
-#include "../cardinal_iterators/ResourceNodeInputWrapper.hpp"
-#include "../cardinal_iterators/ResourceStockpileWrapper.hpp"
+#include "../cell/cardinal_iterators/ResourceNodeInputWrapper.hpp"
+#include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
+#include "../config/cfg.hpp"
 
 namespace dish2 {
 

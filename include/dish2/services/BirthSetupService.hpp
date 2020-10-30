@@ -4,13 +4,12 @@
 
 #include <functional>
 
-#include "../../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
-#include "../../../../third-party/Empirical/source/base/vector.h"
-#include "../../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
+#include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/Empirical/source/base/vector.h"
+#include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
-#include "../../config/cfg.hpp"
-
-#include "../cardinal_iterators/GenomeNodeInputWrapper.hpp"
+#include "../config/cfg.hpp"
+#include "../cell/cardinal_iterators/GenomeNodeInputWrapper.hpp"
 
 namespace dish2 {
 

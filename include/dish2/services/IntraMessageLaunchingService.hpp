@@ -2,10 +2,10 @@
 #ifndef DISH2_CELL_SERVICES_INTRAMESSAGELAUNCHINGSERVICE_HPP_INCLUDE
 #define DISH2_CELL_SERVICES_INTRAMESSAGELAUNCHINGSERVICE_HPP_INCLUDE
 
-#include "../../../../third-party/conduit/include/uitsl/debug/WarnOnce.hpp"
-#include "../../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/conduit/include/uitsl/debug/WarnOnce.hpp"
+#include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
-#include "../../config/cfg.hpp"
+#include "../config/cfg.hpp"
 
 namespace dish2 {
 
