@@ -23,13 +23,18 @@ namespace dish2 {
 template <class Spec>
 void Cell<Spec>::ResourceSendingService() {
 
-  // check resource stockpile consistency
+  // check resource stockpile consistency and validity
   emp_assert((
     std::set< typename dish2::ResourceStockpileWrapper<Spec>::value_type >(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
     ).size() == 1
   ));
+  emp_assert( std::all_of(
+    begin<dish2::ResourceStockpileWrapper<Spec>>(),
+    end<dish2::ResourceStockpileWrapper<Spec>>(),
+    [this](const auto amt){ return std::isfinite(amt) && ( amt >= 0 ); }
+  ) );
 
   // initialize available amount to entire stockpile
   thread_local emp::vector<float> send_amounts;
@@ -47,9 +52,21 @@ void Cell<Spec>::ResourceSendingService() {
     begin<dish2::ResourceReserveRequestWrapper<Spec>>(),
     std::begin( send_amounts ),
     [](const auto send_amount, const auto reserve_request){
-      return send_amount - std::min( reserve_request.Get(), send_amount );
+      return std::clamp(send_amount - reserve_request.Get(), 0.0f, send_amount);
     }
   );
+
+  // check that each individual send request is leq total available amount
+  // within float tolerance
+  emp_assert( std::all_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [this](const auto amt){
+      return std::nextafter(
+        amt, *begin<dish2::ResourceStockpileWrapper<Spec>>()
+      ) <= *begin<dish2::ResourceStockpileWrapper<Spec>>();
+    }
+  ), "a" );
 
   // multiply by fraction requested
   std::transform(
@@ -58,11 +75,24 @@ void Cell<Spec>::ResourceSendingService() {
     begin<dish2::ResourceSendRequestWrapper<Spec>>(),
     std::begin( send_amounts ),
     [](const auto send_amount, const auto send_request_raw){
-      const auto send_request = std::min( 1.0f, std::abs( send_request_raw ) );
-      emp_assert( std::clamp( send_request, 0.0f, 1.0f ) == send_request );
+      // precision workaround, get next smallest value below 1.0f
+      constexpr float top = std::nextafter(1.0f, 0.0f);
+      const auto send_request = std::clamp( send_request_raw.Get(), 0.0f, top );
       return send_amount * send_request;
     }
   );
+
+  // check that each individual send request is leq total available amount
+  // within float tolerance
+  emp_assert( std::all_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [this](const auto amt){
+      return std::nextafter(
+        amt, *begin<dish2::ResourceStockpileWrapper<Spec>>()
+      ) <= *begin<dish2::ResourceStockpileWrapper<Spec>>();
+    }
+  ), "b" );
 
   // if absolute rate limited, cap by it
   std::transform(
@@ -71,13 +101,25 @@ void Cell<Spec>::ResourceSendingService() {
     begin<dish2::ResourceSendLimitWrapper<Spec>>(),
     std::begin( send_amounts ),
     [](const auto send_amount, const auto send_limit_raw){
-      const auto send_limit = std::abs( send_limit_raw );
+      const auto send_limit = std::max( 0.0f, send_limit_raw.Get() );
       return send_limit
         ? std::min( send_amount, send_limit )
         : send_amount
       ;
     }
   );
+
+  // check that each individual send request is leq total available amount
+  // within float tolerance
+  emp_assert( std::all_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [this](const auto amt){
+      return std::nextafter(
+        amt, *begin<dish2::ResourceStockpileWrapper<Spec>>()
+      ) <= *begin<dish2::ResourceStockpileWrapper<Spec>>();
+    }
+  ), "c" );
 
   // check that all send amounts are non-negative and finite
   emp_assert( std::all_of(
@@ -99,6 +141,18 @@ void Cell<Spec>::ResourceSendingService() {
     [total_requested](const auto amt){ return amt * (amt / total_requested); }
   );
 
+  // check that each individual send request is leq total available amount
+  // within float tolerance
+  emp_assert( std::all_of(
+    std::begin(send_amounts),
+    std::end(send_amounts),
+    [this](const auto amt){
+      return std::nextafter(
+        amt, *begin<dish2::ResourceStockpileWrapper<Spec>>()
+      ) <= *begin<dish2::ResourceStockpileWrapper<Spec>>();
+    }
+  ), "d" );
+
   // check that all send amounts are non-negative and finite
   emp_assert( std::all_of(
     std::begin( send_amounts ),
@@ -107,10 +161,12 @@ void Cell<Spec>::ResourceSendingService() {
   ) );
 
   // check that sum send amount doesn't exceed stockpiled amount
-  emp_assert( std::accumulate(
-    std::begin( send_amounts ),
-    std::end( send_amounts ),
-    0.0f
+  // within float tolerance
+  emp_assert( std::nextafter(
+    std::accumulate(
+      std::begin( send_amounts ), std::end( send_amounts ), 0.0f
+    ),
+    *begin<dish2::ResourceStockpileWrapper<Spec>>()
   ) <= *begin<dish2::ResourceStockpileWrapper<Spec>>() );
 
   // do the send
@@ -127,8 +183,12 @@ void Cell<Spec>::ResourceSendingService() {
     );
   }
 
+  // patch for precision errors
+  // could also clamp, but this avoids branching
+  stockpile += std::numeric_limits<float>::epsilon();
+
   // check that stockpile wasn't overspent or corrupted
-  emp_assert( std::isfinite(stockpile) && ( stockpile >= 0 ) );
+  emp_assert( std::isfinite(stockpile) && ( stockpile >= 0.0f ), stockpile );
 
   // update stockpile state
   std::fill(
@@ -137,13 +197,18 @@ void Cell<Spec>::ResourceSendingService() {
     stockpile
   );
 
-  // check resource stockpile consistency
+  // check resource stockpile consistency and validity
   emp_assert((
     std::set< typename dish2::ResourceStockpileWrapper<Spec>::value_type >(
       begin<dish2::ResourceStockpileWrapper<Spec>>(),
       end<dish2::ResourceStockpileWrapper<Spec>>()
     ).size() == 1
   ));
+  emp_assert( std::all_of(
+    begin<dish2::ResourceStockpileWrapper<Spec>>(),
+    end<dish2::ResourceStockpileWrapper<Spec>>(),
+    [this](const auto amt){ return std::isfinite(amt) && ( amt >= 0 ); }
+  ) );
 
 }
 
