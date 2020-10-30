@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <functional>
+#include <limits>
 #include <set>
 #include <utility>
 
@@ -76,7 +77,7 @@ void Cell<Spec>::ResourceSendingService() {
     std::begin( send_amounts ),
     [](const auto send_amount, const auto send_request_raw){
       // precision workaround, get next smallest value below 1.0f
-      constexpr float top = std::nextafter(1.0f, 0.0f);
+      constexpr float top = 1.0f - std::numeric_limits<float>::epsilon();
       const auto send_request = std::clamp( send_request_raw.Get(), 0.0f, top );
       return send_amount * send_request;
     }
