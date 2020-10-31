@@ -28,6 +28,28 @@ public:
 
   value_type* operator->() { return &operator*(); }
 
+  PeripheralWrapper& operator++() {
+    parent_t::operator++();
+    return *this;
+  }
+
+  PeripheralWrapper operator++(int) {
+    const auto res = *this;
+    operator++();
+    return res;
+  }
+
+  PeripheralWrapper& operator--() {
+    parent_t::operator--();
+    return *this;
+  }
+
+  PeripheralWrapper operator--(int) {
+    PeripheralWrapper res{ *this };
+    res -= 1;
+    return res;
+  }
+
   PeripheralWrapper operator+(const size_t rhs) {
     PeripheralWrapper res{ *this };
     res += rhs;

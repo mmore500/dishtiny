@@ -30,6 +30,28 @@ public:
 
   value_type* operator->() { return &operator*(); }
 
+  GenomeNodeInputWrapper& operator++() {
+    parent_t::operator++();
+    return *this;
+  }
+
+  GenomeNodeInputWrapper operator++(int) {
+    const auto res = *this;
+    operator++();
+    return res;
+  }
+
+  GenomeNodeInputWrapper& operator--() {
+    parent_t::operator--();
+    return *this;
+  }
+
+  GenomeNodeInputWrapper operator--(int) {
+    GenomeNodeInputWrapper res{ *this };
+    res -= 1;
+    return res;
+  }
+
   GenomeNodeInputWrapper operator+(const size_t rhs) {
     GenomeNodeInputWrapper res{ *this };
     res += rhs;

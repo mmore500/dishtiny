@@ -29,6 +29,26 @@ public:
 
   value_type* operator->() { return &operator*(); }
 
+  CpuWrapper& operator++() {
+    parent_t::operator++();
+    return *this;
+  }
+
+  CpuWrapper operator++(int) {
+    const auto res = *this;
+    operator++();
+    return res;
+  }
+
+  CpuWrapper& operator--() {
+    parent_t::operator--();
+    return *this;
+  }
+
+  CpuWrapper operator--(int) {
+    return *this - 1;
+  }
+
   CpuWrapper operator+(const size_t rhs) {
     CpuWrapper res{ *this };
     res += rhs;

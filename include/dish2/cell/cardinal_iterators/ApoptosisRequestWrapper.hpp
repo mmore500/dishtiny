@@ -34,6 +34,28 @@ public:
 
   value_type* operator->() { return &operator*(); }
 
+  ApoptosisRequestWrapper& operator++() {
+    parent_t::operator++();
+    return *this;
+  }
+
+  ApoptosisRequestWrapper operator++(int) {
+    const auto res = *this;
+    operator++();
+    return res;
+  }
+
+  ApoptosisRequestWrapper& operator--() {
+    parent_t::operator--();
+    return *this;
+  }
+
+  ApoptosisRequestWrapper operator--(int) {
+    ApoptosisRequestWrapper res{ *this };
+    res -= 1;
+    return res;
+  }
+
   ApoptosisRequestWrapper operator+(const size_t rhs) {
     ApoptosisRequestWrapper res{ *this };
     res += rhs;

@@ -30,6 +30,28 @@ public:
 
   value_type* operator->() { return &operator*(); }
 
+  StateNodeInputWrapper& operator++() {
+    parent_t::operator++();
+    return *this;
+  }
+
+  StateNodeInputWrapper operator++(int) {
+    const auto res = *this;
+    operator++();
+    return res;
+  }
+
+  StateNodeInputWrapper& operator--() {
+    parent_t::operator--();
+    return *this;
+  }
+
+  StateNodeInputWrapper operator--(int) {
+    StateNodeInputWrapper res{ *this };
+    res -= 1;
+    return res;
+  }
+
   StateNodeInputWrapper operator+(const size_t rhs) {
     StateNodeInputWrapper res{ *this };
     res += rhs;

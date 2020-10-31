@@ -34,6 +34,28 @@ public:
 
   value_type* operator->() { return &operator*(); }
 
+  SpawnRequestWrapper& operator++() {
+    parent_t::operator++();
+    return *this;
+  }
+
+  SpawnRequestWrapper operator++(int) {
+    const auto res = *this;
+    operator++();
+    return res;
+  }
+
+  SpawnRequestWrapper& operator--() {
+    parent_t::operator--();
+    return *this;
+  }
+
+  SpawnRequestWrapper operator--(int) {
+    SpawnRequestWrapper res{ *this };
+    res -= 1;
+    return res;
+  }
+
   SpawnRequestWrapper operator+(const size_t rhs) {
     SpawnRequestWrapper res{ *this };
     res += rhs;

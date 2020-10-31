@@ -34,6 +34,28 @@ public:
 
   value_type* operator->() { return &operator*(); }
 
+  NeighborResourceReceiveResistanceWrapper& operator++() {
+    parent_t::operator++();
+    return *this;
+  }
+
+  NeighborResourceReceiveResistanceWrapper operator++(int) {
+    const auto res = *this;
+    operator++();
+    return res;
+  }
+
+  NeighborResourceReceiveResistanceWrapper& operator--() {
+    parent_t::operator--();
+    return *this;
+  }
+
+  NeighborResourceReceiveResistanceWrapper operator--(int) {
+    NeighborResourceReceiveResistanceWrapper res{ *this };
+    res -= 1;
+    return res;
+  }
+
   NeighborResourceReceiveResistanceWrapper operator+(const size_t rhs) {
     NeighborResourceReceiveResistanceWrapper res{ *this };
     res += rhs;

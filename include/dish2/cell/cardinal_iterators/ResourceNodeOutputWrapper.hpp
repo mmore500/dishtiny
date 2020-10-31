@@ -30,6 +30,28 @@ public:
 
   value_type* operator->() { return &operator*(); }
 
+  ResourceNodeOutputWrapper& operator++() {
+    parent_t::operator++();
+    return *this;
+  }
+
+  ResourceNodeOutputWrapper operator++(int) {
+    const auto res = *this;
+    operator++();
+    return res;
+  }
+
+  ResourceNodeOutputWrapper& operator--() {
+    parent_t::operator--();
+    return *this;
+  }
+
+  ResourceNodeOutputWrapper operator--(int) {
+    ResourceNodeOutputWrapper res{ *this };
+    res -= 1;
+    return res;
+  }
+
   ResourceNodeOutputWrapper operator+(const size_t rhs) {
     ResourceNodeOutputWrapper res{ *this };
     res += rhs;

@@ -34,6 +34,28 @@ public:
 
   value_type* operator->() { return &operator*(); }
 
+  KinGroupIDViewWrapper& operator++() {
+    parent_t::operator++();
+    return *this;
+  }
+
+  KinGroupIDViewWrapper operator++(int) {
+    const auto res = *this;
+    operator++();
+    return res;
+  }
+
+  KinGroupIDViewWrapper& operator--() {
+    parent_t::operator--();
+    return *this;
+  }
+
+  KinGroupIDViewWrapper operator--(int) {
+    KinGroupIDViewWrapper res{ *this };
+    res -= 1;
+    return res;
+  }
+
   KinGroupIDViewWrapper operator+(const size_t rhs) {
     KinGroupIDViewWrapper res{ *this };
     res += rhs;

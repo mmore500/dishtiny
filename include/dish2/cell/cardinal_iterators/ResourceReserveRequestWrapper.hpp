@@ -34,6 +34,28 @@ public:
 
   value_type* operator->() { return &operator*(); }
 
+  ResourceReserveRequestWrapper& operator++() {
+    parent_t::operator++();
+    return *this;
+  }
+
+  ResourceReserveRequestWrapper operator++(int) {
+    const auto res = *this;
+    operator++();
+    return res;
+  }
+
+  ResourceReserveRequestWrapper& operator--() {
+    parent_t::operator--();
+    return *this;
+  }
+
+  ResourceReserveRequestWrapper operator--(int) {
+    ResourceReserveRequestWrapper res{ *this };
+    res -= 1;
+    return res;
+  }
+
   ResourceReserveRequestWrapper operator+(const size_t rhs) {
     ResourceReserveRequestWrapper res{ *this };
     res += rhs;
