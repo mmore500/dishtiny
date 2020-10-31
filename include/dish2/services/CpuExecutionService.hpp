@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_CELL_SERVICES_CPUEXECUTIONSERVICE_HPP_INCLUDE
-#define DISH2_CELL_SERVICES_CPUEXECUTIONSERVICE_HPP_INCLUDE
+#ifndef DISH2_SERVICES_CPUEXECUTIONSERVICE_HPP_INCLUDE
+#define DISH2_SERVICES_CPUEXECUTIONSERVICE_HPP_INCLUDE
 
 #include "../../../third-party/conduit/include/uitsl/debug/WarnOnce.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
@@ -44,4 +44,4 @@ struct CpuExecutionService {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_CELL_SERVICES_CPUEXECUTIONSERVICE_HPP_INCLUDE
+#endif // #ifndef DISH2_SERVICES_CPUEXECUTIONSERVICE_HPP_INCLUDE
