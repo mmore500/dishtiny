@@ -22,6 +22,8 @@ struct InterMessageLaunchingService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
+    using spec_t = typename Cell::spec_t;
+
     static uitsl::WarnOnce warning{
       "TODO InterMessageLaunchingService unimplemented"
     };

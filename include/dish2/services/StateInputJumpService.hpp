@@ -24,9 +24,11 @@ struct StateInputJumpService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
+    using spec_t = typename Cell::spec_t;
+
     std::for_each(
-      cell.template begin<dish2::StateNodeInputWrapper<Spec>>(),
-      cell.template end<dish2::StateNodeInputWrapper<Spec>>(),
+      cell.template begin<dish2::StateNodeInputWrapper<spec_t>>(),
+      cell.template end<dish2::StateNodeInputWrapper<spec_t>>(),
       []( auto& input ){ input.Jump(); }
     );
 

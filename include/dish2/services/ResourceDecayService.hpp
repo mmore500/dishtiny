@@ -25,11 +25,13 @@ struct ResourceDecayService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
+    using spec_t = typename Cell::spec_t;
+
     // check resource stockpile consistency
     emp_assert((
-      std::set<typename dish2::ResourceStockpileWrapper<Spec>::value_type>(
-        cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-        cell.template end<dish2::ResourceStockpileWrapper<Spec>>()
+      std::set<typename dish2::ResourceStockpileWrapper<spec_t>::value_type>(
+        cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+        cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
 
@@ -37,17 +39,17 @@ struct ResourceDecayService {
 
     // update stockpiles to reflect harvested amount
     std::transform(
-      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-      cell.template end<dish2::ResourceStockpileWrapper<Spec>>(),
-      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
       [decay_rate](const auto cur) { return cur * decay_rate; }
     );
 
     // check resource stockpile consistency
     emp_assert((
-      std::set<typename dish2::ResourceStockpileWrapper<Spec>::value_type>(
-        cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-        cell.template end<dish2::ResourceStockpileWrapper<Spec>>()
+      std::set<typename dish2::ResourceStockpileWrapper<spec_t>::value_type>(
+        cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+        cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
 

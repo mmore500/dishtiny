@@ -4,6 +4,7 @@
 
 #include <utility>
 
+#include "../../../third-party/conduit/include/netuit/mesh/Mesh.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
 #include "../../../third-party/Empirical/source/base/optional.h"
 #include "../../../third-party/Empirical/source/base/vector.h"
@@ -31,6 +32,9 @@ struct Cell {
 
   using genome_mesh_spec_t = typename Spec::genome_mesh_spec_t;
   using genome_node_t = netuit::MeshNode<genome_mesh_spec_t>;
+
+  using intra_message_mesh_spec_t = typename Spec::intra_message_mesh_spec_t;
+  using intra_message_node_t = netuit::MeshNode<intra_message_mesh_spec_t>;
 
   using message_mesh_spec_t = typename Spec::message_mesh_spec_t;
   using message_node_t = netuit::MeshNode<message_mesh_spec_t>;
@@ -68,9 +72,28 @@ struct Cell {
       state_node.GetNumOutputs(),
     }.size() ));
 
+    const size_t num_cardinals = message_node.GetNumInputs();
+
+    using intra_message_mesh_t = netuit::Mesh<intra_message_mesh_spec_t>;
+    using intra_message_backend_t
+      = typename intra_message_mesh_spec_t::ProcBackEnd;
+    using intra_message_mesh_topology_factory_t
+      = typename Spec::intra_topology_factory_t;
+    intra_message_mesh_t intra_message_mesh{
+      intra_message_mesh_topology_factory_t{}( num_cardinals ),
+      uitsl::AssignIntegrated<uitsl::thread_id_t>{},
+      uitsl::AssignIntegrated<uitsl::proc_id_t>{},
+      std::make_shared<intra_message_backend_t>(),
+      MPI_COMM_WORLD,
+      0 // const size_t mesh_id_
+    };
+    auto intra_message_submesh = intra_message_mesh.GetSubmesh(0, 0);
+
+    emp_assert( intra_message_submesh.size() == num_cardinals );
+
     // set up cardinals, one for each cell neighbor
-    cardinals.reserve( message_node.GetNumInputs() );
-    for (size_t i{}; i < message_node.GetNumInputs(); ++i) {
+    cardinals.reserve( num_cardinals );
+    for (size_t i{}; i < num_cardinals; ++i) {
       cardinals.emplace_back(
         genome_node.GetInput(i),
         genome_node.GetOutput(i),
@@ -79,7 +102,8 @@ struct Cell {
         resource_node.GetInput(i),
         resource_node.GetOutput(i),
         state_node.GetInput(i),
-        state_node.GetOutput(i)
+        state_node.GetOutput(i),
+        intra_message_submesh[i]
       );
     }
 

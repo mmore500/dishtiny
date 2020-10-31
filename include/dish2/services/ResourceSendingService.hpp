@@ -36,16 +36,18 @@ struct ResourceSendingService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
+    using spec_t = typename Cell::spec_t;
+
     // check resource stockpile consistency and validity
     emp_assert((
-      std::set< typename dish2::ResourceStockpileWrapper<Spec>::value_type >(
-        cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-        cell.template end<dish2::ResourceStockpileWrapper<Spec>>()
+      std::set< typename dish2::ResourceStockpileWrapper<spec_t>::value_type >(
+        cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+        cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
     emp_assert( std::all_of(
-      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-      cell.template end<dish2::ResourceStockpileWrapper<Spec>>(),
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
       [](const auto amt){ return std::isfinite(amt) && ( amt >= 0 ); }
     ) );
 
@@ -53,8 +55,8 @@ struct ResourceSendingService {
     thread_local emp::vector<float> send_amounts;
     send_amounts.clear();
     std::copy(
-      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-      cell.template end<dish2::ResourceStockpileWrapper<Spec>>(),
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
       std::back_inserter( send_amounts )
     );
 
@@ -62,7 +64,7 @@ struct ResourceSendingService {
     std::transform(
       std::begin( send_amounts ),
       std::end( send_amounts ),
-      cell.template begin<dish2::ResourceReserveRequestWrapper<Spec>>(),
+      cell.template begin<dish2::ResourceReserveRequestWrapper<spec_t>>(),
       std::begin( send_amounts ),
       [](const auto send_amount, const auto reserve_request_raw){
         return dish2::nan_to_zero(
@@ -88,7 +90,7 @@ struct ResourceSendingService {
       std::end(send_amounts),
       [&cell](const auto amt){
         return amt
-          - *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>()
+          - *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>()
           <= std::numeric_limits<float>::epsilon();
       }
     ), "a" );
@@ -97,7 +99,7 @@ struct ResourceSendingService {
     std::transform(
       std::begin( send_amounts ),
       std::end( send_amounts ),
-      cell.template begin<dish2::ResourceSendRequestWrapper<Spec>>(),
+      cell.template begin<dish2::ResourceSendRequestWrapper<spec_t>>(),
       std::begin( send_amounts ),
       [](const auto send_amount, const auto send_request_raw){
         return dish2::nan_to_zero( std::clamp(
@@ -124,7 +126,7 @@ struct ResourceSendingService {
       std::end(send_amounts),
       [&cell](const auto amt){
         return amt
-          - *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>()
+          - *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>()
           <= std::numeric_limits<float>::epsilon();
       }
     ), "b" );
@@ -133,7 +135,7 @@ struct ResourceSendingService {
     std::transform(
       std::begin( send_amounts ),
       std::end( send_amounts ),
-      cell.template begin<dish2::ResourceSendLimitWrapper<Spec>>(),
+      cell.template begin<dish2::ResourceSendLimitWrapper<spec_t>>(),
       std::begin( send_amounts ),
       [](const auto send_amount, const auto send_limit_raw){
         const auto send_limit = dish2::nan_to_zero(
@@ -163,7 +165,7 @@ struct ResourceSendingService {
       std::end(send_amounts),
       [&cell](const auto amt){
         return amt
-          - *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>()
+          - *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>()
           <= std::numeric_limits<float>::epsilon();
       }
     ), "c" );
@@ -205,7 +207,7 @@ struct ResourceSendingService {
       std::end(send_amounts),
       [&cell](const auto amt){
         return amt
-          - *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>()
+          - *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>()
           <= std::numeric_limits<float>::epsilon();
       }
     ), "d" );
@@ -223,16 +225,16 @@ struct ResourceSendingService {
       std::accumulate(
         std::begin( send_amounts ), std::end( send_amounts ), 0.0f
       ),
-      *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>()
-    ) <= *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>() );
+      *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>()
+    ) <= *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>() );
 
     // do the send
     // TODO write a custom transform-like for_each
     float stockpile
-      = *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>();
+      = *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>();
     for (size_t i{}; i < send_amounts.size(); ++i) {
       auto& resource_output
-        = *(cell.template begin<dish2::ResourceNodeOutputWrapper<Spec>>() + i);
+        =*(cell.template begin<dish2::ResourceNodeOutputWrapper<spec_t>>() + i);
       const auto send_amount = *( std::begin( send_amounts ) + i );
 
       stockpile -= send_amount;
@@ -250,21 +252,21 @@ struct ResourceSendingService {
 
     // update stockpile state
     std::fill(
-      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-      cell.template end<dish2::ResourceStockpileWrapper<Spec>>(),
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
       stockpile
     );
 
     // check resource stockpile consistency and validity
     emp_assert((
-      std::set< typename dish2::ResourceStockpileWrapper<Spec>::value_type >(
-        cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-        cell.template end<dish2::ResourceStockpileWrapper<Spec>>()
+      std::set< typename dish2::ResourceStockpileWrapper<spec_t>::value_type >(
+        cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+        cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
     emp_assert( std::all_of(
-      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-      cell.template end<dish2::ResourceStockpileWrapper<Spec>>(),
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
       [](const auto amt){ return std::isfinite(amt) && ( amt >= 0 ); }
     ) );
 

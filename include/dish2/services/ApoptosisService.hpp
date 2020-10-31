@@ -25,9 +25,11 @@ struct ApoptosisService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
+    using spec_t = typename Cell::spec_t;
+
     if ( std::any_of(
-      cell.template begin<dish2::ApoptosisRequestWrapper<Spec>>(),
-      cell.template end<dish2::ApoptosisRequestWrapper<Spec>>(),
+      cell.template begin<dish2::ApoptosisRequestWrapper<spec_t>>(),
+      cell.template end<dish2::ApoptosisRequestWrapper<spec_t>>(),
       std::identity
     ) ) cell.DeathRoutine();
 

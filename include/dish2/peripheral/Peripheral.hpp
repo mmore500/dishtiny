@@ -2,9 +2,11 @@
 #ifndef DISH2_PERIPHERAL_PERIPHERAL_HPP_INCLUDE
 #define DISH2_PERIPHERAL_PERIPHERAL_HPP_INCLUDE
 
+#include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeInput.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeOutput.hpp"
 
+#include "../spec/IntraMessageMeshSpec.hpp"
 #include "../spec/MessageMeshSpec.hpp"
 #include "../spec/StateMeshSpec.hpp"
 
@@ -18,6 +20,11 @@ struct Peripheral {
 
   dish2::ReadableState<Spec> readable_state{};
 
+  using intra_message_mesh_spec_t = dish2::IntraMessageMeshSpec;
+  using intra_message_node_outputs_t
+    = netuit::MeshNode<intra_message_mesh_spec_t>::outputs_t;
+  intra_message_node_outputs_t intra_message_node_outputs;
+
   using message_mesh_spec_t = dish2::MessageMeshSpec;
   using message_node_output_t = netuit::MeshNodeOutput<message_mesh_spec_t>;
   message_node_output_t message_node_output;
@@ -27,9 +34,11 @@ struct Peripheral {
   state_node_input_t state_node_input;
 
   Peripheral(
+    intra_message_node_outputs_t& intra_message_node_outputs_,
     message_node_output_t& message_node_output_,
     state_node_input_t& state_node_input_
-  ) : message_node_output( message_node_output_ )
+  ) : intra_message_node_outputs( intra_message_node_outputs_ )
+  , message_node_output( message_node_output_ )
   , state_node_input( state_node_input_ )
   {}
 

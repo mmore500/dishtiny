@@ -24,9 +24,10 @@ struct CpuExecutionService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
-    if ( cell.genome->program.empty() ) return;
+    using spec_t = typename Cell::spec_t;
+    using sgpl_spec_t = typename spec_t::sgpl_spec_t;
 
-    using sgpl_spec_t = typename Spec::sgpl_spec_t;
+    if ( cell.genome->program.empty() ) return;
 
     for (size_t rep = 0; rep < dish2::cfg.HARDWARE_EXECUTION_ROUNDS(); ++rep) {
       // TODO should these be shuffled?

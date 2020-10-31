@@ -26,38 +26,40 @@ struct ResourceReceivingService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
+    using spec_t = typename Cell::spec_t;
+
     // check resource stockpile consistency
     emp_assert((
-      std::set<typename dish2::ResourceStockpileWrapper<Spec>::value_type>(
-        cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-        cell.template end<dish2::ResourceStockpileWrapper<Spec>>()
+      std::set<typename dish2::ResourceStockpileWrapper<spec_t>::value_type>(
+        cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+        cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
 
     // how much resource have we received across all cardinals?
     const float received_amount = std::accumulate(
-      cell.template begin<dish2::ResourceNodeInputWrapper<Spec>>(),
-      cell.template end<dish2::ResourceNodeInputWrapper<Spec>>(),
+      cell.template begin<dish2::ResourceNodeInputWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceNodeInputWrapper<spec_t>>(),
       0.0f,
       [](const auto& cumulative_sum, auto& addend){ return addend.JumpGet(); }
     );
 
     // how much do we already have?
     const float current_amount
-      = *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>();
+      = *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>();
 
     // update stockpiles
     std::fill(
-      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-      cell.template end<dish2::ResourceStockpileWrapper<Spec>>(),
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
       received_amount + current_amount
     );
 
     // check resource stockpile consistency
     emp_assert((
-      std::set<typename dish2::ResourceStockpileWrapper<Spec>::value_type>(
-        cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-        cell.template end<dish2::ResourceStockpileWrapper<Spec>>()
+      std::set<typename dish2::ResourceStockpileWrapper<spec_t>::value_type>(
+        cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+        cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
 

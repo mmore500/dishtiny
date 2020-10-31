@@ -2,6 +2,7 @@
 #ifndef DISH2_CELL_CARDINAL_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_HPP_INCLUDE
 
+#include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeInput.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeOutput.hpp"
 #include "../../../third-party/Empirical/source/tools/BitSet.h"
@@ -20,6 +21,10 @@ struct Cardinal {
   using genome_node_output_t = netuit::MeshNodeOutput<genome_mesh_spec_t>;
   genome_node_input_t genome_node_input;
   genome_node_output_t genome_node_output;
+
+  using intra_message_mesh_spec_t = typename Spec::intra_message_mesh_spec_t;
+  using intra_message_node_t = netuit::MeshNode<intra_message_mesh_spec_t>;
+  intra_message_node_t intra_message_node;
 
   using message_mesh_spec_t = typename Spec::message_mesh_spec_t;
   using message_node_input_t = netuit::MeshNodeInput<message_mesh_spec_t>;
@@ -55,20 +60,22 @@ struct Cardinal {
     const resource_node_input_t& resource_node_input_,
     const resource_node_output_t& resource_node_output_,
     const state_node_input_t& state_node_input_,
-    const state_node_output_t& state_node_output_
+    const state_node_output_t& state_node_output_,
+    const intra_message_node_t& intra_message_node_
   ) :
     genome_node_input( genome_node_input_ )
   , genome_node_output( genome_node_output_ )
+  , intra_message_node( intra_message_node_ )
   , message_node_input( message_node_input_ )
   , message_node_output( message_node_output_ )
   , resource_node_input( resource_node_input_ )
   , resource_node_output( resource_node_output_ )
   , state_node_input( state_node_input_ )
   , state_node_output( state_node_output_ )
-  , peripheral( message_node_output, state_node_input )
-  {
-    ; // TODO set peripheral to channel IDs
-  }
+  , peripheral(
+    intra_message_node.GetOutputs(), message_node_output, state_node_input
+  )
+  {}
 
   void LoadProgram(const sgpl::Program<sgpl_spec_t>& program) {
     cpu.InitializeAnchors( program );

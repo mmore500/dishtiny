@@ -27,14 +27,16 @@ struct BirthSetupService {
   static void DoService( Cell& cell ) {
     // TODO check quiescence period?
 
+    using spec_t = typename Cell::spec_t;
+
     thread_local emp::vector< std::reference_wrapper<
-      typename dish2::GenomeNodeInputWrapper<Spec>::value_type
+      typename dish2::GenomeNodeInputWrapper<spec_t>::value_type
     > > fresh_inputs;
     fresh_inputs.clear();
 
     std::copy_if(
-      cell.template begin<dish2::GenomeNodeInputWrapper<Spec>>(),
-      cell.template end<dish2::GenomeNodeInputWrapper<Spec>>(),
+      cell.template begin<dish2::GenomeNodeInputWrapper<spec_t>>(),
+      cell.template end<dish2::GenomeNodeInputWrapper<spec_t>>(),
       std::back_inserter( fresh_inputs ),
       [](auto& input){ return input.Jump(); }
     );

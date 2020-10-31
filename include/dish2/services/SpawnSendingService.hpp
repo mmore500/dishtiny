@@ -30,30 +30,32 @@ struct SpawnSendingService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
+    using spec_t = typename Cell::spec_t;
+
     // check resource stockpile consistency
     emp_assert((
-      std::set< typename dish2::ResourceStockpileWrapper<Spec>::value_type >(
-        cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-        cell.template end<dish2::ResourceStockpileWrapper<Spec>>()
+      std::set< typename dish2::ResourceStockpileWrapper<spec_t>::value_type >(
+        cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+        cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
 
     auto available_resource{
-      *cell.template begin<dish2::ResourceStockpileWrapper<Spec>>()
+      *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>()
     };
 
     if ( available_resource < 1 ) return;
 
     thread_local emp::vector< std::reference_wrapper<
-      typename dish2::GenomeNodeOutputWrapper<Spec>::value_type
+      typename dish2::GenomeNodeOutputWrapper<spec_t>::value_type
     > > requested_outputs;
     requested_outputs.clear();
 
     uitsl::copy_if(
-      cell.template begin<dish2::GenomeNodeOutputWrapper<Spec>>(),
-      cell.template end<dish2::GenomeNodeOutputWrapper<Spec>>(),
-      cell.template begin<dish2::SpawnArrestWrapper<Spec>>(),
-      cell.template begin<dish2::SpawnRequestWrapper<Spec>>(),
+      cell.template begin<dish2::GenomeNodeOutputWrapper<spec_t>>(),
+      cell.template end<dish2::GenomeNodeOutputWrapper<spec_t>>(),
+      cell.template begin<dish2::SpawnArrestWrapper<spec_t>>(),
+      cell.template begin<dish2::SpawnRequestWrapper<spec_t>>(),
       std::back_inserter( requested_outputs ),
       []( const auto arrest, const auto request ){ return request && !arrest; }
     );
@@ -76,16 +78,16 @@ struct SpawnSendingService {
     }
 
     std::fill(
-      cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-      cell.template end<dish2::ResourceStockpileWrapper<Spec>>(),
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
       available_resource
     );
 
     // check resource stockpile consistency
     emp_assert((
-      std::set< typename dish2::ResourceStockpileWrapper<Spec>::value_type >(
-        cell.template begin<dish2::ResourceStockpileWrapper<Spec>>(),
-        cell.template end<dish2::ResourceStockpileWrapper<Spec>>()
+      std::set< typename dish2::ResourceStockpileWrapper<spec_t>::value_type >(
+        cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+        cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
 
