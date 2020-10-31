@@ -3,6 +3,7 @@
 #define DISH2_SERVICES_EVENTLAUNCHINGSERVICE_HPP_INCLUDE
 
 #include <algorithm>
+#include <type_traits>
 
 #include "../../../third-party/conduit/include/uitsl/debug/WarnOnce.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
@@ -25,13 +26,18 @@ struct EventLaunchingService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
-    std::for_each(
-      cell.template begin<dish2::CpuWrapper<Spec>>(),
-      cell.template end<dish2::CpuWrapper<Spec>>(),
-      [](auto& cpu){ cpu.TryLaunchCore(); }
-    );
+    using spec_t = typename Cell::spec_t;
+    using event_manager_t = typename spec_t::event_manager_t;
+    using event_tags_t = typename std::decay_t< decltype(
+      cell.genome->event_tags
+    ) >;
 
-    static uitsl::WarnOnce warning{"TODO EventLaunchingService unimplemented"};
+    for (auto& cardinal : cell.cardinals) {
+      using cardinal_t = typename std::decay_t< decltype(cardinal) >;
+      event_manager_t::template Dispatch< cardinal_t, event_tags_t >(
+        cardinal, cell.genome->event_tags
+      );
+    }
 
   }
 

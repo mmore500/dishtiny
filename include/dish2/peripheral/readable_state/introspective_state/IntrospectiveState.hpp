@@ -5,13 +5,16 @@
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
 
 #include "IsAlive.hpp"
+#include "KinGroupIDView.hpp"
 #include "ResourceStockpile.hpp"
 
 namespace dish2 {
 
+template<typename Spec>
 struct IntrospectiveState
 : public uitsl::PodInternalNode<
   dish2::IsAlive,
+  dish2::KinGroupIDView<Spec>,
   dish2::ResourceStockpile
 >
 {};

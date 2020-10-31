@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <tuple>
 #include <utility>
 
 #include "../../../third-party/Empirical/source/polyfill/span.h"
@@ -25,7 +26,9 @@ template<typename Spec>
 struct Genome {
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
+  using event_tags_t = dish2::EventTags<Spec>;
 
+  event_tags_t event_tags;
   dish2::GenerationCounter<Spec> generation_counter;
   dish2::KinGroupID<Spec> kin_group_id;
   dish2::MutationCounter mutation_counter;
@@ -36,12 +39,27 @@ struct Genome {
   Genome() = default;
 
   Genome(std::in_place_t)
-  : kin_group_id( std::in_place )
+  : event_tags( std::in_place )
+  , kin_group_id( std::in_place )
   , program( dish2::cfg.PROGRAM_START_SIZE() )
   , root_id( std::in_place ) {}
 
   bool operator==(const Genome& other) const {
-    return program == other.program;
+    return std::tuple{
+      event_tags,
+      generation_counter,
+      kin_group_id,
+      mutation_counter,
+      program,
+      root_id
+    } == std::tuple{
+      other.event_tags,
+      other.generation_counter,
+      other.kin_group_id,
+      other.mutation_counter,
+      other.program,
+      other.root_id
+    };
   }
 
   void ElapseGeneration(const size_t rep_lev) {
@@ -51,6 +69,9 @@ struct Genome {
 
     if ( sgpl::ThreadLocalRandom::Get().P( dish2::cfg.MUTATION_RATE() ) ) {
       MutateProgram();
+      mutation_counter.RecordPointMutation(
+        event_tags.ApplyPointMutations( dish2::cfg.POINT_MUTATION_RATE() )
+      );
     }
 
     // root_id doesn't change
@@ -95,6 +116,7 @@ struct Genome {
 
   template <class Archive>
   void serialize( Archive & ar ) { ar(
+    event_tags,
     generation_counter,
     mutation_counter,
     kin_group_id,

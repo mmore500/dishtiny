@@ -30,8 +30,9 @@ using ImplSel = uit::ImplSelect<
   #endif
 >;
 
+template<typename Spec>
 using ImplSpec = uit::ImplSpec<
-  dish2::ReadableState,
+  dish2::ReadableState<Spec>,
   ImplSel,
   uit::DefaultSpoutWrapper,
   2, // N
@@ -40,7 +41,8 @@ using ImplSpec = uit::ImplSpec<
 
 } // namespace internal_state_spec
 
-using StateMeshSpec = internal_state_spec::ImplSpec;
+template<typename Spec>
+using StateMeshSpec = internal_state_spec::template ImplSpec<Spec>;
 
 } // namespace dish2
 

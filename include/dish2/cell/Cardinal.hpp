@@ -4,6 +4,7 @@
 
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeInput.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeOutput.hpp"
+#include "../../../third-party/Empirical/source/tools/BitSet.h"
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
@@ -43,7 +44,7 @@ struct Cardinal {
   using cpu_t = sgpl::Cpu<sgpl_spec_t>;
   cpu_t cpu;
 
-  using peripheral_t = dish2::Peripheral;
+  using peripheral_t = dish2::Peripheral<Spec>;
   peripheral_t peripheral;
 
   Cardinal(
@@ -74,6 +75,8 @@ struct Cardinal {
   }
 
   void Reset() { cpu.Reset(); peripheral.Clear(); }
+
+  void DispatchEvent(const emp::BitSet<32>& tag) { cpu.ForceLaunchCore( tag ); }
 
 };
 

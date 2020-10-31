@@ -10,6 +10,8 @@
 
 #include "../config/cfg.hpp"
 #include "../genome/Genome.hpp"
+#include "../events/_index.hpp"
+#include "../events/EventManager.hpp"
 #include "../services/_index.hpp"
 #include "../services/ServiceManager.hpp"
 
@@ -39,6 +41,7 @@ struct Cell {
   using state_mesh_spec_t = typename Spec::state_mesh_spec_t;
   using state_node_t = netuit::MeshNode<state_mesh_spec_t>;
 
+  using spec_t = Spec;
   using this_t = dish2::Cell<Spec>;
 
   // out of class implementations

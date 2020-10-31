@@ -13,15 +13,16 @@
 
 namespace dish2 {
 
+template<typename Spec>
 struct Peripheral {
 
-  dish2::ReadableState readable_state{};
+  dish2::ReadableState<Spec> readable_state{};
 
   using message_mesh_spec_t = dish2::MessageMeshSpec;
   using message_node_output_t = netuit::MeshNodeOutput<message_mesh_spec_t>;
   message_node_output_t message_node_output;
 
-  using state_mesh_spec_t = dish2::StateMeshSpec;
+  using state_mesh_spec_t = dish2::StateMeshSpec<Spec>;
   using state_node_input_t = netuit::MeshNodeInput<state_mesh_spec_t>;
   state_node_input_t state_node_input;
 

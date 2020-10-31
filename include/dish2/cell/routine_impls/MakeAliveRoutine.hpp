@@ -7,6 +7,7 @@
 
 #include "../cardinal_iterators/CpuWrapper.hpp"
 #include "../cardinal_iterators/IsAliveWrapper.hpp"
+#include "../cardinal_iterators/KinGroupIDViewWrapper.hpp"
 
 namespace dish2 {
 
@@ -30,6 +31,32 @@ void Cell<Spec>::MakeAliveRoutine() {
     begin<dish2::IsAliveWrapper<Spec>>(),
     end<dish2::IsAliveWrapper<Spec>>()
   ).size() == 1 ));
+
+  // check kin group ID consistency
+  emp_assert((
+    std::set< typename dish2::KinGroupIDViewWrapper<Spec>::value_type >(
+      begin<dish2::KinGroupIDViewWrapper<Spec>>(),
+      end<dish2::KinGroupIDViewWrapper<Spec>>()
+    ).size() == 1
+  ));
+
+  std::for_each(
+    begin<dish2::KinGroupIDViewWrapper<Spec>>(),
+    end<dish2::KinGroupIDViewWrapper<Spec>>(),
+    [this](auto& kgiv){ std::copy(
+      std::begin( genome->kin_group_id.data ),
+      std::end( genome->kin_group_id.data ),
+      std::begin( kgiv )
+    ); }
+  );
+
+  // check kin group ID consistency
+  emp_assert((
+    std::set< typename dish2::KinGroupIDViewWrapper<Spec>::value_type >(
+      begin<dish2::KinGroupIDViewWrapper<Spec>>(),
+      end<dish2::KinGroupIDViewWrapper<Spec>>()
+    ).size() == 1
+  ));
 
   // load program onto all CPUs
   std::for_each(

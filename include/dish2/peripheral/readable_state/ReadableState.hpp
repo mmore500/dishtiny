@@ -14,14 +14,16 @@ namespace dish2 {
 
 namespace internal {
 
+  template<typename Spec>
   using readable_state_parent_t = uitsl::PodInternalNode<
-    dish2::IntrospectiveState,
+    dish2::IntrospectiveState<Spec>,
     dish2::WritableState
   >;
 
 }
 
-struct ReadableState : public internal::readable_state_parent_t {
+template<typename Spec>
+struct ReadableState : public internal::readable_state_parent_t<Spec> {
 
   // https://stackoverflow.com/a/63046442
   template<size_t Templateify=0>
@@ -29,13 +31,13 @@ struct ReadableState : public internal::readable_state_parent_t {
 
     #define DISH2_READABLE_STATE_CASE_PAYLOAD(N) \
       case N: \
-        if constexpr ( N < internal::readable_state_parent_t::GetSize() ) { \
-          return this->Get<N + Templateify>(); \
+        if constexpr (N < internal::readable_state_parent_t<Spec>::GetSize()){ \
+          return this->template Get<N + Templateify>(); \
         } \
       break;
 
-    emp_assert( idx < internal::readable_state_parent_t::GetSize() );
-    static_assert( internal::readable_state_parent_t::GetSize() < 256 );
+    emp_assert( idx < internal::readable_state_parent_t<Spec>::GetSize() );
+    static_assert( internal::readable_state_parent_t<Spec>::GetSize() < 256 );
 
     switch ( idx ) {
 

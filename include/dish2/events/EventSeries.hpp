@@ -1,0 +1,23 @@
+#pragma once
+#ifndef DISH2_EVENTS_EVENTSERIES_HPP_INCLUDE
+#define DISH2_EVENTS_EVENTSERIES_HPP_INCLUDE
+
+namespace dish2 {
+
+template<typename Event, size_t SeriesSize=0>
+struct EventSeries {
+
+  using event_t = Event;
+
+  constexpr inline static size_t series_idx = SeriesSize;
+
+  template< typename Cardinal, size_t SeriesIdx>
+  static bool Test( Cardinal& cardinal ) {
+    return Event::template Test<Cardinal, SeriesIdx>( cardinal );
+  }
+
+};
+
+} // namespace dish2
+
+#endif // #ifndef DISH2_EVENTS_EVENTSERIES_HPP_INCLUDE
