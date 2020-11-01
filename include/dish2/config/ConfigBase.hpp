@@ -88,6 +88,9 @@ EMP_BUILD_CONFIG(
   VALUE(BIRTH_SETUP_SERVICE_FREQUENCY, size_t, 16,
     "Run service every ?? updates."
   ),
+  VALUE(CELL_AGE_SERVICE_FREQUENCY, size_t, 1,
+    "Run service every ?? updates."
+  ),
   VALUE(CONDUIT_FLUSH_SERVICE_FREQUENCY, size_t, 16,
     "Run service every ?? updates."
   ),

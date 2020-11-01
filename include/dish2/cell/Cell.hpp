@@ -146,6 +146,7 @@ struct Cell {
     // TODO put these in order
     using service_manager_t = dish2::ServiceManager<
       dish2::BirthSetupService,
+      dish2::CellAgeService,
       dish2::ConduitFlushService,
       dish2::CpuExecutionService,
       dish2::EventLaunchingService,
