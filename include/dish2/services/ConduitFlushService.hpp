@@ -24,6 +24,7 @@ struct ConduitFlushService {
     for (auto& cardinal : cell.cardinals) {
       cardinal.genome_node_output.TryFlush();
       cardinal.message_node_output.TryFlush();
+      cardinal.cardinal_quorum_state.output.TryFlush();
       cardinal.resource_node_output.TryFlush();
       cardinal.state_node_output.TryFlush();
     }

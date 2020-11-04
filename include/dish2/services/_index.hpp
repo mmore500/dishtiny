@@ -17,5 +17,6 @@
 #include "ResourceSendingService.hpp"
 #include "SpawnSendingService.hpp"
 #include "StateInputJumpService.hpp"
+#include "StateOutputPutService.hpp"
 
 #endif // #ifndef DISH2_SERVICES__INDEX_HPP_INCLUDE

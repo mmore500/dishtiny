@@ -168,6 +168,7 @@ struct Cell {
       dish2::ResourceSendingService,
       dish2::SpawnSendingService,
       dish2::StateInputJumpService,
+      dish2::StateOutputPutService,
       dish2::ApoptosisService // must run last
     >;
 
