@@ -14,7 +14,8 @@ namespace dish2 {
 template<typename Spec>
 struct KinGroupID {
 
-  emp::array< size_t, Spec::NLEV > data;
+  using buffer_t =  emp::array< size_t, Spec::NLEV >;
+  buffer_t data;
 
   KinGroupID() = default;
 
@@ -53,6 +54,8 @@ struct KinGroupID {
   }
 
   template <class Archive> void serialize( Archive & ar ) { ar( data ); }
+
+  const buffer_t& GetBuffer() const { return data; }
 
 };
 

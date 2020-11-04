@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_VIZ_ARTISTS_KINGROUPIDARTIST_HPP_INCLUDE
-#define DISH2_VIZ_ARTISTS_KINGROUPIDARTIST_HPP_INCLUDE
+#ifndef DISH2_VIZ_ARTISTS_KINMATCHARTIST_HPP_INCLUDE
+#define DISH2_VIZ_ARTISTS_KINMATCHARTIST_HPP_INCLUDE
 
 #include <string>
 
@@ -8,26 +8,29 @@
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
-#include "../fill_colormaps/KinGroupIDFillColorMap.hpp"
+#include "../fill_colormaps/KinMatchColorMap.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
+#include "../getters/KinMatchGetter.hpp"
 #include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
+#include "../renderers/CardinalFillRenderer.hpp"
 
 #include "Artist.hpp"
 
 namespace dish2 {
 
-namespace internal::kin_group_id_artist {
+namespace internal::kin_match_artist {
 
   template<
+    typename KinMatchGetter,
     typename IsAliveGetter,
     typename KinGroupIDGetter
   >
   using parent_t = dish2::Artist<
-    dish2::CellFillRenderer<
-      dish2::KinGroupIDFillColorMap,
-      KinGroupIDGetter
+    dish2::CardinalFillRenderer<
+      dish2::KinMatchColorMap,
+      KinMatchGetter
     >,
     dish2::CellFillRenderer<
       dish2::IsAliveColorMap,
@@ -39,19 +42,22 @@ namespace internal::kin_group_id_artist {
     >
   >;
 
-} // namespace internal::kin_group_id_artist
+} // namespace internal::kin_match_artist
 
 template<
+  typename KinMatchGetter=dish2::KinMatchGetter<dish2::Spec>,
   typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
   typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
 >
-class KinGroupIDArtist
-: public internal::kin_group_id_artist::parent_t<
+class KinMatchArtist
+: public internal::kin_match_artist::parent_t<
+  KinMatchGetter,
   IsAliveGetter,
   KinGroupIDGetter
 > {
 
-  using parent_t = internal::kin_group_id_artist::parent_t<
+  using parent_t = internal::kin_match_artist::parent_t<
+    KinMatchGetter,
     IsAliveGetter,
     KinGroupIDGetter
   >;
@@ -61,10 +67,10 @@ public:
   // inherit constructors
   using parent_t::parent_t;
 
-  static std::string GetName() { return "Kin Group ID"; }
+  static std::string GetName() { return "Kin Match"; }
 
 };
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_VIZ_ARTISTS_KINGROUPIDARTIST_HPP_INCLUDE
+#endif // #ifndef DISH2_VIZ_ARTISTS_KINMATCHARTIST_HPP_INCLUDE

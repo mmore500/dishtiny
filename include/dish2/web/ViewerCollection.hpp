@@ -4,11 +4,7 @@
 
 #include <tuple>
 
-#include "../viz/artists/IsAliveArtist.hpp"
-#include "../viz/artists/CellBirthArtist.hpp"
-#include "../viz/artists/KinGroupIDArtist.hpp"
-#include "../viz/artists/PhylogeneticRootArtist.hpp"
-#include "../viz/artists/ResourceStockpileArtist.hpp"
+#include "../viz/artists/_index.hpp"
 
 #include "GridViewer.hpp"
 
@@ -18,7 +14,10 @@ using ViewerCollection = std::tuple<
   dish2::GridViewer<dish2::IsAliveArtist<>>,
   dish2::GridViewer<dish2::CellBirthArtist<>>,
   dish2::GridViewer<dish2::KinGroupIDArtist<>>,
+  dish2::GridViewer<dish2::KinMatchArtist<>>,
+  dish2::GridViewer<dish2::NeighborKinGroupIDViewArtist<>>,
   dish2::GridViewer<dish2::PhylogeneticRootArtist<>>,
+  dish2::GridViewer<dish2::QuorumBitsArtist<>>,
   dish2::GridViewer<dish2::ResourceStockpileArtist<>>
 >;
 

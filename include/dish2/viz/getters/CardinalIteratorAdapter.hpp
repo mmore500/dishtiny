@@ -27,7 +27,7 @@ public:
   : thread_world(thread_world_)
   {}
 
-  const value_type& Get(
+  decltype(auto) Get(
     const size_t cell_idx, const size_t cardinal_idx=0
   ) const {
     const auto begin_it = thread_world.GetCell(cell_idx).template begin<

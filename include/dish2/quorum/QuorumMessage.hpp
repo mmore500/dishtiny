@@ -102,7 +102,7 @@ public:
 
   void ClearLev( const size_t lev ) { data[ lev ].Clear(); }
 
-  size_t GetNumBits( const size_t lev ) { return data[ lev ].CountOnes(); }
+  size_t GetNumBits(const size_t lev) const { return data[ lev ].CountOnes(); }
 
 };
 

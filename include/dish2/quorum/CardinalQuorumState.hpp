@@ -68,7 +68,7 @@ public:
 
     message_t message = cell_quorum_state.GetKnownBits();
 
-    for (size_t lev = 0; lev < Spec::NLEV; ++lev) {
+    for (size_t lev{}; lev < Spec::NLEV; ++lev) {
       if ( kin_match_by_lev[lev] == false ) message.ClearLev( lev );
     }
 
@@ -78,10 +78,10 @@ public:
 
   bool TryPullIncomingBits() {
 
-    if ( input.Jump() == 0 ) return false;
-
-    ++half_trip_counter;
-    return true;
+    if ( input.Jump() ) {
+      ++half_trip_counter;
+      return true;
+    } else return false;
 
   }
 

@@ -14,7 +14,7 @@ struct KinGroupIDFillColorMap {
 
   template<typename ValueType>
   std::string Paint(const ValueType& in) const {
-    const auto& val = in.data;
+    const auto& val = in.GetBuffer();
 
     return emp::ColorHSV(
       emp::Mod(val.size() > 1 ? val[1] : val[0], 360.0),
