@@ -39,25 +39,24 @@ class ControlPanel {
     ).SetAttr(
       "class", "col-lg-auto p-2"
     ) << emp::web::Button(
-      [this](){ animator.ToggleActive(); },
-      "Start",
-      "run-button"
-    ) << emp::web::Live(
       [this](){
+        animator.ToggleActive();
         if ( animator.GetActive() ) {
           button_dash.Button("run-button").SetAttr(
             "class", "btn btn-primary btn-block btn-lg active",
             "aria-pressed", "true"
           );
-          return "Stop";
+          button_dash.Button("run-button").SetLabel( "Stop" );
         } else {
           button_dash.Button("run-button").SetAttr(
             "class", "btn btn-primary btn-block btn-lg",
             "aria-pressed", "false"
           );
-          return "Run&nbsp";
+          button_dash.Button("run-button").SetLabel( "Run&nbsp" );
         }
-      }
+      },
+      "Start",
+      "run-button"
     );
   }
 

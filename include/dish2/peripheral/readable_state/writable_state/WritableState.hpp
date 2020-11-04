@@ -2,7 +2,10 @@
 #ifndef DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_WRITABLESTATE_HPP_INCLUDE
 #define DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_WRITABLESTATE_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
+#include "../../../../../third-party/conduit/include/uitsl/algorithm/clamp_cast.hpp"
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
 #include "../../../../../third-party/Empirical/source/base/macros.h"
 #include "../../../../../third-party/signalgp-lite/include/sgpl/utility/ByteEnumeration.hpp"
@@ -31,7 +34,9 @@ struct WritableState : public internal::writable_state_parent_t {
     #define DISH2_ADD_TO_STATE_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < internal::writable_state_parent_t::GetSize() ) { \
-          this->Get<N + Templateify>() += val; \
+          this->Get<N + Templateify>() += uitsl::clamp_cast< \
+            std::decay_t< decltype( this->Get<N + Templateify>() ) > \
+          >( val ); \
         } \
       break;
 
@@ -53,7 +58,9 @@ struct WritableState : public internal::writable_state_parent_t {
     #define DISH2_MULTIPLY_STATE_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < internal::writable_state_parent_t::GetSize() ) { \
-          this->Get<N + Templateify>() *= val; \
+          this->Get<N + Templateify>() *= uitsl::clamp_cast< \
+            std::decay_t< decltype( this->Get<N + Templateify>() ) > \
+          >( val ); \
         } \
       break;
 
@@ -75,7 +82,9 @@ struct WritableState : public internal::writable_state_parent_t {
     #define DISH2_WRITABLE_STATE_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < internal::writable_state_parent_t::GetSize() ) { \
-          this->Get<N + Templateify>() = val; \
+          this->Get<N + Templateify>() = uitsl::clamp_cast< \
+            std::decay_t< decltype( this->Get<N + Templateify>() ) > \
+          >( val ); \
         } \
       break;
 

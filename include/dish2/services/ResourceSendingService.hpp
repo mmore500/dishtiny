@@ -11,6 +11,7 @@
 #include "../../../third-party/Empirical/source/base/vector.h"
 #include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/conduit/include/uitsl/polyfill/isfinite.hpp"
 
 #include "../cell/cardinal_iterators/NeighborResourceReceiveResistanceWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceNodeOutputWrapper.hpp"
