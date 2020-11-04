@@ -38,7 +38,7 @@ public:
     return canvas_width / GetGridHeight();
   }
 
-  size_t GetCanvasX(const size_t grid_x) const {
+  size_t GetCanvasX(const double grid_x) const {
 
     emp_assert( GetGridWidth() <= canvas_width );
     const size_t offset_x = (
@@ -49,7 +49,7 @@ public:
 
   }
 
-  size_t GetCanvasY(const size_t grid_y) const {
+  size_t GetCanvasY(const double grid_y) const {
 
     emp_assert( GetGridHeight() <= canvas_height );
     const size_t offset_y = (

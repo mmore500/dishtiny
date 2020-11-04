@@ -49,9 +49,7 @@ public:
         // pick other two vertices depending on direction
         switch ( dir ) {
 
-          // north triangle
-          case 0:
-            // down triangle
+          case 0: // down triangle
             poly.AddPoint(
               helper.GetCanvasX( helper.GetGridX( pos ) + 1),
               helper.GetCanvasY( helper.GetGridY( pos ) + 1)
@@ -62,21 +60,7 @@ public:
             );
             break;
 
-          case 1:
-            // up triangle
-            poly.AddPoint(
-              helper.GetCanvasX( helper.GetGridX( pos ) ),
-              helper.GetCanvasY( helper.GetGridY( pos ) )
-            );
-            poly.AddPoint(
-              helper.GetCanvasX( helper.GetGridX( pos ) + 1),
-              helper.GetCanvasY( helper.GetGridY( pos ) )
-            );
-            break;
-
-          // west triangle
-          case 2:
-            // right triangle
+          case 1: // right triangle
             poly.AddPoint(
               helper.GetCanvasX( helper.GetGridX( pos ) + 1),
               helper.GetCanvasY( helper.GetGridY( pos ) )
@@ -87,15 +71,24 @@ public:
             );
             break;
 
-          // south triangle
-          case 3:
-            // left triangle
+          case 2: // left triangle
             poly.AddPoint(
               helper.GetCanvasX( helper.GetGridX( pos ) ),
               helper.GetCanvasY( helper.GetGridY( pos ) + 1)
             );
             poly.AddPoint(
               helper.GetCanvasX( helper.GetGridX( pos ) ),
+              helper.GetCanvasY( helper.GetGridY( pos ) )
+            );
+            break;
+
+          case 3: // up triangle
+            poly.AddPoint(
+              helper.GetCanvasX( helper.GetGridX( pos ) ),
+              helper.GetCanvasY( helper.GetGridY( pos ) )
+            );
+            poly.AddPoint(
+              helper.GetCanvasX( helper.GetGridX( pos ) + 1),
               helper.GetCanvasY( helper.GetGridY( pos ) )
             );
             break;
