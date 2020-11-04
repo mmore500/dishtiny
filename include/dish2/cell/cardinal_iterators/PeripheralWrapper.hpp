@@ -24,7 +24,7 @@ public:
   using pointer = value_type*;
   using reference = value_type&;
 
-  value_type& operator*() { return parent_t::operator*().cpu; }
+  value_type& operator*() { return parent_t::operator*().peripheral; }
 
   value_type* operator->() { return &operator*(); }
 

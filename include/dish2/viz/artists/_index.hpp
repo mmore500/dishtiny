@@ -6,6 +6,7 @@
 #include "DummyArtist.hpp"
 #include "IsAliveArtist.hpp"
 #include "KinGroupIDArtist.hpp"
+#include "KinGroupIDViewArtist.hpp"
 #include "KinMatchArtist.hpp"
 #include "NeighborKinGroupIDViewArtist.hpp"
 #include "PhylogeneticRootArtist.hpp"
