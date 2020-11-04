@@ -1,4 +1,4 @@
-# TARGET_NAMES += TODO
+TARGET_NAMES += QuorumService
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
 

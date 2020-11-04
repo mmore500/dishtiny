@@ -13,6 +13,7 @@
 #include "../genome/Genome.hpp"
 #include "../events/_index.hpp"
 #include "../events/EventManager.hpp"
+#include "../quorum/CellQuorumState.hpp"
 #include "../services/_index.hpp"
 #include "../services/ServiceManager.hpp"
 
@@ -39,6 +40,11 @@ struct Cell {
   using message_mesh_spec_t = typename Spec::message_mesh_spec_t;
   using message_node_t = netuit::MeshNode<message_mesh_spec_t>;
 
+  using quorum_mesh_spec_t = typename Spec::quorum_mesh_spec_t;
+  using quorum_node_t = netuit::MeshNode<quorum_mesh_spec_t>;
+
+  dish2::CellQuorumState< Spec > cell_quorum_state;
+
   using resource_mesh_spec_t = typename Spec::resource_mesh_spec_t;
   using resource_node_t = netuit::MeshNode<resource_mesh_spec_t>;
 
@@ -56,6 +62,7 @@ struct Cell {
   Cell(
     const genome_node_t& genome_node,
     const message_node_t& message_node,
+    const quorum_node_t& quorum_node,
     const resource_node_t& resource_node,
     const state_node_t& state_node
   ) {
@@ -68,6 +75,7 @@ struct Cell {
       state_node.GetNumInputs(),
       genome_node.GetNumOutputs(),
       message_node.GetNumOutputs(),
+      quorum_node.GetNumOutputs(),
       resource_node.GetNumOutputs(),
       state_node.GetNumOutputs(),
     }.size() ));
@@ -99,6 +107,8 @@ struct Cell {
         genome_node.GetOutput(i),
         message_node.GetInput(i),
         message_node.GetOutput(i),
+        quorum_node.GetInput(i),
+        quorum_node.GetOutput(i),
         resource_node.GetInput(i),
         resource_node.GetOutput(i),
         state_node.GetInput(i),
@@ -152,6 +162,7 @@ struct Cell {
       dish2::EventLaunchingService,
       dish2::InterMessageLaunchingService,
       dish2::IntraMessageLaunchingService,
+      dish2::QuorumService,
       dish2::ResourceDecayService,
       dish2::ResourceHarvestingService,
       dish2::ResourceSendingService,

@@ -1,9 +1,11 @@
 TARGET_NAMES += ApoptosisRequestWrapper
+TARGET_NAMES += CardinalQuorumStateWrapper
 TARGET_NAMES += CpuWrapper
 TARGET_NAMES += GenomeNodeInputWrapper
 TARGET_NAMES += GenomeNodeOutputWrapper
 TARGET_NAMES += IdentityWrapper
 TARGET_NAMES += IsAliveWrapper
+TARGET_NAMES += KinMatchWrapper
 TARGET_NAMES += NeighborResourceReceiveResistanceWrapper
 TARGET_NAMES += PeripheralWrapper
 TARGET_NAMES += ResourceNodeOutputWrapper

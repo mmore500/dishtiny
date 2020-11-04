@@ -27,6 +27,11 @@ struct ThreadWorld {
     = typename netuit::Mesh<message_mesh_spec_t>::submesh_t;
   using message_node_t = netuit::MeshNode<message_mesh_spec_t>;
 
+  using quorum_mesh_spec_t = typename Spec::quorum_mesh_spec_t;
+  using quorum_submesh_t
+    = typename netuit::Mesh<quorum_mesh_spec_t>::submesh_t;
+  using quorum_node_t = netuit::MeshNode<quorum_mesh_spec_t>;
+
   using resource_mesh_spec_t = typename Spec::resource_mesh_spec_t;
   using resource_submesh_t
     = typename netuit::Mesh<resource_mesh_spec_t>::submesh_t;
@@ -40,6 +45,7 @@ struct ThreadWorld {
   explicit ThreadWorld(
     const genome_submesh_t& genome_submesh,
     const message_submesh_t& message_submesh,
+    const quorum_submesh_t& quorum_submesh,
     const resource_submesh_t& resource_submesh,
     const state_submesh_t& state_submesh
   ) {
@@ -47,6 +53,7 @@ struct ThreadWorld {
     emp_assert(( 1 == std::set<size_t>{
       genome_submesh.size(),
       message_submesh.size(),
+      quorum_submesh.size(),
       resource_submesh.size(),
       state_submesh.size()
     }.size() ));
@@ -54,6 +61,7 @@ struct ThreadWorld {
     for (size_t i{}; i < message_submesh.size(); ++i) population.emplace_back(
       genome_submesh[i],
       message_submesh[i],
+      quorum_submesh[i],
       resource_submesh[i],
       state_submesh[i]
     );

@@ -10,6 +10,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
 #include "../peripheral/Peripheral.hpp"
+#include "../quorum/CardinalQuorumState.hpp"
 
 namespace dish2 {
 
@@ -31,6 +32,12 @@ struct Cardinal {
   using message_node_output_t = netuit::MeshNodeOutput<message_mesh_spec_t>;
   message_node_input_t message_node_input;
   message_node_output_t message_node_output;
+
+  using quorum_mesh_spec_t = typename Spec::quorum_mesh_spec_t;
+  using quorum_node_input_t = netuit::MeshNodeInput<quorum_mesh_spec_t>;
+  using quorum_node_output_t = netuit::MeshNodeOutput<quorum_mesh_spec_t>;
+
+  dish2::CardinalQuorumState< Spec > cardinal_quorum_state;
 
   using resource_mesh_spec_t = typename Spec::resource_mesh_spec_t;
   using resource_node_input_t = netuit::MeshNodeInput<resource_mesh_spec_t>;
@@ -57,6 +64,8 @@ struct Cardinal {
     const genome_node_output_t& genome_node_output_,
     const message_node_input_t& message_node_input_,
     const message_node_output_t& message_node_output_,
+    const quorum_node_input_t& quorum_node_input_,
+    const quorum_node_output_t& quorum_node_output_,
     const resource_node_input_t& resource_node_input_,
     const resource_node_output_t& resource_node_output_,
     const state_node_input_t& state_node_input_,
@@ -68,6 +77,7 @@ struct Cardinal {
   , intra_message_node( intra_message_node_ )
   , message_node_input( message_node_input_ )
   , message_node_output( message_node_output_ )
+  , cardinal_quorum_state( quorum_node_input_, quorum_node_output_ )
   , resource_node_input( resource_node_input_ )
   , resource_node_output( resource_node_output_ )
   , state_node_input( state_node_input_ )
@@ -84,6 +94,14 @@ struct Cardinal {
   void Reset() { cpu.Reset(); peripheral.Clear(); }
 
   void DispatchEvent(const emp::BitSet<32>& tag) { cpu.ForceLaunchCore( tag ); }
+
+  bool IsNeighborKin( const size_t lev ) {
+    return peripheral.readable_state.template Get<
+     dish2::KinGroupIDView< Spec >
+   >().Get( lev ) == state_node_input.Get().template Get<
+      dish2::KinGroupIDView< Spec >
+    >().Get( lev );
+  }
 
 };
 

@@ -1,5 +1,6 @@
 TARGET_NAMES += GenomeMeshSpec
 TARGET_NAMES += MessageMeshSpec
+TARGET_NAMES += QuorumMeshspec
 TARGET_NAMES += ResourceMeshSpec
 TARGET_NAMES += Spec
 TARGET_NAMES += StateMeshSpec

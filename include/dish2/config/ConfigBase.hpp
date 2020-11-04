@@ -51,6 +51,11 @@ EMP_BUILD_CONFIG(
   ),
   // VALUE(APOP_RECOVERY_FRAC, float, 0.5, "What fraction of REP_THRESH is recovered to heirs after apoptosis?"),
 
+  GROUP(QUORUM, "QUORUM"),
+  VALUE(P_SET_QUORUM_BIT, float, 1.0,
+    "What fraction of cells should have a quorum bit set?"
+  ),
+
 
   GROUP(GENOME, "GENOME"),
   VALUE(PROGRAM_START_SIZE, size_t, 100, "How big should initial programs be?"),
@@ -104,6 +109,9 @@ EMP_BUILD_CONFIG(
     "Run service every ?? updates."
   ),
   VALUE(INTRA_MESSAGE_LAUNCHING_SERVICE_FREQUENCY, size_t, 1,
+    "Run service every ?? updates."
+  ),
+  VALUE(QUORUM_SERVICE_FREQUENCY, size_t, 1,
     "Run service every ?? updates."
   ),
   VALUE(RESOURCE_DECAY_SERVICE_FREQUENCY, size_t, 1,

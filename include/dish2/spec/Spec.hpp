@@ -15,6 +15,7 @@
 #include "GenomeMeshSpec.hpp"
 #include "IntraMessageMeshSpec.hpp"
 #include "MessageMeshSpec.hpp"
+#include "QuorumMeshSpec.hpp"
 #include "ResourceMeshSpec.hpp"
 #include "StateMeshSpec.hpp"
 
@@ -43,6 +44,7 @@ struct Spec {
   using genome_mesh_spec_t = dish2::GenomeMeshSpec<dish2::Spec>;
   using intra_message_mesh_spec_t = dish2::IntraMessageMeshSpec;
   using message_mesh_spec_t = dish2::MessageMeshSpec;
+  using quorum_mesh_spec_t = dish2::QuorumMeshSpec<dish2::Spec>;
   using resource_mesh_spec_t = dish2::ResourceMeshSpec;
   using state_mesh_spec_t = dish2::StateMeshSpec<dish2::Spec>;
 

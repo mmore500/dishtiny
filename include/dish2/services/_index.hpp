@@ -10,6 +10,7 @@
 #include "EventLaunchingService.hpp"
 #include "InterMessageLaunchingService.hpp"
 #include "IntraMessageLaunchingService.hpp"
+#include "QuorumService.hpp"
 #include "ResourceDecayService.hpp"
 #include "ResourceHarvestingService.hpp"
 #include "ResourceReceivingService.hpp"
