@@ -10,6 +10,7 @@
 
 #include "../../../third-party/Empirical/source/base/vector.h"
 #include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
+#include "../../../third-party/conduit/include/uitsl/algorithm/nan_to_zero.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/isfinite.hpp"
 
@@ -20,7 +21,6 @@
 #include "../cell/cardinal_iterators/ResourceSendRequestWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../config/cfg.hpp"
-#include "../util/nan_to_zero.hpp"
 
 namespace dish2 {
 
@@ -68,7 +68,7 @@ struct ResourceSendingService {
       cell.template begin<dish2::ResourceReserveRequestWrapper<spec_t>>(),
       std::begin( send_amounts ),
       [](const auto send_amount, const auto reserve_request_raw){
-        return dish2::nan_to_zero(
+        return uitsl::nan_to_zero(
           std::clamp(send_amount - reserve_request_raw.Get(), 0.0f, send_amount)
         );
       }
@@ -103,7 +103,7 @@ struct ResourceSendingService {
       cell.template begin<dish2::ResourceSendRequestWrapper<spec_t>>(),
       std::begin( send_amounts ),
       [](const auto send_amount, const auto send_request_raw){
-        return dish2::nan_to_zero( std::clamp(
+        return uitsl::nan_to_zero( std::clamp(
           send_amount * send_request_raw.Get(),
           0.0f, send_amount
         ) );
@@ -139,7 +139,7 @@ struct ResourceSendingService {
       cell.template begin<dish2::ResourceSendLimitWrapper<spec_t>>(),
       std::begin( send_amounts ),
       [](const auto send_amount, const auto send_limit_raw){
-        const auto send_limit = dish2::nan_to_zero(
+        const auto send_limit = uitsl::nan_to_zero(
           std::max( 0.0f, send_limit_raw.Get() )
         );
         return send_limit
