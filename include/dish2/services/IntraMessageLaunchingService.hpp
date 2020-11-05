@@ -23,7 +23,7 @@ struct IntraMessageLaunchingService {
   }
 
   template<typename Cell>
-  static void DoService( Cell& cell ) {
+  static void DoService( Cell& cell, const size_t ) {
 
     using spec_t = typename Cell::spec_t;
 

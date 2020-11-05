@@ -25,7 +25,7 @@ struct BirthSetupService {
   }
 
   template<typename Cell>
-  static void DoService( Cell& cell ) {
+  static void DoService( Cell& cell, const size_t update ) {
     // TODO check quiescence period?
 
     using spec_t = typename Cell::spec_t;
@@ -53,9 +53,9 @@ struct BirthSetupService {
       ].peripheral.readable_state.template Get<
         dish2::RepLevRequest< spec_t >
       >();
-      cell.genome->ElapseGeneration( replev_request.GetRepLev() );
+      cell.genome->ElapseGeneration( replev_request.GetRepLev(), update );
 
-      cell.MakeAliveRoutine();
+      cell.MakeAliveRoutine( update );
     }
 
   }

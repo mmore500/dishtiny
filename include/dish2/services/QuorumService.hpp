@@ -90,7 +90,7 @@ public:
   }
 
   template<typename Cell>
-  static void DoService( Cell& cell ) {
+  static void DoService( Cell& cell, const size_t ) {
 
     cell.cell_quorum_state.RefreshOwnBits();
 

@@ -17,6 +17,7 @@
 #include "GenerationCounter.hpp"
 #include "Genome.hpp"
 #include "KinGroupID.hpp"
+#include "KinGroupUpdateStamps.hpp"
 #include "MutationCounter.hpp"
 #include "RootID.hpp"
 
@@ -30,6 +31,7 @@ struct Genome {
 
   event_tags_t event_tags;
   dish2::GenerationCounter<Spec> generation_counter;
+  dish2::KinGroupUpdateStamps<Spec> kin_group_update_stamps;
   dish2::KinGroupID<Spec> kin_group_id;
   dish2::MutationCounter mutation_counter;
   using program_t = sgpl::Program<sgpl_spec_t>;
@@ -45,6 +47,7 @@ struct Genome {
   , root_id( std::in_place ) {}
 
   bool operator==(const Genome& other) const {
+    // ignore kin_group_update_stamps,
     return std::tuple{
       event_tags,
       generation_counter,
@@ -62,9 +65,10 @@ struct Genome {
     };
   }
 
-  void ElapseGeneration(const size_t rep_lev) {
+  void ElapseGeneration( const size_t rep_lev, const size_t update ) {
 
     generation_counter.ElapseGeneration( rep_lev );
+    kin_group_update_stamps.ApplyInheritance( rep_lev, update );
     kin_group_id.ApplyInheritance( rep_lev );
 
     if ( sgpl::ThreadLocalRandom::Get().P( dish2::cfg.MUTATION_RATE() ) ) {
@@ -120,6 +124,7 @@ struct Genome {
     generation_counter,
     mutation_counter,
     kin_group_id,
+    kin_group_update_stamps,
     program,
     root_id
   ); }

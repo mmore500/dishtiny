@@ -13,6 +13,7 @@ namespace dish2 {
 using ViewerCollection = std::tuple<
   dish2::GridViewer<dish2::IsAliveArtist<>>,
   dish2::GridViewer<dish2::CellBirthArtist<>>,
+  dish2::GridViewer<dish2::KinGroupAgeArtist<>>,
   dish2::GridViewer<dish2::KinGroupIDArtist<>>,
   dish2::GridViewer<dish2::KinGroupIDViewArtist<>>,
   dish2::GridViewer<dish2::KinMatchArtist<>>,

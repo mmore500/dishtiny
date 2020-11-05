@@ -12,7 +12,7 @@
 namespace dish2 {
 
 template <class Spec>
-void Cell<Spec>::MakeAliveRoutine() {
+void Cell<Spec>::MakeAliveRoutine( const size_t update ) {
 
   // check is alive consistency
   emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(
@@ -57,6 +57,21 @@ void Cell<Spec>::MakeAliveRoutine() {
       end<dish2::KinGroupIDViewWrapper<Spec>>()
     ).size() == 1
   ));
+
+  // set up kin group ages
+  std::for_each(
+    begin<dish2::KinGroupAgeWrapper<Spec>>(),
+    end<dish2::KinGroupAgeWrapper<Spec>>(),
+    [this, update]( auto& kin_group_age ){
+      for( size_t lev{}; lev < kin_group_age.GetSize(); ++lev ) {
+        kin_group_age.Get( lev ) = update - std::min(
+          genome->kin_group_update_stamps.GetBuffer()[ lev ],
+          update
+        );
+      }
+    }
+  );
+
 
   // load program onto all CPUs
   std::for_each(

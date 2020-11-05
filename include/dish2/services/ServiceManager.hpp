@@ -22,7 +22,7 @@ struct ServiceManager<FirstService, SubsequentServices...> {
     using subsequent_services_t = dish2::ServiceManager<SubsequentServices...>;
 
     if ( FirstService::ShouldRun( update, alive ) ) {
-      FirstService::DoService( cell );
+      FirstService::DoService( cell, update );
     }
 
     if constexpr ( sizeof...(SubsequentServices) > 0 ) {

@@ -57,7 +57,7 @@ struct Cell {
   // out of class implementations
   void DeathRoutine();
   void HeirPayoutRoutine();
-  void MakeAliveRoutine();
+  void MakeAliveRoutine(const size_t update=0);
 
   Cell(
     const genome_node_t& genome_node,

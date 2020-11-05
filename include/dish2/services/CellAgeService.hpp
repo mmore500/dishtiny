@@ -9,6 +9,7 @@
 
 #include "../config/cfg.hpp"
 #include "../cell/cardinal_iterators/CellAgeWrapper.hpp"
+#include "../cell/cardinal_iterators/KinGroupAgeWrapper.hpp"
 
 namespace dish2 {
 
@@ -23,7 +24,7 @@ struct CellAgeService {
   }
 
   template<typename Cell>
-  static void DoService( Cell& cell ) {
+  static void DoService( Cell& cell, const size_t ) {
 
     using spec_t = typename Cell::spec_t;
 
@@ -49,6 +50,12 @@ struct CellAgeService {
         cell.template end<dish2::CellAgeWrapper<spec_t>>()
       ).size() == 1
     ));
+
+    std::for_each(
+      cell.template begin<dish2::KinGroupAgeWrapper<Spec>>(),
+      cell.template end<dish2::KinGroupAgeWrapper<Spec>>(),
+      []( auto& kin_group_age ){ kin_group_age.Bump(); }
+    );
 
   }
 

@@ -6,6 +6,7 @@
 
 #include "CellAge.hpp"
 #include "IsAlive.hpp"
+#include "KinGroupAge.hpp"
 #include "KinGroupIDView.hpp"
 #include "ResourceStockpile.hpp"
 
@@ -16,6 +17,7 @@ struct IntrospectiveState
 : public uitsl::PodInternalNode<
   dish2::CellAge,
   dish2::IsAlive,
+  dish2::KinGroupAge<Spec>,
   dish2::KinGroupIDView<Spec>,
   dish2::ResourceStockpile
 >
