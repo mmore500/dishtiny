@@ -17,7 +17,7 @@ namespace internal {
   template<typename Spec>
   using readable_state_parent_t = uitsl::PodInternalNode<
     dish2::IntrospectiveState<Spec>,
-    dish2::WritableState
+    dish2::WritableState<Spec>
   >;
 
 }

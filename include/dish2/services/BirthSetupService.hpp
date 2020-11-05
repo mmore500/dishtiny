@@ -5,11 +5,13 @@
 #include <functional>
 
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 #include "../../../third-party/Empirical/source/base/vector.h"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "../config/cfg.hpp"
 #include "../cell/cardinal_iterators/GenomeNodeInputWrapper.hpp"
+#include "../peripheral/readable_state/ReadableState.hpp"
 
 namespace dish2 {
 
@@ -28,24 +30,31 @@ struct BirthSetupService {
 
     using spec_t = typename Cell::spec_t;
 
-    thread_local emp::vector< std::reference_wrapper<
-      typename dish2::GenomeNodeInputWrapper<spec_t>::value_type
-    > > fresh_inputs;
-    fresh_inputs.clear();
+    thread_local emp::vector< size_t > fresh_input_idxs;
+    fresh_input_idxs.clear();
 
-    std::copy_if(
-      cell.template begin<dish2::GenomeNodeInputWrapper<spec_t>>(),
-      cell.template end<dish2::GenomeNodeInputWrapper<spec_t>>(),
-      std::back_inserter( fresh_inputs ),
-      [](auto& input){ return input.Jump(); }
-    );
+    for (size_t idx{}; idx < cell.cardinals.size(); ++idx) {
+      if ( cell.cardinals[idx].genome_node_input.Jump() ) {
+        fresh_input_idxs.push_back( idx );
+      }
+    }
 
-    if ( fresh_inputs.size() ) {
+    if ( fresh_input_idxs.size() ) {
+
       cell.DeathRoutine();
-      cell.genome = fresh_inputs[
-        sgpl::ThreadLocalRandom::Get().GetUInt( fresh_inputs.size() )
-      ].get().Get();
-      cell.genome->ElapseGeneration( 0 ); // TODO FIXME
+      const size_t cardinal_idx = fresh_input_idxs[
+        sgpl::ThreadLocalRandom::Get().GetUInt( fresh_input_idxs.size() )
+      ];
+
+      cell.genome = cell.cardinals[cardinal_idx].genome_node_input.Get();
+
+      const auto& replev_request = cell.cardinals[
+        cardinal_idx
+      ].peripheral.readable_state.template Get<
+        dish2::RepLevRequest< spec_t >
+      >();
+      cell.genome->ElapseGeneration( replev_request.GetRepLev() );
+
       cell.MakeAliveRoutine();
     }
 

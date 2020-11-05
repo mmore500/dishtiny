@@ -16,16 +16,17 @@
 
 namespace dish2 {
 
+template< typename DishSpec >
 using OpLibrary = sgpl::OpLibraryCoupler<
   sgpl::CompleteOpLibrary,
-  dish2::AddToOwnState,
+  dish2::AddToOwnState< DishSpec >,
   dish2::BcstIntraMessage,
-  dish2::MultiplyOwnState,
+  dish2::MultiplyOwnState< DishSpec >,
   dish2::ReadNeighborState,
   dish2::ReadOwnState,
   dish2::SendInterMessage,
   dish2::SendIntraMessage,
-  dish2::WriteOwnState
+  dish2::WriteOwnState< DishSpec >
 >;
 
 } // namespace dish2

@@ -18,30 +18,34 @@ namespace dish2 {
 
 namespace internal {
 
+  template< typename Spec >
   using writable_state_parent_t = uitsl::PodInternalNode<
-    dish2::ControllerMappedState,
+    dish2::ControllerMappedState< Spec >,
     dish2::NopState
   >;
 
-}
+} // namespace internal
 
-struct WritableState : public internal::writable_state_parent_t {
+template< typename Spec >
+struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
 
-  // https://stackoverflow.com/a/63046442
-  template<size_t Templateify=0>
+  using parent_t = dish2::internal::writable_state_parent_t<Spec>;
+  constexpr inline static size_t parent_size = parent_t::GetSize();
+
   void AddTo(const size_t idx, const float val) {
 
     #define DISH2_ADD_TO_STATE_CASE_PAYLOAD(N) \
       case N: \
-        if constexpr ( N  < internal::writable_state_parent_t::GetSize() ) { \
-          this->Get<N + Templateify>() += uitsl::clamp_cast< \
-            std::decay_t< decltype( this->Get<N + Templateify>() ) > \
-          >( val ); \
+        if constexpr ( N  < parent_size ) { \
+          this->parent_t::template GetByIndex<N>() \
+            += uitsl::clamp_cast< std::decay_t< decltype( \
+              this->parent_t::template GetByIndex<N>() \
+            ) > >( val ); \
         } \
       break;
 
-    emp_assert( idx < internal::writable_state_parent_t::GetSize() );
-    static_assert( internal::writable_state_parent_t::GetSize() < 256 );
+    emp_assert( idx < parent_size );
+    static_assert( parent_size < 256 );
 
     switch ( idx ) {
 
@@ -51,21 +55,20 @@ struct WritableState : public internal::writable_state_parent_t {
 
   }
 
-  // https://stackoverflow.com/a/63046442
-  template<size_t Templateify=0>
   void Multiply(const size_t idx, const float val) {
 
     #define DISH2_MULTIPLY_STATE_CASE_PAYLOAD(N) \
       case N: \
-        if constexpr ( N  < internal::writable_state_parent_t::GetSize() ) { \
-          this->Get<N + Templateify>() *= uitsl::clamp_cast< \
-            std::decay_t< decltype( this->Get<N + Templateify>() ) > \
-          >( val ); \
+        if constexpr ( N  < parent_size ) { \
+          this->parent_t::template GetByIndex<N>() \
+            *= uitsl::clamp_cast< std::decay_t< decltype( \
+              this->parent_t::template GetByIndex<N>() \
+            ) > >( val ); \
         } \
       break;
 
-    emp_assert( idx < internal::writable_state_parent_t::GetSize() );
-    static_assert( internal::writable_state_parent_t::GetSize() < 256 );
+    emp_assert( idx < parent_size );
+    static_assert( parent_size < 256 );
 
     switch ( idx ) {
 
@@ -75,21 +78,20 @@ struct WritableState : public internal::writable_state_parent_t {
 
   }
 
-  // https://stackoverflow.com/a/63046442
-  template<size_t Templateify=0>
   void Write(const size_t idx, const float val) {
 
     #define DISH2_WRITABLE_STATE_CASE_PAYLOAD(N) \
       case N: \
-        if constexpr ( N  < internal::writable_state_parent_t::GetSize() ) { \
-          this->Get<N + Templateify>() = uitsl::clamp_cast< \
-            std::decay_t< decltype( this->Get<N + Templateify>() ) > \
-          >( val ); \
+        if constexpr ( N  < parent_size ) { \
+          this->parent_t::template GetByIndex<N>() \
+            = uitsl::clamp_cast< std::decay_t< decltype( \
+              this->parent_t::template GetByIndex<N>() \
+            ) > >( val ); \
         } \
       break;
 
-    emp_assert( idx < internal::writable_state_parent_t::GetSize() );
-    static_assert( internal::writable_state_parent_t::GetSize() < 256 );
+    emp_assert( idx < parent_size );
+    static_assert( parent_size < 256 );
 
     switch ( idx ) {
 

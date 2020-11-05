@@ -29,7 +29,7 @@ struct Spec {
   constexpr inline static size_t AMT_NOP_MEMORY = 4;
 
   using sgpl_spec_t = sgpl::Spec<
-    dish2::OpLibrary,
+    dish2::OpLibrary<dish2::Spec>,
     dish2::Peripheral<dish2::Spec>
   >;
 
