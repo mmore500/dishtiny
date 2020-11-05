@@ -85,8 +85,7 @@ public:
   static bool ShouldRun( const size_t update, const bool alive ) {
     const size_t freq = dish2::cfg.QUORUM_SERVICE_FREQUENCY();
     return
-      alive
-      && freq > 0
+      freq > 0
       && uitsl::shift_mod( update, freq ) == 0;
   }
 
