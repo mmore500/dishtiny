@@ -57,7 +57,7 @@ public:
 
   void ResetTripCounter() { half_trip_counter %= 2; }
 
-  bool IsTripCounterComplete() const { return half_trip_counter >= 4; }
+  bool IsTripCounterComplete() const { return half_trip_counter >= 9; }
 
   bool ShouldPush() const { return half_trip_counter % 2 == 0; }
 
