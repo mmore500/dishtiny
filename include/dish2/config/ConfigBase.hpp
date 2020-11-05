@@ -123,6 +123,9 @@ EMP_BUILD_CONFIG(
   VALUE(RESOURCE_HARVESTING_SERVICE_FREQUENCY, size_t, 1,
     "Run service every ?? updates."
   ),
+  VALUE(RESOURCE_INPUT_JUMP_SERVICE_FREQUENCY, size_t, 1,
+    "Run service every ?? updates."
+  ),
   VALUE(RESOURCE_RECEIVING_SERVICE_FREQUENCY, size_t, 8,
     "Run service every ?? updates."
   ),

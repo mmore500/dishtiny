@@ -165,10 +165,13 @@ struct Cell {
       dish2::QuorumService,
       dish2::ResourceDecayService,
       dish2::ResourceHarvestingService,
+      dish2::ResourceReceivingService,
       dish2::ResourceSendingService,
       dish2::SpawnSendingService,
       dish2::StateInputJumpService,
       dish2::StateOutputPutService,
+
+      dish2::ResourceInputJumpService,
       dish2::ApoptosisService // must run last
     >;
 

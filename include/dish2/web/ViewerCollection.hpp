@@ -20,6 +20,7 @@ using ViewerCollection = std::tuple<
   dish2::GridViewer<dish2::NeighborKinGroupIDViewArtist<>>,
   dish2::GridViewer<dish2::PhylogeneticRootArtist<>>,
   dish2::GridViewer<dish2::QuorumBitsArtist<>>,
+  dish2::GridViewer<dish2::ResourceInputPeekArtist<>>,
   dish2::GridViewer<dish2::ResourceStockpileArtist<>>
 >;
 

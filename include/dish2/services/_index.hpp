@@ -13,6 +13,7 @@
 #include "QuorumService.hpp"
 #include "ResourceDecayService.hpp"
 #include "ResourceHarvestingService.hpp"
+#include "ResourceInputJumpService.hpp"
 #include "ResourceReceivingService.hpp"
 #include "ResourceSendingService.hpp"
 #include "SpawnSendingService.hpp"
