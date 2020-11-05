@@ -16,6 +16,7 @@ using ViewerCollection = std::tuple<
   dish2::GridViewer<dish2::KinGroupIDArtist<>>,
   dish2::GridViewer<dish2::KinGroupIDViewArtist<>>,
   dish2::GridViewer<dish2::KinMatchArtist<>>,
+  dish2::GridViewer<dish2::LearnedQuorumBitsArtist<>>,
   dish2::GridViewer<dish2::NeighborKinGroupIDViewArtist<>>,
   dish2::GridViewer<dish2::PhylogeneticRootArtist<>>,
   dish2::GridViewer<dish2::QuorumBitsArtist<>>,

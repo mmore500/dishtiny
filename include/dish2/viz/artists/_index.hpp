@@ -8,6 +8,7 @@
 #include "KinGroupIDArtist.hpp"
 #include "KinGroupIDViewArtist.hpp"
 #include "KinMatchArtist.hpp"
+#include "LearnedQuorumBitsArtist.hpp"
 #include "NeighborKinGroupIDViewArtist.hpp"
 #include "PhylogeneticRootArtist.hpp"
 #include "QuorumBitsArtist.hpp"

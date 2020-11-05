@@ -3,6 +3,7 @@
 #define DISH2_QUORUM_QUORUMMESSAGE_HPP_INCLUDE
 
 #include <algorithm>
+#include <iostream>
 
 #include "../../../third-party/Empirical/source/tools/BitSet.h"
 #include "../../../third-party/conduit/include/uitsl/algorithm/unset_mask.hpp"
@@ -103,6 +104,23 @@ public:
   void ClearLev( const size_t lev ) { data[ lev ].Clear(); }
 
   size_t GetNumBits(const size_t lev) const { return data[ lev ].CountOnes(); }
+
+  size_t GetNumBits() const {
+    return std::accumulate(
+      std::begin( data ),
+      std::end( data ),
+      0,
+      [](const auto& cumulator, const auto& bitset){
+        return cumulator + bitset.CountOnes();
+      }
+    );
+  }
+
+  friend std::ostream& operator<<(std::ostream &out, const QuorumMessage& qm){
+    for ( const auto& bs : qm.data ) out << bs;
+    return out;
+  }
+
 
 };
 

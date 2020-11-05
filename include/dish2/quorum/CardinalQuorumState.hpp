@@ -53,6 +53,8 @@ public:
   , output( output_ )
   {}
 
+  size_t GetNumLearnedBits() const { return learned_bits.GetNumBits(); }
+
   void ResetTripCounter() { half_trip_counter %= 2; }
 
   bool IsTripCounterComplete() const { return half_trip_counter >= 4; }
@@ -63,7 +65,7 @@ public:
 
   void PushKnownBits(
     const CellQuorumState<Spec>& cell_quorum_state,
-    const emp::array< char, Spec::NLEV >& kin_match_by_lev
+    const emp::array< char, Spec::NLEV > kin_match_by_lev
   ) {
 
     message_t message = cell_quorum_state.GetKnownBits();
@@ -87,7 +89,7 @@ public:
 
   void LearnPulledBits(
     dish2::CellQuorumState<Spec>& cell_quorum_state,
-    const emp::array< char, Spec::NLEV >& kin_match_by_lev
+    const emp::array< char, Spec::NLEV > kin_match_by_lev
   ) {
 
     const message_t known_bits_before
