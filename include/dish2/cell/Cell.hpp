@@ -160,6 +160,7 @@ struct Cell {
       dish2::ConduitFlushService,
       dish2::CpuExecutionService,
       dish2::EventLaunchingService,
+      dish2::InterMessageCounterClearService,
       dish2::InterMessageLaunchingService,
       dish2::IntraMessageLaunchingService,
       dish2::QuorumService,

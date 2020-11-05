@@ -107,6 +107,9 @@ EMP_BUILD_CONFIG(
   VALUE(EVENT_LAUNCHING_SERVICE_FREQUENCY, size_t, 8,
     "Run service every ?? updates."
   ),
+  VALUE(INTER_MESSAGE_COUNTER_CLEAR_SERVICE_FREQUENCY, size_t, 16,
+    "Run service every ?? updates."
+  ),
   VALUE(INTER_MESSAGE_LAUNCHING_SERVICE_FREQUENCY, size_t, 8,
     "Run service every ?? updates."
   ),

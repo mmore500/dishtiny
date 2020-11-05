@@ -6,6 +6,7 @@
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
 #include "../cell/cardinal_iterators/CpuWrapper.hpp"
+#include "../cell/cardinal_iterators/IncomingInterMessageCounterWrapper.hpp"
 #include "../cell/cardinal_iterators/MessageNodeInputWrapper.hpp"
 #include "../config/cfg.hpp"
 
@@ -30,11 +31,14 @@ struct InterMessageLaunchingService {
       cell.template begin< dish2::MessageNodeInputWrapper<spec_t> >(),
       cell.template end< dish2::MessageNodeInputWrapper<spec_t> >(),
       cell.template begin< dish2::CpuWrapper<spec_t> >(),
-      []( auto& message_input, auto& cpu ) {
+      cell.template begin<dish2::IncomingInterMessageCounterWrapper<spec_t> >(),
+      []( auto& message_input, auto& cpu, auto& message_counter ) {
         while(
           message_input.TryStep()
           && cpu.TryLaunchCore( message_input.Get(), 1)
-        );
+        ) ++message_counter;
+        // purge leftover messages
+        message_counter += message_input.Jump();
       }
     );
 

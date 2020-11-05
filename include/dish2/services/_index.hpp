@@ -8,6 +8,7 @@
 #include "ConduitFlushService.hpp"
 #include "CpuExecutionService.hpp"
 #include "EventLaunchingService.hpp"
+#include "InterMessageCounterClearService.hpp"
 #include "InterMessageLaunchingService.hpp"
 #include "IntraMessageLaunchingService.hpp"
 #include "QuorumService.hpp"

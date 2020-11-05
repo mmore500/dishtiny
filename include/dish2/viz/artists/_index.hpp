@@ -5,6 +5,7 @@
 #include "CellBirthArtist.hpp"
 #include "DummyArtist.hpp"
 #include "HeirRequestArtist.hpp"
+#include "IncomingInterMessageCounterArtist.hpp"
 #include "IsAliveArtist.hpp"
 #include "KinGroupAgeArtist.hpp"
 #include "KinGroupIDArtist.hpp"
