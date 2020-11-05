@@ -5,6 +5,7 @@
 #include "../../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
 
 #include "ApoptosisRequest.hpp"
+#include "HeirRequest.hpp"
 #include "RepLevRequest.hpp"
 #include "ResourceReceiveResistance.hpp"
 #include "ResourceReserveRequest.hpp"
@@ -19,6 +20,7 @@ template< typename Spec >
 struct ControllerMappedState
 : public uitsl::PodInternalNode<
   dish2::ApoptosisRequest,
+  dish2::HeirRequest,
   dish2::RepLevRequest< Spec >,
   dish2::ResourceReceiveResistance,
   dish2::ResourceReserveRequest,

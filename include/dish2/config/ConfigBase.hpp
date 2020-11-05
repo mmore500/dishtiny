@@ -49,7 +49,9 @@ EMP_BUILD_CONFIG(
   VALUE(RESOURCE_DECAY, float, 0.995,
     "How much resource should remain each update?"
   ),
-  // VALUE(APOP_RECOVERY_FRAC, float, 0.5, "What fraction of REP_THRESH is recovered to heirs after apoptosis?"),
+  VALUE(APOP_RECOVERY_FRAC, float, 0.8,
+    "What fraction of REP_THRESH is recovered to heirs after apoptosis?"
+  ),
 
   GROUP(QUORUM, "QUORUM"),
   VALUE(P_SET_QUORUM_BIT, float, 1.0,
