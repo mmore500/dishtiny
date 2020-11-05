@@ -50,7 +50,7 @@ public:
   void RefreshOwnBits() { known_quorum_bits |= own_quorum_bits; }
 
   void ForgetBits( const message_t mask ) {
-    uitsl::unset_mask( known_quorum_bits, mask );
+    known_quorum_bits = uitsl::unset_mask( known_quorum_bits, mask );
   }
 
   void LearnBits( const message_t bits ) { known_quorum_bits |= bits; }
