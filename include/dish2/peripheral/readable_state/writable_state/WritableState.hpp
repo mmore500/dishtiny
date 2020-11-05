@@ -35,14 +35,17 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
   void AddTo(const size_t idx, const float val) {
 
     #define DISH2_ADD_TO_STATE_CASE_PAYLOAD(N) \
-      case N: \
-        if constexpr ( N  < parent_size ) { \
+    case N: \
+      if constexpr ( N  < parent_size ) { \
+        using target_t = std::decay_t< decltype( \
           this->parent_t::template GetByIndex<N>() \
-            += uitsl::clamp_cast< std::decay_t< decltype( \
-              this->parent_t::template GetByIndex<N>() \
-            ) > >( val ); \
-        } \
-      break;
+        ) >; \
+        const target_t clamped = uitsl::clamp_cast< std::decay_t< decltype( \
+          this->parent_t::template GetByIndex<N>() \
+        ) > >( val ); \
+        this->parent_t::template GetByIndex<N>() += clamped; \
+      } \
+    break;
 
     emp_assert( idx < parent_size );
     static_assert( parent_size < 256 );
@@ -58,14 +61,17 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
   void Multiply(const size_t idx, const float val) {
 
     #define DISH2_MULTIPLY_STATE_CASE_PAYLOAD(N) \
-      case N: \
-        if constexpr ( N  < parent_size ) { \
+    case N: \
+      if constexpr ( N  < parent_size ) { \
+        using target_t = std::decay_t< decltype( \
           this->parent_t::template GetByIndex<N>() \
-            *= uitsl::clamp_cast< std::decay_t< decltype( \
-              this->parent_t::template GetByIndex<N>() \
-            ) > >( val ); \
-        } \
-      break;
+        ) >; \
+        const target_t clamped = uitsl::clamp_cast< std::decay_t< decltype( \
+          this->parent_t::template GetByIndex<N>() \
+        ) > >( val ); \
+        this->parent_t::template GetByIndex<N>() *= clamped; \
+      } \
+    break;
 
     emp_assert( idx < parent_size );
     static_assert( parent_size < 256 );
@@ -83,10 +89,13 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
     #define DISH2_WRITABLE_STATE_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_size ) { \
-          this->parent_t::template GetByIndex<N>() \
-            = uitsl::clamp_cast< std::decay_t< decltype( \
-              this->parent_t::template GetByIndex<N>() \
-            ) > >( val ); \
+          using target_t = std::decay_t< decltype( \
+            this->parent_t::template GetByIndex<N>() \
+          ) >; \
+          const target_t clamped = uitsl::clamp_cast< std::decay_t< decltype( \
+            this->parent_t::template GetByIndex<N>() \
+          ) > >( val ); \
+          this->parent_t::template GetByIndex<N>() = clamped; \
         } \
       break;
 
