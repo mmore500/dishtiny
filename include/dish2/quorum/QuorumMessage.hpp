@@ -79,7 +79,7 @@ public:
       std::begin( other.data ),
       std::begin( res.data ),
       []( const auto& this_bits, const auto& other_bits ){
-        return this_bits | other_bits;
+        return this_bits & other_bits;
       }
     );
     return res;
