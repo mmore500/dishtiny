@@ -14,7 +14,7 @@ struct KinMatchColorMap {
 
   template<typename ValueType>
   std::string Paint(const ValueType kin_match_array) const {
-    if (kin_match_array[0] == 0) return "green";
+    if ( kin_match_array[0] ) return "green";
     else return "white";
   }
 
