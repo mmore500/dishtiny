@@ -7,6 +7,7 @@
 #include "CellAgeService.hpp"
 #include "ConduitFlushService.hpp"
 #include "CpuExecutionService.hpp"
+#include "EpochAdvanceService.hpp"
 #include "EventLaunchingService.hpp"
 #include "InterMessageCounterClearService.hpp"
 #include "InterMessageLaunchingService.hpp"

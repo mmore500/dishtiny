@@ -5,6 +5,7 @@
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
 
 #include "CellAge.hpp"
+#include "Epoch.hpp"
 #include "IncomingInterMessageCounter.hpp"
 #include "IsAlive.hpp"
 #include "KinGroupAge.hpp"
@@ -17,6 +18,7 @@ template<typename Spec>
 struct IntrospectiveState
 : public uitsl::PodInternalNode<
   dish2::CellAge,
+  dish2::Epoch,
   dish2::IncomingInterMessageCounter,
   dish2::IsAlive,
   dish2::KinGroupAge<Spec>,

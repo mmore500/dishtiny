@@ -4,6 +4,7 @@
 
 #include "CellBirthArtist.hpp"
 #include "DummyArtist.hpp"
+#include "EpochArtist.hpp"
 #include "HeirRequestArtist.hpp"
 #include "IncomingInterMessageCounterArtist.hpp"
 #include "IsAliveArtist.hpp"

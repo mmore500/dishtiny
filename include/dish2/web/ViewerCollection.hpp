@@ -12,6 +12,7 @@ namespace dish2 {
 
 using ViewerCollection = std::tuple<
   dish2::GridViewer<dish2::CellBirthArtist<>>,
+  dish2::GridViewer<dish2::EpochArtist<>>,
   dish2::GridViewer<dish2::HeirRequestArtist<>>,
   dish2::GridViewer<dish2::IncomingInterMessageCounterArtist<>>,
   dish2::GridViewer<dish2::IsAliveArtist<>>,
