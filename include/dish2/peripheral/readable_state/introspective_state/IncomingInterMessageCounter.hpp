@@ -6,9 +6,9 @@
 
 namespace dish2 {
 
-struct IncomingInterMessageCounter : public uitsl::PodLeafNode<float> {
+struct IncomingInterMessageCounter : public uitsl::PodLeafNode<size_t> {
   // inherit constructors
-  using parent_t = uitsl::PodLeafNode<float>;
+  using parent_t = uitsl::PodLeafNode<size_t>;
   using parent_t::parent_t;
 };
 
