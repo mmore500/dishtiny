@@ -19,7 +19,7 @@ struct ConduitFlushService {
   }
 
   template<typename Cell>
-  static void DoService( Cell& cell, const size_t ) {
+  static void DoService( Cell& cell ) {
 
     for (auto& cardinal : cell.cardinals) {
       cardinal.genome_node_output.TryFlush();

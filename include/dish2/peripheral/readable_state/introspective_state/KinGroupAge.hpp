@@ -4,6 +4,8 @@
 
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
 
+#include "../../../genome/KinGroupEpochStamps.hpp"
+
 namespace dish2 {
 
 template< typename Spec >
@@ -12,12 +14,14 @@ struct KinGroupAge : public uitsl::PodLeafNode< size_t, Spec::NLEV > {
   using parent_t = uitsl::PodLeafNode<size_t, Spec::NLEV>;
   using parent_t::parent_t;
 
-  void Bump() {
+  void Refresh(
+    const size_t epoch, const dish2::KinGroupEpochStamps< Spec > stamps
+  ) {
     std::transform(
+      std::begin( stamps.GetBuffer() ),
+      std::end( stamps.GetBuffer() ),
       std::begin( *this ),
-      std::end( *this ),
-      std::begin( *this ),
-      []( const auto counter ){ return counter + 1; }
+      [epoch]( const auto stamp ){ return epoch - stamp; }
     );
   }
 

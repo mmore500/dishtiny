@@ -6,13 +6,16 @@
 #include <set>
 
 #include "../cardinal_iterators/CpuWrapper.hpp"
+#include "../cardinal_iterators/EpochWrapper.hpp"
 #include "../cardinal_iterators/IsAliveWrapper.hpp"
 #include "../cardinal_iterators/KinGroupIDViewWrapper.hpp"
 
 namespace dish2 {
 
 template <class Spec>
-void Cell<Spec>::MakeAliveRoutine( const size_t update ) {
+void Cell<Spec>::MakeAliveRoutine() {
+
+  const size_t epoch = *begin<dish2::EpochWrapper<Spec>>();
 
   // check is alive consistency
   emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(
@@ -62,11 +65,11 @@ void Cell<Spec>::MakeAliveRoutine( const size_t update ) {
   std::for_each(
     begin<dish2::KinGroupAgeWrapper<Spec>>(),
     end<dish2::KinGroupAgeWrapper<Spec>>(),
-    [this, update]( auto& kin_group_age ){
+    [this, epoch]( auto& kin_group_age ){
       for( size_t lev{}; lev < kin_group_age.GetSize(); ++lev ) {
-        kin_group_age.Get( lev ) = update - std::min(
-          genome->kin_group_update_stamps.GetBuffer()[ lev ],
-          update
+        kin_group_age.Get( lev ) = epoch - std::min(
+          genome->kin_group_epoch_stamps.GetBuffer()[ lev ],
+          epoch
         );
       }
     }

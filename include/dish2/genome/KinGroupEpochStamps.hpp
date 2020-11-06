@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_GENOME_KINGROUPUPDATESTAMPS_HPP_INCLUDE
-#define DISH2_GENOME_KINGROUPUPDATESTAMPS_HPP_INCLUDE
+#ifndef DISH2_GENOME_KINGROUPEPOCHSTAMPS_HPP_INCLUDE
+#define DISH2_GENOME_KINGROUPEPOCHSTAMPS_HPP_INCLUDE
 
 #include <algorithm>
 #include <utility>
@@ -11,26 +11,24 @@
 
 namespace dish2 {
 
-// TODO FIXME multiproc multithread
-// add some sort of update sync between simulation components
 template<typename Spec>
-struct KinGroupUpdateStamps {
+struct KinGroupEpochStamps {
 
   using buffer_t =  emp::array< size_t, Spec::NLEV >;
   buffer_t data{};
 
-  KinGroupUpdateStamps() = default;
+  KinGroupEpochStamps() = default;
 
-  bool operator==(const KinGroupUpdateStamps& other) const {
+  bool operator==(const KinGroupEpochStamps& other) const {
     return data == other.data;
   }
 
-  void ApplyInheritance( const size_t rep_lev, const size_t update ) {
+  void ApplyInheritance( const size_t rep_lev, const size_t epoch ) {
     emp_assert( rep_lev <= Spec::NLEV );
     std::fill(
       std::begin( data ),
       std::next( std::begin( data ), rep_lev ),
-      update
+      epoch
     );
   }
 
@@ -43,4 +41,4 @@ struct KinGroupUpdateStamps {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_GENOME_KINGROUPUPDATESTAMPS_HPP_INCLUDE
+#endif // #ifndef DISH2_GENOME_KINGROUPEPOCHSTAMPS_HPP_INCLUDE

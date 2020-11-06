@@ -22,7 +22,7 @@ struct CpuExecutionService {
   }
 
   template<typename Cell>
-  static void DoService( Cell& cell, const size_t ) {
+  static void DoService( Cell& cell ) {
 
     using spec_t = typename Cell::spec_t;
     using sgpl_spec_t = typename spec_t::sgpl_spec_t;

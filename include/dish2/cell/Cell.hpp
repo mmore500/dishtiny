@@ -57,7 +57,7 @@ struct Cell {
   // out of class implementations
   void DeathRoutine();
   void HeirPayoutRoutine();
-  void MakeAliveRoutine(const size_t update=0);
+  void MakeAliveRoutine();
 
   Cell(
     const genome_node_t& genome_node,
@@ -155,7 +155,6 @@ struct Cell {
 
     // TODO put these in order
     using service_manager_t = dish2::ServiceManager<
-      dish2::EpochAdvanceService,
 
       dish2::BirthSetupService,
       dish2::CellAgeService,
@@ -174,6 +173,7 @@ struct Cell {
       dish2::StateInputJumpService,
       dish2::StateOutputPutService,
 
+      dish2::EpochAdvanceService,
       dish2::ResourceInputJumpService,
       dish2::ApoptosisService // must run last
     >;

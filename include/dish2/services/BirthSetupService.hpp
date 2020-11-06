@@ -25,7 +25,7 @@ struct BirthSetupService {
   }
 
   template<typename Cell>
-  static void DoService( Cell& cell, const size_t update ) {
+  static void DoService( Cell& cell ) {
     // TODO check quiescence period?
 
     using spec_t = typename Cell::spec_t;
@@ -48,14 +48,19 @@ struct BirthSetupService {
 
       cell.genome = cell.cardinals[cardinal_idx].genome_node_input.Get();
 
+      const size_t epoch = cell.cardinals[
+        cardinal_idx
+      ].peripheral.readable_state.template Get<
+        dish2::Epoch
+      >();
       const auto& replev_request = cell.cardinals[
         cardinal_idx
       ].peripheral.readable_state.template Get<
         dish2::RepLevRequest< spec_t >
       >();
-      cell.genome->ElapseGeneration( replev_request.GetRepLev(), update );
+      cell.genome->ElapseGeneration( replev_request.GetRepLev(), epoch );
 
-      cell.MakeAliveRoutine( update );
+      cell.MakeAliveRoutine();
     }
 
   }

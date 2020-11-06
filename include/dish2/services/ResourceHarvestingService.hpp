@@ -23,7 +23,7 @@ struct ResourceHarvestingService {
   }
 
   template<typename Cell>
-  static void DoService( Cell& cell, const size_t ) {
+  static void DoService( Cell& cell ) {
 
     using spec_t = typename Cell::spec_t;
 

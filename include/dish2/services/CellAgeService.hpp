@@ -9,6 +9,7 @@
 
 #include "../config/cfg.hpp"
 #include "../cell/cardinal_iterators/CellAgeWrapper.hpp"
+#include "../cell/cardinal_iterators/EpochWrapper.hpp"
 #include "../cell/cardinal_iterators/KinGroupAgeWrapper.hpp"
 
 namespace dish2 {
@@ -24,7 +25,7 @@ struct CellAgeService {
   }
 
   template<typename Cell>
-  static void DoService( Cell& cell, const size_t ) {
+  static void DoService( Cell& cell ) {
 
     using spec_t = typename Cell::spec_t;
 
@@ -51,10 +52,14 @@ struct CellAgeService {
       ).size() == 1
     ));
 
+    const auto& kin_group_epoch_stamps = cell.genome->kin_group_epoch_stamps;
+    const size_t epoch = *cell.template begin<dish2::EpochWrapper<Spec>>();
     std::for_each(
       cell.template begin<dish2::KinGroupAgeWrapper<Spec>>(),
       cell.template end<dish2::KinGroupAgeWrapper<Spec>>(),
-      []( auto& kin_group_age ){ kin_group_age.Bump(); }
+      [&kin_group_epoch_stamps, epoch]( auto& kin_group_age ){
+        kin_group_age.Refresh( epoch, kin_group_epoch_stamps );
+      }
     );
 
   }
