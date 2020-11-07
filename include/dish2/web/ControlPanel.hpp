@@ -57,6 +57,9 @@ class ControlPanel {
       },
       "Start",
       "run-button"
+    ).SetAttr(
+      "class", "btn btn-primary btn-block btn-lg",
+      "aria-pressed", "false"
     );
   }
 

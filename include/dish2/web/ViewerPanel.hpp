@@ -5,21 +5,21 @@
 #include <type_traits>
 #include <utility>
 
+#include "../../../third-party/Empirical/source/base/optional.h"
 #include "../../../third-party/Empirical/source/web/Document.h"
 #include "../../../third-party/Empirical/source/web/DocuExtras.h"
 #include "../../../third-party/Empirical/source/web/js_utils.h"
-#include "../../../third-party/conduit/include/uitsl/meta/TupleConstructEach.hpp"
 
 #include "../world/ThreadWorld.hpp"
 #include "../spec/Spec.hpp"
 
+#include "DocumentHandles.hpp"
 #include "ViewerCollection.hpp"
 
 namespace dish2 {
 
 class ViewerPanel {
 
-  emp::web::Document grid_viewer{ "grid_viewer" };
   emp::web::DocuExtras view_selector{ "view_selector" };
 
   dish2::ViewerCollection viewer_collection;
@@ -29,13 +29,11 @@ public:
   // adapted from https://stackoverflow.com/a/22561209
   template <typename... TupElem>
   ViewerPanel(dish2::ThreadWorld<dish2::Spec>& thread_world)
-  : viewer_collection( uitsl::TupleConstructEach<dish2::ViewerCollection>::Make(
-    thread_world, grid_viewer
-  ) )
-  {
+  : viewer_collection( thread_world ) {
 
-    grid_viewer.SetAttr("class", "mx-auto card-deck");
-    grid_viewer.SetCSS(
+    dish2::document_handles.at("grid_viewer")->SetAttr(
+      "class", "mx-auto card-deck"
+    ).SetCSS(
       "min-height",
       emp::to_string(
         std::min(emp::GetViewPortSize() - 100, 500),
@@ -51,34 +49,9 @@ public:
       "data-toggle", "buttons"
     );
 
-    // adapted from https://stackoverflow.com/a/16387374
-    // std::apply(
-    //   [](auto& ...x){ std::make_tuple(
-    //     x = std::decay_t<decltype(x)>()...
-    //   ); },
-    //   viewer_collection
-    // );
-
-
-    // for (auto & [category, series] : artists) {
-    //   for (auto & artist : series) artist->Deactivate();
-    // }
-    // std::find_if(
-    //   std::begin(artists),
-    //   std::end(artists),
-    //   [](const auto &v){ return v.second[0]->GetName() == "Channel"; }
-    // )->second[0]->Activate();
   }
 
-  void Redraw() {
-
-    // adapted from https://stackoverflow.com/a/45498003
-    std::apply(
-      [](auto& ...x){ ( ..., x.Redraw() ); },
-      viewer_collection
-    );
-
-  }
+  void Redraw() { viewer_collection.Redraw(); }
 
 
 
