@@ -17,6 +17,8 @@ class LearnedQuorumBitsGetter {
 
   std::reference_wrapper<const dish2::ThreadWorld<Spec>> thread_world;
 
+  size_t lev;
+
 public:
 
   using value_type = size_t;
@@ -24,9 +26,11 @@ public:
   template< typename... Args >
   LearnedQuorumBitsGetter(
     const dish2::ThreadWorld<Spec>& thread_world_,
+    const size_t idx,
     Args&&...
   )
   : thread_world(thread_world_)
+  , lev( idx )
   {}
 
   const value_type Get(

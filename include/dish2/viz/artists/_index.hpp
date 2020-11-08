@@ -10,6 +10,7 @@
 #include "IsAliveArtist.hpp"
 #include "KinGroupAgeArtist.hpp"
 #include "KinGroupIDArtist.hpp"
+#include "KinGroupIDLevArtist.hpp"
 #include "KinGroupIDViewArtist.hpp"
 #include "KinMatchArtist.hpp"
 #include "LearnedQuorumBitsArtist.hpp"
