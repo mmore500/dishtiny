@@ -19,5 +19,6 @@
 #include "QuorumBitsArtist.hpp"
 #include "ResourceInputPeekArtist.hpp"
 #include "ResourceStockpileArtist.hpp"
+#include "TaxaArtist.hpp"
 
 #endif // #ifndef DISH2_VIZ_ARTISTS__INDEX_HPP_INCLUDE
