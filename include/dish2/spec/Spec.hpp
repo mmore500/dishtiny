@@ -12,6 +12,7 @@
 #include "../operations/OpLibrary.hpp"
 #include "../peripheral/Peripheral.hpp"
 
+#include "_NLEV.hpp"
 #include "GenomeMeshSpec.hpp"
 #include "IntraMessageMeshSpec.hpp"
 #include "MessageMeshSpec.hpp"
@@ -23,7 +24,7 @@ namespace dish2 {
 
 struct Spec {
 
-  constexpr inline static size_t NLEV{ 1 };
+  constexpr inline static size_t NLEV{ dish2::internal::NLEV };
 
   // todo implement
   constexpr inline static size_t AMT_NOP_MEMORY = 4;

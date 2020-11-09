@@ -5,9 +5,18 @@
 #include <limits>
 #include <string>
 
+#include "../../../third-party/Empirical/source/base/array.h"
 #include "../../../third-party/Empirical/source/config/config.h"
 
+#include "../spec/_NLEV.hpp"
+
 namespace dish2 {
+
+namespace internal {
+
+using nlev_float_t = emp::array<float, dish2::internal::NLEV>;
+
+} // namespace internal
 
 EMP_BUILD_CONFIG(
   ConfigBase,
@@ -44,6 +53,9 @@ EMP_BUILD_CONFIG(
     "How much resource should a cell start with?"
   ),
   VALUE(HARVEST_RATE, float, 0.05,
+    "How much resource should cells accrue per update?"
+  ),
+  VALUE(EXAMPLE, internal::nlev_float_t, (internal::nlev_float_t{0.05, 0.05}),
     "How much resource should cells accrue per update?"
   ),
   VALUE(RESOURCE_DECAY, float, 0.995,
