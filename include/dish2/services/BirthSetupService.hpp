@@ -41,21 +41,22 @@ struct BirthSetupService {
 
     if ( fresh_input_idxs.size() ) {
 
-      cell.DeathRoutine();
       const size_t cardinal_idx = fresh_input_idxs[
         sgpl::ThreadLocalRandom::Get().GetUInt( fresh_input_idxs.size() )
       ];
-
-      cell.genome = cell.cardinals[cardinal_idx].genome_node_input.Get();
-
       const size_t epoch = cell.cardinals[
         cardinal_idx
       ].peripheral.readable_state.template Get<
         dish2::Epoch
       >();
+
+      cell.DeathRoutine();
+
+      cell.genome = cell.cardinals[cardinal_idx].genome_node_input.Get();
+
       const auto& replev_request = cell.cardinals[
         cardinal_idx
-      ].peripheral.readable_state.template Get<
+      ].peripheral.state_node_input.Get().template Get<
         dish2::RepLevRequest< spec_t >
       >();
       cell.genome->ElapseGeneration( replev_request.GetRepLev(), epoch );
