@@ -42,7 +42,21 @@ EMP_BUILD_CONFIG(
 
   GROUP(DEMOGRAPHICS, "DEMOGRAPHICS"),
   VALUE(N_CELLS, size_t, 10000, "How many cells should be simulated?"),
-  VALUE(N_DIMS, size_t, 2, "What dimensionality should the toroidal mesh have?"),
+  VALUE(N_DIMS, size_t, 2,
+    "What dimensionality should the toroidal mesh have?"),
+  VALUE(
+    GROUP_EXPIRATION_DURATIONS,
+    internal::nlev_size_t_t,
+    (internal::nlev_size_t_t{ std::kilo::num, 10 * std::kilo::num }),
+    "After how many epochs should groups stop collecting resource?"
+  ),
+  VALUE(
+    CELL_AGE_DURATION,
+    size_t,
+    std::kilo::num,
+    "After how many epochs should cells die?"
+  ),
+
   // VALUE(AGE_LIMIT_MULTIPLIER, float, 1.0, "What ratio of EVENT_RADIUS should the limit on cell age be?"),
   // VALUE(CHANNELS_VISIBLE, bool, true, "Should channels have any effect in the instruction set and event triggers?"),
   // VALUE(GEN_INCR_FREQ, size_t, 512, "How often should we increase cell generation counters?"),
@@ -84,8 +98,8 @@ EMP_BUILD_CONFIG(
     (internal::nlev_size_t_t{12, 36}),
     "At what quorum size should cell death be triggered?"
   ),
-  VALUE(P_QUORUM_KILL, internal::nlev_float_t,
-    (internal::nlev_float_t{0.9, 0.95}),
+  VALUE(P_QUORUM_CAP_KILL, internal::nlev_float_t,
+    (internal::nlev_float_t{0.2, 0.2}),
     "With what probability should quorum death be enforced?"
   ),
 
@@ -153,6 +167,9 @@ EMP_BUILD_CONFIG(
     "Run service every ?? updates."
   ),
   VALUE(STATE_OUTPUT_PUT_SERVICE_FREQUENCY, size_t, 8,
+    "Run service every ?? updates."
+  ),
+  VALUE(QUORUM_CAP_SERVICE_FREQUENCY, size_t, 16,
     "Run service every ?? updates."
   ),
   VALUE(QUORUM_SERVICE_FREQUENCY, size_t, 1,

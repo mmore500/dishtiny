@@ -165,6 +165,7 @@ struct Cell {
       dish2::InterMessageCounterClearService,
       dish2::InterMessageLaunchingService,
       dish2::IntraMessageLaunchingService,
+      dish2::QuorumCapService,
       dish2::QuorumService,
       dish2::ResourceDecayService,
       dish2::ResourceHarvestingService,
@@ -176,6 +177,7 @@ struct Cell {
 
       dish2::EpochAdvanceService,
       dish2::ResourceInputJumpService,
+      dish2::CellDeathService, // must run last
       dish2::ApoptosisService // must run last
     >;
 

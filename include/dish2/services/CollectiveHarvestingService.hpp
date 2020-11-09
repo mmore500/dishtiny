@@ -8,6 +8,7 @@
 
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
+#include "../cell/cardinal_iterators/KinGroupAgeWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../config/cfg.hpp"
 
@@ -18,14 +19,25 @@ class CollectiveHarvestingService {
   template<typename Cell>
   static float CalcHarvest( const Cell& cell, const size_t lev ) {
 
+    using spec_t = typename Cell::spec_t;
+
+    const size_t group_age
+      = cell.template begin<dish2::KinGroupAgeWrapper<spec_t>>()->GetBuffer(
+      )[ lev ];
+
+    const bool is_group_expired
+      = group_age > cfg.GROUP_EXPIRATION_DURATIONS()[ lev ];
+
+    if ( is_group_expired ) return 0.0f;
+
     const size_t optimum = cfg.OPTIMAL_QUORUM_COUNT()[lev];
     const size_t quorum_count = cell.cell_quorum_state.GetNumKnownQuorumBits(
       lev
     );
     const size_t distance_from_optimum
       = std::max(optimum, quorum_count) - std::min(optimum, quorum_count);
-    const float resource_penalty_rate =
-      1.0f / cfg.OPTIMAL_QUORUM_COUNT()[lev];
+    const float resource_penalty_rate
+      = 1.0f / cfg.OPTIMAL_QUORUM_COUNT()[lev];
     const float resource_penalty
       = distance_from_optimum * resource_penalty_rate;
     return std::max(
