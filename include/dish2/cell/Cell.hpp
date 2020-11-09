@@ -158,6 +158,7 @@ struct Cell {
 
       dish2::BirthSetupService,
       dish2::CellAgeService,
+      dish2::CollectiveHarvestingService,
       dish2::ConduitFlushService,
       dish2::CpuExecutionService,
       dish2::EventLaunchingService,

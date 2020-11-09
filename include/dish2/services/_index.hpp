@@ -5,6 +5,7 @@
 #include "ApoptosisService.hpp"
 #include "BirthSetupService.hpp"
 #include "CellAgeService.hpp"
+#include "CollectiveHarvestingService.hpp"
 #include "ConduitFlushService.hpp"
 #include "CpuExecutionService.hpp"
 #include "EpochAdvanceService.hpp"

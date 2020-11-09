@@ -1,7 +1,8 @@
 #pragma once
-#ifndef DISH2_SERVICES_RESOURCEHARVESTINGSERVICE_HPP_INCLUDE
-#define DISH2_SERVICES_RESOURCEHARVESTINGSERVICE_HPP_INCLUDE
+#ifndef DISH2_SERVICES_COLLECTIVEHARVESTINGSERVICE_HPP_INCLUDE
+#define DISH2_SERVICES_COLLECTIVEHARVESTINGSERVICE_HPP_INCLUDE
 
+#include <algorithm>
 #include <set>
 #include <utility>
 
@@ -12,10 +13,31 @@
 
 namespace dish2 {
 
-struct ResourceHarvestingService {
+class CollectiveHarvestingService {
+
+  template<typename Cell>
+  static float CalcHarvest( const Cell& cell, const size_t lev ) {
+
+    const size_t optimum = cfg.OPTIMAL_QUORUM_COUNT()[lev];
+    const size_t quorum_count = cell.cell_quorum_state.GetNumKnownQuorumBits(
+      lev
+    );
+    const size_t distance_from_optimum
+      = std::max(optimum, quorum_count) - std::min(optimum, quorum_count);
+    const float resource_penalty_rate =
+      1.0f / cfg.OPTIMAL_QUORUM_COUNT()[lev];
+    const float resource_penalty
+      = distance_from_optimum * resource_penalty_rate;
+    return std::max(
+      cfg.COLLECTIVE_HARVEST_RATE()[lev] - resource_penalty,
+      0.0f
+    );
+  }
+
+public:
 
   static bool ShouldRun( const size_t update, const bool alive ) {
-    const size_t freq = dish2::cfg.RESOURCE_HARVESTING_SERVICE_FREQUENCY();
+    const size_t freq = dish2::cfg.COLLECTIVE_HARVESTING_SERVICE_FREQUENCY();
     return
       alive
       && freq > 0
@@ -35,8 +57,11 @@ struct ResourceHarvestingService {
       ).size() == 1
     ));
 
-    // how much resource have we harvested
-    const float harvest = dish2::cfg.BASE_HARVEST_RATE();
+    // how much resource have we harvested?
+    float harvest{};
+    for (size_t lev{}; lev < Spec::NLEV; ++lev) {
+      harvest += CalcHarvest<Cell>( cell, lev );
+    }
 
     // update stockpiles to reflect harvested amount
     std::transform(
@@ -60,4 +85,4 @@ struct ResourceHarvestingService {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_SERVICES_RESOURCEHARVESTINGSERVICE_HPP_INCLUDE
+#endif // #ifndef DISH2_SERVICES_COLLECTIVEHARVESTINGSERVICE_HPP_INCLUDE

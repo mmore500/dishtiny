@@ -24,9 +24,9 @@ public:
 
   QuorumMessage(std::in_place_t) {
     auto& rand = sgpl::ThreadLocalRandom::Get();
-    for ( auto& bs : data ) {
-      if ( rand.P( dish2::cfg.P_SET_QUORUM_BIT() ) ) {
-        bs.Set( rand.GetUInt( bs.GetSize() ) );
+    for ( size_t lev; lev < Spec::NLEV; ++lev ) {
+      if ( rand.P( dish2::cfg.P_SET_QUORUM_BIT()[lev] ) ) {
+        data[lev].Set( rand.GetUInt( data[lev].GetSize() ) );
       }
     }
   }

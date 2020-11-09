@@ -15,6 +15,7 @@ namespace dish2 {
 namespace internal {
 
 using nlev_float_t = emp::array<float, dish2::internal::NLEV>;
+using nlev_size_t_t = emp::array<size_t, dish2::internal::NLEV>;
 
 } // namespace internal
 
@@ -52,12 +53,6 @@ EMP_BUILD_CONFIG(
   VALUE(START_RESOURCE, float, 0.8,
     "How much resource should a cell start with?"
   ),
-  VALUE(HARVEST_RATE, float, 0.05,
-    "How much resource should cells accrue per update?"
-  ),
-  VALUE(EXAMPLE, internal::nlev_float_t, (internal::nlev_float_t{0.05, 0.05}),
-    "How much resource should cells accrue per update?"
-  ),
   VALUE(RESOURCE_DECAY, float, 0.995,
     "How much resource should remain each update?"
   ),
@@ -65,11 +60,34 @@ EMP_BUILD_CONFIG(
     "What fraction of REP_THRESH is recovered to heirs after apoptosis?"
   ),
 
+  GROUP(HARVEST, "HARVEST"),
+  VALUE(BASE_HARVEST_RATE, float, 0.02,
+    "How much resource should cells accrue per update?"
+  ),
+  VALUE(COLLECTIVE_HARVEST_RATE, internal::nlev_float_t,
+    (internal::nlev_float_t{0.25, 0.25}),
+    "How much resource should cells accrue per update?"
+  ),
+  VALUE(OPTIMAL_QUORUM_COUNT, internal::nlev_size_t_t,
+    (internal::nlev_size_t_t{6, 24}),
+    "What group size does collective harvest work most effectively at?"
+  ),
+
   GROUP(QUORUM, "QUORUM"),
-  VALUE(P_SET_QUORUM_BIT, float, 1.0,
+  VALUE(P_SET_QUORUM_BIT, internal::nlev_float_t,
+    (internal::nlev_float_t{1.0, 1.0}),
     "What fraction of cells should have a quorum bit set?"
   ),
 
+  GROUP(QUORUM_CAPS, "QUORUM_CAPS"),
+  VALUE(QUORUM_CAP, internal::nlev_size_t_t,
+    (internal::nlev_size_t_t{12, 36}),
+    "At what quorum size should cell death be triggered?"
+  ),
+  VALUE(P_QUORUM_KILL, internal::nlev_float_t,
+    (internal::nlev_float_t{0.9, 0.95}),
+    "With what probability should quorum death be enforced?"
+  ),
 
   GROUP(GENOME, "GENOME"),
   VALUE(PROGRAM_START_SIZE, size_t, 100, "How big should initial programs be?"),
@@ -111,6 +129,9 @@ EMP_BUILD_CONFIG(
     "Run service every ?? updates."
   ),
   VALUE(CONDUIT_FLUSH_SERVICE_FREQUENCY, size_t, 16,
+    "Run service every ?? updates."
+  ),
+  VALUE(COLLECTIVE_HARVESTING_SERVICE_FREQUENCY, size_t, 16,
     "Run service every ?? updates."
   ),
   VALUE(CPU_EXECUTION_SERVICE_FREQUENCY, size_t, 1,
