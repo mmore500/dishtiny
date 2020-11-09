@@ -16,6 +16,8 @@ struct EventSeries {
     return Event::template Test<Cardinal, SeriesIdx>( cardinal );
   }
 
+  constexpr static size_t GetNumEvents() { return SeriesSize; }
+
 };
 
 } // namespace dish2

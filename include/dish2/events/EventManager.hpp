@@ -36,7 +36,11 @@ struct EventManager<FirstEventSeries, SubsequentEventSeries...> {
       using next_in_series_t = dish2::EventSeries<
         typename FirstEventSeries::event_t, series_idx - 1
       >;
-      next_in_series_t::template Dispatch<
+      using next_event_manager = dish2::EventManager<
+        next_in_series_t,
+        SubsequentEventSeries...
+      >;
+      next_event_manager::template Dispatch<
         Cardinal, EventTags, EventIdx + 1
       >(
         cardinal, event_tags
