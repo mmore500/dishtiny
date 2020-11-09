@@ -14,15 +14,37 @@
 namespace dish2 {
 
 template<typename Spec>
-class KinGroupAgeGetter
-: public dish2::CardinalIteratorAdapter<Spec, dish2::KinGroupAgeWrapper> {
+class KinGroupAgeGetter {
 
-  using parent_t
-    = dish2::CardinalIteratorAdapter<Spec, dish2::KinGroupAgeWrapper>;
+  dish2::CardinalIteratorAdapter<Spec, dish2::KinGroupAgeWrapper> getter;
+
+  size_t lev;
 
 public:
-  // inherit constructors
-  using parent_t::parent_t;
+
+  using value_type = size_t;
+
+  template< typename... Args >
+  KinGroupAgeGetter(
+    const dish2::ThreadWorld<Spec>& thread_world,
+    const size_t idx,
+    Args&&...
+  )
+  : getter(thread_world)
+  , lev( idx )
+  {}
+
+  const value_type Get(
+    const size_t cell_idx, const size_t cardinal_idx=0
+  ) const {
+    return getter.Get( cell_idx, cardinal_idx ).GetBuffer()[ lev ];
+  }
+
+  size_t GetNumCells() const { return getter.GetNumCells(); }
+
+  size_t GetNumCardinals( const size_t cell_idx=0 ) const {
+    return getter.GetNumCardinals();
+  }
 
 };
 
