@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_SERVICES_INTERMESSAGECOUNTERCLEARSERVICE_HPP_INCLUDE
-#define DISH2_SERVICES_INTERMESSAGECOUNTERCLEARSERVICE_HPP_INCLUDE
+#ifndef DISH2_SERVICES_MESSAGECOUNTERCLEARSERVICE_HPP_INCLUDE
+#define DISH2_SERVICES_MESSAGECOUNTERCLEARSERVICE_HPP_INCLUDE
 
 #include <algorithm>
 
@@ -8,11 +8,12 @@
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
 #include "../cell/cardinal_iterators/IncomingInterMessageCounterWrapper.hpp"
+#include "../cell/cardinal_iterators/IncomingIntraMessageCounterWrapper.hpp"
 #include "../config/cfg.hpp"
 
 namespace dish2 {
 
-struct InterMessageCounterClearService {
+struct MessageCounterClearService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {
     const size_t freq
@@ -34,10 +35,16 @@ struct InterMessageCounterClearService {
       0
     );
 
+    std::fill(
+      cell.template begin<dish2::IncomingIntraMessageCounterWrapper<spec_t> >(),
+      cell.template end< dish2::IncomingIntraMessageCounterWrapper<spec_t> >(),
+      0
+    );
+
   }
 
 };
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_SERVICES_INTERMESSAGECOUNTERCLEARSERVICE_HPP_INCLUDE
+#endif // #ifndef DISH2_SERVICES_MESSAGECOUNTERCLEARSERVICE_HPP_INCLUDE

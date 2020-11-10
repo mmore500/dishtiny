@@ -21,6 +21,9 @@ using ViewerCollection = dish2::ViewerManager<
   dish2::GridViewer<
     dish2::IncomingInterMessageCounterArtist<>, dish2::MessagingCategory
   >,
+  dish2::GridViewer<
+    dish2::IncomingIntraMessageCounterArtist<>, dish2::MessagingCategory
+  >,
   dish2::GridViewer<dish2::IsAliveArtist<>, dish2::DemographicsCategory>,
   dish2::SeriesViewer<
     dish2::KinGroupAgeArtist<>, dish2::DemographicsCategory, Spec::NLEV

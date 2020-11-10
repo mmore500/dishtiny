@@ -7,6 +7,7 @@
 #include "CellAge.hpp"
 #include "Epoch.hpp"
 #include "IncomingInterMessageCounter.hpp"
+#include "IncomingIntraMessageCounter.hpp"
 #include "IsAlive.hpp"
 #include "KinGroupAge.hpp"
 #include "KinGroupIDView.hpp"
@@ -20,6 +21,7 @@ struct IntrospectiveState
   dish2::CellAge,
   dish2::Epoch,
   dish2::IncomingInterMessageCounter,
+  dish2::IncomingIntraMessageCounter,
   dish2::IsAlive,
   dish2::KinGroupAge<Spec>,
   dish2::KinGroupIDView<Spec>,

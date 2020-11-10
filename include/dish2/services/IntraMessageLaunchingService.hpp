@@ -8,6 +8,7 @@
 #include "../../../third-party/Empirical/source/base/vector.h"
 
 #include "../cell/cardinal_iterators/CpuWrapper.hpp"
+#include "../cell/cardinal_iterators/IncomingIntraMessageCounterWrapper.hpp"
 #include "../cell/cardinal_iterators/IntraMessageNodeWrapper.hpp"
 #include "../config/cfg.hpp"
 
@@ -33,16 +34,19 @@ struct IntraMessageLaunchingService {
       cell.template begin< dish2::IntraMessageNodeWrapper<spec_t> >(),
       cell.template end< dish2::IntraMessageNodeWrapper<spec_t> >(),
       cell.template begin< dish2::CpuWrapper<spec_t> >(),
-      []( auto& im_node, auto& cpu ){
+      cell.template begin<dish2::IncomingIntraMessageCounterWrapper<spec_t> >(),
+      []( auto& im_node, auto& cpu, auto& counter ){
         thread_local emp::vector< tag_t > deduplicator;
         deduplicator.clear();
 
         // keep doing while any input succeeds at spawning a message
         while( std::count_if(
           std::begin( im_node.GetInputs() ), std::end( im_node.GetInputs() ),
-          [&cpu]( auto& input ){
+          [&cpu, &counter]( auto& input ){
 
             if ( input.TryStep() == 0 ) return false;
+
+            ++counter;
 
             const auto& [tag, data] = input.Get();
 
@@ -55,6 +59,7 @@ struct IntraMessageLaunchingService {
 
             const bool res = cpu.TryLaunchCore( tag );
             if ( res ) cpu.GetFreshestCore().SetRegisters( data );
+            else counter += input.Jump();
             return res;
 
           }
