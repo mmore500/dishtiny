@@ -54,6 +54,12 @@ using ViewerCollection = dish2::ViewerManager<
     dish2::ResourceStockpileArtist<>, dish2::SharingCategory
   >,
   dish2::GridViewer<
+    dish2::SpawnArrestArtist<>, dish2::SharingCategory
+  >,
+  dish2::GridViewer<
+    dish2::SpawnRequestArtist<>, dish2::SharingCategory
+  >,
+  dish2::GridViewer<
     dish2::TaxaArtist<>, dish2::SharingCategory
   >
 >;
