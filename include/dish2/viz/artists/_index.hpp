@@ -16,6 +16,7 @@
 #include "KinMatchArtist.hpp"
 #include "LearnedQuorumBitsArtist.hpp"
 #include "NeighborKinGroupIDViewArtist.hpp"
+#include "NumBusyCoresArtist.hpp"
 #include "PhylogeneticRootArtist.hpp"
 #include "QuorumBitsArtist.hpp"
 #include "ResourceInputPeekArtist.hpp"
