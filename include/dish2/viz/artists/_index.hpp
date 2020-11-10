@@ -17,6 +17,7 @@
 #include "LearnedQuorumBitsArtist.hpp"
 #include "NeighborKinGroupIDViewArtist.hpp"
 #include "NumBusyCoresArtist.hpp"
+#include "NumCoresOnModuleArtist.hpp"
 #include "NumModulesArtist.hpp"
 #include "PhylogeneticRootArtist.hpp"
 #include "QuorumBitsArtist.hpp"
