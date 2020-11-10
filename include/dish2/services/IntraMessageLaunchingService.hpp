@@ -5,6 +5,7 @@
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/WarnOnce.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/Empirical/source/base/vector.h"
 
 #include "../cell/cardinal_iterators/CpuWrapper.hpp"
 #include "../cell/cardinal_iterators/IntraMessageNodeWrapper.hpp"
@@ -26,23 +27,37 @@ struct IntraMessageLaunchingService {
   static void DoService( Cell& cell ) {
 
     using spec_t = typename Cell::spec_t;
+    using tag_t = typename spec_t::tag_t;
 
     uitsl::for_each(
       cell.template begin< dish2::IntraMessageNodeWrapper<spec_t> >(),
       cell.template end< dish2::IntraMessageNodeWrapper<spec_t> >(),
       cell.template begin< dish2::CpuWrapper<spec_t> >(),
-      []( auto& im_node, auto& cpu ){ while( std::count_if(
-        std::begin( im_node.GetInputs() ),
-        std::end( im_node.GetInputs() ),
-        [&cpu]( auto& input ){
-          if ( input.TryStep() ) {
-            const bool res = cpu.TryLaunchCore( std::get<0>( input.Get() ) );
-            if ( res ) cpu.GetFreshestCore().SetRegisters(
-              std::get<1>( input.Get() )
-            );
+      []( auto& im_node, auto& cpu ){
+        thread_local emp::vector< tag_t > deduplicator;
+        deduplicator.clear();
+
+        // keep doing while any input succeeds at spawning a message
+        while( std::count_if(
+          std::begin( im_node.GetInputs() ), std::end( im_node.GetInputs() ),
+          [&cpu]( auto& input ){
+
+            if ( input.TryStep() == 0 ) return false;
+
+            const auto& [tag, data] = input.Get();
+
+            // don't spawn more than one core for each tag to prevent
+            // out of control execution triggering with all cardinals bcsting
+            if ( std::find(
+              std::begin( deduplicator ), std::end( deduplicator ), tag
+            ) != std::end( deduplicator ) ) return true;
+            else deduplicator.push_back( tag );
+
+            const bool res = cpu.TryLaunchCore( tag );
+            if ( res ) cpu.GetFreshestCore().SetRegisters( data );
             return res;
-          } else return false;
-        }
+
+          }
       ) ); }
     );
 

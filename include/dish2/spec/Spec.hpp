@@ -45,6 +45,8 @@ struct Spec {
 
   constexpr inline static size_t NUM_EVENTS = event_manager_t::GetNumEvents();
 
+  using tag_t = typename sgpl_spec_t::tag_t;
+
   using message_t = std::tuple<
     typename sgpl_spec_t::tag_t,
     typename sgpl::Core< sgpl_spec_t >::registers_t
