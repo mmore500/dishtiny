@@ -29,7 +29,7 @@ public:
   : thread_world(thread_world_)
   {}
 
-  const value_type Get(
+  const value_type& Get(
     const size_t cell_idx, const size_t cardinal_idx=0
   ) const {
     if ( thread_world.get().GetCell( cell_idx ).genome.has_value() ) {

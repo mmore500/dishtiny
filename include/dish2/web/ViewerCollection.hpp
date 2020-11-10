@@ -48,6 +48,9 @@ using ViewerCollection = dish2::ViewerManager<
     dish2::NumBusyCoresArtist<>, dish2::GroupStructureCategory
   >,
   dish2::GridViewer<
+    dish2::NumModulesArtist<>, dish2::GroupStructureCategory
+  >,
+  dish2::GridViewer<
     dish2::PhylogeneticRootArtist<>, dish2::DemographicsCategory
   >,
   dish2::SeriesViewer<
