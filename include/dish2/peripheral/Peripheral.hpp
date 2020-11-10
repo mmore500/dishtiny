@@ -20,12 +20,12 @@ struct Peripheral {
 
   dish2::ReadableState<Spec> readable_state{};
 
-  using intra_message_mesh_spec_t = dish2::IntraMessageMeshSpec;
+  using intra_message_mesh_spec_t = dish2::IntraMessageMeshSpec< Spec >;
   using intra_message_node_outputs_t
-    = netuit::MeshNode<intra_message_mesh_spec_t>::outputs_t;
+    = typename netuit::MeshNode<intra_message_mesh_spec_t>::outputs_t;
   intra_message_node_outputs_t intra_message_node_outputs;
 
-  using message_mesh_spec_t = dish2::MessageMeshSpec;
+  using message_mesh_spec_t = dish2::MessageMeshSpec< Spec >;
   using message_node_output_t = netuit::MeshNodeOutput<message_mesh_spec_t>;
   message_node_output_t message_node_output;
 

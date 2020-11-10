@@ -2,9 +2,12 @@
 #ifndef DISH2_SPEC_SPEC_HPP_INCLUDE
 #define DISH2_SPEC_SPEC_HPP_INCLUDE
 
+#include <tuple>
+
 #include "../../../third-party/conduit/include/netuit/arrange/ToroidalTopologyFactory.hpp"
 #include "../../../third-party/conduit/include/netuit/arrange/CompleteTopologyFactory.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/config/Spec.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/hardware/Core.hpp"
 
 #include "../events/_index.hpp"
 #include "../events/EventManager.hpp"
@@ -42,9 +45,14 @@ struct Spec {
 
   constexpr inline static size_t NUM_EVENTS = event_manager_t::GetNumEvents();
 
+  using message_t = std::tuple<
+    typename sgpl_spec_t::tag_t,
+    typename sgpl::Core< sgpl_spec_t >::registers_t
+  >;
+
   using genome_mesh_spec_t = dish2::GenomeMeshSpec<dish2::Spec>;
-  using intra_message_mesh_spec_t = dish2::IntraMessageMeshSpec;
-  using message_mesh_spec_t = dish2::MessageMeshSpec;
+  using intra_message_mesh_spec_t = dish2::IntraMessageMeshSpec< dish2::Spec >;
+  using message_mesh_spec_t = dish2::MessageMeshSpec< dish2::Spec >;
   using quorum_mesh_spec_t = dish2::QuorumMeshSpec<dish2::Spec>;
   using resource_mesh_spec_t = dish2::ResourceMeshSpec;
   using state_mesh_spec_t = dish2::StateMeshSpec<dish2::Spec>;

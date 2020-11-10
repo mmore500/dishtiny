@@ -18,8 +18,9 @@ namespace internal_intra_message_spec {
     uit::EmpAssertDuct
   >;
 
+  template< typename Spec >
   using ImplSpec = uit::ImplSpec<
-    emp::BitSet<32>, // FIXME
+    typename Spec::message_t,
     ImplSel,
     uit::DefaultSpoutWrapper,
     4, // N
@@ -28,7 +29,8 @@ namespace internal_intra_message_spec {
 
 } // namespace internal_intra_message_spec
 
-using IntraMessageMeshSpec = internal_intra_message_spec::ImplSpec;
+template< typename Spec >
+using IntraMessageMeshSpec = internal_intra_message_spec::ImplSpec< Spec >;
 
 } // namespace dish2
 

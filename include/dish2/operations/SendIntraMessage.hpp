@@ -2,6 +2,8 @@
 #ifndef DISH2_OPERATIONS_SENDINTRAMESSAGE_HPP_INCLUDE
 #define DISH2_OPERATIONS_SENDINTRAMESSAGE_HPP_INCLUDE
 
+#include <tuple>
+
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Instruction.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
@@ -27,7 +29,9 @@ struct SendIntraMessage {
       0
     ) % num_addrs;
 
-    outputs[ addr ].TryPut( inst.tag );
+    outputs[ addr ].TryPut( std::make_tuple(
+      inst.tag, core.GetRegisters()
+    ) );
 
   }
 

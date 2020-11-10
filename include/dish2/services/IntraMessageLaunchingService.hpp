@@ -35,8 +35,13 @@ struct IntraMessageLaunchingService {
         std::begin( im_node.GetInputs() ),
         std::end( im_node.GetInputs() ),
         [&cpu]( auto& input ){
-          if ( input.TryStep() ) return cpu.TryLaunchCore( input.Get() );
-          else return false;
+          if ( input.TryStep() ) {
+            const bool res = cpu.TryLaunchCore( std::get<0>( input.Get() ) );
+            if ( res ) cpu.GetFreshestCore().SetRegisters(
+              std::get<1>( input.Get() )
+            );
+            return res;
+          } else return false;
         }
       ) ); }
     );

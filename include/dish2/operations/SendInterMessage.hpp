@@ -2,6 +2,8 @@
 #ifndef DISH2_OPERATIONS_SENDINTERMESSAGE_HPP_INCLUDE
 #define DISH2_OPERATIONS_SENDINTERMESSAGE_HPP_INCLUDE
 
+#include <tuple>
+
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Instruction.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
@@ -18,7 +20,9 @@ struct SendInterMessage {
     typename Spec::peripheral_t& peripheral
   ) {
 
-    peripheral.message_node_output.TryPut( inst.tag );
+    peripheral.message_node_output.TryPut( std::make_tuple(
+      inst.tag, core.GetRegisters()
+    ) );
 
   }
 

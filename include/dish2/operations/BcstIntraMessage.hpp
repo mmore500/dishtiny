@@ -2,6 +2,8 @@
 #ifndef DISH2_OPERATIONS_BCSTINTRAMESSAGE_HPP_INCLUDE
 #define DISH2_OPERATIONS_BCSTINTRAMESSAGE_HPP_INCLUDE
 
+#include <tuple>
+
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Instruction.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
@@ -19,7 +21,9 @@ struct BcstIntraMessage {
   ) {
 
     for ( auto& out : peripheral.intra_message_node_outputs ) {
-      out.TryPut( inst.tag );
+      out.TryPut( std::make_tuple(
+        inst.tag, core.GetRegisters()
+      ) );
     }
 
   }

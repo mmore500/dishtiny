@@ -28,8 +28,9 @@ namespace internal_message_spec {
     #endif
   >;
 
+  template< typename Spec >
   using ImplSpec = uit::ImplSpec<
-    emp::BitSet<32>, // FIXME
+    typename Spec::message_t,
     ImplSel,
     uit::DefaultSpoutWrapper,
     2, // N
@@ -38,7 +39,8 @@ namespace internal_message_spec {
 
 } // namespace internal_message_spec
 
-using MessageMeshSpec = internal_message_spec::ImplSpec;
+template< typename Spec >
+using MessageMeshSpec = internal_message_spec::ImplSpec< Spec >;
 
 } // namespace dish2
 

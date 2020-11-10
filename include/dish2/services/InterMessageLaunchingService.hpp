@@ -35,8 +35,13 @@ struct InterMessageLaunchingService {
       []( auto& message_input, auto& cpu, auto& message_counter ) {
         while(
           message_input.TryStep()
-          && cpu.TryLaunchCore( message_input.Get(), 1)
-        ) ++message_counter;
+          && cpu.TryLaunchCore( std::get<0>( message_input.Get() ), 1)
+        ) {
+          cpu.GetFreshestCore().SetRegisters(
+            std::get<1>( message_input.Get() )
+          );
+          ++message_counter;
+        }
         // purge leftover messages
         message_counter += message_input.Jump();
       }
