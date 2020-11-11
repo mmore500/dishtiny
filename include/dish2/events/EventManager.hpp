@@ -62,7 +62,11 @@ struct EventManager<FirstEventSeries, SubsequentEventSeries...> {
       using next_in_series_t = dish2::EventSeries<
         typename FirstEventSeries::event_t, series_idx - 1
       >;
-      return next_in_series_t::GetNumEvents() + 1;
+      using next_event_manager = dish2::EventManager<
+        next_in_series_t,
+        SubsequentEventSeries...
+      >;
+    return next_event_manager::GetNumEvents() + 1;
     } else if constexpr ( sizeof...(SubsequentEventSeries) > 0 ) {
       using subsequent_series_t = dish2::EventManager<SubsequentEventSeries...>;
       return subsequent_series_t::GetNumEvents() + 1;
