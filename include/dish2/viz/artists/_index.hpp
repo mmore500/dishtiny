@@ -21,6 +21,7 @@
 #include "NumModulesArtist.hpp"
 #include "PhylogeneticRootArtist.hpp"
 #include "QuorumBitsArtist.hpp"
+#include "RegulationByModuleArtist.hpp"
 #include "ResourceInputPeekArtist.hpp"
 #include "ResourceStockpileArtist.hpp"
 #include "SpawnArrestArtist.hpp"

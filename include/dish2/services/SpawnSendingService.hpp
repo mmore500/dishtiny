@@ -40,7 +40,7 @@ struct SpawnSendingService {
       ).size() == 1
     ));
 
-    auto available_resource{
+    float available_resource{
       *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>()
     };
 
