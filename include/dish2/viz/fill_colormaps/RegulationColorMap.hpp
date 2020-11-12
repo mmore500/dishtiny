@@ -26,6 +26,8 @@ struct RegulationColorMap {
 
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

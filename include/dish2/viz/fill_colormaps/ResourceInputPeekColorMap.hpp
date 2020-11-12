@@ -21,7 +21,10 @@ struct ResourceInputPeekColorMap {
       1.0
     );
     else if (amt == 0.0) return "white";
-    else return "red";  }
+    else return "red";
+  }
+
+  void Refresh() { ; }
 
 };
 

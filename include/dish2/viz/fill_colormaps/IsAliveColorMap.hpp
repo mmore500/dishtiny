@@ -19,6 +19,8 @@ struct IsAliveColorMap {
     else return "black";
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

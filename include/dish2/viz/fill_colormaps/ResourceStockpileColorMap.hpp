@@ -33,6 +33,8 @@ struct ResourceStockpileColorMap {
     );
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

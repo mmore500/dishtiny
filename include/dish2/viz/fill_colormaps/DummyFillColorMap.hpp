@@ -20,6 +20,8 @@ struct DummyFillColorMap {
     return emp::ColorRGB( R, G, B );
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

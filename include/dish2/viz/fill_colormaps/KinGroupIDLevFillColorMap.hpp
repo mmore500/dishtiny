@@ -22,6 +22,8 @@ struct KinGroupIDLevFillColorMap {
 
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

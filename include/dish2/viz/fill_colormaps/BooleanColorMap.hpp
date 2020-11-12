@@ -18,6 +18,8 @@ struct BooleanColorMap {
     else return "white";
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

@@ -24,6 +24,8 @@ struct KinGroupIDGrayscaleFillColorMap {
 
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

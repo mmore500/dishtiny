@@ -18,6 +18,8 @@ struct KinMatchColorMap {
     else return "white";
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

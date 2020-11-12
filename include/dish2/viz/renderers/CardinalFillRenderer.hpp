@@ -28,6 +28,8 @@ public:
 
   void Render( emp::web::Canvas& canvas ) {
 
+    color_map.Refresh();
+
     const dish2::CanvasMathHelper helper{ canvas };
 
     // draw the background color for each subgrid

@@ -20,3 +20,6 @@
 [submodule "third-party/signalgp-lite"]
   path = third-party/signalgp-lite
   url = https://github.com/mmore500/signalgp-lite
+[submodule "third-party/header-only-pca"]
+	path = third-party/header-only-pca
+	url = https://github.com/rodsan0/header-only-pca.git

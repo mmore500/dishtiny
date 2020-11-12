@@ -23,6 +23,8 @@ struct IncomingInterMessageCounterColorMap {
     );
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

@@ -22,6 +22,8 @@ struct NumBusyCoresColorMap {
     );
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

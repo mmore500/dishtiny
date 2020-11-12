@@ -27,6 +27,8 @@ struct PhylogeneticRootColorMap {
     }
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

@@ -27,6 +27,8 @@ struct QuorumBitsColorMap {
     }
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

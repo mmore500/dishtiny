@@ -15,7 +15,8 @@ namespace dish2 {
 template<typename Spec>
 struct ThreadWorld {
 
-  emp::vector< dish2::Cell<Spec> > population;
+  using population_t = emp::vector< dish2::Cell<Spec> >;
+  population_t population;
 
   using genome_mesh_spec_t = typename Spec::genome_mesh_spec_t;
   using genome_submesh_t

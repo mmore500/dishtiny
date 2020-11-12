@@ -24,6 +24,8 @@ struct EpochColorMap {
 
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2

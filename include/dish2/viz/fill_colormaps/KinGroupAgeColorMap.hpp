@@ -23,6 +23,8 @@ struct KinGroupAgeColorMap {
 
   }
 
+  void Refresh() { ; }
+
 };
 
 } // namespace dish2
