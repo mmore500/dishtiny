@@ -19,6 +19,7 @@
 #include "NumBusyCoresArtist.hpp"
 #include "NumCoresOnModuleArtist.hpp"
 #include "NumModulesArtist.hpp"
+#include "PcaBinaryExpressionArtist.hpp"
 #include "PcaExpressionArtist.hpp"
 #include "PcaRegulationArtist.hpp"
 #include "PhylogeneticRootArtist.hpp"
