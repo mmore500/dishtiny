@@ -9,7 +9,7 @@
 
 #include "../world/ThreadWorld.hpp"
 
-#include "count_live_cells.hpp"
+#include "count_live_cardinals.hpp"
 #include "get_maximum_module_count.hpp"
 
 namespace dish2 {
@@ -20,7 +20,7 @@ hopca::Matrix summarize_module_expression(
 ) {
 
   const size_t max_modules = dish2::get_maximum_module_count<Spec>( world );
-  const size_t num_live_cells = dish2::count_live_cells<Spec>( world );
+  const size_t num_live_cardinals = dish2::count_live_cardinals<Spec>( world );
   const auto& population = world.population;
 
   emp::vector<double> res;
@@ -50,7 +50,7 @@ hopca::Matrix summarize_module_expression(
   );
 
   return hola::matrix_transpose( hola::matrix_from_array(
-    res.data(), max_modules, num_live_cells
+    res.data(), max_modules, num_live_cardinals
   ) );
 
 }

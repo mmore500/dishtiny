@@ -8,24 +8,29 @@
 #include <map>
 
 #include "../../../../third-party/conduit/include/uitsl/algorithm/clamp_cast.hpp"
+#include "../../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
+#include "../../../../third-party/Empirical/source/base/optional.h"
 #include "../../../../third-party/Empirical/source/tools/math.h"
-#include "../../../../third-party/Empirical/source/tools/math.h"
+#include "../../../../third-party/header-only-pca/include/hopca/normalize.hpp"
 #include "../../../../third-party/header-only-pca/include/hopca/pca.hpp"
 
 #include "../../introspection/make_cardi_coord_to_live_cardi_idx_translator.hpp"
+#include "../../introspection/count_live_cells.hpp"
 #include "../../introspection/summarize_module_expression.hpp"
 #include "../../world/ThreadWorld.hpp"
 
 namespace dish2 {
 
-struct PcaExpressionColorMap {
+class PcaExpressionColorMap {
 
   std::reference_wrapper< const dish2::ThreadWorld<Spec> > thread_world;
 
   std::map< // todo fixme
     std::tuple<size_t, size_t>, size_t
   > cardi_coord_to_live_cardi_idx_translator;
-  hopca::Matrix pca_result{};
+  emp::optional<hopca::Matrix> pca_result;
+
+public:
 
   template<typename... Args>
   PcaExpressionColorMap(
@@ -40,35 +45,54 @@ struct PcaExpressionColorMap {
     if ( cardi_coord_to_live_cardi_idx_translator.count(
       cardi_coord
     ) == 0 ) return "transparent";
-    else {
-      const size_t live_cardi_idx = cardi_coord_to_live_cardi_idx_translator.at(
-        cardi_coord
-      );
-      hopca::Vector v = hola::matrix_column_copy( pca_result, live_cardi_idx );
-      const auto data = DATA(v);
+    else if ( !pca_result.has_value() ) return "transparent";
 
-      return emp::ColorRGB(
-        std::clamp( uitsl::clamp_cast<int>( data[0] * 255.0 ), 0, 255 ),
-        std::clamp( uitsl::clamp_cast<int>( data[1] * 255.0 ), 0, 255 ),
-        std::clamp( uitsl::clamp_cast<int>( data[2] * 255.0 ), 0, 255 )
-      );
+    const size_t live_cardi_idx = cardi_coord_to_live_cardi_idx_translator.at(
+      cardi_coord
+    );
+    hopca::Vector v = hola::matrix_row_copy( *pca_result, live_cardi_idx );
+    const auto data = DATA(v);
 
-    }
+    emp_assert( std::clamp( v->length, 1, 3 ) == v->length );
+
+    return emp::ColorRGB(
+      std::clamp( uitsl::clamp_cast<int>( data[0] * 255.0 ), 0, 255 ),
+      v->length >= 1
+        ? std::clamp( uitsl::clamp_cast<int>( data[1] * 255.0 ), 0, 255 )
+        : 0
+      ,
+      v->length >= 2
+        ? std::clamp( uitsl::clamp_cast<int>( data[2] * 255.0 ), 0, 255 )
+        : 0
+    );
+
   }
 
   void Refresh() {
-    const auto expression_summary = dish2::summarize_module_expression(
-      thread_world.get()
+
+    pca_result.reset();
+
+    const auto expression_summary = hopca::drop_homogenous_columns(
+      dish2::summarize_module_expression(
+        thread_world.get()
+      )
     );
     cardi_coord_to_live_cardi_idx_translator
       = dish2::make_cardi_coord_to_live_cardi_idx_translator< Spec >(
         thread_world.get()
       );
 
-    hopca::PCA module_expression_pca{ 3 };
+    if ( !expression_summary.has_value() ) return;
 
-    pca_result = module_expression_pca.doPCA( expression_summary );
+    hopca::PCA module_expression_pca{ std::min(
+      3ul, uitsl::audit_cast<size_t>( expression_summary.value()->n_row )
+    ) };
 
+    pca_result = hopca::unit_normalize(
+      hopca::drop_homogenous_columns(
+        module_expression_pca.doPCA( *expression_summary )
+      ).value()
+    );
 
   }
 
