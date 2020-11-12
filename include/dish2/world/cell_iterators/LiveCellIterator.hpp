@@ -12,10 +12,10 @@ namespace dish2 {
 
 template<typename Spec>
 class LiveCellIterator
-: protected emp::vector<dish2::Cell<Spec>>::const_iterator {
+: protected std::vector<dish2::Cell<Spec>>::const_iterator {
 
   using parent_t
-    = typename emp::vector<dish2::Cell<Spec>>::const_iterator;
+    = typename std::vector<dish2::Cell<Spec>>::const_iterator;
 
   parent_t end;
 
