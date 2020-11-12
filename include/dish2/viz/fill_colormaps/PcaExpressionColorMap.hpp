@@ -56,13 +56,13 @@ public:
     emp_assert( std::clamp( v->length, 1, 3 ) == v->length );
 
     return emp::ColorRGB(
-      std::clamp( uitsl::clamp_cast<int>( data[0] * 255.0 ), 0, 255 ),
+      255 - std::clamp( uitsl::clamp_cast<int>( data[0] * 255.0 ), 0, 255 ),
       v->length >= 1
-        ? std::clamp( uitsl::clamp_cast<int>( data[1] * 255.0 ), 0, 255 )
+        ? 255 - std::clamp( uitsl::clamp_cast<int>( data[1] * 255.0 ), 0, 255 )
         : 0
       ,
       v->length >= 2
-        ? std::clamp( uitsl::clamp_cast<int>( data[2] * 255.0 ), 0, 255 )
+        ? 255 - std::clamp( uitsl::clamp_cast<int>( data[2] * 255.0 ), 0, 255 )
         : 0
     );
 
