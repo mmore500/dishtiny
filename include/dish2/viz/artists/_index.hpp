@@ -20,6 +20,7 @@
 #include "NumCoresOnModuleArtist.hpp"
 #include "NumModulesArtist.hpp"
 #include "PcaExpressionArtist.hpp"
+#include "PcaRegulationArtist.hpp"
 #include "PhylogeneticRootArtist.hpp"
 #include "QuorumBitsArtist.hpp"
 #include "RegulationByModuleArtist.hpp"
