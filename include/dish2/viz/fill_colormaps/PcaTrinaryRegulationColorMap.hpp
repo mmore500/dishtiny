@@ -72,7 +72,7 @@ public:
 
     pca_result.reset();
 
-    hopca::Matrix raw_regulation_summary = dish2::summarize_module_expression(
+    hopca::Matrix raw_regulation_summary = dish2::summarize_module_regulation(
       thread_world.get()
     );
     std::transform(
