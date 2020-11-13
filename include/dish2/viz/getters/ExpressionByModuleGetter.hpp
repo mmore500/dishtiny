@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_VIZ_GETTERS_NUMCORESONMODULEGETTER_HPP_INCLUDE
-#define DISH2_VIZ_GETTERS_NUMCORESONMODULEGETTER_HPP_INCLUDE
+#ifndef DISH2_VIZ_GETTERS_EXPRESSIONBYMODULEGETTER_HPP_INCLUDE
+#define DISH2_VIZ_GETTERS_EXPRESSIONBYMODULEGETTER_HPP_INCLUDE
 
 #include <functional>
 
@@ -18,7 +18,7 @@
 namespace dish2 {
 
 template<typename Spec>
-class NumCoresOnModuleGetter {
+class ExpressionByModuleGetter {
 
   dish2::CardinalIteratorAdapter<Spec, dish2::CpuWrapper> cpu_getter;
   dish2::GenomeGetter<Spec> genome_getter;
@@ -30,7 +30,7 @@ public:
   using value_type = size_t;
 
   template< typename... Args >
-  NumCoresOnModuleGetter(
+  ExpressionByModuleGetter(
     const dish2::ThreadWorld<Spec>& thread_world_,
     const size_t idx,
     Args&&...
@@ -65,4 +65,4 @@ public:
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_VIZ_GETTERS_NUMCORESONMODULEGETTER_HPP_INCLUDE
+#endif // #ifndef DISH2_VIZ_GETTERS_EXPRESSIONBYMODULEGETTER_HPP_INCLUDE

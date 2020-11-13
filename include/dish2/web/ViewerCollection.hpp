@@ -17,6 +17,9 @@ template<typename Spec>
 using ViewerCollection = dish2::ViewerManager<
   dish2::GridViewer<dish2::CellBirthArtist<>, dish2::ApoptosisCategory>,
   dish2::GridViewer<dish2::EpochArtist<>, dish2::DemographicsCategory>,
+  dish2::SeriesViewer<
+    dish2::ExpressionByModuleArtist<>, dish2::GroupStructureCategory, 16
+  >,
   dish2::GridViewer<dish2::HeirRequestArtist<>, dish2::SharingCategory>,
   dish2::GridViewer<
     dish2::IncomingInterMessageCounterArtist<>, dish2::MessagingCategory
@@ -46,9 +49,6 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::GridViewer<
     dish2::NumBusyCoresArtist<>, dish2::GroupStructureCategory
-  >,
-  dish2::SeriesViewer<
-    dish2::NumCoresOnModuleArtist<>, dish2::GroupStructureCategory, 16
   >,
   dish2::GridViewer<
     dish2::NumModulesArtist<>, dish2::GroupStructureCategory

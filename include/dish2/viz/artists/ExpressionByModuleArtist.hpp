@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_VIZ_ARTISTS_NUMCORESONMODULEARTIST_HPP_INCLUDE
-#define DISH2_VIZ_ARTISTS_NUMCORESONMODULEARTIST_HPP_INCLUDE
+#ifndef DISH2_VIZ_ARTISTS_EXPRESSIONBYMODULEARTIST_HPP_INCLUDE
+#define DISH2_VIZ_ARTISTS_EXPRESSIONBYMODULEARTIST_HPP_INCLUDE
 
 #include <string>
 
@@ -11,7 +11,7 @@
 #include "../fill_colormaps/NumBusyCoresColorMap.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
-#include "../getters/NumCoresOnModuleGetter.hpp"
+#include "../getters/ExpressionByModuleGetter.hpp"
 #include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CardinalFillRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
@@ -20,17 +20,17 @@
 
 namespace dish2 {
 
-namespace internal::num_cores_on_module_artist {
+namespace internal::expression_by_module_artist {
 
   template<
-    typename NumCoresOnModuleGetter,
+    typename ExpressionByModuleGetter,
     typename IsAliveGetter,
     typename KinGroupIDGetter
   >
   using parent_t = dish2::Artist<
     dish2::CardinalFillRenderer<
       dish2::NumBusyCoresColorMap,
-      NumCoresOnModuleGetter
+      ExpressionByModuleGetter
     >,
     dish2::CellFillRenderer<
       dish2::IsAliveColorMap,
@@ -42,23 +42,23 @@ namespace internal::num_cores_on_module_artist {
     >
   >;
 
-} // namespace internal::num_cores_on_module_artist
+} // namespace internal::expression_by_module_artist
 
 template<
-  typename NumCoresOnModuleGetter
-    =dish2::NumCoresOnModuleGetter<dish2::Spec>,
+  typename ExpressionByModuleGetter
+    =dish2::ExpressionByModuleGetter<dish2::Spec>,
   typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
   typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
 >
-class NumCoresOnModuleArtist
-: public internal::num_cores_on_module_artist::parent_t<
-  NumCoresOnModuleGetter,
+class ExpressionByModuleArtist
+: public internal::expression_by_module_artist::parent_t<
+  ExpressionByModuleGetter,
   IsAliveGetter,
   KinGroupIDGetter
 > {
 
-  using parent_t = internal::num_cores_on_module_artist::parent_t<
-    NumCoresOnModuleGetter,
+  using parent_t = internal::expression_by_module_artist::parent_t<
+    ExpressionByModuleGetter,
     IsAliveGetter,
     KinGroupIDGetter
   >;
@@ -68,10 +68,10 @@ public:
   // inherit constructors
   using parent_t::parent_t;
 
-  static std::string GetName() { return "Num Cores On Module"; }
+  static std::string GetName() { return "Expression by Module"; }
 
 };
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_VIZ_ARTISTS_NUMCORESONMODULEARTIST_HPP_INCLUDE
+#endif // #ifndef DISH2_VIZ_ARTISTS_EXPRESSIONBYMODULEARTIST_HPP_INCLUDE
