@@ -49,9 +49,7 @@ hopca::Matrix summarize_module_regulation(
     } }
   );
 
-  return hola::matrix_transpose( hola::matrix_from_array(
-    res.data(), max_modules, num_live_cardinals
-  ) );
+  return hola::matrix_from_array( res.data(), num_live_cardinals, max_modules );
 
 }
 
