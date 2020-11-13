@@ -8,7 +8,7 @@
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
-#include "../fill_colormaps/RegulationColorMap.hpp"
+#include "../fill_colormaps/RegulationProtectedColorMap.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
 #include "../getters/RegulationProtectedByModuleGetter.hpp"
@@ -29,7 +29,7 @@ namespace internal::regulation_protected_by_module_artist {
   >
   using parent_t = dish2::Artist<
     dish2::CardinalFillRenderer<
-      dish2::RegulationColorMap,
+      dish2::RegulationProtectedColorMap,
       RegulationProtectedByModuleGetter
     >,
     dish2::CellFillRenderer<

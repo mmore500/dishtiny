@@ -50,7 +50,7 @@ public:
 
     if ( module_idx >= sgpl::count_modules( program ) ) return 0.0f;
 
-    return sgpl::get_module_regulator(
+    return *sgpl::get_module_regulator(
       cpu,
       program,
       module_idx

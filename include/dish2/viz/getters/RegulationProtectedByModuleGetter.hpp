@@ -28,7 +28,7 @@ class RegulationProtectedByModuleGetter {
 
 public:
 
-  using value_type = float;
+  using value_type = emp::optional<float>;
 
   template< typename... Args >
   RegulationProtectedByModuleGetter(
