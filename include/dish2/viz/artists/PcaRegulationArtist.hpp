@@ -8,7 +8,7 @@
 
 #include "../border_colormaps/KinGroupIDBorderInvertColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
-#include "../fill_colormaps/PcaExpressionColorMap.hpp"
+#include "../fill_colormaps/PcaRegulationColorMap.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
 #include "../getters/CardiCoordGetter.hpp"
@@ -29,7 +29,7 @@ namespace internal::pca_regulation_artist {
   >
   using parent_t = dish2::Artist<
     dish2::CardinalFillRenderer<
-      dish2::PcaExpressionColorMap,
+      dish2::PcaRegulationColorMap,
       CardiCoordGetter
     >,
     dish2::CellFillRenderer<
