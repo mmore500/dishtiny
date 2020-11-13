@@ -7,6 +7,7 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "ControlPanel.hpp"
+#include "SystematicsPanel.hpp"
 #include "ViewerPanel.hpp"
 
 namespace dish2 {
@@ -24,6 +25,7 @@ class WebInterface {
       return thread_world.GetUpdate();
     }
   };
+  dish2::SystematicsPanel systematics_panel;
   dish2::ViewerPanel view_panel{ thread_world };
 
 public:
