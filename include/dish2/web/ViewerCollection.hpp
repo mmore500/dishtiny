@@ -63,6 +63,9 @@ using ViewerCollection = dish2::ViewerManager<
     dish2::PcaRegulationArtist<>, dish2::GroupStructureCategory
   >,
   dish2::GridViewer<
+    dish2::PcaTrinaryRegulationArtist<>, dish2::GroupStructureCategory
+  >,
+  dish2::GridViewer<
     dish2::PhylogeneticRootArtist<>, dish2::DemographicsCategory
   >,
   dish2::SeriesViewer<

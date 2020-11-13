@@ -22,6 +22,7 @@
 #include "PcaBinaryExpressionArtist.hpp"
 #include "PcaExpressionArtist.hpp"
 #include "PcaRegulationArtist.hpp"
+#include "PcaTrinaryRegulationArtist.hpp"
 #include "PhylogeneticRootArtist.hpp"
 #include "QuorumBitsArtist.hpp"
 #include "RegulationByModuleArtist.hpp"
