@@ -15,6 +15,7 @@ namespace dish2 {
 
 template<typename Spec>
 using ViewerCollection = dish2::ViewerManager<
+  dish2::GridViewer<dish2::ApoptosisRequestArtist<>, dish2::ApoptosisCategory>,
   dish2::GridViewer<dish2::CellBirthArtist<>, dish2::ApoptosisCategory>,
   dish2::GridViewer<dish2::EpochArtist<>, dish2::DemographicsCategory>,
   dish2::SeriesViewer<

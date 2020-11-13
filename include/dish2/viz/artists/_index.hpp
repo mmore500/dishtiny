@@ -2,6 +2,7 @@
 #ifndef DISH2_VIZ_ARTISTS__INDEX_HPP_INCLUDE
 #define DISH2_VIZ_ARTISTS__INDEX_HPP_INCLUDE
 
+#include "ApoptosisRequestArtist.hpp"
 #include "CellBirthArtist.hpp"
 #include "DummyArtist.hpp"
 #include "EpochArtist.hpp"
