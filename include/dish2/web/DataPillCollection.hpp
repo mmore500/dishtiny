@@ -16,7 +16,11 @@ namespace internal {
 template< size_t... I >
 auto make_data_pill_collection( std::index_sequence<I...> ) {
   return std::tuple<
+    dish2::MaximumModuleCountPill,
+    dish2::MaximumProgramLengthPill,
     dish2::MeanEpochPill,
+    dish2::MeanModuleCountPill,
+    dish2::MeanProgramLengthPill,
     dish2::NumLiveCellsPill,
     dish2::NumPhylogeneticRootsPill,
     dish2::NumUniqueGenotypesPill,
