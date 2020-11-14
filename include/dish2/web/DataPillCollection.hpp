@@ -27,7 +27,7 @@ auto make_data_pill_collection( std::index_sequence<I...> ) {
 
 using DataPillCollection = decltype(
   internal::make_data_pill_collection(
-    std::make_index_sequence< dish2::Spec::NLEV >{}
+    std::make_index_sequence< dish2::Spec::NLEV + 1>{}
   )
 );
 
