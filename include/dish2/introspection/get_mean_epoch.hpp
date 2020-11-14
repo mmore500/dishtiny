@@ -17,7 +17,7 @@
 namespace dish2 {
 
 template< typename Spec >
-size_t get_mean_epoch( const dish2::ThreadWorld<Spec>& world ) {
+double get_mean_epoch( const dish2::ThreadWorld<Spec>& world ) {
 
   const auto& population = world.population;
 
