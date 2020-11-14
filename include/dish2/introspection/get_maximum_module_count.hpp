@@ -21,10 +21,8 @@ size_t get_maximum_module_count( const dish2::ThreadWorld<Spec>& world ) {
 
   emp::vector< size_t > module_counts;
   std::transform(
-    ++dish2::LiveCellIterator<Spec>(
-      std::prev( std::begin( population ) ), std::end( population )
-    ),
-    dish2::LiveCellIterator<Spec>( std::end(population), std::end(population) ),
+    dish2::LiveCellIterator<Spec>::make_begin( population ),
+    dish2::LiveCellIterator<Spec>::make_end( population ),
     std::back_inserter( module_counts ),
     []( const dish2::Cell<Spec>& cell ){
       return sgpl::count_modules( cell.genome->program );

@@ -18,10 +18,8 @@ size_t count_live_cardinals( const dish2::ThreadWorld<Spec>& world ) {
   const auto& population = world.population;
 
   return std::accumulate(
-    ++dish2::LiveCellIterator<Spec>(
-      std::prev( std::begin( population ) ), std::end( population )
-    ),
-    dish2::LiveCellIterator<Spec>( std::end(population), std::end(population) ),
+    dish2::LiveCellIterator<Spec>::make_begin( population ),
+    dish2::LiveCellIterator<Spec>::make_end( population ),
     0,
     []( const auto accumulator, const auto& cell ) {
       return accumulator + cell.GetNumCardinals();

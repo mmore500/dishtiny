@@ -26,10 +26,8 @@ hopca::Matrix summarize_module_regulation(
   emp::vector<double> res;
 
   std::for_each(
-    ++dish2::LiveCellIterator< Spec >(
-      std::prev( std::begin( population ) ), std::end( population )
-    ),
-    dish2::LiveCellIterator<Spec>( std::end(population), std::end(population) ),
+    dish2::LiveCellIterator<Spec>::make_begin( population ),
+    dish2::LiveCellIterator<Spec>::make_end( population ),
     [&]( const auto& cell ){ for (const auto& cardinal : cell) {
 
       auto cardinal_module_regulation = sgpl::summarize_module_regulation(

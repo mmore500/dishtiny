@@ -19,14 +19,28 @@ class LiveCellIterator
 
   parent_t end;
 
-public:
-
   LiveCellIterator(
     const parent_t& init,
     const parent_t& end_
   ) : parent_t(init)
   , end(end_)
   {}
+
+public:
+
+  static LiveCellIterator make_begin(
+    const emp::vector<dish2::Cell<Spec>>& population
+  ) {
+    return ++dish2::LiveCellIterator<Spec>{
+      std::prev( std::begin( population ) ), std::end( population )
+    };
+  }
+
+  static LiveCellIterator make_end(
+    const emp::vector<dish2::Cell<Spec>>& population
+  ) {
+    return LiveCellIterator<Spec>{ std::end(population), std::end(population) };
+  }
 
   using value_type = dish2::Cell<Spec>;
   using pointer = value_type*;

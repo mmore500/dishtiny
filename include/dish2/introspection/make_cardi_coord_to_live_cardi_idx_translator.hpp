@@ -27,12 +27,8 @@ make_cardi_coord_to_live_cardi_idx_translator(
   size_t live_cardi_idx{};
 
   for (
-    auto it = ++dish2::LiveCellIterator<Spec>(
-      std::prev( std::begin( population ) ), std::end( population )
-    );
-    it != dish2::LiveCellIterator<Spec>(
-      std::end(population), std::end(population)
-    );
+    auto it = dish2::LiveCellIterator<Spec>::make_begin( population );
+    it != dish2::LiveCellIterator<Spec>::make_end( population );
     ++it
   ) {
     const size_t cell_pos = it.CalcDistance( std::begin( population ) );

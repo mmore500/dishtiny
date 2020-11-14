@@ -18,10 +18,8 @@ size_t count_live_cells( const dish2::ThreadWorld<Spec>& world ) {
   const auto& population = world.population;
 
   return std::distance(
-    ++dish2::LiveCellIterator<Spec>(
-      std::prev( std::begin( population ) ), std::end( population )
-    ),
-    dish2::LiveCellIterator<Spec>( std::end(population), std::end(population) )
+    dish2::LiveCellIterator<Spec>::make_begin( population ),
+    dish2::LiveCellIterator<Spec>::make_end( population )
   );
 
 }
