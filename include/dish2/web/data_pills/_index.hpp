@@ -4,6 +4,7 @@
 
 #include "ElapsedGenerationsPill.hpp"
 #include "MeanEpochPill.hpp"
+#include "NumLiveCellsPill.hpp"
 #include "NumPhylogeneticRootsPill.hpp"
 #include "NumUniqueGenotypesPill.hpp"
 
