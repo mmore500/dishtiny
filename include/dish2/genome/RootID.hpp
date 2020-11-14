@@ -31,7 +31,7 @@ public:
   RootID(const size_t id_) : id( id_ ) {}
 
   bool operator==(const RootID& other) const {
-    return root_id_counter == other.root_id_counter;
+    return id == other.id;
   }
 
   template <class Archive> void serialize( Archive & ar ) { ar( id ); }
