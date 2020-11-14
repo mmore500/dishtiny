@@ -9,7 +9,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 
 #include "../cell/Cell.hpp"
-#include "../world/cell_iterators/LiveCellIterator.hpp"
+#include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
 
 namespace dish2 {

@@ -2,18 +2,17 @@
 #ifndef DISH2_WEB_DATAPILL_HPP_INCLUDE
 #define DISH2_WEB_DATAPILL_HPP_INCLUDE
 
+#include <functional>
+#include <string>
+
+#include "../../../third-party/Empirical/source/tools/string_utils.h"
 #include "../../../third-party/Empirical/source/web/commands.h"
 #include "../../../third-party/Empirical/source/web/Div.h"
-#include "../../../third-party/Empirical/source/tools/string_utils.h"
+#include "../../../third-party/Empirical/source/web/init.h"
 
 namespace dish2 {
 
 struct DataPill {
-
-  // const std::string & title;
-  // const std::function<std::string()> value;
-  // const std::string & description;
-  // emp::web::Document & parent;
 
   emp::web::Div pill;
 
@@ -42,24 +41,6 @@ struct DataPill {
         "href", emp::to_string("#datapill-collapse-", emp::slugify( title ))
       ) << emp::web::Div(
         emp::to_string("datapill-wrapper2-", emp::slugify( title ))
-      ).OnClick(
-        [](){
-          // static bool active = false;
-          // active = !active;
-          // if (active) {
-          //   parent.Div("datapill-active").SetCSS(
-          //     "class", "btn w-100 btn-primary border-secondary active"
-          //   ).SetAttr(
-          //     "aria-pressed", "true"
-          //   );
-          // } else {
-          //   parent.Div("datapill-active").SetCSS(
-          //     "class", "btn w-100 btn-primary border-secondary"
-          //   ).SetAttr(
-          //     "aria-pressed", "false"
-          //   );
-          // }
-        }
       ) << emp::web::Element(
          "button", emp::to_string("datapill-button-", emp::slugify( title ))
       ).SetAttr(
@@ -82,9 +63,9 @@ struct DataPill {
         emp::to_string("datapill-value-", emp::slugify( title ))
       ).SetAttr(
         "class", "badge-light btn w-25 border-secondary"
-      ) <<
+      ) << emp::web::Live(
         value
-       << emp::web::Close(
+      ) << emp::web::Close(
         emp::to_string("datapill-value-", emp::slugify( title ))
       ) << emp::web::Close(
         emp::to_string("datapill-btngroup-", emp::slugify( title ))

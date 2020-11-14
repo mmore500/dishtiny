@@ -25,7 +25,7 @@ class WebInterface {
       return thread_world.GetUpdate();
     }
   };
-  dish2::SystematicsPanel systematics_panel;
+  dish2::SystematicsPanel systematics_panel{ thread_world };
   dish2::ViewerPanel view_panel{ thread_world };
 
 public:
@@ -38,7 +38,7 @@ public:
       render_toggle && thread_world.GetUpdate() % render_freq == 0
     ) {
       view_panel.Redraw();
-      // systematics_dash.Redraw();
+      systematics_panel.Redraw();
       // dominant_viewer.Text("dom_text").Redraw();
     };
 

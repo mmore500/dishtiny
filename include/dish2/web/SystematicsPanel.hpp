@@ -8,7 +8,10 @@
 #include "../../../third-party/Empirical/source/web/Div.h"
 #include "../../../third-party/Empirical/source/web/Document.h"
 
+#include "../spec/Spec.hpp"
+
 #include "DataPill.hpp"
+#include "DataPillCollection.hpp"
 
 namespace dish2 {
 
@@ -16,23 +19,21 @@ class SystematicsPanel {
 
   emp::web::Document button_dash{ "emp_systematics_dash" };
 
-  void SetupDummyPill() {
+public:
 
-    button_dash << (emp::web::Div) dish2::DataPill(
-      "example title",
-      [](){ return "42"; },
-      "example description"
+  SystematicsPanel( const dish2::ThreadWorld< dish2::Spec >& world ) {
+
+    // adapted from https://stackoverflow.com/a/45498003
+    std::apply(
+      [this, &world](auto ...x){(..., (
+        button_dash << decltype(x)::Make( world )
+      ) );},
+      dish2::DataPillCollection{}
     );
 
   }
 
-public:
-
-  SystematicsPanel() {
-
-    SetupDummyPill();
-
-  }
+  void Redraw() { button_dash.Redraw(); }
 
 };
 
