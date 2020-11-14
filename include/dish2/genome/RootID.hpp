@@ -30,6 +30,10 @@ public:
 
   RootID(const size_t id_) : id( id_ ) {}
 
+  bool operator<(const RootID& other) const {
+    return id < other.id;
+  }
+
   bool operator==(const RootID& other) const {
     return id == other.id;
   }

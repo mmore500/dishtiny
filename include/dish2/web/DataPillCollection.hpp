@@ -9,7 +9,8 @@
 namespace dish2 {
 
 using DataPillCollection = std::tuple<
-  dish2::MeanEpochPill
+  dish2::MeanEpochPill,
+  dish2::NumPhylogeneticRootsPill
 >;
 
 } // namespace dish2

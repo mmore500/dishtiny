@@ -1,10 +1,10 @@
 #pragma once
-#ifndef DISH2_WEB_DATA_PILLS_MEANEPOCHPILL_HPP_INCLUDE
-#define DISH2_WEB_DATA_PILLS_MEANEPOCHPILL_HPP_INCLUDE
+#ifndef DISH2_WEB_DATA_PILLS_NUMPHYLOGENETICROOTSPILL_HPP_INCLUDE
+#define DISH2_WEB_DATA_PILLS_NUMPHYLOGENETICROOTSPILL_HPP_INCLUDE
 
 #include "../../../../third-party/Empirical/source/tools/string_utils.h"
 
-#include "../../introspection/get_mean_epoch.hpp"
+#include "../../introspection/count_unique_root_ids.hpp"
 #include "../../world/ThreadWorld.hpp"
 #include "../../spec/Spec.hpp"
 
@@ -12,17 +12,17 @@
 
 namespace dish2 {
 
-class MeanEpochPill {
+class NumPhylogeneticRootsPill {
 
   static auto DoWork( const ThreadWorld<dish2::Spec>& world ) {
-    return dish2::get_mean_epoch<dish2::Spec>( world );
+    return dish2::count_unique_root_ids<dish2::Spec>( world );
   }
 
 public:
 
   static emp::web::Div Make( const ThreadWorld<dish2::Spec>& world ) {
     return dish2::DataPill(
-      "Mean Epoch",
+      "Num Phylogenetic Roots",
       [&world](){ return emp::to_string( DoWork( world ) ); },
       "TODO"
     );
@@ -32,4 +32,4 @@ public:
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WEB_DATA_PILLS_MEANEPOCHPILL_HPP_INCLUDE
+#endif // #ifndef DISH2_WEB_DATA_PILLS_NUMPHYLOGENETICROOTSPILL_HPP_INCLUDE
