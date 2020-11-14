@@ -2,8 +2,11 @@
 #ifndef DISH2_GENOME_EVENTTAGS_HPP_INCLUDE
 #define DISH2_GENOME_EVENTTAGS_HPP_INCLUDE
 
+#include <cstddef>
+
 #include "../../../third-party/Empirical/source/base/array.h"
 #include "../../../third-party/Empirical/source/tools/BitSet.h"
+#include "../../../third-party/Empirical/source/tools/hash_utils.h"
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/mutate_bytes.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
@@ -53,10 +56,29 @@ struct EventTags {
 
   bool operator==(const EventTags& other) const { return tags == other.tags; }
 
+  bool operator<(const EventTags& other) const { return tags < other.tags; }
+
   template<typename Archive> void serialize( Archive & ar ) { ar( tags ); }
 
 };
 
 } // namespace dish2
+
+namespace std {
+
+template <typename Spec>
+struct hash<dish2::EventTags<Spec>> {
+
+size_t operator()( const dish2::EventTags<Spec>& event_tags ) const {
+  const auto& tags = event_tags.tags;
+  return emp::murmur_hash( std::span<const std::byte>(
+    reinterpret_cast<const std::byte*>( tags.data() ),
+    tags.size() * sizeof( tags.front() )
+  ) );
+}
+
+};
+
+} // namespace std
 
 #endif // #ifndef DISH2_GENOME_EVENTTAGS_HPP_INCLUDE

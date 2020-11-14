@@ -18,6 +18,7 @@ auto make_data_pill_collection( std::index_sequence<I...> ) {
   return std::tuple<
     dish2::MeanEpochPill,
     dish2::NumPhylogeneticRootsPill,
+    dish2::NumUniqueGenotypesPill,
     dish2::ElapsedGenerationsPill<I>...
   >{};
 }
