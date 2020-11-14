@@ -23,6 +23,10 @@ public:
 
   SystematicsPanel( const dish2::ThreadWorld< dish2::Spec >& world ) {
 
+    button_dash.SetAttr(
+      "class", "row"
+    );
+
     // adapted from https://stackoverflow.com/a/45498003
     std::apply(
       [this, &world](auto ...x){(..., (
