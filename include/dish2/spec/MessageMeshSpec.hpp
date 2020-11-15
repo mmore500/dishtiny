@@ -3,6 +3,7 @@
 #define DISH2_SPEC_MESSAGEMESHSPEC_HPP_INCLUDE
 
 #include "../../../third-party/cereal/include/cereal/types/array.hpp"
+#include "../../../third-party/cereal/include/cereal/types/tuple.hpp"
 #include "../../../third-party/conduit/include/uit/ducts/mock/EmpAssertDuct.hpp"
 #include "../../../third-party/conduit/include/uit/ducts/proc/put=dropping+get=stepping+type=cereal/aggregated+inlet=RingIsend+outlet=Iprobe_c::AggregatedIriOiDuct.hpp"
 #include "../../../third-party/conduit/include/uit/setup/ImplSelect.hpp"
