@@ -7,6 +7,7 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "ControlPanel.hpp"
+#include "PrevalentGenotypePanel.hpp"
 #include "SystematicsPanel.hpp"
 #include "ViewerPanel.hpp"
 
@@ -25,6 +26,7 @@ class WebInterface {
       return thread_world.GetUpdate();
     }
   };
+  dish2::PrevalentGenotypePanel prevalent_genotype_panel{ thread_world };
   dish2::SystematicsPanel systematics_panel{ thread_world };
   dish2::ViewerPanel view_panel{ thread_world };
 
@@ -39,7 +41,7 @@ public:
     ) {
       view_panel.Redraw();
       systematics_panel.Redraw();
-      // dominant_viewer.Text("dom_text").Redraw();
+      prevalent_genotype_panel.Redraw();
     };
 
   }
