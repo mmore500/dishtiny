@@ -28,6 +28,8 @@ struct ReadOwnState {
 
   static std::string name() { return "ReadOwnState"; }
 
+  static size_t prevalence() { return 20; }
+
 };
 
 } // namespace dish2

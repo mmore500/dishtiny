@@ -35,6 +35,8 @@ struct WriteOwnState {
 
   static std::string name() { return "WriteOwnState"; }
 
+  static size_t prevalence() { return 5; }
+
 };
 
 } // namespace dish2

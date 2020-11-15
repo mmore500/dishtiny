@@ -35,6 +35,8 @@ struct AddToOwnState {
 
   static std::string name() { return "AddToOwnState"; }
 
+  static size_t prevalence() { return 5; }
+
 };
 
 } // namespace dish2

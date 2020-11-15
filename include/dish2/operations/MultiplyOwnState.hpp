@@ -35,6 +35,8 @@ struct MultiplyOwnState {
 
   static std::string name() { return "MultiplyOwnState"; }
 
+  static size_t prevalence() { return 5; }
+
 };
 
 } // namespace dish2

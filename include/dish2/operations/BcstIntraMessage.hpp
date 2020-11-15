@@ -30,6 +30,8 @@ struct BcstIntraMessage {
 
   static std::string name() { return "BcstIntraMessage"; }
 
+  static size_t prevalence() { return 1; }
+
 };
 
 } // namespace dish2

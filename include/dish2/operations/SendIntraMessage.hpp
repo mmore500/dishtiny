@@ -37,6 +37,8 @@ struct SendIntraMessage {
 
   static std::string name() { return "SendIntraMessage"; }
 
+  static size_t prevalence() { return 5; }
+
 };
 
 } // namespace dish2
