@@ -33,13 +33,19 @@ struct AddToOwnState {
 
   }
 
-  static std::string name() { return "AddToOwnState"; }
+  static std::string name() { return "Add To Own State"; }
 
   static size_t prevalence() { return 5; }
 
-  static size_t num_registers_to_print() { return 1; }
+  template<typename Spec>
+  static auto descriptors( const sgpl::Instruction<Spec>& inst ) {
 
-  static bool should_print_tag() { return false; }
+    return std::map<std::string, std::string>{
+      { "argument a", emp::to_string( static_cast<int>( inst.args[0] ) ) },
+      { "summary", "TODO" },
+      { "target", "TODO" },
+    };
+  }
 
 };
 

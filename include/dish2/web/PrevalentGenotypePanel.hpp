@@ -11,7 +11,8 @@
 #include "../introspection/get_prevalent_coding_genotype.hpp"
 #include "../spec/Spec.hpp"
 
-#include "InstructionListGroupItem.hpp"
+#include "InstructionListDetailItem.hpp"
+#include "InstructionListEntryItem.hpp"
 
 namespace dish2 {
 
@@ -19,8 +20,10 @@ class PrevalentGenotypePanel {
 
   emp::web::Document panel{ "dominant_viewer-body" };
 
-  using instruction_list_group_item_t
-    = dish2::InstructionListGroupItem< dish2::Spec >;
+  using instruction_list_detail_item_t
+    = dish2::InstructionListDetailItem< dish2::Spec >;
+  using instruction_list_entry_item_t
+    = dish2::InstructionListEntryItem< dish2::Spec >;
 
   const dish2::ThreadWorld< dish2::Spec >& thread_world;
 
@@ -50,7 +53,8 @@ public:
       std::begin( program ),
       std::end( program ),
       [this]( const auto& instruction ) {
-        panel << (emp::web::Div) instruction_list_group_item_t{ instruction };
+        panel << (emp::web::Div) instruction_list_entry_item_t{ instruction };
+        panel << (emp::web::Div) instruction_list_detail_item_t{ instruction };
       }
     );
 
