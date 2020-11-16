@@ -32,6 +32,10 @@ struct BcstIntraMessage {
 
   static size_t prevalence() { return 1; }
 
+  static size_t num_registers_to_print() { return 0; }
+
+  static bool should_print_tag() { return true; }
+
 };
 
 } // namespace dish2

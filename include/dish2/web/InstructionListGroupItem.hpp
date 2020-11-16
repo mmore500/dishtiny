@@ -4,8 +4,10 @@
 
 #include <functional>
 #include <string>
+#include <type_traits>
 
 #include "../../../third-party/Empirical/source/tools/string_utils.h"
+#include "../../../third-party/Empirical/source/tools/hash_namify.h"
 #include "../../../third-party/Empirical/source/web/commands.h"
 #include "../../../third-party/Empirical/source/web/Div.h"
 #include "../../../third-party/Empirical/source/web/init.h"
@@ -28,6 +30,12 @@ struct InstructionListGroupItem {
     );
 
     list_group_item << instruction.GetOpName();
+    list_group_item << emp::web::endl;
+    if ( instruction.ShouldPrintTag() ) list_group_item << emp::hash_namify(
+      std::hash< std::decay_t< decltype( instruction.GetTag() ) > >{}(
+        instruction.GetTag()
+      )
+    );
 
   }
 
