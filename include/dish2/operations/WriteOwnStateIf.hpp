@@ -11,7 +11,7 @@
 namespace dish2 {
 
 template< typename DishSpec >
-struct WriteOwnState {
+struct WriteOwnStateIf {
 
   template<typename SgplSpec>
   static void run(
@@ -20,6 +20,8 @@ struct WriteOwnState {
     const sgpl::Program<SgplSpec>&,
     typename SgplSpec::peripheral_t& peripheral
   ) {
+
+    if ( !core.registers[ inst.args[0] ] ) return;
 
     constexpr size_t num_addrs = dish2::WritableState<DishSpec>::GetSize();
     const size_t addr = inst.tag.GetUInt(0) % num_addrs;

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_OPERATIONS_SENDINTRAMESSAGE_HPP_INCLUDE
-#define DISH2_OPERATIONS_SENDINTRAMESSAGE_HPP_INCLUDE
+#ifndef DISH2_OPERATIONS_SENDINTERMESSAGE_HPP_INCLUDE
+#define DISH2_OPERATIONS_SENDINTERMESSAGE_HPP_INCLUDE
 
 #include <tuple>
 
@@ -11,7 +11,7 @@
 
 namespace dish2 {
 
-struct SendIntraMessage {
+struct SendInterMessageIf {
 
   template<typename Spec>
   static void run(
@@ -21,22 +21,15 @@ struct SendIntraMessage {
     typename Spec::peripheral_t& peripheral
   ) {
 
-    auto& outputs = peripheral.intra_message_node_outputs;
+    if ( !core.registers[ inst.args[0] ] ) return;
 
-    const size_t num_addrs = outputs.size();
-    const size_t addr = std::accumulate(
-      std::begin( inst.args ),
-      std::end( inst.args ),
-      0
-    ) % num_addrs;
-
-    outputs[ addr ].TryPut( std::make_tuple(
+    peripheral.message_node_output.TryPut( std::make_tuple(
       inst.tag, core.GetRegisters()
     ) );
 
   }
 
-  static std::string name() { return "Send Intra-Cell Message"; }
+  static std::string name() { return "Send Inter-Cell Message"; }
 
   static size_t prevalence() { return 5; }
 
@@ -46,7 +39,8 @@ struct SendIntraMessage {
     using tag_t = typename Spec::tag_t;
 
     return std::map<std::string, std::string>{
-      { "summary", "TODO" },
+      { "argument a", emp::to_string( static_cast<int>( inst.args[0] ) ) },
+      { "summary", "if a, send message to neighbor cell" },
       { "tag bits", emp::to_string( inst.tag ) },
       { "tag moniker", emp::hash_namify( std::hash< tag_t >{}( inst.tag ) ) },
     };
@@ -56,4 +50,4 @@ struct SendIntraMessage {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_OPERATIONS_SENDINTRAMESSAGE_HPP_INCLUDE
+#endif // #ifndef DISH2_OPERATIONS_SENDINTERMESSAGE_HPP_INCLUDE

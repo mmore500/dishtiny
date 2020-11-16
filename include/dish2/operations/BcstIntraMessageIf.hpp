@@ -11,7 +11,7 @@
 
 namespace dish2 {
 
-struct BcstIntraMessage {
+struct BcstIntraMessageIf {
 
   template<typename Spec>
   static void run(
@@ -20,6 +20,8 @@ struct BcstIntraMessage {
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t& peripheral
   ) {
+
+    if ( !core.registers[ inst.args[0] ] ) return;
 
     for ( auto& out : peripheral.intra_message_node_outputs ) {
       out.TryPut( std::make_tuple(
@@ -39,7 +41,8 @@ struct BcstIntraMessage {
     using tag_t = typename Spec::tag_t;
 
     return std::map<std::string, std::string>{
-      { "summary", "TODO" },
+      { "argument a", emp::to_string( static_cast<int>( inst.args[0] ) ) },
+      { "summary", "if a, send message to all other cardinals within cell" },
       { "tag bits", emp::to_string( inst.tag ) },
       { "tag moniker", emp::hash_namify( std::hash< tag_t >{}( inst.tag ) ) }
     };
