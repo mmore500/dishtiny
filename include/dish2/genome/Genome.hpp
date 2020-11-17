@@ -45,7 +45,9 @@ struct Genome {
   : event_tags( std::in_place )
   , kin_group_id( std::in_place )
   , program( dish2::cfg.PROGRAM_START_SIZE() )
-  , root_id( std::in_place ) {}
+  , root_id( std::in_place ) {
+    program.RotateGlobalAnchorToFront();
+  }
 
   bool operator==(const Genome& other) const {
     // ignore kin_group_epoch_stamps,
@@ -88,6 +90,9 @@ struct Genome {
     mutation_counter.RecordPointMutation( program.ApplyPointMutations(
       dish2::cfg.POINT_MUTATION_RATE()
     ) );
+    // todo, is this convenience worth optimizing out?
+    // also potentially would need to fix constructor
+    program.RotateGlobalAnchorToFront();
   }
 
   void DoProgramSequenceMutation() {
