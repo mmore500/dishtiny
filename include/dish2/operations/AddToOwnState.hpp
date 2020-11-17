@@ -11,7 +11,16 @@
 namespace dish2 {
 
 template< typename DishSpec >
-struct AddToOwnState {
+class AddToOwnState {
+
+  template<typename SgplSpec>
+  static size_t GetAddr( const sgpl::Instruction<SgplSpec>& inst ) {
+    constexpr size_t num_addrs = dish2::WritableState< DishSpec >::GetSize();
+    const size_t addr = inst.tag.GetUInt(0) % num_addrs;
+    return addr;
+  }
+
+public:
 
   template<typename SgplSpec>
   static void run(
@@ -21,13 +30,10 @@ struct AddToOwnState {
     typename SgplSpec::peripheral_t& peripheral
   ) {
 
-    constexpr size_t num_addrs = dish2::WritableState< DishSpec >::GetSize();
-    const size_t addr = inst.tag.GetUInt(0) % num_addrs;
-
     peripheral.readable_state.template Get<
       dish2::WritableState< DishSpec >
     >().AddTo(
-      addr,
+      GetAddr( inst ),
       core.registers[ inst.args[0] ]
     );
 
@@ -37,13 +43,17 @@ struct AddToOwnState {
 
   static size_t prevalence() { return 5; }
 
-  template<typename Spec>
-  static auto descriptors( const sgpl::Instruction<Spec>& inst ) {
+  template<typename SgplSpec>
+  static auto descriptors( const sgpl::Instruction<SgplSpec>& inst ) {
 
     return std::map<std::string, std::string>{
       { "argument a", emp::to_string( static_cast<int>( inst.args[0] ) ) },
-      { "summary", "TODO" },
-      { "target", "TODO" },
+      { "summary", "state += a" },
+      { "target",
+        dish2::WritableState< DishSpec >::GetLeafTypeName(
+          GetAddr( inst )
+        )
+      },
     };
   }
 

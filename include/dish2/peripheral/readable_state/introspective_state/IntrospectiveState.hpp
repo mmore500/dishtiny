@@ -3,6 +3,7 @@
 #define DISH2_PERIPHERAL_READABLE_STATE_INTROSPECTIVE_STATE_INTROSPECTIVESTATE_HPP_INCLUDE
 
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
+#include "../../../../../third-party/conduit/include/uitsl/meta/TypeName.hpp"
 
 #include "CellAge.hpp"
 #include "Epoch.hpp"

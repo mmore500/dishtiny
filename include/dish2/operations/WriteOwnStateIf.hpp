@@ -11,7 +11,16 @@
 namespace dish2 {
 
 template< typename DishSpec >
-struct WriteOwnStateIf {
+class WriteOwnStateIf {
+
+  template<typename SgplSpec>
+  static size_t GetAddr( const sgpl::Instruction<SgplSpec>& inst ) {
+    constexpr size_t num_addrs = dish2::WritableState< DishSpec >::GetSize();
+    const size_t addr = inst.tag.GetUInt(0) % num_addrs;
+    return addr;
+  }
+
+public:
 
   template<typename SgplSpec>
   static void run(
@@ -21,15 +30,12 @@ struct WriteOwnStateIf {
     typename SgplSpec::peripheral_t& peripheral
   ) {
 
-    if ( !core.registers[ inst.args[0] ] ) return;
-
-    constexpr size_t num_addrs = dish2::WritableState<DishSpec>::GetSize();
-    const size_t addr = inst.tag.GetUInt(0) % num_addrs;
+    if ( !core.registers[ inst.args[1] ] ) return;
 
     peripheral.readable_state.template Get<
       dish2::WritableState<DishSpec>
     >().Write(
-      addr,
+      GetAddr( inst ),
       core.registers[ inst.args[0] ]
     );
 
@@ -44,8 +50,12 @@ struct WriteOwnStateIf {
 
     return std::map<std::string, std::string>{
       { "argument a", emp::to_string( static_cast<int>( inst.args[0] ) ) },
-      { "summary", "TODO" },
-      { "target", "TODO" },
+      { "summary", "if b, state = a" },
+      { "target",
+        dish2::WritableState< DishSpec >::GetLeafTypeName(
+          GetAddr( inst )
+        )
+      },
     };
 
   }

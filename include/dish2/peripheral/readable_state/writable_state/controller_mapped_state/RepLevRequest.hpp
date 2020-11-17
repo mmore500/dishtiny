@@ -4,6 +4,7 @@
 
 #include "../../../../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 #include "../../../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
+#include "../../../../../../third-party/conduit/include/uitsl/meta/TypeName.hpp"
 
 namespace dish2 {
 
@@ -23,5 +24,11 @@ struct RepLevRequest : public uitsl::PodLeafNode<char, Spec::NLEV> {
 };
 
 } // namespace dish2
+
+namespace uitsl {
+
+// UITSL_ENABLE_TYPENAME( dish2::RepLevRequest );
+
+} // namespace uitsl
 
 #endif // #ifndef DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_CONTROLLER_MAPPED_STATE_REPLEVREQUEST_HPP_INCLUDE

@@ -3,6 +3,7 @@
 #define DISH2_PERIPHERAL_READABLE_STATE_INTROSPECTIVE_STATE_CELLAGE_HPP_INCLUDE
 
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
+#include "../../../../../third-party/conduit/include/uitsl/meta/TypeName.hpp"
 
 namespace dish2 {
 
@@ -12,5 +13,11 @@ struct CellAge : public uitsl::PodLeafNode<size_t> {
 };
 
 } // namespace dish2
+
+namespace uitsl {
+
+UITSL_ENABLE_TYPENAME( dish2::CellAge );
+
+} // namespace uitsl
 
 #endif // #ifndef DISH2_PERIPHERAL_READABLE_STATE_INTROSPECTIVE_STATE_CELLAGE_HPP_INCLUDE

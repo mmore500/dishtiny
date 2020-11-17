@@ -22,8 +22,8 @@ using OpLibrary = sgpl::OpLibraryCoupler<
   dish2::AddToOwnState< DishSpec >,
   dish2::BcstIntraMessageIf,
   dish2::MultiplyOwnState< DishSpec >,
-  dish2::ReadNeighborState,
-  dish2::ReadOwnState,
+  dish2::ReadNeighborState< DishSpec >,
+  dish2::ReadOwnState< DishSpec >,
   dish2::SendInterMessageIf,
   dish2::SendIntraMessageIf,
   dish2::WriteOwnStateIf< DishSpec >

@@ -2,6 +2,7 @@
 #ifndef DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_WRITABLESTATE_HPP_INCLUDE
 #define DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_WRITABLESTATE_HPP_INCLUDE
 
+#include <string>
 #include <type_traits>
 
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
@@ -107,6 +108,31 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
       EMP_WRAP_EACH( DISH2_WRITABLE_STATE_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION )
 
     }
+
+  }
+
+  static std::string GetLeafTypeName( const size_t idx ) {
+
+    #define DISH2_WRITABLE_STATE_NAME_CASE_PAYLOAD(N) \
+      case N: \
+        if constexpr ( N  < parent_size ) { \
+          return uitsl::TypeName< \
+            typename parent_t::template leaf_t<N> \
+          >::Get(); \
+        }
+
+    emp_assert( idx < parent_size );
+    static_assert( parent_size < 256 );
+
+    switch ( idx ) {
+
+      EMP_WRAP_EACH(
+        DISH2_WRITABLE_STATE_NAME_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
+      )
+
+    }
+
+    return "bad idx";
 
   }
 

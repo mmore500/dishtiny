@@ -8,21 +8,29 @@
 
 namespace dish2 {
 
-struct ReadOwnState {
+template< typename DishSpec >
+class ReadOwnState {
 
-  template<typename Spec>
+  template<typename SgplSpec>
+  static size_t GetAddr( const sgpl::Instruction<SgplSpec>& inst ) {
+    constexpr size_t num_addrs = dish2::ReadableState< DishSpec >::GetSize();
+    const size_t addr = inst.tag.GetUInt(0) % num_addrs;
+    return addr;
+  }
+
+public:
+
+  template<typename SgplSpec>
   static void run(
-    sgpl::Core<Spec>& core,
-    const sgpl::Instruction<Spec>& inst,
-    const sgpl::Program<Spec>&,
-    const typename Spec::peripheral_t& peripheral
+    sgpl::Core<SgplSpec>& core,
+    const sgpl::Instruction<SgplSpec>& inst,
+    const sgpl::Program<SgplSpec>&,
+    const typename SgplSpec::peripheral_t& peripheral
   ) {
 
-    constexpr size_t num_addrs
-      = decltype(peripheral.readable_state)::GetSize();
-    const size_t addr = inst.tag.GetUInt(0) % num_addrs;
-
-    core.registers[ inst.args[0] ] = peripheral.readable_state.Read(addr);
+    core.registers[ inst.args[0] ] = peripheral.readable_state.Read(
+      GetAddr(inst)
+    );
 
   }
 
@@ -30,13 +38,17 @@ struct ReadOwnState {
 
   static size_t prevalence() { return 20; }
 
-  template<typename Spec>
-  static auto descriptors( const sgpl::Instruction<Spec>& inst ) {
+  template<typename SgplSpec>
+  static auto descriptors( const sgpl::Instruction<SgplSpec>& inst ) {
 
     return std::map<std::string, std::string>{
       { "argument a", emp::to_string( static_cast<int>( inst.args[0] ) ) },
-      { "summary", "TODO" },
-      { "target", "TODO" },
+      { "summary", "a = state" },
+      { "target",
+        dish2::ReadableState< DishSpec >::GetLeafTypeName(
+          GetAddr( inst )
+        )
+      },
     };
 
   }

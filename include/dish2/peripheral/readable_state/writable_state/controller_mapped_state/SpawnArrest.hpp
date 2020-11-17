@@ -3,6 +3,7 @@
 #define DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_CONTROLLER_MAPPED_STATE_SPAWNARREST_HPP_INCLUDE
 
 #include "../../../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
+#include "../../../../../../third-party/conduit/include/uitsl/meta/TypeName.hpp"
 
 namespace dish2 {
 
@@ -13,5 +14,11 @@ struct SpawnArrest : public uitsl::PodLeafNode<char> {
 };
 
 } // namespace dish2
+
+namespace uitsl {
+
+UITSL_ENABLE_TYPENAME( dish2::SpawnArrest );
+
+} // namespace uitsl
 
 #endif // #ifndef DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_CONTROLLER_MAPPED_STATE_SPAWNARREST_HPP_INCLUDE

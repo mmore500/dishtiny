@@ -3,6 +3,7 @@
 #define DISH2_PERIPHERAL_READABLE_STATE_INTROSPECTIVE_STATE_KINGROUPIDVIEW_HPP_INCLUDE
 
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
+#include "../../../../../third-party/conduit/include/uitsl/meta/TypeName.hpp"
 
 namespace dish2 {
 
@@ -14,5 +15,11 @@ struct KinGroupIDView : public uitsl::PodLeafNode< size_t, Spec::NLEV > {
 };
 
 } // namespace dish2
+
+namespace uitsl {
+
+// UITSL_ENABLE_TYPENAME( dish2::KinGroupIDView );
+
+} // namespace uitsl
 
 #endif // #ifndef DISH2_PERIPHERAL_READABLE_STATE_INTROSPECTIVE_STATE_KINGROUPIDVIEW_HPP_INCLUDE
