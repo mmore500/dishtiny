@@ -6,6 +6,8 @@
 #include "MaximumModuleCountPill.hpp"
 #include "MaximumProgramLengthPill.hpp"
 #include "MeanEpochPill.hpp"
+#include "MeanElapsedInsertionsDeletionsPill.hpp"
+#include "MeanElapsedPointMutationsPill.hpp"
 #include "MeanModuleCountPill.hpp"
 #include "MeanProgramLengthPill.hpp"
 #include "NumLiveCellsPill.hpp"
