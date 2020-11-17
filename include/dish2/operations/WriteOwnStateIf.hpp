@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_OPERATIONS_WRITEOWNSTATE_HPP_INCLUDE
-#define DISH2_OPERATIONS_WRITEOWNSTATE_HPP_INCLUDE
+#ifndef DISH2_OPERATIONS_WRITEOWNSTATEIF_HPP_INCLUDE
+#define DISH2_OPERATIONS_WRITEOWNSTATEIF_HPP_INCLUDE
 
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Instruction.hpp"
@@ -69,4 +69,4 @@ public:
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_OPERATIONS_WRITEOWNSTATE_HPP_INCLUDE
+#endif // #ifndef DISH2_OPERATIONS_WRITEOWNSTATEIF_HPP_INCLUDE
