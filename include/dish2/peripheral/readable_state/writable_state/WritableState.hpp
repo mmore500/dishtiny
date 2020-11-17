@@ -22,7 +22,7 @@ namespace internal {
   template< typename Spec >
   using writable_state_parent_t = uitsl::PodInternalNode<
     dish2::ControllerMappedState< Spec >,
-    dish2::NopState
+    dish2::NopState< Spec >
   >;
 
 } // namespace internal

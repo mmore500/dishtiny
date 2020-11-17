@@ -7,9 +7,10 @@
 
 namespace dish2 {
 
-struct NopState : public uitsl::PodLeafNode<float> {
+template< typename Spec >
+struct NopState : public uitsl::PodLeafNode<float, Spec::AMT_NOP_MEMORY> {
   // inherit constructors
-  using parent_t = uitsl::PodLeafNode<float>;
+  using parent_t = uitsl::PodLeafNode<float, Spec::AMT_NOP_MEMORY>;
   using parent_t::parent_t;
 };
 
@@ -17,7 +18,7 @@ struct NopState : public uitsl::PodLeafNode<float> {
 
 namespace uitsl {
 
-UITSL_ENABLE_TYPENAME( dish2::NopState );
+UITSL_ENABLE_TYPENAME_TEMPLATE( dish2::NopState );
 
 } // namespace uitsl
 

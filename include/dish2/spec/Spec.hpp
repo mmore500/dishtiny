@@ -29,7 +29,6 @@ struct Spec {
 
   constexpr inline static size_t NLEV{ dish2::internal::NLEV };
 
-  // todo implement
   constexpr inline static size_t AMT_NOP_MEMORY = 4;
 
   using sgpl_spec_t = sgpl::Spec<
