@@ -6,6 +6,7 @@
 #include <string>
 #include <type_traits>
 
+#include "../../../third-party/Empirical/source/base/optional.h"
 #include "../../../third-party/Empirical/source/tools/string_utils.h"
 #include "../../../third-party/Empirical/source/tools/hash_namify.h"
 #include "../../../third-party/Empirical/source/web/commands.h"
@@ -16,7 +17,7 @@
 namespace dish2 {
 
 template< typename Spec >
-struct InstructionListEntryItem {
+class InstructionListEntryItem {
 
   emp::web::Div list_group_item;
 
@@ -28,10 +29,34 @@ struct InstructionListEntryItem {
     {"Local Anchor", "list-group-item-secondary"}
   };
 
-  InstructionListEntryItem( const instruction_t& instruction ) {
+  emp::web::Div make_badges(
+    const size_t program_idx, const emp::optional<size_t> module_idx
+  ) {
+    emp::web::Div res;
+    if ( module_idx.has_value() ) res << emp::web::Div().SetAttr(
+      "class", "badge badge-primary badge-pill m-1"
+    ).SetCSS(
+      "border", "0px"
+    ) << "module " << *module_idx;
+    res << emp::web::Div().SetAttr(
+      "class", "badge badge-secondary badge-pill m-1"
+    ).SetCSS(
+      "border", "0px"
+    ) << program_idx;
+    return res;
+  }
+
+public:
+
+  InstructionListEntryItem(
+    const instruction_t& instruction,
+    const size_t program_idx, const size_t module_idx
+  ) {
 
     list_group_item.SetAttr(
-      "class", "list-group-item  list-group-item-action"
+      "class",
+      "list-group-item list-group-item-action"
+        " d-flex justify-content-between align-items-center"
     );
 
     // TODO use AddAttr from sara boyd's branch
@@ -44,6 +69,13 @@ struct InstructionListEntryItem {
     );
 
     list_group_item << instruction.GetOpName();
+
+    list_group_item << make_badges(
+      program_idx,
+      instruction.GetOpName() == "Global Anchor"
+        ? emp::optional<size_t>{ module_idx }
+        : std::nullopt
+      );
 
   }
 

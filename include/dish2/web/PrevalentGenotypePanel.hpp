@@ -4,9 +4,12 @@
 
 #include <algorithm>
 
+#include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
 #include "../../../third-party/Empirical/source/web/Div.h"
 #include "../../../third-party/Empirical/source/web/Document.h"
+#include "../../../third-party/signalgp-lite/include/sgpl/introspection/enumerate_module_ids.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../introspection/get_prevalent_coding_genotype.hpp"
 #include "../spec/Spec.hpp"
@@ -49,12 +52,20 @@ public:
       = dish2::get_prevalent_coding_genotype<dish2::Spec>( thread_world );
     const auto& [event_tags, program] = coding_genotype;
 
-    std::for_each(
+    const auto enumerated_module_ids = sgpl::enumerate_module_ids( program );
+
+    uitsl::for_each(
       std::begin( program ),
       std::end( program ),
-      [this]( const auto& instruction ) {
-        panel << (emp::web::Div) instruction_list_entry_item_t{ instruction };
-        panel << (emp::web::Div) instruction_list_detail_item_t{ instruction };
+      sgpl::CountingIterator{},
+      std::begin( enumerated_module_ids ),
+      [this](
+        const auto& inst, const size_t program_idx, const size_t module_idx
+      ) {
+        panel << (emp::web::Div) instruction_list_entry_item_t{
+          inst, program_idx, module_idx
+        };
+        panel << (emp::web::Div) instruction_list_detail_item_t{ inst };
       }
     );
 
