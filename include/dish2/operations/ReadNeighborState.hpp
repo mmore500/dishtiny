@@ -49,6 +49,11 @@ public:
           GetAddr( inst )
         )
       },
+      { "target index",
+        emp::to_string( dish2::ReadableState< DishSpec >::GetLeafIndex(
+          GetAddr( inst )
+        ) )
+      },
     };
 
   }

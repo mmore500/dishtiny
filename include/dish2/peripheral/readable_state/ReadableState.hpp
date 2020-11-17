@@ -2,6 +2,9 @@
 #ifndef DISH2_PERIPHERAL_READABLE_STATE_READABLESTATE_HPP_INCLUDE
 #define DISH2_PERIPHERAL_READABLE_STATE_READABLESTATE_HPP_INCLUDE
 
+#include <cstring>
+#include <limits>
+
 #include "../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
 #include "../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
 #include "../../../../third-party/Empirical/source/base/macros.h"
@@ -74,6 +77,29 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
     }
 
     return "bad idx";
+
+  }
+
+  static size_t GetLeafIndex( const size_t idx ) {
+
+    #define DISH2_READABLE_STATE_INDEX_CASE_PAYLOAD(N) \
+      case N: \
+        if constexpr ( N  < parent_t::GetSize() ) { \
+          return parent_t::template GetLeafIndex<N>(); \
+        }
+
+    emp_assert( idx < parent_t::GetSize() );
+    static_assert( parent_t::GetSize() < 256 );
+
+    switch ( idx ) {
+
+      EMP_WRAP_EACH(
+        DISH2_READABLE_STATE_INDEX_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
+      )
+
+    }
+
+    return std::numeric_limits<size_t>::max();
 
   }
 
