@@ -27,7 +27,7 @@ struct RepLevRequest : public uitsl::PodLeafNode<char, Spec::NLEV> {
 
 namespace uitsl {
 
-// UITSL_ENABLE_TYPENAME( dish2::RepLevRequest );
+UITSL_ENABLE_TYPENAME_TEMPLATE( dish2::RepLevRequest );
 
 } // namespace uitsl
 

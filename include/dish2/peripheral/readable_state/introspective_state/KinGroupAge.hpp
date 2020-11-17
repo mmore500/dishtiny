@@ -32,7 +32,7 @@ struct KinGroupAge : public uitsl::PodLeafNode< size_t, Spec::NLEV > {
 
 namespace uitsl {
 
-// UITSL_ENABLE_TYPENAME( dish2::SpawnRequest );
+UITSL_ENABLE_TYPENAME_TEMPLATE( dish2::KinGroupAge );
 
 } // namespace uitsl
 

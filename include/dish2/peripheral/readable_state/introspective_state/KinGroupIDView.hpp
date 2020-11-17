@@ -18,7 +18,7 @@ struct KinGroupIDView : public uitsl::PodLeafNode< size_t, Spec::NLEV > {
 
 namespace uitsl {
 
-// UITSL_ENABLE_TYPENAME( dish2::KinGroupIDView );
+UITSL_ENABLE_TYPENAME_TEMPLATE( dish2::KinGroupIDView );
 
 } // namespace uitsl
 
