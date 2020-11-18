@@ -16,6 +16,7 @@
 
 #include "InstructionListDetailItem.hpp"
 #include "InstructionListEntryItem.hpp"
+#include "InstructionListNopOutItem.hpp"
 
 namespace dish2 {
 
@@ -27,30 +28,21 @@ class PrevalentGenotypePanel {
     = dish2::InstructionListDetailItem< dish2::Spec >;
   using instruction_list_entry_item_t
     = dish2::InstructionListEntryItem< dish2::Spec >;
+  using instruction_list_nop_out_item_t = dish2::InstructionListNopOutItem;
+
+  using program_t = typename dish2::Spec::program_t;
 
   const dish2::ThreadWorld< dish2::Spec >& thread_world;
 
-public:
-
-  PrevalentGenotypePanel(
-    const dish2::ThreadWorld< dish2::Spec >& thread_world_
-  ) : thread_world( thread_world_ ) {
-
-    panel.SetAttr(
-      "class", "list-group list-group-flush"
-    );
-
-    Redraw();
-
-  }
-
-  void Redraw() {
+  void Redraw( const program_t& program ) {
 
     panel.ClearChildren();
 
-    const auto& [coding_genotype, count]
-      = dish2::get_prevalent_coding_genotype<dish2::Spec>( thread_world );
-    const auto& [event_tags, program] = coding_genotype;
+    panel << (emp::web::Div) instruction_list_nop_out_item_t{ [this, program](){
+      auto program_copy( program );
+      for (auto& instruction : program_copy) instruction.NopOut();
+      Redraw( program_copy );
+    } };
 
     const auto enumerated_module_ids = sgpl::enumerate_module_ids( program );
 
@@ -69,6 +61,27 @@ public:
       }
     );
 
+  }
+
+public:
+
+  PrevalentGenotypePanel(
+    const dish2::ThreadWorld< dish2::Spec >& thread_world_
+  ) : thread_world( thread_world_ ) {
+
+    panel.SetAttr(
+      "class", "list-group list-group-flush"
+    );
+
+    Redraw();
+
+  }
+
+  void Redraw() {
+    const auto& [coding_genotype, count]
+      = dish2::get_prevalent_coding_genotype<dish2::Spec>( thread_world );
+    const auto& [event_tags, program] = coding_genotype;
+    Redraw( program );
   }
 
 };

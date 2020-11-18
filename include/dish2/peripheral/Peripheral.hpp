@@ -5,6 +5,8 @@
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeInput.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeOutput.hpp"
+#include "../../../third-party/conduit/include/uit/fixtures/Sink.hpp"
+#include "../../../third-party/conduit/include/uit/fixtures/Source.hpp"
 
 #include "../spec/IntraMessageMeshSpec.hpp"
 #include "../spec/MessageMeshSpec.hpp"
@@ -32,6 +34,23 @@ struct Peripheral {
   using state_mesh_spec_t = dish2::StateMeshSpec<Spec>;
   using state_node_input_t = netuit::MeshNodeInput<state_mesh_spec_t>;
   state_node_input_t state_node_input;
+
+  static Peripheral make_dummy() {
+    intra_message_node_outputs_t intra_message_node_outputs{};
+    message_node_output_t message_node_output{
+      uit::Sink<message_mesh_spec_t>{}.GetInlet(),
+      0
+    };
+    state_node_input_t state_node_input{
+      uit::Source<state_mesh_spec_t>{}.GetOutlet(),
+      0
+    };
+    return Peripheral(
+      intra_message_node_outputs,
+      message_node_output,
+      state_node_input
+    );
+  }
 
   Peripheral(
     intra_message_node_outputs_t& intra_message_node_outputs_,

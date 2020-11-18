@@ -57,6 +57,8 @@ public:
       "class",
       "list-group-item list-group-item-action"
         " d-flex justify-content-between align-items-center"
+    ).SetCSS(
+      "cursor", "pointer"
     );
 
     // TODO use AddAttr from sara boyd's branch

@@ -8,6 +8,7 @@
 #include "../../../third-party/conduit/include/netuit/arrange/CompleteTopologyFactory.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/config/Spec.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Core.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
 #include "../events/_index.hpp"
 #include "../events/EventManager.hpp"
@@ -60,6 +61,8 @@ struct Spec {
 
   using topology_factory_t = netuit::ToroidalTopologyFactory;
   using intra_topology_factory_t = netuit::CompleteTopologyFactory;
+
+  using program_t = sgpl::Program< sgpl_spec_t >;
 
 };
 
