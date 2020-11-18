@@ -41,7 +41,6 @@ public:
     ) {
       view_panel.Redraw();
       systematics_panel.Redraw();
-      prevalent_genotype_panel.Redraw();
     };
 
   }

@@ -17,6 +17,7 @@
 #include "InstructionListDetailItem.hpp"
 #include "InstructionListEntryItem.hpp"
 #include "InstructionListNopOutItem.hpp"
+#include "InstructionListRefreshItem.hpp"
 
 namespace dish2 {
 
@@ -29,6 +30,7 @@ class PrevalentGenotypePanel {
   using instruction_list_entry_item_t
     = dish2::InstructionListEntryItem< dish2::Spec >;
   using instruction_list_nop_out_item_t = dish2::InstructionListNopOutItem;
+  using instruction_list_refresh_item_t = dish2::InstructionListRefreshItem;
 
   using program_t = typename dish2::Spec::program_t;
 
@@ -37,6 +39,10 @@ class PrevalentGenotypePanel {
   void Redraw( const program_t& program ) {
 
     panel.ClearChildren();
+
+    panel << (emp::web::Div) instruction_list_refresh_item_t{ [this](){
+      Redraw();
+    } };
 
     panel << (emp::web::Div) instruction_list_nop_out_item_t{ [this, program](){
       auto program_copy( program );
