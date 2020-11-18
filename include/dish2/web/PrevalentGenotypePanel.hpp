@@ -76,7 +76,7 @@ public:
   ) : thread_world( thread_world_ ) {
 
     panel.SetAttr(
-      "class", "list-group list-group-flush"
+      "class", "list-group list-group-flush collapse"
     );
 
     Redraw();
