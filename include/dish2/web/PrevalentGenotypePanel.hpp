@@ -42,12 +42,16 @@ class PrevalentGenotypePanel {
 
     panel << (emp::web::Div) instruction_list_refresh_item_t{ [this](){
       Redraw();
+      // why is this necessary?
+      panel.SetAttr( "class", "list-group list-group-flush collapse show" );
     } };
 
     panel << (emp::web::Div) instruction_list_nop_out_item_t{ [this, program](){
       auto program_copy( program );
       for (auto& instruction : program_copy) instruction.NopOut();
       Redraw( program_copy );
+      // why is this necessary?
+      panel.SetAttr( "class", "list-group list-group-flush collapse show" );
     } };
 
     const auto enumerated_module_ids = sgpl::enumerate_module_ids( program );
