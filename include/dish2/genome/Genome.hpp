@@ -68,6 +68,8 @@ struct Genome {
     };
   }
 
+  bool operator!=(const Genome& other) const { return !operator==(other); }
+
   void ElapseGeneration( const size_t rep_lev, const size_t epoch ) {
 
     generation_counter.ElapseGeneration( rep_lev );
@@ -122,6 +124,10 @@ struct Genome {
       mutation_counter.RecordInsertionDeletion( num_muts );
       program = std::move( copy );
     }
+  }
+
+  void SetupSeededGenotype() {
+    kin_group_id = dish2::KinGroupID<Spec>{ std::in_place };
   }
 
   template <class Archive>

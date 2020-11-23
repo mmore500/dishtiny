@@ -11,6 +11,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/enumerate_module_ids.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
+#include "../algorithm/nop_out_phenotypically_neutral_instructions.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
 #include "../spec/Spec.hpp"
 
@@ -36,7 +37,9 @@ class PrevalentGenotypePanel {
 
   const dish2::ThreadWorld< dish2::Spec >& thread_world;
 
-  void Redraw( const program_t& program ) {
+  void Redraw( const dish2::Genome< dish2::Spec >& genome ) {
+
+    const auto& program = genome.program;
 
     panel.ClearChildren();
 
@@ -46,10 +49,12 @@ class PrevalentGenotypePanel {
       panel.SetAttr( "class", "list-group list-group-flush collapse show" );
     } };
 
-    panel << (emp::web::Div) instruction_list_nop_out_item_t{ [this, program](){
-      auto program_copy( program );
-      for (auto& instruction : program_copy) instruction.NopOut();
-      Redraw( program_copy );
+    panel << (emp::web::Div) instruction_list_nop_out_item_t{ [this, genome](){
+      Redraw(
+        dish2::nop_out_phenotypically_neutral_instructions< dish2::Spec >(
+          genome
+        )
+      );
       // why is this necessary?
       panel.SetAttr( "class", "list-group list-group-flush collapse show" );
     } };
@@ -91,7 +96,12 @@ public:
     const auto& [coding_genotype, count]
       = dish2::get_prevalent_coding_genotype<dish2::Spec>( thread_world );
     const auto& [event_tags, program] = coding_genotype;
-    Redraw( program );
+
+    dish2::Genome< dish2::Spec > genome;
+    genome.program = program;
+    genome.event_tags = event_tags;
+
+    Redraw( genome );
   }
 
 };

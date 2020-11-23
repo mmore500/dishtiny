@@ -35,6 +35,8 @@ EMP_BUILD_CONFIG(
 
   GROUP(EXPERIMENT, "EXPERIMENT"),
   VALUE(RUN_SLUG, std::string, "default", "Run-identifying slug"),
+  VALUE(PHENOTYPIC_DIVERGENCE_N_UPDATES, size_t, 100, "TODO"),
+  VALUE(PHENOTYPIC_DIVERGENCE_N_CELLS, size_t, 3600, "TODO"),
   // VALUE(SEED_POP, bool, 0, "Should we seed the population?"),
   // VALUE(SEED_POP_ID, size_t, 0, "Should we seed the population with all seedpop IDs (0) or with a specific ID (>0)?"),
   // VALUE(SEED_MUTATIONS_P, float, 0.0, "With what probability should we apply mutations to seeded cells??"),
