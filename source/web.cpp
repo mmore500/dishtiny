@@ -17,6 +17,8 @@
 #include "dish2/web/WebInterface.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
+thread_local dish2::WebInterface* interface;
+
 void run() {
 
   // apply configuration query params and config files to Config
@@ -26,6 +28,8 @@ void run() {
   am.UseCallbacks();
   if (am.HasUnused()) std::exit(EXIT_FAILURE);
 
+  interface = new dish2::WebInterface;
+
   // log configuraiton settings
   std::cout << "==============================" << std::endl;
   std::cout << "|    How am I configured?    |" << std::endl;
@@ -33,8 +37,6 @@ void run() {
   // cfg.WriteMe(std::cout);
   std::cout << "==============================\n" << std::endl;
 
-  // initialize persistent web interface
-  auto interface = new dish2::WebInterface;
 
   // set up web interface
   interface->Redraw();
@@ -42,7 +44,7 @@ void run() {
   std::cout << "web viewer load SUCCESS" << std::endl;
 
   // once we're done setting up, turn off the loading modal
-  emscripten_run_script("$('.modal').modal('hide');");
+  MAIN_THREAD_EM_ASM({ $('.modal').modal('hide'); });
 
 }
 
@@ -85,12 +87,16 @@ int main() {
 
   std::cout << "treatment_source: " << treatment_source << std::endl;
 
-  emscripten_async_wget(
-    treatment_source.c_str(),
-    "treatment_source.tar.gz",
-    treatget_callback,
-    treatget_callback
-  );
+  // emscripten_async_wget(
+  //   treatment_source.c_str(),
+  //   "treatment_source.tar.gz",
+  //   treatget_callback,
+  //   treatget_callback
+  // );
+
+  run();
+
+  emscripten_set_main_loop([](){}, 1, true);
 
   return 0;
 }

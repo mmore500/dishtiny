@@ -20,6 +20,7 @@ a.out
 a.out.js
 
 web/dishtiny.js
+web/dishtiny.worker.js
 web/index.html
 
 build/

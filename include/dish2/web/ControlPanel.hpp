@@ -8,6 +8,7 @@
 #include "../../../third-party/Empirical/source/web/Button.h"
 #include "../../../third-party/Empirical/source/web/Div.h"
 #include "../../../third-party/Empirical/source/web/Document.h"
+#include "../../../third-party/Empirical/source/web/emfunctions.h"
 
 #include "Animator.hpp"
 
@@ -19,21 +20,34 @@ class ControlPanel {
 
   dish2::Animator animator;
 
+  size_t update{};
+
   void SetupStepButton() {
     button_dash.Div("button_row") << emp::web::Div(
       "step_col"
     ).SetAttr(
       "class", "col-lg-auto p-2"
-    ) << emp::web::Button(
-      [this](){ animator.DoFrame(); },
-      emp::to_string("Update 0"),
+    ) << emp::web::Div(
       "step_button"
     ).SetAttr(
       "class", "btn btn-block btn-lg btn-primary"
+    ).OnClick(
+      [this](){ animator.DoFrame(); }
+    ) << "Update&nbsp;"
+    << emp::web::Element(
+      "span"
+    ).SetCSS(
+      // adapted from http://code.iamkate.com/html-and-css/fixing-browsers-broken-monospace-font-handling/
+      "font-family", "monospace,monospace",
+      "font-size", "1em"
+    ) << emp::web::Text(
+      "update_text"
     );
+
   }
 
   void SetupRunButton() {
+
     button_dash.Div("button_row") << emp::web::Div(
       "run_col"
     ).SetAttr(
@@ -41,19 +55,29 @@ class ControlPanel {
     ) << emp::web::Button(
       [this](){
         animator.ToggleActive();
+
+        auto button = button_dash.Button( "run-button" );
+        button.Freeze();
         if ( animator.GetActive() ) {
-          button_dash.Button("run-button").SetAttr(
+          button.SetCSS(
+              "min-width",
+              emp::to_string( button.GetWidth(), "px" )
+          ).SetAttr(
             "class", "btn btn-primary btn-block btn-lg active",
             "aria-pressed", "true"
-          );
-          button_dash.Button("run-button").SetLabel( "Stop" );
-        } else {
-          button_dash.Button("run-button").SetAttr(
+          ).SetLabel( "Stop" );
+        } else if (
+          !animator.GetActive()
+        ) {
+          button.SetCSS(
+            "min-width",
+            emp::to_string( button.GetWidth(), "px" )
+          ).SetAttr(
             "class", "btn btn-primary btn-block btn-lg",
             "aria-pressed", "false"
-          );
-          button_dash.Button("run-button").SetLabel( "Run&nbsp" );
+          ).SetLabel( "Start" );
         }
+        button.Activate();
       },
       "Start",
       "run-button"
@@ -61,6 +85,7 @@ class ControlPanel {
       "class", "btn btn-primary btn-block btn-lg",
       "aria-pressed", "false"
     );
+
   }
 
   void SetupRenderButton() {
@@ -129,15 +154,10 @@ class ControlPanel {
   }
 
   void RefreshUpdateButton(const size_t update) {
-    button_dash.Button(
-      "step_button"
-    ).SetLabel(
-      emp::to_string(
-        "Update ",
-        update
-      )
-    );
-    button_dash.Div("run-button").Redraw();
+
+    auto text = button_dash.Text( "update_text" );
+    text.Clear();
+    text << emp::to_string(update);
   }
 
 public:
@@ -162,6 +182,8 @@ public:
     SetupStepButton();
     SetupRunButton();
     SetupRenderButton();
+
+    RefreshUpdateButton( 0 );
 
   }
 
