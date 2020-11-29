@@ -15,7 +15,7 @@
 #include "../../../third-party/Empirical/source/web/Div.h"
 #include "../../../third-party/Empirical/source/web/Document.h"
 #include "../../../third-party/Empirical/source/web/Element.h"
-#include "../../../third-party/Empirical/source/web/Text.h"
+#include "../../../third-party/Empirical/source/web/TextFeed.h"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../debug/log_event_dispatcher.hpp"
@@ -27,9 +27,11 @@ class LogEventReadout {
 
   emp::web::Div container;
 
-  emp::web::Text log;
-
-  emp::web::Text stack;
+  emp::web::TextFeed log{
+    "",
+    "<hr>",
+    std::kilo::num
+  };
 
   void setup() {
 
@@ -76,7 +78,6 @@ class LogEventReadout {
       [this](const dish2::LogEntry& entry, const size_t stack_depth) {
 
         log << emp::to_string(
-          "<hr>",
           emp::repeat("📌", stack_depth),
           " ",
           entry.type.symbol,
@@ -87,7 +88,6 @@ class LogEventReadout {
         );
         // TODO entry.detail tooltip?
 
-        log.PruneTo( std::kilo::num );
       }
     );
   }
