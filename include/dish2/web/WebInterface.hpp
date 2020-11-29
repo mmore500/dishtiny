@@ -7,6 +7,7 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "ControlPanel.hpp"
+#include "ModalLogReadoutPanel.hpp"
 #include "PrevalentGenotypePanel.hpp"
 #include "SystematicsPanel.hpp"
 #include "ViewerPanel.hpp"
@@ -26,6 +27,7 @@ class WebInterface {
       return thread_world.GetUpdate();
     }
   };
+  dish2::ModalLogReadoutPanel modal_log_readout_panel;
   dish2::PrevalentGenotypePanel prevalent_genotype_panel{ thread_world };
   dish2::SystematicsPanel systematics_panel{ thread_world };
   dish2::ViewerPanel view_panel{ thread_world };

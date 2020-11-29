@@ -10,6 +10,9 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
+#include "../debug/entry_types.hpp"
+#include "../debug/log_event.hpp"
+#include "../debug/LogScope.hpp"
 #include "../introspection/compare_resource_stockpiles.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -34,12 +37,27 @@ bool detect_phenotypic_divergence(
     world2.Update();
 
     if ( !dish2::compare_resource_stockpiles<Spec>( world1, world2 ) ) {
+      dish2::log_event( {
+        dish2::result_fail,
+        emp::to_string( "phenotypic divergence detected at update ", upd )
+      } );
       return true;
     }
 
-    std::cout << "." << std::endl;
+    if ( upd % 100 == 0 ) dish2::log_event( {
+      dish2::info, emp::to_string( "update ", upd )
+    } );
 
   }
+
+  dish2::log_event( {
+    dish2::result_success,
+    emp::to_string(
+      "no divergence detected after ",
+      cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES(),
+      " updates"
+    )
+  } );
 
   return false;
 

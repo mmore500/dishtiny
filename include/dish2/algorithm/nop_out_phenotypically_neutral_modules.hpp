@@ -13,6 +13,9 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../cell/Cell.hpp"
+#include "../debug/entry_types.hpp"
+#include "../debug/log_event.hpp"
+#include "../debug/LogScope.hpp"
 #include "../genome/Genome.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -22,6 +25,8 @@ template< typename Spec >
 dish2::Genome<Spec> nop_out_phenotypically_neutral_modules(
   const dish2::Genome<Spec>& orig_genome
 ) {
+
+  const dish2::LogScope guard( "evaluating module-by-module" );
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
 
@@ -33,7 +38,10 @@ dish2::Genome<Spec> nop_out_phenotypically_neutral_modules(
     std::next( sgpl::GlobalAnchorIterator<sgpl_spec_t>::make_begin(orig_prog) ),
     sgpl::GlobalAnchorIterator<sgpl_spec_t>::make_end( orig_prog ),
     sgpl::GlobalAnchorIterator<sgpl_spec_t>::make_begin( orig_prog ),
-    [&]( const auto& module_back, const auto& module_front ) {
+    sgpl::CountingIterator{},
+    [&]( const auto& module_back, const auto& module_front, const auto idx ) {
+
+      const dish2::LogScope guard( emp::to_string("evaluating module ", idx) );
 
       auto trial_genome = res;
       auto& trial_prog = trial_genome.program;
@@ -48,12 +56,13 @@ dish2::Genome<Spec> nop_out_phenotypically_neutral_modules(
 
       if ( !dish2::detect_phenotypic_divergence<Spec>(
         orig_genome, trial_genome
-      ) ) res = trial_genome;
+      ) ) {
+        dish2::log_event({dish2::info, emp::to_string("nopping module ", idx)});
+        res = trial_genome;
+      }
 
     }
   );
-
-  std::cout << "modules complete" << std::endl;
 
   return res;
 

@@ -15,7 +15,11 @@ struct DocumentHandles {
   std::unordered_map<std::string, doc_wrap_t> bak;
 
   auto& at( const std::string& q ) {
-    if ( bak.count(q) == 0 ) bak[q] = doc_wrap_t(q);
+    if ( bak.count(q) == 0 ) {
+      bak[q].emplace( q );
+      bak[q]->Activate();
+      (*bak[q])->DoActivate();
+    };
     return bak[q];
   }
 

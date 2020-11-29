@@ -1,3 +1,5 @@
+#define DISH2_LOG_ENABLE
+
 #include <string>
 #include <unistd.h>
 
@@ -14,12 +16,15 @@
 #include "Empirical/source/web/UrlParams.h"
 
 #include "dish2/config/cfg.hpp"
+#include "dish2/prefab/ModalGuard.hpp"
 #include "dish2/web/WebInterface.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
 thread_local dish2::WebInterface* interface;
 
 void run() {
+
+  // const dish2::ModalGuard guard{ "TODO" };
 
   // apply configuration query params and config files to Config
   auto specs = emp::ArgManager::make_builtin_specs( &dish2::cfg );
@@ -44,7 +49,7 @@ void run() {
   std::cout << "web viewer load SUCCESS" << std::endl;
 
   // once we're done setting up, turn off the loading modal
-  MAIN_THREAD_EM_ASM({ $('.modal').modal('hide'); });
+  // MAIN_THREAD_EM_ASM({ $('.modal').modal('hide'); });
 
 }
 

@@ -13,6 +13,7 @@
 
 #include "../algorithm/nop_out_phenotypically_neutral_instructions.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
+#include "../prefab/ModalGuard.hpp"
 #include "../spec/Spec.hpp"
 
 #include "InstructionListDetailItem.hpp"
@@ -50,6 +51,9 @@ class PrevalentGenotypePanel {
     } };
 
     panel << (emp::web::Div) instruction_list_nop_out_item_t{ [this, genome](){
+
+      const dish2::ModalGuard guard{ "modal-log-readout" };
+
       Redraw(
         dish2::nop_out_phenotypically_neutral_instructions< dish2::Spec >(
           genome
@@ -57,6 +61,7 @@ class PrevalentGenotypePanel {
       );
       // why is this necessary?
       panel.SetAttr( "class", "list-group list-group-flush collapse show" );
+
     } };
 
     const auto enumerated_module_ids = sgpl::enumerate_module_ids( program );
