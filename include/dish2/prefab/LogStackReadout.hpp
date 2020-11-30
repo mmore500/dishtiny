@@ -90,6 +90,10 @@ public:
 
   operator emp::web::Div&() { return container; }
 
+  void Clear() { stack.Clear(); }
+
+  void Redraw() { stack.Redraw(); }
+
 };
 
 

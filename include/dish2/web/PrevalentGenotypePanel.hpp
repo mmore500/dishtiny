@@ -12,6 +12,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../algorithm/nop_out_phenotypically_neutral_instructions.hpp"
+#include "../debug/LogLevelGuard.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
 #include "../prefab/ModalGuard.hpp"
 #include "../spec/Spec.hpp"
@@ -53,6 +54,8 @@ class PrevalentGenotypePanel {
     panel << (emp::web::Div) instruction_list_nop_out_item_t{ [this, genome](){
 
       const dish2::ModalGuard guard{ "modal-log-readout" };
+
+      const dish2::LogLevelGuard guard2;
 
       Redraw(
         dish2::nop_out_phenotypically_neutral_instructions< dish2::Spec >(

@@ -100,6 +100,10 @@ public:
 
   operator emp::web::Div&() { return container; }
 
+  void Clear() { log.Clear(); }
+
+  void Redraw() { log.Redraw(); }
+
 };
 
 

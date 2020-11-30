@@ -7,6 +7,7 @@
 #include "enable.hpp"
 #include "entry_types.hpp"
 #include "log_event.hpp"
+#include "log_level.hpp"
 #include "log_stack.hpp"
 #include "log_stack_dispatcher.hpp"
 
@@ -35,7 +36,9 @@ struct LogScope {
       description
     );
 
-    for (const auto& fun : log_stack_dispatcher ) fun( dish2::log_stack );
+    if ( dish2::log_level >= dish2::scope_begin.verbosity ) {
+      for (const auto& fun : log_stack_dispatcher ) fun( dish2::log_stack );
+    }
 
   }
 
@@ -44,12 +47,14 @@ struct LogScope {
     dish2::log_stack.pop_back();
 
     dish2::log_event({
-      dish2::scope_end,
-      name,
-      description
-    });
+        dish2::scope_end,
+        name,
+        description
+      });
 
-    for (const auto& fun : log_stack_dispatcher ) fun( dish2::log_stack );
+    if ( dish2::log_level >= dish2::scope_end.verbosity ) {
+      for (const auto& fun : log_stack_dispatcher ) fun( dish2::log_stack );
+    }
 
   }
 

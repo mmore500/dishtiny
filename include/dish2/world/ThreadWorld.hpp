@@ -6,9 +6,11 @@
 
 #include "../../../third-party/conduit/include/netuit/mesh/Mesh.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
+#include "../../../third-party/Empirical/source/tools/string_utils.h"
 
 #include "../cell/Cell.hpp"
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 

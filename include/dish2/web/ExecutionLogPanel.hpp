@@ -2,8 +2,13 @@
 #ifndef DISH2_WEB_EXECUTIONLOGPANEL_HPP_INCLUDE
 #define DISH2_WEB_EXECUTIONLOGPANEL_HPP_INCLUDE
 
-#include "../../../third-party/Empirical/source/web/Document.h"
+#include <emscripten.h>
+#include <emscripten/threading.h>
 
+#include "../../../third-party/Empirical/source/web/Document.h"
+#include "../../../third-party/Empirical/source/web/JSWrap.h"
+
+#include "../debug/log_level.hpp"
 #include "../prefab/LogEventReadout.hpp"
 #include "../prefab/LogStackReadout.hpp"
 
@@ -11,58 +16,83 @@ namespace dish2 {
 
 class ExecutionLogPanel {
 
-  emp::web::Document panel{ "execution-log-panel" };
+  emp::web::Document stack_panel{ "execution-log-stack-panel" };
+
+  emp::web::Document events_panel{ "execution-log-events-panel" };
+
+  dish2::LogStackReadout log_stack_readout;
 
   dish2::LogEventReadout log_events_readout;
 
-  dish2::LogStackReadout log_stack_readout;
 
 public:
 
   ExecutionLogPanel() {
-    panel.SetAttr(
-      "class", "list-group list-group-flush collapse"
-    );
 
-    panel <<  emp::web::Div().SetAttr(
-      "class",
-      "list-group-item list-group-item-info"
-    ) << "‼️ When this panel is open, you'll have to click the step button to advance the simulation.";
+    // add callback on opening the panel that increases the log level
+    // or on closing the panel resets the log level
+    {
+      const size_t log_level_fun = emp::JSWrap( [](){
+        dish2::log_level = 10;
+      } );
+      const size_t log_release_fun = emp::JSWrap( [this](){
+        Clear();
+        // adapted from https://github.com/emscripten-core/emscripten/blob/2bca083cbbd5a4133db61fbd74d04f7feecfa907/tests/pthread/test_futex_wake_all.cpp
+        emscripten_atomic_store_u32(
+          &dish2::log_futex_val,  dish2::log_futex_release
+        );
+        emscripten_futex_wake( &dish2::log_futex_val, 1 );
+      } );
 
-    panel << emp::web::Div().SetAttr(
-      "class",
-      "list-group-item list-group-item-action list-group-item-success"
-    ).SetCSS(
-      "cursor", "pointer"
-    ).OnClick(
-      [](){ }
-    ) << "Step";
+      MAIN_THREAD_EM_ASM({
+        $('#execution-log-panel-button').on('click', function() {
+          if ( !$('#execution-log-panel-button').hasClass('active') ) {
+            empCppCallback($0);
+          } else {
+            empDoCppCallback($1);
+          }
+        });
+      }, log_level_fun, log_release_fun);
+    }
 
+    // add callback to stepper button that wakes log futex
+    {
+      const size_t fun_id = emp::JSWrap( [](){
+        // adapted from https://github.com/emscripten-core/emscripten/blob/2bca083cbbd5a4133db61fbd74d04f7feecfa907/tests/pthread/test_futex_wake_all.cpp
+        const int step = MAIN_THREAD_EM_ASM_INT({
+          return $('#execution-log-panel-step').val();
+        });
+        emscripten_atomic_store_u32( &dish2::log_futex_val, step );
+        emscripten_futex_wake( &dish2::log_futex_val, 1 );
+      } );
+      MAIN_THREAD_EM_ASM({
+        $('#execution-log-panel-stepper').on('click', function() {
+          // using empDoCppCallback ensures that C++ callback is processed on
+          // browser thread, not web worker (which is busy spin waiting)
+          empDoCppCallback($0);
+        });
+      }, fun_id);
+    }
 
-
-    panel <<  emp::web::Div().SetAttr(
-      "class",
-      "list-group-item"
-    ) << "Stack Log --- tells you the nested set of tasks that the computer is working on right now.";
-
-    panel <<  emp::web::Div().SetAttr(
+    stack_panel.SetAttr(
       "class",
       "list-group-item"
     ) << (emp::web::Div) log_stack_readout;
 
-    panel <<  emp::web::Div().SetAttr(
+    events_panel.SetAttr(
       "class",
-      "list-group-item"
-    ) << "Events Log --- gives you a play-by-play of what the computer has done.";
-
-    panel <<  emp::web::Div().SetAttr(
-      "class",
-      "list-group-item"
-    ).SetCSS(
-      "max-height: 80vh",
-      "display: flex"
+      "list-group-item",
+      "style", // workaround for css not applying
+      "max-height: 60vh; display: flex;"
     ) << (emp::web::Div) log_events_readout;
 
+  }
+
+  void Clear() {
+    log_stack_readout.Clear();
+    log_stack_readout.Redraw();
+    log_events_readout.Clear();
+    log_events_readout.Redraw();
   }
 
 };
