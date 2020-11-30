@@ -50,7 +50,6 @@ class LogEventReadout {
       "margin", "30px auto 0",
       "padding", "20px",
       "box-sizing", "border-box",
-      "max-width", "800px",
       "border-radius", "4px",
       "display", "flex",
       "flex-wrap", "wrap-reverse",

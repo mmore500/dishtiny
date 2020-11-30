@@ -44,7 +44,6 @@ class LogStackReadout {
       "font-family", "monospace",
       "padding", "20px",
       "box-sizing", "border-box",
-      "max-width", "800px",
       "border-radius", "4px",
       "width", "100%"
     ) << ratchet << stack;
