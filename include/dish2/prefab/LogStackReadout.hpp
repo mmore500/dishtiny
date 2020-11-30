@@ -78,7 +78,6 @@ class LogStackReadout {
 
           );
           ratchet_heights.push_back( ratchet.GetHeight() );
-          std::cout << ratchet_heights.back() << std::endl;
         }
 
         else emp_assert( false );
