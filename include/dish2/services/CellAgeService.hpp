@@ -11,6 +11,7 @@
 #include "../cell/cardinal_iterators/CellAgeWrapper.hpp"
 #include "../cell/cardinal_iterators/EpochWrapper.hpp"
 #include "../cell/cardinal_iterators/KinGroupAgeWrapper.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -28,6 +29,8 @@ struct CellAgeService {
   static void DoService( Cell& cell ) {
 
     using spec_t = typename Cell::spec_t;
+
+    const dish2::LogScope guard{ "cell age service" };
 
     // check cell age consistency
     emp_assert((

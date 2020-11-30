@@ -17,6 +17,7 @@
 #include "../cell/cardinal_iterators/NeighborResourceReceiveResistanceWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceNodeInputWrapper.hpp"
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -32,6 +33,8 @@ struct ResourceInputJumpService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "resource input jump service" };
 
     using spec_t = typename Cell::spec_t;
 

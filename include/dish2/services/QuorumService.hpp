@@ -11,6 +11,7 @@
 #include "../config/cfg.hpp"
 #include "../cell/cardinal_iterators/CardinalQuorumStateWrapper.hpp"
 #include "../cell/cardinal_iterators/KinMatchWrapper.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -40,6 +41,8 @@ class QuorumService {
 
   template<typename Cell>
   static void UpdateKnownBits( Cell& cell ) {
+
+    const dish2::LogScope guard{ "quorum service" };
 
     using spec_t = typename Cell::spec_t;
 

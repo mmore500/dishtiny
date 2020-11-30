@@ -21,6 +21,7 @@
 #include "../cell/cardinal_iterators/ResourceSendRequestWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -36,6 +37,8 @@ struct ResourceSendingService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "resource sending service" };
 
     using spec_t = typename Cell::spec_t;
 

@@ -11,6 +11,7 @@
 #include "../cell/cardinal_iterators/EpochWrapper.hpp"
 #include "../cell/cardinal_iterators/KinGroupAgeWrapper.hpp"
 #include "../cell/cardinal_iterators/NeighborEpochWrapper.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -25,6 +26,8 @@ struct EpochAdvanceService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "epoch advance service" };
 
     using spec_t = typename Cell::spec_t;
 

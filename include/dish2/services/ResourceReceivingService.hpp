@@ -10,6 +10,7 @@
 #include "../cell/cardinal_iterators/ResourceNodeInputWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -25,6 +26,8 @@ struct ResourceReceivingService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "resource receiving service" };
 
     using spec_t = typename Cell::spec_t;
 

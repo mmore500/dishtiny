@@ -9,6 +9,7 @@
 
 #include "../cell/cardinal_iterators/StateNodeInputWrapper.hpp"
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -23,6 +24,8 @@ struct StateInputJumpService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "state input jump service" };
 
     using spec_t = typename Cell::spec_t;
 

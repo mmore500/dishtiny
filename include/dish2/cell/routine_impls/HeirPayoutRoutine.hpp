@@ -14,11 +14,14 @@
 #include "../cardinal_iterators/HeirRequestWrapper.hpp"
 #include "../cardinal_iterators/ResourceNodeOutputWrapper.hpp"
 #include "../cardinal_iterators/ResourceStockpileWrapper.hpp"
+#include "../../debug/LogScope.hpp"
 
 namespace dish2 {
 
 template <class Spec>
 void Cell<Spec>::HeirPayoutRoutine() {
+
+  const dish2::LogScope guard{ "heir payout routine" };
 
   // calculate amount of resource to send each heir
   const size_t num_heirs = std::count_if(

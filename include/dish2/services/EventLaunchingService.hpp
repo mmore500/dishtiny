@@ -10,6 +10,7 @@
 
 #include "../cell/cardinal_iterators/CpuWrapper.hpp"
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -25,6 +26,8 @@ struct EventLaunchingService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "event launching service" };
 
     using spec_t = typename Cell::spec_t;
     using event_manager_t = typename spec_t::event_manager_t;

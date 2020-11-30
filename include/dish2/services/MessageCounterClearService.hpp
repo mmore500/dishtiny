@@ -10,6 +10,7 @@
 #include "../cell/cardinal_iterators/IncomingInterMessageCounterWrapper.hpp"
 #include "../cell/cardinal_iterators/IncomingIntraMessageCounterWrapper.hpp"
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -26,6 +27,8 @@ struct MessageCounterClearService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "message counter clear service" };
 
     using spec_t = typename Cell::spec_t;
 

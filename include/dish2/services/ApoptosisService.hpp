@@ -9,6 +9,7 @@
 
 #include "../config/cfg.hpp"
 #include "../cell/cardinal_iterators/ApoptosisRequestWrapper.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -24,6 +25,8 @@ struct ApoptosisService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "apoptosis service" };
 
     using spec_t = typename Cell::spec_t;
 

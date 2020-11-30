@@ -8,6 +8,7 @@
 
 #include "../cell/cardinal_iterators/CpuWrapper.hpp"
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -23,6 +24,8 @@ struct CpuExecutionService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "cpu execution service" };
 
     using spec_t = typename Cell::spec_t;
     using sgpl_spec_t = typename spec_t::sgpl_spec_t;

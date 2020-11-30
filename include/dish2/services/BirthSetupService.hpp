@@ -11,6 +11,7 @@
 
 #include "../config/cfg.hpp"
 #include "../cell/cardinal_iterators/GenomeNodeInputWrapper.hpp"
+#include "../debug/LogScope.hpp"
 #include "../peripheral/readable_state/ReadableState.hpp"
 
 namespace dish2 {
@@ -27,6 +28,7 @@ struct BirthSetupService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
     // TODO check quiescence period?
+    const dish2::LogScope guard{ "birth setup service" };
 
     using spec_t = typename Cell::spec_t;
 

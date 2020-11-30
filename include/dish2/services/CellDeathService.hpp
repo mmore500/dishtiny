@@ -11,6 +11,7 @@
 #include "../cell/cardinal_iterators/CellAgeWrapper.hpp"
 #include "../cell/cardinal_iterators/GenomeNodeOutputWrapper.hpp"
 #include "../cell/cardinal_iterators/NeighborIsAliveWrapper.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -48,6 +49,8 @@ public:
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "cell death service" };
 
     using spec_t = typename Cell::spec_t;
 

@@ -9,6 +9,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -24,6 +25,8 @@ struct QuorumCapService {
 
   template<typename Cell>
   static bool DoService( Cell& cell, const size_t lev ) {
+
+    const dish2::LogScope guard{ "quorum cap service" };
 
     const size_t num_quorum_bits
       = cell.cell_quorum_state.GetNumKnownQuorumBits( lev );

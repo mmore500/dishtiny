@@ -9,6 +9,7 @@
 #include "../cell/cardinal_iterators/IncomingInterMessageCounterWrapper.hpp"
 #include "../cell/cardinal_iterators/MessageNodeInputWrapper.hpp"
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -24,6 +25,8 @@ struct InterMessageLaunchingService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "inter message launching service" };
 
     using spec_t = typename Cell::spec_t;
 

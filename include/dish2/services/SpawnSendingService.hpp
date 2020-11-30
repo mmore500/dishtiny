@@ -14,6 +14,7 @@
 #include "../cell/cardinal_iterators/SpawnArrestWrapper.hpp"
 #include "../cell/cardinal_iterators/SpawnRequestWrapper.hpp"
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -29,6 +30,8 @@ struct SpawnSendingService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "spawn sending service" };
 
     using spec_t = typename Cell::spec_t;
 

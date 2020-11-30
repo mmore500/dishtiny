@@ -9,11 +9,14 @@
 #include "../cardinal_iterators/EpochWrapper.hpp"
 #include "../cardinal_iterators/IsAliveWrapper.hpp"
 #include "../cardinal_iterators/KinGroupIDViewWrapper.hpp"
+#include "../../debug/LogScope.hpp"
 
 namespace dish2 {
 
 template <class Spec>
 void Cell<Spec>::MakeAliveRoutine() {
+
+  const dish2::LogScope guard{ "make alive routine" };
 
   const size_t epoch = *begin<dish2::EpochWrapper<Spec>>();
 

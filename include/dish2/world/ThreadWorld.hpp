@@ -74,7 +74,11 @@ struct ThreadWorld {
   size_t update{};
 
   void Update() {
-    for (auto& cell : population) cell.Update(update);
+    for ( size_t i = 0; i < population.size(); ++i ) {
+      const dish2::LogScope guard{ emp::to_string("updating cell ", i) };
+      auto& cell = population[i];
+      cell.Update(update);
+    }
     ++update;
   }
 

@@ -5,6 +5,7 @@
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
 #include "../config/cfg.hpp"
+#include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
@@ -20,6 +21,8 @@ struct ConduitFlushService {
 
   template<typename Cell>
   static void DoService( Cell& cell ) {
+
+    const dish2::LogScope guard{ "conduit flush service" };
 
     for (auto& cardinal : cell.cardinals) {
       cardinal.genome_node_output.TryFlush();

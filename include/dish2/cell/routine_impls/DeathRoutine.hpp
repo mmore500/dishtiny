@@ -8,11 +8,14 @@
 
 #include "../cardinal_iterators/IsAliveWrapper.hpp"
 #include "../cardinal_iterators/EpochWrapper.hpp"
+#include "../../debug/LogScope.hpp"
 
 namespace dish2 {
 
 template <class Spec>
 void Cell<Spec>::DeathRoutine() {
+
+  const dish2::LogScope guard{ "death routine" };
 
   // check is alive consistency
   emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(
