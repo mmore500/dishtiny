@@ -49,6 +49,8 @@ public:
           if ( !$('#execution-log-panel-button').hasClass('active') ) {
             empCppCallback($0);
           } else {
+            // remove all open detail popovers
+            $("[data-toggle='popover']").popover('dispose');
             empDoCppCallback($1);
           }
         });
@@ -67,6 +69,8 @@ public:
       } );
       MAIN_THREAD_EM_ASM({
         $('#execution-log-panel-stepper').on('click', function() {
+          // remove all open detail popovers
+          $("[data-toggle='popover']").popover('dispose');
           // using empDoCppCallback ensures that C++ callback is processed on
           // browser thread, not web worker (which is busy spin waiting)
           empDoCppCallback($0);
@@ -83,7 +87,7 @@ public:
       "class",
       "list-group-item",
       "style", // workaround for css not applying
-      "max-height: 60vh; display: flex;"
+      "max-height: 40vh; display: flex;"
     ) << (emp::web::Div) log_events_readout;
 
   }

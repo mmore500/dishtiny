@@ -83,7 +83,12 @@ class LogEventReadout {
           " ",
           entry.type.name,
           " ",
-          entry.name
+          entry.name,
+          "<a class=\"float-right\" href=\"javascript:;\" data-placement=\"left\" data-toggle=\"popover\" data-trigger=\"manual\" title=\"",
+          entry.name,
+          "\" data-content=\"",
+          entry.detail,
+          "\" onclick=\"$(this).popover(); $(this).popover('toggle');\">🤔</a>"
         );
         // TODO entry.detail tooltip?
 

@@ -69,7 +69,13 @@ class LogStackReadout {
             stack.GetSize() ? "<hr>" : "",
             emp::repeat("📌", stack.GetSize()),
             "📎 ",
-            cur_stack.back().name
+            cur_stack.back().name,
+            "<a class=\"float-right\" href=\"javascript:;\" data-placement=\"left\" data-toggle=\"popover\" data-trigger=\"manual\" title=\"",
+            cur_stack.back().name,
+            "\" data-content=\"",
+            cur_stack.back().detail,
+            "\" onclick=\"$(this).popover(); $(this).popover('toggle');\">🤔</a>"
+
           );
           ratchet_heights.push_back( ratchet.GetHeight() );
           std::cout << ratchet_heights.back() << std::endl;
