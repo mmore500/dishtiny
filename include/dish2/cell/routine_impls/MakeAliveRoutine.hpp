@@ -16,7 +16,7 @@ namespace dish2 {
 template <class Spec>
 void Cell<Spec>::MakeAliveRoutine() {
 
-  const dish2::LogScope guard{ "make alive routine" };
+  const dish2::LogScope guard{ "make alive routine", "TODO", 3 };
 
   const size_t epoch = *begin<dish2::EpochWrapper<Spec>>();
 

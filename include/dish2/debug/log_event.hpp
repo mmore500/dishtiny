@@ -16,7 +16,7 @@ namespace dish2 {
 void log_event( const dish2::LogEntry& entry ) {
 #ifdef DISH2_LOG_ENABLE
 
-  if ( dish2::log_level >= dish2::scope_begin.verbosity ) {
+  if ( dish2::log_level >= entry.type.verbosity ) {
     for (const auto& fun : log_event_dispatcher ) {
       fun( entry, dish2::log_stack.size() );
     }

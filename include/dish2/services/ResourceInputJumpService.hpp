@@ -34,7 +34,7 @@ struct ResourceInputJumpService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
-    const dish2::LogScope guard{ "resource input jump service" };
+    const dish2::LogScope guard{ "resource input jump service", "TODO", 3 };
 
     using spec_t = typename Cell::spec_t;
 

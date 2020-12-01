@@ -50,7 +50,7 @@ public:
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
-    const dish2::LogScope guard{ "cell death service" };
+    const dish2::LogScope guard{ "cell death service", "TODO", 3 };
 
     using spec_t = typename Cell::spec_t;
 

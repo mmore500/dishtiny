@@ -30,7 +30,7 @@ struct CellAgeService {
 
     using spec_t = typename Cell::spec_t;
 
-    const dish2::LogScope guard{ "cell age service" };
+    const dish2::LogScope guard{ "cell age service", "TODO", 3 };
 
     // check cell age consistency
     emp_assert((

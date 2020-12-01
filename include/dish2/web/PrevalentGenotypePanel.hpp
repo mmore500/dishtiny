@@ -55,7 +55,7 @@ class PrevalentGenotypePanel {
 
       const dish2::ModalGuard guard{ "modal-log-readout" };
 
-      const dish2::LogLevelGuard guard2;
+      const dish2::LogLevelGuard guard2{ 2 };
 
       Redraw(
         dish2::nop_out_phenotypically_neutral_instructions< dish2::Spec >(

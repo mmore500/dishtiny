@@ -25,7 +25,7 @@ struct CpuExecutionService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
-    const dish2::LogScope guard{ "cpu execution service" };
+    const dish2::LogScope guard{ "cpu execution service", "TODO", 3 };
 
     using spec_t = typename Cell::spec_t;
     using sgpl_spec_t = typename spec_t::sgpl_spec_t;

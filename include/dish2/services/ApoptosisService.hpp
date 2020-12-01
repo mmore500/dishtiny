@@ -26,7 +26,7 @@ struct ApoptosisService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
-    const dish2::LogScope guard{ "apoptosis service" };
+    const dish2::LogScope guard{ "apoptosis service", "TODO", 3 };
 
     using spec_t = typename Cell::spec_t;
 

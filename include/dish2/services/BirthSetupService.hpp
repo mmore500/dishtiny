@@ -28,7 +28,7 @@ struct BirthSetupService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
     // TODO check quiescence period?
-    const dish2::LogScope guard{ "birth setup service" };
+    const dish2::LogScope guard{ "birth setup service", "TODO", 3 };
 
     using spec_t = typename Cell::spec_t;
 

@@ -42,7 +42,7 @@ class QuorumService {
   template<typename Cell>
   static void UpdateKnownBits( Cell& cell ) {
 
-    const dish2::LogScope guard{ "quorum service" };
+    const dish2::LogScope guard{ "quorum service", "TODO", 3 };
 
     using spec_t = typename Cell::spec_t;
 

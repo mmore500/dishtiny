@@ -26,7 +26,7 @@ struct QuorumCapService {
   template<typename Cell>
   static bool DoService( Cell& cell, const size_t lev ) {
 
-    const dish2::LogScope guard{ "quorum cap service" };
+    const dish2::LogScope guard{ "quorum cap service", "TODO", 3 };
 
     const size_t num_quorum_bits
       = cell.cell_quorum_state.GetNumKnownQuorumBits( lev );

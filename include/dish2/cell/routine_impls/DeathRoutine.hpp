@@ -15,7 +15,7 @@ namespace dish2 {
 template <class Spec>
 void Cell<Spec>::DeathRoutine() {
 
-  const dish2::LogScope guard{ "death routine" };
+  const dish2::LogScope guard{ "death routine", "TODO", 3 };
 
   // check is alive consistency
   emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(

@@ -27,7 +27,7 @@ struct EpochAdvanceService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
-    const dish2::LogScope guard{ "epoch advance service" };
+    const dish2::LogScope guard{ "epoch advance service", "TODO", 3 };
 
     using spec_t = typename Cell::spec_t;
 

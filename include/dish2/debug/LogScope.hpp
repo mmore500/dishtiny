@@ -18,17 +18,23 @@ struct LogScope {
 
   std::string name;
   std::string description;
+  int verbosity;
 
   LogScope(
     const std::string& name_,
-    const std::string& description_=""
+    const std::string& description_="",
+    const int verbosity_ = dish2::scope_begin.verbosity
   ) : name( name_ )
-  , description( description_ ) {
+  , description( description_ )
+  , verbosity( verbosity_ ) {
+
+    auto event = dish2::scope_begin;
+    event.verbosity = verbosity;
 
     dish2::log_event({
-      dish2::scope_begin,
+      event,
       name,
-      description
+      description,
     });
 
     dish2::log_stack.emplace_back(
@@ -36,7 +42,7 @@ struct LogScope {
       description
     );
 
-    if ( dish2::log_level >= dish2::scope_begin.verbosity ) {
+    if ( dish2::log_level >= verbosity ) {
       for (const auto& fun : log_stack_dispatcher ) fun( dish2::log_stack );
     }
 
@@ -46,13 +52,16 @@ struct LogScope {
 
     dish2::log_stack.pop_back();
 
-    dish2::log_event({
-        dish2::scope_end,
-        name,
-        description
-      });
+    auto event = dish2::scope_end;
+    event.verbosity = verbosity;
 
-    if ( dish2::log_level >= dish2::scope_end.verbosity ) {
+    dish2::log_event({
+      event,
+      name,
+      description
+    });
+
+    if ( dish2::log_level >= verbosity ) {
       for (const auto& fun : log_stack_dispatcher ) fun( dish2::log_stack );
     }
 

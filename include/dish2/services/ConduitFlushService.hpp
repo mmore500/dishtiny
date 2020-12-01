@@ -22,7 +22,7 @@ struct ConduitFlushService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
-    const dish2::LogScope guard{ "conduit flush service" };
+    const dish2::LogScope guard{ "conduit flush service", "TODO", 3 };
 
     for (auto& cardinal : cell.cardinals) {
       cardinal.genome_node_output.TryFlush();
