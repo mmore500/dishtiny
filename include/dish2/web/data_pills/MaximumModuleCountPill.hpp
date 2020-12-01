@@ -2,7 +2,7 @@
 #ifndef DISH2_WEB_DATA_PILLS_MAXIMUMMODULECOUNTPILL_HPP_INCLUDE
 #define DISH2_WEB_DATA_PILLS_MAXIMUMMODULECOUNTPILL_HPP_INCLUDE
 
-#include "../../../../third-party/Empirical/source/tools/string_utils.h"
+#include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../introspection/get_maximum_module_count.hpp"
 #include "../../world/ThreadWorld.hpp"

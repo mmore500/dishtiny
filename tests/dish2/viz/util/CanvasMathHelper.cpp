@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 
 #include "Catch/single_include/catch2/catch.hpp"
-#include "Empirical/source/web/Canvas.h"
+#include "Empirical/include/emp/web/Canvas.hpp"
 
 #include "dish2/config/cfg.hpp"
 #include "dish2/viz/util/CanvasMathHelper.hpp"

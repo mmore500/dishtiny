@@ -5,7 +5,7 @@
 #include <iterator>
 #include <set>
 
-#include "../../../third-party/Empirical/source/tools/tuple_utils.h"
+#include "../../../third-party/Empirical/include/emp/datastructs/tuple_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 
 #include "../cell/Cell.hpp"

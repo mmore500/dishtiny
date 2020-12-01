@@ -8,14 +8,14 @@
 #include <string>
 
 #include "../../../third-party/conduit/include/uitsl/countdown/runtime.hpp"
-#include "../../../third-party/Empirical/source/base/optional.h"
-#include "../../../third-party/Empirical/source/tools/string_utils.h"
-#include "../../../third-party/Empirical/source/web/Canvas.h"
-#include "../../../third-party/Empirical/source/web/commands.h"
-#include "../../../third-party/Empirical/source/web/Div.h"
-#include "../../../third-party/Empirical/source/web/DocuExtras.h"
-#include "../../../third-party/Empirical/source/web/Element.h"
-#include "../../../third-party/Empirical/source/web/js_utils.h"
+#include "../../../third-party/Empirical/include/emp/base/optional.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Canvas.hpp"
+#include "../../../third-party/Empirical/include/emp/web/commands.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Div.hpp"
+#include "../../../third-party/Empirical/include/emp/web/DocuExtras.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Element.hpp"
+#include "../../../third-party/Empirical/include/emp/web/js_utils.hpp"
 
 #include "../world/ThreadWorld.hpp"
 #include "../spec/Spec.hpp"

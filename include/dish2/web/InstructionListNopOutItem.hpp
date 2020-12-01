@@ -4,11 +4,11 @@
 
 #include <functional>
 
-#include "../../../third-party/Empirical/source/tools/string_utils.h"
-#include "../../../third-party/Empirical/source/tools/hash_namify.h"
-#include "../../../third-party/Empirical/source/web/commands.h"
-#include "../../../third-party/Empirical/source/web/Div.h"
-#include "../../../third-party/Empirical/source/web/init.h"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/hash_namify.hpp"
+#include "../../../third-party/Empirical/include/emp/web/commands.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Div.hpp"
+#include "../../../third-party/Empirical/include/emp/web/init.hpp"
 
 namespace dish2 {
 

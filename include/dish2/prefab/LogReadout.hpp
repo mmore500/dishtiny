@@ -9,13 +9,13 @@
 #include <utility>
 
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
-#include "../../../third-party/Empirical/source/base/vector.h"
-#include "../../../third-party/Empirical/source/tools/string_utils.h"
-#include "../../../third-party/Empirical/source/web/commands.h"
-#include "../../../third-party/Empirical/source/web/Div.h"
-#include "../../../third-party/Empirical/source/web/Document.h"
-#include "../../../third-party/Empirical/source/web/Element.h"
-#include "../../../third-party/Empirical/source/web/Text.h"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/web/commands.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Div.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Document.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Element.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Text.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "LogEventReadout.hpp"

@@ -2,8 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_KINMATCHWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_KINMATCHWRAPPER_HPP_INCLUDE
 
-#include "../../../../third-party/Empirical/source/base/array.h"
-#include "../../../../third-party/Empirical/source/base/vector.h"
+#include "../../../../third-party/Empirical/include/emp/base/array.hpp"
+#include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../peripheral/readable_state/ReadableState.hpp"
 

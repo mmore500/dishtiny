@@ -6,8 +6,8 @@
 
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
-#include "../../../third-party/Empirical/source/web/Div.h"
-#include "../../../third-party/Empirical/source/web/Document.h"
+#include "../../../third-party/Empirical/include/emp/web/Div.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Document.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/enumerate_module_ids.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 

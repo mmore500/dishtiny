@@ -4,8 +4,8 @@
 
 #include <functional>
 
-#include "../../../third-party/Empirical/source/base/optional.h"
-#include "../../../third-party/Empirical/source/web/Animate.h"
+#include "../../../third-party/Empirical/include/emp/base/optional.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Animate.hpp"
 
 namespace dish2 {
 

@@ -5,8 +5,8 @@
 #include <string>
 #include <utility>
 
-#include "../../../../third-party/Empirical/source/tools/math.h"
-#include "../../../../third-party/Empirical/source/web/color_map.h"
+#include "../../../../third-party/Empirical/include/emp/math/math.hpp"
+#include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
 
 namespace dish2 {
 

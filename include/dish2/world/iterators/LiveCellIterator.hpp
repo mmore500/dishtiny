@@ -4,7 +4,7 @@
 
 #include <iterator>
 
-#include "../../../../third-party/Empirical/source/base/vector.h"
+#include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../cell/Cell.hpp"
 

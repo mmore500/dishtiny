@@ -5,8 +5,8 @@
 #include <emscripten.h>
 #include <emscripten/threading.h>
 
-#include "../../../third-party/Empirical/source/web/Document.h"
-#include "../../../third-party/Empirical/source/web/JSWrap.h"
+#include "../../../third-party/Empirical/include/emp/web/Document.hpp"
+#include "../../../third-party/Empirical/include/emp/web/JSWrap.hpp"
 
 #include "../debug/log_level.hpp"
 #include "../prefab/LogEventReadout.hpp"

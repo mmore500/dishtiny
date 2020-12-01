@@ -4,9 +4,9 @@
 #include "conduit/include/uitsl/countdown/Timer.hpp"
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 #include "conduit/include/uitsl/parallel/ThreadTeam.hpp"
-#include "Empirical/source/config/ArgManager.h"
-#include "Empirical/source/config/command_line.h"
-#include "Empirical/source/tools/Random.h"
+#include "Empirical/include/emp/config/ArgManager.hpp"
+#include "Empirical/include/emp/config/command_line.hpp"
+#include "Empirical/include/emp/math/Random.hpp"
 
 #include "dish2/config/cfg.hpp"
 #include "dish2/spec/Spec.hpp"

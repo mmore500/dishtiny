@@ -4,9 +4,9 @@
 
 #include <cstddef>
 
-#include "../../../third-party/Empirical/source/base/array.h"
-#include "../../../third-party/Empirical/source/tools/BitSet.h"
-#include "../../../third-party/Empirical/source/tools/hash_utils.h"
+#include "../../../third-party/Empirical/include/emp/base/array.hpp"
+#include "../../../third-party/Empirical/include/emp/bits/BitSet.hpp"
+#include "../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/mutate_bytes.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 

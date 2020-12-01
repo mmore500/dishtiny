@@ -10,7 +10,7 @@
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
 #include "../../../../../third-party/conduit/include/uitsl/algorithm/clamp_cast.hpp"
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
-#include "../../../../../third-party/Empirical/source/base/macros.h"
+#include "../../../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../../../third-party/signalgp-lite/include/sgpl/utility/ByteEnumeration.hpp"
 
 #include "NopState.hpp"

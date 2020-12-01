@@ -6,7 +6,7 @@
 #include <utility>
 
 #include "../../../third-party/cereal/include/cereal/types/array.hpp"
-#include "../../../third-party/Empirical/source/base/array.h"
+#include "../../../third-party/Empirical/include/emp/base/array.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 namespace dish2 {

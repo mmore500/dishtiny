@@ -5,8 +5,8 @@
 #include <cmath>
 
 #include "../../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
-#include "../../../../third-party/Empirical/source/tools/math.h"
-#include "../../../../third-party/Empirical/source/web/Canvas.h"
+#include "../../../../third-party/Empirical/include/emp/math/math.hpp"
+#include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
 #include "../../config/cfg.hpp"
 

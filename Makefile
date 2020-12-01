@@ -1,6 +1,6 @@
 # Project-specific settings
 PROJECT := dishtiny
-EMP_DIR := third-party/Empirical/source
+EMP_DIR := third-party/Empirical/include/emp
 
 DISHTINY_HASH := $(shell git rev-parse --short HEAD)
 DISHTINY_DIRTY := $(shell \

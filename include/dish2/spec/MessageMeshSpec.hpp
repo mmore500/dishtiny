@@ -8,7 +8,7 @@
 #include "../../../third-party/conduit/include/uit/ducts/proc/put=dropping+get=stepping+type=cereal/aggregated+inlet=RingIsend+outlet=Iprobe_c::AggregatedIriOiDuct.hpp"
 #include "../../../third-party/conduit/include/uit/setup/ImplSelect.hpp"
 #include "../../../third-party/conduit/include/uit/setup/ImplSpec.hpp"
-#include "../../../third-party/Empirical/source/tools/BitSet.h"
+#include "../../../third-party/Empirical/include/emp/bits/BitSet.hpp"
 
 namespace dish2 {
 

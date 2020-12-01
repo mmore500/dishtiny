@@ -12,9 +12,9 @@
 #include "cereal/include/cereal/types/string.hpp"
 #include "cereal/include/cereal/types/unordered_map.hpp"
 #include "cereal/include/cereal/types/vector.hpp"
-#include "Empirical/source/config/ArgManager.h"
-#include "Empirical/source/config/command_line.h"
-#include "Empirical/source/tools/Random.h"
+#include "Empirical/include/emp/config/ArgManager.hpp"
+#include "Empirical/include/emp/config/command_line.hpp"
+#include "Empirical/include/emp/math/Random.hpp"
 
 #include "dish/config/Config.hpp"
 #include "dish/world/DishWorld.hpp"

@@ -9,7 +9,7 @@
 #include "../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/mpi_utils.hpp"
-#include "../../../third-party/Empirical/source/base/vector.h"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../config/cfg.hpp"
 

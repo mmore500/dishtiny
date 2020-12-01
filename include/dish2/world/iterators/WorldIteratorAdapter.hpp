@@ -4,9 +4,9 @@
 
 #include <tuple>
 
-#include "../../../../third-party/Empirical/source/tools/hash_utils.h"
-#include "../../../../third-party/Empirical/source/tools/math.h"
-#include "../../../../third-party/Empirical/source/web/color_map.h"
+#include "../../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
+#include "../../../../third-party/Empirical/include/emp/math/math.hpp"
+#include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
 
 #include "../../world/ThreadWorld.hpp"
 

@@ -2,9 +2,9 @@
 #ifndef DISH2_PREFAB_MODALLOGREADOUT_HPP_INCLUDE
 #define DISH2_PREFAB_MODALLOGREADOUT_HPP_INCLUDE
 
-#include "../../../third-party/Empirical/source/web/Div.h"
-#include "../../../third-party/Empirical/source/web/Document.h"
-#include "../../../third-party/Empirical/source/web/Element.h"
+#include "../../../third-party/Empirical/include/emp/web/Div.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Document.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Element.hpp"
 
 #include "LogReadout.hpp"
 

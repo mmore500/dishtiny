@@ -5,10 +5,10 @@
 #include <type_traits>
 #include <utility>
 
-#include "../../../third-party/Empirical/source/base/optional.h"
-#include "../../../third-party/Empirical/source/web/Document.h"
-#include "../../../third-party/Empirical/source/web/DocuExtras.h"
-#include "../../../third-party/Empirical/source/web/js_utils.h"
+#include "../../../third-party/Empirical/include/emp/base/optional.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Document.hpp"
+#include "../../../third-party/Empirical/include/emp/web/DocuExtras.hpp"
+#include "../../../third-party/Empirical/include/emp/web/js_utils.hpp"
 
 #include "../world/ThreadWorld.hpp"
 #include "../spec/Spec.hpp"

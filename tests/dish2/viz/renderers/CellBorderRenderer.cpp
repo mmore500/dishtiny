@@ -1,9 +1,9 @@
 #define CATCH_CONFIG_MAIN
 
 #include "Catch/single_include/catch2/catch.hpp"
-#include "Empirical/source/web/Canvas.h"
-#include "Empirical/source/web/Document.h"
-#include "Empirical/source/web/NodeDomShim.h"
+#include "Empirical/include/emp/web/Canvas.hpp"
+#include "Empirical/include/emp/web/Document.hpp"
+#include "Empirical/include/emp/web/NodeDomShim.hpp"
 
 #include "dish2/viz/border_colormaps/DummyBorderColorMap.hpp"
 #include "dish2/viz/getters/DummyGetter.hpp"

@@ -9,8 +9,8 @@
 
 #include "../../../../third-party/conduit/include/uitsl/algorithm/clamp_cast.hpp"
 #include "../../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
-#include "../../../../third-party/Empirical/source/base/optional.h"
-#include "../../../../third-party/Empirical/source/tools/math.h"
+#include "../../../../third-party/Empirical/include/emp/base/optional.hpp"
+#include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/header-only-pca/include/hopca/normalize.hpp"
 #include "../../../../third-party/header-only-pca/include/hopca/pca.hpp"
 

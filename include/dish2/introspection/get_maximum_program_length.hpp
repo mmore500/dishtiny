@@ -4,7 +4,7 @@
 
 #include <algorithm>
 
-#include "../../../third-party/Empirical/source/base/vector.h"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 

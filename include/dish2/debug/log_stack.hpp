@@ -2,7 +2,7 @@
 #ifndef DISH2_DEBUG_LOG_STACK_HPP_INCLUDE
 #define DISH2_DEBUG_LOG_STACK_HPP_INCLUDE
 
-#include "../../../third-party/Empirical/source/base/vector.h"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "LogStackFrame.hpp"
 

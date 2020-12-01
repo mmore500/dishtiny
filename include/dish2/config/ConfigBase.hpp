@@ -5,8 +5,8 @@
 #include <limits>
 #include <string>
 
-#include "../../../third-party/Empirical/source/base/array.h"
-#include "../../../third-party/Empirical/source/config/config.h"
+#include "../../../third-party/Empirical/include/emp/base/array.hpp"
+#include "../../../third-party/Empirical/include/emp/config/config.hpp"
 
 #include "../spec/_NLEV.hpp"
 

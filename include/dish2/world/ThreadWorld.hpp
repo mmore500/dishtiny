@@ -6,7 +6,7 @@
 
 #include "../../../third-party/conduit/include/netuit/mesh/Mesh.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
-#include "../../../third-party/Empirical/source/tools/string_utils.h"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../cell/Cell.hpp"
 #include "../config/cfg.hpp"

@@ -5,10 +5,10 @@
 #include <functional>
 
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
-#include "../../../third-party/Empirical/source/web/Button.h"
-#include "../../../third-party/Empirical/source/web/Div.h"
-#include "../../../third-party/Empirical/source/web/Document.h"
-#include "../../../third-party/Empirical/source/web/emfunctions.h"
+#include "../../../third-party/Empirical/include/emp/web/Button.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Div.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Document.hpp"
+#include "../../../third-party/Empirical/include/emp/web/emfunctions.hpp"
 
 #include "Animator.hpp"
 

@@ -4,7 +4,7 @@
 
 #include <utility>
 
-#include "../../../../third-party/Empirical/source/web/Canvas.h"
+#include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
 namespace dish2 {
 

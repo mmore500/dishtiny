@@ -7,7 +7,7 @@
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeInput.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeOutput.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/unset_mask.hpp"
-#include "../../../third-party/Empirical/source/base/array.h"
+#include "../../../third-party/Empirical/include/emp/base/array.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "CellQuorumState.hpp"

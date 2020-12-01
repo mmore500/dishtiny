@@ -5,8 +5,8 @@
 #include <functional>
 
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
-#include "../../../third-party/Empirical/source/web/Div.h"
-#include "../../../third-party/Empirical/source/web/Document.h"
+#include "../../../third-party/Empirical/include/emp/web/Div.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Document.hpp"
 
 #include "../spec/Spec.hpp"
 

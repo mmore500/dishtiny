@@ -3,9 +3,9 @@
 #include "Catch/single_include/catch2/catch.hpp"
 #include "conduit/include/uitsl/debug/compare_files.hpp"
 #include "conduit/include/uitsl/polyfill/ompi_mpi_comm_world.hpp"
-#include "Empirical/source/web/Canvas.h"
-#include "Empirical/source/web/Document.h"
-#include "Empirical/source/web/NodeDomShim.h"
+#include "Empirical/include/emp/web/Canvas.hpp"
+#include "Empirical/include/emp/web/Document.hpp"
+#include "Empirical/include/emp/web/NodeDomShim.hpp"
 #include "signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "dish2/viz/artists/KinGroupIDArtist.hpp"

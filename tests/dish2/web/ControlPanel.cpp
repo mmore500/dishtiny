@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 
 #include "Catch/single_include/catch2/catch.hpp"
-#include "Empirical/source/web/NodeDomShim.h"
+#include "Empirical/include/emp/web/NodeDomShim.hpp"
 
 #include "dish2/web/ControlPanel.hpp"
 

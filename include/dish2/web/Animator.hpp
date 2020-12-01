@@ -4,7 +4,7 @@
 
 #include <functional>
 
-#include "../../../third-party/Empirical/source/web/Animate.h"
+#include "../../../third-party/Empirical/include/emp/web/Animate.hpp"
 
 namespace dish2 {
 

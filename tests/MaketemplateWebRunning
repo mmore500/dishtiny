@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 DISH_CXX ?= emcc
 
-FLAGS = -std=c++17 -g -pipe -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -I/usr/lib/x86_64-linux-gnu/openmpi/include/ -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" --js-library $(TO_ROOT)/third-party/Empirical/source/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0
+FLAGS = -std=c++17 -g -pipe -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -I/usr/lib/x86_64-linux-gnu/openmpi/include/ -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" --js-library $(TO_ROOT)/third-party/Empirical/include/emp/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0
 
 default: test
 

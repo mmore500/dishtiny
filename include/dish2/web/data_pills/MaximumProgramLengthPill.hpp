@@ -2,7 +2,7 @@
 #ifndef DISH2_WEB_DATA_PILLS_MAXIMUMPROGRAMLENGTHPILL_HPP_INCLUDE
 #define DISH2_WEB_DATA_PILLS_MAXIMUMPROGRAMLENGTHPILL_HPP_INCLUDE
 
-#include "../../../../third-party/Empirical/source/tools/string_utils.h"
+#include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../introspection/get_maximum_program_length.hpp"
 #include "../../world/ThreadWorld.hpp"

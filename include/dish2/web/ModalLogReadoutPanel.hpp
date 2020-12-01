@@ -2,7 +2,7 @@
 #ifndef DISH2_WEB_MODALLOGREADOUTPANEL_HPP_INCLUDE
 #define DISH2_WEB_MODALLOGREADOUTPANEL_HPP_INCLUDE
 
-#include "../../../third-party/Empirical/source/web/Document.h"
+#include "../../../third-party/Empirical/include/emp/web/Document.hpp"
 
 #include "../prefab/ModalLogReadout.hpp"
 

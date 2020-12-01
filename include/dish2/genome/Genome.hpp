@@ -7,8 +7,8 @@
 #include <tuple>
 #include <utility>
 
-#include "../../../third-party/Empirical/source/polyfill/span.h"
-#include "../../../third-party/Empirical/source/tools/hash_utils.h"
+#include "../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/polyfill/span.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/sloppy_copy.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 

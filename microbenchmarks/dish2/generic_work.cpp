@@ -5,7 +5,7 @@
 #include "conduit/include/uitsl/debug/benchmark_utils.hpp"
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 #include "conduit/include/uitsl/polyfill/barrier.hpp"
-#include "Empirical/source/tools/string_utils.h"
+#include "Empirical/include/emp/tools/string_utils.hpp"
 
 #include "dish2/config/cfg.hpp"
 #include "dish2/spec/Spec.hpp"

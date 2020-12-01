@@ -2,7 +2,7 @@
 #ifndef DISH2_WEB_DATA_PILLS_ELAPSEDGENERATIONSPILL_HPP_INCLUDE
 #define DISH2_WEB_DATA_PILLS_ELAPSEDGENERATIONSPILL_HPP_INCLUDE
 
-#include "../../../../third-party/Empirical/source/tools/string_utils.h"
+#include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../introspection/get_mean_generation.hpp"
 #include "../../world/ThreadWorld.hpp"

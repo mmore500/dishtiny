@@ -5,7 +5,7 @@
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeInput.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeOutput.hpp"
-#include "../../../third-party/Empirical/source/tools/BitSet.h"
+#include "../../../third-party/Empirical/include/emp/bits/BitSet.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 

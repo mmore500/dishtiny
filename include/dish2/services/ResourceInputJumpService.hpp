@@ -8,7 +8,7 @@
 #include <set>
 #include <utility>
 
-#include "../../../third-party/Empirical/source/base/vector.h"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/nan_to_zero.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
