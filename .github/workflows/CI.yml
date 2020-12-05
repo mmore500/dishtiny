@@ -1,0 +1,155 @@
+name: CI
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches:
+      - '**'
+  schedule:
+    - cron: '0 0 * * 0'
+jobs:
+
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-16.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          push: true
+          tags: "GITHUB_ACTION_${{ github.run_number }}"
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: mmore500/dishtiny
+          tag_with_ref: true
+
+  docs:
+    name: Docs, Miscellaneous
+    runs-on: ubuntu-16.04
+    needs:
+      - docker-build
+    steps:
+      - uses: docker-practice/actions-setup-docker@v1
+      - run: docker run "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny && ./ci/test_trailing_whitespace.sh && ./ci/test_tabs.sh && ./ci/test_missing_newlines.sh && make docs && ./ci/test_headerguards.sh && ./ci/test_alphabetize_includes.sh && python3 ci/test_readme_snippets.py"
+
+  unit:
+    name: Unit Tests (debug mode)
+    runs-on: ubuntu-16.04
+    needs:
+      - docker-build
+    strategy:
+      matrix:
+        cxx: [clang++, g++]
+        mode: [ debug, fulldebug, opt ]
+    env:
+      DISH_MPICXX: mpicxx.openmpi
+      OMPI_CXX: ${{ matrix.cxx }}
+    steps:
+      - uses: docker-practice/actions-setup-docker@v1
+      - run: docker run -e DISH_MPICXX=$DISH_MPICXX -e OMPI_CXX=$OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make ${{ matrix.mode }}"
+
+  source:
+    name: Source
+    runs-on: ubuntu-16.04
+    needs:
+      - docker-build
+    strategy:
+      matrix:
+        cxx: [clang++, g++]
+    env:
+      DISH_MPICXX: mpicxx.openmpi
+      OMPI_CXX: ${{ matrix.cxx }}
+    steps:
+      - uses: docker-practice/actions-setup-docker@v1
+      - run: docker run -e DISH_MPICXX=$DISH_MPICXX -e OMPI_CXX=$OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make test"
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-16.04
+    needs:
+      - docker-build
+    env:
+      DISH_MPICXX: mpicxx.openmpi
+      OMPI_CXX: clang++
+    steps:
+      - uses: docker-practice/actions-setup-docker@v1
+      - run: export ci_env=`bash <(curl -s https://codecov.io/env)`
+      - run: docker run $ci_env -e DISH_MPICXX -e OMPI_CXX "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny && make coverage && bash <(curl -s https://codecov.io/bash)"
+
+  fuzzing:
+    name: Fuzzing
+    runs-on: ubuntu-16.04
+    needs:
+      - docker-build
+    steps:
+      - uses: docker-practice/actions-setup-docker@v1
+      - run: docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/fuzzing && make && make opt"
+
+  microbenchmarks:
+    name: Microbenchmarks
+    runs-on: ubuntu-16.04
+    needs:
+      - docker-build
+    steps:
+      - uses: docker-practice/actions-setup-docker@v1
+      - run: docker run -e OSF_USERNAME=$OSF_USERNAME -e OSF_PASSWORD=$OSF_USERNAME -e CONTEXT=actions "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/microbenchmarks && make"
+
+  deploy-pages:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-16.04
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - docs
+      - unit
+      - source
+      - coverage
+      - fuzzing
+      - microbenchmarks
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - run:
+        |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          echo $(cd third-party && ./install_emsdk.sh)
+      - run: make web
+      - run:
+        |
+          cd web
+          git init
+          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/devosoft/empirical-prefab-demo.git > /dev/null 2>&1
+          git checkout -b gh-pages
+          git add .
+          git commit --message "GitHub Action ${{ github.run_number }}"
+          git push --force --quiet origin gh-pages
+
+  deploy-dockerhub:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-16.04
+    if: github.ref == 'refs/heads/master'
+    needs:
+      - docs
+      - unit
+      - source
+      - coverage
+      - fuzzing
+      - microbenchmarks
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          push: true
+          tags: "latest"
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: mmore500/dishtiny
+          tag_with_ref: true
