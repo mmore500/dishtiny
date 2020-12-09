@@ -194,12 +194,12 @@ function on_exit {
   echo "#!/bin/bash" > "${rerun}"
   echo "rm -rf ${REPRO_ID} && mkdir ${REPRO_ID} && cd ${REPRO_ID}" \
     >> "${rerun}"
-  echo "mkdir ${arg_slug}"
-  echo "git -C ${arg_slug} init"
-  echo "git -C ${arg_slug} remote add origin https://github.com/${arg_username}/${arg_slug}.git"
-  echo "git -C ${arg_slug} fetch --depth 1 origin ${repo_sha}"
-  echo "git -C ${arg_slug} checkout FETCH_HEAD"
-  echo "git -C ${arg_slug} submodule update --init --recursive --depth 1"
+  echo "mkdir ${arg_slug}" >> "${rerun}"
+  echo "git -C ${arg_slug} init" >> "${rerun}"
+  echo "git -C ${arg_slug} remote add origin https://github.com/${arg_username}/${arg_slug}.git" >> "${rerun}"
+  echo "git -C ${arg_slug} fetch --depth 1 origin ${repo_sha}" >> "${rerun}"
+  echo "git -C ${arg_slug} checkout FETCH_HEAD" >> "${rerun}"
+  echo "git -C ${arg_slug} submodule update --init --recursive --depth 1" >> "${rerun}"
   echo "singularity shell docker://${arg_username}/${arg_slug}@sha256:${dockerfile_sha} \
 << END_OF_HEREDOC
 ${INPUT}
