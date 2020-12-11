@@ -67,6 +67,10 @@ struct LogScope {
 
   }
 
+#else
+
+  template< typename... Args > LogScope(Args&&... args) {}
+
 #endif // #ifdef DISH2_LOG_ENABLE
 };
 
