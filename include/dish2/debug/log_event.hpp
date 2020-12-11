@@ -4,7 +4,9 @@
 
 #include <limits>
 
+#ifdef __EMSCRIPTEN__
 #include <emscripten/threading.h>
+#endif
 
 #include "enable.hpp"
 #include "log_event_dispatcher.hpp"
