@@ -302,4 +302,4 @@ echo "--------------------------------------"
 
 # pipe input into the container, record a copy to $STDIN
 tee "${stdin}" | \
-  singularity shell "docker://${arg_username}/${arg_slug}@sha256:${dockerfile_sha}"
+  singularity shell --env "SECONDS=$SECONDS" "docker://${arg_username}/${arg_slug}@sha256:${dockerfile_sha}"
