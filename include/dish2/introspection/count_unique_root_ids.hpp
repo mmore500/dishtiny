@@ -4,6 +4,7 @@
 
 #include <iterator>
 #include <set>
+#include <type_traits>
 
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 
@@ -23,7 +24,7 @@ size_t count_unique_root_ids( const dish2::ThreadWorld<Spec>& world ) {
     dish2::LiveCellIterator<Spec>
   >;
 
-  return std::set< typename wrapper_t::value_type >(
+  return std::set< std::remove_const_t<typename wrapper_t::value_type> >(
     wrapper_t{ dish2::LiveCellIterator<Spec>::make_begin( population ) },
     wrapper_t{ dish2::LiveCellIterator<Spec>::make_end( population ) }
   ).size();

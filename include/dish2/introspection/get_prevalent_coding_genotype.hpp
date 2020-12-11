@@ -18,24 +18,27 @@ namespace dish2 {
 
 namespace internal::get_prevalent_coding_genotype {
 
+template< typename Spec >
 using wrapper_t = dish2::CodingGenotypeConstWrapper<
   Spec,
   dish2::LiveCellIterator<Spec>
 >;
 
-using coding_genotype_ref_t = typename wrapper_t::value_type;
+template< typename Spec >
+using coding_genotype_ref_t = typename wrapper_t<Spec>::value_type;
 
-using ret_t = std::pair< coding_genotype_ref_t, size_t >;
+template< typename Spec >
+using ret_t = std::pair< coding_genotype_ref_t<Spec>, size_t >;
 
 } // namespace internal::get_prevalent_coding_genotype
 
 template< typename Spec >
-internal::get_prevalent_coding_genotype::ret_t
+internal::get_prevalent_coding_genotype::ret_t<Spec>
 get_prevalent_coding_genotype( const dish2::ThreadWorld<Spec>& world ) {
 
   const auto& population = world.population;
 
-  using wrapper_t = internal::get_prevalent_coding_genotype::wrapper_t;
+  using wrapper_t = internal::get_prevalent_coding_genotype::wrapper_t<Spec>;
 
   // coding_genotype_ref_t -> count
   std::map< typename wrapper_t::value_type, size_t > counter;

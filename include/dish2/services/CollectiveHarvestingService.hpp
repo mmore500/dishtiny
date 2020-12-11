@@ -74,7 +74,7 @@ public:
 
     // how much resource have we harvested?
     float harvest{};
-    for (size_t lev{}; lev < Spec::NLEV; ++lev) {
+    for (size_t lev{}; lev < spec_t::NLEV; ++lev) {
       harvest += CalcHarvest<Cell>( cell, lev );
     }
 

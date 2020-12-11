@@ -56,10 +56,10 @@ struct CellAgeService {
     ));
 
     const auto& kin_group_epoch_stamps = cell.genome->kin_group_epoch_stamps;
-    const size_t epoch = *cell.template begin<dish2::EpochWrapper<Spec>>();
+    const size_t epoch = *cell.template begin<dish2::EpochWrapper<spec_t>>();
     std::for_each(
-      cell.template begin<dish2::KinGroupAgeWrapper<Spec>>(),
-      cell.template end<dish2::KinGroupAgeWrapper<Spec>>(),
+      cell.template begin<dish2::KinGroupAgeWrapper<spec_t>>(),
+      cell.template end<dish2::KinGroupAgeWrapper<spec_t>>(),
       [&kin_group_epoch_stamps, epoch]( auto& kin_group_age ){
         kin_group_age.Refresh( epoch, kin_group_epoch_stamps );
       }
