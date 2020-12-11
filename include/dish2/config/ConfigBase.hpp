@@ -28,8 +28,11 @@ EMP_BUILD_CONFIG(
   VALUE(RUN_UPDATES, size_t, 0,
     "[NATIVE] How many updates should we run the experiment for?"
   ),
-  VALUE(RUN_SECONDS, size_t, 0,
+  VALUE(RUN_SECONDS, double, 0,
     "[NATIVE] How many seconds should we run the experiment for?"
+  ),
+  VALUE(LOG_FREQ, double, 20,
+    "[NATIVE] How many seconds should pass between logging progress?"
   ),
 
 

@@ -23,7 +23,7 @@ struct LogScope {
   LogScope(
     const std::string& name_,
     const std::string& description_="",
-    const int verbosity_ = dish2::scope_begin.verbosity
+    const int verbosity_=dish2::scope_begin.verbosity
   ) : name( name_ )
   , description( description_ )
   , verbosity( verbosity_ ) {
