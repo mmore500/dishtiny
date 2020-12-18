@@ -3,7 +3,6 @@
 #include <cstdlib>
 
 #include "conduit/include/uitsl/chrono/CoarseClock.hpp"
-#include "conduit/include/uitsl/countdown/JobTimer.hpp"
 #include "conduit/include/uitsl/countdown/Timer.hpp"
 #include "conduit/include/uitsl/debug/safe_cast.hpp"
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
@@ -53,7 +52,7 @@ void thread_job(
       % ( std::numeric_limits<int>::max() - 1 )
   ) );
 
-  uitsl::JobTimer<
+  uitsl::Timer<
     std::chrono::duration<double, std::ratio<1>>,
     uitsl::CoarseClock
   > run_timer{ std::chrono::duration<double, std::ratio<1>>{
