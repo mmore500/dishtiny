@@ -76,10 +76,20 @@ void thread_job(
       log_timer = decltype(log_timer){
         std::chrono::duration<double, std::ratio<1>>{ dish2::cfg.LOG_FREQ() }
       };
-      std::cout
-        << "thread " << thread
-        << " @ update " << thread_world.GetUpdate()
-        << std::endl;
+      std::cout << "thread " << thread;
+      std::cout << " @ update " << thread_world.GetUpdate();
+      if ( dish2::cfg.RUN_UPDATES() ) {
+        std::cout << " of " << dish2::cfg.RUN_UPDATES()
+          << " ("
+          << 100.0 * thread_world.GetUpdate() / dish2::cfg.RUN_UPDATES()
+          << "%)";
+      }
+      std::cout << " + second " << run_timer.GetElapsed().count();
+      if ( dish2::cfg.RUN_SECONDS() ) {
+        std::cout << " of " << dish2::cfg.RUN_SECONDS()
+        << " (" << 100.0 * run_timer.GetFractionComplete() << "%)";
+      }
+      std::cout << std::endl;
     }
 
     // update the simulation
