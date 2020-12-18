@@ -38,11 +38,15 @@ void write_summary_metrics(
 
   thread_local std::string metric;
   thread_local double value;
+  thread_local size_t update;
+
+  update = world.GetUpdate();
 
   thread_local std::once_flag once_flag;
   std::call_once(once_flag, [](){
     file.AddVar(metric, "Metric");
     file.AddVar(value, "Value");
+    file.AddVar(update, "Update");
     file.PrintHeaderKeys();
   });
 
