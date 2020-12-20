@@ -6,12 +6,12 @@ function setup_file {
 }
 
 function teardown_file {
-  rm -f dishtiny
+  rm -f rundishtiny
 }
 
 function setup {
   TO_ROOT=$(git rev-parse --show-cdup)
-  cp "${TO_ROOT}/dishtiny" .
+  cp "${TO_ROOT}/rundishtiny" .
 }
 
 function teardown {
@@ -19,5 +19,5 @@ function teardown {
 }
 
 function invoking_dishtiny_exits_success { #@test
-  ./dishtiny --RUN_SECONDS 10
+  ./rundishtiny --RUN_SECONDS 10
 }
