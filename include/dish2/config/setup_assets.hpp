@@ -8,7 +8,7 @@ namespace dish2 {
 
 void setup_assets( emp::ArgManager& arg_manager ) {
 
-  arg_manager.CallbackArg( "autoinstall" );
+  while( arg_manager.CallbackArg( "autoinstall" ) );
 
 }
 

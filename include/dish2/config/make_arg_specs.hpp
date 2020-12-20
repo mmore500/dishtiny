@@ -30,7 +30,7 @@ auto make_arg_specs() {
         }
       } }, // callback
       false, // gobble_flags
-      true // flatten
+      false // flatten
     )}
   } );
 
