@@ -18,7 +18,6 @@ struct DocumentHandles {
     if ( bak.count(q) == 0 ) {
       bak[q].emplace( q );
       bak[q]->Activate();
-      (*bak[q])->DoActivate();
     };
     return bak[q];
   }
