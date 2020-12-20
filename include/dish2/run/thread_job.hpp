@@ -5,7 +5,7 @@
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 
 #include "../config/cfg.hpp"
-#include "../introspection/write_summary_metrics.hpp"
+#include "../introspection/write_demographic_phenotypic_phylogenetic_metrics.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "setup_thread_local_random.hpp"
@@ -31,7 +31,9 @@ void thread_job(
     dish2::thread_step<Spec>( thread_idx, thread_world, run_timer, log_timer );
   }
 
-  dish2::write_summary_metrics<Spec>( thread_world, thread_idx );
+  dish2::write_demographic_phenotypic_phylogenetic_metrics<Spec>(
+    thread_world, thread_idx
+  );
 
 }
 
