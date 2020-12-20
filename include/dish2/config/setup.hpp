@@ -4,7 +4,6 @@
 
 #include "../../../third-party/Empirical/include/emp/config/ArgManager.hpp"
 
-#include "make_arg_specs.hpp"
 #include "print_assets.hpp"
 #include "print_config.hpp"
 #include "setup_assets.hpp"
@@ -12,9 +11,7 @@
 
 namespace dish2 {
 
-void setup( int argc, char* argv[] ) {
-
-  emp::ArgManager arg_manager{ argc, argv, dish2::make_arg_specs() };
+void setup( emp::ArgManager arg_manager ) {
 
   setup_assets( arg_manager );
 

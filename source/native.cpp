@@ -3,6 +3,7 @@
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 #include "conduit/include/uitsl/parallel/ThreadTeam.hpp"
 
+#include "dish2/config/make_arg_specs.hpp"
 #include "dish2/config/setup.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/run/thread_job.hpp"
@@ -14,7 +15,7 @@ using Spec = dish2::Spec;
 
 int main(int argc, char* argv[]) {
 
-  dish2::setup( argc, argv );
+  dish2::setup( emp::ArgManager{ argc, argv, dish2::make_arg_specs() } );
 
   dish2::ProcWorld<Spec> proc_world;
 
