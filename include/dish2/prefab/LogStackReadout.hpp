@@ -15,7 +15,7 @@
 #include "../../../third-party/Empirical/include/emp/web/Div.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Document.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Element.hpp"
-#include "../../../third-party/Empirical/include/emp/web/Text.hpp"
+#include "../../../third-party/Empirical/include/emp/web/TextFeed.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../debug/log_stack_dispatcher.hpp"
@@ -28,7 +28,7 @@ class LogStackReadout {
   emp::web::Div container;
   emp::web::Div ratchet;
 
-  emp::web::Text stack;
+  emp::web::TextFeed stack;
 
   emp::vector<double> ratchet_heights{ 0.0 };
 
