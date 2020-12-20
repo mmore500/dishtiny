@@ -77,7 +77,7 @@ doto-badge.json:
 badges: documentation-coverage-badge.json version-badge.json doto-badge.json
 
 clean:
-	rm -rf $(PROJECT) web/$(PROJECT).js web/*.js.map web/*.js.map *~ source/*.o web/*.wasm web/*.wast coverage_include web/*.json
+	rm -rf run$(PROJECT) web/$(PROJECT).js web/*.js.map web/*.js.map *~ source/*.o web/*.wasm web/*.wast coverage_include web/*.json
 	cd docs && make clean
 	cd tests && make clean
 
