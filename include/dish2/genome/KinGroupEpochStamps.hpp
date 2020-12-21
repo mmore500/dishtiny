@@ -32,8 +32,6 @@ struct KinGroupEpochStamps {
     );
   }
 
-  template <class Archive> void serialize( Archive & ar ) { ar( data ); }
-
   const buffer_t& GetBuffer() const { return data; }
 
 };

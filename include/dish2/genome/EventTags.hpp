@@ -4,6 +4,7 @@
 
 #include <cstddef>
 
+#include "../../../third-party/cereal/include/cereal/types/array.hpp"
 #include "../../../third-party/Empirical/include/emp/base/array.hpp"
 #include "../../../third-party/Empirical/include/emp/bits/BitSet.hpp"
 #include "../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
@@ -58,7 +59,9 @@ struct EventTags {
 
   bool operator<(const EventTags& other) const { return tags < other.tags; }
 
-  template<typename Archive> void serialize( Archive & ar ) { ar( tags ); }
+  template<typename Archive> void serialize( Archive & ar ) {
+    ar( CEREAL_NVP( tags ) );
+  }
 
 };
 

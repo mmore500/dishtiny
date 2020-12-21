@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <cstddef>
 
+#include "../../../third-party/cereal/include/cereal/types/array.hpp"
+
 namespace dish2 {
 
 template<typename Spec>
@@ -25,9 +27,8 @@ struct GenerationCounter {
     return elapsed_generations == other.elapsed_generations;
   }
 
-  template<typename Archive> void serialize( Archive & ar ) { ar(
-    elapsed_generations
-  ); }
+  template<typename Archive>
+  void serialize( Archive & ar ) { ar( CEREAL_NVP( elapsed_generations ) ); }
 
 };
 

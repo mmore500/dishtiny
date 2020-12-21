@@ -132,13 +132,12 @@ struct Genome {
 
   template <class Archive>
   void serialize( Archive & ar ) { ar(
-    event_tags,
-    generation_counter,
-    mutation_counter,
-    kin_group_id,
-    kin_group_epoch_stamps,
-    program,
-    root_id
+    CEREAL_NVP( event_tags ),
+    CEREAL_NVP( generation_counter ),
+    CEREAL_NVP( mutation_counter ),
+    CEREAL_NVP( kin_group_id ),
+    CEREAL_NVP( program ),
+    CEREAL_NVP( root_id )
   ); }
 
 };

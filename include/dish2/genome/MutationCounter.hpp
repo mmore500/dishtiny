@@ -29,8 +29,8 @@ struct MutationCounter {
   }
 
   template<typename Archive> void serialize( Archive & ar ) { ar(
-    point_mutation_counter,
-    insertion_deletion_counter
+    CEREAL_NVP( point_mutation_counter ),
+    CEREAL_NVP( insertion_deletion_counter )
   ); }
 
 };

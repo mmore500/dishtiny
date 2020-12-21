@@ -53,7 +53,8 @@ struct KinGroupID {
     );
   }
 
-  template <class Archive> void serialize( Archive & ar ) { ar( data ); }
+  template <class Archive>
+  void serialize( Archive & ar ) { ar( CEREAL_NVP( data ) ); }
 
   const buffer_t& GetBuffer() const { return data; }
 

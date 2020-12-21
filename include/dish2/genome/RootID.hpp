@@ -17,30 +17,31 @@ class RootID {
 
   inline static std::atomic< size_t > root_id_counter{};
 
-  size_t id;
+  size_t root_id;
 
 public:
 
   RootID() = default;
 
-  RootID(std::in_place_t) : id( uitsl::sidebyside_hash< std::ratio<3, 4> >(
+  RootID(std::in_place_t) : root_id( uitsl::sidebyside_hash< std::ratio<3, 4> >(
     uitsl::audit_cast<size_t>( uitsl::get_proc_id() ),
     root_id_counter++
   ) ) {}
 
-  RootID(const size_t id_) : id( id_ ) {}
+  RootID(const size_t root_id_) : root_id( root_id_ ) {}
 
   bool operator<(const RootID& other) const {
-    return id < other.id;
+    return root_id < other.root_id;
   }
 
   bool operator==(const RootID& other) const {
-    return id == other.id;
+    return root_id == other.root_id;
   }
 
-  template <class Archive> void serialize( Archive & ar ) { ar( id ); }
+  template <class Archive>
+  void serialize( Archive & ar ) { ar( CEREAL_NVP( root_id ) ); }
 
-  size_t GetID() const { return id; }
+  size_t GetID() const { return root_id; }
 
 };
 
