@@ -43,6 +43,8 @@ public:
 
   size_t GetID() const { return root_id; }
 
+  void SetID( const size_t id ) { root_id = id; }
+
 };
 
 } // namespace dish2

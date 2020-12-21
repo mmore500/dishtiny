@@ -42,6 +42,10 @@ EMP_BUILD_CONFIG(
   VALUE(PHENOTYPIC_DIVERGENCE_N_CELLS, size_t, 3600, "TODO"),
   VALUE(STINT, size_t, std::numeric_limits<size_t>::max(), "TODO"),
   VALUE(SERIES, size_t, std::numeric_limits<size_t>::max(), "TODO"),
+  VALUE(
+    GENESIS, std::string, "generate",
+    "generate, reconstitute, or innoculate"
+  ),
   // VALUE(SEED_POP, bool, 0, "Should we seed the population?"),
   // VALUE(SEED_POP_ID, size_t, 0, "Should we seed the population with all seedpop IDs (0) or with a specific ID (>0)?"),
   // VALUE(SEED_MUTATIONS_P, float, 0.0, "With what probability should we apply mutations to seeded cells??"),

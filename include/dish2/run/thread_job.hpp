@@ -2,10 +2,13 @@
 #ifndef DISH2_RUN_THREAD_JOB_HPP_INCLUDE
 #define DISH2_RUN_THREAD_JOB_HPP_INCLUDE
 
+#include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
 
 #include "../config/cfg.hpp"
+#include "../load/innoculate_population.hpp"
+#include "../load/reconstitute_population.hpp"
 #include "../record/dump_abundance_genome.hpp"
 #include "../record/dump_arbitrary_genome.hpp"
 #include "../record/dump_population.hpp"
@@ -24,6 +27,12 @@ void thread_job(
 ) {
 
   dish2::setup_thread_local_random( thread_idx );
+
+  if ( cfg.GENESIS() == "innoculate" )
+    dish2::innoculate_population( thread_idx, thread_world );
+  else if ( cfg.GENESIS() == "reconstitute" )
+    dish2::reconstitute_population( thread_idx, thread_world );
+  else emp_always_assert( cfg.GENESIS() == "generate", cfg.GENESIS() );
 
   const uitsl::CoarseTimer run_timer{
     dish2::cfg.RUN_SECONDS() ?: std::numeric_limits<double>::infinity()
