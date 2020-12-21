@@ -24,13 +24,16 @@ void seed_genomes_into(
 
   auto& population = world.population;
 
-  uitsl::for_each(
+  for ( auto& cell : population ) cell.DeathRoutine();
+
+  if ( seeds.size() ) uitsl::for_each(
     std::begin( population ),
     std::end( population ),
     sgpl::CountingIterator{},
     [&seeds]( auto& cell, const size_t idx ){
       cell.genome = seeds[ idx % seeds.size() ];
       cell.genome->SetupSeededGenotype();
+      cell.MakeAliveRoutine();
     }
   );
 
