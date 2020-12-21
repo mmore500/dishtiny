@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_INTROSPECTION_GET_METASERIES_HPP_INCLUDE
-#define DISH2_INTROSPECTION_GET_METASERIES_HPP_INCLUDE
+#ifndef DISH2_INTROSPECTION_GET_ENDEAVOR_HPP_INCLUDE
+#define DISH2_INTROSPECTION_GET_ENDEAVOR_HPP_INCLUDE
 
 #include <cstdlib>
 #include <limits>
@@ -24,4 +24,4 @@ emp::optional<size_t> get_endeavor() {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_INTROSPECTION_GET_METASERIES_HPP_INCLUDE
+#endif // #ifndef DISH2_INTROSPECTION_GET_ENDEAVOR_HPP_INCLUDE
