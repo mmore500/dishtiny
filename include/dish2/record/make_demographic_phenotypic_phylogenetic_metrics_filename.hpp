@@ -7,8 +7,10 @@
 #include <string>
 
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../config/cfg.hpp"
+#include "../introspection/get_endeavor.hpp"
 
 namespace dish2 {
 
@@ -32,6 +34,10 @@ std::string make_demographic_phenotypic_phylogenetic_metrics_filename(
 
   if ( cfg.STINT() != std::numeric_limits<size_t>::max() ) {
     keyname_attributes[ "stint" ] = emp::to_string( cfg.STINT() );
+  }
+
+  if ( dish2::get_endeavor() ) {
+    keyname_attributes[ "endeavor" ] = *dish2::get_endeavor();
   }
 
   return emp::keyname::pack( keyname_attributes );
