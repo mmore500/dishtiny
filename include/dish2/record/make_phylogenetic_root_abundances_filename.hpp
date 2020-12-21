@@ -36,6 +36,10 @@ std::string make_phylogenetic_root_abundances_filename(
     keyname_attributes[ "stint" ] = emp::to_string( cfg.STINT() );
   }
 
+  if ( cfg.REPLICATE() != std::numeric_limits<size_t>::max() ) {
+    keyname_attributes[ "replicate" ] = emp::to_string( cfg.REPLICATE() );
+  }
+
   if ( dish2::get_endeavor() ) {
     keyname_attributes[ "endeavor" ] = *dish2::get_endeavor();
   }
