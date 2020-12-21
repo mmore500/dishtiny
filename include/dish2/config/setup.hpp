@@ -4,6 +4,7 @@
 
 #include "../../../third-party/Empirical/include/emp/config/ArgManager.hpp"
 
+#include "dump_config.hpp"
 #include "print_assets.hpp"
 #include "print_config.hpp"
 #include "setup_assets.hpp"
@@ -20,6 +21,8 @@ void setup( emp::ArgManager arg_manager ) {
   print_assets();
 
   print_config();
+
+  dump_config();
 
 }
 
