@@ -21,6 +21,7 @@ std::string make_dump_abundance_genome_filename(
     {"a", "genome"},
     {"criteria", "abundance"},
     {"abundance", emp::to_string( abundance )},
+    {"morph", "wildtype"},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"thread", emp::to_string(thread_idx)},
     {"ext", ".json"}
