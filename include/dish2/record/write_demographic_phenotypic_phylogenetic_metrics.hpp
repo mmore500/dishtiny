@@ -1,41 +1,42 @@
 #pragma once
-#ifndef DISH2_INTROSPECTION_WRITE_DEMOGRAPHIC_PHENOTYPIC_PHYLOGENETIC_METRICS_HPP_INCLUDE
-#define DISH2_INTROSPECTION_WRITE_DEMOGRAPHIC_PHENOTYPIC_PHYLOGENETIC_METRICS_HPP_INCLUDE
+#ifndef DISH2_RECORD_WRITE_DEMOGRAPHIC_PHENOTYPIC_PHYLOGENETIC_METRICS_HPP_INCLUDE
+#define DISH2_RECORD_WRITE_DEMOGRAPHIC_PHENOTYPIC_PHYLOGENETIC_METRICS_HPP_INCLUDE
 
-#include <cstdlib>
 #include <mutex>
 
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
-#include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 
-#include "count_dead_cells.hpp"
-#include "count_live_cells.hpp"
-#include "count_unique_coding_genotypes.hpp"
-#include "count_unique_root_ids.hpp"
-#include "get_fraction_apoptosis_request.hpp"
-#include "get_fraction_fecund_resource_stockpile.hpp"
-#include "get_fraction_incoming_inter_message.hpp"
-#include "get_fraction_incoming_intra_message.hpp"
-#include "get_fraction_receiving_resource.hpp"
-#include "get_fraction_resource_receive_resistance.hpp"
-#include "get_fraction_resource_reserve_request.hpp"
-#include "get_fraction_resource_send_request.hpp"
-#include "get_fraction_spawn_arrest.hpp"
-#include "get_fraction_spawn_request.hpp"
-#include "get_mean_cell_age.hpp"
-#include "get_mean_elapsed_insertions_deletions.hpp"
-#include "get_mean_elapsed_point_mutations.hpp"
-#include "get_mean_epoch.hpp"
-#include "get_mean_generation.hpp"
-#include "get_mean_incoming_inter_message_count.hpp"
-#include "get_mean_incoming_intra_message_count.hpp"
-#include "get_mean_kin_group_age.hpp"
-#include "get_mean_module_count.hpp"
-#include "get_mean_program_length.hpp"
-#include "get_mean_resource_received.hpp"
-#include "get_mean_resource_stockpile.hpp"
-#include "get_prevalent_coding_genotype.hpp"
+#include "../config/cfg.hpp"
+#include "../introspection/count_dead_cells.hpp"
+#include "../introspection/count_live_cells.hpp"
+#include "../introspection/count_unique_coding_genotypes.hpp"
+#include "../introspection/count_unique_root_ids.hpp"
+#include "../introspection/get_fraction_apoptosis_request.hpp"
+#include "../introspection/get_fraction_fecund_resource_stockpile.hpp"
+#include "../introspection/get_fraction_incoming_inter_message.hpp"
+#include "../introspection/get_fraction_incoming_intra_message.hpp"
+#include "../introspection/get_fraction_receiving_resource.hpp"
+#include "../introspection/get_fraction_resource_receive_resistance.hpp"
+#include "../introspection/get_fraction_resource_reserve_request.hpp"
+#include "../introspection/get_fraction_resource_send_request.hpp"
+#include "../introspection/get_fraction_spawn_arrest.hpp"
+#include "../introspection/get_fraction_spawn_request.hpp"
+#include "../introspection/get_mean_cell_age.hpp"
+#include "../introspection/get_mean_elapsed_insertions_deletions.hpp"
+#include "../introspection/get_mean_elapsed_point_mutations.hpp"
+#include "../introspection/get_mean_epoch.hpp"
+#include "../introspection/get_mean_generation.hpp"
+#include "../introspection/get_mean_incoming_inter_message_count.hpp"
+#include "../introspection/get_mean_incoming_intra_message_count.hpp"
+#include "../introspection/get_mean_kin_group_age.hpp"
+#include "../introspection/get_mean_module_count.hpp"
+#include "../introspection/get_mean_program_length.hpp"
+#include "../introspection/get_mean_resource_received.hpp"
+#include "../introspection/get_mean_resource_stockpile.hpp"
+#include "../introspection/get_prevalent_coding_genotype.hpp"
+
+#include "make_demographic_phenotypic_phylogenetic_metrics_filename.hpp"
 
 namespace dish2 {
 
@@ -44,13 +45,11 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
 ) {
 
-  thread_local emp::DataFile file( emp::keyname::pack({
-    {"a", "demographic_phenotypic_phylogenetic_metrics"},
-    {"repro", std::getenv("REPRO_ID") ?: ""},
-    {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
-    {"thread", emp::to_string(thread_idx)},
-    {"ext", ".csv"}
-  }) );
+  thread_local emp::DataFile file(
+    dish2::make_demographic_phenotypic_phylogenetic_metrics_filename(
+      thread_idx
+    )
+  );
 
   thread_local std::string metric;
   thread_local double value;
@@ -245,4 +244,4 @@ void write_demographic_phenotypic_phylogenetic_metrics(
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_INTROSPECTION_WRITE_DEMOGRAPHIC_PHENOTYPIC_PHYLOGENETIC_METRICS_HPP_INCLUDE
+#endif // #ifndef DISH2_RECORD_WRITE_DEMOGRAPHIC_PHENOTYPIC_PHYLOGENETIC_METRICS_HPP_INCLUDE

@@ -3,9 +3,13 @@
 #define DISH2_RUN_THREAD_JOB_HPP_INCLUDE
 
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
+#include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
 
 #include "../config/cfg.hpp"
-#include "../introspection/write_demographic_phenotypic_phylogenetic_metrics.hpp"
+#include "../record/dump_abundance_genome.hpp"
+#include "../record/dump_arbitrary_genome.hpp"
+#include "../record/dump_population.hpp"
+#include "../record/write_demographic_phenotypic_phylogenetic_metrics.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "setup_thread_local_random.hpp"
@@ -31,9 +35,20 @@ void thread_job(
     dish2::thread_step<Spec>( thread_idx, thread_world, run_timer, log_timer );
   }
 
+  std::cout << "thread " << thread_idx << " simulation complete" << std::endl;
+
+  uitsl::err_audit(!
+    dish2::dump_abundance_genome<Spec>( thread_world, thread_idx )
+  );
+  uitsl::err_audit(!
+    dish2::dump_arbitrary_genome<Spec>( thread_world, thread_idx )
+  );
+  dish2::dump_population<Spec>( thread_world, thread_idx );
   dish2::write_demographic_phenotypic_phylogenetic_metrics<Spec>(
     thread_world, thread_idx
   );
+
+  std::cout << "thread " << thread_idx << " data dump complete" << std::endl;
 
 }
 
