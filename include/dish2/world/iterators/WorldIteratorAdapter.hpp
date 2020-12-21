@@ -44,9 +44,13 @@ public:
   }
 
   static WorldIteratorAdapter make_end( CellIterator cell_iterator ) {
+    // ideally, just use std::prev()
+    // but for some reason that's calling operator++ instead of operator--
+    // see backtrace at https://pastebin.com/4nGpEcCy
+    --cell_iterator;
     return WorldIteratorAdapter{
-      std::prev( cell_iterator )->template end< CardinalIterator >(),
-      std::prev( cell_iterator )
+      cell_iterator->template end< CardinalIterator >(),
+      cell_iterator
     };
   }
 
