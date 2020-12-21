@@ -17,12 +17,15 @@ class LiveCellIterator
   using parent_t
     = typename std::vector<dish2::Cell<Spec>>::const_iterator;
 
+  parent_t begin;
   parent_t end;
 
   LiveCellIterator(
     const parent_t& init,
+    const parent_t& begin_,
     const parent_t& end_
   ) : parent_t(init)
+  , begin(begin_)
   , end(end_)
   {}
 
@@ -32,14 +35,20 @@ public:
     const emp::vector<dish2::Cell<Spec>>& population
   ) {
     return ++dish2::LiveCellIterator<Spec>{
-      std::prev( std::begin( population ) ), std::end( population )
+      std::prev( std::begin( population ) ),
+      std::begin( population ),
+      std::end( population )
     };
   }
 
   static LiveCellIterator make_end(
     const emp::vector<dish2::Cell<Spec>>& population
   ) {
-    return LiveCellIterator<Spec>{ std::end(population), std::end(population) };
+    return LiveCellIterator<Spec>{
+      std::end(population),
+      std::begin(population),
+      std::end(population)
+    };
   }
 
   using value_type = dish2::Cell<Spec>;
@@ -60,12 +69,38 @@ public:
       *this != end
       && ! parent_t::operator*().IsAlive()
     );
+
+    emp_assert( *this == end || parent_t::operator*().IsAlive() );
+
     return *this;
   }
 
   LiveCellIterator operator++(int) {
     const auto res = *this;
     operator++();
+    return res;
+  }
+
+  LiveCellIterator& operator--() {
+
+    // might not quite be right, but should work in practice
+    do {
+      parent_t::operator--();
+    } while (
+      *this != std::prev( begin )
+      && !parent_t::operator*().IsAlive()
+    );
+
+    emp_assert(
+      *this != std::prev( begin ) || parent_t::operator*().IsAlive()
+    );
+
+    return *this;
+  }
+
+  LiveCellIterator operator--(int) {
+    const auto res = *this;
+    operator--();
     return res;
   }
 
