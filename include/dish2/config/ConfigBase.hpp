@@ -34,6 +34,9 @@ EMP_BUILD_CONFIG(
   VALUE(LOG_FREQ, double, 20,
     "[NATIVE] How many seconds should pass between logging progress?"
   ),
+  VALUE(ROOT_ABUNDANCES_FREQ, size_t, 0,
+    "[NATIVE] How many updates should elapse between recording phylogenetic root abundances? If 0, never record phylogenetic root abundances. Must be power of two."
+  ),
 
 
   GROUP(EXPERIMENT, "EXPERIMENT"),

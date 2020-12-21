@@ -3,8 +3,10 @@
 #define DISH2_RUN_THREAD_STEP_HPP_INCLUDE
 
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
+#include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
 #include "../config/cfg.hpp"
+#include "../record/write_phylogenetic_root_abundances.hpp"
 
 #include "print_progress.hpp"
 #include "setup_thread_local_random.hpp"
@@ -23,6 +25,12 @@ void thread_step(
     log_timer.Reset();
     dish2::print_progress( thread_idx, thread_world, run_timer );
   }
+
+  if (
+    cfg.ROOT_ABUNDANCES_FREQ()
+    && uitsl::shift_mod( thread_world.GetUpdate(), cfg.ROOT_ABUNDANCES_FREQ() )
+      == 0
+  ) dish2::write_phylogenetic_root_abundances<Spec>( thread_world, thread_idx );
 
   // update the simulation
   thread_world.Update();
