@@ -15,7 +15,12 @@ namespace dish2 {
 
 void setup_thread_local_random( const size_t thread_idx ) {
 
-  const auto hash = emp::CombineHash( thread_idx, dish2::cfg.RNG_SEED() );
+  size_t hash{ thread_idx };
+  hash = emp::CombineHash( hash, dish2::cfg.SERIES() );
+  hash = emp::CombineHash( hash, dish2::cfg.STINT() );
+  hash = emp::CombineHash( hash, dish2::cfg.REPLICATE() );
+
+  // seed >= 1 so that rng is seeded deterministically
   const auto seed_addend = hash % ( std::numeric_limits<int>::max() - 1 );
   const int seed = uitsl::safe_cast<int>( 1 + seed_addend );
 

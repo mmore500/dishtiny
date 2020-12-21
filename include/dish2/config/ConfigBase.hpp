@@ -24,7 +24,6 @@ EMP_BUILD_CONFIG(
 
   GROUP(EXECUTION, "EXECUTION"),
   VALUE(N_THREADS, size_t, 1, "[NATIVE] How many threads should we run with?"),
-  VALUE(RNG_SEED, size_t, 1, "Seed value for random number generator."),
   VALUE(RUN_UPDATES, size_t, 0,
     "[NATIVE] How many updates should we run the experiment for?"
   ),
