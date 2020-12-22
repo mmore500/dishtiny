@@ -52,6 +52,7 @@ struct Cardinal {
   state_node_output_t state_node_output;
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
+  using tag_t = typename Spec::tag_t;
 
   using cpu_t = sgpl::Cpu<sgpl_spec_t>;
   cpu_t cpu;
@@ -93,7 +94,7 @@ struct Cardinal {
 
   void Reset() { cpu.Reset(); peripheral.Clear(); }
 
-  void DispatchEvent(const emp::BitSet<32>& tag) { cpu.ForceLaunchCore( tag ); }
+  void DispatchEvent(const tag_t& tag) { cpu.ForceLaunchCore( tag ); }
 
   bool IsNeighborKin( const size_t lev ) {
     return peripheral.readable_state.template Get<

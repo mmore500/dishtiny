@@ -41,7 +41,7 @@ bool dump_abundance_genome(
     archive( genome );
   }
 
-  if (thread_idx == 0 && cfg.DO_PHENOTYPE_EQUIVALENT_NOPOUT()) {
+  if (thread_idx == 0 && cfg.PHENOTYPE_EQUIVALENT_NOPOUT()) {
     std::cout << "recording phenotype equivalent nopout" << std::endl;
     const std::string filename = dish2::make_dump_abundance_genome_filename(
       thread_idx, abundance_frac, "phenotype_equivalent_nopout"

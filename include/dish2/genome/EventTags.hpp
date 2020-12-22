@@ -6,9 +6,8 @@
 
 #include "../../../third-party/cereal/include/cereal/types/array.hpp"
 #include "../../../third-party/Empirical/include/emp/base/array.hpp"
-#include "../../../third-party/Empirical/include/emp/bits/BitSet.hpp"
 #include "../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
-#include "../../../third-party/signalgp-lite/include/sgpl/algorithm/mutate_bytes.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/algorithm/mutate_bits.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 namespace dish2 {
@@ -16,7 +15,9 @@ namespace dish2 {
 template<typename Spec>
 struct EventTags {
 
-  using tags_t = emp::array< emp::BitSet<32> , Spec::NUM_EVENTS >;
+  using tag_t = typename Spec::tag_t;
+
+  using tags_t = emp::array< tag_t , Spec::NUM_EVENTS >;
   tags_t tags;
 
   constexpr inline static size_t tag_bytes

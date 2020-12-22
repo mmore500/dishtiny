@@ -21,14 +21,13 @@ dish2::Genome<Spec> nop_out_phenotypically_neutral_modules(
   dish2::Genome<Spec> genome
 ) {
 
+  using sgpl_spec_t = typename Spec::sgpl_spec_t;
   const size_t num_modules = sgpl::count_modules<sgpl_spec_t>(
     genome.program
   );
 
   const dish2::LogScope guard( "evaluating module-by-module" );
   std::cout << "evaluating " << num_modules << " modules" << std::endl;
-
-  using sgpl_spec_t = typename Spec::sgpl_spec_t;
 
   emp::vector< char > should_nop( num_modules );
 
