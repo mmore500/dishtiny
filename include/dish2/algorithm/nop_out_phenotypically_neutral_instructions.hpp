@@ -5,57 +5,52 @@
 #include <algorithm>
 
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_instructions.hpp"
 
-#include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
-#include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
-#include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
-
-#include "../cell/Cell.hpp"
 #include "../debug/LogScope.hpp"
 #include "../genome/Genome.hpp"
 #include "../world/ThreadWorld.hpp"
 
-#include "detect_phenotypic_divergence.hpp"
-#include "nop_out_phenotypically_neutral_modules.hpp"
+#include "test_instruction_for_phenotypic_neutrality.hpp"
 
 namespace dish2 {
 
 template< typename Spec >
 dish2::Genome<Spec> nop_out_phenotypically_neutral_instructions(
-  const dish2::Genome<Spec>& genome
+  dish2::Genome<Spec> genome
 ) {
 
-  const dish2::LogScope guard1{ "noping out neutral sites" };
+  const dish2::LogScope guard{ "evaluating instruction-by-instruction" };
+  std::cout
+    << "evaluating " << genome.program.size() << " instructions" << std::endl;
 
-  auto res = dish2::nop_out_phenotypically_neutral_modules<Spec>( genome );
+  using sgpl_spec_t = typename Spec::sgpl_spec_t;
 
-  const dish2::LogScope guard2{ "evaluating instruction-by-instruction" };
+  emp::vector< char > should_nop( genome.program.size() );
 
-  emp::vector< size_t > neutral_sites;
+  #pragma omp parallel for
+  for (size_t idx = 0; idx < genome.program.size(); ++idx) {
 
-  for (size_t site{}; site < res.program.size(); ++site) {
+    #ifdef __EMSCRIPTEN__
+    const dish2::LogScope guard3{
+      emp::to_string("evaluating instruction ", idx)
+    };
+    #endif // #ifdef __EMSCRIPTEN__
 
-    const dish2::LogScope guard3{ emp::to_string("evaluating site ", site) };
+    should_nop[idx] = dish2::test_instruction_for_phenotypic_neutrality< Spec >(
+      genome, idx
+    );
 
-    auto test = res;
-
-    test.program[site].NopOut();
-
-    if ( test == res ) {
-      dish2::log_event({dish2::result_skip, "inst alread nop, skipping test"});
-      continue;
-    }
-
-    if ( !dish2::detect_phenotypic_divergence<Spec>( test, res ) ) {
-      dish2::log_event({ dish2::info, emp::to_string("nopping site ", site) });
-      neutral_sites.push_back( site );
-    }
+    std::cout << ":" << std::flush;
 
   }
 
-  for ( const auto site : neutral_sites ) res.program[site].NopOut();
+  std::cout << " done" << std::endl;
 
-  return res;
+  genome.program
+    = sgpl::nop_out_instructions< sgpl_spec_t >( genome.program, should_nop );
+
+  return genome;
 
 }
 

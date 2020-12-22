@@ -16,14 +16,15 @@ namespace dish2 {
 
 std::string make_dump_abundance_genome_filename(
   const size_t thread_idx,
-  const double abundance
+  const double abundance,
+  const std::string& morph
 ) {
 
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "genome"},
     {"criteria", "abundance"},
     {"abundance", emp::to_string( abundance )},
-    {"morph", "wildtype"},
+    {"morph", morph},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"thread", emp::to_string(thread_idx)},
     {"ext", ".json"}

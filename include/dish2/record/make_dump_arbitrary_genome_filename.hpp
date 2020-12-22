@@ -14,12 +14,15 @@
 
 namespace dish2 {
 
-std::string make_dump_arbitrary_genome_filename( const size_t thread_idx ) {
+std::string make_dump_arbitrary_genome_filename(
+  const size_t thread_idx,
+  const std::string& morph
+) {
 
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "genome"},
     {"criteria", "arbitrary"},
-    {"morph", "wildtype"},
+    {"morph", morph},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"thread", emp::to_string(thread_idx)},
     {"ext", ".json"}

@@ -33,6 +33,9 @@ EMP_BUILD_CONFIG(
   VALUE(LOG_FREQ, double, 20,
     "[NATIVE] How many seconds should pass between logging progress?"
   ),
+  VALUE(PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
+    "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run?"
+  ),
   VALUE(ROOT_ABUNDANCES_FREQ, size_t, 0,
     "[NATIVE] How many updates should elapse between recording phylogenetic root abundances? If 0, never record phylogenetic root abundances. Must be power of two."
   ),
@@ -40,8 +43,9 @@ EMP_BUILD_CONFIG(
 
   GROUP(EXPERIMENT, "EXPERIMENT"),
   VALUE(RUN_SLUG, std::string, "default", "Run-identifying slug"),
-  VALUE(PHENOTYPIC_DIVERGENCE_N_UPDATES, size_t, 100, "TODO"),
-  VALUE(PHENOTYPIC_DIVERGENCE_N_CELLS, size_t, 3600, "TODO"),
+  // TODO make an EMSCRIPTEN or NATIVE macro
+  VALUE(PHENOTYPIC_DIVERGENCE_N_UPDATES, size_t, 4096, "TODO"),
+  VALUE(PHENOTYPIC_DIVERGENCE_N_CELLS, size_t, 256, "TODO"),
   VALUE(STINT, size_t, std::numeric_limits<size_t>::max(), "TODO"),
   VALUE(SERIES, size_t, std::numeric_limits<size_t>::max(), "TODO"),
   VALUE(REPLICATE, size_t, std::numeric_limits<size_t>::max(), "TODO"),

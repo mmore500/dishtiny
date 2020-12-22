@@ -7,6 +7,7 @@
 
 #include "../../../third-party/cereal/include/cereal/archives/json.hpp"
 
+#include "../algorithm/make_phenotype_equivalent_nopout.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_prevalent_coding_genotype_genome.hpp"
 
@@ -31,14 +32,24 @@ bool dump_abundance_genome(
     abundance / static_cast<double>( dish2::count_live_cells<Spec>( world ) )
   };
 
-  const std::string filename(
-    dish2::make_dump_abundance_genome_filename( thread_idx, abundance_frac )
-  );
+  {
+    const std::string filename = dish2::make_dump_abundance_genome_filename(
+      thread_idx, abundance_frac, "wildtype"
+    );
+    std::ofstream os( filename );
+    cereal::JSONOutputArchive archive( os );
+    archive( genome );
+  }
 
-  std::ofstream os( filename );
-  cereal::JSONOutputArchive archive( os );
-
-  archive( genome );
+  if (thread_idx == 0 && cfg.DO_PHENOTYPE_EQUIVALENT_NOPOUT()) {
+    std::cout << "recording phenotype equivalent nopout" << std::endl;
+    const std::string filename = dish2::make_dump_abundance_genome_filename(
+      thread_idx, abundance_frac, "phenotype_equivalent_nopout"
+    );
+    std::ofstream os( filename );
+    cereal::JSONOutputArchive archive( os );
+    archive( dish2::make_phenotype_equivalent_nopout< Spec >(genome) );
+  }
 
   return true;
 

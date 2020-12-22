@@ -7,6 +7,7 @@
 
 #include "../../../third-party/cereal/include/cereal/archives/json.hpp"
 
+#include "../algorithm/make_phenotype_equivalent_nopout.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 
@@ -24,17 +25,18 @@ bool dump_arbitrary_genome(
   // abort if no live cells
   if ( dish2::count_live_cells<Spec>(world) == 0 ) return false;
 
-  const std::string filename(
-    dish2::make_dump_arbitrary_genome_filename( thread_idx )
-  );
-
-  std::ofstream os( filename );
-  cereal::JSONOutputArchive archive( os );
-
   // get the first /live/ cell
-  archive(
-    *(dish2::LiveCellIterator<Spec>::make_begin( world.population )->genome)
-  );
+  const auto genome
+    = *(dish2::LiveCellIterator<Spec>::make_begin( world.population )->genome);
+
+  {
+    const std::string filename = dish2::make_dump_arbitrary_genome_filename(
+      thread_idx, "wildtype"
+    );
+    std::ofstream os( filename );
+    cereal::JSONOutputArchive archive( os );
+    archive( genome );
+  }
 
   return true;
 

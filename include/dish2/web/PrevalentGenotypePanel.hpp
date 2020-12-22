@@ -58,7 +58,7 @@ class PrevalentGenotypePanel {
       const dish2::LogLevelGuard guard2{ 2 };
 
       Redraw(
-        dish2::nop_out_phenotypically_neutral_instructions< dish2::Spec >(
+        dish2::make_phenotype_equivalent_nopout< dish2::Spec >(
           genome
         )
       );

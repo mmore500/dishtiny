@@ -14,6 +14,7 @@
 #include "../debug/log_event.hpp"
 #include "../debug/LogScope.hpp"
 #include "../introspection/compare_resource_stockpiles.hpp"
+#include "../world/ProcWorld.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "seed_genomes_into.hpp"
@@ -66,17 +67,13 @@ bool detect_phenotypic_divergence(
 template< typename Spec >
 bool detect_phenotypic_divergence(
   const dish2::Genome<Spec>& genome1,
-  const dish2::Genome<Spec> genome2
+  const dish2::Genome<Spec>& genome2
 ) {
 
+  // if genomes are equivalent, no need to test
+  if ( genome1 == genome2 ) return false;
 
   netuit::internal::MeshIDCounter::Reset();
-
-  // store old N_CELLS value, temporarily overwrite it
-  const auto n_cells_bak = cfg.N_CELLS();
-  cfg.Set( "N_CELLS", emp::to_string(cfg.PHENOTYPIC_DIVERGENCE_N_CELLS()) );
-  const auto n_threads_bak = cfg.N_THREADS();
-  cfg.Set( "N_THREADS", "1" );
 
   const emp::Random rng_bak = sgpl::ThreadLocalRandom::Get();
 
@@ -88,10 +85,6 @@ bool detect_phenotypic_divergence(
 
   auto world2 = dish2::ProcWorld<Spec>{}.MakeThreadWorld(0);
   dish2::seed_genomes_into<Spec>( {genome2}, world2 );
-
-  // restore N_CELLS value
-  cfg.Set( "N_CELLS", emp::to_string(n_cells_bak) );
-  cfg.Set( "N_THREADS", emp::to_string(n_threads_bak) );
 
   return detect_phenotypic_divergence<Spec>( world1, world2 );
 
