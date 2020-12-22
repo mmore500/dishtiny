@@ -32,7 +32,7 @@ struct EventTags {
     );
   }
 
-  size_t ApplyPointMutations( const float p_byte_scramble ) {
+  size_t ApplyPointMutations( const float p_bit_toggle ) {
 
     // ideally, we would draw from the binomial distn,
     // but that's expensive with varying n...
@@ -41,10 +41,10 @@ struct EventTags {
     // (they become more similar for large n)
     const size_t n_muts = sgpl::ThreadLocalRandom::Get().GetRandPoisson(
       tag_bytes,
-      p_byte_scramble
+      p_bit_toggle
     );
 
-    sgpl::mutate_bytes(
+    sgpl::mutate_bits(
       std::span<std::byte>(
         reinterpret_cast<std::byte*>( tags.data() ),
         tag_bytes
