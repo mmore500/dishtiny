@@ -133,8 +133,8 @@ EMP_BUILD_CONFIG(
     (internal::nreplev_float_t{0.0, 0.2, 0.5}),
     "For each replev, what fraction of cells should be mutated at all?"
   ),
-  VALUE(POINT_MUTATION_RATE, float, 0.01,
-    "What fraction of bytes should be scrambled?"
+  VALUE(POINT_MUTATION_RATE, float, 0.001,
+    "What fraction of bits should be scrambled?"
   ),
   VALUE(SEQUENCE_DEFECT_RATE, float, 0.01,
     "How often should sloppy copy defect occur?"
