@@ -5,6 +5,7 @@
 #include <limits>
 #include <string>
 
+#include "../../../third-party/conduit/include/uitsl/utility/UITSL_IF_WEB_ELSE.hpp"
 #include "../../../third-party/Empirical/include/emp/base/array.hpp"
 #include "../../../third-party/Empirical/include/emp/config/config.hpp"
 
@@ -43,8 +44,9 @@ EMP_BUILD_CONFIG(
 
   GROUP(EXPERIMENT, "EXPERIMENT"),
   VALUE(RUN_SLUG, std::string, "default", "Run-identifying slug"),
-  // TODO make an EMSCRIPTEN or NATIVE macro
-  VALUE(PHENOTYPIC_DIVERGENCE_N_UPDATES, size_t, 4096, "TODO"),
+  VALUE(PHENOTYPIC_DIVERGENCE_N_UPDATES, size_t,
+    UITSL_IF_WEB_ELSE(100, 4096), "TODO"
+  ),
   VALUE(PHENOTYPIC_DIVERGENCE_N_CELLS, size_t, 256, "TODO"),
   VALUE(STINT, size_t, std::numeric_limits<size_t>::max(), "TODO"),
   VALUE(SERIES, size_t, std::numeric_limits<size_t>::max(), "TODO"),
@@ -59,7 +61,9 @@ EMP_BUILD_CONFIG(
 
 
   GROUP(DEMOGRAPHICS, "DEMOGRAPHICS"),
-  VALUE(N_CELLS, size_t, 10000, "How many cells should be simulated?"),
+  VALUE(N_CELLS, size_t,
+    UITSL_IF_WEB_ELSE(3600, 10000), "How many cells should be simulated?"
+  ),
   VALUE(N_DIMS, size_t, 2,
     "What dimensionality should the toroidal mesh have?"),
   VALUE(
