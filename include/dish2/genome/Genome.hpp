@@ -80,7 +80,9 @@ struct Genome {
     kin_group_epoch_stamps.ApplyInheritance( rep_lev, epoch );
     kin_group_id.ApplyInheritance( rep_lev );
 
-    if ( sgpl::ThreadLocalRandom::Get().P( dish2::cfg.MUTATION_RATE() ) ) {
+    if (
+      sgpl::ThreadLocalRandom::Get().P( dish2::cfg.MUTATION_RATE()[rep_lev] )
+    ) {
       mutation_counter.RecordMutationOccurrence();
       MutateProgram();
       mutation_counter.RecordPointMutation(

@@ -15,8 +15,9 @@ namespace dish2 {
 
 namespace internal {
 
-using nlev_float_t = emp::array<float, dish2::internal::NLEV>;
-using nlev_size_t_t = emp::array<size_t, dish2::internal::NLEV>;
+using nlev_float_t = std::array<float, dish2::internal::NLEV>;
+using nreplev_float_t = std::array<float, dish2::internal::NLEV + 1>;
+using nlev_size_t_t = std::array<size_t, dish2::internal::NLEV>;
 
 } // namespace internal
 
@@ -128,8 +129,9 @@ EMP_BUILD_CONFIG(
   GROUP(GENOME, "GENOME"),
   VALUE(PROGRAM_START_SIZE, size_t, 100, "How big should initial programs be?"),
   VALUE(PROGRAM_MAX_SIZE, size_t, 1000, "What size should programs be capped at?"),
-  VALUE(MUTATION_RATE, float, 0.1,
-    "What fraction of cells should be mutated at all?"
+  VALUE(MUTATION_RATE, internal::nreplev_float_t,
+    (internal::nreplev_float_t{0.0, 0.2, 0.5}),
+    "For each replev, what fraction of cells should be mutated at all?"
   ),
   VALUE(POINT_MUTATION_RATE, float, 0.01,
     "What fraction of bytes should be scrambled?"
