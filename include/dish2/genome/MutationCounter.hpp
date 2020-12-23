@@ -11,12 +11,15 @@ struct MutationCounter {
 
   size_t point_mutation_counter{};
   size_t insertion_deletion_counter{};
+  size_t mutation_occurrence_counter{};
 
   void RecordPointMutation(const size_t num) { point_mutation_counter += num; }
 
   void RecordInsertionDeletion(const size_t num) {
     insertion_deletion_counter += num;
   }
+
+  void RecordMutationOccurrence() { ++mutation_occurrence_counter; }
 
   bool operator==(const MutationCounter& other) const {
     return std::tuple{

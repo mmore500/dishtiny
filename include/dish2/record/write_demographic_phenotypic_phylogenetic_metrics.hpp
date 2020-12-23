@@ -24,6 +24,7 @@
 #include "../introspection/get_fraction_spawn_request.hpp"
 #include "../introspection/get_mean_cell_age.hpp"
 #include "../introspection/get_mean_elapsed_insertions_deletions.hpp"
+#include "../introspection/get_mean_elapsed_mutation_occurences.hpp"
 #include "../introspection/get_mean_elapsed_point_mutations.hpp"
 #include "../introspection/get_mean_epoch.hpp"
 #include "../introspection/get_mean_generation.hpp"
@@ -94,6 +95,12 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   {
     metric = "Mean Elapsed Point Mutations";
     value = dish2::get_mean_elapsed_point_mutations<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Mean Elapsed Mutation Occurences";
+    value = dish2::get_mean_elapsed_mutation_occurences<Spec>( world );
     file.Update();
   }
 

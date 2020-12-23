@@ -7,6 +7,7 @@
 #include "MaximumProgramLengthPill.hpp"
 #include "MeanEpochPill.hpp"
 #include "MeanElapsedInsertionsDeletionsPill.hpp"
+#include "MeanElapsedMutationOccurencesPill.hpp"
 #include "MeanElapsedPointMutationsPill.hpp"
 #include "MeanModuleCountPill.hpp"
 #include "MeanProgramLengthPill.hpp"

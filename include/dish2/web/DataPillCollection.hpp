@@ -19,6 +19,7 @@ auto make_data_pill_collection( std::index_sequence<I...> ) {
     dish2::MaximumModuleCountPill,
     dish2::MaximumProgramLengthPill,
     dish2::MeanElapsedInsertionsDeletionsPill,
+    dish2::MeanElapsedMutationOccurencesPill,
     dish2::MeanElapsedPointMutationsPill,
     dish2::MeanEpochPill,
     dish2::MeanModuleCountPill,

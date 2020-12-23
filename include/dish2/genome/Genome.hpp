@@ -77,6 +77,7 @@ struct Genome {
     kin_group_id.ApplyInheritance( rep_lev );
 
     if ( sgpl::ThreadLocalRandom::Get().P( dish2::cfg.MUTATION_RATE() ) ) {
+      mutation_counter.RecordMutationOccurrence();
       MutateProgram();
       mutation_counter.RecordPointMutation(
         event_tags.ApplyPointMutations( dish2::cfg.POINT_MUTATION_RATE() )
