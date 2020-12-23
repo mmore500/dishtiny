@@ -3,6 +3,7 @@
 #define DISH2_GENOME_EVENTTAGS_HPP_INCLUDE
 
 #include <cstddef>
+#include <limits>
 
 #include "../../../third-party/cereal/include/cereal/types/array.hpp"
 #include "../../../third-party/Empirical/include/emp/base/array.hpp"
@@ -40,7 +41,7 @@ struct EventTags {
     // they're similar-ish, e.g., https://www.researchgate.net/figure/Poisson-versus-binomial-distribution-from-number-of-heads-in-a-coin-toss-The-Poisson_fig3_255717571
     // (they become more similar for large n)
     const size_t n_muts = sgpl::ThreadLocalRandom::Get().GetRandPoisson(
-      tag_bytes,
+      tag_bytes * CHAR_BIT,
       p_bit_toggle
     );
 
