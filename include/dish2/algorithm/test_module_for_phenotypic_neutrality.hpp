@@ -2,6 +2,7 @@
 #ifndef DISH2_ALGORITHM_TEST_MODULE_FOR_PHENOTYPIC_NEUTRALITY_HPP_INCLUDE
 #define DISH2_ALGORITHM_TEST_MODULE_FOR_PHENOTYPIC_NEUTRALITY_HPP_INCLUDE
 
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_module.hpp"
 
 #include "../cell/Cell.hpp"
@@ -20,7 +21,7 @@ bool test_module_for_phenotypic_neutrality(
   const dish2::Genome<Spec>& genome, const size_t module_idx
 ) {
 
-  const dish2::LogScope guard( "evaluating module ", module_idx );
+  const dish2::LogScope guard(emp::to_string("evaluating module ", module_idx));
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
 
