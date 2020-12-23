@@ -12,6 +12,7 @@
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/count_unique_coding_genotypes.hpp"
 #include "../introspection/count_unique_root_ids.hpp"
+#include "../introspection/count_unique_stint_root_ids.hpp"
 #include "../introspection/get_fraction_apoptosis_request.hpp"
 #include "../introspection/get_fraction_fecund_resource_stockpile.hpp"
 #include "../introspection/get_fraction_incoming_inter_message.hpp"
@@ -83,6 +84,12 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   {
     metric = "Number Phylogenetic Roots";
     value = dish2::count_unique_root_ids<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Number Stint Phylogenetic Roots";
+    value = dish2::count_unique_stint_root_ids<Spec>( world );
     file.Update();
   }
 

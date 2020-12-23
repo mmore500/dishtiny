@@ -38,6 +38,7 @@ struct Genome {
   using program_t = sgpl::Program<sgpl_spec_t>;
   program_t program;
   dish2::RootID root_id;
+  dish2::RootID stint_root_id;
 
   Genome() = default;
 
@@ -45,7 +46,8 @@ struct Genome {
   : event_tags( std::in_place )
   , kin_group_id( std::in_place )
   , program( dish2::cfg.PROGRAM_START_SIZE() )
-  , root_id( std::in_place ) {
+  , root_id( std::in_place )
+  , stint_root_id( std::in_place ) {
     program.RotateGlobalAnchorToFront();
   }
 
@@ -57,14 +59,16 @@ struct Genome {
       kin_group_id,
       mutation_counter,
       program,
-      root_id
+      root_id,
+      stint_root_id
     } == std::tuple{
       other.event_tags,
       other.generation_counter,
       other.kin_group_id,
       other.mutation_counter,
       other.program,
-      other.root_id
+      other.root_id,
+      other.stint_root_id
     };
   }
 
@@ -84,7 +88,7 @@ struct Genome {
       );
     }
 
-    // root_id doesn't change
+    // root_id and stint_root_id doesn't change
 
   }
 
@@ -129,6 +133,7 @@ struct Genome {
 
   void SetupSeededGenotype() {
     kin_group_id = dish2::KinGroupID<Spec>{ std::in_place };
+    stint_root_id = dish2::RootID{ std::in_place };
   }
 
   template <class Archive>
@@ -138,7 +143,8 @@ struct Genome {
     CEREAL_NVP( mutation_counter ),
     CEREAL_NVP( kin_group_id ),
     CEREAL_NVP( program ),
-    CEREAL_NVP( root_id )
+    CEREAL_NVP( root_id ),
+    CEREAL_NVP( stint_root_id )
   ); }
 
 };
