@@ -30,6 +30,9 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::GridViewer<dish2::IsAliveArtist<>, dish2::DemographicsCategory>,
   dish2::SeriesViewer<
+    dish2::IsPeripheralLevArtist<>, dish2::GroupStructureCategory, Spec::NLEV
+  >,
+  dish2::SeriesViewer<
     dish2::KinGroupAgeArtist<>, dish2::DemographicsCategory, Spec::NLEV
   >,
   dish2::GridViewer<

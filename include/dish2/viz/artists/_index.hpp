@@ -11,6 +11,7 @@
 #include "IncomingInterMessageCounterArtist.hpp"
 #include "IncomingIntraMessageCounterArtist.hpp"
 #include "IsAliveArtist.hpp"
+#include "IsPeripheralLevArtist.hpp"
 #include "KinGroupAgeArtist.hpp"
 #include "KinGroupIDArtist.hpp"
 #include "KinGroupIDLevArtist.hpp"

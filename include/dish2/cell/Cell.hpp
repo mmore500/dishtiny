@@ -20,6 +20,7 @@
 #include "Cardinal.hpp"
 
 #include "cardinal_iterators/IdentityWrapper.hpp"
+#include "cardinal_iterators/NeighborKinGroupIDViewWrapper.hpp"
 
 namespace dish2 {
 
@@ -145,6 +146,19 @@ struct Cell {
       dish2::IsAlive
     >().Get() == genome.has_value() );
     return genome.has_value();
+  }
+
+  size_t IsPeripheral( const size_t lev ) const {
+    if ( !IsAlive() ) return false;
+
+    const auto kin_group_id = genome->kin_group_id.GetBuffer()[ lev ];
+    return std::count_if(
+      this->begin<dish2::NeighborKinGroupIDViewWrapper<Spec>>(),
+      this->end<dish2::NeighborKinGroupIDViewWrapper<Spec>>(),
+      [lev, kin_group_id]( const auto& neighbor_kin_group_id_view ){
+        return kin_group_id != neighbor_kin_group_id_view.Get( lev );
+      }
+    );
   }
 
   size_t GetNumCardinals() const { return cardinals.size(); }
