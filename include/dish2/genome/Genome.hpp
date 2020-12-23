@@ -107,30 +107,21 @@ struct Genome {
   void DoProgramSequenceMutation() {
     using inst_t = typename program_t::value_type;
 
-    // TODO perform the sloppy copy elsewhere for efficiency's sake?
-    if ( sgpl::ThreadLocalRandom::Get().P(
+    const bool is_severe = sgpl::ThreadLocalRandom::Get().P(
       dish2::cfg.SEVERE_SEQUENCE_MUTATION_RATE()
-    ) ) {
-      // do severe sequence mutation
-      auto [copy, num_muts] = sgpl::sloppy_copy<inst_t, 0>(
-        program,
-        dish2::cfg.SEQUENCE_DEFECT_RATE(),
-        program.size(),
-        dish2::cfg.PROGRAM_MAX_SIZE()
-      );
-      mutation_counter.RecordInsertionDeletion( num_muts );
-      program = std::move( copy );
-    } else {
-      // do minor sequence mutation
-      auto [copy, num_muts] = sgpl::sloppy_copy<inst_t, 1>(
-        program,
-        dish2::cfg.SEQUENCE_DEFECT_RATE(),
-        dish2::cfg.MINOR_SEQUENCE_MUTATION_BOUND(),
-        dish2::cfg.PROGRAM_MAX_SIZE()
-      );
-      mutation_counter.RecordInsertionDeletion( num_muts );
-      program = std::move( copy );
-    }
+    );
+
+    // TODO perform the sloppy copy elsewhere for efficiency's sake?
+    // do severe sequence mutation
+    auto [copy, num_muts] = sgpl::sloppy_copy<inst_t, 0>(
+      program,
+      dish2::cfg.SEQUENCE_DEFECT_RATE(),
+      is_severe ? program.size() : dish2::cfg.MINOR_SEQUENCE_MUTATION_BOUND(),
+      dish2::cfg.PROGRAM_MAX_SIZE()
+    );
+    mutation_counter.RecordInsertionDeletion( num_muts );
+    program = std::move( copy );
+
   }
 
   void SetupSeededGenotype() {
