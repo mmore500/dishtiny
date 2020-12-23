@@ -32,9 +32,16 @@ struct QuorumCapService {
       = cell.cell_quorum_state.GetNumKnownQuorumBits( lev );
     if ( num_quorum_bits < cfg.QUORUM_CAP()[ lev ] ) return false;
 
-    const float p = cfg.P_QUORUM_CAP_KILL()[ lev ];
+    const float p = std::min(1.0f,
+      cfg.P_QUORUM_CAP_KILL()[ lev ]
+      * cell.IsPeripheral( lev )
+      //^ don't kill cels on interior, kill periphery
+      // more non-kin neighbors = more likely to be killed
+      * (num_quorum_bits - cfg.QUORUM_CAP()[ lev ])
+      //^ enforce more strictly on large groups
+    );
     auto& rand = sgpl::ThreadLocalRandom::Get();
-    if ( rand.P( p ) ) cell.DeathRoutine();
+    if ( p && rand.P( p ) ) cell.DeathRoutine();
 
     return true;
 

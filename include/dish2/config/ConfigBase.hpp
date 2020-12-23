@@ -122,7 +122,7 @@ EMP_BUILD_CONFIG(
     "At what quorum size should cell death be triggered?"
   ),
   VALUE(P_QUORUM_CAP_KILL, internal::nlev_float_t,
-    (internal::nlev_float_t{0.2, 0.2}),
+    (internal::nlev_float_t{0.0825, 0.0825}),
     "With what probability should quorum death be enforced?"
   ),
 
