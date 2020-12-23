@@ -11,7 +11,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/enumerate_module_ids.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
-#include "../algorithm/nop_out_phenotypically_neutral_instructions.hpp"
+#include "../algorithm/make_phenotype_equivalent_nopout.hpp"
 #include "../debug/LogLevelGuard.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
 #include "../prefab/ModalGuard.hpp"
