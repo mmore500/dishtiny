@@ -17,6 +17,7 @@
 #include "../introspection/get_fraction_fecund_resource_stockpile.hpp"
 #include "../introspection/get_fraction_incoming_inter_message.hpp"
 #include "../introspection/get_fraction_incoming_intra_message.hpp"
+#include "../introspection/get_fraction_nulliparous.hpp"
 #include "../introspection/get_fraction_receiving_resource.hpp"
 #include "../introspection/get_fraction_resource_receive_resistance.hpp"
 #include "../introspection/get_fraction_resource_reserve_request.hpp"
@@ -36,6 +37,7 @@
 #include "../introspection/get_mean_program_length.hpp"
 #include "../introspection/get_mean_resource_received.hpp"
 #include "../introspection/get_mean_resource_stockpile.hpp"
+#include "../introspection/get_mean_spawn_count.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
 
 #include "make_demographic_phenotypic_phylogenetic_metrics_filename.hpp"
@@ -221,6 +223,18 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   {
     metric = "Spawn Request Fraction";
     value = dish2::get_fraction_spawn_request<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Nulliparous Fraction";
+    value = dish2::get_fraction_nulliparous<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Mean Spawn Count";
+    value = dish2::get_mean_spawn_count<Spec>( world );
     file.Update();
   }
 

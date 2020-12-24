@@ -2,6 +2,8 @@
 #ifndef DISH2_SERVICES_SPAWNSENDINGSERVICE_HPP_INCLUDE
 #define DISH2_SERVICES_SPAWNSENDINGSERVICE_HPP_INCLUDE
 
+#include <algorithm>
+#include <numeric>
 #include <set>
 
 #include "../../../third-party/conduit/include/uitsl/algorithm/copy_if.hpp"
@@ -12,6 +14,7 @@
 #include "../cell/cardinal_iterators/GenomeNodeOutputWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../cell/cardinal_iterators/SpawnArrestWrapper.hpp"
+#include "../cell/cardinal_iterators/SpawnCountWrapper.hpp"
 #include "../cell/cardinal_iterators/SpawnRequestWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
@@ -40,6 +43,14 @@ struct SpawnSendingService {
       std::set< typename dish2::ResourceStockpileWrapper<spec_t>::value_type >(
         cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
         cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
+      ).size() == 1
+    ));
+
+    // check spawn count consistency
+    emp_assert((
+      std::set< typename dish2::SpawnCountWrapper<spec_t>::value_type >(
+        cell.template begin<dish2::SpawnCountWrapper<spec_t>>(),
+        cell.template end<dish2::SpawnCountWrapper<spec_t>>()
       ).size() == 1
     ));
 
@@ -74,6 +85,14 @@ struct SpawnSendingService {
       requested_outputs[ idx ].get().Put( *cell.genome );
       available_resource -= 1;
 
+      // record spawn send in spawn count
+      std::transform(
+        cell.template begin<dish2::SpawnCountWrapper<spec_t>>(),
+        cell.template end<dish2::SpawnCountWrapper<spec_t>>(),
+        cell.template begin<dish2::SpawnCountWrapper<spec_t>>(),
+        []( const auto& cur ){ emp_assert( cur + 1 > cur ); return cur + 1; }
+      );
+
       // swap 'n pop request
       requested_outputs[ idx ] = requested_outputs.back();
       requested_outputs.pop_back();
@@ -91,6 +110,14 @@ struct SpawnSendingService {
       std::set< typename dish2::ResourceStockpileWrapper<spec_t>::value_type >(
         cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
         cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
+      ).size() == 1
+    ));
+
+    // check spawn count consistency
+    emp_assert((
+      std::set< typename dish2::SpawnCountWrapper<spec_t>::value_type >(
+        cell.template begin<dish2::SpawnCountWrapper<spec_t>>(),
+        cell.template end<dish2::SpawnCountWrapper<spec_t>>()
       ).size() == 1
     ));
 

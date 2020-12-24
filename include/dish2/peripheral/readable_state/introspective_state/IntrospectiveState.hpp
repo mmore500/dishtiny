@@ -13,6 +13,7 @@
 #include "KinGroupAge.hpp"
 #include "KinGroupIDView.hpp"
 #include "ResourceStockpile.hpp"
+#include "SpawnCount.hpp"
 
 namespace dish2 {
 
@@ -26,7 +27,8 @@ struct IntrospectiveState
   dish2::IsAlive,
   dish2::KinGroupAge<Spec>,
   dish2::KinGroupIDView<Spec>,
-  dish2::ResourceStockpile
+  dish2::ResourceStockpile,
+  dish2::SpawnCount
 >
 {};
 
