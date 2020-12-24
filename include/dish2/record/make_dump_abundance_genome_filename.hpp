@@ -6,6 +6,7 @@
 #include <limits>
 #include <string>
 
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
@@ -25,6 +26,7 @@ std::string make_dump_abundance_genome_filename(
     {"criteria", "abundance"},
     {"abundance", emp::to_string( abundance )},
     {"morph", morph},
+    {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"thread", emp::to_string(thread_idx)},
     {"ext", ".json"}

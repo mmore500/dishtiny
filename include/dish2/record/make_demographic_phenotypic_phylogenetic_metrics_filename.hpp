@@ -6,6 +6,7 @@
 #include <limits>
 #include <string>
 
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
@@ -19,6 +20,7 @@ std::string make_demographic_phenotypic_phylogenetic_metrics_filename(
 ) {
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "demographic_phenotypic_phylogenetic_metrics"},
+    {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"thread", emp::to_string(thread_idx)},
     {"ext", ".csv"}

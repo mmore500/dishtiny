@@ -6,6 +6,7 @@
 #include <limits>
 #include <string>
 
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
@@ -18,6 +19,7 @@ std::string make_dump_population_filename( const size_t thread_idx) {
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "population"},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
+    {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"thread", emp::to_string(thread_idx)},
     {"ext", ".bin"}
   };

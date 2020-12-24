@@ -6,6 +6,7 @@
 #include <limits>
 #include <string>
 
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
@@ -20,6 +21,7 @@ std::string make_phylogenetic_root_abundances_filename(
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "phylogenetic_root_abundances"},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
+    {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"thread", emp::to_string(thread_idx)},
     {"ext", ".csv"}
   };
