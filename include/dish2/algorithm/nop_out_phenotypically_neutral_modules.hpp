@@ -44,7 +44,7 @@ dish2::Genome<Spec> nop_out_phenotypically_neutral_modules(
       genome, module_idx
     );
 
-    std::cout << "." << std::flush;
+    std::cout << ( should_nop[module_idx] ? "x" : "o" ) << std::flush;
 
   }
 

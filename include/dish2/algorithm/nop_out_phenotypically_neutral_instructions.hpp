@@ -41,7 +41,7 @@ dish2::Genome<Spec> nop_out_phenotypically_neutral_instructions(
       genome, idx
     );
 
-    std::cout << ":" << std::flush;
+    std::cout << ( should_nop[idx] ? "x" : "o" ) << std::flush;
 
   }
 
