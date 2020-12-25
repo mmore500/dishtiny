@@ -12,6 +12,7 @@
 #include "../record/dump_abundance_genome.hpp"
 #include "../record/dump_arbitrary_genome.hpp"
 #include "../record/dump_population.hpp"
+#include "../record/write_cell_census.hpp"
 #include "../record/write_demographic_phenotypic_phylogenetic_metrics.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -53,6 +54,7 @@ void thread_job(
     dish2::dump_arbitrary_genome<Spec>( thread_world, thread_idx )
   );
   dish2::dump_population<Spec>( thread_world, thread_idx );
+  dish2::write_cell_census<Spec>( thread_world, thread_idx );
   dish2::write_demographic_phenotypic_phylogenetic_metrics<Spec>(
     thread_world, thread_idx
   );

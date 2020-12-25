@@ -28,7 +28,7 @@ dish2::Genome<Spec> nop_out_phenotypically_neutral_instructions(
 
   emp::vector< char > should_nop( genome.program.size() );
 
-  #pragma omp parallel for
+  // #pragma omp parallel for
   for (size_t idx = 0; idx < genome.program.size(); ++idx) {
 
     #ifdef __EMSCRIPTEN__

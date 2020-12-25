@@ -31,7 +31,7 @@ dish2::Genome<Spec> nop_out_phenotypically_neutral_modules(
 
   emp::vector< char > should_nop( num_modules );
 
-  #pragma omp parallel for
+  // #pragma omp parallel for
   for (size_t module_idx = 0; module_idx < num_modules; ++module_idx) {
 
     #ifdef __EMSCRIPTEN__
