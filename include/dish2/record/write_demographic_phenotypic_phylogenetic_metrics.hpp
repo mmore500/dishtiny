@@ -11,6 +11,8 @@
 #include "../introspection/count_dead_cells.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/count_unique_coding_genotypes.hpp"
+#include "../introspection/count_unique_module_expression_profiles.hpp"
+#include "../introspection/count_unique_module_regulation_profiles.hpp"
 #include "../introspection/count_unique_root_ids.hpp"
 #include "../introspection/count_unique_stint_root_ids.hpp"
 #include "../introspection/get_fraction_apoptosis_request.hpp"
@@ -171,6 +173,19 @@ void write_demographic_phenotypic_phylogenetic_metrics(
 
 
   // PHENOTYPIC METRICS
+
+  {
+    metric = "Number Unique Module Regulation Profiles";
+    value = dish2::count_unique_module_regulation_profiles<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Number Unique Module Expression Profiles";
+    value = dish2::count_unique_module_expression_profiles<Spec>( world );
+    file.Update();
+  }
+
 
   {
     metric = "Mean Resource Stockpile";
