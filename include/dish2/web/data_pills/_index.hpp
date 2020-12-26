@@ -14,6 +14,8 @@
 #include "NumLiveCellsPill.hpp"
 #include "NumPhylogeneticRootsPill.hpp"
 #include "NumUniqueGenotypesPill.hpp"
+#include "NumUniqueModuleExpressionProfilesPill.hpp"
+#include "NumUniqueModuleRegulationProfilesPill.hpp"
 #include "PrevalentGenotypeCountPill.hpp"
 
 #endif // #ifndef DISH2_WEB_DATA_PILLS__INDEX_HPP_INCLUDE

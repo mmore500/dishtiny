@@ -27,6 +27,8 @@ auto make_data_pill_collection( std::index_sequence<I...> ) {
     dish2::NumLiveCellsPill,
     dish2::NumPhylogeneticRootsPill,
     dish2::NumUniqueGenotypesPill,
+    dish2::NumUniqueModuleExpressionProfilesPill,
+    dish2::NumUniqueModuleRegulationProfilesPill,
     dish2::PrevalentGenotypeCountPill,
     dish2::ElapsedGenerationsPill<I>...
   >{};
