@@ -2,7 +2,11 @@
 #ifndef DISH2_CONFIG_SETUP_HPP_INCLUDE
 #define DISH2_CONFIG_SETUP_HPP_INCLUDE
 
+#include <limits>
+
 #include "../../../third-party/Empirical/include/emp/config/ArgManager.hpp"
+
+#include "../run/setup_thread_local_random.hpp"
 
 #include "dump_config.hpp"
 #include "print_assets.hpp"
@@ -23,6 +27,9 @@ void setup( emp::ArgManager arg_manager ) {
   print_config();
 
   dump_config();
+
+  // setup main thread thread local random
+  dish2::setup_thread_local_random( std::numeric_limits<size_t>::max() );
 
 }
 

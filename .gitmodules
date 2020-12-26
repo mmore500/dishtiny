@@ -26,3 +26,6 @@
 [submodule "third-party/bats-core"]
   path = third-party/bats-core
   url = https://github.com/bats-core/bats-core
+[submodule "third-party/PicoSHA2"]
+	path = third-party/PicoSHA2
+	url = https://github.com/okdshin/PicoSHA2
