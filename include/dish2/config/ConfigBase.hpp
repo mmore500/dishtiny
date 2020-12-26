@@ -15,9 +15,9 @@ namespace dish2 {
 
 namespace internal {
 
-using nlev_float_t = std::array<float, dish2::internal::NLEV>;
-using nreplev_float_t = std::array<float, dish2::internal::NLEV + 1>;
-using nlev_size_t_t = std::array<size_t, dish2::internal::NLEV>;
+using nlev_float_t = emp::array<float, dish2::internal::NLEV>;
+using nreplev_float_t = emp::array<float, dish2::internal::NLEV + 1>;
+using nlev_size_t_t = emp::array<size_t, dish2::internal::NLEV>;
 
 } // namespace internal
 

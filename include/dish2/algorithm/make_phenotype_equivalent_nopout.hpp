@@ -4,6 +4,7 @@
 
 #include <algorithm>
 
+#include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/streamstringify.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
@@ -35,7 +36,8 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
   );
 
   emp_assert( std::none_of(
-    std::begin( cfg.MUTATION_RATE() ), std::end( cfg.MUTATION_RATE() )
+    std::begin( cfg.MUTATION_RATE() ), std::end( cfg.MUTATION_RATE() ),
+    std::identity
   ) );
 
   const dish2::LogScope guard1{ "noping out phenotypically neutral sites" };
