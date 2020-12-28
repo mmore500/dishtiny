@@ -30,7 +30,7 @@ bool test_module_for_phenotypic_neutrality(
     nopout.program, module_idx
   );
 
-  return dish2::detect_phenotypic_divergence<Spec>( genome, nopout );
+  return dish2::detect_phenotypic_divergence<Spec>( genome, nopout ) == false;
 
 }
 

@@ -25,7 +25,7 @@ bool test_instruction_for_phenotypic_neutrality(
   auto nopout = genome;
   nopout.program[ inst_idx ].NopOut();
 
-  return dish2::detect_phenotypic_divergence<Spec>( genome, nopout );
+  return dish2::detect_phenotypic_divergence<Spec>( genome, nopout ) == false;
 
 }
 
