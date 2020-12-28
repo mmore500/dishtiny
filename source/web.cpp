@@ -23,8 +23,6 @@ int main() {
     emp::web::GetUrlParams(), dish2::make_arg_specs()
   } );
 
-  dish2::ProcWorld<Spec> proc_world;
-
   interface = new dish2::WebInterface;
 
   // set up web interface
