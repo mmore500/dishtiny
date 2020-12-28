@@ -23,8 +23,8 @@ function invoking_dishtiny_exits_success { #@test
 }
 
 function single_thread_is_deterministic { #@test
-  run mkdir first; cp rundishtiny first; cd first; ./rundishtiny --RUN_UPDATES 64 --N_THREADS 1; cd ..
-  run mkdir second; cp rundishtiny second; cd second; ./rundishtiny --RUN_UPDATES 64 --N_THREADS 1; cd ..
+  run mkdir first; cp rundishtiny first; cd first; ./rundishtiny --RUN_UPDATES 1024 --N_THREADS 1; cd ..
+  run mkdir second;  cp rundishtiny second; cd second; ./rundishtiny --RUN_UPDATES 1024 --N_THREADS 1; cd ..
   run diff first/ second/
   [ "$status" -eq 0 ]
 }
