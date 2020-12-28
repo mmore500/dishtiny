@@ -77,7 +77,7 @@ struct SpawnSendingService {
     while ( available_resource >= 1 && requested_outputs.size() ) {
 
       // pick a random request
-      const size_t idx = sgpl::ThreadLocalRandom::Get().GetUInt(
+      const size_t idx = sgpl::tlrand.Get().GetUInt(
         requested_outputs.size()
       );
 

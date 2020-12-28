@@ -79,7 +79,7 @@ void write_demographic_phenotypic_phylogenetic_metrics(
 
   {
     metric = "Random Number Generator Seed";
-    value = sgpl::ThreadLocalRandom::Get().GetSeed();
+    value = sgpl::tlrand.Get().GetSeed();
     file.Update();
   }
 

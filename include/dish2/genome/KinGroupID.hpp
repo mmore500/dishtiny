@@ -20,7 +20,7 @@ struct KinGroupID {
   KinGroupID() = default;
 
   KinGroupID(std::in_place_t) {
-    sgpl::ThreadLocalRandom::Get().RandFill(
+    sgpl::tlrand.Get().RandFill(
       reinterpret_cast<unsigned char*>( data.data() ),
       sizeof( typename decltype(data)::value_type ) * data.size()
     );
@@ -35,7 +35,7 @@ struct KinGroupID {
       std::next( std::begin( data ), rep_lev ),
       [](){
         size_t res;
-        sgpl::ThreadLocalRandom::Get().RandFill(
+        sgpl::tlrand.Get().RandFill(
           reinterpret_cast<unsigned char*>( &res ),
           sizeof( res )
         );

@@ -29,11 +29,11 @@ bool detect_phenotypic_divergence(
 
   for ( size_t upd{}; upd < cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES(); ++upd ) {
 
-    const emp::Random bak = sgpl::ThreadLocalRandom::Get();
+    const emp::Random bak = sgpl::tlrand.Get();
 
     world1.Update();
 
-    sgpl::ThreadLocalRandom::Get() = bak;
+    sgpl::tlrand.Get() = bak;
 
     world2.Update();
 
@@ -75,13 +75,13 @@ bool detect_phenotypic_divergence(
 
   netuit::internal::MeshIDCounter::Reset();
 
-  const emp::Random rng_bak = sgpl::ThreadLocalRandom::Get();
+  const emp::Random rng_bak = sgpl::tlrand.Get();
 
   auto world1 = dish2::ProcWorld<Spec>{}.MakeThreadWorld(0);
   dish2::seed_genomes_into<Spec>( {genome1}, world1 );
 
   // roll back rng state
-  sgpl::ThreadLocalRandom::Get() = rng_bak;
+  sgpl::tlrand.Get() = rng_bak;
 
   auto world2 = dish2::ProcWorld<Spec>{}.MakeThreadWorld(0);
   dish2::seed_genomes_into<Spec>( {genome2}, world2 );

@@ -23,7 +23,7 @@ public:
   QuorumMessage() = default;
 
   QuorumMessage(std::in_place_t) {
-    auto& rand = sgpl::ThreadLocalRandom::Get();
+    auto& rand = sgpl::tlrand.Get();
     for ( size_t lev{}; lev < Spec::NLEV; ++lev ) {
       if ( rand.P( dish2::cfg.P_SET_QUORUM_BIT()[lev] ) ) {
         data[lev].Set( rand.GetUInt( data[lev].GetSize() ) );

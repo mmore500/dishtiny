@@ -10,7 +10,6 @@
 #include "../../../third-party/Empirical/include/emp/math/Random.hpp"
 #include "../../../third-party/Empirical/include/emp/meta/meta.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
-#include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "../config/cfg.hpp"
 #include "../utility/sha256_reduce.hpp"
@@ -42,7 +41,7 @@ void setup_thread_local_random( const size_t thread_idx ) {
   const auto seed_addend = hash % ( std::numeric_limits<int>::max() - 1 );
   const int seed = uitsl::safe_cast<int>( 1 + seed_addend );
 
-  sgpl::ThreadLocalRandom::Initialize( seed );
+  sgpl::tlrand.Initialize( seed );
 
   std::cout << "thread " << thread_idx << " applied rng seed " << seed;
   std::cout << std::endl;

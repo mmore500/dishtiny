@@ -27,7 +27,7 @@ struct EventTags {
   EventTags() = default;
 
   EventTags( std::in_place_t ) {
-    sgpl::ThreadLocalRandom::Get().RandFill(
+    sgpl::tlrand.Get().RandFill(
       reinterpret_cast<unsigned char*>( tags.data() ),
       tag_bytes
     );
@@ -40,7 +40,7 @@ struct EventTags {
     // so approximate with the poisson distribution instead
     // they're similar-ish, e.g., https://www.researchgate.net/figure/Poisson-versus-binomial-distribution-from-number-of-heads-in-a-coin-toss-The-Poisson_fig3_255717571
     // (they become more similar for large n)
-    const size_t n_muts = sgpl::ThreadLocalRandom::Get().GetRandPoisson(
+    const size_t n_muts = sgpl::tlrand.Get().GetRandPoisson(
       tag_bytes * CHAR_BIT,
       p_bit_toggle
     );

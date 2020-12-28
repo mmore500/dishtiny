@@ -23,7 +23,7 @@ emp::web::Document emp_base{ "emp_base" };
 TEST_CASE("Test KinGroupIDArtist") {
 
   // set RNG to ensure consistent output
-  sgpl::ThreadLocalRandom::Get() = emp::Random{ 1 };
+  sgpl::tlrand.Get() = emp::Random{ 1 };
 
   emp::web::Canvas canvas(500, 500);
   emp_base << canvas;

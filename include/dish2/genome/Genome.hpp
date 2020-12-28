@@ -81,7 +81,7 @@ struct Genome {
     kin_group_id.ApplyInheritance( rep_lev );
 
     if (
-      sgpl::ThreadLocalRandom::Get().P( dish2::cfg.MUTATION_RATE()[rep_lev] )
+      sgpl::tlrand.Get().P( dish2::cfg.MUTATION_RATE()[rep_lev] )
     ) {
       mutation_counter.RecordMutationOccurrence();
       MutateProgram();
@@ -107,7 +107,7 @@ struct Genome {
   void DoProgramSequenceMutation() {
     using inst_t = typename program_t::value_type;
 
-    const bool is_severe = sgpl::ThreadLocalRandom::Get().P(
+    const bool is_severe = sgpl::tlrand.Get().P(
       dish2::cfg.SEVERE_SEQUENCE_MUTATION_RATE()
     );
 

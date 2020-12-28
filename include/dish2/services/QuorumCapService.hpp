@@ -40,7 +40,7 @@ struct QuorumCapService {
       * (num_quorum_bits - cfg.QUORUM_CAP()[ lev ])
       //^ enforce more strictly on large groups
     );
-    auto& rand = sgpl::ThreadLocalRandom::Get();
+    auto& rand = sgpl::tlrand.Get();
     if ( p && rand.P( p ) ) cell.DeathRoutine();
 
     return true;

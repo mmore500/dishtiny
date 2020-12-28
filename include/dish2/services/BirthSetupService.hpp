@@ -44,7 +44,7 @@ struct BirthSetupService {
     if ( fresh_input_idxs.size() ) {
 
       const size_t cardinal_idx = fresh_input_idxs[
-        sgpl::ThreadLocalRandom::Get().GetUInt( fresh_input_idxs.size() )
+        sgpl::tlrand.Get().GetUInt( fresh_input_idxs.size() )
       ];
       const size_t epoch = cell.cardinals[
         cardinal_idx
