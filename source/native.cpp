@@ -6,6 +6,7 @@
 #include "dish2/config/make_arg_specs.hpp"
 #include "dish2/config/setup.hpp"
 #include "dish2/spec/Spec.hpp"
+#include "dish2/run/setup_thread_local_random.hpp"
 #include "dish2/run/thread_job.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
@@ -23,9 +24,10 @@ int main(int argc, char* argv[]) {
 
   // launch threads to run simulation
   for( size_t thread{}; thread < dish2::cfg.N_THREADS(); ++thread ) team.Add(
-    [thread, &proc_world](){ dish2::thread_job<Spec>(
-      thread, proc_world.MakeThreadWorld( thread )
-    ); }
+    [thread, &proc_world](){
+      dish2::setup_thread_local_random( thread );
+      dish2::thread_job<Spec>( thread, proc_world.MakeThreadWorld( thread ) );
+    }
   );
 
   // wait for threads to complete

@@ -16,7 +16,6 @@
 #include "../record/write_demographic_phenotypic_phylogenetic_metrics.hpp"
 #include "../world/ThreadWorld.hpp"
 
-#include "setup_thread_local_random.hpp"
 #include "thread_should_continue.hpp"
 #include "thread_step.hpp"
 
@@ -26,8 +25,6 @@ template<typename Spec>
 void thread_job(
   const size_t thread_idx, dish2::ThreadWorld<Spec> thread_world
 ) {
-
-  dish2::setup_thread_local_random( thread_idx );
 
   if ( cfg.GENESIS() == "innoculate" )
     dish2::innoculate_population( thread_idx, thread_world );
