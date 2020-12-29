@@ -14,6 +14,7 @@
 #include "../../../../../third-party/signalgp-lite/include/sgpl/utility/ByteEnumeration.hpp"
 
 #include "NopState.hpp"
+#include "TransientNopState.hpp"
 
 #include "controller_mapped_state/ControllerMappedState.hpp"
 
@@ -24,7 +25,8 @@ namespace internal {
   template< typename Spec >
   using writable_state_parent_t = uitsl::PodInternalNode<
     dish2::ControllerMappedState< Spec >,
-    dish2::NopState< Spec >
+    dish2::NopState< Spec >,
+    dish2::TransientNopState< Spec >
   >;
 
 } // namespace internal

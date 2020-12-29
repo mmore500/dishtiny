@@ -169,6 +169,7 @@ struct Cell {
 
     // TODO put these in order
     using service_manager_t = dish2::ServiceManager<
+      dish2::DecayToBaselineService, // should run before cpu execution service
       dish2::CpuExecutionService,
 
       dish2::BirthSetupService,
