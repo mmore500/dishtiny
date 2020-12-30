@@ -1,17 +1,17 @@
 #pragma once
-#ifndef DISH2_RECORD_MAKE_DUMP_ABUNDANCE_GENOME_FILENAME_HPP_INCLUDE
-#define DISH2_RECORD_MAKE_DUMP_ABUNDANCE_GENOME_FILENAME_HPP_INCLUDE
+#ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_DUMP_ABUNDANCE_GENOME_FILENAME_HPP_INCLUDE
+#define DISH2_RECORD_MAKE_FILENAME_MAKE_DUMP_ABUNDANCE_GENOME_FILENAME_HPP_INCLUDE
 
 #include <cstdlib>
 #include <limits>
 #include <string>
 
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
-#include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
-#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
+#include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
-#include "../config/cfg.hpp"
-#include "../introspection/get_endeavor.hpp"
+#include "../../config/cfg.hpp"
+#include "../../introspection/get_endeavor.hpp"
 
 namespace dish2 {
 
@@ -57,4 +57,4 @@ std::string make_dump_abundance_genome_filename(
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_RECORD_MAKE_DUMP_ABUNDANCE_GENOME_FILENAME_HPP_INCLUDE
+#endif // #ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_DUMP_ABUNDANCE_GENOME_FILENAME_HPP_INCLUDE

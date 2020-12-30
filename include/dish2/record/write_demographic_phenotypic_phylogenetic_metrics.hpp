@@ -42,7 +42,7 @@
 #include "../introspection/get_mean_spawn_count.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
 
-#include "make_demographic_phenotypic_phylogenetic_metrics_filename.hpp"
+#include "make_filename/make_demographic_phenotypic_phylogenetic_metrics_filename.hpp"
 
 namespace dish2 {
 

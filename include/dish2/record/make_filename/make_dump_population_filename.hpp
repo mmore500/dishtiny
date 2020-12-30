@@ -1,29 +1,27 @@
 #pragma once
-#ifndef DISH2_RECORD_MAKE_DEMOGRAPHIC_PHENOTYPIC_PHYLOGENETIC_METRICS_FILENAME_HPP_INCLUDE
-#define DISH2_RECORD_MAKE_DEMOGRAPHIC_PHENOTYPIC_PHYLOGENETIC_METRICS_FILENAME_HPP_INCLUDE
+#ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_DUMP_POPULATION_FILENAME_HPP_INCLUDE
+#define DISH2_RECORD_MAKE_FILENAME_MAKE_DUMP_POPULATION_FILENAME_HPP_INCLUDE
 
 #include <cstdlib>
 #include <limits>
 #include <string>
 
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
-#include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
-#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
+#include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
-#include "../config/cfg.hpp"
-#include "../introspection/get_endeavor.hpp"
+#include "../../config/cfg.hpp"
+#include "../../introspection/get_endeavor.hpp"
 
 namespace dish2 {
 
-std::string make_demographic_phenotypic_phylogenetic_metrics_filename(
-  const size_t thread_idx
-) {
+std::string make_dump_population_filename( const size_t thread_idx) {
   auto keyname_attributes = emp::keyname::unpack_t{
-    {"a", "demographic_phenotypic_phylogenetic_metrics"},
-    {"proc", emp::to_string( uitsl::get_proc_id() )},
+    {"a", "population"},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
+    {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"thread", emp::to_string(thread_idx)},
-    {"ext", ".csv"}
+    {"ext", ".bin"}
   };
 
   if ( std::getenv("REPRO_ID") ) {
@@ -51,4 +49,4 @@ std::string make_demographic_phenotypic_phylogenetic_metrics_filename(
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_RECORD_MAKE_DEMOGRAPHIC_PHENOTYPIC_PHYLOGENETIC_METRICS_FILENAME_HPP_INCLUDE
+#endif // #ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_DUMP_POPULATION_FILENAME_HPP_INCLUDE

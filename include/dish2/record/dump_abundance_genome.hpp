@@ -13,7 +13,7 @@
 
 #include "../world/ThreadWorld.hpp"
 
-#include "make_dump_abundance_genome_filename.hpp"
+#include "make_filename/make_dump_abundance_genome_filename.hpp"
 
 namespace dish2 {
 

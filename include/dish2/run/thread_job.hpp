@@ -9,13 +9,11 @@
 #include "../config/cfg.hpp"
 #include "../load/innoculate_population.hpp"
 #include "../load/reconstitute_population.hpp"
-#include "../record/dump_abundance_genome.hpp"
-#include "../record/dump_arbitrary_genome.hpp"
-#include "../record/dump_population.hpp"
-#include "../record/write_cell_census.hpp"
-#include "../record/write_demographic_phenotypic_phylogenetic_metrics.hpp"
 #include "../world/ThreadWorld.hpp"
 
+#include "thread_data_dump.hpp"
+#include "thread_data_finalize.hpp"
+#include "thread_data_write.hpp"
 #include "thread_should_continue.hpp"
 #include "thread_step.hpp"
 
@@ -44,19 +42,11 @@ void thread_job(
 
   std::cout << "thread " << thread_idx << " simulation complete" << std::endl;
 
-  uitsl::err_audit(!
-    dish2::dump_abundance_genome<Spec>( thread_world, thread_idx )
-  );
-  uitsl::err_audit(!
-    dish2::dump_arbitrary_genome<Spec>( thread_world, thread_idx )
-  );
-  dish2::dump_population<Spec>( thread_world, thread_idx );
-  dish2::write_cell_census<Spec>( thread_world, thread_idx );
-  dish2::write_demographic_phenotypic_phylogenetic_metrics<Spec>(
-    thread_world, thread_idx
-  );
+  dish2::thread_data_dump<Spec>( thread_world, thread_idx );
+  dish2::thread_data_write<Spec>( thread_world, thread_idx );
+  dish2::thread_data_finalize<Spec>( thread_world, thread_idx );
 
-  std::cout << "thread " << thread_idx << " data dump complete" << std::endl;
+  std::cout << "thread " << thread_idx << " data recorded" << std::endl;
 
 }
 

@@ -7,14 +7,13 @@
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 
-#include "make_cell_census_filename.hpp"
-
 #include "cell_census/write_cell_age.hpp"
 #include "cell_census/write_kin_group_age.hpp"
 #include "cell_census/write_kin_group_id.hpp"
 #include "cell_census/write_peripheral_count.hpp"
 #include "cell_census/write_resource_stockpile.hpp"
 #include "cell_census/write_spawn_count.hpp"
+#include "make_filename/make_cell_census_filename.hpp"
 
 namespace dish2 {
 
