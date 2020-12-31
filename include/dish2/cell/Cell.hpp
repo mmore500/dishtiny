@@ -4,6 +4,8 @@
 
 #include <utility>
 
+#include "../../../third-party/conduit/include/netuit/assign/AssignIntegrated.hpp"
+#include "../../../third-party/conduit/include/netuit/assign/AssignThisProc.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/Mesh.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
 #include "../../../third-party/Empirical/include/emp/base/optional.hpp"
@@ -91,12 +93,13 @@ struct Cell {
     intra_message_mesh_t intra_message_mesh{
       intra_message_mesh_topology_factory_t{}( num_cardinals ),
       uitsl::AssignIntegrated<uitsl::thread_id_t>{},
-      uitsl::AssignIntegrated<uitsl::proc_id_t>{},
+      netuit::AssignThisProc{},
       std::make_shared<intra_message_backend_t>(),
       MPI_COMM_WORLD,
       0 // const size_t mesh_id_
     };
-    auto intra_message_submesh = intra_message_mesh.GetSubmesh(0, 0);
+
+    auto intra_message_submesh = intra_message_mesh.GetSubmesh(0);
 
     emp_assert( intra_message_submesh.size() == num_cardinals );
 
