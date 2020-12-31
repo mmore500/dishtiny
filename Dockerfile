@@ -30,7 +30,21 @@ RUN \
   apt-get purge -y libhdf5-dev \
     && \
   aptitude install -y libhdf5-dev \
-    &&  echo "upgrade success"
+    && \
+  echo "upgrade success"
+
+RUN \
+  apt-get update -qq \
+    && \
+  apt-get install -y --allow-downgrades --no-install-recommends \
+    rdfind \
+    imagemagick \
+    && \
+  apt-get clean \
+    && \
+  rm -rf /var/lib/apt/lists/* \
+    && \
+  echo "installed apt packages"
 
 RUN \
   pip3 install -r /opt/dishtiny/docs/requirements.txt \
