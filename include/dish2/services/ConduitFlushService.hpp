@@ -13,9 +13,9 @@ struct ConduitFlushService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {
     const size_t freq = dish2::cfg.CONDUIT_FLUSH_SERVICE_FREQUENCY();
+    // must run whether cell is alive or not to keep aggregated flushes in sync
     return
-      alive
-      && freq > 0
+      freq > 0
       && uitsl::shift_mod( update, freq ) == 0;
   }
 

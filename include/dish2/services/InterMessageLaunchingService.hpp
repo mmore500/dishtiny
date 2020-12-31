@@ -45,8 +45,8 @@ struct InterMessageLaunchingService {
           );
           ++message_counter;
         }
-        // purge leftover messages
-        message_counter += message_input.Jump();
+        // leftover messages purged in a seperate service
+        // everyone must jump at once because it's an aggregated duct
       }
     );
 
