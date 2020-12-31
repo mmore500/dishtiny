@@ -9,6 +9,7 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
+#include "../config/TemporaryConfigOverride.hpp"
 #include "../debug/entry_types.hpp"
 #include "../debug/log_event.hpp"
 #include "../debug/LogScope.hpp"
@@ -25,15 +26,16 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 ) {
 
   // store old config values, temporarily overwrite them
-  const auto n_cells_bak = cfg.N_CELLS();
-  const auto weak_scaling_bak = cfg.WEAK_SCALING();
-  const auto n_threads_bak = cfg.N_THREADS();
-  const auto mutation_rate_bak = cfg.MUTATION_RATE();
-
-  cfg.Set( "N_CELLS", emp::to_string(cfg.PHENOTYPIC_DIVERGENCE_N_CELLS()) );
-  cfg.Set( "WEAK_SCALING", "0" );
-  cfg.Set( "N_THREADS", "1" );
-  cfg.Set(
+  const dish2::TemporaryConfigOverride n_cells(
+    "N_CELLS", cfg.PHENOTYPIC_DIVERGENCE_N_CELLS()
+  );
+  const dish2::TemporaryConfigOverride weak_scaling(
+    "WEAK_SCALING", false
+  );
+  const dish2::TemporaryConfigOverride n_threads(
+    "N_THREADS", 1
+  );
+  const dish2::TemporaryConfigOverride mutation_rate(
     "MUTATION_RATE", uitsl::stringstreamify( decltype(cfg.MUTATION_RATE()){} )
   );
 
@@ -47,14 +49,6 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
   genome = dish2::nop_out_phenotypically_neutral_modules< Spec >( genome );
 
   genome = dish2::nop_out_phenotypically_neutral_instructions< Spec >( genome );
-
-  // restore old config values
-  cfg.Set( "N_CELLS", emp::to_string(n_cells_bak) );
-  cfg.Set( "WEAK_SCALING", emp::to_string(weak_scaling_bak) );
-  cfg.Set( "N_THREADS", emp::to_string(n_threads_bak) );
-  cfg.Set( "MUTATION_RATE", uitsl::stringstreamify(mutation_rate_bak) );
-
-  emp_assert( cfg.MUTATION_RATE() == mutation_rate_bak );
 
   return genome;
 
