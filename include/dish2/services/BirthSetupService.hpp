@@ -3,6 +3,7 @@
 #define DISH2_SERVICES_BIRTHSETUPSERVICE_HPP_INCLUDE
 
 #include <functional>
+#include <utility>
 
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
@@ -54,11 +55,13 @@ struct BirthSetupService {
 
       cell.DeathRoutine();
 
-      cell.genome = cell.cardinals[cardinal_idx].genome_node_input.Get();
+      cell.genome = std::as_const(
+        cell.cardinals[ cardinal_idx ].genome_node_input
+      ).Get();
 
-      const auto& replev_request = cell.cardinals[
-        cardinal_idx
-      ].peripheral.state_node_input.Get().template Get<
+      const auto& replev_request = std::as_const(
+        cell.cardinals[ cardinal_idx ].peripheral.state_node_input
+      ).Get().template Get<
         dish2::RepLevRequest< spec_t >
       >();
       cell.genome->ElapseGeneration( replev_request.GetRepLev(), epoch );

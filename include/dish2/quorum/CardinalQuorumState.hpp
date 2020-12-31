@@ -98,7 +98,7 @@ public:
     ForgetLearnedBits( cell_quorum_state );
 
     // filter blacklisted bits from received bits
-    learned_bits = input.Get();
+    learned_bits = std::as_const(input).Get();
     learned_bits.UnsetMask(
       cell_quorum_state.GetBlacklistedBits()
     );

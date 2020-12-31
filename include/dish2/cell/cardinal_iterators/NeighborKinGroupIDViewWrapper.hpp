@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_NEIGHBORKINGROUPIDVIEWWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_NEIGHBORKINGROUPIDVIEWWRAPPER_HPP_INCLUDE
 
+#include <utility>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../peripheral/readable_state/ReadableState.hpp"
@@ -26,13 +28,15 @@ public:
   using pointer = value_type*;
   using reference = value_type&;
 
-  value_type& operator*() {
-    return parent_t::operator*().state_node_input.Get().template Get<
+  const value_type& operator*() {
+    return std::as_const(
+      parent_t::operator*().state_node_input
+    ).Get().template Get<
       dish2::KinGroupIDView< Spec >
     >();
   }
 
-  value_type* operator->() { return &operator*(); }
+  const value_type* operator->() { return &operator*(); }
 
   NeighborKinGroupIDViewWrapper& operator++() {
     parent_t::operator++();

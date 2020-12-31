@@ -28,7 +28,10 @@ public:
     typename SgplSpec::peripheral_t& peripheral
   ) {
 
-    const auto& neighbor_state = peripheral.state_node_input.Get();
+    using as_const = const decltype(peripheral.state_node_input)&;
+
+    const auto& neighbor_state
+      = const_cast<as_const>(peripheral.state_node_input).Get();
 
     core.registers[ inst.args[0] ] = neighbor_state.Read( GetAddr( inst ) );
 

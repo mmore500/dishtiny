@@ -2,6 +2,8 @@
 #ifndef DISH2_EVENTS_KINGROUPMISMATCHEVENT_HPP_INCLUDE
 #define DISH2_EVENTS_KINGROUPMISMATCHEVENT_HPP_INCLUDE
 
+#include <utility>
+
 #include "../peripheral/readable_state/ReadableState.hpp"
 
 namespace dish2 {
@@ -11,7 +13,9 @@ struct KinGroupMismatchEvent {
 
   template< typename Cardinal, size_t SeriesIdx >
   static bool Test( Cardinal& cardinal ) {
-    return cardinal.peripheral.state_node_input.Get().template Get<
+    return std::as_const(
+      cardinal.peripheral.state_node_input
+    ).Get().template Get<
       typename dish2::KinGroupIDView<Spec>
     >().template Get<
       SeriesIdx

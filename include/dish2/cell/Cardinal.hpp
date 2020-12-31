@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_HPP_INCLUDE
 
+#include <utility>
+
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeInput.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeOutput.hpp"
@@ -97,9 +99,10 @@ struct Cardinal {
   void DispatchEvent(const tag_t& tag) { cpu.ForceLaunchCore( tag ); }
 
   bool IsNeighborKin( const size_t lev ) {
+
     return peripheral.readable_state.template Get<
      dish2::KinGroupIDView< Spec >
-   >().Get( lev ) == state_node_input.Get().template Get<
+   >().Get( lev ) == std::as_const(state_node_input).Get().template Get<
       dish2::KinGroupIDView< Spec >
     >().Get( lev );
   }
