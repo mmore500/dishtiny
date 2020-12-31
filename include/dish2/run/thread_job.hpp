@@ -5,6 +5,7 @@
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 
 #include "../config/cfg.hpp"
 #include "../load/innoculate_population.hpp"
@@ -40,7 +41,8 @@ void thread_job(
     dish2::thread_step<Spec>( thread_idx, thread_world, run_timer, log_timer );
   }
 
-  std::cout << "thread " << thread_idx << " simulation complete" << std::endl;
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " simulation complete" << std::endl;
 
   dish2::thread_data_dump<Spec>( thread_world, thread_idx );
   dish2::thread_data_write<Spec>( thread_world, thread_idx );

@@ -17,7 +17,8 @@ void print_progress(
   const uitsl::CoarseTimer& run_timer
 ) {
 
-  std::cout << "thread " << thread_idx;
+  std::cout << "proc " << uitsl::get_proc_id();
+  std::cout << " thread " << thread_idx;
   std::cout << " @ update " << thread_world.GetUpdate();
 
   // if limited by updates, print percent updates progress

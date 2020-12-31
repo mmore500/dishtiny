@@ -8,6 +8,7 @@
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 
 #include "../genome/Genome.hpp"
@@ -35,7 +36,7 @@ dish2::Genome<Spec> load_innoculum(
   );
   innoculum.root_id.SetID( root_id );
 
-  std::cout << "thread " << thread_idx
+  std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " loaded innoculum " << root_id << " from " << path << std::endl;
 
   return innoculum;

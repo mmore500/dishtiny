@@ -31,8 +31,8 @@ void setup_thread_local_random( const size_t thread_idx ) {
     : computed_preseed
   ;
 
-  std::cout << "thread " << thread_idx << " using rng preseed " << preseed;
-  std::cout  << std::endl;
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " using rng preseed " << preseed << std::endl;
 
   const size_t hash = dish2::sha256_reduce( emp::vector< size_t >{
     preseed, thread_idx, uitsl::safe_cast<size_t>( uitsl::get_proc_id() )
@@ -44,8 +44,8 @@ void setup_thread_local_random( const size_t thread_idx ) {
 
   sgpl::tlrand.Initialize( seed );
 
-  std::cout << "thread " << thread_idx << " applied rng seed " << seed;
-  std::cout << std::endl;
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " applied rng seed " << seed << std::endl;
 
 }
 

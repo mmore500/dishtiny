@@ -9,6 +9,7 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 
 #include "../algorithm/seed_genomes_into.hpp"
@@ -61,7 +62,7 @@ void innoculate_population(
 
   dish2::seed_genomes_into<Spec>( innoculums, world );
 
-  std::cout << "thread " << thread_idx
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " loaded " << innoculums.size() << " innoculums " << std::endl;
 
 }
