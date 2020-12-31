@@ -8,6 +8,7 @@
 #include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
+#include "../../config/num_cells_local.hpp"
 #include "../../config/cfg.hpp"
 
 namespace dish2 {
@@ -24,9 +25,9 @@ public:
   , canvas_width( canvas.GetWidth() )
   { emp_assert( canvas_height > 0 ); emp_assert( canvas_width > 0 );}
 
-  size_t GetGridWidth() const { return std::sqrt( dish2::cfg.N_CELLS() ); }
+  size_t GetGridWidth() const { return std::sqrt( dish2::num_cells_local() ); }
 
-  size_t GetGridHeight() const { return std::sqrt( dish2::cfg.N_CELLS() ); }
+  size_t GetGridHeight() const { return std::sqrt( dish2::num_cells_local() ); }
 
   size_t GetCellWidthPx() const {
     emp_assert( GetGridWidth() >= 0 );

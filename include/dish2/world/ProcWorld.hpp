@@ -12,6 +12,7 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../config/cfg.hpp"
+#include "../config/num_cells_global.hpp"
 
 #include "ThreadWorld.hpp"
 
@@ -23,7 +24,7 @@ struct ProcWorld {
   using topology_factory_t = typename Spec::topology_factory_t;
 
   const double dim_width {
-    std::pow( dish2::cfg.N_CELLS(), 1.0 / dish2::cfg.N_DIMS() )
+    std::pow( dish2::num_cells_global(), 1.0 / dish2::cfg.N_DIMS() )
   };
   const emp::vector< size_t > dims =
     emp::vector< size_t >( dish2::cfg.N_DIMS(), dim_width );

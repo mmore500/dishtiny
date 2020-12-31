@@ -71,6 +71,7 @@ EMP_BUILD_CONFIG(
   VALUE(N_CELLS, size_t,
     UITSL_IF_WEB_ELSE(3600, 10000), "How many cells should be simulated?"
   ),
+  VALUE(WEAK_SCALING, bool, false, "[NATIVE] Should number of total cells be multiplied by the total number of threads (num procs times threads per proc)?"),
   VALUE(N_DIMS, size_t, 2,
     "What dimensionality should the toroidal mesh have?"),
   VALUE(

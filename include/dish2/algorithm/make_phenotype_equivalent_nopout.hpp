@@ -26,10 +26,12 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
   // store old config values, temporarily overwrite them
   const auto n_cells_bak = cfg.N_CELLS();
+  const auto weak_scaling_bak = cfg.WEAK_SCALING();
   const auto n_threads_bak = cfg.N_THREADS();
   const auto mutation_rate_bak = cfg.MUTATION_RATE();
 
   cfg.Set( "N_CELLS", emp::to_string(cfg.PHENOTYPIC_DIVERGENCE_N_CELLS()) );
+  cfg.Set( "WEAK_SCALING", "0" );
   cfg.Set( "N_THREADS", "1" );
   cfg.Set(
     "MUTATION_RATE", uitsl::stringstreamify( decltype(cfg.MUTATION_RATE()){} )
@@ -48,6 +50,7 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
   // restore old config values
   cfg.Set( "N_CELLS", emp::to_string(n_cells_bak) );
+  cfg.Set( "WEAK_SCALING", emp::to_string(weak_scaling_bak) );
   cfg.Set( "N_THREADS", emp::to_string(n_threads_bak) );
   cfg.Set( "MUTATION_RATE", uitsl::stringstreamify(mutation_rate_bak) );
 
