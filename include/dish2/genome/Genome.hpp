@@ -170,15 +170,16 @@ namespace std {
 template <typename Spec>
 struct hash<dish2::Genome<Spec>> {
 
-size_t operator()( const dish2::Genome<Spec>& genome ) const {
-  const auto& program = genome.program;
-  return emp::murmur_hash( std::span<const std::byte>(
-    reinterpret_cast<const std::byte*>( program.data() ),
-    // TODO only bother hashing up to the first 32 bytes?
-    // std::min( program.size() * sizeof( program.front() ), 32ul )
-    program.size() * sizeof( program.front() )
-  ) );
-}
+  // hashing bytewise includes neutral padding bits
+  // the copy ctor/assignment operator for Program now do memcpy
+  // so this should work consistently
+  size_t operator()( const dish2::Genome<Spec>& genome ) const {
+    const auto& program = genome.program;
+    return emp::murmur_hash( std::span<const std::byte>(
+      reinterpret_cast<const std::byte*>( program.data() ),
+      program.size() * sizeof( program.front() )
+    ) );
+  }
 
 };
 
