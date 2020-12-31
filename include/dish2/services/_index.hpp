@@ -13,6 +13,7 @@
 #include "EpochAdvanceService.hpp"
 #include "EventLaunchingService.hpp"
 #include "InterMessageLaunchingService.hpp"
+#include "InterMessagePurgingService.hpp"
 #include "IntraMessageLaunchingService.hpp"
 #include "MessageCounterClearService.hpp"
 #include "QuorumCapService.hpp"
