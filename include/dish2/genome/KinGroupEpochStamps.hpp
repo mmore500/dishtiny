@@ -23,6 +23,10 @@ struct KinGroupEpochStamps {
     return data == other.data;
   }
 
+  bool operator<(const KinGroupEpochStamps& other) const {
+    return data < other.data;
+  }
+
   void ApplyInheritance( const size_t rep_lev, const size_t epoch ) {
     emp_assert( rep_lev <= Spec::NLEV );
     std::fill(

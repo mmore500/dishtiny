@@ -72,6 +72,27 @@ struct Genome {
     };
   }
 
+  bool operator<(const Genome& other) const {
+    // ignore kin_group_epoch_stamps,
+    return std::tuple{
+      event_tags,
+      generation_counter,
+      kin_group_id,
+      mutation_counter,
+      program,
+      root_id,
+      stint_root_id
+    } < std::tuple{
+      other.event_tags,
+      other.generation_counter,
+      other.kin_group_id,
+      other.mutation_counter,
+      other.program,
+      other.root_id,
+      other.stint_root_id
+    };
+  }
+
   bool operator!=(const Genome& other) const { return !operator==(other); }
 
   void ElapseGeneration( const size_t rep_lev, const size_t epoch ) {

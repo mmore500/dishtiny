@@ -28,6 +28,8 @@ struct KinGroupID {
 
   bool operator==(const KinGroupID& other) const { return data == other.data; }
 
+  bool operator<(const KinGroupID& other) const { return data < other.data; }
+
   void ApplyInheritance( const size_t rep_lev ) {
     emp_assert( rep_lev <= Spec::NLEV );
     std::generate(

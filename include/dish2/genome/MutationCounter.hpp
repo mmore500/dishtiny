@@ -31,6 +31,16 @@ struct MutationCounter {
     };
   }
 
+  bool operator<(const MutationCounter& other) const {
+    return std::tuple{
+      point_mutation_counter,
+      insertion_deletion_counter
+    } < std::tuple{
+      other.point_mutation_counter,
+      other.insertion_deletion_counter
+    };
+  }
+
   template<typename Archive> void serialize( Archive & ar ) { ar(
     CEREAL_NVP( point_mutation_counter ),
     CEREAL_NVP( insertion_deletion_counter )

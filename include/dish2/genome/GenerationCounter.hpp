@@ -27,6 +27,10 @@ struct GenerationCounter {
     return elapsed_generations == other.elapsed_generations;
   }
 
+  bool operator<(const GenerationCounter& other) const {
+    return elapsed_generations < other.elapsed_generations;
+  }
+
   template<typename Archive>
   void serialize( Archive & ar ) { ar( CEREAL_NVP( elapsed_generations ) ); }
 
