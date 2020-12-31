@@ -23,12 +23,14 @@ class SeriesDrawer {
     SeriesLength
   > drawers;
 
+  size_t thread_idx;
+
 public:
 
   SeriesDrawer(
     const dish2::ThreadWorld<dish2::Spec>& thread_world,
-    const size_t thread_idx
-  ) {
+    const size_t thread_idx_
+  ) : thread_idx( thread_idx_ ) {
 
     for (size_t i{}; i < SeriesLength; ++i) drawers[i].emplace(
       thread_world, thread_idx, i
@@ -36,7 +38,10 @@ public:
 
   }
 
-  void SaveToFile() { for ( auto& drawer : drawers ) drawer->SaveToFile(); }
+  void SaveToFile() {
+    // only save series for main thread
+    if ( thread_idx == 0 ) for ( auto& drawer : drawers ) drawer->SaveToFile();
+  }
 
 };
 

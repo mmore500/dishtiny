@@ -38,6 +38,9 @@ EMP_BUILD_CONFIG(
   VALUE(PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
     "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run?"
   ),
+  VALUE(RECORD_FINAL_DATA, bool, false,
+    "[NATIVE] Should we record data on the final state of the simulation?"
+  ),
   VALUE(ROOT_ABUNDANCES_FREQ, size_t, 0,
     "[NATIVE] How many updates should elapse between recording phylogenetic root abundances? If 0, never record phylogenetic root abundances. Must be power of two."
   ),

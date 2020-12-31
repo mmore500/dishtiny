@@ -6,6 +6,8 @@
 #include "dish2/config/make_arg_specs.hpp"
 #include "dish2/config/setup.hpp"
 #include "dish2/spec/Spec.hpp"
+#include "dish2/record/initialize_drawings.hpp"
+#include "dish2/record/finalize_drawings.hpp"
 #include "dish2/run/setup_thread_local_random.hpp"
 #include "dish2/run/thread_job.hpp"
 #include "dish2/world/ProcWorld.hpp"
@@ -17,6 +19,7 @@ using Spec = dish2::Spec;
 int main(int argc, char* argv[]) {
 
   dish2::setup( emp::ArgManager{ argc, argv, dish2::make_arg_specs() } );
+  dish2::initialize_drawings();
 
   dish2::ProcWorld<Spec> proc_world;
 
@@ -32,6 +35,8 @@ int main(int argc, char* argv[]) {
 
   // wait for threads to complete
   team.Join();
+
+  dish2::finalize_drawings();
 
   return 0;
 

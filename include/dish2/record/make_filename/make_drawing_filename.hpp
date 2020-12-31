@@ -28,6 +28,7 @@ std::string make_drawing_filename(
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"thread", emp::to_string(thread_idx)},
+    {"update", emp::to_string(update)},
     {"ext", ".png"}
   };
 
@@ -51,7 +52,7 @@ std::string make_drawing_filename(
     keyname_attributes[ "endeavor" ] = *dish2::get_endeavor();
   }
 
-  return emp::keyname::pack( keyname_attributes );
+  return "drawings/" + emp::keyname::pack( keyname_attributes );
 
 }
 

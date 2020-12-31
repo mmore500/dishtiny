@@ -17,8 +17,8 @@ bool thread_should_contine(
   const uitsl::CoarseTimer& run_timer
 ) {
 
-  // only consider terminating if update is a multiple of 64
-  if ( uitsl::shift_mod(thread_world.GetUpdate(), 64) ) return true;
+  // only consider terminating if update is a multiple of 64, minus one
+  if ( uitsl::shift_mod(thread_world.GetUpdate(), 64) != 63 ) return true;
   else return (
     !run_timer.IsComplete()
     && thread_world.GetUpdate()

@@ -13,7 +13,6 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "thread_data_dump.hpp"
-#include "thread_data_finalize.hpp"
 #include "thread_data_write.hpp"
 #include "thread_should_continue.hpp"
 #include "thread_step.hpp"
@@ -44,11 +43,22 @@ void thread_job(
   std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " simulation complete" << std::endl;
 
-  dish2::thread_data_dump<Spec>( thread_world, thread_idx );
-  dish2::thread_data_write<Spec>( thread_world, thread_idx );
-  dish2::thread_data_finalize<Spec>( thread_world, thread_idx );
+  if ( cfg.RECORD_FINAL_DATA() ) {
+    dish2::thread_data_dump<Spec>( thread_world, thread_idx );
+    std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " dump complete" << std::endl;
 
-  std::cout << "thread " << thread_idx << " data recorded" << std::endl;
+    dish2::thread_data_write<Spec>( thread_world, thread_idx );
+    std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " write 0" << std::endl;
+    thread_world.Update();
+    dish2::thread_data_write<Spec>( thread_world, thread_idx );
+    std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " write 1" << std::endl;
+  }
+
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " data recorded" << std::endl;
 
 }
 
