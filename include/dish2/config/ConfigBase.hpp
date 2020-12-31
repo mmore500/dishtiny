@@ -83,11 +83,6 @@ EMP_BUILD_CONFIG(
     "After how many epochs should cells die?"
   ),
 
-  // VALUE(AGE_LIMIT_MULTIPLIER, float, 1.0, "What ratio of EVENT_RADIUS should the limit on cell age be?"),
-  // VALUE(CHANNELS_VISIBLE, bool, true, "Should channels have any effect in the instruction set and event triggers?"),
-  // VALUE(GEN_INCR_FREQ, size_t, 512, "How often should we increase cell generation counters?"),
-  // VALUE(EXP_GRACE_PERIOD, float, 1.0, "How many channel generations should resource collection be allowed after a cell's expires channel generation counter?"),
-
 
   GROUP(RESOURCE, "RESOURCE"),
   VALUE(START_RESOURCE, float, 0.8,
@@ -228,140 +223,139 @@ EMP_BUILD_CONFIG(
   ),
 
 
-
-  GROUP(DATA, "DATA"),
-  VALUE(UPDATES_PER_CHUNK, size_t, 64,
-    "[NATIVE] "
-    "How many updates should we save in each dimension per dataset chunk? Total number will be this parameter squared."
-  ),
-  VALUE(CHUNK_COMPRESSION, size_t, 6,
-    "[NATIVE] "
-    "What should the compression level for the .h5 files be?"
-  ),
-  VALUE(SNAPSHOT_FREQUENCY, size_t, 0,
-    "[NATIVE] "
-    "How often should we save data snapshots?"
-  ),
-  VALUE(SNAPSHOT_LENGTH, size_t, 16,
-    "[NATIVE] "
-    "How long should snapshots last for?"
-  ),
-  VALUE(POPULATION, size_t, std::numeric_limits<size_t>::max(),
-    "[NATIVE] "
-    "How often should we save population during a snapshot?"
-  ),
-  VALUE(TRIGGERS, size_t, std::numeric_limits<size_t>::max(),
-    "[NATIVE] "
-    "How often should we save triggers during a snapshot?"
-  ),
-  VALUE(CHANNEL, size_t, 16,
-    "[NATIVE] "
-    "How often should we save channel during a snapshot?"
-  ),
-  VALUE(CHANNEL_GENERATION, size_t, 16,
-    "[NATIVE] "
-    "How often should we save channel generation during a snapshot?"
-  ),
-  VALUE(EXPIRATION, size_t, 16,
-    "[NATIVE] "
-    "How often should we save expiration during a snapshot?"
-  ),
-  VALUE(RESOURCE_HARVESTED, size_t, 1,
-    "[NATIVE] "
-    "How often should we save resource harvested during a snapshot?"
-  ),
-  VALUE(CELL_GEN, size_t, 16,
-    "[NATIVE] "
-    "How often should we save cell gen during a snapshot?"
-  ),
-  VALUE(ROOT_ID, size_t, 16,
-    "[NATIVE] "
-    "How often should we save root IDs during a snapshot?"
-  ),
-  VALUE(STOCKPILE, size_t, 1,
-    "[NATIVE] "
-    "How often should we save stockpiles during a snapshot?"
-  ),
-  VALUE(LIVE, size_t, 16,
-    "[NATIVE] "
-    "How often should we save which cells are alive during a snapshot?"
-  ),
-  VALUE(APOPTOSIS, size_t, 16,
-    "[NATIVE] "
-    "How often should we save apoptosis are dead during a snapshot?"
-  ),
-  VALUE(TOTAL_CONTRIBUTE, size_t, 16,
-    "[NATIVE] "
-    "How often should we save total contribute during a snapshot?"
-  ),
-  VALUE(PREV_CHAN, size_t, 16,
-    "[NATIVE] "
-    "How often should we save the previous channel during a snapshot?"
-  ),
-  VALUE(PARENT_POS, size_t, 16,
-    "[NATIVE] "
-    "How often should we save parent positions during a snapshot?"
-  ),
-  VALUE(CELL_AGE, size_t, 16,
-    "[NATIVE] "
-    "How often should we save cell ages during a snapshot?"
-  ),
-  VALUE(SPIKE_BROADCAST_TRAFFIC, size_t, 16,
-    "[NATIVE] "
-    "How often should we save spike broadcast traffic during a snapshot?"
-  ),
-  VALUE(DEATH, size_t, 16,
-    "[NATIVE] "
-    "How often should we save death during a snapshot?"
-  ),
-  VALUE(OUTGOING_CONNECTION_COUNT, size_t, 16,
-    "[NATIVE] "
-    "How often should we save outgoing connection counts during a snapshot?"
-  ),
-  VALUE(FLEDGING_CONNECTION_COUNT, size_t, 16,
-    "[NATIVE] "
-    "How often should we save fledging connection counts during a snapshot?"
-  ),
-  VALUE(INCOMING_CONNECTION_COUNT, size_t, 16,
-    "[NATIVE] "
-    "How often should we save incoming connection counts during a snapshot?"
-  ),
-  VALUE(INBOX_ACTIVATION, size_t, 16,
-    "[NATIVE] "
-    "How often should we save inbox activations during a snapshot?"
-  ),
-  VALUE(INBOX_TRAFFIC, size_t, 16,
-    "[NATIVE] "
-    "How often should we save inbox traffic during a snapshot?"
-  ),
-  VALUE(TRUSTED_INBOX_TRAFFIC, size_t, 16,
-    "[NATIVE] "
-    "How often should we save trusted inbox traffic during a snapshot?"
-  ),
-  VALUE(REP_OUTGOING, size_t, 16,
-    "[NATIVE] "
-    "How often should we save outgoing reproduction requests during a snapshot?"
-  ),
-  VALUE(REP_INCOMING, size_t, 16,
-    "[NATIVE] "
-    "How often should we save incoming reproduction requests during a snapshot?"
-  ),
-  VALUE(RESOURCE_CONTRIBUTED, size_t, 1,
-    "[NATIVE] "
-    "How often should we save resource contributed during a snapshot?"
-  ),
-  VALUE(IN_RESISTANCE, size_t, 16,
-    "[NATIVE] "
-    "How often should we save in resistance during a snapshot?"
-  ),
-  VALUE(OUT_RESISTANCE, size_t, 16,
-    "[NATIVE] "
-    "How often should we save out resistance during a snapshot?"
-  ),
-  VALUE(HEIR, size_t, 16,
-    "[NATIVE] "
-    "How often should we save heirs during a snapshot?"
-  )
+  // GROUP(DATA, "DATA"),
+  // VALUE(UPDATES_PER_CHUNK, size_t, 64,
+  //   "[NATIVE] "
+  //   "How many updates should we save in each dimension per dataset chunk? Total number will be this parameter squared."
+  // ),
+  // VALUE(CHUNK_COMPRESSION, size_t, 6,
+  //   "[NATIVE] "
+  //   "What should the compression level for the .h5 files be?"
+  // ),
+  // VALUE(SNAPSHOT_FREQUENCY, size_t, 0,
+  //   "[NATIVE] "
+  //   "How often should we save data snapshots?"
+  // ),
+  // VALUE(SNAPSHOT_LENGTH, size_t, 16,
+  //   "[NATIVE] "
+  //   "How long should snapshots last for?"
+  // ),
+  // VALUE(POPULATION, size_t, std::numeric_limits<size_t>::max(),
+  //   "[NATIVE] "
+  //   "How often should we save population during a snapshot?"
+  // ),
+  // VALUE(TRIGGERS, size_t, std::numeric_limits<size_t>::max(),
+  //   "[NATIVE] "
+  //   "How often should we save triggers during a snapshot?"
+  // ),
+  // VALUE(CHANNEL, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save channel during a snapshot?"
+  // ),
+  // VALUE(CHANNEL_GENERATION, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save channel generation during a snapshot?"
+  // ),
+  // VALUE(EXPIRATION, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save expiration during a snapshot?"
+  // ),
+  // VALUE(RESOURCE_HARVESTED, size_t, 1,
+  //   "[NATIVE] "
+  //   "How often should we save resource harvested during a snapshot?"
+  // ),
+  // VALUE(CELL_GEN, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save cell gen during a snapshot?"
+  // ),
+  // VALUE(ROOT_ID, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save root IDs during a snapshot?"
+  // ),
+  // VALUE(STOCKPILE, size_t, 1,
+  //   "[NATIVE] "
+  //   "How often should we save stockpiles during a snapshot?"
+  // ),
+  // VALUE(LIVE, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save which cells are alive during a snapshot?"
+  // ),
+  // VALUE(APOPTOSIS, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save apoptosis are dead during a snapshot?"
+  // ),
+  // VALUE(TOTAL_CONTRIBUTE, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save total contribute during a snapshot?"
+  // ),
+  // VALUE(PREV_CHAN, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save the previous channel during a snapshot?"
+  // ),
+  // VALUE(PARENT_POS, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save parent positions during a snapshot?"
+  // ),
+  // VALUE(CELL_AGE, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save cell ages during a snapshot?"
+  // ),
+  // VALUE(SPIKE_BROADCAST_TRAFFIC, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save spike broadcast traffic during a snapshot?"
+  // ),
+  // VALUE(DEATH, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save death during a snapshot?"
+  // ),
+  // VALUE(OUTGOING_CONNECTION_COUNT, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save outgoing connection counts during a snapshot?"
+  // ),
+  // VALUE(FLEDGING_CONNECTION_COUNT, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save fledging connection counts during a snapshot?"
+  // ),
+  // VALUE(INCOMING_CONNECTION_COUNT, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save incoming connection counts during a snapshot?"
+  // ),
+  // VALUE(INBOX_ACTIVATION, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save inbox activations during a snapshot?"
+  // ),
+  // VALUE(INBOX_TRAFFIC, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save inbox traffic during a snapshot?"
+  // ),
+  // VALUE(TRUSTED_INBOX_TRAFFIC, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save trusted inbox traffic during a snapshot?"
+  // ),
+  // VALUE(REP_OUTGOING, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save outgoing reproduction requests during a snapshot?"
+  // ),
+  // VALUE(REP_INCOMING, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save incoming reproduction requests during a snapshot?"
+  // ),
+  // VALUE(RESOURCE_CONTRIBUTED, size_t, 1,
+  //   "[NATIVE] "
+  //   "How often should we save resource contributed during a snapshot?"
+  // ),
+  // VALUE(IN_RESISTANCE, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save in resistance during a snapshot?"
+  // ),
+  // VALUE(OUT_RESISTANCE, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save out resistance during a snapshot?"
+  // ),
+  // VALUE(HEIR, size_t, 16,
+  //   "[NATIVE] "
+  //   "How often should we save heirs during a snapshot?"
+  // )
 
 )
 
