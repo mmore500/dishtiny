@@ -36,7 +36,7 @@ EMP_BUILD_CONFIG(
     "[NATIVE] How many seconds should pass between logging progress?"
   ),
   VALUE(PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
-    "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run?"
+    "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable RECORD_FINAL_DATA."
   ),
   VALUE(RECORD_FINAL_DATA, bool, false,
     "[NATIVE] Should we record data on the final state of the simulation?"
@@ -360,6 +360,6 @@ EMP_BUILD_CONFIG(
 
 )
 
-} // namespace dish
+} // namespace dish2
 
 #endif // #ifndef DISH2_CONFIG_CONFIGBASE_HPP_INCLUDE
