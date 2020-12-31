@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
+#include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
 
 #include "../util/CanvasMathHelper.hpp"
 
