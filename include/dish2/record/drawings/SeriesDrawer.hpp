@@ -7,6 +7,7 @@
 #include <ratio>
 #include <string>
 
+#include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/base/optional.hpp"
 
 #include "../../world/ThreadWorld.hpp"
@@ -39,8 +40,11 @@ public:
   }
 
   void SaveToFile() {
-    // only save series for main thread
-    if ( thread_idx == 0 ) for ( auto& drawer : drawers ) drawer->SaveToFile();
+    // only save series for main thread on root process
+    // in order to reduce computational intensity
+    if ( thread_idx == 0 && uitsl::is_root() ) {
+      for ( auto& drawer : drawers ) drawer->SaveToFile();
+    }
   }
 
 };

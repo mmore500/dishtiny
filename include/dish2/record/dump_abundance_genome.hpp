@@ -6,6 +6,7 @@
 #include <string>
 
 #include "../../../third-party/cereal/include/cereal/archives/json.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 
 #include "../algorithm/make_phenotype_equivalent_nopout.hpp"
 #include "../introspection/count_live_cells.hpp"
@@ -41,7 +42,9 @@ bool dump_abundance_genome(
     archive( genome );
   }
 
-  if (thread_idx == 0 && cfg.PHENOTYPE_EQUIVALENT_NOPOUT()) {
+  if (
+    cfg.PHENOTYPE_EQUIVALENT_NOPOUT() && thread_idx == 0 && uitsl::is_root()
+  ) {
     std::cout << "recording phenotype equivalent nopout" << std::endl;
     const std::string filename = dish2::make_dump_abundance_genome_filename(
       thread_idx, abundance_frac, "phenotype_equivalent_nopout"
