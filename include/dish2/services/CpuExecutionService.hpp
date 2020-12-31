@@ -2,9 +2,14 @@
 #ifndef DISH2_SERVICES_CPUEXECUTIONSERVICE_HPP_INCLUDE
 #define DISH2_SERVICES_CPUEXECUTIONSERVICE_HPP_INCLUDE
 
+#include <numeric>
+
 #include "../../../third-party/conduit/include/uitsl/debug/WarnOnce.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+#include "../../../third-party/Empirical/include/emp/math/random_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/execute_cpu.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "../cell/cardinal_iterators/CpuWrapper.hpp"
 #include "../config/cfg.hpp"
@@ -33,12 +38,21 @@ struct CpuExecutionService {
     if ( cell.genome->program.empty() ) return;
 
     for (size_t rep = 0; rep < dish2::cfg.HARDWARE_EXECUTION_ROUNDS(); ++rep) {
-      // TODO should these be shuffled?
-      for (auto& cardinal : cell.cardinals) sgpl::execute_cpu<sgpl_spec_t>(
+
+      auto& cardinals = cell.cardinals;
+
+      thread_local emp::vector< decltype( cardinals.begin()) > shuffler;
+      shuffler.resize( cardinals.size() );
+      std::iota(
+        std::begin( shuffler ), std::end( shuffler ), std::begin( cardinals )
+      );
+      emp::Shuffle( sgpl::tlrand.Get(), shuffler );
+
+      for (auto cardinal_it : shuffler) sgpl::execute_cpu<sgpl_spec_t>(
         dish2::cfg.HARDWARE_EXECUTION_CYCLES(),
-        cardinal.cpu,
+        cardinal_it->cpu,
         cell.genome->program,
-        cardinal.peripheral
+        cardinal_it->peripheral
       );
     }
 
