@@ -53,9 +53,10 @@ void create_montage() {
 }
 
 void finalize_drawings() {
-
-  create_deduplicated_drawing_archive();
-  create_montage();
+  if ( cfg.RECORD_FINAL_DATA() ) {
+    create_deduplicated_drawing_archive();
+    create_montage();
+  }
 
 }
 
