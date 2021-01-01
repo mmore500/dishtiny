@@ -10,8 +10,8 @@ namespace dish2 {
 
 size_t num_cells_global() {
   return cfg.WEAK_SCALING()
-    ? cfg.N_CELLS()
-    : cfg.N_CELLS() * cfg.N_THREADS() * uitsl::get_nprocs();
+    ? cfg.N_CELLS() * cfg.N_THREADS() * uitsl::get_nprocs()
+    : cfg.N_CELLS();
   ;
 }
 

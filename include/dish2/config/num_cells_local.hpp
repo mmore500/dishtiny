@@ -11,8 +11,8 @@ namespace dish2 {
 
 size_t num_cells_local() {
   return cfg.WEAK_SCALING()
-    ? uitsl::div_ceil( cfg.N_CELLS(), cfg.N_THREADS() * uitsl::get_nprocs() )
-    : cfg.N_CELLS();
+    ? cfg.N_CELLS()
+    : uitsl::div_ceil( cfg.N_CELLS(), cfg.N_THREADS() * uitsl::get_nprocs() );
   ;
 }
 
