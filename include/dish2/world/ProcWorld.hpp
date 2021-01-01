@@ -3,11 +3,17 @@
 #define DISH2_WORLD_PROCWORLD_HPP_INCLUDE
 
 #include <cmath>
+#include <iostream>
+#include <functional>
+#include <utility>
 
 #include "../../../third-party/conduit/include/netuit/assign/AssignIntegrated.hpp"
+#include "../../../third-party/conduit/include/netuit/assign/AssignPerfectHypercube.hpp"
 #include "../../../third-party/conduit/include/netuit/assign/GenerateMetisAssignments.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
-#include "../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
+#include "../../../third-party/conduit/include/uitsl/debug/safe_cast.hpp"
+#include "../../../third-party/conduit/include/uitsl/nonce/ThreadUidNormalizer.hpp"
+#include "../../../third-party/conduit/include/uitsl/math/is_perfect_hypercube.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/mpi_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
@@ -32,20 +38,49 @@ struct ProcWorld {
   const netuit::Topology topology{ topology_factory_t{}( dims ) };
 
   #ifndef __EMSCRIPTEN__
+  const size_t total_threads = uitsl::get_nprocs() * dish2::cfg.N_THREADS();
+  const bool perfect_case = (
+    (dish2::num_cells_global() % uitsl::get_nprocs() == 0)
+    && (dish2::num_cells_global() % total_threads == 0)
+    && uitsl::is_perfect_hypercube(
+      dish2::num_cells_global(), dish2::cfg.N_DIMS()
+    )
+    && uitsl::is_perfect_hypercube(
+      uitsl::get_nprocs(), dish2::cfg.N_DIMS()
+    )
+    && uitsl::is_perfect_hypercube(
+      total_threads, dish2::cfg.N_DIMS()
+    )
+  );
+
   const std::pair<
-    uitsl::EnumeratedFunctor<netuit::Topology::node_id_t, uitsl::proc_id_t>,
-    uitsl::EnumeratedFunctor<netuit::Topology::node_id_t, uitsl::thread_id_t>
-  > assignments{ netuit::GenerateMetisAssignments(
-    uitsl::audit_cast<size_t>( uitsl::get_nprocs() ),
+    std::function<uitsl::proc_id_t(size_t)>,
+    std::function<uitsl::thread_id_t(size_t)>
+  > assignments = perfect_case
+   ? std::pair{
+    netuit::AssignPerfectHypercube<uitsl::proc_id_t>(
+      dish2::cfg.N_DIMS(), dish2::num_cells_global(), uitsl::get_nprocs()
+    ),
+    uitsl::ThreadUidNormalizer(
+      netuit::AssignPerfectHypercube<uitsl::proc_id_t>(
+        dish2::cfg.N_DIMS(), dish2::num_cells_global(), uitsl::get_nprocs()
+      ),
+      netuit::AssignPerfectHypercube<uitsl::thread_id_t>(
+        dish2::cfg.N_DIMS(), dish2::num_cells_global(), total_threads
+      )
+    )
+   }
+   : netuit::GenerateMetisAssignmentFunctors(
+    uitsl::safe_cast<size_t>( uitsl::get_nprocs() ),
     dish2::cfg.N_THREADS(),
     topology
-  ) };
-  #else
+  );
+  #else // #ifndef __EMSCRIPTEN__
   const std::pair<
     uitsl::AssignIntegrated<uitsl::proc_id_t>,
     uitsl::AssignIntegrated<uitsl::thread_id_t>
   > assignments;
-  #endif
+  #endif // #ifndef __EMSCRIPTEN__
 
   using genome_mesh_spec_t = typename Spec::genome_mesh_spec_t;
   netuit::Mesh<genome_mesh_spec_t> genome_mesh{
@@ -81,6 +116,8 @@ struct ProcWorld {
     assignments.second,
     assignments.first
   };
+
+  ProcWorld() { std::cout << "used metis? " << !perfect_case << std::endl; }
 
   dish2::ThreadWorld<Spec> MakeThreadWorld(const uitsl::thread_id_t thread_id) {
     return dish2::ThreadWorld<Spec>(
