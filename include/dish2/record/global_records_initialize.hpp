@@ -8,7 +8,7 @@
 
 namespace dish2 {
 
-void initialize_drawings() {
+void global_records_initialize() {
 
   std::filesystem::create_directories("./drawings");
 

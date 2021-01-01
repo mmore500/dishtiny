@@ -46,7 +46,7 @@ void thread_job(
   std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " simulation complete" << std::endl;
 
-  if ( cfg.RECORD_FINAL_DATA() ) {
+  if ( cfg.DATA_DUMP() ) {
     dish2::thread_data_dump<Spec>( thread_world, thread_idx );
     std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " dump complete" << std::endl;

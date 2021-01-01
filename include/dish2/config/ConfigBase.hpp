@@ -38,7 +38,7 @@ EMP_BUILD_CONFIG(
   VALUE(PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
     "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable RECORD_FINAL_DATA."
   ),
-  VALUE(RECORD_FINAL_DATA, bool, false,
+  VALUE(DATA_DUMP, bool, false,
     "[NATIVE] Should we record data on the final state of the simulation?"
   ),
   VALUE(ROOT_ABUNDANCES_FREQ, size_t, 0,
