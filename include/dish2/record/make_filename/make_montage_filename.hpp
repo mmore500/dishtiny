@@ -15,12 +15,13 @@
 
 namespace dish2 {
 
-std::string make_montage_filename() {
+std::string make_montage_filename( const size_t update ) {
 
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "montage"},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
+    {"update", emp::to_string( update )},
     {"ext", ".jpg"}
   };
 

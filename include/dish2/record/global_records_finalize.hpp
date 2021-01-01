@@ -45,7 +45,7 @@ void create_montage() {
     std::string{}
     + "montage -verbose -label '%f' -font Helvetica -pointsize 10 -background '#000000' -fill 'gray' -define png:size=500x500 -geometry 500x500+2+2 -auto-orient -crop 500x500+0+0 "
     + emp::join_on( most_recent_drawings, " " )
-    + " " + dish2::make_montage_filename()
+    + " " + dish2::make_montage_filename( last_update )
   );
 
   // montage is returning an error code of 1, so don't verify
