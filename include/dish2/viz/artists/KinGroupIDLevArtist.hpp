@@ -63,6 +63,11 @@ public:
 
   static std::string GetName() { return "Kin Group ID by Lev"; }
 
+  template< typename Spec >
+  static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
+    return Spec::NLEV;
+  }
+
 };
 
 } // namespace dish2

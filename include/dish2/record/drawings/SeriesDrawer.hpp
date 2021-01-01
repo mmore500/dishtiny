@@ -9,6 +9,7 @@
 
 #include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/base/optional.hpp"
+#include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../world/ThreadWorld.hpp"
 
@@ -16,24 +17,24 @@
 
 namespace dish2 {
 
-template< typename Artist, size_t SeriesLength >
+template< typename Spec, typename Artist >
 class SeriesDrawer {
 
-  emp::array<
-    emp::optional< dish2::GridDrawer< Artist > >,
-    SeriesLength
-  > drawers;
-
   size_t thread_idx;
+
+  emp::vector<
+    emp::optional< dish2::GridDrawer< Spec, Artist > >
+  > drawers;
 
 public:
 
   SeriesDrawer(
-    const dish2::ThreadWorld<dish2::Spec>& thread_world,
+    const dish2::ThreadWorld<Spec>& thread_world,
     const size_t thread_idx_
-  ) : thread_idx( thread_idx_ ) {
+  ) : thread_idx( thread_idx_ )
+  , drawers( Artist::template GetSeriesLength<Spec>( thread_world ) ) {
 
-    for (size_t i{}; i < SeriesLength; ++i) drawers[i].emplace(
+    for (size_t i{}; i < drawers.size(); ++i) drawers[i].emplace(
       thread_world, thread_idx, i
     );
 

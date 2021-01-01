@@ -6,6 +6,8 @@
 
 #include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
+#include "../../world/ThreadWorld.hpp"
+
 namespace dish2 {
 
 // base case
@@ -41,6 +43,11 @@ public:
       subsequent_artist.template Draw<false>( canvas );
     }
 
+  }
+
+  template< typename Spec >
+  static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
+    return 1;
   }
 
 };

@@ -69,6 +69,11 @@ public:
 
   static std::string GetName() { return "Kin Match"; }
 
+  template< typename Spec >
+  static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
+    return Spec::NLEV;
+  }
+
 };
 
 } // namespace dish2

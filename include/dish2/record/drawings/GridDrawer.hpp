@@ -17,14 +17,14 @@
 
 namespace dish2 {
 
-template<typename Artist>
+template<typename Spec, typename Artist>
 class GridDrawer {
 
   Artist artist;
 
   emp::web::Canvas canvas{ 2000, 2000 };
 
-  const dish2::ThreadWorld<dish2::Spec>& thread_world;
+  const dish2::ThreadWorld<Spec>& thread_world;
 
   size_t thread_idx;
 
@@ -33,7 +33,7 @@ class GridDrawer {
 public:
 
   GridDrawer(
-    const dish2::ThreadWorld<dish2::Spec>& thread_world_,
+    const dish2::ThreadWorld<Spec>& thread_world_,
     const size_t thread_idx_,
     const size_t series_idx_=0
   )
