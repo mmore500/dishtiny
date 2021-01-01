@@ -36,6 +36,9 @@ void thread_job(
 
   uitsl::CoarseTimer log_timer{ dish2::cfg.LOG_FREQ() };
 
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " running " << thread_world.population.size() << " cells" << std::endl;
+
   while ( dish2::thread_should_contine<Spec>( thread_world, run_timer ) ) {
     dish2::thread_step<Spec>( thread_idx, thread_world, run_timer, log_timer );
   }
