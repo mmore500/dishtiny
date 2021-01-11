@@ -17,11 +17,19 @@ CFLAGS_all := -std=c++17 -pipe -Wall -Wno-unused-function -Wno-unused-private-fi
 
 # Native compiler information
 MPICXX ?= mpicxx.openmpi
-CFLAGS_nat := -O3 -march=native -flto -DNDEBUG $(CFLAGS_all) -fopenmp
+
+IS_CLANG := $(shell ($(MPICXX) --version | grep -q clang); echo $$?)
+ifeq (${IS_CLANG},0)
+	OMP_FLAG := -fopenmp=libomp
+else
+	OMP_FLAG := -fopenmp
+endif
+
+CFLAGS_nat := -O3 -march=native -flto -DNDEBUG $(CFLAGS_all) $(OMP_FLAG)
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
-CFLAGS_nat_debug := -g -DEMP_TRACK_MEM -fopenmp $(CFLAGS_all)
+CFLAGS_nat_debug := -g -DEMP_TRACK_MEM $(OMP_FLAG) $(CFLAGS_all)
 CFLAGS_nat_sanitize := -fsanitize=address -fsanitize=undefined $(CFLAGS_nat_debug)
-CFLAGS_nat_profile := -pg -DNDEBUG -fopenmp $(CFLAGS_all)
+CFLAGS_nat_profile := -pg -DNDEBUG $(OMP_FLAG) $(CFLAGS_all)
 
 # Emscripten compiler information
 CXX_web := emcc
@@ -46,8 +54,9 @@ debug-web:	$(PROJECT).js web/index.html
 web-debug:	debug-web
 
 $(PROJECT):	source/native.cpp include/
-	@echo CXX $(CXX)
-	$(MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT) -fopenmp
+	@echo MPICXX $(MPICXX)
+	@echo OMPI_CXX $(OMPI_CXX)
+	$(MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT)
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/
