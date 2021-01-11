@@ -21,8 +21,10 @@ MPICXX ?= mpicxx.openmpi
 IS_CLANG := $(shell ($(MPICXX) --version | grep -q clang); echo $$?)
 ifeq (${IS_CLANG},0)
 	OMP_FLAG := -fopenmp=libomp
+	OMP_LINKER_FLAG := -fopenmp=libiomp5
 else
 	OMP_FLAG := -fopenmp
+	OMP_LINKER_FLAG := -fopenmp
 endif
 
 CFLAGS_nat := -O3 -march=native -flto -DNDEBUG $(CFLAGS_all) $(OMP_FLAG)
@@ -56,7 +58,7 @@ web-debug:	debug-web
 $(PROJECT):	source/native.cpp include/
 	@echo MPICXX $(MPICXX)
 	@echo OMPI_CXX $(OMPI_CXX)
-	$(MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT)
+	$(MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT) $(OMP_LINKER_FLAG)
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/
