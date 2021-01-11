@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_RECORD_FINALIZE_DRAWINGS_HPP_INCLUDE
-#define DISH2_RECORD_FINALIZE_DRAWINGS_HPP_INCLUDE
+#ifndef DISH2_RECORD_GLOBAL_RECORDS_FINALIZE_HPP_INCLUDE
+#define DISH2_RECORD_GLOBAL_RECORDS_FINALIZE_HPP_INCLUDE
 
 #include <algorithm>
 #include <cstdlib>
@@ -76,4 +76,4 @@ void global_records_finalize() {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_RECORD_FINALIZE_DRAWINGS_HPP_INCLUDE
+#endif // #ifndef DISH2_RECORD_GLOBAL_RECORDS_FINALIZE_HPP_INCLUDE
