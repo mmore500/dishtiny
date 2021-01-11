@@ -39,16 +39,16 @@ public:
     const size_t idx_in_row = cell_idx % dimension;
 
     switch (cardinal_idx) {
-      case 0:
+      case 3:
         // north
         return (cell_idx + cardinality - dimension) % cardinality;
-      case 1:
+      case 2:
         // west
         return first_idx_in_row + (idx_in_row + dimension - 1) % dimension;
-      case 2:
+      case 1:
         // east
         return first_idx_in_row + (idx_in_row + 1) % dimension;
-      case 3:
+      case 0:
         // south
         return (cell_idx + dimension) % cardinality;
       default:

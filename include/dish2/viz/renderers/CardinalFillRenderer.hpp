@@ -53,11 +53,11 @@ public:
 
           case 0: // down triangle
             poly.AddPoint(
-              helper.GetCanvasX( helper.GetGridX( pos ) + 1),
+              helper.GetCanvasX( helper.GetGridX( pos ) ),
               helper.GetCanvasY( helper.GetGridY( pos ) + 1)
             );
             poly.AddPoint(
-              helper.GetCanvasX( helper.GetGridX( pos ) ),
+              helper.GetCanvasX( helper.GetGridX( pos ) + 1),
               helper.GetCanvasY( helper.GetGridY( pos ) + 1)
             );
             break;
@@ -65,32 +65,32 @@ public:
           case 1: // right triangle
             poly.AddPoint(
               helper.GetCanvasX( helper.GetGridX( pos ) + 1),
-              helper.GetCanvasY( helper.GetGridY( pos ) )
+              helper.GetCanvasY( helper.GetGridY( pos ) + 1)
             );
             poly.AddPoint(
               helper.GetCanvasX( helper.GetGridX( pos ) + 1),
-              helper.GetCanvasY( helper.GetGridY( pos ) + 1)
+              helper.GetCanvasY( helper.GetGridY( pos ) )
             );
             break;
 
           case 2: // left triangle
             poly.AddPoint(
               helper.GetCanvasX( helper.GetGridX( pos ) ),
-              helper.GetCanvasY( helper.GetGridY( pos ) + 1)
+              helper.GetCanvasY( helper.GetGridY( pos ) )
             );
             poly.AddPoint(
               helper.GetCanvasX( helper.GetGridX( pos ) ),
-              helper.GetCanvasY( helper.GetGridY( pos ) )
+              helper.GetCanvasY( helper.GetGridY( pos ) + 1)
             );
             break;
 
           case 3: // up triangle
             poly.AddPoint(
-              helper.GetCanvasX( helper.GetGridX( pos ) ),
+              helper.GetCanvasX( helper.GetGridX( pos ) + 1),
               helper.GetCanvasY( helper.GetGridY( pos ) )
             );
             poly.AddPoint(
-              helper.GetCanvasX( helper.GetGridX( pos ) + 1),
+              helper.GetCanvasX( helper.GetGridX( pos ) ),
               helper.GetCanvasY( helper.GetGridY( pos ) )
             );
             break;
