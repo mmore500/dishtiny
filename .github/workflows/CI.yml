@@ -45,7 +45,7 @@ jobs:
     strategy:
       matrix:
         cxx: [clang++, g++]
-        mode: [ debug, fulldebug, opt ]
+        mode: [ "", opt]
     env:
       DISH_MPICXX: mpicxx.openmpi
       OMPI_CXX: ${{ matrix.cxx }}
@@ -53,7 +53,7 @@ jobs:
       # Adapted from https://askubuntu.com/a/524368
       - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
       - uses: docker-practice/actions-setup-docker@v1
-      - run: docker run -e DISH_MPICXX=$DISH_MPICXX -e OMPI_CXX=$OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make ${{ matrix.mode }}"
+      - run: docker run -e DISH_MPICXX=$DISH_MPICXX -e OMPI_CXX=$OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "set -x && cd /opt/dishtiny/tests/dish2 && make ${{ matrix.mode }}"
 
   source:
     name: Source
@@ -63,6 +63,7 @@ jobs:
     strategy:
       matrix:
         cxx: [clang++, g++]
+        mode: [ "", opt]
     env:
       DISH_MPICXX: mpicxx.openmpi
       OMPI_CXX: ${{ matrix.cxx }}
@@ -70,7 +71,7 @@ jobs:
       # Adapted from https://askubuntu.com/a/524368
       - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
       - uses: docker-practice/actions-setup-docker@v1
-      - run: docker run -e DISH_MPICXX=$DISH_MPICXX -e OMPI_CXX=$OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make test"
+      - run: docker run -e DISH_MPICXX=$DISH_MPICXX -e OMPI_CXX=$OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "set -x && cd /opt/dishtiny/tests/source && make && make ${{ matrix.mode }}"
 
   coverage:
     name: Coverage
@@ -85,7 +86,7 @@ jobs:
       - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
       - uses: docker-practice/actions-setup-docker@v1
       - run: export ci_env=`bash <(curl -s https://codecov.io/env)`
-      - run: docker run $ci_env -e DISH_MPICXX -e OMPI_CXX "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny && make coverage && bash <(curl -s https://codecov.io/bash)"
+      - run: docker run $ci_env -e DISH_MPICXX -e OMPI_CXX "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/tests/dish2 && make coverage && bash <(curl -s https://codecov.io/bash)"
 
   fuzzing:
     name: Fuzzing
