@@ -138,7 +138,7 @@ jobs:
           FOLDER: web # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
   deploy-dockerhub:
-    name: Deploy to GitHub Pages
+    name: Deploy to DockerHub
     runs-on: ubuntu-16.04
     if: github.ref == 'refs/heads/master'
     needs:
@@ -152,7 +152,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-      - name: Push to Docker Hub
+      - name: Push to DockerHub
         uses: docker/build-push-action@v1
         with:
           push: true
