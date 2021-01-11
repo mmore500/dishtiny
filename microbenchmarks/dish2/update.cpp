@@ -24,6 +24,7 @@ static void DoBench(benchmark::State& state) {
   if (state.thread_index == 0) {
     dish2::cfg.Set("N_CELLS", emp::to_string(NUM_CELLS));
     dish2::cfg.Set("N_THREADS", emp::to_string(state.threads));
+    netuit::internal::MeshIDCounter::Reset();
     proc_world.emplace();
     flag = true;
   } else while (flag == false);
