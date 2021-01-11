@@ -3,8 +3,8 @@
 #define DISH2_INTROSPECTION_MAKE_CARDI_COORD_TO_LIVE_CARDI_IDX_TRANSLATOR_HPP_INCLUDE
 
 #include <iterator>
-#include <tuple>
 #include <map> // todo fixme
+#include <tuple>
 
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 

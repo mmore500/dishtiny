@@ -10,8 +10,8 @@
 #include "dish2/viz/border_colormaps/DummyBorderColorMap.hpp"
 #include "dish2/viz/fill_colormaps/DummyFillColorMap.hpp"
 #include "dish2/viz/getters/DummyGetter.hpp"
-#include "dish2/viz/renderers/CellFillRenderer.hpp"
 #include "dish2/viz/renderers/CellBorderRenderer.hpp"
+#include "dish2/viz/renderers/CellFillRenderer.hpp"
 
 const emp::web::NodeDomShim shim;
 

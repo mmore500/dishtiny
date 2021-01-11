@@ -5,12 +5,12 @@
 #include <algorithm>
 #include <set>
 
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
+#include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
-#include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 
 #include "../algorithm/seed_genomes_into.hpp"
 #include "../genome/Genome.hpp"

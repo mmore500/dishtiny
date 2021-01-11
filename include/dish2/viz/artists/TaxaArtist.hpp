@@ -9,9 +9,9 @@
 #include "../border_colormaps/TaxaBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/KinGroupIDGrayscaleFillColorMap.hpp"
+#include "../getters/GenomeGetter.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
-#include "../getters/GenomeGetter.hpp"
 #include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
 

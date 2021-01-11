@@ -6,12 +6,12 @@
 #include <utility>
 
 #include "../../../third-party/Empirical/include/emp/base/optional.hpp"
-#include "../../../third-party/Empirical/include/emp/web/Document.hpp"
 #include "../../../third-party/Empirical/include/emp/web/DocuExtras.hpp"
+#include "../../../third-party/Empirical/include/emp/web/Document.hpp"
 #include "../../../third-party/Empirical/include/emp/web/js_utils.hpp"
 
-#include "../world/ThreadWorld.hpp"
 #include "../spec/Spec.hpp"
+#include "../world/ThreadWorld.hpp"
 
 #include "DocumentHandles.hpp"
 #include "ViewerCollection.hpp"

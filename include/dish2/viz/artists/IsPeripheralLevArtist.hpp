@@ -7,8 +7,8 @@
 #include "../../spec/Spec.hpp"
 
 #include "../border_colormaps/MatchBorderColorMap.hpp"
-#include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/BooleanColorMap.hpp"
+#include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../getters/IsPeripheralLevGetter.hpp"
 #include "../getters/IsPeripheralLevGetter.hpp"
 #include "../renderers/CellBorderRenderer.hpp"

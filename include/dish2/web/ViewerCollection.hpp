@@ -8,8 +8,8 @@
 
 #include "GridViewer.hpp"
 #include "SeriesViewer.hpp"
-#include "ViewerManager.hpp"
 #include "viewer_categories/_index.hpp"
+#include "ViewerManager.hpp"
 
 namespace dish2 {
 

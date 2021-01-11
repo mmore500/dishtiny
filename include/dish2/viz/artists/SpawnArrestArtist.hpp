@@ -7,13 +7,13 @@
 #include "../../spec/Spec.hpp"
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
-#include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/BooleanColorMap.hpp"
+#include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../getters/IsAliveGetter.hpp"
-#include "../getters/SpawnArrestGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
-#include "../renderers/CellBorderRenderer.hpp"
+#include "../getters/SpawnArrestGetter.hpp"
 #include "../renderers/CardinalFillRenderer.hpp"
+#include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
 
 #include "Artist.hpp"

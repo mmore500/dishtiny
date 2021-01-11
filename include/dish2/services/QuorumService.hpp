@@ -8,9 +8,9 @@
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 
-#include "../config/cfg.hpp"
 #include "../cell/cardinal_iterators/CardinalQuorumStateWrapper.hpp"
 #include "../cell/cardinal_iterators/KinMatchWrapper.hpp"
+#include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 
 namespace dish2 {

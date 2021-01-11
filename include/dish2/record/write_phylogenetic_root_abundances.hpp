@@ -6,8 +6,8 @@
 
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 
-#include "../introspection/get_unique_root_ids.hpp"
 #include "../introspection/get_root_id_prevalence.hpp"
+#include "../introspection/get_unique_root_ids.hpp"
 
 #include "make_filename/make_phylogenetic_root_abundances_filename.hpp"
 

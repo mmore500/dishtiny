@@ -12,9 +12,9 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../config/cfg.hpp"
-#include "../genome/Genome.hpp"
-#include "../events/_index.hpp"
 #include "../events/EventManager.hpp"
+#include "../events/_index.hpp"
+#include "../genome/Genome.hpp"
 #include "../quorum/CellQuorumState.hpp"
 #include "../services/_index.hpp"
 #include "../services/ServiceManager.hpp"

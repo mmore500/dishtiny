@@ -8,8 +8,8 @@
 #include "entry_types.hpp"
 #include "log_event.hpp"
 #include "log_level.hpp"
-#include "log_stack.hpp"
 #include "log_stack_dispatcher.hpp"
+#include "log_stack.hpp"
 
 namespace dish2 {
 

@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <iostream>
 
-#include "../../../third-party/Empirical/include/emp/bits/BitSet.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/unset_mask.hpp"
+#include "../../../third-party/Empirical/include/emp/bits/BitSet.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "../config/cfg.hpp"

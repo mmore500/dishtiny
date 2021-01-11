@@ -11,8 +11,8 @@
 #include "../fill_colormaps/QuorumBitsColorMap.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
 #include "../getters/NeighborPosGetter.hpp"
-#include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CardinalFillRenderer.hpp"
+#include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
 
 #include "Artist.hpp"

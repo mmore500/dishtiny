@@ -17,8 +17,8 @@
 #include "EventTags.hpp"
 #include "GenerationCounter.hpp"
 #include "Genome.hpp"
-#include "KinGroupID.hpp"
 #include "KinGroupEpochStamps.hpp"
+#include "KinGroupID.hpp"
 #include "MutationCounter.hpp"
 #include "RootID.hpp"
 

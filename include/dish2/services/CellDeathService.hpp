@@ -7,10 +7,10 @@
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 
-#include "../config/cfg.hpp"
 #include "../cell/cardinal_iterators/CellAgeWrapper.hpp"
 #include "../cell/cardinal_iterators/GenomeNodeOutputWrapper.hpp"
 #include "../cell/cardinal_iterators/NeighborIsAliveWrapper.hpp"
+#include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 
 namespace dish2 {

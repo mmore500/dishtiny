@@ -10,8 +10,8 @@
 
 #include "../spec/Spec.hpp"
 
-#include "DataPill.hpp"
 #include "DataPillCollection.hpp"
+#include "DataPill.hpp"
 
 namespace dish2 {
 

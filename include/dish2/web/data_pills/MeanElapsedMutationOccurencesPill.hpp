@@ -5,8 +5,8 @@
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../introspection/get_mean_elapsed_mutation_occurences.hpp"
-#include "../../world/ThreadWorld.hpp"
 #include "../../spec/Spec.hpp"
+#include "../../world/ThreadWorld.hpp"
 
 #include "../DataPill.hpp"
 

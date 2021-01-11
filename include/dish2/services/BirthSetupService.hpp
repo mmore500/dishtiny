@@ -10,8 +10,8 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
-#include "../config/cfg.hpp"
 #include "../cell/cardinal_iterators/GenomeNodeInputWrapper.hpp"
+#include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 #include "../peripheral/readable_state/ReadableState.hpp"
 

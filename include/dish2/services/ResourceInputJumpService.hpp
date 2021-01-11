@@ -8,11 +8,11 @@
 #include <set>
 #include <utility>
 
-#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
-#include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/nan_to_zero.hpp"
+#include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/isfinite.hpp"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../cell/cardinal_iterators/NeighborResourceReceiveResistanceWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceNodeInputWrapper.hpp"

@@ -4,22 +4,22 @@
 
 #include <tuple>
 
-#include "../../../third-party/conduit/include/netuit/arrange/ToroidalTopologyFactory.hpp"
 #include "../../../third-party/conduit/include/netuit/arrange/CompleteTopologyFactory.hpp"
+#include "../../../third-party/conduit/include/netuit/arrange/ToroidalTopologyFactory.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/config/Spec.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Core.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
-#include "../events/_index.hpp"
 #include "../events/EventManager.hpp"
 #include "../events/EventSeries.hpp"
+#include "../events/_index.hpp"
 #include "../operations/OpLibrary.hpp"
 #include "../peripheral/Peripheral.hpp"
 
-#include "_NLEV.hpp"
 #include "GenomeMeshSpec.hpp"
 #include "IntraMessageMeshSpec.hpp"
 #include "MessageMeshSpec.hpp"
+#include "_NLEV.hpp"
 #include "QuorumMeshSpec.hpp"
 #include "ResourceMeshSpec.hpp"
 #include "StateMeshSpec.hpp"

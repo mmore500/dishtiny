@@ -3,8 +3,8 @@
 #define DISH2_GENOME_ROOTID_HPP_INCLUDE
 
 #include <atomic>
-#include <tuple>
 #include <ratio>
+#include <tuple>
 #include <utility>
 
 #include "../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"

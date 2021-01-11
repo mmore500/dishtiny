@@ -7,11 +7,11 @@
 #include "../../spec/Spec.hpp"
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
-#include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/EpochColorMap.hpp"
+#include "../fill_colormaps/IsAliveColorMap.hpp"
+#include "../getters/EpochGetter.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
-#include "../getters/EpochGetter.hpp"
 #include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
 

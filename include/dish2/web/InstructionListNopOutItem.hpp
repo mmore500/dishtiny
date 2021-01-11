@@ -4,8 +4,8 @@
 
 #include <functional>
 
-#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/hash_namify.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/commands.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Div.hpp"
 #include "../../../third-party/Empirical/include/emp/web/init.hpp"

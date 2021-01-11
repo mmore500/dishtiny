@@ -14,8 +14,8 @@
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
 #include "../getters/RegulationByModuleGetter.hpp"
-#include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CardinalFillRenderer.hpp"
+#include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
 
 #include "Artist.hpp"

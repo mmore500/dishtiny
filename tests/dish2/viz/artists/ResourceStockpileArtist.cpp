@@ -7,13 +7,13 @@
 #include "Empirical/include/emp/web/Document.hpp"
 #include "Empirical/include/emp/web/NodeDomShim.hpp"
 
+#include "dish2/spec/Spec.hpp"
 #include "dish2/viz/artists/ResourceStockpileArtist.hpp"
 #include "dish2/viz/getters/ResourceStockpileGetter.hpp"
-#include "dish2/viz/renderers/CellFillRenderer.hpp"
 #include "dish2/viz/renderers/CellBorderRenderer.hpp"
+#include "dish2/viz/renderers/CellFillRenderer.hpp"
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
-#include "dish2/spec/Spec.hpp"
 
 const emp::web::NodeDomShim shim;
 

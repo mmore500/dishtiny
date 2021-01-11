@@ -6,8 +6,8 @@
 
 #include "../../../../third-party/signalgp-lite/include/sgpl/introspection/count_cores_with_module_idx.hpp"
 
-#include "../../cell/Cell.hpp"
 #include "../../cell/cardinal_iterators/CpuWrapper.hpp"
+#include "../../cell/Cell.hpp"
 #include "../../config/cfg.hpp"
 #include "../../genome/Genome.hpp"
 #include "../../genome/KinGroupID.hpp"

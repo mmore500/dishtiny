@@ -2,8 +2,8 @@
 #ifndef DISH2_CONFIG_NUM_CELLS_LOCAL_HPP_INCLUDE
 #define DISH2_CONFIG_NUM_CELLS_LOCAL_HPP_INCLUDE
 
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/divide_utils.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 
 #include "cfg.hpp"
 

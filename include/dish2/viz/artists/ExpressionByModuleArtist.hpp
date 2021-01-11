@@ -11,11 +11,11 @@
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/NumBusyCoresColorMap.hpp"
+#include "../getters/ExpressionByModuleGetter.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
-#include "../getters/ExpressionByModuleGetter.hpp"
-#include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CardinalFillRenderer.hpp"
+#include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
 
 #include "Artist.hpp"

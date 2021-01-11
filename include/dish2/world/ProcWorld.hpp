@@ -3,8 +3,8 @@
 #define DISH2_WORLD_PROCWORLD_HPP_INCLUDE
 
 #include <cmath>
-#include <iostream>
 #include <functional>
+#include <iostream>
 #include <utility>
 
 #include "../../../third-party/conduit/include/netuit/assign/AssignIntegrated.hpp"
@@ -12,9 +12,9 @@
 #include "../../../third-party/conduit/include/netuit/assign/GenerateMetisAssignments.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/safe_cast.hpp"
-#include "../../../third-party/conduit/include/uitsl/nonce/ThreadUidNormalizer.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/is_perfect_hypercube.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/mpi_utils.hpp"
+#include "../../../third-party/conduit/include/uitsl/nonce/ThreadUidNormalizer.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../config/cfg.hpp"

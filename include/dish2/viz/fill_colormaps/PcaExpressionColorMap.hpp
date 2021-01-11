@@ -14,8 +14,8 @@
 #include "../../../../third-party/header-only-pca/include/hopca/normalize.hpp"
 #include "../../../../third-party/header-only-pca/include/hopca/pca.hpp"
 
-#include "../../introspection/make_cardi_coord_to_live_cardi_idx_translator.hpp"
 #include "../../introspection/count_live_cells.hpp"
+#include "../../introspection/make_cardi_coord_to_live_cardi_idx_translator.hpp"
 #include "../../introspection/summarize_module_expression.hpp"
 #include "../../world/ThreadWorld.hpp"
 

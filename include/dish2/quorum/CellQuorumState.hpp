@@ -6,9 +6,9 @@
 #include <memory>
 #include <utility>
 
-#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/unset_mask.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/safe_compare.hpp"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "QuorumMessage.hpp"
 

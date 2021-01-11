@@ -6,8 +6,8 @@
 
 #include "../../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 
-#include "../cardinal_iterators/IsAliveWrapper.hpp"
 #include "../cardinal_iterators/EpochWrapper.hpp"
+#include "../cardinal_iterators/IsAliveWrapper.hpp"
 #include "../../debug/LogScope.hpp"
 
 namespace dish2 {

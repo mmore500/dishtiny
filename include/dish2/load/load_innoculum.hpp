@@ -6,10 +6,10 @@
 
 #include "../../../third-party/cereal/include/cereal/archives/json.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
-#include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
-#include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
+#include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 
 #include "../genome/Genome.hpp"
 

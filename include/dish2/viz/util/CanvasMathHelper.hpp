@@ -8,8 +8,8 @@
 #include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
-#include "../../config/num_cells_local.hpp"
 #include "../../config/cfg.hpp"
+#include "../../config/num_cells_local.hpp"
 
 namespace dish2 {
 

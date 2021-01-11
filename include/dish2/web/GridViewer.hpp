@@ -17,8 +17,8 @@
 #include "../../../third-party/Empirical/include/emp/web/Element.hpp"
 #include "../../../third-party/Empirical/include/emp/web/js_utils.hpp"
 
-#include "../world/ThreadWorld.hpp"
 #include "../spec/Spec.hpp"
+#include "../world/ThreadWorld.hpp"
 
 #include "DocumentHandles.hpp"
 

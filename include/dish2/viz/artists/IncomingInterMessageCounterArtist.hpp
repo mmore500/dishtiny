@@ -7,13 +7,13 @@
 #include "../../spec/Spec.hpp"
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
-#include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/IncomingInterMessageCounterColorMap.hpp"
+#include "../fill_colormaps/IsAliveColorMap.hpp"
+#include "../getters/IncomingInterMessageCounterGetter.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
-#include "../getters/IncomingInterMessageCounterGetter.hpp"
-#include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CardinalFillRenderer.hpp"
+#include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
 
 #include "Artist.hpp"

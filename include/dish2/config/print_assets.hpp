@@ -5,8 +5,8 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "../../../third-party/conduit/include/uitsl/debug/list_cwd.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/err_verify.hpp"
+#include "../../../third-party/conduit/include/uitsl/debug/list_cwd.hpp"
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 
 #include "cfg.hpp"

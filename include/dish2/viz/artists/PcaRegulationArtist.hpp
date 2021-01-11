@@ -9,12 +9,12 @@
 #include "../border_colormaps/KinGroupIDBorderInvertColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/PcaRegulationColorMap.hpp"
+#include "../getters/CardiCoordGetter.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
-#include "../getters/CardiCoordGetter.hpp"
+#include "../renderers/CardinalFillRenderer.hpp"
 #include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
-#include "../renderers/CardinalFillRenderer.hpp"
 
 #include "Artist.hpp"
 
