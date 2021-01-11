@@ -5,6 +5,7 @@
 #include "conduit/include/uitsl/debug/benchmark_utils.hpp"
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 #include "conduit/include/uitsl/polyfill/barrier.hpp"
+#include "Empirical/include/emp/base/optional.hpp"
 #include "Empirical/include/emp/tools/string_utils.hpp"
 
 #include "dish2/config/cfg.hpp"
@@ -14,7 +15,7 @@
 
 const uitsl::MpiGuard guard;
 
-dish2::ProcWorld<dish2::Spec> proc_world;
+emp::optional<dish2::ProcWorld<dish2::Spec>> proc_world;
 std::atomic<size_t> flag{false};
 
 template<size_t NUM_CELLS>
@@ -23,12 +24,12 @@ static void DoBench(benchmark::State& state) {
   if (state.thread_index == 0) {
     dish2::cfg.Set("N_CELLS", emp::to_string(NUM_CELLS));
     dish2::cfg.Set("N_THREADS", emp::to_string(state.threads));
-    proc_world = dish2::ProcWorld<dish2::Spec>{};
+    proc_world.emplace();
     flag = true;
   } else while (flag == false);
 
   // Perform setup here
-  auto tw = proc_world.MakeThreadWorld(state.thread_index);
+  auto tw = proc_world->MakeThreadWorld(state.thread_index);
 
   // benchmark goes here
   for (auto _ : state) tw.Update();
