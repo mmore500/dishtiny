@@ -3,6 +3,7 @@
 #define DISH2_VIZ_ARTISTS__INDEX_HPP_INCLUDE
 
 #include "ApoptosisRequestArtist.hpp"
+#include "CardinalOrderArtist.hpp"
 #include "CellBirthArtist.hpp"
 #include "DummyArtist.hpp"
 #include "EpochArtist.hpp"
@@ -19,6 +20,7 @@
 #include "KinMatchArtist.hpp"
 #include "LearnedQuorumBitsArtist.hpp"
 #include "NeighborKinGroupIDViewArtist.hpp"
+#include "NeighborPosArtist.hpp"
 #include "NumBusyCoresArtist.hpp"
 #include "NumModulesArtist.hpp"
 #include "PcaBinaryExpressionArtist.hpp"

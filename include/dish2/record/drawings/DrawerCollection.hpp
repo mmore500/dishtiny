@@ -18,6 +18,10 @@ using DrawerCollection = dish2::DrawerManager<
   >,
   dish2::GridDrawer<
     Spec,
+    dish2::CardinalOrderArtist<>
+  >,
+  dish2::GridDrawer<
+    Spec,
     dish2::CellBirthArtist<>
   >,
   // dish2::GridDrawer<
@@ -72,10 +76,14 @@ using DrawerCollection = dish2::DrawerManager<
   //   Spec,
   //   dish2::LearnedQuorumBitsArtist<>
   // >,
-  // dish2::GridDrawer<
-  //   Spec,
-  //   dish2::NeighborKinGroupIDViewArtist<>
-  // >,
+  dish2::GridDrawer<
+    Spec,
+    dish2::NeighborKinGroupIDViewArtist<>
+  >,
+  dish2::GridDrawer<
+    Spec,
+    dish2::NeighborPosArtist<>
+  >,
   dish2::GridDrawer<
     Spec,
     dish2::NumBusyCoresArtist<>
