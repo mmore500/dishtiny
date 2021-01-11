@@ -44,7 +44,7 @@ EMP_BUILD_CONFIG(
   VALUE(ROOT_ABUNDANCES_FREQ, size_t, 0,
     "[NATIVE] How many updates should elapse between recording phylogenetic root abundances? If 0, never record phylogenetic root abundances. Must be power of two."
   ),
-  VALUE(RNG_PRESEED, size_t, std::numeric_limits<size_t>::max(),
+  VALUE(RNG_PRESEED, uint32_t, std::numeric_limits<uint32_t>::max(),
     "[NATIVE] Optionally override the calculated rng preseed."
   ),
 
@@ -55,9 +55,9 @@ EMP_BUILD_CONFIG(
     UITSL_IF_WEB_ELSE(100, 4096), "TODO"
   ),
   VALUE(PHENOTYPIC_DIVERGENCE_N_CELLS, size_t, 256, "TODO"),
-  VALUE(STINT, size_t, std::numeric_limits<size_t>::max(), "TODO"),
-  VALUE(SERIES, size_t, std::numeric_limits<size_t>::max(), "TODO"),
-  VALUE(REPLICATE, size_t, std::numeric_limits<size_t>::max(), "TODO"),
+  VALUE(STINT, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
+  VALUE(SERIES, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
+  VALUE(REPLICATE, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
   VALUE(
     GENESIS, std::string, "generate",
     "generate, reconstitute, or innoculate"

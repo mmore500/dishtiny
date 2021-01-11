@@ -29,7 +29,7 @@ void setup( emp::ArgManager arg_manager ) {
   dump_config();
 
   // setup main thread thread local random
-  dish2::setup_thread_local_random( std::numeric_limits<size_t>::max() );
+  dish2::setup_thread_local_random( std::numeric_limits<uint32_t>::max() );
 
 }
 

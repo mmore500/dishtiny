@@ -19,14 +19,14 @@ namespace dish2 {
 
 void setup_thread_local_random( const size_t thread_idx ) {
 
-  const size_t computed_preseed = []{
-    return dish2::sha256_reduce( emp::vector< size_t >{
+  const uint32_t computed_preseed = []{
+    return dish2::sha256_reduce( emp::vector< uint32_t >{
       dish2::cfg.STINT(), dish2::cfg.SERIES(), dish2::cfg.REPLICATE()
     } );
   }();
 
-  const size_t preseed =
-    ( dish2::cfg.RNG_PRESEED() != std::numeric_limits<size_t>::max() )
+  const uint32_t preseed =
+    ( dish2::cfg.RNG_PRESEED() != std::numeric_limits<uint32_t>::max() )
     ? dish2::cfg.RNG_PRESEED()
     : computed_preseed
   ;
@@ -34,13 +34,18 @@ void setup_thread_local_random( const size_t thread_idx ) {
   std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " using rng preseed " << preseed << std::endl;
 
-  const size_t hash = dish2::sha256_reduce( emp::vector< size_t >{
-    preseed, thread_idx, uitsl::safe_cast<size_t>( uitsl::get_proc_id() )
+  const uint32_t hash = dish2::sha256_reduce( emp::vector< uint32_t >{
+    preseed,
+    uitsl::safe_cast<uint32_t>( thread_idx ),
+    uitsl::safe_cast<uint32_t>( uitsl::get_proc_id() )
   } );
 
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " calculated hash " << hash << std::endl;
+
   // seed >= 1 so that rng is seeded deterministically
-  const auto seed_addend = hash % ( std::numeric_limits<int>::max() - 1 );
-  const int seed = uitsl::safe_cast<int>( 1 + seed_addend );
+  const auto seed_addend = hash % ( std::numeric_limits<int32_t>::max() - 1 );
+  const int32_t seed = uitsl::safe_cast<int32_t>( 1 + seed_addend );
 
   sgpl::tlrand.Initialize( seed );
 
