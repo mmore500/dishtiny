@@ -12,20 +12,21 @@
 #include "signalgp-lite/include/sgpl/operations/unary/Terminal.hpp"
 
 #include "dish2/operations/MultiplyOwnState.hpp"
-#include "dish2/operations/WriteOwnState.hpp"
+#include "dish2/operations/WriteOwnStateIf.hpp"
 #include "dish2/peripheral/Peripheral.hpp"
 #include "dish2/spec/MessageMeshSpec.hpp"
+#include "dish2/spec/Spec.hpp"
 #include "dish2/spec/StateMeshSpec.hpp"
 
 using library_t = sgpl::OpLibrary<
-  dish2::MultiplyOwnState,
-  dish2::WriteOwnState,
-  sgpl::Terminal<std::ratio<2>, std::ratio<0>>
+  dish2::MultiplyOwnState<dish2::Spec>,
+  dish2::WriteOwnStateIf<dish2::Spec>,
+  sgpl::Terminal
 >;
 
 using sgpl_spec_t = sgpl::Spec<
   library_t,
-  dish2::Peripheral
+  dish2::Peripheral<dish2::Spec>
 >;
 
 using program_t = sgpl::Program< sgpl_spec_t >;
@@ -41,25 +42,25 @@ program_t make_program() {
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "01111111111111111111111111111111"
+      "bitstring": "1111111111111111111111111111111111111111111111111111111111111110"
     },
     {
-      "operation": "WriteOwnState",
+      "operation": "Write Own State",
       "args": {
         "value0": 0,
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "00000000000000000000000000000000"
+      "bitstring": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     {
-      "operation": "WriteOwnState",
+      "operation": "Write Own State",
       "args": {
         "value0": 0,
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "00000000000000000000000000000001"
+      "bitstring": "0000000000000000000000000000000000000000000000000000000000000001"
     },
     {
       "operation": "Terminal",
@@ -68,25 +69,25 @@ program_t make_program() {
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "11111111111111111111111111111111"
+      "bitstring": "1100101100111101000001111010110001010011110001100110000000000001"
     },
     {
-      "operation": "MultiplyOwnState",
+      "operation": "Multiply Own State",
       "args": {
         "value0": 0,
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "00000000000000000000000000000000"
+      "bitstring": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     {
-      "operation": "MultiplyOwnState",
+      "operation": "Multiply Own State",
       "args": {
         "value0": 0,
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "00000000000000000000000000000000"
+      "bitstring": "0000000000000000000000000000000000000000000000000000000000000000"
     }
   ] } )" };
 
@@ -110,20 +111,13 @@ TEST_CASE("Test MultiplyOwnState") {
   program_t program{ make_program() };
   cpu.InitializeAnchors( program );
 
-  // conduit
-  uit::Conduit<dish2::MessageMeshSpec> message_conduit;
-  uit::Conduit<dish2::StateMeshSpec> state_conduit;
-
-  using message_node_output_t = netuit::MeshNodeOutput<dish2::MessageMeshSpec>;
-  using state_node_input_t = netuit::MeshNodeInput<dish2::StateMeshSpec>;
-  message_node_output_t message_node_output{ message_conduit.GetInlet(), 0 };
-  state_node_input_t state_node_input{ state_conduit.GetOutlet(), 0 };
-
   // peripheral
-  dish2::Peripheral peripheral{ message_node_output, state_node_input };
+  dish2::Peripheral<dish2::Spec> peripheral{
+    dish2::Peripheral<dish2::Spec>::make_dummy()
+  };
   const auto& readable_state = peripheral.readable_state;
   const auto& writable_state = readable_state.template Get<
-    dish2::WritableState
+    dish2::WritableState<dish2::Spec>
   >();
 
   REQUIRE( cpu.TryLaunchCore() );
@@ -132,29 +126,29 @@ TEST_CASE("Test MultiplyOwnState") {
     REQUIRE( readable_state.Read( i ) == 0 );
   }
 
-  sgpl::Terminal<std::ratio<2>, std::ratio<0>>::run(
+  sgpl::Terminal::run(
     cpu.GetActiveCore(),
     program[0],
     program,
     peripheral
   );
 
-  dish2::WriteOwnState::run(
+  dish2::WriteOwnStateIf<dish2::Spec>::run(
     cpu.GetActiveCore(),
     program[1],
     program,
     peripheral
   );
 
-  dish2::WriteOwnState::run(
+  dish2::WriteOwnStateIf<dish2::Spec>::run(
     cpu.GetActiveCore(),
     program[2],
     program,
     peripheral
   );
 
-  REQUIRE( writable_state.Get<0>() == 1 );
-  REQUIRE( writable_state.Get<1>() == 1 );
+  REQUIRE( writable_state.Get<0>() == 1.0f );
+  REQUIRE( writable_state.Get<1>() == 1.0f );
 
   float counter{};
   for ( size_t i{}; i < readable_state.GetSize(); ++i ) {
@@ -163,33 +157,22 @@ TEST_CASE("Test MultiplyOwnState") {
 
   REQUIRE( counter == 2 );
 
-  sgpl::Terminal<std::ratio<2>, std::ratio<0>>::run(
+  sgpl::Terminal::run(
     cpu.GetActiveCore(),
     program[3],
     program,
     peripheral
   );
 
-  REQUIRE( cpu.GetActiveCore().registers[0] == 2 );
+  REQUIRE( cpu.GetActiveCore().registers[0] == Approx(4.92392f).margin(0.01) );
 
-  REQUIRE( writable_state.Get<0>() == 1 );
-  REQUIRE( writable_state.Get<1>() == 1 );
-  REQUIRE( writable_state.Get<2>() == 0 );
+  REQUIRE( writable_state.Get<0>() == 1.0f );
+  REQUIRE( writable_state.Get<1>() == 1.0f );
+  REQUIRE( writable_state.Get<2>() == 0.0f );
 
-  dish2::MultiplyOwnState::run(
+  dish2::MultiplyOwnState<dish2::Spec>::run(
     cpu.GetActiveCore(),
     program[4],
-    program,
-    peripheral
-  );
-
-  REQUIRE( writable_state.Get<0>() == 2 );
-  REQUIRE( writable_state.Get<1>() == 1 );
-  REQUIRE( writable_state.Get<2>() == 0 );
-
-  dish2::MultiplyOwnState::run(
-    cpu.GetActiveCore(),
-    program[5],
     program,
     peripheral
   );
@@ -198,12 +181,25 @@ TEST_CASE("Test MultiplyOwnState") {
   REQUIRE( writable_state.Get<1>() == 1 );
   REQUIRE( writable_state.Get<2>() == 0 );
 
+  dish2::MultiplyOwnState<dish2::Spec>::run(
+    cpu.GetActiveCore(),
+    program[5],
+    program,
+    peripheral
+  );
+
+  REQUIRE(
+    writable_state.Get<0>() == 16
+  );
+  REQUIRE( writable_state.Get<1>() == 1 );
+  REQUIRE( writable_state.Get<2>() == 0 );
+
   counter = 0;
   for ( size_t i{}; i < readable_state.GetSize(); ++i ) {
     counter += readable_state.Read( i );
   }
 
-  REQUIRE( counter == 5 );
+  REQUIRE( counter == 17 );
 
 
 }
