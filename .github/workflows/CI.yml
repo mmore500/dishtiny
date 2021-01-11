@@ -32,6 +32,8 @@ jobs:
     needs:
       - docker-build
     steps:
+      # Adapted from https://askubuntu.com/a/524368
+      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
       - uses: docker-practice/actions-setup-docker@v1
       - run: docker run "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny && ./ci/test_trailing_whitespace.sh && ./ci/test_tabs.sh && ./ci/test_missing_newlines.sh && make docs && ./ci/test_headerguards.sh && ./ci/test_alphabetize_includes.sh && python3 ci/test_readme_snippets.py"
 
@@ -48,6 +50,8 @@ jobs:
       DISH_MPICXX: mpicxx.openmpi
       OMPI_CXX: ${{ matrix.cxx }}
     steps:
+      # Adapted from https://askubuntu.com/a/524368
+      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
       - uses: docker-practice/actions-setup-docker@v1
       - run: docker run -e DISH_MPICXX=$DISH_MPICXX -e OMPI_CXX=$OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make ${{ matrix.mode }}"
 
@@ -63,6 +67,8 @@ jobs:
       DISH_MPICXX: mpicxx.openmpi
       OMPI_CXX: ${{ matrix.cxx }}
     steps:
+      # Adapted from https://askubuntu.com/a/524368
+      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
       - uses: docker-practice/actions-setup-docker@v1
       - run: docker run -e DISH_MPICXX=$DISH_MPICXX -e OMPI_CXX=$OMPI_CXX --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "set -x && cd /opt/dishtiny/tests && make test"
 
@@ -75,6 +81,8 @@ jobs:
       DISH_MPICXX: mpicxx.openmpi
       OMPI_CXX: clang++
     steps:
+      # Adapted from https://askubuntu.com/a/524368
+      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
       - uses: docker-practice/actions-setup-docker@v1
       - run: export ci_env=`bash <(curl -s https://codecov.io/env)`
       - run: docker run $ci_env -e DISH_MPICXX -e OMPI_CXX "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny && make coverage && bash <(curl -s https://codecov.io/bash)"
@@ -85,6 +93,8 @@ jobs:
     needs:
       - docker-build
     steps:
+      # Adapted from https://askubuntu.com/a/524368
+      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
       - uses: docker-practice/actions-setup-docker@v1
       - run: docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/fuzzing && make && make opt"
 
@@ -94,6 +104,8 @@ jobs:
     needs:
       - docker-build
     steps:
+      # Adapted from https://askubuntu.com/a/524368
+      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
       - uses: docker-practice/actions-setup-docker@v1
       - run: docker run -e OSF_USERNAME=$OSF_USERNAME -e OSF_PASSWORD=$OSF_USERNAME -e CONTEXT=actions "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/microbenchmarks && make"
 
