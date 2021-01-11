@@ -36,7 +36,7 @@ public:
 
   size_t GetCellHeightPx() const {
     emp_assert( GetGridHeight() >= 0 );
-    return canvas_width / GetGridHeight();
+    return canvas_height / GetGridHeight();
   }
 
   size_t GetCanvasX(const double grid_x) const {
