@@ -39,7 +39,7 @@ struct ProcWorld {
 
   #ifndef __EMSCRIPTEN__
   const size_t total_threads = uitsl::get_nprocs() * dish2::cfg.N_THREADS();
-  const bool perfect_case = (
+  const bool use_metis = !(
     (dish2::num_cells_global() % uitsl::get_nprocs() == 0)
     && (dish2::num_cells_global() % total_threads == 0)
     && uitsl::is_perfect_hypercube(
@@ -56,8 +56,13 @@ struct ProcWorld {
   const std::pair<
     std::function<uitsl::proc_id_t(size_t)>,
     std::function<uitsl::thread_id_t(size_t)>
-  > assignments = perfect_case
-   ? std::pair{
+  > assignments = use_metis
+  ? netuit::GenerateMetisAssignmentFunctors(
+    uitsl::safe_cast<size_t>( uitsl::get_nprocs() ),
+    dish2::cfg.N_THREADS(),
+    topology
+  )
+  : std::pair{
     netuit::AssignPerfectHypercube<uitsl::proc_id_t>(
       dish2::cfg.N_DIMS(), dish2::num_cells_global(), uitsl::get_nprocs()
     ),
@@ -69,13 +74,9 @@ struct ProcWorld {
         dish2::cfg.N_DIMS(), dish2::num_cells_global(), total_threads
       )
     )
-   }
-   : netuit::GenerateMetisAssignmentFunctors(
-    uitsl::safe_cast<size_t>( uitsl::get_nprocs() ),
-    dish2::cfg.N_THREADS(),
-    topology
-  );
+  };
   #else // #ifndef __EMSCRIPTEN__
+  const bool use_metis = false;
   const std::pair<
     uitsl::AssignIntegrated<uitsl::proc_id_t>,
     uitsl::AssignIntegrated<uitsl::thread_id_t>
@@ -117,7 +118,7 @@ struct ProcWorld {
     assignments.first
   };
 
-  ProcWorld() { std::cout << "used metis? " << !perfect_case << std::endl; }
+  ProcWorld() { std::cout << "used metis? " << use_metis << std::endl; }
 
   dish2::ThreadWorld<Spec> MakeThreadWorld(const uitsl::thread_id_t thread_id) {
     return dish2::ThreadWorld<Spec>(
