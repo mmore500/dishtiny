@@ -6,6 +6,7 @@
 #include <cstddef>
 
 #include "../../../third-party/cereal/include/cereal/types/array.hpp"
+#include "../../../third-party/Empirical/include/emp/base/array.hpp"
 
 namespace dish2 {
 
