@@ -27,7 +27,7 @@ function invoking_dishtiny_multithread_exits_success { #@test
 }
 
 function invoking_dishtiny_multiproc_exits_success { #@test
-  mpiexec -n 2 ./rundishtiny --RUN_SECONDS 10 --N_THREADS 2
+  mpiexec -n 2 ./rundishtiny --RUN_SECONDS 10
 }
 
 function invoking_dishtiny_multiproc_multithread_exits_success { #@test
