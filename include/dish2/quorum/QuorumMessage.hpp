@@ -16,7 +16,8 @@ namespace dish2 {
 template< typename Spec >
 class QuorumMessage {
 
-  emp::array< emp::BitSet<64>, Spec::NLEV > data{};
+  // TODO swtich back to emp::array after https://github.com/devosoft/Empirical/issues/408 is resolved
+  std::array< emp::BitSet<64>, Spec::NLEV > data{};
 
 public:
 
