@@ -16,7 +16,7 @@ CFLAGS_all := -std=c++17 -pipe -Wall -Wno-unused-function -Wno-unused-private-fi
 	$(ARGS)
 
 # Native compiler information
-CXX := mpicxx
+MPICXX ?= mpicxx.openmpi
 CFLAGS_nat := -O3 -march=native -flto -DNDEBUG $(CFLAGS_all) -fopenmp
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
 CFLAGS_nat_debug := -g -DEMP_TRACK_MEM -fopenmp $(CFLAGS_all)
@@ -47,7 +47,7 @@ web-debug:	debug-web
 
 $(PROJECT):	source/native.cpp include/
 	@echo CXX $(CXX)
-	$(CXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT)
+	$(MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT)
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/
