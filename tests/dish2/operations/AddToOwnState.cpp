@@ -13,17 +13,19 @@
 
 #include "dish2/operations/AddToOwnState.hpp"
 #include "dish2/peripheral/Peripheral.hpp"
+#include "dish2/spec/IntraMessageMeshSpec.hpp"
 #include "dish2/spec/MessageMeshSpec.hpp"
+#include "dish2/spec/Spec.hpp"
 #include "dish2/spec/StateMeshSpec.hpp"
 
 using library_t = sgpl::OpLibrary<
-  dish2::AddToOwnState,
-  sgpl::Terminal<std::ratio<1>, std::ratio<-1>>
+  dish2::AddToOwnState<dish2::Spec>,
+  sgpl::Terminal
 >;
 
 using sgpl_spec_t = sgpl::Spec<
   library_t,
-  dish2::Peripheral
+  dish2::Peripheral<dish2::Spec>
 >;
 
 using program_t = sgpl::Program< sgpl_spec_t >;
@@ -39,25 +41,25 @@ program_t make_program() {
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "11111111111111111111111111111111"
+      "bitstring": "1111111111111111111111111111111111111111111111111111111111111110"
     },
     {
-      "operation": "AddToOwnState",
+      "operation": "Add To Own State",
       "args": {
         "value0": 0,
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "00000000000000000000000000000000"
+      "bitstring": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     {
-      "operation": "AddToOwnState",
+      "operation": "Add To Own State",
       "args": {
         "value0": 0,
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "00000000000000000000000000000001"
+      "bitstring": "0000000000000000000000000000000000000000000000000000000000000001"
     }
   ] } )" };
 
@@ -81,20 +83,13 @@ TEST_CASE("Test AddToOwnState") {
   program_t program{ make_program() };
   cpu.InitializeAnchors( program );
 
-  // conduit
-  uit::Conduit<dish2::MessageMeshSpec> message_conduit;
-  uit::Conduit<dish2::StateMeshSpec> state_conduit;
-
-  using message_node_output_t = netuit::MeshNodeOutput<dish2::MessageMeshSpec>;
-  using state_node_input_t = netuit::MeshNodeInput<dish2::StateMeshSpec>;
-  message_node_output_t message_node_output{ message_conduit.GetInlet(), 0 };
-  state_node_input_t state_node_input{ state_conduit.GetOutlet(), 0 };
-
   // peripheral
-  dish2::Peripheral peripheral{ message_node_output, state_node_input };
+  dish2::Peripheral<dish2::Spec> peripheral{
+    dish2::Peripheral<dish2::Spec>::make_dummy()
+  };
   const auto& readable_state = peripheral.readable_state;
   const auto& writable_state = readable_state.template Get<
-    dish2::WritableState
+    dish2::WritableState<dish2::Spec>
   >();
 
   REQUIRE( cpu.TryLaunchCore() );
@@ -103,14 +98,14 @@ TEST_CASE("Test AddToOwnState") {
     REQUIRE( readable_state.Read( i ) == 0 );
   }
 
-  sgpl::Terminal<std::ratio<1>, std::ratio<-1>>::run(
+  sgpl::Terminal::run(
     cpu.GetActiveCore(),
     program[0],
     program,
     peripheral
   );
 
-  dish2::AddToOwnState::run(
+  dish2::AddToOwnState<dish2::Spec>::run(
     cpu.GetActiveCore(),
     program[1],
     program,
@@ -127,7 +122,7 @@ TEST_CASE("Test AddToOwnState") {
 
   REQUIRE( counter == 1 );
 
-  dish2::AddToOwnState::run(
+  dish2::AddToOwnState<dish2::Spec>::run(
     cpu.GetActiveCore(),
     program[2],
     program,
@@ -137,7 +132,7 @@ TEST_CASE("Test AddToOwnState") {
   REQUIRE( writable_state.Get<0>() == 1 );
   REQUIRE( writable_state.Get<1>() == 1 );
 
-  dish2::AddToOwnState::run(
+  dish2::AddToOwnState<dish2::Spec>::run(
     cpu.GetActiveCore(),
     program[1],
     program,
