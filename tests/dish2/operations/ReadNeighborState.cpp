@@ -14,16 +14,18 @@
 
 #include "dish2/operations/ReadNeighborState.hpp"
 #include "dish2/peripheral/Peripheral.hpp"
+#include "dish2/spec/IntraMessageMeshSpec.hpp"
 #include "dish2/spec/MessageMeshSpec.hpp"
+#include "dish2/spec/Spec.hpp"
 #include "dish2/spec/StateMeshSpec.hpp"
 
 using library_t = sgpl::OpLibrary<
-  dish2::ReadNeighborState
+  dish2::ReadNeighborState<dish2::Spec>
 >;
 
 using sgpl_spec_t = sgpl::Spec<
   library_t,
-  dish2::Peripheral
+  dish2::Peripheral<dish2::Spec>
 >;
 
 using program_t = sgpl::Program< sgpl_spec_t >;
@@ -33,22 +35,22 @@ program_t make_program() {
 
   std::istringstream program_text{  R"( { "value0": [
     {
-      "operation": "ReadNeighborState",
+      "operation": "Read Neighbor State",
       "args": {
         "value0": 0,
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "00000000000000000000000000000000"
+      "bitstring": "0000000000000000000000000000000000000000000000000000000000000000"
     },
     {
-      "operation": "ReadNeighborState",
+      "operation": "Read Neighbor State",
       "args": {
         "value0": 1,
         "value1": 0,
         "value2": 0
       },
-      "bitstring": "00000000000000000000000000000001"
+      "bitstring": "0000000000000000000000000000000000000000000000000000000000000001"
     }
   ] } )" };
 
@@ -73,16 +75,26 @@ TEST_CASE("Test ReadNeighborState") {
   cpu.InitializeAnchors( program );
 
   // conduit
-  uit::Conduit<dish2::MessageMeshSpec> message_conduit;
-  uit::Conduit<dish2::StateMeshSpec> state_conduit;
+  uit::Conduit<dish2::MessageMeshSpec<dish2::Spec>> message_conduit;
+  uit::Conduit<dish2::StateMeshSpec<dish2::Spec>> state_conduit;
 
-  using message_node_output_t = netuit::MeshNodeOutput<dish2::MessageMeshSpec>;
-  using state_node_input_t = netuit::MeshNodeInput<dish2::StateMeshSpec>;
+  using intra_message_mesh_spec_t = dish2::IntraMessageMeshSpec< dish2::Spec >;
+  using intra_message_node_outputs_t
+    = typename netuit::MeshNode<intra_message_mesh_spec_t>::outputs_t;
+  intra_message_node_outputs_t intra_message_node_outputs;
+  using message_node_output_t = netuit::MeshNodeOutput<
+    dish2::MessageMeshSpec< dish2::Spec >
+  >;
+  using state_node_input_t = netuit::MeshNodeInput<
+    dish2::StateMeshSpec< dish2::Spec >
+  >;
   message_node_output_t message_node_output{ message_conduit.GetInlet(), 0 };
   state_node_input_t state_node_input{ state_conduit.GetOutlet(), 0 };
 
   // peripheral
-  dish2::Peripheral peripheral{ message_node_output, state_node_input };
+  dish2::Peripheral peripheral{
+    intra_message_node_outputs, message_node_output, state_node_input
+  };
   auto& readable_state = peripheral.readable_state;
 
   // readable state should be zero-initialized
@@ -109,7 +121,7 @@ TEST_CASE("Test ReadNeighborState") {
   ) );
 
   // read from first readable_state position
-  dish2::ReadNeighborState::run(
+  dish2::ReadNeighborState<dish2::Spec>::run(
     cpu.GetActiveCore(),
     program[0],
     program,
@@ -123,7 +135,7 @@ TEST_CASE("Test ReadNeighborState") {
   ) == 42.0f );
 
   // read from second readable_state position
-  dish2::ReadNeighborState::run(
+  dish2::ReadNeighborState<dish2::Spec>::run(
     cpu.GetActiveCore(),
     program[1],
     program,
