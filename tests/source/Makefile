@@ -14,5 +14,5 @@ coverage:
 	echo "nop"
 
 clean:
-	rm -f *.csv *.cfg *.bin *.json drawings rundishtiny
+	rm -rf *.csv *.cfg *.bin *.json drawings rundishtiny
 	rm -rf first first.tar second second.tar
