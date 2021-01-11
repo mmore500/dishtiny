@@ -14,15 +14,16 @@
 
 #include "dish2/operations/ReadOwnState.hpp"
 #include "dish2/peripheral/Peripheral.hpp"
+#include "dish2/spec/Spec.hpp"
 #include "dish2/spec/StateMeshSpec.hpp"
 
 using library_t = sgpl::OpLibrary<
-  dish2::ReadOwnState
+  dish2::ReadOwnState<dish2::Spec>
 >;
 
 using sgpl_spec_t = sgpl::Spec<
   library_t,
-  dish2::Peripheral
+  dish2::Peripheral<dish2::Spec>
 >;
 
 using program_t = sgpl::Program< sgpl_spec_t >;
@@ -98,7 +99,7 @@ TEST_CASE("Test ReadOwnState") {
   ) );
 
   // read from first readable_state position
-  dish2::ReadOwnState::run(
+  dish2::ReadOwnState< dish2::Spec >::run(
     cpu.GetActiveCore(),
     program[0],
     program,
@@ -112,7 +113,7 @@ TEST_CASE("Test ReadOwnState") {
   ) == 42.0f );
 
   // read from second readable_state position
-  dish2::ReadOwnState::run(
+  dish2::ReadOwnState< dish2::Spec >::run(
     cpu.GetActiveCore(),
     program[1],
     program,

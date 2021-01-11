@@ -6,6 +6,8 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Instruction.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
+#include "../peripheral/readable_state/ReadableState.hpp"
+
 namespace dish2 {
 
 template< typename DishSpec >
