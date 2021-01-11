@@ -36,15 +36,15 @@ std::string make_dump_abundance_genome_filename(
     keyname_attributes[ "repro" ] = std::getenv("REPRO_ID");
   }
 
-  if ( cfg.SERIES() != std::numeric_limits<size_t>::max() ) {
+  if ( cfg.SERIES() != std::numeric_limits<uint32_t>::max() ) {
     keyname_attributes[ "series" ] = emp::to_string( cfg.SERIES() );
   }
 
-  if ( cfg.STINT() != std::numeric_limits<size_t>::max() ) {
+  if ( cfg.STINT() != std::numeric_limits<uint32_t>::max() ) {
     keyname_attributes[ "stint" ] = emp::to_string( cfg.STINT() );
   }
 
-  if ( cfg.REPLICATE() != std::numeric_limits<size_t>::max() ) {
+  if ( cfg.REPLICATE() != std::numeric_limits<uint32_t>::max() ) {
     keyname_attributes[ "replicate" ] = emp::to_string( cfg.REPLICATE() );
   }
 
