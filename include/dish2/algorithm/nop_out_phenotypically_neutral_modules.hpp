@@ -2,6 +2,8 @@
 #ifndef DISH2_ALGORITHM_NOP_OUT_PHENOTYPICALLY_NEUTRAL_MODULES_HPP_INCLUDE
 #define DISH2_ALGORITHM_NOP_OUT_PHENOTYPICALLY_NEUTRAL_MODULES_HPP_INCLUDE
 
+#include <omp.h>
+
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
@@ -31,7 +33,7 @@ dish2::Genome<Spec> nop_out_phenotypically_neutral_modules(
 
   emp::vector< char > should_nop( num_modules );
 
-  // #pragma omp parallel for
+  #pragma omp parallel for
   for (size_t module_idx = 0; module_idx < num_modules; ++module_idx) {
 
     #ifdef __EMSCRIPTEN__

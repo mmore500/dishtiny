@@ -47,7 +47,7 @@ web-debug:	debug-web
 
 $(PROJECT):	source/native.cpp include/
 	@echo CXX $(CXX)
-	$(MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT)
+	$(MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT) -fopenmp
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/
