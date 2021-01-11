@@ -39,6 +39,8 @@ RUN \
   apt-get install -y --allow-downgrades --no-install-recommends \
     rdfind \
     imagemagick \
+    libcurl4-openssl-dev \
+    libsfml-dev \
     && \
   apt-get clean \
     && \
