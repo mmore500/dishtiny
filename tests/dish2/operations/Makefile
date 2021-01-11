@@ -3,8 +3,8 @@ TARGET_NAMES += MultiplyOwnState
 TARGET_NAMES += OpLibrary
 TARGET_NAMES += ReadNeighborState
 TARGET_NAMES += ReadOwnState
-TARGET_NAMES += SendInterMessage
-TARGET_NAMES += WriteOwnState
+TARGET_NAMES += SendInterMessageIf
+TARGET_NAMES += WriteOwnStateIf
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
 
