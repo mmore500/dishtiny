@@ -3,6 +3,7 @@
 #define DISH2_RECORD_GLOBAL_RECORDS_INITIALIZE_HPP_INCLUDE
 
 #include <cstdlib>
+#include <string>
 
 #include <sys/stat.h>
 
@@ -15,9 +16,8 @@ void global_records_initialize() {
 
   // std::filesystem::create_directories is failing inside Docker container
   // so use mkdir as a backup for now
-  const std::filesystem::path path{ "./drawings" };
+  const std::string path{ "./drawings" };
   uitsl::err_audit( mkdir( path.c_str(), 0755 ) );
-  emp_assert( std::filesystem::exists(path) );
 
   // std::filesystem::create_directories("./drawings");
 
