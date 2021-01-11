@@ -36,15 +36,20 @@ void create_montage() {
     "update", "drawings/", uitsl::stoszt
   );
 
-  auto most_recent_drawings = uitsl::keyname_directory_filter(
-    "update", emp::to_string( last_update ), "drawings/"
+  // use only drawings from thread 0 proc 0
+  auto target_drawings = uitsl::keyname_directory_filter(
+    {
+      {"update", emp::to_string( last_update )},
+      {"proc", "0"},
+      {"thread", "0"},
+    }, "drawings/"
   );
-  std::sort(std::begin(most_recent_drawings), std::end(most_recent_drawings));
+  std::sort(std::begin(target_drawings), std::end(target_drawings));
 
   const std::string command = (
     std::string{}
     + "montage -verbose -label '%f' -font Helvetica -pointsize 10 -background '#000000' -fill 'gray' -define png:size=500x500 -geometry 500x500+2+2 -auto-orient -crop 500x500+0+0 "
-    + emp::join_on( most_recent_drawings, " " )
+    + emp::join_on( target_drawings, " " )
     + " " + dish2::make_montage_filename( last_update )
   );
 
