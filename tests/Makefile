@@ -1,4 +1,3 @@
-TARGET_NAMES += dish
 TARGET_NAMES += dish2
 TARGET_NAMES += source
 
