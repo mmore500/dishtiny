@@ -38,7 +38,7 @@ jobs:
       - run: docker run "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny && ./ci/test_trailing_whitespace.sh && ./ci/test_tabs.sh && ./ci/test_missing_newlines.sh && make docs && ./ci/test_headerguards.sh && ./ci/test_alphabetize_includes.sh && python3 ci/test_readme_snippets.py"
 
   unit:
-    name: Unit Tests (debug mode)
+    name: Unit Tests
     runs-on: ubuntu-16.04
     needs:
       - docker-build
