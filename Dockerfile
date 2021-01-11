@@ -41,6 +41,7 @@ RUN \
     imagemagick \
     libcurl4-openssl-dev \
     libsfml-dev \
+    libomp-dev \
     && \
   apt-get clean \
     && \
