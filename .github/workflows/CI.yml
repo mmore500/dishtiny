@@ -46,6 +46,7 @@ jobs:
       matrix:
         cxx: [clang++, g++]
         mode: [ "", opt]
+      fail-fast: false
     env:
       DISH_MPICXX: mpicxx.openmpi
       OMPI_CXX: ${{ matrix.cxx }}
@@ -64,6 +65,7 @@ jobs:
       matrix:
         cxx: [clang++, g++]
         mode: [ "", opt]
+      fail-fast: false
     env:
       DISH_MPICXX: mpicxx.openmpi
       OMPI_CXX: ${{ matrix.cxx }}
