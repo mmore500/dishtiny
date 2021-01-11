@@ -131,16 +131,12 @@ jobs:
           git config --global user.name "GitHub Actions"
           echo $(cd third-party && ./install_emsdk.sh)
       - run: make web
-      - run:
-        |
-          cd web
-          git init
-          git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/devosoft/empirical-prefab-demo.git > /dev/null 2>&1
-          git checkout -b gh-pages
-          git add .
-          git commit --message "GitHub Action ${{ github.run_number }}"
-          git push --force --quiet origin gh-pages
-
+      - uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: web # The folder the action should deploy.
+          CLEAN: true # Automatically remove deleted files from the deploy branch
   deploy-dockerhub:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-16.04
@@ -152,7 +148,6 @@ jobs:
       - coverage
       - fuzzing
       - microbenchmarks
-
     steps:
       - uses: actions/checkout@v2
         with:
