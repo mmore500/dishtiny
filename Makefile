@@ -16,7 +16,7 @@ CFLAGS_all := -std=c++17 -pipe -Wall -Wno-unused-function -Wno-unused-private-fi
 	$(ARGS)
 
 # Native compiler information
-MPICXX ?= mpicxx.openmpi
+MPICXX ?= mpicxx.mpich
 
 IS_CLANG := $(shell ($(MPICXX) --version | grep -q clang); echo $$?)
 ifeq (${IS_CLANG},0)
