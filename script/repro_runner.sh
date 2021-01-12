@@ -64,25 +64,29 @@ required arguments:
   -u / --username  username used for dockerhub and github
 
 optional arguments:
-  -b / --branch  source branch to check out(default: master)
+  -b / --branch  source branch to check out (default: master)
+  -c / --container_sha sha of docker container to run in (default: none)
   -h / --help  show this message and exit
+  -r / --repo_sha repo sha to check out (default: none)
 
 exported environment variables:
   REPRO_ID a 16-character string uniquely identifying this session
 "
 
 ################################################################################
-####
-#### "Parse Arguments"
-#### "--------------------------------------"
+echo
+echo "Parse Arguments"
+echo "--------------------------------------"
 ################################################################################
 
 # adapted from https://stackoverflow.com/a/33826763
 while [[ "$#" -gt 0 ]]; do
   case $1 in
     -b|--branch) arg_branch="$2"; shift ;; # source branch to check out
+    -c|--container_sha) container_sha="$2"; shift ;; # container sha to run in
     -h|--help) echo "$usage"; exit;; # print help message
     -p|--project) arg_project="$2"; shift ;; # osf project id
+    -r|--repo_sha) repo_sha="$2"; shift ;; # source sha to check out
     -s|--slug) arg_slug="$2"; shift ;; # github/dockerhub project slug
     -u|--username) arg_username="$2"; shift ;; # github/dockerhub username
     *) echo "Unknown argument passed: $1"; exit 1 ;;
@@ -255,7 +259,7 @@ trap on_exit EXIT
 
 ################################################################################
 echo
-echo "Setup Exit and Error Traps"
+echo "Generate REPRO_ID"
 echo "--------------------------------------"
 ################################################################################
 
@@ -267,7 +271,7 @@ echo
 echo "Setup Work Directory"
 echo "--------------------------------------"
 ################################################################################
-rm -rf $REPRO_ID && mkdir $REPRO_ID && cd $REPRO_ID
+rm -rf "${REPRO_ID}" && mkdir "${REPRO_ID}" && cd "${REPRO_ID}"
 pwd
 
 ################################################################################
@@ -280,19 +284,30 @@ echo "--------------------------------------"
 mkdir -p output
 
 # setup latest project source
-git clone "https://github.com/${arg_username}/${arg_slug}.git" \
-  --depth 1 --recursive --shallow-submodules \
-  --branch "$arg_branch"
+if [ -n "${repo_sha}" ]; then
+  mkdir "${arg_slug}"
+  git -C "${arg_slug}" init
+  git -C "${arg_slug}" remote add origin "https://github.com/${arg_username}/${arg_slug}.git"
+  git -C "${arg_slug}" fetch --depth 1 origin "${repo_sha}"
+  git -C "${arg_slug}" checkout FETCH_HEAD
+  git -C "${arg_slug}" submodule update --init --recursive --depth 1
+else
+  git clone "https://github.com/${arg_username}/${arg_slug}.git" \
+    --depth 1 --recursive --shallow-submodules \
+    --branch "${arg_branch}"
+  repo_sha=$(git -C "${arg_slug}" rev-parse HEAD)
+fi
 
-repo_sha=$(git -C "${arg_slug}" rev-parse HEAD)
 echo "repo_sha ${repo_sha}"
 
 # get sha of latest docker container
-dockerfile_sha=$(\
-  singularity exec "docker://${arg_username}/${arg_slug}" \
-    bash -c 'echo ${SINGULARITY_NAME}' \
-)
-echo "dockerfile_sha ${dockerfile_sha}"
+if [ -z "${container_sha}" ]; then
+  container_sha=$(\
+    singularity exec "docker://${arg_username}/${arg_slug}" \
+      bash -c 'echo ${SINGULARITY_NAME}' \
+  )
+fi
+echo "container_sha ${container_sha}"
 
 ################################################################################
 echo
@@ -302,4 +317,4 @@ echo "--------------------------------------"
 
 # pipe input into the container, record a copy to $STDIN
 tee "${stdin}" | \
-  singularity shell --env "SECONDS=$SECONDS" "docker://${arg_username}/${arg_slug}@sha256:${dockerfile_sha}"
+  singularity shell --env "SECONDS=${SECONDS}" "docker://${arg_username}/${arg_slug}@sha256:${container_sha}"
