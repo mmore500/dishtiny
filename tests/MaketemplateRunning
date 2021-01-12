@@ -1,4 +1,5 @@
-DISH_MPICXX ?= mpicxx
+DISH_MPICXX ?= mpicxx.mpich
+DISH_MPIEXEC ?= mpiexec.mpich
 
 FLAGS = -std=c++17 -g -pipe -pthread -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/
 
@@ -7,14 +8,14 @@ default: test
 test-%: %.cpp $(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp
 	$(DISH_MPICXX) $(FLAGS) $< -lmetis -lz -lcurl -lsfml-graphics -o $@.out
 	# execute test
-	./$@.out
+	$(DISH_MPIEXEC) -n 1 ./$@.out
 
 cov-%: %.cpp $(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp
 	sed "s/g++/mpicxx.openmpi/g" "/usr/bin/h5c++" > "h5c++" && chmod +x "h5c++"
 	export OMPI_CXX=clang++; ./h5c++ $(FLAGS) $< -lmetis -lz -lcurl -lsfml-graphics -o $@.out
 	#echo "running $@.out"
 	# execute test
-	./$@.out
+	$(DISH_MPIEXEC) -n 1 ./$@.out
 	llvm-profdata merge default.profraw -o default.profdata
 	llvm-cov show ./$@.out -instr-profile=default.profdata > coverage_$@.txt
 	python $(TO_ROOT)/third-party/force-cover/fix_coverage.py coverage_$@.txt

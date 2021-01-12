@@ -16,9 +16,9 @@ CFLAGS_all := -std=c++17 -pipe -Wall -Wno-unused-function -Wno-unused-private-fi
 	$(ARGS)
 
 # Native compiler information
-MPICXX ?= mpicxx.mpich
+DISH_MPICXX ?= mpicxx.mpich
 
-IS_CLANG := $(shell ($(MPICXX) --version | grep -q clang); echo $$?)
+IS_CLANG := $(shell ($(DISH_MPICXX) --version | grep -q clang); echo $$?)
 ifeq (${IS_CLANG},0)
 	OMP_FLAG := -fopenmp=libomp
 	OMP_LINKER_FLAG := -fopenmp=libiomp5
@@ -56,9 +56,9 @@ debug-web:	$(PROJECT).js web/index.html
 web-debug:	debug-web
 
 $(PROJECT):	source/native.cpp include/
-	@echo MPICXX $(MPICXX)
+	@echo DISH_MPICXX $(DISH_MPICXX)
 	@echo OMPI_CXX $(OMPI_CXX)
-	$(MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT) $(OMP_LINKER_FLAG)
+	$(DISH_MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT) $(OMP_LINKER_FLAG)
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/

@@ -19,24 +19,24 @@ function teardown {
 }
 
 function invoking_dishtiny_exits_success { #@test
-  mpiexec -n 1 ./rundishtiny --RUN_SECONDS 10 --N_CELLS 100
+  "${DISH_MPIEXEC:-mpiexec.mpich}" -n 1 ./rundishtiny --RUN_SECONDS 10 --N_CELLS 100
 }
 
 function invoking_dishtiny_multithread_exits_success { #@test
-  mpiexec -n 1 ./rundishtiny --RUN_SECONDS 10 --N_THREADS 2 --N_CELLS 100
+  "${DISH_MPIEXEC:-mpiexec.mpich}" -n 1 ./rundishtiny --RUN_SECONDS 10 --N_THREADS 2 --N_CELLS 100
 }
 
 function invoking_dishtiny_multiproc_exits_success { #@test
-  mpiexec -n 2 ./rundishtiny --RUN_SECONDS 10 --N_CELLS 100
+  "${DISH_MPIEXEC:-mpiexec.mpich}" -n 2 ./rundishtiny --RUN_SECONDS 10 --N_CELLS 100
 }
 
 function invoking_dishtiny_multiproc_multithread_exits_success { #@test
-  mpiexec -n 2 ./rundishtiny --RUN_SECONDS 10 --N_THREADS 2 --N_CELLS 100
+  "${DISH_MPIEXEC:-mpiexec.mpich}" -n 2 ./rundishtiny --RUN_SECONDS 10 --N_THREADS 2 --N_CELLS 100
 }
 
 function single_thread_is_deterministic { #@test
-  run mkdir first; cp rundishtiny first; cd first; ./rundishtiny --RUN_UPDATES 64 --N_THREADS 1 --N_CELLS 100; cd ..
-  run mkdir second; cp rundishtiny second; cd second; ./rundishtiny --RUN_UPDATES 64 --N_THREADS 1 --N_CELLS 100; cd ..
+  run mkdir first; cp rundishtiny first; cd first; "${DISH_MPIEXEC:-mpiexec.mpich}" -n 1 ./rundishtiny --RUN_UPDATES 64 --N_THREADS 1 --N_CELLS 100; cd ..
+  run mkdir second; cp rundishtiny second; cd second; "${DISH_MPIEXEC:-mpiexec.mpich}" -n 1 ./rundishtiny --RUN_UPDATES 64 --N_THREADS 1 --N_CELLS 100; cd ..
   run diff first/ second/
   [ "$status" -eq 0 ]
 }
