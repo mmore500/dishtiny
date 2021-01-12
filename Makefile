@@ -92,16 +92,16 @@ clean:
 	cd docs && make clean
 	cd tests && make clean
 
-test: debug web
-	timeout 30 ./dishtiny | grep -q "^32$$" && echo 'matched!' || exit 1
-	npm install
-	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch(); const page = await browser.newPage(); await page.goto('http://localhost:3000/index.html'); await sleep(30000); const html = await page.content(); console.log(html); browser.close(); process.exit(0); } run();" | node | grep -q "Update 0" && echo "matched!" ||  exit 1
-	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch(); const page = await browser.newPage(); page.on('console', msg => console.log(msg.text())); await page.goto('http://localhost:3000/index.html'); await sleep(30000); await page.content(); browser.close(); process.exit(0); } run();" | node | grep -q "web viewer load SUCCESS" && echo "matched!"|| exit 1
+# test: debug web
+# 	timeout 30 ./rundishtiny | grep -q "^32$$" && echo 'matched!' || exit 1
+# 	npm install
+# 	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch(); const page = await browser.newPage(); await page.goto('http://localhost:3000/index.html'); await sleep(30000); const html = await page.content(); console.log(html); browser.close(); process.exit(0); } run();" | node | grep -q "Update 0" && echo "matched!" ||  exit 1
+# 	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch(); const page = await browser.newPage(); page.on('console', msg => console.log(msg.text())); await page.goto('http://localhost:3000/index.html'); await sleep(30000); await page.content(); browser.close(); process.exit(0); } run();" | node | grep -q "web viewer load SUCCESS" && echo "matched!"|| exit 1
 
-tests:
-	cd tests && make
-	cd tests && make opt
-	cd tests && make fulldebug
+# tests:
+# 	cd tests && make
+# 	cd tests && make opt
+# 	cd tests && make fulldebug
 
 coverage:
 	cd tests && make coverage
