@@ -1,0 +1,143 @@
+#!/bin/bash
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time=4:00:00
+#SBATCH --job-name series={{ series }}+stint={{ stint }}
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%j.out"
+#SBATCH --mem=16G
+#SBATCH --ntasks 1
+#SBATCH --cpus-per-task 4
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=mmore500@msu.edu
+
+set -e
+
+cd $(mktemp -d)
+
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+
+REPRO_RUNNER=$(mktemp)
+curl -o "${REPRO_RUNNER}" "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh"
+chmod +x "${REPRO_RUNNER}"
+
+"${REPRO_RUNNER}" \
+  -p dnh2v -u mmore500 -s dishtiny \
+  --repo_sha "{{ repo_sha }}" --container_sha "{{ container_sha }}" \
+  << REPRO_RUNNER_HEREDOC_EOF
+
+
+ENDEAVOR={{ series % 1000 }}
+GENESIS="{{ "generate" if stint == 0 else "reconstitute" }}"
+N_PROCS=1
+N_THREADS=4
+
+if (({{ stint }} > 0)); then
+  for ((proc=0;proc<N_PROCS;++proc)); do
+    for ((thread=0;thread<N_PROCS;++thread)); do
+      f="a=population+proc=${proc}+series={{ series }}+stint={{ stint }}+thread=${thread}+ext=.bin"
+      osf -p dnh2v fetch "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint - 1 }}/${f}" "${f}" &
+    done
+  done
+fi
+
+wait
+
+
+
+################################################################################
+echo
+echo "Set Up Work Directory"
+echo "-------------------------"
+################################################################################
+
+mkdir work
+make -C dishtiny/
+cp dishtiny/rundishtiny work
+cd work
+
+################################################################################
+echo
+echo "Running Simulation"
+echo "------------------"
+################################################################################
+
+mpiexec.mpich -n 1 ./rundishtiny -N_THREADS 4 -RUN_SECONDS 10800 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 1 -STINT {{ stint }} -SERIES {{ series }}
+
+################################################################################
+echo
+echo "Uploading Data"
+echo "--------------"
+################################################################################
+
+for f in *a=population*; do
+  echo uploading "${f}"
+  osf upload -p dnh2v "${f}" "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint }}/${f}" &
+done
+
+wait
+
+for f in *a=demographic_phenotypic_phylogenetic_metrics*; do
+  echo uploading "${f}"
+  osf upload -p dnh2v "${f}" "endeavor=${ENDEAVOR}/evolve/metrics/stint={{ stint }}/${f}" &
+done
+
+wait
+
+for f in *a=cell_census*; do
+  echo uploading "${f}";
+  osf upload -p dnh2v "${f}" "endeavor=${ENDEAVOR}/evolve/censuses/stint={{ stint }}/${f}" &
+done
+
+wait
+
+for f in *a=montage*; do
+  echo uploading "${f}";
+  osf upload -p dnh2v "${f}" "endeavor=${ENDEAVOR}/evolve/montages/stint={{ stint }}/${f}" &
+done
+
+wait
+
+echo uploading drawings.tar.gz
+osf upload -p dnh2v "drawings.tar.gz" "endeavor=${ENDEAVOR}/evolve/drawings/stint={{ stint }}/a=drawings+ext=.tar.gz"
+
+for f in *a=genome*; do
+  echo uploading "${f}"
+  osf upload -p dnh2v "${f}" "endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" &
+done
+
+wait
+
+################################################################################
+echo
+echo "Submit Next Job"
+echo "---------------"
+################################################################################
+
+# run jinja on template
+JOB_TEMPLATE=$(mktemp)
+JOB_SCRIPT=$(mktemp)
+
+curl -o "${JOB_TEMPLATE}" "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/evolve/evolvejob.slurm.sh.jinja"
+
+j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+container_sha: {{ container_sha }}
+repo_sha: {{ repo_sha }}
+series: {{ series }}
+stint: {{ stint + 1 }}
+J2_HEREDOC_EOF
+
+chmod +x "${JOB_SCRIPT}"
+
+sbatch "${JOB_SCRIPT}" \
+&& echo "   job submit success!" \
+|| (echo "   job submit failure (FAIL)" && exit 1)
+
+################################################################################
+echo
+echo "Done! (SUCCESS)"
+echo "---------------"
+################################################################################
+
+REPRO_RUNNER_HEREDOC_EOF
