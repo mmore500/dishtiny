@@ -2,8 +2,6 @@
 #ifndef DISH2_ALGORITHM_NOP_OUT_PHENOTYPICALLY_NEUTRAL_MODULES_HPP_INCLUDE
 #define DISH2_ALGORITHM_NOP_OUT_PHENOTYPICALLY_NEUTRAL_MODULES_HPP_INCLUDE
 
-#include <omp.h>
-
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"

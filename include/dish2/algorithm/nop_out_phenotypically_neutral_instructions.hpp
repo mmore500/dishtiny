@@ -4,8 +4,6 @@
 
 #include <algorithm>
 
-#include <omp.h>
-
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_instructions.hpp"
 
