@@ -47,7 +47,7 @@ std::string make_dump_arbitrary_genome_filename(
   }
 
   if ( dish2::get_endeavor() ) {
-    keyname_attributes[ "endeavor" ] = *dish2::get_endeavor();
+    keyname_attributes[ "endeavor" ] = emp::to_string( *dish2::get_endeavor() );
   }
 
   return emp::keyname::pack( keyname_attributes );

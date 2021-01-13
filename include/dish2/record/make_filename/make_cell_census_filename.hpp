@@ -43,7 +43,7 @@ std::string make_cell_census_filename(
   }
 
   if ( dish2::get_endeavor() ) {
-    keyname_attributes[ "endeavor" ] = *dish2::get_endeavor();
+    keyname_attributes[ "endeavor" ] = emp::to_string( *dish2::get_endeavor() );
   }
 
   return emp::keyname::pack( keyname_attributes );

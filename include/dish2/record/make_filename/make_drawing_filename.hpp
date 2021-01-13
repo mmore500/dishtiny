@@ -49,7 +49,7 @@ std::string make_drawing_filename(
   }
 
   if ( dish2::get_endeavor() ) {
-    keyname_attributes[ "endeavor" ] = *dish2::get_endeavor();
+    keyname_attributes[ "endeavor" ] = emp::to_string( *dish2::get_endeavor() );
   }
 
   return "drawings/" + emp::keyname::pack( keyname_attributes );

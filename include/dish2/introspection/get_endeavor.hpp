@@ -15,7 +15,7 @@ namespace dish2 {
 emp::optional<uint32_t> get_endeavor() {
 
   if ( cfg.SERIES() != std::numeric_limits<uint32_t>::max() )
-    return cfg.SERIES() % 1000;
+    return cfg.SERIES() / 1000;
   else if ( std::getenv("DISHTINY_ENDEAVOR") )
     return uitsl::stoszt( std::getenv("DISHTINY_ENDEAVOR") );
   else return std::nullopt;

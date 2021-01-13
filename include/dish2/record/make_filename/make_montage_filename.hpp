@@ -42,7 +42,7 @@ std::string make_montage_filename( const size_t update ) {
   }
 
   if ( dish2::get_endeavor() ) {
-    keyname_attributes[ "endeavor" ] = *dish2::get_endeavor();
+    keyname_attributes[ "endeavor" ] = emp::to_string( *dish2::get_endeavor() );
   }
 
   return emp::keyname::pack( keyname_attributes );
