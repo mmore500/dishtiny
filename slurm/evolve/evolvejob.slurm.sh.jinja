@@ -73,38 +73,50 @@ echo "--------------"
 
 for f in *a=population*; do
   echo uploading "${f}"
-  osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint }}/${f}" &
+  for i in {1..10}; do
+    osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint }}/${f}" && break || sleep $((RANDOM % 10)) && echo "fail ${f}"
+  done &
 done
 
 wait
 
 for f in *a=demographic_phenotypic_phylogenetic_metrics*; do
   echo uploading "${f}"
-  osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/metrics/stint={{ stint }}/${f}" &
+  for i in {1..10}; do
+    osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/metrics/stint={{ stint }}/${f}" && break || sleep $((RANDOM % 10)) && echo "fail ${f}"
+  done &
 done
 
 wait
 
 for f in *a=cell_census*; do
   echo uploading "${f}";
-  osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/censuses/stint={{ stint }}/${f}" &
+  for i in {1..10}; do
+    osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/censuses/stint={{ stint }}/${f}" && break || sleep $((RANDOM % 10)) && echo "fail ${f}"
+  done &
 done
 
 wait
 
 for f in *a=montage*; do
   echo uploading "${f}";
-  osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/montages/stint={{ stint }}/${f}" &
+  for i in {1..10}; do
+    osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/montages/stint={{ stint }}/${f}" && break || sleep $((RANDOM % 10)) && echo "fail ${f}"
+  done &
 done
 
 wait
 
 echo uploading drawings.tar.gz
-osf -p dnh2v upload "drawings.tar.gz" "endeavor=${ENDEAVOR}/evolve/drawings/stint={{ stint }}/a=drawings+ext=.tar.gz"
+for i in {1..10}; do
+  osf -p dnh2v upload "drawings.tar.gz" "endeavor=${ENDEAVOR}/evolve/drawings/stint={{ stint }}/a=drawings+ext=.tar.gz" && break || sleep $((RANDOM % 10)) && echo "fail drawings.tar.gz"
+done &
 
 for f in *a=genome*; do
   echo uploading "${f}"
-  osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" &
+  for i in {1..10}; do
+    osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" && break || sleep $((RANDOM % 10)) && echo "fail ${f}"
+  done &
 done
 
 wait
