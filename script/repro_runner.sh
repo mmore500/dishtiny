@@ -144,10 +144,12 @@ date
 hostname
 pwd
 command -v qstat >/dev/null && qstat -f "${SLURM_JOB_ID}"
-echo "arg_branch $arg_branch"
-echo "arg_project $arg_project"
-echo "arg_slug $arg_slug"
-echo "arg_username $arg_username"
+echo "arg_branch ${arg_branch}"
+echo "container_sha ${container_sha}"
+echo "arg_project ${arg_project}"
+echo "repo_sha ${repo_sha}"
+echo "arg_slug ${arg_slug}"
+echo "arg_username ${arg_username}"
 
 ################################################################################
 echo
