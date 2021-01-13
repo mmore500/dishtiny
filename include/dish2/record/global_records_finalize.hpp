@@ -34,7 +34,7 @@ void create_montage() {
 
   const size_t last_update = uitsl::keyname_directory_max(
     "update",
-    {{"proc", "0"}, {"thread", "0"}},
+    {{"proc", "0"}, {"thread", "0"}, {"ext", ".png"}},
     "drawings/",
     uitsl::stoszt
   );
@@ -45,6 +45,7 @@ void create_montage() {
       {"update", emp::to_string( last_update )},
       {"proc", "0"},
       {"thread", "0"},
+      {"ext", ".png"},
     }, "drawings/"
   );
   std::sort(std::begin(target_drawings), std::end(target_drawings));
