@@ -291,12 +291,12 @@ if [ -n "${repo_sha}" ]; then
   mkdir "${arg_slug}"
   git -C "${arg_slug}" init
   git -C "${arg_slug}" remote add origin "https://github.com/${arg_username}/${arg_slug}.git"
-  git -C "${arg_slug}" fetch --depth 1 origin "${repo_sha}"
+  git -C "${arg_slug}" fetch --quiet --depth 1 origin "${repo_sha}"
   git -C "${arg_slug}" checkout FETCH_HEAD
-  git -C "${arg_slug}" submodule update --init --recursive --depth 1
+  git -C "${arg_slug}" submodule update --quiet --init --recursive --depth 1
 else
   git clone "https://github.com/${arg_username}/${arg_slug}.git" \
-    --depth 1 --recursive --shallow-submodules \
+    --quiet --depth 1 --recursive --shallow-submodules \
     --branch "${arg_branch}"
   repo_sha=$(git -C "${arg_slug}" rev-parse HEAD)
 fi
