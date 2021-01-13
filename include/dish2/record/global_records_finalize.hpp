@@ -59,6 +59,11 @@ void create_montage() {
 }
 
 void finalize_drawings() {
+  uitsl::err_verify( std::system(
+    "for f in drawings/a=*; do"
+    "  keyname stash --move $f a proc thread ext"
+    "; done"
+  ) );
   create_deduplicated_drawing_archive();
   create_montage();
 }
