@@ -37,15 +37,15 @@ struct CpuExecutionService {
 
     if ( cell.genome->program.empty() ) return;
 
+    auto& cardinals = cell.cardinals;
+    thread_local emp::vector< decltype(cardinals.begin()) > shuffler;
+    shuffler.resize( cardinals.size() );
+    std::iota(
+      std::begin( shuffler ), std::end( shuffler ), std::begin( cardinals )
+    );
+
     for (size_t rep = 0; rep < dish2::cfg.HARDWARE_EXECUTION_ROUNDS(); ++rep) {
 
-      auto& cardinals = cell.cardinals;
-
-      thread_local emp::vector< decltype( cardinals.begin()) > shuffler;
-      shuffler.resize( cardinals.size() );
-      std::iota(
-        std::begin( shuffler ), std::end( shuffler ), std::begin( cardinals )
-      );
       emp::Shuffle( sgpl::tlrand.Get(), shuffler );
 
       for (auto cardinal_it : shuffler) sgpl::execute_cpu<sgpl_spec_t>(
