@@ -62,8 +62,9 @@ void create_montage() {
 }
 
 void finalize_drawings() {
+  // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system(
-    "for f in drawings/a=*; do"
+    "cd drawings && for f in a=*; do"
     "  keyname stash --move $f a proc thread update ext"
     "; done"
   ) );
