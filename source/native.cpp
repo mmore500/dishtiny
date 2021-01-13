@@ -1,6 +1,7 @@
 // This is the main function for the NATIVE version of this project.
 
 #include "conduit/include/uitsl/parallel/ThreadTeam.hpp"
+#include "conduit/include/uitsl/mpi/comm_utils.hpp"
 
 #include "dish2/config/make_arg_specs.hpp"
 #include "dish2/config/setup.hpp"
@@ -34,6 +35,8 @@ int main(int argc, char* argv[]) {
   team.Join();
 
   dish2::global_records_finalize();
+
+  std::cout << "process " << uitsl::get_proc_id() << " complete" << std::endl;
 
   return 0;
 
