@@ -6,7 +6,7 @@
 
 #include "../../spec/Spec.hpp"
 
-#include "../border_colormaps/KinGroupIDBorderInvertColorMap.hpp"
+#include "../border_colormaps/KinGroupIDBorderGrayColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/PcaRegulationColorMap.hpp"
 #include "../getters/CardiCoordGetter.hpp"
@@ -37,7 +37,7 @@ namespace internal::pca_regulation_artist {
       IsAliveGetter
     >,
     dish2::CellBorderRenderer<
-      dish2::KinGroupIDBorderInvertColorMap,
+      dish2::KinGroupIDBorderGrayColorMap,
       KinGroupIDGetter
     >
   >;
