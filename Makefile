@@ -55,10 +55,11 @@ debug-web:	$(PROJECT).js web/index.html
 
 web-debug:	debug-web
 
+# see https://stackoverflow.com/a/57760267 RE: -lstdc++fs
 $(PROJECT):	source/native.cpp include/
 	@echo DISH_MPICXX $(DISH_MPICXX)
 	@echo OMPI_CXX $(OMPI_CXX)
-	$(DISH_MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT) $(OMP_LINKER_FLAG)
+	$(DISH_MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT) $(OMP_LINKER_FLAG) -lstdc++fs
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/
