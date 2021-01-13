@@ -50,6 +50,9 @@ all: $(PROJECT) $(PROJECT).js web/index.html
 debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
 debug:	$(PROJECT)
 
+sanitize: CFLAGS_nat := $(CFLAGS_nat_sanitize)
+sanitize: $(PROJECT)
+
 debug-web:	CFLAGS_web := $(CFLAGS_web_debug)
 debug-web:	$(PROJECT).js web/index.html
 
