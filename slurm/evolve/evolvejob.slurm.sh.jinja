@@ -73,38 +73,38 @@ echo "--------------"
 
 for f in *a=population*; do
   echo uploading "${f}"
-  osf upload -p dnh2v "${f}" "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint }}/${f}" &
+  osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint }}/${f}" &
 done
 
 wait
 
 for f in *a=demographic_phenotypic_phylogenetic_metrics*; do
   echo uploading "${f}"
-  osf upload -p dnh2v "${f}" "endeavor=${ENDEAVOR}/evolve/metrics/stint={{ stint }}/${f}" &
+  osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/metrics/stint={{ stint }}/${f}" &
 done
 
 wait
 
 for f in *a=cell_census*; do
   echo uploading "${f}";
-  osf upload -p dnh2v "${f}" "endeavor=${ENDEAVOR}/evolve/censuses/stint={{ stint }}/${f}" &
+  osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/censuses/stint={{ stint }}/${f}" &
 done
 
 wait
 
 for f in *a=montage*; do
   echo uploading "${f}";
-  osf upload -p dnh2v "${f}" "endeavor=${ENDEAVOR}/evolve/montages/stint={{ stint }}/${f}" &
+  osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/montages/stint={{ stint }}/${f}" &
 done
 
 wait
 
 echo uploading drawings.tar.gz
-osf upload -p dnh2v "drawings.tar.gz" "endeavor=${ENDEAVOR}/evolve/drawings/stint={{ stint }}/a=drawings+ext=.tar.gz"
+osf -p dnh2v upload "drawings.tar.gz" "endeavor=${ENDEAVOR}/evolve/drawings/stint={{ stint }}/a=drawings+ext=.tar.gz"
 
 for f in *a=genome*; do
   echo uploading "${f}"
-  osf upload -p dnh2v "${f}" "endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" &
+  osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" &
 done
 
 wait
