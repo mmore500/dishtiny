@@ -142,7 +142,8 @@ echo "--------------------------------------"
 ################################################################################
 date
 hostname
-command -v qstat >/dev/null && qstat -f ${SLURM_JOB_ID}
+pwd
+command -v qstat >/dev/null && qstat -f "${SLURM_JOB_ID}"
 echo "arg_branch $arg_branch"
 echo "arg_project $arg_project"
 echo "arg_slug $arg_slug"
