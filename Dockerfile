@@ -50,9 +50,9 @@ RUN \
   echo "installed apt packages"
 
 RUN \
-  pip3 install -r /opt/dishtiny/docs/requirements.txt \
+  pip3 install --timeout 60 --retries 100 -r /opt/dishtiny/docs/requirements.txt \
     && \
-  pip3 install -r /opt/dishtiny/third-party/requirements.txt \
+  pip3 install --timeout 60 --retries 100 -r /opt/dishtiny/third-party/requirements.txt \
     && \
   echo "installed python requirements"
 
