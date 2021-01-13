@@ -33,18 +33,6 @@ GENESIS="{{ "generate" if stint == 0 else "reconstitute" }}"
 N_PROCS=1
 N_THREADS=4
 
-if (({{ stint }} > 0)); then
-  for ((proc=0;proc<N_PROCS;++proc)); do
-    for ((thread=0;thread<N_PROCS;++thread)); do
-      f="a=population+proc=${proc}+series={{ series }}+stint={{ stint }}+thread=${thread}+ext=.bin"
-      osf -p dnh2v fetch "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint - 1 }}/${f}" "${f}" &
-    done
-  done
-fi
-
-wait
-
-
 
 ################################################################################
 echo
@@ -56,6 +44,18 @@ mkdir work
 make -C dishtiny/
 cp dishtiny/rundishtiny work
 cd work
+
+if (({{ stint }} > 0)); then
+  for ((proc=0;proc<N_PROCS;++proc)); do
+    for ((thread=0;thread<N_PROCS;++thread)); do
+      f="a=population+proc=${proc}+series={{ series }}+stint={{ stint }}+thread=${thread}+ext=.bin"
+      osf -p dnh2v fetch "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint - 1 }}/${f}" "${f}" &
+    done
+  done
+fi
+
+wait
+
 
 ################################################################################
 echo
