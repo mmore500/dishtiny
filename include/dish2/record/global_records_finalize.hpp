@@ -33,7 +33,10 @@ void create_deduplicated_drawing_archive() {
 void create_montage() {
 
   const size_t last_update = uitsl::keyname_directory_max(
-    "update", "drawings/", uitsl::stoszt
+    "update",
+    {{"proc", "0"}, {"thread", "0"}},
+    "drawings/",
+    uitsl::stoszt
   );
 
   // use only drawings from thread 0 proc 0
