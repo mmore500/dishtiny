@@ -75,5 +75,9 @@ RUN \
 
 USER user
 
+# python needs this
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+
 # Define default working directory.
 WORKDIR /opt/dishtiny

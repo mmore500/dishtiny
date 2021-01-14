@@ -10,29 +10,40 @@
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=mmore500@msu.edu
 
-set -e
+# fail on error
+set -ev
 
+# set up and jump into temporary work directory
 cd $(mktemp -d)
 
+# load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
 
+# curl repro_runner.sh script into to a temporary file
 REPRO_RUNNER=$(mktemp)
 curl -o "${REPRO_RUNNER}" "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh"
 chmod +x "${REPRO_RUNNER}"
+
+################################################################################
+echo
+echo "Running Job with repro_runner.sh"
+echo "--------------------------------"
+################################################################################
 
 "${REPRO_RUNNER}" \
   -p dnh2v -u mmore500 -s dishtiny \
   --repo_sha "{{ repo_sha }}" --container_sha "{{ container_sha }}" \
   << REPRO_RUNNER_HEREDOC_EOF
 
+# fail on error
+set -ev
 
 ENDEAVOR={{ series / 1000 }}
 GENESIS="{{ "generate" if stint == 0 else "reconstitute" }}"
 N_PROCS=1
 N_THREADS=4
-
 
 ################################################################################
 echo
