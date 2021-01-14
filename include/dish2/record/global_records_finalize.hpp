@@ -4,19 +4,55 @@
 
 #include <algorithm>
 #include <cstdlib>
+#include <string>
 
 #include "../../../third-party/conduit/include/uitsl/debug/err_discard.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/err_verify.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/audited_routines.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_filter.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_max.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "make_filename/make_montage_filename.hpp"
 
 namespace dish2 {
+
+std::string make_drawing_archive_filename() {
+
+  auto keyname_attributes = emp::keyname::unpack_t{
+    {"a", "drawings"},
+    {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
+    {"ext", ".tar.gz"},
+  };
+
+  if ( std::getenv("REPRO_ID") ) {
+    keyname_attributes[ "repro" ] = std::getenv("REPRO_ID");
+  }
+
+  if ( cfg.SERIES() != std::numeric_limits<uint32_t>::max() ) {
+    keyname_attributes[ "series" ] = emp::to_string( cfg.SERIES() );
+  }
+
+  if ( cfg.STINT() != std::numeric_limits<uint32_t>::max() ) {
+    keyname_attributes[ "stint" ] = emp::to_string( cfg.STINT() );
+  }
+
+  if ( cfg.REPLICATE() != std::numeric_limits<uint32_t>::max() ) {
+    keyname_attributes[ "replicate" ] = emp::to_string( cfg.REPLICATE() );
+  }
+
+  if ( dish2::get_endeavor() ) {
+    keyname_attributes[ "endeavor" ] = emp::to_string( *dish2::get_endeavor() );
+  }
+
+  return emp::keyname::pack( keyname_attributes );
+
+}
+
 
 void create_deduplicated_drawing_archive() {
 
@@ -24,9 +60,10 @@ void create_deduplicated_drawing_archive() {
     "rdfind -makesymlinks true -makeresultsfile false drawings/"
   ) );
 
-  uitsl::err_verify( std::system(
-    "GZIP=-9 tar -czvf drawings.tar.gz drawings"
+  const std::string zip_command( emp::to_string(
+    "GZIP=-9 tar -czf ", make_drawing_archive_filename(), " drawings/"
   ) );
+  uitsl::err_verify( std::system( zip_command.c_str() ) );
 
 }
 
