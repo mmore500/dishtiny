@@ -67,14 +67,14 @@ fi
 
 wait
 
-
 ################################################################################
 echo
 echo "Running Simulation"
 echo "------------------"
 ################################################################################
 
-mpiexec.mpich -n 1 ./rundishtiny -N_THREADS 4 -RUN_SECONDS 10800 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 1 -STINT {{ stint }} -SERIES {{ series }}
+mpiexec.mpich -n 1 ./rundishtiny -N_THREADS 4 -RUN_SECONDS 60 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 1 -STINT {{ stint }} -SERIES {{ series }} \
+  || ( echo "simulation error code $?" && exit 1 )
 
 ################################################################################
 echo
