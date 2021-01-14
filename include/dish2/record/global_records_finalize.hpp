@@ -103,8 +103,8 @@ void create_montage() {
 void finalize_drawings() {
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system(
-    "cd drawings && for f in a=*; do"
-    "  keyname stash --move $f a proc thread update ext"
+    "cd drawings && for f in *a=*; do"
+    "  keyname stash --move $f a proc thread update stint series ext"
     "; done"
   ) );
   create_deduplicated_drawing_archive();
@@ -113,8 +113,8 @@ void finalize_drawings() {
 
 void finalize_metadata() {
   uitsl::err_verify( std::system(
-    "for f in a=*; do"
-    "  keyname stash --move $f a criteria morph proc thread ext"
+    "for f in *a=*; do"
+    "  keyname stash --move $f a criteria morph proc stint series thread ext"
     "; done"
   ) );
 }
