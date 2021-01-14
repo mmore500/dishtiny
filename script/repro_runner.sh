@@ -128,6 +128,14 @@ output=$(mktemp)
 manifest=$(mktemp)
 runner=$(readlink -f $0) # get path to this script
 
+echo "stdin ${stdin}"
+echo "log ${log}"
+echo "context ${context}"
+echo "rerun ${rerun}"
+echo "output ${output}"
+echo "manifest ${manifest}"
+echo "runner ${runner}"
+
 ################################################################################
 echo
 echo "Redirect stdout and stderr to Log File"
