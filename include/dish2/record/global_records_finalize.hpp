@@ -120,6 +120,9 @@ void finalize_metadata() {
 }
 
 void global_records_finalize() {
+
+  UITSL_Barrier( MPI_COMM_WORLD );
+
   if ( uitsl::is_root() && cfg.DATA_DUMP() ) {
     finalize_drawings();
     finalize_metadata();
