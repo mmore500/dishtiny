@@ -1,5 +1,7 @@
 // This is the main function for the NATIVE version of this project.
 
+#include <iostream>
+
 #include "conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "conduit/include/uitsl/parallel/ThreadTeam.hpp"
 
