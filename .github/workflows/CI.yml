@@ -153,7 +153,9 @@ jobs:
         uses: docker/build-push-action@v1
         with:
           push: true
-          tags: "latest"
+          tags: |
+            mmore500/dishtiny:latest
+            mmore500/dishtiny:${{ github.sha }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: mmore500/dishtiny

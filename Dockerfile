@@ -1,4 +1,4 @@
-FROM mmore500/conduit
+FROM mmore500/conduit:e2a6568b00fc9f533b4dec4c080c6889f0713ee6@sha256:6da2fb075447da6c4490d2c52970e27a6ac874b153c8d31fdf7408a72fe97329
 
 USER root
 
