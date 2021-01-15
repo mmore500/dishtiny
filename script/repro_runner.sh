@@ -110,6 +110,9 @@ echo "Assert Prequisites"
 echo "--------------------------------------"
 ################################################################################
 
+module load git/2.27.0 || :
+source ~/pyenv/bin/activate || :
+
 command -v osf >/dev/null \
   || python3 -m pip install --user git+https://github.com/mmore500/osfclient.git \
   || ( echo "no osf client" && exit 1 )
@@ -120,6 +123,7 @@ test $PUSHOVER_APP_TOKEN || ( echo "no PUSHOVER_APP_TOKEN env var" && exit 1 )
 test $arg_project || ( echo "no --project arg" && exit 1 )
 test $arg_slug || ( echo "no --slug arg" && exit 1 )
 test $arg_username || ( echo "no --username arg" && exit 1 )
+
 
 ################################################################################
 echo
