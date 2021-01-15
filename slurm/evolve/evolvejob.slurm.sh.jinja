@@ -63,7 +63,7 @@ make -C dishtiny/
 cp dishtiny/rundishtiny work
 cd work
 
-{% if stint > 0 %}
+{% if stint | int > 0 %}
 for ((proc=0;proc<N_PROCS;++proc)); do
   for ((thread=0;thread<N_THREADS;++thread)); do
     f="a=population+proc=${proc}+series={{ series }}+stint={{ stint }}+thread=${thread}+ext=.bin"
