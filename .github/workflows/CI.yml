@@ -124,21 +124,16 @@ jobs:
       - fuzzing
       - microbenchmarks
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
-      - run:
-        |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          echo $(cd third-party && ./install_emsdk.sh)
-      - run: make web
+      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
+      - uses: docker-practice/actions-setup-docker@v1
+      - run: docker run -v "$(pwd):/context/" "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/ && make web && cp -r web/ /context/"
       - uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: web # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
+
   deploy-dockerhub:
     name: Deploy to DockerHub
     runs-on: ubuntu-16.04
