@@ -83,7 +83,8 @@ echo "------------------"
 # we have to cut off stdin, stdout, stderr on mpiexec
 # for compatibility with repro_runner.sh and prevent a funky
 # tee: read error: Resource temporarily unavailable
-(: | mpiexec.mpich -n "${N_PROCS}" ./rundishtiny -N_THREADS "${N_THREADS}" -RUN_SECONDS 60 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} > /dev/stdout 2>&1 \
+#(: | mpiexec.mpich -n "${N_PROCS}" ./rundishtiny -N_THREADS "${N_THREADS}" -RUN_SECONDS 60 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} > /dev/stdout 2>&1 \
+(./rundishtiny -N_THREADS "${N_THREADS}" -RUN_SECONDS 60 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} \
   && echo "simulation exit success" ) \
   || ( echo "simulation error code $?" && echo exit 1 )
 
