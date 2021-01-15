@@ -94,8 +94,15 @@ while [[ "$#" -gt 0 ]]; do
   shift
 done
 
-# default arguments
+# setup default arguments
 test $arg_branch || arg_branch=master
+
+echo "arg_branch ${arg_branch}"
+echo "container_sha ${container_sha}"
+echo "arg_project ${arg_project}"
+echo "repo_sha ${repo_sha}"
+echo "arg_slug ${arg_slug}"
+echo "arg_username ${arg_username}"
 
 ################################################################################
 echo
@@ -145,19 +152,23 @@ exec > >(tee "${log}") 2>&1
 
 ################################################################################
 echo
+echo "Generate REPRO_ID"
+echo "--------------------------------------"
+################################################################################
+
+export REPRO_ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
+echo "REPRO_ID ${REPRO_ID}"
+
+################################################################################
+echo
 echo "Log Job Info"
 echo "--------------------------------------"
 ################################################################################
-date
-hostname
-pwd
+echo "REPRO_ID ${REPRO_ID}"
+echo "date $(date)"
+echo "hostname $(hostname)"
+echo "pwd $(pwd)"
 command -v qstat >/dev/null && qstat -f "${SLURM_JOB_ID}"
-echo "arg_branch ${arg_branch}"
-echo "container_sha ${container_sha}"
-echo "arg_project ${arg_project}"
-echo "repo_sha ${repo_sha}"
-echo "arg_slug ${arg_slug}"
-echo "arg_username ${arg_username}"
 
 ################################################################################
 echo
@@ -267,15 +278,6 @@ function on_error() {
 
 trap 'on_error $? $LINENO' ERR
 trap on_exit EXIT
-
-################################################################################
-echo
-echo "Generate REPRO_ID"
-echo "--------------------------------------"
-################################################################################
-
-export REPRO_ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-echo "REPRO_ID ${REPRO_ID}"
 
 ################################################################################
 echo
