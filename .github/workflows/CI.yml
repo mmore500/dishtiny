@@ -126,7 +126,7 @@ jobs:
     steps:
       - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
       - uses: docker-practice/actions-setup-docker@v1
-      - run: docker run -v "$(pwd):/context/" "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/ && make web && cp -r web/ /context/"
+      - run: docker run -e "OSF_USERNAME=${{ secrets.OSF_USERNAME }}" -e "OSF_PASSWORD=${{ secrets.OSF_PASSWORD }}" -v "$(pwd):/context/" "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/ && make web && cp -r web/ /context/"
       - uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
