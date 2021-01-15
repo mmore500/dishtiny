@@ -227,7 +227,7 @@ function on_exit {
   echo "git -C ${arg_slug} checkout FETCH_HEAD" >> "${rerun}"
   echo "git -C ${arg_slug} submodule update --init --recursive --depth 1" >> "${rerun}"
   echo "singularity shell docker://${arg_username}/${arg_slug}@sha256:${dockerfile_sha} \
-<< END_OF_HEREDOC
+<< 'END_OF_HEREDOC'
 ${INPUT}
 END_OF_HEREDOC" >> "${rerun}"
   chmod +x "${rerun}"
