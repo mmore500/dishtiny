@@ -42,7 +42,7 @@ echo "--------------------------------"
 # fail on error
 set -e
 
-ENDEAVOR={{ series // 1000 }}
+ENDEAVOR={{ series | int // 1000 }}
 GENESIS="{{ "generate" if stint == 0 else "reconstitute" }}"
 N_PROCS=1
 N_THREADS=4
