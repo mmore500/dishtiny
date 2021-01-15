@@ -42,6 +42,7 @@ RUN \
     libcurl4-openssl-dev \
     libsfml-dev \
     libomp-dev \
+    sshpass \
     && \
   apt-get clean \
     && \
