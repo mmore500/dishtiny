@@ -16,14 +16,8 @@ shift
 
 SERIES="${@}"
 
-REPRO_RUNNER="$(mktemp)"
-curl -o "${REPRO_RUNNER}" "https://raw.githubusercontent.com/mmore500/dishtiny/${REPO_SHA}/slurm/evolve/evolvekickoff.sh"
-chmod +x "${REPRO_RUNNER}"
-
-
 JOB_TEMPLATE="$(mktemp)"
 curl -o "${JOB_TEMPLATE}" "https://raw.githubusercontent.com/mmore500/dishtiny/${REPO_SHA}/slurm/evolve/evolvejob.slurm.sh.jinja"
-
 
 for just_one_series in SERIES; do
 

@@ -168,6 +168,9 @@ wait
 
 shopt -u nullglob
 
+
+REPRO_RUNNER_HEREDOC_EOF
+
 ################################################################################
 echo
 echo "Submit Next Job"
@@ -194,9 +197,6 @@ for retry in {1..10}; do
     || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==10)); then echo "  job submit fail" && exit 1; fi
 done &
-
-
-REPRO_RUNNER_HEREDOC_EOF
 
 ################################################################################
 echo
