@@ -24,6 +24,10 @@ source ~/pyenv/bin/activate || :
 for just_one_series in SERIES; do
 
   JOB_SCRIPT="$(mktemp)"
+
+  echo "series ${just_one_series}"
+  echo "JOB_SCRIPT ${JOB_SCRIPT}"
+
   j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 container_sha: "${CONTAINER_SHA}"
 repo_sha: "${REPO_SHA}"
