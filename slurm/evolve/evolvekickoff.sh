@@ -19,6 +19,8 @@ SERIES="${@}"
 JOB_TEMPLATE="$(mktemp)"
 curl -o "${JOB_TEMPLATE}" "https://raw.githubusercontent.com/mmore500/dishtiny/${REPO_SHA}/slurm/evolve/evolvejob.slurm.sh.jinja"
 
+source ~/pyenv/bin/activate || :
+
 for just_one_series in SERIES; do
 
   JOB_SCRIPT="$(mktemp)"
