@@ -10,11 +10,13 @@
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=mmore500@msu.edu
 
+echo "${SHELL}"
+
 # fail on error
 set -e
 
 # set up and jump into temporary work directory
-cd $(mktemp -d)
+cd "$(mktemp -d)"
 
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
@@ -35,7 +37,7 @@ echo "--------------------------------"
 "${REPRO_RUNNER}" \
   -p dnh2v -u mmore500 -s dishtiny \
   --repo_sha "{{ repo_sha }}" --container_sha "{{ container_sha }}" \
-  << REPRO_RUNNER_HEREDOC_EOF
+  << 'REPRO_RUNNER_HEREDOC_EOF'
 
 # fail on error
 set -e
@@ -78,8 +80,13 @@ echo "Running Simulation"
 echo "------------------"
 ################################################################################
 
-mpiexec.mpich -n 1 ./rundishtiny -N_THREADS 4 -RUN_SECONDS 60 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 1 -STINT {{ stint }} -SERIES {{ series }} \
-  || ( echo "simulation error code $?" && exit 1 )
+# we have to cut off stdin, stdout, stderr on mpiexec
+# for compatibility with repro_runner.sh and prevent a funky
+# tee: read error: Resource temporarily unavailable
+(: | mpiexec.mpich -n "${N_PROCS}" ./rundishtiny -N_THREADS "${N_THREADS}" -RUN_SECONDS 60 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} > /dev/tty 2>&1 \
+  && echo "simulation exit success" ) \
+  || ( echo "simulation error code $?" && echo exit 1 )
+
 
 ################################################################################
 echo
@@ -87,69 +94,79 @@ echo "Uploading Data"
 echo "--------------"
 ################################################################################
 
+shopt -s nullglob
+
+echo "uploading any population files..."
 for f in *a=population*; do
   echo "uploading ${f}"
   for retry in {1..10}; do
-    (osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint }}/${f}" && break) \
-      || ( echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)) )
-    if ((${retry}==10)); then echo "job submit fail" && exit 1; fi
+    osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint }}/${f}" && echo "  $f upload success" && break \
+      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "  $f upload fail" && exit 1; fi
   done &
 done
 
 wait
 
+echo "uploading any metrics files..."
 for f in *a=demographic_phenotypic_phylogenetic_metrics*; do
   echo uploading "${f}"
   for retry in {1..10}; do
-    (osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/metrics/stint={{ stint }}/${f}" && break) \
-      || ( echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)) )
-    if ((${retry}==10)); then echo "job submit fail" && exit 1; fi
+    osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/metrics/stint={{ stint }}/${f}" && echo "  $f upload success" && break \
+      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "$f upload fail" && exit 1; fi
   done &
 done
 
 wait
 
+echo "uploading any census files..."
 for f in *a=cell_census*; do
   echo uploading "${f}";
   for retry in {1..10}; do
-    (osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/censuses/stint={{ stint }}/${f}" && break) \
-      || ( echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)) )
-    if ((${retry}==10)); then echo "job submit fail" && exit 1; fi
+    osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/censuses/stint={{ stint }}/${f}" && echo "  $f upload success" && break \
+      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "$f upload fail" && exit 1; fi
   done &
 done
 
 wait
 
+echo "uploading any montage files..."
 for f in *a=montage*; do
   echo uploading "${f}"
   for retry in {1..10}; do
-    (osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/montages/stint={{ stint }}/${f}" && break) \
-      || ( echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)) )
-    if ((${retry}==10)); then echo "job submit fail" && exit 1; fi
+    osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/montages/stint={{ stint }}/${f}" && echo "  $f upload success" && break \
+      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "$f upload fail" && exit 1; fi
   done &
 done
 
 wait
 
+echo "uploading any drawing archives..."
 for f in *a=drawings*; do
   echo uploading "${f}"
   for retry in {1..10}; do
-    (osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/drawings/stint={{ stint }}/${f}" && break) \
-      || ( echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)) )
-    if ((${retry}==10)); then echo "job submit fail" && exit 1; fi
+    osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/evolve/drawings/stint={{ stint }}/${f}" && echo "  $f upload success" && break \
+      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "$f upload fail" && exit 1; fi
   done &
 done
 
+echo "uploading any genome files..."
 for f in *a=genome*; do
   echo uploading "${f}"
   for retry in {1..10}; do
-    (osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" && break) \
-      || ( echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)) )
-    if ((${retry}==10)); then echo "job submit fail" && exit 1; fi
+    osf -p dnh2v upload "${f}" "endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" && echo "  $f upload success" && break \
+      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "$f upload fail" && exit 1; fi
   done &
 done
 
 wait
+
+shopt -u nullglob
 
 ################################################################################
 echo
@@ -173,9 +190,9 @@ J2_HEREDOC_EOF
 chmod +x "${JOB_SCRIPT}"
 
 for retry in {1..10}; do
-  (sbatch "${JOB_SCRIPT}" && break) \
-    || ( echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)) )
-  if ((${retry}==10)); then echo "job submit fail" && exit 1; fi
+  sbatch "${JOB_SCRIPT}" && echo "  job submit success" && break \
+    || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==10)); then echo "  job submit fail" && exit 1; fi
 done &
 
 
