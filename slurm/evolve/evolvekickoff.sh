@@ -21,7 +21,7 @@ curl -o "${JOB_TEMPLATE}" "https://raw.githubusercontent.com/mmore500/dishtiny/$
 
 source ~/pyenv/bin/activate || :
 
-for just_one_series in SERIES; do
+for just_one_series in "${SERIES}"; do
 
   JOB_SCRIPT="$(mktemp)"
 
