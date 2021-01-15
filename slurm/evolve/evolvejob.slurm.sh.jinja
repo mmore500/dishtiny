@@ -43,7 +43,7 @@ echo "--------------------------------"
 set -e
 
 ENDEAVOR={{ series | int // 1000 }}
-GENESIS="{{ "generate" if stint == 0 else "reconstitute" }}"
+GENESIS="{{ "generate" if stint | int == 0 else "reconstitute" }}"
 N_PROCS=1
 N_THREADS=4
 
