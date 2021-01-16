@@ -21,7 +21,7 @@ void global_records_initialize() {
   // so use mkdir as a backup for now
   const std::string path{ "./drawings" };
   if ( uitsl::is_root() && !dish2::path_exists( path ) ) {
-    uitsl::err_audit( mkdir( path.c_str(), 0755 ) );
+    uitsl_err_audit( mkdir( path.c_str(), 0755 ) );
   }
 
   // std::filesystem::create_directories("./drawings");

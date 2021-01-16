@@ -21,10 +21,10 @@ void thread_data_dump(
   const size_t thread_idx
 ) {
 
-  uitsl::err_audit(!
+  uitsl_err_audit(!
     dish2::dump_abundance_genome<Spec>( thread_world, thread_idx )
   );
-  uitsl::err_audit(!
+  uitsl_err_audit(!
     dish2::dump_arbitrary_genome<Spec>( thread_world, thread_idx )
   );
   dish2::dump_population<Spec>( thread_world, thread_idx );

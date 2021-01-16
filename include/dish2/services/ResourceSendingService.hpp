@@ -242,7 +242,7 @@ struct ResourceSendingService {
       const auto send_amount = *( std::begin( send_amounts ) + i );
 
       stockpile -= send_amount;
-      uitsl::err_audit(!
+      uitsl_err_audit(!
         resource_output.TryPut( send_amount )
       );
     }
