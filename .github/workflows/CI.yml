@@ -24,7 +24,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: mmore500/dishtiny
-          tag_with_ref: true
+          add_git_labels: true
 
   docs:
     name: Docs, Miscellaneous
@@ -143,7 +143,6 @@ jobs:
   deploy-dockerhub:
     name: Deploy to DockerHub
     runs-on: ubuntu-16.04
-    if: github.ref == 'refs/heads/master'
     needs:
       - docs
       - unit
@@ -159,8 +158,9 @@ jobs:
         uses: docker/build-push-action@v1
         with:
           push: true
-          tags: latest,${{ github.sha }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: mmore500/dishtiny
           tag_with_ref: true
+          tag_with_sha: true
+          add_git_labels: true
