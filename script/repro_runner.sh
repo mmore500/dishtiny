@@ -113,13 +113,6 @@ echo "Assert Prequisites"
 echo "--------------------------------------"
 ################################################################################
 
-test ${LMOD_CMD} || export LMOD_CMD=/usr/local/lmod/lmod/libexec/lmod
-# fixes "module: command not found" inside of slurm jobs
-module () {
-  eval $("${LMOD_CMD}" "${SHELL}" "${@}") \
-  && eval $(${LMOD_SETTARG_CMD:-:} -s sh)
-}
-
 module purge; module load git/2.27.0 || :
 git --version
 source ~/pyenv/bin/activate || :
