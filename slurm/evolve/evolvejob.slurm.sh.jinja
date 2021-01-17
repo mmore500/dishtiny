@@ -80,14 +80,28 @@ echo "Running Simulation"
 echo "------------------"
 ################################################################################
 
+# note:
 # we have to cut off stdin, stdout, stderr on mpiexec
 # for compatibility with repro_runner.sh and prevent a funky
 # tee: read error: Resource temporarily unavailable
-#(: | mpiexec.mpich -n "${N_PROCS}" ./rundishtiny -N_THREADS "${N_THREADS}" -RUN_SECONDS 60 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} > /dev/stdout 2>&1 \
-(./rundishtiny -N_THREADS "${N_THREADS}" -RUN_SECONDS 60 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} \
-  && echo "simulation exit success" ) \
-  || ( echo "simulation error code $?" && echo exit 1 )
+# ssh accomplishes this right now, but otherwise something else would be needed
 
+# use ssh to access host then launch mpi jobs there (e.g., "hybrid approach")
+# see https://sylabs.io/guides/3.3/user-guide/mpi.html
+
+sshpass -p "${HOST_PASSWORD}" \
+ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+  "${HOST_USERNAME}@$(hostname)" \
+<< MPIEXEC_HEREDOC_EOF
+  module load iccifort/2019.5.281 MPICH/3.3.2 || :
+  mpiexec.hydra --version
+  mpiexec.hydra -n "${N_PROCS}" \
+  singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
+    ./rundishtiny \
+    -N_THREADS "${N_THREADS}" -RUN_SECONDS 60 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} \
+  && echo "simulation exit success" \
+  || ( echo "simulation error code $?" && exit 1 )
+MPIEXEC_HEREDOC_EOF
 
 ################################################################################
 echo
@@ -196,7 +210,7 @@ J2_HEREDOC_EOF
 chmod +x "${JOB_SCRIPT}"
 
 for retry in {1..10}; do
-  sbatch "${JOB_SCRIPT}" && echo "  job submit success" && break \
+  sshpass -p "${HOST_PASSWORD}" ssh "${HOST_USERNAME}@$(hostname)" sbatch "${JOB_SCRIPT}" && echo "  job submit success" && break \
     || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==10)); then echo "  job submit fail" && exit 1; fi
 done &
