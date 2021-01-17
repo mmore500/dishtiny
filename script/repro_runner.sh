@@ -65,7 +65,7 @@ required arguments:
 
 optional arguments:
   -b / --branch  source branch to check out (default: master)
-  -c / --container_sha sha of docker container to run in (default: none)
+  -c / --container_tag tag of docker container to run in, can include container sha (default: latest)
   -h / --help  show this message and exit
   -r / --repo_sha repo sha to check out (default: none)
 
@@ -83,7 +83,7 @@ echo "--------------------------------------"
 while [[ "$#" -gt 0 ]]; do
   case $1 in
     -b|--branch) arg_branch="$2"; shift ;; # source branch to check out
-    -c|--container_sha) container_sha="$2"; shift ;; # container sha to run in
+    -c|--container_tag) container_tag="$2"; shift ;; # container to run in
     -h|--help) echo "$usage"; exit;; # print help message
     -p|--project) arg_project="$2"; shift ;; # osf project id
     -r|--repo_sha) repo_sha="$2"; shift ;; # source sha to check out
@@ -95,10 +95,11 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # setup default arguments
-test $arg_branch || arg_branch=master
+test ${arg_branch} || arg_branch=master
+test ${container_tag} || container_tag=latest
 
 echo "arg_branch ${arg_branch}"
-echo "container_sha ${container_sha}"
+echo "container_tag ${container_tag}"
 echo "arg_project ${arg_project}"
 echo "repo_sha ${repo_sha}"
 echo "arg_slug ${arg_slug}"
@@ -230,7 +231,7 @@ function on_exit {
   echo "git -C ${arg_slug} fetch --depth 1 origin ${repo_sha}" >> "${rerun}"
   echo "git -C ${arg_slug} checkout FETCH_HEAD" >> "${rerun}"
   echo "git -C ${arg_slug} submodule update --init --recursive --depth 1" >> "${rerun}"
-  echo "singularity shell docker://${arg_username}/${arg_slug}@sha256:${dockerfile_sha} \
+  echo "singularity shell docker://${arg_username}/${arg_slug}:${container_tag} \
 << 'END_OF_HEREDOC'
 ${INPUT}
 END_OF_HEREDOC" >> "${rerun}"
@@ -318,13 +319,13 @@ fi
 echo "repo_sha ${repo_sha}"
 
 # get sha of latest docker container
-if [ -z "${container_sha}" ]; then
-  container_sha=$(\
-    singularity exec "docker://${arg_username}/${arg_slug}" \
+if [[ "${container_tag}" != *"@sha256:"* ]]; then
+  container_tag="${container_tag}@sha256:$(\
+    singularity exec "docker://${arg_username}/${arg_slug}:${container_tag}" \
       bash -c 'echo ${SINGULARITY_NAME}' \
-  )
+  )"
 fi
-echo "container_sha ${container_sha}"
+echo "container_tag with sha256 ${container_tag}"
 
 ################################################################################
 echo
@@ -333,5 +334,7 @@ echo "--------------------------------------"
 ################################################################################
 
 # pipe input into the container, record a copy to $STDIN
+# Docker references with both a tag and digest are currently not supported in
+# singularity so we have to strip everything before @sha256:digest
 tee "${stdin}" | \
-  singularity shell --env "SECONDS=${SECONDS}" -B "${HOME}:/home/user" "docker://${arg_username}/${arg_slug}@sha256:${container_sha}"
+  singularity shell --env "SECONDS=${SECONDS}" -B "${HOME}:/home/user" "docker://${arg_username}/${arg_slug}@${container_tag#*@}"

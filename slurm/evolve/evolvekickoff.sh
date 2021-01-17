@@ -1,11 +1,14 @@
 #!/bin/bash
 
+# fail on error
+set -e
+
 if (( "$#" < 4 )); then
-  echo "USAGE: [container_sha] [repo_sha] [stint] [series...]"
+  echo "USAGE: [container_tag] [repo_sha] [stint] [series...]"
   exit 1
 fi
 
-CONTAINER_SHA="${1}"
+CONTAINER_TAG="${1}"
 shift
 
 REPO_SHA="${1}"

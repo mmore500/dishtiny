@@ -36,7 +36,7 @@ echo "--------------------------------"
 
 "${REPRO_RUNNER}" \
   -p dnh2v -u mmore500 -s dishtiny \
-  --repo_sha "{{ repo_sha }}" --container_sha "{{ container_sha }}" \
+  --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
   << 'REPRO_RUNNER_HEREDOC_EOF'
 
 # fail on error
@@ -59,7 +59,7 @@ echo "N_PROCS ${N_PROCS}"
 echo "N_THREADS ${N_THREADS}"
 echo "series {{ series }}"
 echo "stint {{ stint }}"
-echo "container_sha {{ container_sha }}"
+echo "container_tag {{ container_tag }}"
 echo "repo_sha {{ repo_sha }}"
 
 ################################################################################
@@ -215,7 +215,7 @@ curl -o "${JOB_TEMPLATE}" "https://raw.githubusercontent.com/mmore500/dishtiny/{
 source ~/pyenv/bin/activate || :
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
-container_sha: {{ container_sha }}
+container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
 series: {{ series }}
 stint: {{ stint | int + 1 }}
