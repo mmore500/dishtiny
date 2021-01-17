@@ -115,12 +115,10 @@ echo "--------------------------------------"
 
 module purge; module load git/2.27.0 || :
 git --version
-source ~/pyenv/bin/activate || :
-source ~/.secrets.sh || :
+[[ -f ~/pyenv/bin/activate ]] && source ~/pyenv/bin/activate
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
 
-command -v osf >/dev/null \
-  || python3 -m pip install --user git+https://github.com/mmore500/osfclient.git \
-  || ( echo "no osf client" && exit 1 )
+command -v osf >/dev/null || ( echo "no osf client" && exit 1 )
 test ${OSF_USERNAME} || ( echo "no OSF_USERNAME env var" && exit 1 )
 test ${OSF_PASSWORD} || ( echo "no OSF_PASSWORD env var" && exit 1 )
 test ${PUSHOVER_USER_TOKEN} || ( echo "no PUSHOVER_USER_TOKEN env var" && exit 1 )
