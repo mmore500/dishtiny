@@ -73,6 +73,8 @@ exported environment variables:
   REPRO_ID a 16-character string uniquely identifying this session
 "
 
+echo "${0} ${@}"
+
 ################################################################################
 echo
 echo "Parse Arguments"
@@ -113,6 +115,7 @@ echo "--------------------------------------"
 
 module load git/2.27.0 || :
 source ~/pyenv/bin/activate || :
+source ~/.secrets.sh || :
 
 command -v osf >/dev/null \
   || python3 -m pip install --user git+https://github.com/mmore500/osfclient.git \
