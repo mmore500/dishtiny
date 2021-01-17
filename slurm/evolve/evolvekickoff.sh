@@ -38,7 +38,6 @@ echo "--------------------------------"
   --repo_sha "${REPO_SHA}" --container_tag "${CONTAINER_TAG}" \
   << REPRO_RUNNER_HEREDOC_EOF
 
-
 source ~/.secrets.sh || :
 
 for just_one_series in ${SERIES}; do
@@ -48,7 +47,7 @@ for just_one_series in ${SERIES}; do
   echo "series \${just_one_series}"
   echo "JOB_SCRIPT \${JOB_SCRIPT}"
 
-  j2 --format=yaml -o "${JOB_SCRIPT}" "dishtiny/slurm/evolve/evolvejob.slurm.sh.jinja" << J2_HEREDOC_EOF
+  j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/evolve/evolvejob.slurm.sh.jinja" << J2_HEREDOC_EOF
 container_tag: "${CONTAINER_TAG}"
 repo_sha: "${REPO_SHA}"
 series: "\${just_one_series}"
@@ -56,11 +55,13 @@ stint: "${STINT}"
 J2_HEREDOC_EOF
 
   for retry in {1..10}; do
-    sshpass -p "${HOST_PASSWORD}" ssh "${HOST_USERNAME}@\$(hostname)" sbatch "\${JOB_SCRIPT}" && echo "  job submit success" && break \
+    sshpass -p "\${HOST_PASSWORD}" ssh "\${HOST_USERNAME}@\$(hostname)" sbatch "\${JOB_SCRIPT}" && echo "  job submit success" && break \
       || (echo "retrying job submit (\${retry})" && sleep \$((RANDOM % 10)))
     if ((\${retry}==10)); then echo "job submit fail" && exit 1; fi
   done &
 
 done
+
+wait
 
 REPRO_RUNNER_HEREDOC_EOF
