@@ -13,6 +13,14 @@
 # fail on error
 set -e
 
+# specify display, start the Xvfb server, and save the process ID
+# adapted from https://wiki.hpcc.msu.edu/display/~colbrydi@msu.edu/2013/10
+export DISPLAY=":1"
+rm -f /tmp/.X11-unix
+rm -f /tmp/.X11-lock
+Xvfb $DISPLAY -auth /dev/null/ &
+XVFB_PID=$!
+
 # set up and jump into temporary work directory
 cd "$(mktemp -d)"
 
@@ -101,7 +109,7 @@ echo "------------------"
 
 sshpass -p "${HOST_PASSWORD}" \
 ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-  "${HOST_USERNAME}@$(hostname)" \
+  "${HOST_USERNAME}@$(hostname)" -X \
 << MPIEXEC_HEREDOC_EOF
   module purge; module load iccifort/2019.5.281 MPICH/3.3.2 || :
   mpiexec.hydra --version

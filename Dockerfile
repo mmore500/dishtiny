@@ -43,6 +43,7 @@ RUN \
     libsfml-dev \
     libomp-dev \
     sshpass \
+    xauth \
     && \
   apt-get clean \
     && \
