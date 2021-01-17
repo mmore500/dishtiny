@@ -213,6 +213,9 @@ echo "---------------"
 JOB_TEMPLATE="$(mktemp)"
 JOB_SCRIPT="$(mktemp)"
 
+echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
+echo "JOB_SCRIPT ${JOB_SCRIPT}"
+
 curl -o "${JOB_TEMPLATE}" "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/evolve/evolvejob.slurm.sh.jinja"
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
@@ -225,10 +228,14 @@ J2_HEREDOC_EOF
 chmod +x "${JOB_SCRIPT}"
 
 for retry in {1..10}; do
-  sshpass -p "${HOST_PASSWORD}" ssh "${HOST_USERNAME}@$(hostname)" sbatch "${JOB_SCRIPT}" && echo "  job submit success" && break \
-    || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)))
+  sshpass -p "${HOST_PASSWORD}" \
+    ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+      "${HOST_USERNAME}@$(hostname)" -X \
+      sbatch "${JOB_SCRIPT}" \
+  && echo "  job submit success" && break \
+  || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==10)); then echo "  job submit fail" && exit 1; fi
-done &
+done
 
 ################################################################################
 echo
