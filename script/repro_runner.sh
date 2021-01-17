@@ -194,33 +194,26 @@ function on_exit {
   echo "  SECONDS ${SECONDS}"
 
   echo "uploading runner"
-  osf -p $arg_project upload \
-    "${runner}" \
-    "repro/${REPRO_ID}/a=runner+repro=${REPRO_ID}+ext=.sh"
+  for retry in {1..10}; do
+    osf -p "${arg_project}" upload \
+      "${runner}" \
+      "repro/${REPRO_ID}/a=runner+repro=${REPRO_ID}+ext=.sh" \
+    && echo "  runner upload success" \
+    && break \
+      || (echo "retrying runner upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "upload runner fail" && exit 1; fi
+  done &
 
   echo "uploading stdin"
-  osf -p $arg_project upload \
-    "${stdin}" \
-    "repro/${REPRO_ID}/a=stdin+repro=${REPRO_ID}+ext=.txt"
-
-  echo "uploading output"
-  tar -czf $output output
-  osf -p $arg_project upload \
-    "${output}" \
-    "repro/${REPRO_ID}/a=output+repro=${REPRO_ID}+ext=.tar.gz"
-
-  raw_output_url=$(osf -p $arg_project geturl \
-    "repro/${REPRO_ID}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
-  )
-  output_url=$(curl -Ls -o /dev/null -w %{url_effective} $raw_output_url)
-  echo "output uploaded to ${output_url}"
-  echo "  download a copy: curl -L ${output_url}download --output ${REPRO_ID}.tar.gz"
-
-  echo "uploading output manifest"
-  ls output > $manifest
-  osf -p $arg_project upload \
-    "${manifest}" \
-    "repro/${REPRO_ID}/a=manifest+repro=${REPRO_ID}+ext=.txt"
+  for retry in {1..10}; do
+    osf -p "${arg_project}" upload \
+      "${stdin}" \
+      "repro/${REPRO_ID}/a=stdin+repro=${REPRO_ID}+ext=.txt" \
+    && echo "  stdin upload success" \
+    && break \
+      || (echo "retrying stdin upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "upload stdin fail" && exit 1; fi
+  done &
 
   echo "making rerun script"
   INPUT="$(cat $stdin)"
@@ -239,15 +232,58 @@ ${INPUT}
 END_OF_HEREDOC" >> "${rerun}"
   chmod +x "${rerun}"
 
-  echo "uploading rerun script"
-  osf -p $arg_project upload \
-    "${rerun}" \
-    "repro/${REPRO_ID}/a=rerun+repro=${REPRO_ID}+ext=.sh"
+  echo "uploading rerun"
+  for retry in {1..10}; do
+    osf -p "${arg_project}" upload \
+      "${rerun}" \
+      "repro/${REPRO_ID}/a=rerun+repro=${REPRO_ID}+ext=.sh" \
+    && echo "  rerun upload success" \
+    && break \
+      || (echo "retrying rerun upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "upload rerun fail" && exit 1; fi
+  done &
 
   echo "uploading log"
-  osf -p $arg_project upload \
-    "${log}" \
-    "repro/${REPRO_ID}/a=log+repro=${REPRO_ID}+ext=.txt"
+  for retry in {1..10}; do
+    osf -p "${arg_project}" upload \
+      "${log}" \
+      "repro/${REPRO_ID}/a=log+repro=${REPRO_ID}+ext=.txt" \
+    && echo "  log upload success" \
+    && break \
+      || (echo "retrying log upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "upload log fail" && exit 1; fi
+  done &
+
+  echo "uploading output manifest"
+  ls output > "${manifest}"
+  for retry in {1..10}; do
+    osf -p "${arg_project}" upload \
+      "${manifest}" \
+      "repro/${REPRO_ID}/a=manifest+repro=${REPRO_ID}+ext=.txt" \
+    && echo "  manifest upload success" \
+    && break \
+      || (echo "retrying manifest upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "upload manifest fail" && exit 1; fi
+  done &
+
+  echo "uploading output"
+  tar -czf "${output}" output
+  for retry in {1..10}; do
+    osf -p "${arg_project}" upload \
+      "${output}" \
+      "repro/${REPRO_ID}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
+    && echo "  output upload success" \
+    && break \
+      || (echo "retrying output upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "upload output fail" && exit 1; fi
+  done
+
+  raw_output_url=$(osf -p "${arg_project}" geturl \
+    "repro/${REPRO_ID}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
+  )
+  output_url=$(curl -Ls -o /dev/null -w %{url_effective} $raw_output_url)
+  echo "output uploaded to ${output_url}"
+  echo "  download a copy: curl -L ${output_url}download --output ${REPRO_ID}.tar.gz"
 
   echo "on exit cleanup complete"
 
@@ -271,7 +307,7 @@ function on_error() {
   echo "Sending Pushover Notification"
   bash <(curl https://raw.githubusercontent.com/${arg_username}/pushover.sh/master/pushover.sh) \
    -T "$PUSHOVER_APP_TOKEN" -U "$PUSHOVER_USER_TOKEN" \
-   -u $(osf -p $arg_project geturl \
+   -u $(osf -p "${arg_project}" geturl \
       "repro/${REPRO_ID}/a=log+repro=${REPRO_ID}+ext=.txt" \
     ) \
     "$SLURM_JOB_NAME failed"
