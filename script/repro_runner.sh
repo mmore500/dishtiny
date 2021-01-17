@@ -113,7 +113,8 @@ echo "Assert Prequisites"
 echo "--------------------------------------"
 ################################################################################
 
-module load git/2.27.0 || :
+module purge; module load git/2.27.0 || :
+git --version
 source ~/pyenv/bin/activate || :
 source ~/.secrets.sh || :
 
