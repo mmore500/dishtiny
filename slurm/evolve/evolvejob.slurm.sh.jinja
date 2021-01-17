@@ -216,8 +216,6 @@ JOB_SCRIPT="$(mktemp)"
 
 curl -o "${JOB_TEMPLATE}" "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/evolve/evolvejob.slurm.sh.jinja"
 
-source ~/pyenv/bin/activate || :
-
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
