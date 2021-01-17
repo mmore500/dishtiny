@@ -3,7 +3,7 @@
 #SBATCH --time=4:00:00
 #SBATCH --job-name series={{ series }}+stint={{ stint }}
 #SBATCH --account=devolab
-#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%j.out"
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/job=%j+series={{ series }}+stint={{ stint }}+ext.log"
 #SBATCH --mem=16G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 4
