@@ -77,7 +77,11 @@ cd work
 for ((proc=0;proc<N_PROCS;++proc)); do
   for ((thread=0;thread<N_THREADS;++thread)); do
     f="a=population+proc=${proc}+series={{ series }}+stint={{ stint }}+thread=${thread}+ext=.bin"
-    osf -p dnh2v fetch "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint - 1 }}/${f}" "${f}" &
+    for retry in {1..10}; do
+      osf -p dnh2v fetch "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint | int - 1 }}/${f}" "${f}" && echo "  $f download success" && break \
+        || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
+      if ((${retry}==10)); then echo "$f download fail" && exit 1; fi
+    done &
   done
 done
 {% endif %}
