@@ -30,7 +30,7 @@ chmod +x "${REPRO_RUNNER}"
 
 ################################################################################
 echo
-echo "Running Job with repro_runner.sh"
+echo "Run Job with repro_runner.sh"
 echo "--------------------------------"
 ################################################################################
 
@@ -42,6 +42,12 @@ echo "--------------------------------"
 # fail on error
 set -e
 
+################################################################################
+echo
+echo "Initialize and Log Config"
+echo "-------------------------"
+################################################################################
+
 ENDEAVOR={{ series | int // 1000 }}
 GENESIS="{{ "generate" if stint | int == 0 else "reconstitute" }}"
 N_PROCS=1
@@ -51,6 +57,10 @@ echo "ENDEAVOR ${ENDEAVOR}"
 echo "GENESIS ${GENESIS}"
 echo "N_PROCS ${N_PROCS}"
 echo "N_THREADS ${N_THREADS}"
+echo "series {{ series }}"
+echo "stint {{ stint }}"
+echo "container_sha {{ container_sha }}"
+echo "repo_sha {{ repo_sha }}"
 
 ################################################################################
 echo
@@ -76,7 +86,7 @@ wait
 
 ################################################################################
 echo
-echo "Running Simulation"
+echo "Run Simulation"
 echo "------------------"
 ################################################################################
 
@@ -105,7 +115,7 @@ MPIEXEC_HEREDOC_EOF
 
 ################################################################################
 echo
-echo "Uploading Data"
+echo "Upload Data"
 echo "--------------"
 ################################################################################
 
