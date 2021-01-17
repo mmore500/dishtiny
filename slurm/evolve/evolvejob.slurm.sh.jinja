@@ -16,6 +16,7 @@ set -e
 # specify display, start the Xvfb server, and save the process ID
 # adapted from https://wiki.hpcc.msu.edu/display/~colbrydi@msu.edu/2013/10
 export DISPLAY=":1"
+# don't have permissions to remove this
 # rm -rf /tmp/.X11-unix
 rm -f /tmp/.X11-lock
 Xvfb $DISPLAY -auth /dev/null/ &
