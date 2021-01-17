@@ -113,6 +113,7 @@ echo "Assert Prequisites"
 echo "--------------------------------------"
 ################################################################################
 
+test ${LMOD_CMD} || export LMOD_CMD=/usr/local/lmod/lmod/libexec/lmod
 # fixes "module: command not found" inside of slurm jobs
 module () {
   eval $("${LMOD_CMD}" "${SHELL}" "${@}") \
@@ -127,13 +128,13 @@ source ~/.secrets.sh || :
 command -v osf >/dev/null \
   || python3 -m pip install --user git+https://github.com/mmore500/osfclient.git \
   || ( echo "no osf client" && exit 1 )
-test $OSF_USERNAME || ( echo "no OSF_USERNAME env var" && exit 1 )
-test $OSF_PASSWORD || ( echo "no OSF_PASSWORD env var" && exit 1 )
-test $PUSHOVER_USER_TOKEN || ( echo "no PUSHOVER_USER_TOKEN env var" && exit 1 )
-test $PUSHOVER_APP_TOKEN || ( echo "no PUSHOVER_APP_TOKEN env var" && exit 1 )
-test $arg_project || ( echo "no --project arg" && exit 1 )
-test $arg_slug || ( echo "no --slug arg" && exit 1 )
-test $arg_username || ( echo "no --username arg" && exit 1 )
+test ${OSF_USERNAME} || ( echo "no OSF_USERNAME env var" && exit 1 )
+test ${OSF_PASSWORD} || ( echo "no OSF_PASSWORD env var" && exit 1 )
+test ${PUSHOVER_USER_TOKEN} || ( echo "no PUSHOVER_USER_TOKEN env var" && exit 1 )
+test ${PUSHOVER_APP_TOKEN} || ( echo "no PUSHOVER_APP_TOKEN env var" && exit 1 )
+test ${arg_project} || ( echo "no --project arg" && exit 1 )
+test ${arg_slug} || ( echo "no --slug arg" && exit 1 )
+test ${arg_username} || ( echo "no --username arg" && exit 1 )
 
 
 ################################################################################
