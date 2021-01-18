@@ -15,12 +15,11 @@ set -e
 
 # specify display, start the Xvfb server, and save the process ID
 # adapted from https://wiki.hpcc.msu.edu/display/~colbrydi@msu.edu/2013/10
-export DISPLAY=":1"
-# don't have permissions to remove this
-# rm -rf /tmp/.X11-unix
-rm -f /tmp/.X11-lock
-Xvfb $DISPLAY -auth /dev/null/ &
-XVFB_PID=$!
+export DISPLAY=":${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X11-unix/X${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X${SLURM_JOB_ID-1}-lock"
+Xvfb "${DISPLAY}" -auth /dev/null/ &
+export XVFB_PID=$!
 
 # set up and jump into temporary work directory
 cd "$(mktemp -d)"
@@ -122,6 +121,8 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   module load iccifort/2019.5.281 MPICH/3.3.2 || :
   module list || :
   echo "modules loaded..."
+  export DISPLAY="${DISPLAY}"
+  export XVFB_PID="${XVFB_PID}"
   mpiexec.hydra --version
   mpiexec.hydra -n "${N_PROCS}" \
   singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
