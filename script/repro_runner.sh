@@ -201,7 +201,7 @@ function on_exit {
     && echo "  runner upload success" \
     && break \
       || (echo "retrying runner upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload runner fail" && exit 1; fi
+    if ((${retry}==10)); then echo "upload runner fail"; fi
   done &
 
   echo "uploading stdin"
@@ -212,7 +212,7 @@ function on_exit {
     && echo "  stdin upload success" \
     && break \
       || (echo "retrying stdin upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload stdin fail" && exit 1; fi
+    if ((${retry}==10)); then echo "upload stdin fail"; fi
   done &
 
   echo "making rerun script"
@@ -240,7 +240,7 @@ END_OF_HEREDOC" >> "${rerun}"
     && echo "  rerun upload success" \
     && break \
       || (echo "retrying rerun upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload rerun fail" && exit 1; fi
+    if ((${retry}==10)); then echo "upload rerun fail"; fi
   done &
 
   echo "uploading log"
@@ -251,7 +251,7 @@ END_OF_HEREDOC" >> "${rerun}"
     && echo "  log upload success" \
     && break \
       || (echo "retrying log upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload log fail" && exit 1; fi
+    if ((${retry}==10)); then echo "upload log fail"; fi
   done &
 
   echo "uploading output manifest"
@@ -263,7 +263,7 @@ END_OF_HEREDOC" >> "${rerun}"
     && echo "  manifest upload success" \
     && break \
       || (echo "retrying manifest upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload manifest fail" && exit 1; fi
+    if ((${retry}==10)); then echo "upload manifest fail"; fi
   done &
 
   echo "uploading output"
@@ -275,7 +275,7 @@ END_OF_HEREDOC" >> "${rerun}"
     && echo "  output upload success" \
     && break \
       || (echo "retrying output upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload output fail" && exit 1; fi
+    if ((${retry}==10)); then echo "upload output fail"; fi
   done
 
   raw_output_url=$(osf -p "${arg_project}" geturl \
