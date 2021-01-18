@@ -240,6 +240,15 @@ chmod +x "${JOB_SCRIPT}"
 
 for retry in {1..10}; do
   sshpass -p "${HOST_PASSWORD}" \
+    scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+      "${JOB_SCRIPT}" "${HOST_USERNAME}@$(hostname):${JOB_SCRIPT}" \
+  && echo "  job script copy success" && break \
+  || (echo "retrying job script copy (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==10)); then echo "  job script copy fail" && exit 1; fi
+done
+
+for retry in {1..10}; do
+  sshpass -p "${HOST_PASSWORD}" \
     ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${HOST_USERNAME}@$(hostname)" -X \
       bash -l -c "sbatch \"${JOB_SCRIPT}\"" \
