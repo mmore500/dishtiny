@@ -281,7 +281,7 @@ END_OF_HEREDOC" >> "${rerun}"
 
   wait
 
-  echo "on exit cleanup complete"
+  echo "Exit Trap Complete"
 
 }
 
@@ -317,6 +317,8 @@ function on_error() {
 
   # reset exit trap
   trap '' EXIT
+
+  echo "Error Trap Complete"
 
   exit ${1}
 
