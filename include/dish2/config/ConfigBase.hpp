@@ -129,13 +129,13 @@ EMP_BUILD_CONFIG(
   VALUE(PROGRAM_START_SIZE, size_t, 100, "How big should initial programs be?"),
   VALUE(PROGRAM_MAX_SIZE, size_t, 1000, "What size should programs be capped at?"),
   VALUE(MUTATION_RATE, internal::nreplev_float_t,
-    (internal::nreplev_float_t{0.0, 0.2, 0.5}),
+    (internal::nreplev_float_t{0.1, 0.2, 0.5}),
     "For each replev, what fraction of cells should be mutated at all?"
   ),
-  VALUE(POINT_MUTATION_RATE, float, 0.001,
+  VALUE(POINT_MUTATION_RATE, float, 0.0005,
     "What fraction of bits should be scrambled?"
   ),
-  VALUE(SEQUENCE_DEFECT_RATE, float, 0.01,
+  VALUE(SEQUENCE_DEFECT_RATE, float, 0.001,
     "How often should sloppy copy defect occur?"
   ),
   VALUE(MINOR_SEQUENCE_MUTATION_BOUND, size_t, 8,
