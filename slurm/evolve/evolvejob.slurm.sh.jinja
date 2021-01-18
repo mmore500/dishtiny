@@ -246,7 +246,7 @@ for retry in {1..10}; do
 done
 
 for retry in {1..10}; do
-  echo "sbatch \"${JOB_SCRIPT}\""
+  echo "sbatch \"${JOB_SCRIPT}\"" \
   | sshpass -p "${HOST_PASSWORD}" \
     ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${HOST_USERNAME}@$(hostname)" -X \
