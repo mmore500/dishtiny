@@ -113,6 +113,9 @@ echo "------------------"
 # use ssh to access host then launch mpi jobs there (e.g., "hybrid approach")
 # see https://sylabs.io/guides/3.3/user-guide/mpi.html
 
+# using -tt to access login shell so module loads correctly
+# means we have to exit the session manually
+
 sshpass -p "${HOST_PASSWORD}" \
 ssh -tt -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   "${HOST_USERNAME}@$(hostname)" -X \
@@ -126,6 +129,8 @@ ssh -tt -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
     -N_THREADS "${N_THREADS}" -RUN_SECONDS 10800 -GENESIS "${GENESIS}" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 1 -STINT {{ stint }} -SERIES {{ series }} \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
+
+  echo "ssh -tt session successfull complete" && exit 0
 MPIEXEC_HEREDOC_EOF
 
 ################################################################################
@@ -235,9 +240,9 @@ chmod +x "${JOB_SCRIPT}"
 
 for retry in {1..10}; do
   sshpass -p "${HOST_PASSWORD}" \
-    ssh -tt -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+    ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${HOST_USERNAME}@$(hostname)" -X \
-      sbatch "${JOB_SCRIPT}" \
+      bash -l -c "sbatch \"${JOB_SCRIPT}\"" \
   && echo "  job submit success" && break \
   || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==10)); then echo "  job submit fail" && exit 1; fi
