@@ -119,7 +119,8 @@ sshpass -p "${HOST_PASSWORD}" \
 ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   "${HOST_USERNAME}@$(hostname)" -X 'bash -login'\
 << MPIEXEC_HEREDOC_EOF
-  module purge; module load iccifort/2019.5.281 MPICH/3.3.2 || :
+  module load iccifort/2019.5.281 MPICH/3.3.2 || :
+  module list || :
   echo "modules loaded..."
   mpiexec.hydra --version
   mpiexec.hydra -n "${N_PROCS}" \
