@@ -103,7 +103,7 @@ void create_montage() {
 
   const std::string command = (
     std::string{}
-    + "montage -verbose -label '%l' -font Helvetica -pointsize 25 -background '#000000' -fill 'gray' -define png:size=500x500 -geometry 500x500+2+2 -auto-orient "
+    + "montage -verbose -label '%l' -pointsize 40 -background 'black' -fill 'white' -define png:size=500x500 -geometry 500x500+2+2 -auto-orient "
     + emp::join_on( target_drawings, " " )
     + " " + dish2::make_montage_filename( last_update )
     + " || echo \"montage exit code was $?\""
