@@ -26,5 +26,6 @@
 #include "SpawnSendingService.hpp"
 #include "StateInputJumpService.hpp"
 #include "StateOutputPutService.hpp"
+#include "WritableStateNoiseService.hpp"
 
 #endif // #ifndef DISH2_SERVICES__INDEX_HPP_INCLUDE

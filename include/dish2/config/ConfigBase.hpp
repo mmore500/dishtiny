@@ -153,6 +153,9 @@ EMP_BUILD_CONFIG(
   VALUE(HARDWARE_EXECUTION_CYCLES, size_t, 16,
     "How many hardware cycles to run per round?"
   ),
+  VALUE(WRITABLE_STATE_BIT_DEFECT_RATE, float, 0.0005,
+    "At what rate should bits should be flipped in writable memory?"
+  ),
 
 
   GROUP(SERVICES, "SERVICES"),
@@ -220,6 +223,9 @@ EMP_BUILD_CONFIG(
     "Run service every ?? updates."
   ),
   VALUE(STATE_INPUT_JUMP_SERVICE_FREQUENCY, size_t, 8,
+    "Run service every ?? updates."
+  ),
+  VALUE(WRITABLE_STATE_NOISE_SERVICE_FREQUENCY, size_t, 8,
     "Run service every ?? updates."
   ),
 
