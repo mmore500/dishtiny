@@ -117,7 +117,10 @@ sshpass -p "${HOST_PASSWORD}" \
 ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   "${HOST_USERNAME}@$(hostname)" -X \
 << MPIEXEC_HEREDOC_EOF
+  source /etc/profile.d/profile || :
+  source /etc/profile.d/setup_modules.sh || :
   module purge; module load iccifort/2019.5.281 MPICH/3.3.2 || :
+  echo "modules loaded..."
   mpiexec.hydra --version
   mpiexec.hydra -n "${N_PROCS}" \
   singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
