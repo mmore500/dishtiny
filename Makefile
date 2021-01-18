@@ -27,7 +27,7 @@ else
 	OMP_LINKER_FLAG := -fopenmp
 endif
 
-CFLAGS_nat := -O3 -march=native -flto -DNDEBUG $(CFLAGS_all) $(OMP_FLAG)
+CFLAGS_nat := -O3 -march=native -flto -DNDEBUG -ffast-math $(CFLAGS_all) $(OMP_FLAG)
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
 CFLAGS_nat_debug := -g -DEMP_TRACK_MEM $(OMP_FLAG) $(CFLAGS_all)
 CFLAGS_nat_sanitize := -fsanitize=address -fsanitize=undefined $(CFLAGS_nat_debug)
