@@ -149,8 +149,8 @@ for f in *a=population*; do
     if ((${retry}==20)); then echo "  $f upload fail" && exit 123123; fi
   done &
 
-  # limit to ten concurrent upload jobs
-  while (( $(jobs -p | wc -l) > 10 )); do sleep 1; done
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
 
 done
 
@@ -163,8 +163,8 @@ for f in *a=demographic_phenotypic_phylogenetic_metrics*; do
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
   done &
 
-  # limit to ten concurrent upload jobs
-  while (( $(jobs -p | wc -l) > 10 )); do sleep 1; done
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
 
 done
 
@@ -177,13 +177,10 @@ for f in *a=cell_census*; do
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
   done &
 
-  # limit to ten concurrent upload jobs
-  while (( $(jobs -p | wc -l) > 10 )); do sleep 1; done
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
 
 done
-
-# limit to ten concurrent upload jobs
-while (( $(jobs -p | wc -l) > 10 )); do sleep 1; done
 
 echo "uploading any montage files..."
 for f in *a=montage*; do
@@ -194,8 +191,8 @@ for f in *a=montage*; do
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
   done &
 
-  # limit to ten concurrent upload jobs
-  while (( $(jobs -p | wc -l) > 10 )); do sleep 1; done
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
 
 done
 
@@ -208,8 +205,8 @@ for f in *a=drawings*; do
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
   done &
 
-  # limit to ten concurrent upload jobs
-  while (( $(jobs -p | wc -l) > 10 )); do sleep 1; done
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
 
 done
 
@@ -222,8 +219,8 @@ for f in *a=genome*; do
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
   done &
 
-  # limit to ten concurrent upload jobs
-  while (( $(jobs -p | wc -l) > 10 )); do sleep 1; done
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
 
 done
 
