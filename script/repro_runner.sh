@@ -193,27 +193,16 @@ function on_exit {
   echo "  date $(date)"
   echo "  SECONDS ${SECONDS}"
 
-  echo "uploading runner"
-  for retry in {1..10}; do
-    osf -p "${arg_project}" upload \
-      "${runner}" \
-      "repro/${REPRO_ID}/a=runner+repro=${REPRO_ID}+ext=.sh" \
-    && echo "  runner upload success" \
-    && break \
-      || (echo "retrying runner upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload runner fail"; fi
-  done &
-
-  echo "uploading stdin"
-  for retry in {1..10}; do
-    osf -p "${arg_project}" upload \
-      "${stdin}" \
-      "repro/${REPRO_ID}/a=stdin+repro=${REPRO_ID}+ext=.txt" \
-    && echo "  stdin upload success" \
-    && break \
-      || (echo "retrying stdin upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload stdin fail"; fi
-  done &
+  # echo "uploading stdin"
+  # for retry in {1..3}; do
+  #   osf -p "${arg_project}" upload \
+  #     "${stdin}" \
+  #     "repro/${REPRO_ID}/a=stdin+repro=${REPRO_ID}+ext=.txt" \
+  #   && echo "  stdin upload success" \
+  #   && break \
+  #     || (echo "retrying stdin upload (${retry})" && sleep $((RANDOM % 10)))
+  #   if ((${retry}==3)); then echo "upload stdin fail"; fi
+  # done &
 
   echo "making rerun script"
   INPUT="$(cat $stdin)"
@@ -233,14 +222,14 @@ END_OF_HEREDOC" >> "${rerun}"
   chmod +x "${rerun}"
 
   echo "uploading rerun"
-  for retry in {1..10}; do
+  for retry in {1..3}; do
     osf -p "${arg_project}" upload \
       "${rerun}" \
       "repro/${REPRO_ID}/a=rerun+repro=${REPRO_ID}+ext=.sh" \
     && echo "  rerun upload success" \
     && break \
       || (echo "retrying rerun upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload rerun fail"; fi
+    if ((${retry}==3)); then echo "upload rerun fail"; fi
   done &
 
   echo "uploading log"
@@ -254,36 +243,43 @@ END_OF_HEREDOC" >> "${rerun}"
     if ((${retry}==10)); then echo "upload log fail"; fi
   done &
 
-  echo "uploading output manifest"
-  ls output > "${manifest}"
-  for retry in {1..10}; do
-    osf -p "${arg_project}" upload \
-      "${manifest}" \
-      "repro/${REPRO_ID}/a=manifest+repro=${REPRO_ID}+ext=.txt" \
-    && echo "  manifest upload success" \
-    && break \
-      || (echo "retrying manifest upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload manifest fail"; fi
-  done &
+  # if user has created an output directory, upload it
+  if [ -d "${WORK_DIRECTORY}/output" ]; then
 
-  echo "uploading output"
-  tar -czf "${output}" output
-  for retry in {1..10}; do
-    osf -p "${arg_project}" upload \
-      "${output}" \
+    echo "uploading output manifest"
+    ls "${WORK_DIRECTORY}/output" > "${manifest}"
+    for retry in {1..3}; do
+      osf -p "${arg_project}" upload \
+        "${manifest}" \
+        "repro/${REPRO_ID}/a=manifest+repro=${REPRO_ID}+ext=.txt" \
+      && echo "  manifest upload success" \
+      && break \
+        || (echo "retrying manifest upload (${retry})" && sleep $((RANDOM % 10)))
+      if ((${retry}==3)); then echo "upload manifest fail"; fi
+    done &
+
+    echo "uploading output"
+    tar -czf "${output}" "${WORK_DIRECTORY}/output"
+    for retry in {1..10}; do
+      osf -p "${arg_project}" upload \
+        "${output}" \
+        "repro/${REPRO_ID}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
+      && echo "  output upload success" \
+      && break \
+        || (echo "retrying output upload (${retry})" && sleep $((RANDOM % 10)))
+      if ((${retry}==10)); then echo "upload output fail"; fi
+    done
+
+    raw_output_url=$(osf -p "${arg_project}" geturl \
       "repro/${REPRO_ID}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
-    && echo "  output upload success" \
-    && break \
-      || (echo "retrying output upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload output fail"; fi
-  done
+    )
+    output_url=$(curl -Ls -o /dev/null -w %{url_effective} $raw_output_url)
+    echo "output uploaded to ${output_url}"
+    echo "  download a copy: curl -L ${output_url}download --output ${REPRO_ID}.tar.gz"
 
-  raw_output_url=$(osf -p "${arg_project}" geturl \
-    "repro/${REPRO_ID}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
-  )
-  output_url=$(curl -Ls -o /dev/null -w %{url_effective} $raw_output_url)
-  echo "output uploaded to ${output_url}"
-  echo "  download a copy: curl -L ${output_url}download --output ${REPRO_ID}.tar.gz"
+  fi
+
+  wait
 
   echo "on exit cleanup complete"
 
@@ -335,7 +331,8 @@ echo "Setup Work Directory"
 echo "--------------------------------------"
 ################################################################################
 rm -rf "${REPRO_ID}" && mkdir "${REPRO_ID}" && cd "${REPRO_ID}"
-pwd
+export WORK_DIRECTORY="$(pwd)"
+echo "WORK_DIRECTORY ${WORK_DIRECTORY}"
 
 ################################################################################
 echo
@@ -344,7 +341,8 @@ echo "--------------------------------------"
 ################################################################################
 
 # setup output folder
-mkdir -p output
+# no, user has to make output folder if they want it
+# mkdir -p output
 
 # setup latest project source
 if [ -n "${repo_sha}" ]; then
