@@ -301,6 +301,13 @@ function on_error() {
   echo "---------------------"
   echo
 
+  if (( ${1} == 123123 )); then
+    command -v scontrol \
+      && scontrol requeue "${SLURM_JOB_ID}" \
+      && echo "error code 123123, job resubmit success, restart count ${SLURM_RESTART_COUNT}" \
+      || echo "error code 123123, job resubmit failure, restart count ${SLURM_RESTART_COUNT}"
+  fi
+
   # upload log files
   on_exit
 
@@ -310,12 +317,12 @@ function on_error() {
    -u $(osf -p "${arg_project}" geturl \
       "repro/${REPRO_ID}/a=log+repro=${REPRO_ID}+ext=.txt" \
     ) \
-    "$SLURM_JOB_NAME failed"
+    "${SLURM_JOB_ID} ${SLURM_JOB_NAME} error code ${1}, restart count ${SLURM_RESTART_COUNT}"
 
   # reset exit trap
   trap '' EXIT
 
-  exit 1
+  exit ${1}
 
 }
 
