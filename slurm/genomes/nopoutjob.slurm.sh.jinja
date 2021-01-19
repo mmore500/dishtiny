@@ -74,7 +74,9 @@ echo "downloading genome from target stint and series..."
 f="a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={{ stint }}+thread=0+ext=.json"
 echo "downloading ${f}"
 for retry in {1..20}; do
-  osf -p dnh2v fetch "endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" "root_id=0+${f}" \
+  aws s3 cp \
+    "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" \
+    "root_id=0+${f}" \
     && echo "  ${f} download success" && break \
     || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
@@ -132,7 +134,10 @@ echo "uploading any genome files..."
 for f in *a=genome*morph=phenotype_equivalent_nopout*; do
   echo uploading "${f}"
   for retry in {1..20}; do
-    osf -p dnh2v upload -f "${f}" "endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" && echo "  $f upload success" && break \
+    aws s3 cp \
+      "${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" \
+    && echo "  $f upload success" && break \
       || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
   done &

@@ -82,7 +82,9 @@ for ((proc=0;proc<N_PROCS;++proc)); do
     f="a=population+proc=${proc}+series={{ series }}+stint={{ stint | int - 1 }}+thread=${thread}+ext=.bin"
     echo "downloading ${f}"
     for retry in {1..20}; do
-      osf -p dnh2v fetch "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint | int - 1 }}/${f}" "${f}" \
+      aws s3 cp \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint | int - 1 }}/${f}" \
+      "${f}" \
         && echo "  ${f} download success" && break \
         || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
       if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
@@ -145,8 +147,11 @@ echo "uploading any population files..."
 for f in *a=population*; do
   echo "uploading ${f}"
   for retry in {1..20}; do
-    osf -p dnh2v upload -f "${f}" "endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint }}/${f}" && echo "  $f upload success" && break \
-      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    aws s3 cp \
+      "${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint }}/${f}" \
+    && echo "  $f upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "  $f upload fail" && exit 123123; fi
   done &
 
@@ -159,8 +164,11 @@ echo "uploading any metrics files..."
 for f in *a=demographic_phenotypic_phylogenetic_metrics*; do
   echo uploading "${f}"
   for retry in {1..20}; do
-    osf -p dnh2v upload -f "${f}" "endeavor=${ENDEAVOR}/evolve/metrics/stint={{ stint }}/${f}" && echo "  $f upload success" && break \
-      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    aws s3 cp \
+      "${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/metrics/stint={{ stint }}/${f}" \
+    && echo "  $f upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
   done &
 
@@ -173,8 +181,11 @@ echo "uploading any census files..."
 for f in *a=cell_census*; do
   echo uploading "${f}";
   for retry in {1..20}; do
-    osf -p dnh2v upload -f "${f}" "endeavor=${ENDEAVOR}/evolve/censuses/stint={{ stint }}/${f}" && echo "  $f upload success" && break \
-      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    aws s3 cp \
+      "${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/censuses/stint={{ stint }}/${f}" \
+    && echo "  $f upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
   done &
 
@@ -187,8 +198,11 @@ echo "uploading any montage files..."
 for f in *a=montage*; do
   echo uploading "${f}"
   for retry in {1..20}; do
-    osf -p dnh2v upload -f "${f}" "endeavor=${ENDEAVOR}/evolve/montages/stint={{ stint }}/${f}" && echo "  $f upload success" && break \
-      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    aws s3 cp \
+      "${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/montages/stint={{ stint }}/${f}" \
+    && echo "  $f upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
   done &
 
@@ -201,8 +215,11 @@ echo "uploading any drawing archives..."
 for f in *a=drawings*; do
   echo uploading "${f}"
   for retry in {1..20}; do
-    osf -p dnh2v upload -f "${f}" "endeavor=${ENDEAVOR}/evolve/drawings/stint={{ stint }}/${f}" && echo "  $f upload success" && break \
-      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    aws s3 cp \
+      "${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/drawings/stint={{ stint }}/${f}" \
+    && echo "  $f upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
   done &
 
@@ -215,8 +232,11 @@ echo "uploading any genome files..."
 for f in *a=genome*; do
   echo uploading "${f}"
   for retry in {1..20}; do
-    osf -p dnh2v upload -f "${f}" "endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" && echo "  $f upload success" && break \
-      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    aws s3 cp \
+      "${f}"
+      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" \
+    && echo "  $f upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
   done &
 
