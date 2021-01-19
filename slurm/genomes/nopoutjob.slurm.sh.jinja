@@ -112,8 +112,9 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   echo "modules loaded..."
   export DISPLAY="${DISPLAY}"
   export XVFB_PID="${XVFB_PID}"
+  export REPRO_ID="${REPRO_ID}"
   mpiexec.hydra --version
-  mpiexec.hydra -n "${N_PROCS}" \
+  mpiexec.hydra -n 1 \
   singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
     ./rundishtiny \
     -RUN_UPDATES 1 -GENESIS "innoculate" -DATA_DUMP 1 -PHENOTYPE_EQUIVALENT_NOPOUT 1 -STINT {{ stint }} -SERIES {{ series }} \
