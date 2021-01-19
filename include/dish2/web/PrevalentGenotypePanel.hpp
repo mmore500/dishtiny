@@ -59,7 +59,7 @@ class PrevalentGenotypePanel {
 
       Redraw(
         dish2::make_phenotype_equivalent_nopout< dish2::Spec >(
-          genome
+          genome, "prevalent"
         )
       );
       // why is this necessary?

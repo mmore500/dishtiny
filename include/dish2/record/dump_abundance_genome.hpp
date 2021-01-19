@@ -51,7 +51,9 @@ bool dump_abundance_genome(
     );
     std::ofstream os( filename );
     cereal::JSONOutputArchive archive( os );
-    archive( dish2::make_phenotype_equivalent_nopout< Spec >(genome) );
+    archive( dish2::make_phenotype_equivalent_nopout< Spec >(
+      genome, "abundance"
+    ) );
   }
 
   return true;

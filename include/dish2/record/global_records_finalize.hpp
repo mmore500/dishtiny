@@ -129,6 +129,7 @@ void finalize_metadata() {
   uitsl::err_verify( std::system(
     "for f in *a=*; do"
     "  keyname stash --move $f a criteria morph proc stint series thread ext"
+    "    nopout_coarseness nopout_target"
     "; done"
   ) );
 }

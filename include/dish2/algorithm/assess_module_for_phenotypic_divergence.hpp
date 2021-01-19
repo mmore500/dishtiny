@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_ALGORITHM_TEST_MODULE_FOR_PHENOTYPIC_NEUTRALITY_HPP_INCLUDE
-#define DISH2_ALGORITHM_TEST_MODULE_FOR_PHENOTYPIC_NEUTRALITY_HPP_INCLUDE
+#ifndef DISH2_ALGORITHM_ASSESS_MODULE_FOR_PHENOTYPIC_DIVERGENCE_HPP_INCLUDE
+#define DISH2_ALGORITHM_ASSESS_MODULE_FOR_PHENOTYPIC_DIVERGENCE_HPP_INCLUDE
 
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_module.hpp"
@@ -12,12 +12,12 @@
 #include "../genome/Genome.hpp"
 #include "../world/ThreadWorld.hpp"
 
-#include "detect_phenotypic_divergence.hpp"
+#include "run_until_phenotypic_divergence.hpp"
 
 namespace dish2 {
 
 template< typename Spec >
-bool test_module_for_phenotypic_neutrality(
+size_t assess_module_for_phenotypic_divergence(
   const dish2::Genome<Spec>& genome, const size_t module_idx
 ) {
 
@@ -30,10 +30,10 @@ bool test_module_for_phenotypic_neutrality(
     nopout.program, module_idx
   );
 
-  return dish2::detect_phenotypic_divergence<Spec>( genome, nopout ) == false;
+  return dish2::run_until_phenotypic_divergence<Spec>( genome, nopout );
 
 }
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_ALGORITHM_TEST_MODULE_FOR_PHENOTYPIC_NEUTRALITY_HPP_INCLUDE
+#endif // #ifndef DISH2_ALGORITHM_ASSESS_MODULE_FOR_PHENOTYPIC_DIVERGENCE_HPP_INCLUDE

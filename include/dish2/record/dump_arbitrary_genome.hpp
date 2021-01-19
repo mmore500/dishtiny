@@ -7,7 +7,6 @@
 
 #include "../../../third-party/cereal/include/cereal/archives/json.hpp"
 
-#include "../algorithm/make_phenotype_equivalent_nopout.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 

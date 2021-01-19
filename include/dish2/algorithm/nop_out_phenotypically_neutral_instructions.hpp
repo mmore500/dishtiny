@@ -3,6 +3,7 @@
 #define DISH2_ALGORITHM_NOP_OUT_PHENOTYPICALLY_NEUTRAL_INSTRUCTIONS_HPP_INCLUDE
 
 #include <algorithm>
+#include <tuple>
 
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_instructions.hpp"
@@ -11,12 +12,12 @@
 #include "../genome/Genome.hpp"
 #include "../world/ThreadWorld.hpp"
 
-#include "test_instructions_for_phenotypic_neutrality.hpp"
+#include "assess_instructions_for_phenotypic_divergence.hpp"
 
 namespace dish2 {
 
 template< typename Spec >
-dish2::Genome<Spec> nop_out_phenotypically_neutral_instructions(
+auto nop_out_phenotypically_neutral_instructions(
   dish2::Genome<Spec> genome, const size_t nop_length=1
 ) {
 
@@ -28,6 +29,7 @@ dish2::Genome<Spec> nop_out_phenotypically_neutral_instructions(
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
 
   emp::vector< char > should_nop( genome.program.size() );
+  emp::vector< size_t > divergence_updates( genome.program.size() );
 
   #pragma omp parallel for
   for (size_t idx = 0; idx < genome.program.size(); idx += nop_length) {
@@ -38,13 +40,14 @@ dish2::Genome<Spec> nop_out_phenotypically_neutral_instructions(
     };
     #endif // #ifdef __EMSCRIPTEN__
 
-    const bool res = dish2::test_instructions_for_phenotypic_neutrality< Spec >(
-      genome, idx, nop_length
-    );
+    const auto res = dish2::assess_instructions_for_phenotypic_divergence<Spec>(
+        genome, idx, nop_length
+      );
 
     for (size_t i{}; i < nop_length; ++i) if ( idx + i < should_nop.size() ) {
-      should_nop[idx + i] = res;
-      std::cout << ( res ? "x" : "o" ) << std::flush;
+      should_nop[idx + i] = (res == cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES());
+      divergence_updates[idx + i] = res;
+      std::cout << ( should_nop[idx + i] ? "x" : "o" ) << std::flush;
     }
 
   }
@@ -54,7 +57,7 @@ dish2::Genome<Spec> nop_out_phenotypically_neutral_instructions(
   genome.program
     = sgpl::nop_out_instructions< sgpl_spec_t >( genome.program, should_nop );
 
-  return genome;
+  return std::tuple{genome, divergence_updates};
 
 }
 
