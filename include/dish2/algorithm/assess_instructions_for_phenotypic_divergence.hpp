@@ -29,7 +29,7 @@ size_t assess_instructions_for_phenotypic_divergence(
     size_t idx = inst_idx;
     idx < std::min(inst_idx + nop_length, nopout.program.size());
     ++idx
-  ) nopout.program[ inst_idx ].NopOut();
+  ) nopout.program[ idx ].NopOut();
 
   return dish2::run_until_phenotypic_divergence<Spec>( genome, nopout );
 
