@@ -382,4 +382,8 @@ echo "--------------------------------------"
 # Docker references with both a tag and digest are currently not supported in
 # singularity so we have to strip everything before @sha256:digest
 tee "${stdin}" | \
-  singularity shell --env "SECONDS=${SECONDS}" -B "${HOME}:/home/user" "docker://${arg_username}/${arg_slug}@${container_tag#*@}"
+  singularity shell \
+    --env "SECONDS=${SECONDS}" \
+    -B "${HOME}:/home/user" \
+    --dns 8.8.8.8,8.8.4.4 \
+    "docker://${arg_username}/${arg_slug}@${container_tag#*@}"
