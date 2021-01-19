@@ -37,6 +37,7 @@ RUN \
   apt-get update -qq \
     && \
   apt-get install -y --allow-downgrades --no-install-recommends \
+    awscli \
     rdfind \
     imagemagick \
     libcurl4-openssl-dev \
