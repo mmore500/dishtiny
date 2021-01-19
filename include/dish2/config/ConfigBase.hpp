@@ -54,7 +54,7 @@ EMP_BUILD_CONFIG(
   VALUE(PHENOTYPIC_DIVERGENCE_N_UPDATES, size_t,
     UITSL_IF_WEB_ELSE(100, 4096), "TODO"
   ),
-  VALUE(PHENOTYPIC_DIVERGENCE_N_CELLS, size_t, 256, "TODO"),
+  VALUE(PHENOTYPIC_DIVERGENCE_N_CELLS, size_t, 100, "TODO"),
   VALUE(STINT, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
   VALUE(SERIES, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
   VALUE(REPLICATE, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
