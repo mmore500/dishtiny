@@ -48,6 +48,23 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
   genome = dish2::nop_out_phenotypically_neutral_modules< Spec >( genome );
 
+  // nop out in increasingly fine-grained segments
+  // idea is that failing (detecting divergence) tends to be fast
+  // so coarse grained searches can give us a big potential speedup
+  // at low cost
+
+  genome = dish2::nop_out_phenotypically_neutral_instructions< Spec >(
+    genome, 8
+  );
+
+  genome = dish2::nop_out_phenotypically_neutral_instructions< Spec >(
+    genome, 4
+  );
+
+  genome = dish2::nop_out_phenotypically_neutral_instructions< Spec >(
+    genome, 2
+  );
+
   genome = dish2::nop_out_phenotypically_neutral_instructions< Spec >( genome );
 
   return genome;
