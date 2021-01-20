@@ -355,9 +355,17 @@ if [ -n "${repo_sha}" ]; then
   git -C "${arg_slug}" checkout FETCH_HEAD
   git -C "${arg_slug}" submodule update --quiet --init --recursive --depth 1
 else
-  git clone "https://github.com/${arg_username}/${arg_slug}.git" \
-    --quiet --depth 1 --recursive --shallow-submodules \
-    --branch "${arg_branch}"
+  for retry in {1..20}; do
+    rm -rf "${arg_slug}"
+    git clone "https://github.com/${arg_username}/${arg_slug}.git" \
+      --quiet --depth 1 --recursive --shallow-submodules \
+      --branch "${arg_branch}" \
+    && echo "  source clone success" \
+    && break \
+    || (echo "retrying manifest upload (${retry})" && sleep $((RANDOM % 10)))
+
+    if ((${retry}==20)); then echo "source clone fail" && exit 123123; fi
+  done
   repo_sha=$(git -C "${arg_slug}" rev-parse HEAD)
 fi
 
