@@ -2,8 +2,10 @@
 #ifndef DISH2_RUN_THREAD_STEP_HPP_INCLUDE
 #define DISH2_RUN_THREAD_STEP_HPP_INCLUDE
 
+#include "../../../third-party/conduit/include/uitsl/concurrent/ConcurrentTimeoutBarrier.hpp"
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/conduit/include/uitsl/parallel/ThreadIbarrierFactory.hpp"
 
 #include "../config/cfg.hpp"
 #include "../record/write_phylogenetic_root_abundances.hpp"
@@ -35,6 +37,19 @@ void thread_step(
   // update the simulation
   thread_world.Update();
 
+  #ifndef __EMSCRIPTEN__
+  if ( cfg.SYNCHRONOUS() ) {
+
+    // initialized first time thru the function,
+    // so N_THREADS should be initialized
+    static uitsl::ThreadIbarrierFactory factory{ cfg.N_THREADS() };
+
+    const uitsl::ConcurrentTimeoutBarrier<uitsl::CoarseTimer> barrier{
+      factory.MakeBarrier(), run_timer
+    };
+
+  }
+  #endif // #ifndef __EMSCRIPTEN__
 
 }
 

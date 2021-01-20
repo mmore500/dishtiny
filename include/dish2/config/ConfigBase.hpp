@@ -35,6 +35,9 @@ EMP_BUILD_CONFIG(
   VALUE(LOG_FREQ, double, 20,
     "[NATIVE] How many seconds should pass between logging progress?"
   ),
+  VALUE(SYNCHRONOUS, bool, false,
+    "[NATIVE] Should updates occur synchronously across threawds and processes?"
+  ),
   VALUE(PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
     "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable RECORD_FINAL_DATA."
   ),
