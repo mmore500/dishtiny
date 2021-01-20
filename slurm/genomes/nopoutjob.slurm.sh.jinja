@@ -28,7 +28,7 @@ cd "$(mktemp -d)"
 REPRO_RUNNER="$(mktemp)"
 for retry in {1..20}; do
   curl \
-    -o "${JOB_TEMPLATE}" \
+    -o "${REPRO_RUNNER}" \
     "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh" \
   && echo "  job template curl success" && break \
   || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
