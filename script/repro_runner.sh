@@ -233,14 +233,14 @@ END_OF_HEREDOC" >> "${rerun}"
   done &
 
   echo "uploading log"
-  for retry in {1..10}; do
+  for retry in {1..3}; do
     osf -p "${arg_project}" upload \
       "${log}" \
       "repro/${REPRO_ID}/a=log+repro=${REPRO_ID}+ext=.txt" \
     && echo "  log upload success" \
     && break \
       || (echo "retrying log upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==10)); then echo "upload log fail"; fi
+    if ((${retry}==3)); then echo "upload log fail"; fi
   done &
 
   # if user has created an output directory, upload it
