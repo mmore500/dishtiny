@@ -2,6 +2,8 @@
 #ifndef DISH2_RUN_THREAD_JOB_HPP_INCLUDE
 #define DISH2_RUN_THREAD_JOB_HPP_INCLUDE
 
+#include <fstream>
+
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
@@ -10,6 +12,7 @@
 #include "../config/cfg.hpp"
 #include "../load/innoculate_population.hpp"
 #include "../load/reconstitute_population.hpp"
+#include "../record/make_filename/make_elapsed_updates_filename.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "thread_data_dump.hpp"
@@ -46,6 +49,11 @@ void thread_job(
   std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " simulation complete @ " << thread_world.GetUpdate() << " updates"
     << std::endl;
+
+  // write elapsed updates to file (for easier benchmark post-processing)
+  std::ofstream(
+    dish2::make_elapsed_updates_filename( thread_idx )
+  ) << thread_world.GetUpdate() << std::endl;
 
   if ( cfg.DATA_DUMP() ) {
     dish2::thread_data_dump<Spec>( thread_world, thread_idx );
