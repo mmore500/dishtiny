@@ -318,7 +318,7 @@ j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
 series: {{ series }}
-stint: {{ stint | int + 1 }}
+stint: {{ stint | int }}
 J2_HEREDOC_EOF
 
 chmod +x "${JOB_SCRIPT}"
