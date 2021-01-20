@@ -4,8 +4,8 @@ j2cli[yaml]==0.3.10
 git+git://github.com/mmore500/osfclient@9e2e14d#egg=osfclient
 keyname==0.3.0
 exdown==0.7.0
-pandas==1.2.1
-seaborn==0.11.1
+pandas==1.1.2
+seaborn==0.11.0
 frozendict==1.2
-matplotlib==3.3.3
+matplotlib==3.3.2
 iterpop==0.3.4
