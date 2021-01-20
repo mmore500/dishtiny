@@ -120,6 +120,7 @@ sshpass -p "${HOST_PASSWORD}" \
 ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   "${HOST_USERNAME}@$(hostname)" -X 'bash -login'\
 << MPIEXEC_HEREDOC_EOF
+  [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
   module load --ignore-cache GCC/7.2.0-2.29 MPICH/3.2.1|| :
   module list || :
   echo "modules loaded..."
