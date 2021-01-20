@@ -98,11 +98,13 @@ public:
       3ul, uitsl::audit_cast<size_t>(trinary_regulation_summary.value()->n_row)
     ) };
 
-    pca_result = hopca::unit_normalize(
-      hopca::drop_homogenous_columns(
-        module_regulation_pca.doPCA( *trinary_regulation_summary )
-      ).value()
+    const auto condensed_summary = hopca::drop_homogenous_columns(
+      module_regulation_pca.doPCA( *trinary_regulation_summary )
     );
+
+    if ( !condensed_summary.has_value() ) return;
+
+    pca_result = hopca::unit_normalize( *condensed_summary );
 
   }
 

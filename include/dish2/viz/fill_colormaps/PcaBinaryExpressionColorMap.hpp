@@ -99,11 +99,13 @@ public:
       3ul, uitsl::audit_cast<size_t>( binary_expression_summary.value()->n_row )
     ) };
 
-    pca_result = hopca::unit_normalize(
-      hopca::drop_homogenous_columns(
-        module_expression_pca.doPCA( *binary_expression_summary )
-      ).value()
+    const auto condensed_summary = hopca::drop_homogenous_columns(
+      module_expression_pca.doPCA( *binary_expression_summary )
     );
+
+    if ( !condensed_summary.has_value() ) return;
+
+    pca_result = hopca::unit_normalize( *condensed_summary );
 
   }
 
