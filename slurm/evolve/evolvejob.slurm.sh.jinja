@@ -233,7 +233,7 @@ for f in *a=genome*; do
   echo uploading "${f}"
   for retry in {1..20}; do
     aws s3 cp --quiet \
-      "${f}"
+      "${f}" \
       "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
