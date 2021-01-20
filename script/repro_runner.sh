@@ -308,7 +308,7 @@ function on_error() {
   on_exit
 
   echo "Sending Pushover Notification"
-  bash <(curl https://raw.githubusercontent.com/${arg_username}/pushover.sh/master/pushover.sh) \
+  bash <(curl https://raw.githubusercontent.com/mmore500/pushover.sh/master/pushover.sh) \
    -T "$PUSHOVER_APP_TOKEN" -U "$PUSHOVER_USER_TOKEN" \
    -u $(osf -p "${arg_project}" geturl \
       "repro/${REPRO_ID}/a=log+repro=${REPRO_ID}+ext=.txt" \
