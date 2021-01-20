@@ -26,7 +26,14 @@ cd "$(mktemp -d)"
 
 # curl repro_runner.sh script into to a temporary file
 REPRO_RUNNER="$(mktemp)"
-curl -o "${REPRO_RUNNER}" "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh"
+for retry in {1..20}; do
+  curl \
+    -o "${REPRO_RUNNER}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh" \
+  && echo "  job template curl success" && break \
+  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
+done
 chmod +x "${REPRO_RUNNER}"
 
 ################################################################################
@@ -265,7 +272,14 @@ JOB_SCRIPT="$(mktemp)"
 echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
 echo "JOB_SCRIPT ${JOB_SCRIPT}"
 
-curl -o "${JOB_TEMPLATE}" "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/evolve/evolvejob.slurm.sh.jinja"
+for retry in {1..20}; do
+  curl \
+    -o "${JOB_TEMPLATE}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/evolve/evolvejob.slurm.sh.jinja" \
+  && echo "  job template curl success" && break \
+  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
+done
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 container_tag: {{ container_tag }}
@@ -312,7 +326,14 @@ JOB_SCRIPT="$(mktemp)"
 echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
 echo "JOB_SCRIPT ${JOB_SCRIPT}"
 
-curl -o "${JOB_TEMPLATE}" "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/genomes/nopoutjob.slurm.sh.jinja"
+for retry in {1..20}; do
+  curl \
+    -o "${JOB_TEMPLATE}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/genomes/nopoutjob.slurm.sh.jinja" \
+  && echo "  job template curl success" && break \
+  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
+done
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 container_tag: {{ container_tag }}
