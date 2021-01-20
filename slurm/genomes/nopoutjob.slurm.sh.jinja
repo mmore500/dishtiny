@@ -74,7 +74,7 @@ echo "downloading genome from target stint and series..."
 f="a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={{ stint }}+thread=0+ext=.json"
 echo "downloading ${f}"
 for retry in {1..20}; do
-  aws s3 cp \
+  aws s3 cp --quiet \
     "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" \
     "root_id=0+${f}" \
     && echo "  ${f} download success" && break \
@@ -134,7 +134,7 @@ echo "uploading any genome files..."
 for f in *a=genome*morph=phenotype_equivalent_nopout*; do
   echo uploading "${f}"
   for retry in {1..20}; do
-    aws s3 cp \
+    aws s3 cp --quiet \
       "${f}" \
       "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  $f upload success" && break \
