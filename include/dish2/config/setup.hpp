@@ -6,6 +6,7 @@
 #include <string>
 
 #include "../../../third-party/conduit/include/uitsl/mpi/mpi_flex_guard.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/config/ArgManager.hpp"
 
@@ -31,9 +32,10 @@ void setup( emp::ArgManager arg_manager ) {
 
   setup_config( arg_manager );
 
-  print_assets();
-
-  print_config();
+  if ( uitsl::is_root() ) {
+    print_assets();
+    print_config();
+  }
 
   dump_config();
 

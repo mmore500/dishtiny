@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include <mpi.h>
+
 #include "conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "conduit/include/uitsl/parallel/ThreadTeam.hpp"
 
@@ -22,6 +24,9 @@ int main(int argc, char* argv[]) {
   dish2::global_records_initialize();
 
   dish2::ProcWorld<Spec> proc_world;
+
+  // synchronize all processes before entering simulation loop
+  MPI_Barrier( MPI_COMM_WORLD );
 
   uitsl::ThreadTeam team;
 
