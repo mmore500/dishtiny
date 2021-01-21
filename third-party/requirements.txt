@@ -9,3 +9,4 @@ seaborn==0.11.0
 frozendict==1.2
 matplotlib==3.3.2
 iterpop==0.3.4
+python-slugify==4.0.1
