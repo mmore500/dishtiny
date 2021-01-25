@@ -132,12 +132,14 @@ jobs:
       options: --user root
     steps:
       - run: make -C /opt/dishtiny/ web
-      - run: cp -r /opt/dishtiny/web/ web/
+      - run: make -C /opt/dishtiny/ badges
+      - run: git clone https://github.com/mmore500/dishtiny.git -b web-archive deploy/
+      - run: cp -r /opt/dishtiny/web/ deploy/master/
       - uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: web # The folder the action should deploy.
+          FOLDER: deploy/ # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
 
   deploy-dockerhub:
