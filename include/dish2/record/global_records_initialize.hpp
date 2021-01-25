@@ -15,11 +15,13 @@ namespace dish2 {
 
 void global_records_initialize() {
 
-  // std::filesystem::create_directories is failing inside Docker container
-  // so use mkdir as a backup for now
   const std::string path{ "./drawings" };
   if ( uitsl::is_root() && !std::filesystem::exists( path ) ) {
-    emp_always_assert( std::filesystem::create_directories("./drawings") );
+    // use mkdir as a fallback
+    emp_always_assert(
+      std::filesystem::create_directories( path )
+      || mkdir( path.c_str(), 0777 ) == 0
+    );
   }
 
 }

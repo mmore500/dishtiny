@@ -11,6 +11,7 @@ function teardown_file {
 
 function setup {
   TO_ROOT=$(git rev-parse --show-cdup)
+  make clean
   cp "${TO_ROOT}/rundishtiny" .
 }
 
