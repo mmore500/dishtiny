@@ -1,0 +1,333 @@
+[neighbor-sharing-fraction]
+header = ["The **Neighbor Sharing Fraction Viewer** shows the resource-sharing effort of cells towards each of their neighboring cells."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} indicates **zero resource** was received.",
+    "{make_badge('Blue', '#0000FF')} indicates a **small amount** of resource-sharing effort.",
+    "{make_badge('Green', '#00FF00')} indicates an **intermediate amount** of resource-sharing.",
+    "{make_badge('Yellow', '#FFFF00')} indicates a **large amount** of sharing effort.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[interconnect-sharing-fraction]
+header = ["The **Interconnect Sharing Fraction Viewer** shows the resource-sharing effort of cells towards their outgoing interconnects."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} indicates **zero resource** was received.",
+    "{make_badge('Blue', '#0000FF')} indicates a **small amount** of resource-sharing effort.",
+    "{make_badge('Green', '#00FF00')} indicates an **intermediate amount** of resource-sharing.",
+    "{make_badge('Yellow', '#FFFF00')} indicates a **large amount** of sharing effort.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[channel]
+header = ["The **Channel Viewer** shows the arrangement of hereditarily-defined resource-collecing cell groups."]
+items = [
+    "**Color saturation** (e.g., {make_badge('light green', '#BFFFBF')} vs. {make_badge('intense green', '#00FF00')} ) differentiates **low-level groups**.",
+    "**Color hue** (e.g., {make_badge('light blue', '#BFBFFF')} / {make_badge('intense blue', '#0000FF')} vs. {make_badge('light purple', '#FFBFFF')} / {make_badge('intense purple', '#FF00FF')} ) differentiates **high-level groups**, which are groups of low-level groups. ",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[resource-stockpile]
+header = ["The **Stockpile Viewer** depicts the resource that each cell-like organism has accumulated."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Red', '#FF0000')} indicates a **resource defecit** (which, if it becomes too extreme, will result in that cell's death).",
+    "{make_badge('White', '#FFFFFF')} indicates **zero resource**.",
+    "{make_badge('Blue', '#0000FF')} indicates **positive resource**, but below the threshold required for reproduction.",
+    "{make_badge('Green', '#00FF00')} indicates **enough resource to reproduce**.",
+    "{make_badge('Yellow', '#FFFF00')} indicates an **excess of resource**, more than enough to reproduce.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[resource-sharing]
+header = ["The **Contributed Resource Viewer** depicts the total amount of resource has received from all neighbors during the previous update."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} indicates **zero resource** was received.",
+    "{make_badge('Blue', '#0000FF')} indicates a **small amount** of resource was received.",
+    "{make_badge('Green', '#00FF00')} indicates an **intermediate amount** of resource was received.",
+    "{make_badge('Yellow', '#FFFF00')} indicates a **large amount** of resource was received.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[resource-flow]
+header = ["The **Resource Flow Viewer** depicts the spatial structure of resource sharing."]
+items = [
+    "{make_badge('White', '#FFFFFF')} cells share resource with **zero neighbors**.",
+    "{make_badge('Green', '#00FF00')} cells share resource with **one neighbor**.",
+    "{make_badge('Blue', '#0000FF')} cells share resource with **two neighbors**.",
+    "{make_badge('Purple', '#FF00FF')} cells share resource with **three neighbors**.",
+    "{make_badge('Red', '#FF0000')} cells share resource with **four neighbors**.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[messaging-flow]
+header = ["The **Messaging Flow Viewer** depicts the spatial structure of intercellular messaging."]
+items = [
+    "{make_badge('White', '#FFFFFF')} cells received messages from **zero neighbors**.",
+    "{make_badge('Green', '#00FF00')} cells received messages from **one neighbor**.",
+    "{make_badge('Blue', '#0000FF')} cells received messages from **two neighbors**.",
+    "{make_badge('Purple', '#FF00FF')} cells received messages from **three neighbors**.",
+    "{make_badge('Red', '#FF0000')} cells received messages from **four neighbors**.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[reproduction]
+header = ["The **Cell Reproduction Viewer** depicts attempted cellular reproductions."]
+items = [
+    "{make_badge('White', '#FFFFFF')} cells had **zero** neighbors attempt to place offspring there.",
+    "{make_badge('Green', '#00FF00')} cells had **one** neighbor attempt to place offspring there.",
+    "{make_badge('Blue', '#0000FF')} cells had **two** neighbors attempt to place offspring there.",
+    "{make_badge('Purple', '#FF00FF')} cells had **three** neighbors attempt to place offspring there.",
+    "{make_badge('Red', '#FF0000')} cells had **four** neighbors attempt to place offspring there.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[apoptosis]
+header = ["The **Apoptosis Viewer** shows cells that have registered themselves for imminent cellular suicidie."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} grid tiles are **live cells**.",
+    "{make_badge('Blue', '#0000FF')} cells are registered for **partial apoptosis**, where a underlying cell is destroyed but its channel structure is preserved.",
+    "{make_badge('Red', '#FF0000')} cells are registered for **complete apoptosis**, where a cell and its channel structure are totally destroyed.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[taxa]
+header = ["The **Taxa Viewer** depicts the distribution of groups of genetically-identical cells."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} grid tiles are **live cells**.",
+    "{make_badge('White', '#FFFFFF')} lines divide cells with **identical genotypes**.",
+    "{make_badge('Red', '#FF0000')} lines divide cells with **different genotypes**."
+]
+[parent-cell-of]
+header = ["The **Parent Cell Of** viewer depicts cell kinship relationships."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Red', '#FF0000')} highlighting indicates a cell is the **parent of** its neighbor.",
+    "{make_badge('White', '#FFFFFF')} indicates a cell is **not** the parent of its neighbor.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+
+[child-cell-of]
+header = ["The **Child Cell Of** viewer depicts cell kinship relationships."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Red', '#FF0000')} highlighting indicates a cell is the **child of** its neighbor.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[resource-wave]
+header = ["The **Resource Wave Viewer** depicts the cells' cooperative resource-collection task. Activation propagates outward in same-channel groups from an environmentally-triggered seed."]
+items = [
+    "{make_badge('Green', '#00FF00')} cells are activated within the beneficial radius of the seed and are **gaining resource**.",
+    "{make_badge('Red', '#FF0000')} cells are activated outside the beneficial radius of the seed and are **losing resource**.",
+    "{make_badge('White', '#FFFFFF')} cells are in the **ready state**, meaning they can be activated by adjacent cooperating cells.",
+    "{make_badge('Blue', '#0000FF')} cells are in a **quiescent state**, meaning they cannot be activated by adjacent cooperating cells.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+
+]
+
+[channel-generation]
+header = ["The **Channel Generation Viewer** depicts generation counters that enforce a birth-death lifecycle."]
+items = [
+    "{make_badge('White', '#FFFFFF')} cells are **young** members of a same-channel group. They are capable of collecting resource and producing offspring that are group members.",
+    "{make_badge('Blue', '#0000FF')} cells are **older** members of a same-channel group, which still retain all the capabilities of younger cells.",
+    "{make_badge('Red', '#FF0000')} cells are **oldest** members of a same-channel group. As coloring progress from light to dark red, cells lose their ability to create same-channel offspring and then to collect resource.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[expiration]
+header = ["The **Expiration Viewer** depicts end-of-the-road channel generation state in greater detail."]
+items = [
+    "{make_badge('White', '#FFFFFF')} cells are **young** and retain all reproductive and resource-collection capabilities.",
+    "{make_badge('Blue', '#0000FF')} cells are **older** and have lost same-channel reproductive capability.",
+    "{make_badge('Red', '#FF0000')} cells are **oldest** and have additionally lost resource-collection capability.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[reproductive-pause-flow]
+header = ["The **Reproductive Pause Flow Viewer** depicts reproductive cooperation."]
+items = [
+    "{make_badge('White', '#FFFFFF')} cells have registered **zero** reproductive forbearance.",
+    "{make_badge('Green', '#00FF00')} cells have temporarily registred to pause reproduction in **one direction**.",
+    "{make_badge('Blue', '#0000FF')} cells have temporariliy registered to pause reproduction in **two directions**.",
+    "{make_badge('Purple', '#FF00FF')} cells have temporariliy registered to pause reproduction in **three directions**.",
+    "{make_badge('Red', '#FF0000')} cells have temporarily registered to pause reproduction in all **four directions**.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[reproductive-pause]
+header = ["The **Reproductive Pause Viewer** depicts reproductive cooperation."]
+items = [
+    "{make_badge('White', '#FFFFFF')} coloring indicates a cell **has not** registered reproductive forbearance in a direction.",
+    "{make_badge('Red', '#FF0000')} highlighting indicates a cell **has** temporarily registered to pause reproduction a direction.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[established-interconnect]
+header = ["The **Established Interconnect Viewer** depicts direct long-distance intercell connections that have matured and activated."]
+items = [
+    "{make_badge('Light blue', '#15F4EE')} protrusions with {make_badge('violet', '#8A2BE2')} outlining represent **established inerconnects** between cells.",
+    "**Squared** interconnect endcaps represent the originating cell of an interconnect.",
+    "**Rounded** interconnect endcaps represent the terminus cell of an interconnect.",
+    "{make_badge('Grayscale', '#808080')} coloring differentiates **high-level groups**, which are groups of low-level groups.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[fledgling-interconnect]
+header = ["The **Fledgling Interconnect Viewer** depicts inert, developing long-distance intercell connections."]
+items = [
+    "{make_badge('Light blue', '#15F4EE')} protrusions with {make_badge('violet', '#8A2BE2')} outlining represent **fledgling inerconnects** between cells.",
+    "**Squared** interconnect endcaps represent the originating cell of a fledgling interconnect.",
+    "**Rounded** interconnect endcaps represent the terminus cell of a fledgling interconnect.",
+    "{make_badge('Grayscale', '#808080')} coloring differentiates **high-level groups**, which are groups of low-level groups.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[neighbor-shared-resource]
+header = ["The **Neighbor Shared Resource Viewer** depicts the amount of resource received from each neighbor during the previous update."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} indicates **zero resource** was received.",
+    "{make_badge('Blue', '#0000FF')} indicates a **small amount** of resource was received.",
+    "{make_badge('Green', '#00FF00')} indicates an **intermediate amount** of resource was received.",
+    "{make_badge('Yellow', '#FFFF00')} indicates a **large amount** of resource was received.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[interconnect-shared-resource]
+header = ["The **Interconnect Shared Resource Viewer** depicts the amount of resource received via interconnect during the previous update."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} indicates **zero resource** was received.",
+    "{make_badge('Blue', '#0000FF')} indicates a **small amount** of resource was received.",
+    "{make_badge('Green', '#00FF00')} indicates an **intermediate amount** of resource was received.",
+    "{make_badge('Yellow', '#FFFF00')} indicates a **large amount** of resource was received.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[neighbor-messaging]
+header = ["The **Neighbor Messaging Viewer** depicts recent incoming message traffic from each neighbor."]
+items = [
+    "{make_badge('White', '#FFFFFF')} indicates **zero** incoming message traffic.",
+    "{make_badge('Green', '#00FF00')} indicates **one** incoming message.",
+    "{make_badge('Blue', '#0000FF')} indicates **two** incoming messages.",
+    "{make_badge('Purple', '#FF00FF')} indicates **three** incoming messages.",
+    "{make_badge('Red', '#FF0000')} indicates **four** incoming messages.",
+    "{make_badge('Orange', '#FFA500')} indicates **five** incoming messages.",
+    "{make_badge('Silver', '#C0C0C0')} indicates **six or more** incoming messages.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[interconnect-messaging]
+header = ["The **Interconnect Messaging Viewer** depicts recent incoming message traffic via interconnects."]
+items = [
+    "{make_badge('White', '#FFFFFF')} indicates **zero** incoming message traffic.",
+    "{make_badge('Green', '#00FF00')} indicates **one** incoming message.",
+    "{make_badge('Blue', '#0000FF')} indicates **two** incoming messages.",
+    "{make_badge('Purple', '#FF00FF')} indicates **three** incoming messages.",
+    "{make_badge('Red', '#FF0000')} indicates **four** incoming messages.",
+    "{make_badge('Orange', '#FFA500')} indicates **five** incoming messages.",
+    "{make_badge('Silver', '#C0C0C0')} indicates **six or more** incoming messages.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[phylogenetic-root]
+header = [
+  "The **Phylogenetic Root Viewer** represents the identity of each cell's ancestor at simulation outset.",
+  "If the simuation is seeded with saved genotypes, this represents the file ID of the ancestor strain.",
+  "If the simulation is seeded with generated genotypes, this represents the position ID of the ancestor cell."
+]
+items = [
+    "{make_badge('Red', '#FF0000')} indicates **ancestor ID one**.",
+    "{make_badge('Green', '#00FF00')} indicates **ancestor ID two**.",
+    "{make_badge('Blue', '#0000FF')} indicates **ancestor ID three**.",
+    "{make_badge('Arbitrarily', '#FF00FF')} {make_badge('generated', '#BFBFFF')} {make_badge('colors', '#BFBFFF')} represent other ancestor IDs.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Black', '#000000')} borders divide cells with **different ancestors**."
+]
+
+[regulation]
+header = [
+  "The **Cell-wide Regulation Viewer** depicts the total number of regulated SignalGP modules, summed across all hardware units in a cell.",
+  "(SignalGP modules may be either up- or down-regulated)."
+]
+items = [
+    "{make_badge('White', '#FFFFFF')} indicates **zero** regulated modules.",
+    "{make_badge('Green', '#00FF00')} indicates **one** regulated module.",
+    "{make_badge('Blue', '#0000FF')} indicates **two** regulated modules.",
+    "{make_badge('Purple', '#FF00FF')} indicates **three** regulated modules.",
+    "{make_badge('Red', '#FF0000')} indicates **four** regulated modules.",
+    "{make_badge('Orange', '#FFA500')} indicates **five** regulated modules.",
+    "{make_badge('Silver', '#C0C0C0')} indicates **six or more** regulated modules.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[regulation-flow]
+header = [
+  "The **Regulation Flow Viewer** summarizes the directional structure of SignalGP module regulation.",
+  "(SignalGP modules may be either up- or down-regulated)."
+]
+items = [
+    "{make_badge('White', '#FFFFFF')} indicates **zero** hardware units with regulated modules.",
+    "{make_badge('Green', '#00FF00')} indicates **one** hardware unit with regulated modules.",
+    "{make_badge('Blue', '#0000FF')} indicates **two** hardware units with regulated modules.",
+    "{make_badge('Purple', '#FF00FF')} indicates **three** hardware units with regulated modules.",
+    "{make_badge('Red', '#FF0000')} indicates **four** hardware units with regulated modules.",
+    "{make_badge('Orange', '#FFA500')} indicates **five** hardware units with regulated modules.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[directional-regulation]
+header = [
+  "The **Directional Regulation Viewer** depicts number of regulated SignalGP modules in hardware modules facing each neighbor.",
+  "(SignalGP modules may be either up- or down-regulated)."
+]
+items = [
+    "{make_badge('White', '#FFFFFF')} indicates **zero** regulated modules.",
+    "{make_badge('Green', '#00FF00')} indicates **one** regulated module.",
+    "{make_badge('Blue', '#0000FF')} indicates **two** regulated modules.",
+    "{make_badge('Purple', '#FF00FF')} indicates **three** regulated modules.",
+    "{make_badge('Red', '#FF0000')} indicates **four** regulated modules.",
+    "{make_badge('Orange', '#FFA500')} indicates **five** regulated modules.",
+    "{make_badge('Silver', '#C0C0C0')} indicates **six or more**** regulated modules.",
+    "{make_badge('Black', '#000000')} grid tiles are ****dead cells****.",
+    "{make_badge('White', '#FFFFFF')} borders divide ****low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[interconnect-regulation]
+header = [
+  "The **Interconnect Regulation Viewer** depicts number of regulated SignalGP modules in the hardware module managing the cell's interconnects.",
+  "(SignalGP modules may be either up- or down-regulated)."
+]
+items = [
+    "{make_badge('White', '#FFFFFF')} indicates **zero** regulated modules.",
+    "{make_badge('Green', '#00FF00')} indicates **one** regulated module.",
+    "{make_badge('Blue', '#0000FF')} indicates **two** regulated modules.",
+    "{make_badge('Purple', '#FF00FF')} indicates **three** regulated modules.",
+    "{make_badge('Red', '#FF0000')} indicates **four** regulated modules.",
+    "{make_badge('Orange', '#FFA500')} indicates **five** regulated modules.",
+    "{make_badge('Silver', '#C0C0C0')} indicates **six or more** regulated modules.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]

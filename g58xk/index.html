@@ -1,0 +1,895 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="custom.css">
+<meta charset="utf-8">
+<title>dishtiny</title>
+<script src="jquery-1.11.2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+  <!-- loading spinner -->
+  <!-- adapted from https://stackoverflow.com/questions/48228724/centered-modal-load-spinner-bootstrap-4 -->
+  <style>
+  .bd-example-modal-lg .modal-dialog{
+    display: table;
+    position: relative;
+    margin: 0 auto;
+    top: calc(50% - 24px);
+  }
+
+  .bd-example-modal-lg .modal-dialog .modal-content{
+    background-color: transparent;
+    border: none;
+  }
+  </style>
+
+  <div class="modal fade bd-example-modal-lg" data-backdrop="static" data-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content" style="width: 256px">
+          <div class="spinner-border text-light" style="width: 256px; height: 256px;" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <script>
+  $('.modal').modal('show');
+  setTimeout(function () {
+    $('.modal').modal('hide');
+  }, 10000);
+  </script>
+
+  <style>
+  .text-large {
+    font-size: 125%;
+  }
+  </style>
+
+  <div class="jumbotron">
+    <h1 class="display-4">dishtiny</h1>
+    <p class="lead">
+      <b>dis</b>tributed
+      <b>h</b>ierarchical
+      <b>t</b>ransitions
+      of
+      <b>in</b>dividualit<b>y</b>
+    </p>
+  </div>
+
+  <style>
+  .carousel-control-prev-icon {
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+  }
+
+  .carousel-control-next-icon {
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+  }
+
+  .carousel-control-prev {
+    position: absolute;
+    top: auto;
+    bottom: 36px;
+    right: 85%;
+  }
+
+  .carousel-control-next{
+    position: absolute;
+    top: auto;
+    bottom: 36px;
+    left: 85%;
+  }
+
+  .carousel .carousel-indicators li {
+    background-color: #fff;
+    background-color: rgba(70, 70, 70, 0.25);
+  }
+
+  .carousel .carousel-indicators .active {
+    background-color: #444;
+  }
+  </style>
+
+  <div class="row p-3">
+    <div class="col-sm-12 p-3 mx-auto">
+      <div class="card">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#readme-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left"
+              type="button"
+              data-toggle="button"
+              autocomplete="off"
+            >
+              What am I looking at?
+            </button>
+          </span>
+        </div>
+        <div class="text-large card-body collapse" id="readme-body">
+
+          <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
+            <ol class="carousel-indicators">
+              <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
+              <li data-target="#carouselExampleIndicators" data-slide-to="6"></li>
+            </ol>
+            <div class="carousel-inner">
+
+              <div class="carousel-item active">
+                <div class="row">
+                  <div class="col-lg-6">
+                   <img src="cpus.jpg" class="img-fluid" />
+                  </div>
+                  <div class="col-lg-6">
+                  <b>It's an evolution experiment where computer programs are evolving!</b>
+                  <br> <br>
+                  Each little grid title --- something like a biological cell --- is controlled by four virtual CPUs working in tandem (one for each side of the tile).
+                  Depending on the program loaded into the cell, different decisions are made in response to environmental events and messages from neighboring cells.
+                  <br> <br>
+                  For those in the know, virtual CPUs are being implemented using SignalGP [Lalejini and Ofria, 2018].
+                  </div>
+                  <div class="col-12" style="height: 50px;"> </div>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <div class="row">
+                  <div class="col-lg-6">
+                   <img src="football.jpg" class="img-fluid" />
+                  </div>
+                  <div class="col-lg-6">
+                  These cells are presented with a <b>cooperative resource collection task</b>.
+                  <br> <br>
+                  In order to maximize their resource-collection rate, they need to organize into family resource-collecting groups  (which we call "channels") that are <i>just</i> the right size... not too big and not too small!
+                  <br> <br>
+                  Better-configured resource-collecting groups will tend to outcompete other groups for space on the grid.
+                  </div>
+                  <div class="col-12" style="height: 50px;"> </div>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <div class="row">
+                  <div class="col-lg-6">
+                   <img src="stork.jpg" class="img-fluid" />
+                  </div>
+                  <div class="col-lg-6">
+                  Cells use resource they collect to <b>reproduce</b>.
+                  When a cell has enough resource, it can copy its program into a neighboring cell.
+                  <br> <br>
+                  The copy isn't perfect, though... usually, the program changes slightly (mutates) during this process.
+                  My Darwin fanboys out there are probably onto it already, but
+                  <br> <br>
+                  <b>heritable variation</b> + <b>differential reproductive success</b> (some programs are better at competing for space in the population) = ... <b>evolution</b>!
+                  </div>
+                  <div class="col-12" style="height: 50px;"> </div>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <div class="row">
+                  <div class="col-lg-6">
+                   <img src="mirror.jpg" class="img-fluid" />
+                  </div>
+                  <div class="col-lg-6">
+                  In previous work [Moreno and Ofria, 2019], we found that in response to this particular resource-collection task, strategies built on
+                  <ol>
+                    <li> reproductive division of labor, </li>
+                    <li> resource sharing between cells, and</li>
+                    <li> parental care for offspring </li>
+                  </ol>
+                  tend to evolve.
+                  <br> <br>
+                  Such traits are suggestive of multicellularity... or, in fancy science-speak a <b>fraternal transition in  individuality</b> [Smith and Szathmary, 1997].
+
+                  </ul>
+                  </div>
+                  <div class="col-12" style="height: 50px;"> </div>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <div class="row">
+                  <div class="col-lg-6">
+                   <img src="lightbulb.jpg" class="img-fluid" />
+                  </div>
+                  <div class="col-lg-6">
+                  So, why do this type of thing at all?
+                  <br> <br>
+                  On one hand, we're using this model to <b>ask and answer scientific questions</b> about the evolution of multicellularity in order to better understand the processes at play behind life on Earth.
+                  <br> <br>
+                  On the other, we hope that transitions in individuality --- which were key to the complexification and diversification of life on Earth --- can help us <b>evolve sophisticated</b> --- and perhaps <b>useful</b> --- <b>computational systems</b>, like reinforcement-learning agents.
+                  </div>
+                  <div class="col-12" style="height: 50px;"> </div>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <div class="row">
+                  <div class="col-lg-6">
+                   <img src="binoculars.jpg" class="img-fluid" />
+                  </div>
+                  <div class="col-lg-6">
+                   But this web viewer is here so <b>you</b> can get a peek at <b>evolution in action</b>!
+                   <br> <br>
+                   We reccomend letting the simulation run maybe 10,000 updates with rendering off (so it runs faster).
+                   Then, render every update and look at
+                   <ul>
+                     <li> resource sharing in the <b>Resource Sharing Viewer</b> and </li>
+                     <li> signs of reproductive cooperation in the <b>Reproductive Pause Viewer</b> and <b>Resource Stockpile Viewer</b>. </li>
+                   </ul>
+                   You might need to go get a cup of coffee before there's anything interesting to look at.
+                   Pressed for time?
+                   Watch a pre-rendered timelapse on YouTube <a href="https://www.youtube.com/watch?v=yOhryHORQxE"><b>here</b></a>.
+                  </div>
+                  <div class="col-12" style="height: 50px;"> </div>
+                </div>
+              </div>
+
+              <div class="carousel-item">
+                <div class="row">
+                  <div class="col-lg-6">
+                   <img src="desk.jpg" class="img-fluid" />
+                  </div>
+                  <div class="col-lg-6">
+                  And, for extra credit be sure to
+                  <ul>
+                    <li>twiddle parameters in <b>Configuration</b>,</li>
+                    <li> look at a program in the <b>Dominant Genotype</b> viewer (... can you figure out what it evolved to do?),</li>
+                    <li>check out how the software is put together in <b>Source & Ingredients</b>, and</li>
+                    <li>click over to <b>Let's Chat</b> and let us know what you think!</li>
+                  </ul>
+                  </div>
+                </div>
+                <div class="col-12" style="height: 50px;"> </div>
+              </div>
+
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row p-3">
+    <div class="col-lg-8 p-3 mx-auto">
+      <div class="card">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#grid_viewer-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left active"
+              type="button"
+              data-toggle="button"
+              aria-pressed="true"
+              autocomplete="off"
+            >
+              Viewer
+            </button>
+          </span>
+        </div>
+        <div class="text-large card-body collapse show" id="grid_viewer-body">
+          <div id="grid_viewer"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col p-3 mx-auto">
+      <div class="card">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#view_key-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left"
+              type="button"
+              autocomplete="off"
+            >
+              View Key
+            </button>
+          </span>
+        </div>
+        <div id="view_key-body" class="text-large collapse">
+
+          <div id="channel-key">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-dark">
+              The <b>Channel Viewer</b> shows the arrangement of hereditarily-defined resource-collecing cell groups.
+              </li>
+              <li class="list-group-item">
+                <b>Color saturation</b> (e.g.,
+                <span class="badge badge-light" style="background-color: #BFFFBF;">light green</span>
+                vs.
+                <span class="badge badge-light" style="background-color: #00FF00;">intense green</span>
+                ) differentiates <b>low-level groups</b>.
+              </li>
+              <li class="list-group-item">
+                <b>Color hue</b> (e.g.,
+                <span class="badge badge-light" style="background-color: #BFBFFF;">light blue</span>
+                /
+                <span class="badge badge-dark" style="background-color: #0000FF;">intense blue</span>
+                vs.
+                <span class="badge badge-light" style="background-color: #FFBFFF;">light purple</span>
+                /
+                <span class="badge badge-dark" style="background-color: #FF00FF;">intense purple</span>
+                ) differentiates <b>high-level groups</b>, which are groups of low-level groups.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                borders divide <b>low-level groups</b> that are part of the same high-level group.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                borders divide <b>high-level groups</b>.
+              </li>
+            </ul>
+          </div>
+
+          <div id="resource-stockpile-key">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-dark">
+                The <b>Stockpile Viewer</b> depicts the resource that each cell-like organism has accumulated.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                indicates a <b>resource defecit</b> (which, if it becomes too extreme, will result in that cell's death).
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                indicates <b>zero resource</b>.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                indicates <b>positive resource</b>, but below the threshold required for reproduction.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #00ff00">Green</span>
+                indicates <b>enough resource to reproduce</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffff00">Yellow</span>
+                indicates an <b>excess of resource</b>, more than enough to reproduce.
+              </li>
+            </ul>
+          </div>
+
+          <div id="resource-sharing-key">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-dark">
+                The <b>Contribution Viewer</b> depicts the amount of resource has received from neighbors during the previous update.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                indicates <b>zero resource</b> was received.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                indicates a <b>small amount</b> of resource was received.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #00ff00">Green</span>
+                indicates an <b>intermediate amount</b> of resource was received.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffff00">Yellow</span>
+                indicates a <b>large amount</b> of resource was received.
+              </li>
+            </ul>
+          </div>
+
+          <div id="apoptosis-key">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-dark">
+                The <b>Apoptosis Viewer</b> shows cells that have registered themselves for imminent cellular suicidie.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                grid tiles are <b>live cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                cells are registered for <b>partial apoptosis</b>, where a underlying cell is destroyed but its channel structure is preserved.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                cells are registered for <b>complete apoptosis</b>, where a cell and its channel structure are totally destroyed.
+              </li>
+            </ul>
+          </div>
+
+          <div id="taxa-key">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-dark">
+                The <b>Taxa Viewer</b> depicts the distribution of groups of genetically-identical cells.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                grid tiles are <b>live cells</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                lines divide cells with <b>identical genotypes</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                lines divide cells with <b>different genotypes</b>.
+              </li>
+            </ul>
+          </div>
+
+          <div id="resource-wave-key">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-dark">
+                The <b>Resource Wave Viewer</b> depicts the cells' cooperative resource-collection task.
+                Activation propagates outward in same-channel groups from an environmentally-triggered seed.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #00ff00">Green</span>
+                cells are activated within the beneficial radius of the seed and are <b>gaining resource</b>.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                cells are activated outside the beneficial radius of the seed and are <b>losing resource</b>.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                cells are in the <b>ready state</b>, meaning they can be activated by adjacent cooperating cells.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                cells are in a <b>quiescent state</b>, meaning they cannot be activated by adjacent cooperating cells.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+            </ul>
+          </div>
+
+          <div id="channel-generation-key">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-dark">
+                The <b>Channel Generation Viewer</b> depicts generation counters that enforce a birth-death lifecycle.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                cells are <b>young</b> members of a same-channel group.
+                They are capable of collecting resource and producing offspring that are group members.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                cells are <b>older</b> members of a same-channel group, which still retain all the capabilities of younger cells.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                cells are <b>oldest</b> members of a same-channel group.
+                As coloring progress from light to dark red, cells lose their ability to create same-channel offspring and then to collect resource.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+            </ul>
+          </div>
+
+          <div id="expiration-key">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-dark">
+                The <b>Expiration Viewer</b> depicts end-of-the-road channel generation state in greater detail.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                cells are <b>young</b> and retain all reproductive and resource-collection capabilities.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span> cells are <b>older</b> and have lost same-channel reproductive capability.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                cells are <b>oldest</b> and have additionally lost resource-collection capability.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+            </ul>
+          </div>
+
+          <div id="reproductive-pause-key">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item list-group-item-dark">
+                The <b>Reproductive Pause Viewer</b> depicts reproductive cooperation.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #ffffff">White</span>
+                cells have registered <b>zero</b> reproductive forbearance.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-light" style="background-color: #00ff00">Green</span>
+                cells have temporarily registred to pause reproduction in <b>one direction</b>.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #0000ff">Blue</span>
+                cells have temporariliy registered to pause reproduction in <b>two directions</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff00ff">Purple</span>
+                cells have temporariliy registered to pause reproduction in <b>three directions</b>.
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #ff0000">Red</span>
+                cells have temporarily registered to pause reproduction in all <b>four directions</b>.
+                </span>
+              </li>
+              <li class="list-group-item">
+                <span class="badge badge-dark" style="background-color: #000000">Black</span>
+                grid tiles are <b>dead cells</b>.
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row p-3">
+    <div class="col-lg-8 p-3 mx-auto">
+      <div class="card">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#emp_button_dash-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left active"
+              type="button"
+              data-toggle="button"
+              aria-pressed="true"
+              autocomplete="off"
+            >
+              Controls
+            </button>
+          </span>
+        </div>
+        <div id="emp_button_dash-body" class="text-large card-body collapse show">
+          <div id="emp_button_dash"></div>
+        </div>
+      </div>
+    </div>
+
+        <div class="col-lg-4 p-3 mx-auto">
+          <div class="card">
+            <div class="card-header">
+              <span data-toggle="collapse" href="#view_selector-body">
+                <button
+                  class="btn btn-lg btn-block btn-primary text-left active"
+                  type="button"
+                  data-toggle="button"
+                  aria-pressed="true"
+                  autocomplete="off"
+                >
+                  View Selector
+                </button>
+              </span>
+            </div>
+            <div id="view_selector-body" class="text-large card-body collapse show">
+              <div id="view_selector"></div>
+            </div>
+          </div>
+        </div>
+
+
+  </div>
+
+  <div class="row p-3">
+    <div class="col-lg-6 p-3">
+      <div class="card">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#emp_systematics_dash-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left"
+              type="button"
+              data-toggle="button"
+              autocomplete="off"
+            >
+              Systematics
+            </button>
+          </span>
+        </div>
+        <div id="emp_systematics_dash-body" class="text-large card-body collapse">
+          <div id="emp_systematics_dash"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 p-3 mx-auto">
+      <div class="card">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#dominant_viewer-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left"
+              type="button"
+              data-toggle="button"
+              autocomplete="off"
+            >
+              Dominant Genotype
+            </button>
+          </span>
+        </div>
+        <div id="dominant_viewer-body" class="text-large card-body collapse">
+          <pre>
+          <div id="dominant_viewer"></div>
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row p-3">
+    <div class="col-lg-12 p-3">
+      <div class="card">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#configuration-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left"
+              type="button"
+              data-toggle="button"
+              autocomplete="off"
+            >
+              Configuration
+            </button>
+          </span>
+        </div>
+        <div id="configuration-body" class="text-large collapse">
+        <ul class="list-group list-group-flush">
+        <li class="list-group-item list-group-item-success">
+          Hey!
+          You can adjust any of these parameters right in your web browser using URL query parameters.
+          For example, appending
+          <a href="?SEED=2&MUTATION_RATE=0.1"><b>
+            ?SEED=2&MUTATION_RATE=0.1
+          </b></a>
+          in your web browser's URL bar and refreshing will change the random number generator seed and mutation rate.
+        </li>
+        <li class="list-group-item">
+          <div id="emp_dynamic_config"> </div>
+        </li>
+        <li class="list-group-item list-group-item-warning">
+          Parameters below are locked in at compile time, so you can't adjust them here...
+          :(
+        </li>
+        <li class="list-group-item">
+          <div id="emp_static_config"></div>
+        </li>
+        </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row p-3">
+    <div class="col-md-6 col-xl-3 p-3">
+      <div class="card">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#social-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left"
+              type="button"
+              data-toggle="button"
+              autocomplete="off"
+            >
+              Let's Chat!
+            </button>
+          </span>
+        </div>
+        <div id="social-body" class="text-large collapse">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            Comments, questions, concerns?
+            I started a twitter thread so we can chat!
+          </li>
+          <li class="list-group-item">
+          <blockquote class="card-body twitter-tweet"><p lang="en" dir="ltr">nothing to see here, just a placeholder tweet 🐦</p>&mdash; Matthew A Moreno (@MorenoMatthewA) <a href="https://twitter.com/MorenoMatthewA/status/1054071480512843776?ref_src=twsrc%5Etfw">October 21, 2018</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </li>
+          <li class="list-group-item">
+            You can also reach me at
+            <a href="mailto:m.more500@gmail.com">m.more500@gmail.com</a>.
+          </li>
+        </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-3 p-3">
+      <div class="card">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#source-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left"
+              type="button"
+              data-toggle="button"
+              autocomplete="off"
+            >
+              Source & Ingredients
+            </button>
+          </span>
+        </div>
+        <div id="source-body" class="text-large collapse">
+          <ul class="list-group">
+            <li class="list-group-item">
+              Find the C++ and HTML source on <a href="https://github.com/mmore500/dishtiny"><b>GitHub</b></a>.
+              MIT licensed, contributions welcome!
+            </li>
+            <li class="list-group-item">
+              Data from and tutorials for the native version of the software is hosted on the
+              <a href="https://osf.io/g58xk/">
+              <b>Open Science Framework</b></a>.
+            </li>
+            <li class="list-group-item">
+              The
+              <a href="https://github.com/devosoft/Empirical">
+              <b> Empirical C++ Library </b>
+              </a>
+              for efficient, reliable, and accessible scientific software is the secret sauce behind the web visualization and digital evolution framework.
+            </li>
+            <li class="list-group-item">
+              <a href="https://emscripten.org/">
+              <b> Emscripten </b>
+              </a>
+              compiled it to javascript so it can run in your web browser.
+            </li>
+            <li class="list-group-item">
+              <a href="https://getbootstrap.com/">
+              <b> Bootstrap </b>
+              </a>
+              makes it look pretty and play nice with mobile devices.
+            </i>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-3 p-3">
+      <div class="card">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#references-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left"
+              type="button"
+              data-toggle="button"
+              autocomplete="off"
+            >
+              References
+            </button>
+          </span>
+        </div>
+        <div id="references-body" class="collapse">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              Charles Ofria, Emily Dolson, Alex Lalejini, Jake Fenton, Matthew Andres Moreno, Steven Jorgensen, … Anya Vostinar. (2019, February 22). Empirical (Version v0.0.3). Zenodo. http://doi.org/10.5281/zenodo.2575607
+            </li>
+            <li class="list-group-item">
+              Smith, John Maynard, and Eors Szathmary. The major transitions in evolution. Oxford University Press, 1997.
+            </li>
+            <li class="list-group-item">
+              Lalejini, Alexander, and Charles Ofria. "Evolving event-driven programs with SignalGP." Proceedings of the Genetic and Evolutionary Computation Conference. ACM, 2018.
+            </li>
+            <li class="list-group-item">
+              Moreno, Matthew Andres, and Charles Ofria. "Toward open-ended fraternal transitions in individuality." Artificial life 25.2 (2019): 117-133.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-xl-3 p-3">
+      <div class="card">
+        <div class="card-header">
+          <span data-toggle="collapse" href="#acknowledgements-body">
+            <button
+              class="btn btn-lg btn-block btn-primary text-left"
+              type="button"
+              data-toggle="button"
+              autocomplete="off"
+            >
+              Acknowledgements
+            </button>
+          </span>
+        </div>
+        <div id="acknowledgements-body" class="text-large collapse">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <div class="row justify-content-around">
+              <div class="col-sm-auto p-2 d-flex align-items-center">
+              <div class="mx-auto">
+              <img src="moreno.jpg" class="rounded" alt="Matthew Andres Moreno" height="128" width="128">
+              </div>
+              </div>
+              <div class="col-sm-6 p-2 d-flex align-items-center">
+              <div class="mx-auto">
+              <a href="https://mmore500.github.io">
+              <b>Matthew Andres Moreno</b>
+              </a>
+              made it.
+              </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="row justify-content-around">
+              <div class="col-sm-auto p-2 d-flex align-items-center">
+              <div class="mx-auto">
+              <img src="ofria.jpg" class="rounded" alt="Charles Ofria" height="128" width="128">
+              </div>
+              </div>
+              <div class="col-sm-6 p-2 d-flex align-items-center">
+              <div class="mx-auto">
+              <a href="https://ofria.com">
+              <b>Dr. Charles Ofria</b>
+              </a>
+              advised it.
+              </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              We are the
+              <a href="http://devolab.msu.edu/">
+              Digital Evolution Laboratory
+              </a>
+              at the
+              <a href="https://msu.edu/">
+              Michigan State University
+              </a>
+              <a href="http://www.cse.msu.edu/">
+              Department of Computer Science and Engineering</a>,
+              in association with the
+              <a href="http://beacon-center.org/">
+              NSF BEACON Center for the Study of Evolution in Action</a>.
+            </li>
+            <li class="list-group-item">
+              This research was supported in part by NSF grants DEB-1655715 and DBI-0939454.
+              This material is based upon work supported by the National Science Foundation Graduate Research Fellowship under Grant No. DGE-1424871.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="dishtiny.js"></script>
+
+</body>
+</html>
