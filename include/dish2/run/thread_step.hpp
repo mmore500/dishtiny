@@ -2,7 +2,7 @@
 #ifndef DISH2_RUN_THREAD_STEP_HPP_INCLUDE
 #define DISH2_RUN_THREAD_STEP_HPP_INCLUDE
 
-#include "../../../third-party/conduit/include/uitsl/concurrent/ConcurrentTimeoutBarrier.hpp"
+#include "../../../third-party/conduit/include/uitsl/concurrent/ConcurrentBarrier.hpp"
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 #include "../../../third-party/conduit/include/uitsl/parallel/ThreadIbarrierFactory.hpp"
@@ -42,11 +42,9 @@ void thread_step(
 
     // initialized first time thru the function,
     // so N_THREADS should be initialized
-    static uitsl::ThreadIbarrierFactory factory{ cfg.N_THREADS() };
+    static uitsl::ConcurrentBarrier barrier{ cfg.N_THREADS() };
 
-    const uitsl::ConcurrentTimeoutBarrier<uitsl::CoarseTimer> barrier{
-      factory.MakeBarrier(), run_timer
-    };
+    barrier.ArriveAndWaitWhile( run_timer );
 
   }
   #endif // #ifndef __EMSCRIPTEN__
