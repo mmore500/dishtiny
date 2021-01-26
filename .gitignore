@@ -18,6 +18,7 @@
 .DS_Store
 a.out
 a.out.js
+rundishtiny
 
 web/dishtiny.js
 web/dishtiny.worker.js
