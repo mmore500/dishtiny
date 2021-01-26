@@ -72,17 +72,28 @@ public:
 
     pca_result.reset();
 
-    const auto regulation_summary = hopca::drop_homogenous_columns(
-      dish2::summarize_module_regulation(
-        thread_world.get()
-      )
+    hopca::Matrix raw_regulation_summary = dish2::summarize_module_regulation(
+      thread_world.get()
     );
+    // sanitize out nan, inf
+    std::transform(
+      DATA( raw_regulation_summary ),
+      DATA( raw_regulation_summary )
+        + raw_regulation_summary->n_row * raw_regulation_summary->n_col
+      ,
+      DATA( raw_regulation_summary ),
+      uitsl::clamp_cast<double, double>
+    );
+
+    const auto regulation_summary = hopca::drop_homogenous_columns(
+      raw_regulation_summary
+    );
+    if ( !regulation_summary.has_value() ) return;
+
     cardi_coord_to_live_cardi_idx_translator
       = dish2::make_cardi_coord_to_live_cardi_idx_translator< Spec >(
         thread_world.get()
       );
-
-    if ( !regulation_summary.has_value() ) return;
 
     hopca::PCA module_expression_pca{ std::min(
       3ul, uitsl::audit_cast<size_t>( regulation_summary.value()->n_row )

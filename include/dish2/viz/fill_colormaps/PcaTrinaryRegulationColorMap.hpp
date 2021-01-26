@@ -81,18 +81,21 @@ public:
         + raw_regulation_summary->n_row * raw_regulation_summary->n_col
       ,
       DATA( raw_regulation_summary ),
-      []( const double val ){ return emp::Sgn( val ); }
+      []( const double val ){
+        // clamp_cast to sanitize out nan, inf
+        return emp::Sgn( uitsl::clamp_cast<double>(val) );
+      }
     );
 
     const auto trinary_regulation_summary = hopca::drop_homogenous_columns(
       raw_regulation_summary
     );
+    if ( !trinary_regulation_summary.has_value() ) return;
+
     cardi_coord_to_live_cardi_idx_translator
       = dish2::make_cardi_coord_to_live_cardi_idx_translator< Spec >(
         thread_world.get()
       );
-
-    if ( !trinary_regulation_summary.has_value() ) return;
 
     hopca::PCA module_regulation_pca{ std::min(
       3ul, uitsl::audit_cast<size_t>(trinary_regulation_summary.value()->n_row)
