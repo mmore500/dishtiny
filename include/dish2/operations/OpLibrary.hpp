@@ -19,6 +19,9 @@ namespace dish2 {
 template< typename DishSpec >
 using OpLibrary = sgpl::OpLibraryCoupler<
   sgpl::CompleteOpLibrary,
+  sgpl::global::RegulatorAdj<1>, // exposed regulator
+  sgpl::global::RegulatorGet<1>, // exposed regulator
+  sgpl::global::RegulatorSet<1>, // exposed regulator
   dish2::AddToOwnState< DishSpec >,
   dish2::BcstIntraMessageIf,
   dish2::MultiplyOwnState< DishSpec >,
