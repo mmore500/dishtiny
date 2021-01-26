@@ -82,7 +82,13 @@ public:
         + raw_regulation_summary->n_row * raw_regulation_summary->n_col
       ,
       DATA( raw_regulation_summary ),
-      uitsl::clamp_cast<double, double>
+      [](const double val){
+        return std::clamp(
+          uitsl::clamp_cast<double, double>( val ),
+          -dish2::cfg.REGULATION_VIZ_CLAMP(),
+          dish2::cfg.REGULATION_VIZ_CLAMP()
+        );
+      }
     );
 
     const auto regulation_summary = hopca::drop_homogenous_columns(

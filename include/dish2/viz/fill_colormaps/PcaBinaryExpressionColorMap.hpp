@@ -6,10 +6,12 @@
 #include <functional>
 // #include <unordered_map> // TODO fixme
 #include <map>
+#include <tuple>
 
 #include "../../../../third-party/conduit/include/uitsl/algorithm/clamp_cast.hpp"
 #include "../../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
 #include "../../../../third-party/Empirical/include/emp/base/optional.hpp"
+#include "../../../../third-party/Empirical/include/emp/datastructs/tuple_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/header-only-pca/include/hopca/normalize.hpp"
 #include "../../../../third-party/header-only-pca/include/hopca/pca.hpp"

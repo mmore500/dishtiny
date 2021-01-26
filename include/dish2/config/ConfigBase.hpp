@@ -38,15 +38,6 @@ EMP_BUILD_CONFIG(
   VALUE(SYNCHRONOUS, bool, false,
     "[NATIVE] Should updates occur synchronously across threawds and processes?"
   ),
-  VALUE(PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
-    "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable RECORD_FINAL_DATA."
-  ),
-  VALUE(DATA_DUMP, bool, false,
-    "[NATIVE] Should we record data on the final state of the simulation?"
-  ),
-  VALUE(ROOT_ABUNDANCES_FREQ, size_t, 0,
-    "[NATIVE] How many updates should elapse between recording phylogenetic root abundances? If 0, never record phylogenetic root abundances. Must be power of two."
-  ),
   VALUE(RNG_PRESEED, uint32_t, std::numeric_limits<uint32_t>::max(),
     "[NATIVE] Optionally override the calculated rng preseed."
   ),
@@ -233,7 +224,19 @@ EMP_BUILD_CONFIG(
   ),
 
 
-  // GROUP(DATA, "DATA"),
+  GROUP(DATA, "DATA"),
+  VALUE(PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
+    "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable RECORD_FINAL_DATA."
+  ),
+  VALUE(DATA_DUMP, bool, false,
+    "[NATIVE] Should we record data on the final state of the simulation?"
+  ),
+  VALUE(ROOT_ABUNDANCES_FREQ, size_t, 0,
+    "[NATIVE] How many updates should elapse between recording phylogenetic root abundances? If 0, never record phylogenetic root abundances. Must be power of two."
+  ),
+  VALUE(REGULATION_VIZ_CLAMP, double, 10.0,
+    "What bounds should we clamp regulation values into before running PCA visualization?"
+  ),
   // VALUE(UPDATES_PER_CHUNK, size_t, 64,
   //   "[NATIVE] "
   //   "How many updates should we save in each dimension per dataset chunk? Total number will be this parameter squared."
