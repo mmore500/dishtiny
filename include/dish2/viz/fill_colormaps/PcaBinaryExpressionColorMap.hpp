@@ -4,8 +4,7 @@
 
 #include <algorithm>
 #include <functional>
-// #include <unordered_map> // TODO fixme
-#include <map>
+#include <unordered_map>
 #include <tuple>
 
 #include "../../../../third-party/conduit/include/uitsl/algorithm/clamp_cast.hpp"
@@ -27,8 +26,8 @@ class PcaBinaryExpressionColorMap {
 
   std::reference_wrapper< const dish2::ThreadWorld<Spec> > thread_world;
 
-  std::map< // todo fixme
-    std::tuple<size_t, size_t>, size_t
+  std::unordered_map<
+    std::tuple<size_t, size_t>, size_t, emp::TupleHash<size_t, size_t>
   > cardi_coord_to_live_cardi_idx_translator;
   emp::optional<hopca::Matrix> pca_result;
 
@@ -72,6 +71,11 @@ public:
 
   void Refresh() {
 
+    cardi_coord_to_live_cardi_idx_translator
+      = dish2::make_cardi_coord_to_live_cardi_idx_translator< Spec >(
+        thread_world.get()
+      );
+
     pca_result.reset();
 
     hopca::Matrix raw_expression_summary = dish2::summarize_module_expression(
@@ -89,11 +93,6 @@ public:
     const auto binary_expression_summary = hopca::drop_homogenous_columns(
       raw_expression_summary
     );
-
-    cardi_coord_to_live_cardi_idx_translator
-      = dish2::make_cardi_coord_to_live_cardi_idx_translator< Spec >(
-        thread_world.get()
-      );
 
     if ( !binary_expression_summary.has_value() ) return;
 

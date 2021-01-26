@@ -4,12 +4,13 @@
 
 #include <algorithm>
 #include <functional>
-// #include <unordered_map> // TODO fixme
-#include <map>
+#include <unordered_map>
+#include <tuple>
 
 #include "../../../../third-party/conduit/include/uitsl/algorithm/clamp_cast.hpp"
 #include "../../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
 #include "../../../../third-party/Empirical/include/emp/base/optional.hpp"
+#include "../../../../third-party/Empirical/include/emp/datastructs/tuple_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/header-only-pca/include/hopca/normalize.hpp"
 #include "../../../../third-party/header-only-pca/include/hopca/pca.hpp"
@@ -25,8 +26,8 @@ class PcaTrinaryRegulationColorMap {
 
   std::reference_wrapper< const dish2::ThreadWorld<Spec> > thread_world;
 
-  std::map< // todo fixme
-    std::tuple<size_t, size_t>, size_t
+  std::unordered_map<
+    std::tuple<size_t, size_t>, size_t, emp::TupleHash<size_t, size_t>
   > cardi_coord_to_live_cardi_idx_translator;
   emp::optional<hopca::Matrix> pca_result;
 
@@ -70,6 +71,11 @@ public:
 
   void Refresh() {
 
+    cardi_coord_to_live_cardi_idx_translator
+      = dish2::make_cardi_coord_to_live_cardi_idx_translator< Spec >(
+        thread_world.get()
+      );
+
     pca_result.reset();
 
     hopca::Matrix raw_regulation_summary = dish2::summarize_module_regulation(
@@ -91,11 +97,6 @@ public:
       raw_regulation_summary
     );
     if ( !trinary_regulation_summary.has_value() ) return;
-
-    cardi_coord_to_live_cardi_idx_translator
-      = dish2::make_cardi_coord_to_live_cardi_idx_translator< Spec >(
-        thread_world.get()
-      );
 
     hopca::PCA module_regulation_pca{ std::min(
       3ul, uitsl::audit_cast<size_t>(trinary_regulation_summary.value()->n_row)

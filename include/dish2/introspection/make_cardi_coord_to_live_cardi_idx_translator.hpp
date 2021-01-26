@@ -3,9 +3,10 @@
 #define DISH2_INTROSPECTION_MAKE_CARDI_COORD_TO_LIVE_CARDI_IDX_TRANSLATOR_HPP_INCLUDE
 
 #include <iterator>
-#include <map> // todo fixme
+#include <unordered_map>
 #include <tuple>
 
+#include "../../../third-party/Empirical/include/emp/datastructs/tuple_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 
 #include "../cell/Cell.hpp"
@@ -15,14 +16,15 @@
 namespace dish2 {
 
 template< typename Spec >
-std::map<std::tuple<size_t, size_t>, size_t>
-make_cardi_coord_to_live_cardi_idx_translator(
+auto make_cardi_coord_to_live_cardi_idx_translator(
   const dish2::ThreadWorld<Spec>& world
 ) {
 
   const auto& population = world.population;
 
-  std::map<std::tuple<size_t, size_t>, size_t> res; // todo fixme
+  std::unordered_map<
+    std::tuple<size_t, size_t>, size_t, emp::TupleHash<size_t, size_t>
+  > res;
 
   size_t live_cardi_idx{};
 
