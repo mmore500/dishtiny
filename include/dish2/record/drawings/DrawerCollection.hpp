@@ -122,7 +122,7 @@ using DrawerCollection = dish2::DrawerManager<
   >,
   dish2::SeriesDrawer<
     Spec,
-    dish2::RegulationProtectedByModuleArtist<>
+    dish2::RegulationExposedByModuleArtist<>
   >,
   dish2::GridDrawer<
     Spec,

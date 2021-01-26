@@ -82,7 +82,7 @@ using ViewerCollection = dish2::ViewerManager<
     dish2::RegulationByModuleArtist<>, dish2::SharingCategory, 16
   >,
   dish2::SeriesViewer<
-    dish2::RegulationProtectedByModuleArtist<>, dish2::SharingCategory, 16
+    dish2::RegulationExposedByModuleArtist<>, dish2::SharingCategory, 16
   >,
   dish2::GridViewer<
     dish2::ResourceInputPeekArtist<>, dish2::SharingCategory

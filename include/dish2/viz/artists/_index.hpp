@@ -30,7 +30,7 @@
 #include "PhylogeneticRootArtist.hpp"
 #include "QuorumBitsArtist.hpp"
 #include "RegulationByModuleArtist.hpp"
-#include "RegulationProtectedByModuleArtist.hpp"
+#include "RegulationExposedByModuleArtist.hpp"
 #include "ResourceInputPeekArtist.hpp"
 #include "ResourceStockpileArtist.hpp"
 #include "SpawnArrestArtist.hpp"

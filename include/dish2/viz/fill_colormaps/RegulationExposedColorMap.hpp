@@ -11,10 +11,10 @@
 
 namespace dish2 {
 
-struct RegulationProtectedColorMap {
+struct RegulationExposedColorMap {
 
   template<typename... Args>
-  RegulationProtectedColorMap( Args&&... ){}
+  RegulationExposedColorMap( Args&&... ){}
 
   template<typename ValueType>
   std::string Paint(const ValueType& opt_amt) const {

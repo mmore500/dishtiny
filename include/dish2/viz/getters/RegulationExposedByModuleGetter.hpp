@@ -19,7 +19,7 @@
 namespace dish2 {
 
 template<typename Spec>
-class RegulationProtectedByModuleGetter {
+class RegulationExposedByModuleGetter {
 
   dish2::CardinalIteratorAdapter<Spec, dish2::CpuWrapper> cpu_getter;
   dish2::GenomeGetter<Spec> genome_getter;
@@ -31,7 +31,7 @@ public:
   using value_type = emp::optional<float>;
 
   template< typename... Args >
-  RegulationProtectedByModuleGetter(
+  RegulationExposedByModuleGetter(
     const dish2::ThreadWorld<Spec>& thread_world_,
     const size_t idx,
     Args&&...
