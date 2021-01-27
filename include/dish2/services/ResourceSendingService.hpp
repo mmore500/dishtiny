@@ -8,6 +8,7 @@
 #include <set>
 #include <utility>
 
+#include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/nan_to_zero.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
@@ -244,19 +245,19 @@ struct ResourceSendingService {
     );
 
     // do the send
-    // TODO write a custom transform-like for_each
     float stockpile
       = *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>();
-    for (size_t i{}; i < send_amounts.size(); ++i) {
-      auto& resource_output
-        =*(cell.template begin<dish2::ResourceNodeOutputWrapper<spec_t>>() + i);
-      const auto send_amount = *( std::begin( send_amounts ) + i );
-
-      stockpile -= send_amount;
-      uitsl_err_audit(!
-        resource_output.TryPut( send_amount )
-      );
-    }
+    uitsl::for_each(
+      std::begin( send_amounts ),
+      std::end( send_amounts ),
+      cell.template begin<dish2::ResourceNodeOutputWrapper<spec_t>>(),
+      [&stockpile](const float send_amount, auto& resource_output){
+        stockpile -= send_amount;
+        uitsl_err_audit(!
+          resource_output.TryPut( send_amount )
+        );
+      }
+    );
 
     // patch for precision errors
     // could also clamp, but this avoids branching
