@@ -7,12 +7,15 @@ DISHTINY_DIRTY := $(shell \
     ( git diff-index --quiet HEAD -- && echo "-clean" || echo "-dirty" ) \
     | tr -d '\040\011\012\015' \
   )
+DISHTINY_SOURCE_DIR := $(shell pwd)
 # to compile different metrics/selecctors
 # make ARGS="-DMETRIC=streak -DSELECTOR=roulette"
 
 # Flags to use regardless of compiler
 CFLAGS_all := -std=c++17 -pipe -Wall -Wno-unused-function -Wno-unused-private-field -Wno-empty-body \
-  -Iinclude -Ithird-party/ -DDISHTINY_HASH_=$(DISHTINY_HASH)$(DISHTINY_DIRTY) \
+  -Iinclude -Ithird-party/ \
+	-DDISHTINY_HASH_=$(DISHTINY_HASH)$(DISHTINY_DIRTY) \
+	-DDISHTINY_SOURCE_DIR_=$(DISHTINY_SOURCE_DIR)\
 	$(ARGS)
 
 # Native compiler information
@@ -28,6 +31,7 @@ else
 endif
 
 CFLAGS_nat := -O3 -march=native -flto -DNDEBUG -ffast-math $(CFLAGS_all) $(OMP_FLAG)
+CFLAGS_nat_production := $(CFLAGS_nat) -g
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
 CFLAGS_nat_debug := -g -DEMP_TRACK_MEM $(OMP_FLAG) $(CFLAGS_all)
 CFLAGS_nat_sanitize := -fsanitize=address -fsanitize=undefined $(CFLAGS_nat_debug)
@@ -44,11 +48,15 @@ CFLAGS_web_debug := $(CFLAGS_all) $(OFLAGS_web_debug) $(OFLAGS_web_all)
 
 default: $(PROJECT)
 native: $(PROJECT)
+production: $(PROJECT)
 web: $(PROJECT).js web/index.html
 all: $(PROJECT) $(PROJECT).js web/index.html
 
 debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
 debug:	$(PROJECT)
+
+production:	CFLAGS_nat := $(CFLAGS_nat_production)
+production:	$(PROJECT)
 
 sanitize: CFLAGS_nat := $(CFLAGS_nat_sanitize)
 sanitize: $(PROJECT)
@@ -63,7 +71,7 @@ $(PROJECT):	source/native.cpp include/
 	@echo DISH_MPICXX $(DISH_MPICXX)
 	@echo MPICH_CXX $(MPICH_CXX)
 	@echo OMPI_CXX $(OMPI_CXX)
-	$(DISH_MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -o run$(PROJECT) $(OMP_LINKER_FLAG) -lstdc++fs
+	$(DISH_MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -ldw -o run$(PROJECT) $(OMP_LINKER_FLAG) -lstdc++fs
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/

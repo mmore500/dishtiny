@@ -42,6 +42,7 @@ RUN \
     imagemagick \
     libcurl4-openssl-dev \
     libsfml-dev \
+    libdw-dev \
     libomp-dev \
     sshpass \
     xauth \

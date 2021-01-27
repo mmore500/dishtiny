@@ -15,6 +15,8 @@ void print_config() {
   std::cout << "==============================" << std::endl;
   std::cout << "|    How am I configured?    |" << std::endl;
   std::cout << "==============================" << std::endl;
+  std::cout << "SOURCE DIRECTORY "
+    << EMP_STRINGIFY(DISHTINY_SOURCE_DIR_) << std::endl;
   std::cout << "SOURCE HASH " << EMP_STRINGIFY(DISHTINY_HASH_) << std::endl;
   std::cout << "------------------------------" << std::endl;
 
