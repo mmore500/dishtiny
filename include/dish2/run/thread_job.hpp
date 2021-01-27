@@ -51,7 +51,7 @@ void thread_job(
     << std::endl;
 
   // write elapsed updates to file (for easier benchmark post-processing)
-  std::ofstream(
+  if (cfg.BENCHMARKING_DUMP() ) std::ofstream(
     dish2::make_elapsed_updates_filename( thread_idx )
   ) << thread_world.GetUpdate() << std::endl;
 

@@ -24,7 +24,7 @@ std::string make_elapsed_updates_filename(
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"thread", emp::to_string(thread_idx)},
-    {"ext", ".csv"}
+    {"ext", ".txt"}
   };
 
   if ( std::getenv("REPRO_ID") ) {
