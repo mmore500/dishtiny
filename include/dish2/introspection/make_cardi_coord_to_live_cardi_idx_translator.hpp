@@ -3,8 +3,8 @@
 #define DISH2_INTROSPECTION_MAKE_CARDI_COORD_TO_LIVE_CARDI_IDX_TRANSLATOR_HPP_INCLUDE
 
 #include <iterator>
-#include <unordered_map>
 #include <tuple>
+#include <unordered_map>
 
 #include "../../../third-party/Empirical/include/emp/datastructs/tuple_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
