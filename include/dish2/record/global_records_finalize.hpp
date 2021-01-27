@@ -14,6 +14,7 @@
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_filter.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_max.hpp"
+#include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 

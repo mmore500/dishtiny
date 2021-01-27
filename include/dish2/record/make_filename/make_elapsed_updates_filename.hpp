@@ -7,6 +7,7 @@
 #include <string>
 
 #include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
+#include "../../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
