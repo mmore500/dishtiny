@@ -8,8 +8,8 @@
 
 #include "../../../third-party/Empirical/include/emp/base/assert.hpp"
 
-#include "get_prevalent_coding_genotype.hpp"
 #include "count_live_cells.hpp"
+#include "get_prevalent_coding_genotype.hpp"
 
 namespace dish2 {
 
