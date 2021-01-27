@@ -18,9 +18,9 @@ struct ResourceReceivingService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {
     const size_t freq = dish2::cfg.RESOURCE_RECEIVING_SERVICE_FREQUENCY();
+    // must run whether cell is alive or not to keep aggregated ducts in sync
     return
-      alive
-      && freq > 0
+      freq > 0
       && uitsl::shift_mod( update, freq ) == 0;
   }
 
@@ -46,6 +46,9 @@ struct ResourceReceivingService {
       0.0f,
       [](const auto& cumulative_sum, auto& addend){ return addend.JumpGet(); }
     );
+
+    // dead cells receive resource but do not absorb it
+    if ( !cell.IsAlive() ) return;
 
     // how much do we already have?
     const float current_amount

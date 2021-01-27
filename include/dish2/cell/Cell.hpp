@@ -196,7 +196,6 @@ struct Cell {
       dish2::StateOutputPutService,
 
       dish2::EpochAdvanceService,
-      dish2::ResourceInputJumpService,
       dish2::CellDeathService, // must run last
       dish2::ApoptosisService // must run last
     >;
