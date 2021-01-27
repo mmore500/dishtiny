@@ -36,7 +36,7 @@ EMP_BUILD_CONFIG(
     "[NATIVE] How many seconds should pass between logging progress?"
   ),
   VALUE(SYNCHRONOUS, bool, false,
-    "[NATIVE] Should updates occur synchronously across threawds and processes?"
+    "[NATIVE] Should updates occur synchronously across threads and processes?"
   ),
   VALUE(RNG_PRESEED, uint32_t, std::numeric_limits<uint32_t>::max(),
     "[NATIVE] Optionally override the calculated rng preseed."
