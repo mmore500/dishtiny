@@ -232,6 +232,17 @@ struct ResourceSendingService {
       *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>()
     ) <= *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>() );
 
+    // zero out requests to send to non-alive neighbors
+    std::transform(
+      std::begin( send_amounts ),
+      std::end( send_amounts ),
+      cell.template begin<dish2::NeighborIsAliveWrapper<spec_t>>(),
+      std::begin( send_amounts ),
+      [](const auto send_amount, const auto is_alive){
+        return is_alive.Get() ? send_amount : 0.0f;
+      }
+    );
+
     // do the send
     // TODO write a custom transform-like for_each
     float stockpile
