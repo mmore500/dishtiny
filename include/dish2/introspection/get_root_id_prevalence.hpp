@@ -3,6 +3,7 @@
 #define DISH2_INTROSPECTION_GET_ROOT_ID_PREVALENCE_HPP_INCLUDE
 
 #include <iterator>
+#include <limits>
 #include <set>
 #include <type_traits>
 
@@ -10,6 +11,8 @@
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/iterators/RootIDValWrapper.hpp"
 #include "../world/ThreadWorld.hpp"
+
+#include "count_live_cells.hpp"
 
 namespace dish2 {
 
@@ -23,14 +26,15 @@ double get_root_id_prevalence(
   using lcit_t = dish2::LiveCellIterator<Spec>;
   using wrapper_t = dish2::RootIDValWrapper<lcit_t>;
 
-  return std::count(
+  if ( dish2::count_live_cells<Spec>( world ) == 0 ) {
+    return std::numeric_limits<double>::quiet_NaN();
+  } else return std::count(
     wrapper_t{ lcit_t::make_begin( population ) },
     wrapper_t{ lcit_t::make_end( population ) },
     root_id
-  ) / static_cast<double>( std::distance(
-    lcit_t::make_begin( population ),
-    lcit_t::make_end( population )
-  ) );
+  ) / static_cast<double>(
+    dish2::count_live_cells<Spec>( world )
+  );
 
 
 }

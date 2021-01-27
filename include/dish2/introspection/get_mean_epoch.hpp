@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <limits>
 #include <type_traits>
 #include <vector>
 
@@ -13,6 +14,8 @@
 #include "../cell/Cell.hpp"
 #include "../world/iterators/WorldIteratorAdapter.hpp"
 #include "../world/ThreadWorld.hpp"
+
+#include "count_live_cells.hpp"
 
 namespace dish2 {
 
@@ -26,14 +29,13 @@ double get_mean_epoch( const dish2::ThreadWorld<Spec>& world ) {
     dish2::EpochWrapper<Spec>
   >;
 
-  return std::accumulate(
+  if ( dish2::count_live_cells<Spec>( world ) == 0 ) {
+    return std::numeric_limits<double>::quiet_NaN();
+  } else return std::accumulate(
     iterator_t::make_begin( std::begin(population) ),
     iterator_t::make_end( std::end(population) ),
     0.0
-  ) / std::distance(
-    iterator_t::make_begin( std::begin(population) ),
-    iterator_t::make_end( std::end(population) )
-  );
+  ) / dish2::count_live_cells< Spec >( world );
 
 }
 

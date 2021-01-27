@@ -4,13 +4,15 @@
 
 #include <algorithm>
 
+#include "../../../third-party/Empirical/include/emp/base/assert.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
-
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 
 #include "../cell/Cell.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
+
+#include "count_live_cells.hpp"
 
 namespace dish2 {
 
@@ -29,7 +31,10 @@ size_t get_maximum_module_count( const dish2::ThreadWorld<Spec>& world ) {
     }
   );
 
-  return *std::max_element(
+  if ( module_counts.empty() ) {
+    emp_assert( dish2::count_live_cells< Spec >( world ) == 0 );
+    return 0;
+  } else return *std::max_element(
     std::begin( module_counts ),
     std::end( module_counts )
   );

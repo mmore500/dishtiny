@@ -3,11 +3,14 @@
 #define DISH2_INTROSPECTION_GET_MEAN_CELL_AGE_HPP_INCLUDE
 
 #include <algorithm>
+#include <limits>
 
 #include "../cell/cardinal_iterators/CellAgeWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/iterators/WorldIteratorAdapter.hpp"
 #include "../world/ThreadWorld.hpp"
+
+#include "count_live_cells.hpp"
 
 namespace dish2 {
 
@@ -23,14 +26,13 @@ double get_mean_cell_age( const dish2::ThreadWorld<Spec>& world ) {
     dish2::CellAgeWrapper<Spec>
   >;
 
-  return std::accumulate(
+  if ( dish2::count_live_cells<Spec>( world ) == 0 ) {
+    return std::numeric_limits<double>::quiet_NaN();
+  } else return std::accumulate(
     iterator_t::make_begin( lcit_t::make_begin( population ) ),
     iterator_t::make_end( lcit_t::make_end( population ) ),
     0.0
-  ) / std::distance(
-    iterator_t::make_begin( lcit_t::make_begin( population ) ),
-    iterator_t::make_end( lcit_t::make_end( population ) )
-  );
+  ) / dish2::count_live_cells<Spec>( world );
 
 }
 

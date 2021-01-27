@@ -3,7 +3,9 @@
 #define DISH2_INTROSPECTION_GET_MEAN_PROGRAM_LENGTH_HPP_INCLUDE
 
 #include <algorithm>
+#include <limits>
 
+#include "../../../third-party/Empirical/include/emp/base/assert.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
@@ -11,6 +13,8 @@
 #include "../cell/Cell.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
+
+#include "count_live_cells.hpp"
 
 namespace dish2 {
 
@@ -29,7 +33,10 @@ double get_mean_program_length( const dish2::ThreadWorld<Spec>& world ) {
     }
   );
 
-  return std::accumulate(
+  if ( program_lengths.empty() ) {
+    emp_assert( dish2::count_live_cells<Spec>( world ) == 0 );
+    return std::numeric_limits<double>::quiet_NaN();
+  } else return std::accumulate(
     std::begin( program_lengths ),
     std::end( program_lengths ),
     0.0

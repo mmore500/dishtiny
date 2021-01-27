@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <limits>
 #include <type_traits>
 #include <vector>
 
@@ -13,6 +14,8 @@
 #include "../world/iterators/ElapsedMutationOccurencesConstWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
+
+#include "count_live_cells.hpp"
 
 namespace dish2 {
 
@@ -28,17 +31,16 @@ double get_mean_elapsed_mutation_occurences(
     dish2::LiveCellIterator<Spec>
   >;
 
-  return std::accumulate(
+  if ( dish2::count_live_cells<Spec>( world ) == 0 ) {
+    return std::numeric_limits<double>::quiet_NaN();
+  } else return std::accumulate(
     wrapper_t{ dish2::LiveCellIterator<Spec>::make_begin( population ) },
     wrapper_t{ dish2::LiveCellIterator<Spec>::make_end( population ) },
     0.0,
     []( const auto& accumulator, const auto& counter ){
       return accumulator + counter;
     }
-  ) / std::distance(
-    wrapper_t{ dish2::LiveCellIterator<Spec>::make_begin( population ) },
-    wrapper_t{ dish2::LiveCellIterator<Spec>::make_end( population ) }
-  );
+  ) / dish2::count_live_cells< Spec >( world );
 
 }
 

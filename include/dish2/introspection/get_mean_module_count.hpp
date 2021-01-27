@@ -3,14 +3,17 @@
 #define DISH2_INTROSPECTION_GET_MEAN_MODULE_COUNT_HPP_INCLUDE
 
 #include <algorithm>
+#include <limits>
 
+#include "../../../third-party/Empirical/include/emp/base/assert.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
-
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 
 #include "../cell/Cell.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
+
+#include "count_live_cells.hpp"
 
 namespace dish2 {
 
@@ -29,7 +32,10 @@ double get_mean_module_count( const dish2::ThreadWorld<Spec>& world ) {
     }
   );
 
-  return std::accumulate(
+  if ( module_counts.empty() ) {
+    emp_assert( dish2::count_live_cells<Spec>( world ) == 0 );
+    return std::numeric_limits<double>::quiet_NaN();
+  } else return std::accumulate(
     std::begin( module_counts ),
     std::end( module_counts ),
     0.0

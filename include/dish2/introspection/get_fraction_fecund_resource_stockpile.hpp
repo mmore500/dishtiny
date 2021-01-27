@@ -3,11 +3,14 @@
 #define DISH2_INTROSPECTION_GET_FRACTION_FECUND_RESOURCE_STOCKPILE_HPP_INCLUDE
 
 #include <algorithm>
+#include <limits>
 
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/iterators/WorldIteratorAdapter.hpp"
 #include "../world/ThreadWorld.hpp"
+
+#include "count_live_cells.hpp"
 
 namespace dish2 {
 
@@ -25,14 +28,13 @@ double get_fraction_fecund_resource_stockpile(
     dish2::ResourceStockpileWrapper<Spec>
   >;
 
-  return std::count_if(
+  if ( dish2::count_live_cells<Spec>( world ) == 0 ) {
+    return std::numeric_limits<double>::quiet_NaN();
+  } else return std::count_if(
     iterator_t::make_begin( lcit_t::make_begin( population ) ),
     iterator_t::make_end( lcit_t::make_end( population ) ),
     []( const double stockpile ){  return stockpile >= 1.0; }
-  ) / static_cast< double >( std::distance(
-    iterator_t::make_begin( lcit_t::make_begin( population ) ),
-    iterator_t::make_end( lcit_t::make_end( population ) )
-  ) );
+  ) / static_cast< double >( dish2::count_live_cells<Spec>( world ) );
 
 }
 

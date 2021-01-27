@@ -3,16 +3,21 @@
 #define DISH2_INTROSPECTION_GET_PREVALENT_CODING_GENOTYPE_HPP_INCLUDE
 
 #include <algorithm>
+#include <limits>
 #include <map>
 #include <utility>
 
+#include "../../../third-party/Empirical/include/emp/base/assert.hpp"
 #include "../../../third-party/Empirical/include/emp/datastructs/tuple_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 
 #include "../cell/Cell.hpp"
+#include "../genome/Genome.hpp"
 #include "../world/iterators/CodingGenotypeConstWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
+
+#include "count_live_cells.hpp"
 
 namespace dish2 {
 
@@ -39,9 +44,10 @@ get_prevalent_coding_genotype( const dish2::ThreadWorld<Spec>& world ) {
   const auto& population = world.population;
 
   using wrapper_t = internal::get_prevalent_coding_genotype::wrapper_t<Spec>;
+  using coding_genotype_ref_t = typename wrapper_t::value_type;
 
   // coding_genotype_ref_t -> count
-  std::map< typename wrapper_t::value_type, size_t > counter;
+  std::map< coding_genotype_ref_t, size_t > counter;
 
   std::for_each(
     wrapper_t{ dish2::LiveCellIterator<Spec>::make_begin( population ) },
@@ -49,7 +55,14 @@ get_prevalent_coding_genotype( const dish2::ThreadWorld<Spec>& world ) {
     [&counter]( const auto& coding_genotype ){ ++counter[ coding_genotype ]; }
   );
 
-  return *std::max_element(
+  const static dish2::Genome<Spec> blank_dummy{};
+  if ( counter.empty() ) {
+    emp_assert( dish2::count_live_cells<Spec>( world ) == 0 );
+    return std::pair{
+      coding_genotype_ref_t{ blank_dummy.event_tags, blank_dummy.program },
+      0
+    };
+  } else return *std::max_element(
     std::begin( counter ),
     std::end( counter ),
     []( const auto& left, const auto& right ) {
