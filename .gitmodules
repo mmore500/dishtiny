@@ -30,5 +30,5 @@
   path = third-party/PicoSHA2
   url = https://github.com/okdshin/PicoSHA2
 [submodule "third-party/backward-cpp"]
-	path = third-party/backward-cpp
-	url = https://github.com/bombela/backward-cpp
+  path = third-party/backward-cpp
+  url = https://github.com/bombela/backward-cpp
