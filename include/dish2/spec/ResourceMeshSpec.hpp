@@ -5,6 +5,7 @@
 #include "../../../third-party/conduit/include/uit/ducts/intra/accumulating+type=any/a::AccumulatingDuct.hpp"
 #include "../../../third-party/conduit/include/uit/ducts/mock/EmpAssertDuct.hpp"
 #include "../../../third-party/conduit/include/uit/ducts/proc/accumulating+type=fundamental/aggregated+inlet=Raccumulate+outlet=WithdrawingWindow_f::AggregatedIrOwwDuct.hpp"
+#include "../../../third-party/conduit/include/uit/ducts/proc/accumulating+type=trivial/aggregated+inlet=Isend+outlet=Irecv_t::AggregatedIiOiDuct.hpp"
 #include "../../../third-party/conduit/include/uit/ducts/proc/accumulating+type=trivial/inlet=Isend+outlet=Irecv_t::IiOiDuct.hpp"
 #include "../../../third-party/conduit/include/uit/ducts/thread/accumulating+type=any/a::MutexAccumulatingDuct.hpp"
 #include "../../../third-party/conduit/include/uit/setup/ImplSelect.hpp"
@@ -23,7 +24,7 @@ namespace internal_resource_spec {
     #endif
     ,
     #ifndef __EMSCRIPTEN__
-      uit::t::IiOiDuct
+      uit::t::AggregatedIiOiDuct
     #else
       uit::EmpAssertDuct
     #endif
