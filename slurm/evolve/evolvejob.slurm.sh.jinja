@@ -100,7 +100,7 @@ for ((proc=0;proc<N_PROCS;++proc)); do
 done
 {% endif %}
 
-make -C ../dishtiny/
+make production -C ../dishtiny/
 cp ../dishtiny/rundishtiny .
 
 # compile and download concurrently!

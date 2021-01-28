@@ -89,7 +89,7 @@ for retry in {1..20}; do
   if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
 done &
 
-make -C ../dishtiny/
+make production -C ../dishtiny/
 cp ../dishtiny/rundishtiny .
 
 # compile and download concurrently!
