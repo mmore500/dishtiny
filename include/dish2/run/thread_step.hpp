@@ -4,6 +4,7 @@
 
 #include "../../../third-party/conduit/include/uitsl/concurrent/ConcurrentBarrier.hpp"
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
+#include "../../../third-party/conduit/include/uitsl/chrono/ClockDeltaDetector.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 #include "../../../third-party/conduit/include/uitsl/parallel/ThreadIbarrierFactory.hpp"
 
@@ -38,15 +39,33 @@ void thread_step(
   thread_world.Update();
 
   #ifndef __EMSCRIPTEN__
-  if ( cfg.SYNCHRONOUS() ) {
+  // initialized first time thru the function,
+  // so N_THREADS should be initialized
+  static uitsl::ConcurrentBarrier barrier{ cfg.N_THREADS() };
 
-    // initialized first time thru the function,
-    // so N_THREADS should be initialized
-    static uitsl::ConcurrentBarrier barrier{ cfg.N_THREADS() };
-
+  if ( !cfg.ASYNCHRONOUS() ) {
     barrier.ArriveAndWaitWhile( run_timer );
-
+  } else if (
+    thread_local uitsl::CoarseRealTimer timer_sync{
+      std::chrono::milliseconds{ cfg.SYNC_FREQ_MILLISECONDS() }
+    };
+    uitsl::is_multiprocess()
+      && cfg.ASYNCHRONOUS() == 1
+      && timer_sync.IsComplete()
+  ) {
+    barrier.ArriveAndWaitWhile( run_timer );
+    timer_sync.Reset();
+  } else if (
+    thread_local uitsl::ClockDeltaDetector<> delta_sync;
+    uitsl::is_multiprocess()
+      && cfg.ASYNCHRONOUS() == 2
+      && delta_sync.HasDeltaElapsed()
+  ) {
+    barrier.ArriveAndWaitWhile( run_timer );
+  } else {
+    // nop for cfg.ASYNCHRONOUS() == 3
   }
+
   #endif // #ifndef __EMSCRIPTEN__
 
 }
