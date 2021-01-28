@@ -46,7 +46,8 @@ void reconstitute_population(
     iarchive( reconstituted );
 
     std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-      << " reconstituted " << eligible_population_paths.front() << std::endl;
+      << " reconstituted " << reconstituted.size() << " cells from "
+      << eligible_population_paths.front() << std::endl;
 
   }
 
