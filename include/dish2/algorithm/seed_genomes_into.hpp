@@ -4,9 +4,9 @@
 
 #include <algorithm>
 
-#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
-
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+#include "../../../third-party/Empirical/include/emp/math/random_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
@@ -26,16 +26,35 @@ void seed_genomes_into(
 
   for ( auto& cell : population ) cell.DeathRoutine();
 
-  if ( seeds.size() ) uitsl::for_each(
-    std::begin( population ),
-    std::end( population ),
-    sgpl::CountingIterator{},
-    [&seeds]( auto& cell, const size_t idx ){
-      cell.genome = seeds[ idx % seeds.size() ];
-      cell.genome->SetupSeededGenotype();
-      cell.MakeAliveRoutine();
-    }
-  );
+  if ( seeds.size() ) {
+
+    // fill incoming_population with genomes from seeds,
+    // looping through seeds as necessary to fill incoming_population...
+    emp::vector< dish2::Genome<Spec> > incoming_population;
+    incoming_population.reserve( population.size() );
+    std::transform(
+      sgpl::CountingIterator{}, sgpl::CountingIterator{ population.size() },
+      std::back_inserter( incoming_population ),
+      [&seeds]( const size_t idx ){
+        return seeds[ idx % seeds.size() ];
+      }
+    );
+
+    // shuffle incoming_population...
+    emp::Shuffle( sgpl::tlrand.Get(), incoming_population );
+
+    // ... then inject into ThreadWorld's population
+    uitsl::for_each(
+      std::begin( population ), std::end( population ),
+      std::begin( incoming_population ),
+      []( auto& cell, const auto& seed ){
+        cell.genome = seed;
+        cell.genome->SetupSeededGenotype();
+        cell.MakeAliveRoutine();
+      }
+    );
+
+  }
 
 }
 
