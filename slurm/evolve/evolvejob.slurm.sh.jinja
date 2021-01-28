@@ -368,6 +368,62 @@ fi
 
 ################################################################################
 echo
+echo "Submit Monoculture Job"
+echo "---------------"
+################################################################################
+
+# run monoculture job every tenth stint
+if (( {{ stint }} % 10 == 0 )); then
+
+# run jinja on template
+JOB_TEMPLATE="$(mktemp)"
+JOB_SCRIPT="$(mktemp)"
+
+echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
+echo "JOB_SCRIPT ${JOB_SCRIPT}"
+
+for retry in {1..20}; do
+  curl \
+    -o "${JOB_TEMPLATE}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/monocultures/monoculturejob.slurm.sh.jinja" \
+  && echo "  job template curl success" && break \
+  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
+done
+
+j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+container_tag: {{ container_tag }}
+repo_sha: {{ repo_sha }}
+series: {{ series }}
+stint: {{ stint | int }}
+J2_HEREDOC_EOF
+
+chmod +x "${JOB_SCRIPT}"
+
+for retry in {1..10}; do
+  sshpass -p "${HOST_PASSWORD}" \
+    scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+      "${JOB_SCRIPT}" "${HOST_USERNAME}@$(hostname):${JOB_SCRIPT}" \
+  && echo "  job script copy success" && break \
+  || (echo "retrying job script copy (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==10)); then echo "  job script copy fail" && exit 123123; fi
+done
+
+for retry in {1..10}; do
+  echo "sbatch \"${JOB_SCRIPT}\"" \
+  | sshpass -p "${HOST_PASSWORD}" \
+    ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+      "${HOST_USERNAME}@$(hostname)" -X \
+      'bash -login'  \
+  && echo "  job submit success" && break \
+  || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==10)); then echo "  job submit fail" && exit 123123; fi
+done
+
+fi
+
+################################################################################
+echo
 echo "Done! (SUCCESS)"
 echo "---------------"
 ################################################################################
