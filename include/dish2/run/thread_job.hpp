@@ -4,6 +4,7 @@
 
 #include <fstream>
 
+#include "../../../third-party/conduit/include/uitsl/concurrent/ConcurrentBarrier.hpp"
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
@@ -33,14 +34,20 @@ void thread_job(
     dish2::reconstitute_population( thread_idx, thread_world );
   else emp_always_assert( cfg.GENESIS() == "generate", cfg.GENESIS() );
 
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " running " << thread_world.population.size() << " cells" << std::endl;
+
+  #ifndef __EMSCRIPTEN__
+  // sync before starting job
+  static uitsl::ConcurrentBarrier barrier{ cfg.N_THREADS() };
+  barrier.ArriveAndWait();
+  #endif // #ifndef __EMSCRIPTEN__
+
   const uitsl::CoarseTimer run_timer{
     dish2::cfg.RUN_SECONDS() ?: std::numeric_limits<double>::infinity()
   };
 
   uitsl::CoarseTimer log_timer{ dish2::cfg.LOG_FREQ() };
-
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-    << " running " << thread_world.population.size() << " cells" << std::endl;
 
   while ( dish2::thread_should_contine<Spec>( thread_world, run_timer ) ) {
     dish2::thread_step<Spec>( thread_idx, thread_world, run_timer, log_timer );
