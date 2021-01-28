@@ -3,6 +3,7 @@
 #define DISH2_LOAD_LOAD_INNOCULUM_HPP_INCLUDE
 
 #include <algorithm>
+#include <fstream>
 
 #include "../../../third-party/cereal/include/cereal/archives/json.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
