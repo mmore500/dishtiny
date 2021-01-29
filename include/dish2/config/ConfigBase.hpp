@@ -26,6 +26,9 @@ EMP_BUILD_CONFIG(
 
   GROUP(EXECUTION, "EXECUTION"),
   VALUE(N_THREADS, size_t, 1, "[NATIVE] How many threads should we run with?"),
+  VALUE(RUN, bool, true,
+    "[NATIVE] Should we run evolution or skip directly to post-processing and data collection?"
+  ),
   VALUE(RUN_UPDATES, size_t, 0,
     "[NATIVE] How many updates should we run the experiment for?"
   ),

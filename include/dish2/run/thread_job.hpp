@@ -4,11 +4,7 @@
 
 #include <fstream>
 
-#include "../../../third-party/conduit/include/uitsl/concurrent/ConcurrentBarrier.hpp"
-#include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
-#include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
-#include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 
 #include "../config/cfg.hpp"
 #include "../load/load_world.hpp"
@@ -17,8 +13,7 @@
 
 #include "thread_data_dump.hpp"
 #include "thread_data_write.hpp"
-#include "thread_should_continue.hpp"
-#include "thread_step.hpp"
+#include "thread_evolve.hpp"
 
 namespace dish2 {
 
@@ -29,28 +24,7 @@ void thread_job(
 
   dish2::load_world<Spec>( thread_idx, thread_world );
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-    << " running " << thread_world.population.size() << " cells" << std::endl;
-
-  #ifndef __EMSCRIPTEN__
-  // sync before starting job
-  static uitsl::ConcurrentBarrier barrier{ cfg.N_THREADS() };
-  barrier.ArriveAndWait();
-  #endif // #ifndef __EMSCRIPTEN__
-
-  const uitsl::CoarseTimer run_timer{
-    dish2::cfg.RUN_SECONDS() ?: std::numeric_limits<double>::infinity()
-  };
-
-  uitsl::CoarseTimer log_timer{ dish2::cfg.LOG_FREQ() };
-
-  while ( dish2::thread_should_contine<Spec>( thread_world, run_timer ) ) {
-    dish2::thread_step<Spec>( thread_idx, thread_world, run_timer, log_timer );
-  }
-
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-    << " simulation complete @ " << thread_world.GetUpdate() << " updates"
-    << std::endl;
+  if ( cfg.RUN() ) dish2::thread_evolve<Spec>( thread_idx, thread_world );
 
   // write elapsed updates to file (for easier benchmark post-processing)
   if (cfg.BENCHMARKING_DUMP() ) std::ofstream(
