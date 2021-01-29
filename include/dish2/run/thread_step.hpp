@@ -2,9 +2,9 @@
 #ifndef DISH2_RUN_THREAD_STEP_HPP_INCLUDE
 #define DISH2_RUN_THREAD_STEP_HPP_INCLUDE
 
+#include "../../../third-party/conduit/include/uitsl/chrono/ClockDeltaDetector.hpp"
 #include "../../../third-party/conduit/include/uitsl/concurrent/ConcurrentBarrier.hpp"
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
-#include "../../../third-party/conduit/include/uitsl/chrono/ClockDeltaDetector.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 #include "../../../third-party/conduit/include/uitsl/parallel/ThreadIbarrierFactory.hpp"
 
