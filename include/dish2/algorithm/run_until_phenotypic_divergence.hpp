@@ -23,21 +23,21 @@ namespace dish2 {
 
 template< typename Spec >
 size_t run_until_phenotypic_divergence(
-  dish2::ThreadWorld<Spec>& world1,
-  dish2::ThreadWorld<Spec>& world2
+  dish2::ThreadWorld<Spec>& control,
+  dish2::ThreadWorld<Spec>& experiment
 ) {
 
   for ( size_t upd{}; upd < cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES(); ++upd ) {
 
     const emp::Random bak = sgpl::tlrand.Get();
 
-    world1.Update();
+    control.Update();
 
     sgpl::tlrand.Get() = bak;
 
-    world2.Update();
+    experiment.template Update<false>();
 
-    if ( !dish2::compare_resource_stockpiles<Spec>( world1, world2 ) ) {
+    if ( !dish2::compare_resource_stockpiles<Spec>( control, experiment ) ) {
       dish2::log_event( {
         dish2::result_fail,
         emp::to_string( "phenotypic divergence detected at update ", upd )

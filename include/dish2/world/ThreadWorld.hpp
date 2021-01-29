@@ -6,11 +6,14 @@
 
 #include "../../../third-party/conduit/include/netuit/mesh/Mesh.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
+#include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../cell/Cell.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
+#include "../utility/PopulationExtinctionException.hpp"
 
 namespace dish2 {
 
@@ -73,17 +76,33 @@ struct ThreadWorld {
 
   size_t update{};
 
+  template<bool THROW_EXTINCT=true>
   void Update() {
-    for ( size_t i = 0; i < population.size(); ++i ) {
-      const dish2::LogScope guard{
-        emp::to_string("updating cell ", i),
-        "We're having the nth cell run its program and interact with the environment. All cells will take a turn at this one-by-one.",
-        3
+    uitsl::for_each(
+      std::begin( population ), std::end( population ),
+      sgpl::CountingIterator{},
+      [this](auto& cell, const size_t i){
+        const dish2::LogScope guard{
+          emp::to_string("updating cell ", i),
+          "We're having the nth cell run its program and interact with the environment. All cells will take a turn at this one-by-one.",
+          3
+        };
+        cell.Update(update);
+      }
+    );
+
+    if constexpr ( THROW_EXTINCT ) {
+      if ( std::none_of(
+        std::begin( population ), std::end( population ),
+        []( const auto& cell ){ return cell.IsAlive(); }
+      ) ) throw dish2::PopulationExtinctionException{
+        update,
+        population.size()
       };
-      auto& cell = population[i];
-      cell.Update(update);
     }
+
     ++update;
+
   }
 
   size_t GetUpdate() const { return update; }

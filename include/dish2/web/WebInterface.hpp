@@ -24,7 +24,7 @@ class WebInterface {
 
   dish2::ControlPanel control_panel{
     [this](const bool render_toggle, const size_t render_freq){
-      thread_world.Update();
+      thread_world.template Update<false>();
       Redraw( render_toggle, render_freq );
       return thread_world.GetUpdate();
     }
