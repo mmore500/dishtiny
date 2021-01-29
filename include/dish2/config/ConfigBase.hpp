@@ -47,6 +47,9 @@ EMP_BUILD_CONFIG(
   VALUE(RNG_PRESEED, uint32_t, std::numeric_limits<uint32_t>::max(),
     "[NATIVE] Optionally override the calculated rng preseed."
   ),
+  VALUE(THROW_ON_EXTINCTION, bool, true,
+    "[NATIVE] Should we throw an exception if populations go extinct?"
+  ),
 
 
   GROUP(EXPERIMENT, "EXPERIMENT"),

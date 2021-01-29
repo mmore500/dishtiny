@@ -76,7 +76,7 @@ struct ThreadWorld {
 
   size_t update{};
 
-  template<bool THROW_EXTINCT=true>
+  template<bool THROW_ON_EXTINCTION=true>
   void Update() {
     uitsl::for_each(
       std::begin( population ), std::end( population ),
@@ -91,8 +91,8 @@ struct ThreadWorld {
       }
     );
 
-    if constexpr ( THROW_EXTINCT ) {
-      if ( std::none_of(
+    if constexpr ( THROW_ON_EXTINCTION ) {
+      if ( dish2::cfg.THROW_ON_EXTINCTION() && std::none_of(
         std::begin( population ), std::end( population ),
         []( const auto& cell ){ return cell.IsAlive(); }
       ) ) throw dish2::PopulationExtinctionException{
