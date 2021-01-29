@@ -9,6 +9,7 @@
 #include "CollectiveHarvestingService.hpp"
 #include "ConduitFlushService.hpp"
 #include "CpuExecutionService.hpp"
+#include "DeathLogClearService.hpp"
 #include "DecayToBaselineService.hpp"
 #include "EpochAdvanceService.hpp"
 #include "EventLaunchingService.hpp"

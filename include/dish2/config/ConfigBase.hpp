@@ -180,6 +180,9 @@ EMP_BUILD_CONFIG(
   VALUE(CPU_EXECUTION_SERVICE_FREQUENCY, size_t, 1,
     "Run service every ?? updates."
   ),
+  VALUE(DEATH_LOG_CLEAR_SERVICE_FREQUENCY, size_t, 64,
+    "Run service every ?? updates."
+  ),
   VALUE(DECAY_TO_BASELINE_SERVICE_FREQUENCY, size_t, 32,
     "Run service every ?? updates."
   ),

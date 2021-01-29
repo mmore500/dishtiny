@@ -13,6 +13,7 @@
 #include "../cell/Cell.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
+#include "../introspection/make_causes_of_death_string_histogram.hpp"
 #include "../utility/PopulationExtinctionException.hpp"
 
 namespace dish2 {
@@ -97,7 +98,8 @@ struct ThreadWorld {
         []( const auto& cell ){ return cell.IsAlive(); }
       ) ) throw dish2::PopulationExtinctionException{
         update,
-        population.size()
+        population.size(),
+        dish2::make_causes_of_death_string_histogram< ThreadWorld >( *this )
       };
     }
 

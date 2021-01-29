@@ -53,7 +53,7 @@ struct BirthSetupService {
         dish2::Epoch
       >();
 
-      cell.DeathRoutine();
+      cell.DeathRoutine( dish2::CauseOfDeath::birth );
 
       cell.genome = std::as_const(
         cell.cardinals[ cardinal_idx ].genome_node_input

@@ -6,16 +6,23 @@
 
 #include "../../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 
+#include "../../debug/LogScope.hpp"
+#include "../../enum/CauseOfDeath.hpp"
+
 #include "../cardinal_iterators/EpochWrapper.hpp"
 #include "../cardinal_iterators/IsAliveWrapper.hpp"
-#include "../../debug/LogScope.hpp"
+
 
 namespace dish2 {
 
 template <class Spec>
-void Cell<Spec>::DeathRoutine() {
+void Cell<Spec>::DeathRoutine(
+  const dish2::CauseOfDeath cause_of_death
+) {
 
   const dish2::LogScope guard{ "death routine", "TODO", 3 };
+
+  death_log.push_back( cause_of_death );
 
   // check is alive consistency
   emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(

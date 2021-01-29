@@ -41,6 +41,7 @@
 #include "../introspection/get_mean_resource_stockpile.hpp"
 #include "../introspection/get_mean_spawn_count.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
+#include "../introspection/make_causes_of_death_string_histogram.hpp"
 
 #include "make_filename/make_demographic_phenotypic_phylogenetic_metrics_filename.hpp"
 
@@ -282,6 +283,18 @@ void write_demographic_phenotypic_phylogenetic_metrics(
     value = dish2::get_fraction_incoming_inter_message<Spec>( world );
     file.Update();
   }
+
+  for (
+    const auto& [k, v]
+    : dish2::make_causes_of_death_string_histogram<dish2::ThreadWorld<Spec>>(
+      world
+    )
+  ) {
+    metric = emp::to_string("Num deaths ", k);
+    value = v;
+    file.Update();
+  }
+
 
 }
 

@@ -12,6 +12,7 @@
 #include "../cell/cardinal_iterators/NeighborIsAliveWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
+#include "../enum/CauseOfDeath.hpp"
 
 namespace dish2 {
 
@@ -33,7 +34,7 @@ class CellDeathService {
       );
     }
 
-    cell.DeathRoutine();
+    cell.DeathRoutine( dish2::CauseOfDeath::age );
 
   }
 

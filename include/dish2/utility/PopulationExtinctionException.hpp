@@ -3,7 +3,9 @@
 #define DISH2_UTILITY_POPULATIONEXTINCTIONEXCEPTION_HPP_INCLUDE
 
 #include <exception>
+#include <unordered_map>
 #include <sstream>
+#include <string>
 
 #include "../../../third-party/conduit/include/uitsl/utility/unindent_raw_string_literal.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
@@ -17,20 +19,28 @@ public:
 
   size_t population_size;
 
+  std::unordered_map< std::string, size_t > cause_of_death_counts;
+
 private:
   std::string what_;
 
 public:
 
   PopulationExtinctionException(
-    const size_t update_, const size_t population_size_
+    const size_t update_, const size_t population_size_,
+    const std::unordered_map< std::string, size_t >& cause_of_death_counts_
   ) : update( update_ )
-  , population_size( population_size_ ) {
+  , population_size( population_size_ )
+  , cause_of_death_counts( cause_of_death_counts_ ) {
     std::stringstream ss;
 
     ss << "Population Extinction Exception" << std::endl;
     ss << "  update " << update << std::endl;
     ss << "  population size " << population_size << std::endl;
+    for ( const auto& [k, v] : cause_of_death_counts ) {
+      ss << "  " << k << " " << v << std::endl;
+    }
+
 
     what_ = ss.str();
 

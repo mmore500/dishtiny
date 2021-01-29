@@ -10,6 +10,7 @@
 #include "../cell/cardinal_iterators/ApoptosisRequestWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
+#include "../enum/CauseOfDeath.hpp"
 
 namespace dish2 {
 
@@ -34,7 +35,7 @@ struct ApoptosisService {
       cell.template begin<dish2::ApoptosisRequestWrapper<spec_t>>(),
       cell.template end<dish2::ApoptosisRequestWrapper<spec_t>>(),
       std::identity
-    ) ) cell.DeathRoutine();
+    ) ) cell.DeathRoutine( dish2::CauseOfDeath::apoptosis );
 
   }
 

@@ -41,7 +41,9 @@ struct QuorumCapService {
       //^ enforce more strictly on large groups
     );
     auto& rand = sgpl::tlrand.Get();
-    if ( p && rand.P( p ) ) cell.DeathRoutine();
+    if ( p && rand.P( p ) ) cell.DeathRoutine(
+      dish2::CauseOfDeath::quorum
+    );
 
     return true;
 

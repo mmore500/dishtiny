@@ -11,6 +11,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../cell/Cell.hpp"
+#include "../enum/CauseOfDeath.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -24,7 +25,9 @@ void seed_genomes_into(
 
   auto& population = world.population;
 
-  for ( auto& cell : population ) cell.DeathRoutine();
+  for ( auto& cell : population ) cell.DeathRoutine(
+    dish2::CauseOfDeath::birth
+  );
 
   if ( seeds.size() ) {
 

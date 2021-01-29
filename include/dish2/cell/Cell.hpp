@@ -12,6 +12,7 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../config/cfg.hpp"
+#include "../enum/CauseOfDeath.hpp"
 #include "../events/EventManager.hpp"
 #include "../events/_index.hpp"
 #include "../genome/Genome.hpp"
@@ -30,6 +31,8 @@ template<typename Spec>
 struct Cell {
 
   emp::vector< dish2::Cardinal<Spec> > cardinals;
+
+  emp::vector< dish2::CauseOfDeath > death_log;
 
   using genome_t = dish2::Genome<Spec>;
   emp::optional< genome_t > genome{ std::in_place, std::in_place };
@@ -58,7 +61,7 @@ struct Cell {
   using this_t = dish2::Cell<Spec>;
 
   // out of class implementations
-  void DeathRoutine();
+  void DeathRoutine(const dish2::CauseOfDeath);
   void HeirPayoutRoutine();
   void MakeAliveRoutine();
 
@@ -173,6 +176,7 @@ struct Cell {
     // TODO put these in order
     using service_manager_t = dish2::ServiceManager<
       dish2::DecayToBaselineService, // should run before cpu execution service
+      dish2::DeathLogClearService, // should run before cpu execution service
       dish2::WritableStateNoiseService,
       dish2::CpuExecutionService,
 
