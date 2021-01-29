@@ -175,7 +175,7 @@ echo "REPRO_ID ${REPRO_ID}"
 echo "date $(date)"
 echo "hostname $(hostname)"
 echo "pwd $(pwd)"
-command -v qstat >/dev/null && test $SLURM_JOB_ID && bash -c "qstat -f \"${SLURM_JOB_ID}\""
+command -v qstat >/dev/null && test ${SLURM_JOB_ID} && bash -c "qstat -f \"${SLURM_JOB_ID}\""
 
 ################################################################################
 echo
@@ -407,10 +407,26 @@ echo "Do Work"
 echo "--------------------------------------"
 ################################################################################
 
+# Timeout with 5 minutes (300 seconds) left in job.
+# If not a slurm job, set duration to 0 to disable the associated timeout.
+TIMEOUT_SECONDS=$( \
+  test ${SLURM_JOB_ID} \
+  && squeue -j "${SLURM_JOB_ID}" -O "TimeLeft" \
+    | tail -n 1 \
+    | tr ":" "\n" \
+    | tac \
+    | tr "\n" " " \
+    |  awk '{ print $1 + $2*60 + $3*3600 + $4*86400 }' \
+    | awk '{print $1-300}' \
+  || echo 0 \
+)
+echo "TIMEOUT_SECONDS ${TIMEOUT_SECONDS}"
+
+
 # pipe input into the container, record a copy to $STDIN
 # Docker references with both a tag and digest are currently not supported in
 # singularity so we have to strip everything before @sha256:digest
-tee "${stdin}" | \
+timeout "${TIMEOUT_SECONDS}s" tee "${stdin}" | \
   singularity shell \
     --env "SECONDS=${SECONDS}" \
     -B "${HOME}:/home/user" \
