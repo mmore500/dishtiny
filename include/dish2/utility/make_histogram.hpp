@@ -4,24 +4,26 @@
 
 #include <algorithm>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
 
+#include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
-#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 namespace dish2 {
 
-template< typename Iterator >
-std::unordered_map<std::string, size_t> make_string_key_histogram(
-  const Iterator begin, const Iterator end
+template< typename Iterator, typename UnaryOp>
+auto make_histogram(
+  const Iterator begin, const Iterator end, UnaryOp transform=std::identity
 ) {
 
   using T = typename Iterator::value_type;
+  using K = typename std::result_of<UnaryOp(T)>::type;
 
-  std::unordered_map<std::string, size_t> res;
+  std::unordered_map< K, size_t > res;
 
   std::for_each( begin, end, [&]( const T& val ){
-    ++res[ emp::to_string( val ) ];
+    ++res[ transform( val ) ];
   } );
 
   return res;

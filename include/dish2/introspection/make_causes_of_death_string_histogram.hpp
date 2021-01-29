@@ -5,10 +5,11 @@
 #include <algorithm>
 #include <string>
 
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/magic_enum/include/magic_enum.hpp"
 
 #include "../enum/CauseOfDeath.hpp"
-#include "../utility/make_string_key_histogram.hpp"
+#include "../utility/make_histogram.hpp"
 
 #include "summarize_causes_of_death.hpp"
 
@@ -19,8 +20,9 @@ auto make_causes_of_death_string_histogram( const ThreadWorld& world ) {
 
   const auto summary = dish2::summarize_causes_of_death<ThreadWorld>( world );
 
-  auto res = dish2::make_string_key_histogram(
-    std::begin( summary ), std::end( summary )
+  auto res = dish2::make_histogram(
+    std::begin( summary ), std::end( summary ),
+    []( const dish2::CauseOfDeath val ){ return emp::to_string( val ); }
   );
 
   // ensure all keys are represented
