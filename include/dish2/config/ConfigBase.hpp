@@ -49,7 +49,7 @@ EMP_BUILD_CONFIG(
   GROUP(EXPERIMENT, "EXPERIMENT"),
   VALUE(RUN_SLUG, std::string, "default", "Run-identifying slug"),
   VALUE(PHENOTYPIC_DIVERGENCE_N_UPDATES, size_t,
-    UITSL_IF_WEB_ELSE(100, 4096), "TODO"
+    UITSL_IF_WEB_ELSE(100, 2048), "TODO"
   ),
   VALUE(PHENOTYPIC_DIVERGENCE_N_CELLS, size_t, 100, "TODO"),
   VALUE(STINT, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
