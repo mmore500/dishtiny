@@ -40,6 +40,7 @@ RUN \
     awscli \
     rdfind \
     imagemagick \
+    ioping \
     libcurl4-openssl-dev \
     libsfml-dev \
     libdw-dev \

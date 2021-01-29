@@ -297,6 +297,27 @@ function on_error() {
   echo "---------------------"
   echo
 
+  echo "hostname" && hostname
+  echo "lscpu" && lscpu
+  echo "date" && date
+
+  # memory info
+  echo "cat /proc/meminfo" && cat /proc/meminfo
+  echo "free -g" && free -g
+  echo "vmstat" && vmstat
+
+  # disk info
+  echo "lsblk" && lsblk
+  echo "ioping -c /tmp" && ioping -c /tmp
+  echo "ioping -c ." && ioping -c .
+  echo "ioping -c ~" && ioping -c ~
+
+  # network info
+  echo "curl -I https://google.com" && curl -I https://google.com
+  echo "ipcs" && ipcs
+  echo "cat /proc/net/dev" && cat /proc/net/dev
+  time curl -o /dev/null http://speedtest-blr1.digitalocean.com/10mb.test
+
   if (( ${1} == 123123 )); then
     command -v scontrol \
       && scontrol requeue "${SLURM_JOB_ID}" \
