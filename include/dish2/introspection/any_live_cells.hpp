@@ -22,11 +22,11 @@ size_t any_live_cells( const dish2::ThreadWorld<Spec>& world ) {
 
   const bool res = (
     dish2::LiveCellIterator<Spec>::make_begin( population )
-    == dish2::LiveCellIterator<Spec>::make_end( population )
+    != dish2::LiveCellIterator<Spec>::make_end( population )
   );
 
   emp_assert(
-    res == ( dish2::count_live_cells<Spec>( world ) == 0 )
+    res == ( dish2::count_live_cells<Spec>( world ) > 0 )
   );
 
   return res;
