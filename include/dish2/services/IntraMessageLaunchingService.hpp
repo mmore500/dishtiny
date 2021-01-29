@@ -45,7 +45,8 @@ struct IntraMessageLaunchingService {
         // keep doing while any input succeeds at spawning a message
         while( std::count_if(
           std::begin( im_node.GetInputs() ), std::end( im_node.GetInputs() ),
-          [&cpu, &counter]( auto& input ){
+          // deduplicator doesn't need to be captured because it is thread_local
+          [&counter, &cpu]( auto& input ){
 
             if ( input.TryStep() == 0 ) return false;
 
