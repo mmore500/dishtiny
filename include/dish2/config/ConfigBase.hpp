@@ -57,7 +57,7 @@ EMP_BUILD_CONFIG(
   VALUE(REPLICATE, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
   VALUE(
     GENESIS, std::string, "generate",
-    "generate, reconstitute, or innoculate"
+    "generate, reconstitute, monoculture, or innoculate"
   ),
   // VALUE(SEED_POP, bool, 0, "Should we seed the population?"),
   // VALUE(SEED_POP_ID, size_t, 0, "Should we seed the population with all seedpop IDs (0) or with a specific ID (>0)?"),

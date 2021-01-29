@@ -2,8 +2,7 @@
 #ifndef DISH2_WEB_WEBINTERFACE_HPP_INCLUDE
 #define DISH2_WEB_WEBINTERFACE_HPP_INCLUDE
 
-#include "../load/innoculate_population.hpp"
-#include "../load/reconstitute_population.hpp"
+#include "../load/load_world.hpp"
 #include "../spec/Spec.hpp"
 #include "../world/ProcWorld.hpp"
 #include "../world/ThreadWorld.hpp"
@@ -39,11 +38,7 @@ class WebInterface {
 public:
 
   WebInterface() {
-    if ( cfg.GENESIS() == "innoculate" )
-      dish2::innoculate_population( 0, thread_world );
-    else if ( cfg.GENESIS() == "reconstitute" )
-      dish2::reconstitute_population( 0, thread_world );
-    else emp_always_assert( cfg.GENESIS() == "generate", cfg.GENESIS() );
+    dish2::load_world<Spec>( 0, thread_world );
   }
 
   void Redraw( const bool render_toggle=true, const size_t render_freq=1 ) {

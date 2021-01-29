@@ -24,7 +24,7 @@ dish2::Genome<Spec> load_innoculum(
   dish2::Genome<Spec> innoculum;
 
   {
-    std::fstream fs( path );
+    std::ifstream fs( path );
     cereal::JSONInputArchive iarchive( fs );
     iarchive( innoculum );
   }

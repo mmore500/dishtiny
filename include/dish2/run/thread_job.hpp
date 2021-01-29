@@ -11,8 +11,7 @@
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 
 #include "../config/cfg.hpp"
-#include "../load/innoculate_population.hpp"
-#include "../load/reconstitute_population.hpp"
+#include "../load/load_world.hpp"
 #include "../record/make_filename/make_elapsed_updates_filename.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -28,11 +27,7 @@ void thread_job(
   const size_t thread_idx, dish2::ThreadWorld<Spec> thread_world
 ) {
 
-  if ( cfg.GENESIS() == "innoculate" )
-    dish2::innoculate_population( thread_idx, thread_world );
-  else if ( cfg.GENESIS() == "reconstitute" )
-    dish2::reconstitute_population( thread_idx, thread_world );
-  else emp_always_assert( cfg.GENESIS() == "generate", cfg.GENESIS() );
+  dish2::load_world<Spec>( thread_idx, thread_world );
 
   std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " running " << thread_world.population.size() << " cells" << std::endl;
