@@ -300,6 +300,7 @@ function on_error() {
   echo "hostname" && hostname
   echo "lscpu" && lscpu
   echo "date" && date
+  echo "du -h ." && du -h .
 
   # memory info
   echo "cat /proc/meminfo" && cat /proc/meminfo
