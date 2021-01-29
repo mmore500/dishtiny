@@ -16,6 +16,7 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "count_live_cells.hpp"
+#include "no_live_cells.hpp"
 
 namespace dish2 {
 
@@ -31,7 +32,7 @@ double get_mean_elapsed_mutation_occurences(
     dish2::LiveCellIterator<Spec>
   >;
 
-  if ( dish2::count_live_cells<Spec>( world ) == 0 ) {
+  if ( dish2::no_live_cells<Spec>( world ) ) {
     return std::numeric_limits<double>::quiet_NaN();
   } else return std::accumulate(
     wrapper_t{ dish2::LiveCellIterator<Spec>::make_begin( population ) },

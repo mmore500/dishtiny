@@ -8,8 +8,8 @@
 
 #include "../../../third-party/Empirical/include/emp/base/assert.hpp"
 
-#include "count_live_cells.hpp"
 #include "get_prevalent_coding_genotype.hpp"
+#include "no_live_cells.hpp"
 
 namespace dish2 {
 
@@ -31,7 +31,7 @@ get_prevalent_coding_genotype_genome( const dish2::ThreadWorld<Spec>& world ) {
     *wrapper_t{ it } == prevalent_coding_genotype
   ) return std::pair{ *(it->genome), prevalence };
 
-  emp_assert( dish2::count_live_cells<Spec>( world ) == 0 );
+  emp_assert( dish2::no_live_cells<Spec>( world ) );
   return {};
 
 }

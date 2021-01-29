@@ -13,7 +13,7 @@
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
 
-#include "count_live_cells.hpp"
+#include "no_live_cells.hpp"
 
 namespace dish2 {
 
@@ -33,7 +33,7 @@ size_t get_maximum_program_length( const dish2::ThreadWorld<Spec>& world ) {
   );
 
   if ( program_lengths.empty() ) {
-    emp_assert( dish2::count_live_cells< Spec > == 0 );
+    emp_assert( dish2::no_live_cells< Spec > );
     return 0;
   } else return *std::max_element(
     std::begin( program_lengths ),

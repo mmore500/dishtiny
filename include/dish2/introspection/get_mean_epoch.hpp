@@ -16,6 +16,7 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "count_live_cells.hpp"
+#include "no_live_cells.hpp"
 
 namespace dish2 {
 
@@ -29,7 +30,7 @@ double get_mean_epoch( const dish2::ThreadWorld<Spec>& world ) {
     dish2::EpochWrapper<Spec>
   >;
 
-  if ( dish2::count_live_cells<Spec>( world ) == 0 ) {
+  if ( dish2::no_live_cells<Spec>( world ) ) {
     return std::numeric_limits<double>::quiet_NaN();
   } else return std::accumulate(
     iterator_t::make_begin( std::begin(population) ),

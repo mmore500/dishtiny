@@ -14,7 +14,7 @@
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
 
-#include "count_live_cells.hpp"
+#include "no_live_cells.hpp"
 
 namespace dish2 {
 
@@ -34,7 +34,7 @@ double get_mean_program_length( const dish2::ThreadWorld<Spec>& world ) {
   );
 
   if ( program_lengths.empty() ) {
-    emp_assert( dish2::count_live_cells<Spec>( world ) == 0 );
+    emp_assert( dish2::no_live_cells<Spec>( world ) );
     return std::numeric_limits<double>::quiet_NaN();
   } else return std::accumulate(
     std::begin( program_lengths ),

@@ -13,6 +13,7 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "count_live_cells.hpp"
+#include "no_live_cells.hpp"
 
 namespace dish2 {
 
@@ -28,7 +29,7 @@ double get_fraction_apoptosis_request( const dish2::ThreadWorld<Spec>& world ) {
     dish2::ApoptosisRequestWrapper<Spec>
   >;
 
-  if ( dish2::count_live_cells<Spec>( world ) == 0 ) {
+  if ( dish2::no_live_cells<Spec>( world ) ) {
     return std::numeric_limits<double>::quiet_NaN();
   } else return std::count_if(
     iterator_t::make_begin( lcit_t::make_begin( population ) ),

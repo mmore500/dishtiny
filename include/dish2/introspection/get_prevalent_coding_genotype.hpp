@@ -17,7 +17,7 @@
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
 
-#include "count_live_cells.hpp"
+#include "no_live_cells.hpp"
 
 namespace dish2 {
 
@@ -57,7 +57,7 @@ get_prevalent_coding_genotype( const dish2::ThreadWorld<Spec>& world ) {
 
   const static dish2::Genome<Spec> blank_dummy{};
   if ( counter.empty() ) {
-    emp_assert( dish2::count_live_cells<Spec>( world ) == 0 );
+    emp_assert( dish2::no_live_cells<Spec>( world ) );
     return std::pair{
       coding_genotype_ref_t{ blank_dummy.event_tags, blank_dummy.program },
       0

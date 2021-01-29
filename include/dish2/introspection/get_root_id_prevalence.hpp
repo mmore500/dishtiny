@@ -12,7 +12,7 @@
 #include "../world/iterators/RootIDValWrapper.hpp"
 #include "../world/ThreadWorld.hpp"
 
-#include "count_live_cells.hpp"
+#include "no_live_cells.hpp"
 
 namespace dish2 {
 
@@ -26,7 +26,7 @@ double get_root_id_prevalence(
   using lcit_t = dish2::LiveCellIterator<Spec>;
   using wrapper_t = dish2::RootIDValWrapper<lcit_t>;
 
-  if ( dish2::count_live_cells<Spec>( world ) == 0 ) {
+  if ( dish2::no_live_cells<Spec>( world ) ) {
     return std::numeric_limits<double>::quiet_NaN();
   } else return std::count(
     wrapper_t{ lcit_t::make_begin( population ) },
