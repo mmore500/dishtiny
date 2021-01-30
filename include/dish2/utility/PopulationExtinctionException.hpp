@@ -3,9 +3,9 @@
 #define DISH2_UTILITY_POPULATIONEXTINCTIONEXCEPTION_HPP_INCLUDE
 
 #include <exception>
-#include <unordered_map>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 
 #include "../../../third-party/conduit/include/uitsl/utility/unindent_raw_string_literal.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
