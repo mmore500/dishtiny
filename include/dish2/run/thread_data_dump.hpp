@@ -9,6 +9,7 @@
 #include "../config/cfg.hpp"
 #include "../record/dump_abundance_genome.hpp"
 #include "../record/dump_arbitrary_genome.hpp"
+#include "../record/dump_coalescence_result.hpp"
 #include "../record/dump_population.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -20,6 +21,9 @@ void thread_data_dump(
   const dish2::ThreadWorld<Spec>& thread_world,
   const size_t thread_idx
 ) {
+
+
+  dish2::dump_coalescence_result<Spec>( thread_world, thread_idx );
 
   uitsl_err_audit(!
     dish2::dump_abundance_genome<Spec>( thread_world, thread_idx )

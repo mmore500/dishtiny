@@ -38,6 +38,8 @@ public:
     return root_id == other.root_id;
   }
 
+  bool operator!=(const RootID& other) const { return !operator==(other); }
+
   template <class Archive>
   void serialize( Archive & ar ) { ar( CEREAL_NVP( root_id ) ); }
 

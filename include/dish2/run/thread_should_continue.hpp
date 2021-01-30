@@ -5,8 +5,11 @@
 #include <limits>
 
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 
 #include "../config/cfg.hpp"
+#include "../introspection/has_coalesced.hpp"
 #include "../world/ThreadWorld.hpp"
 
 namespace dish2 {
@@ -17,16 +20,25 @@ bool thread_should_contine(
   const uitsl::CoarseTimer& run_timer
 ) {
 
-  // if we are going to dump data,
-  // only consider terminating if update is a multiple of 64, minus one
+  const size_t update = thread_world.GetUpdate();
+
   if (
-    uitsl::shift_mod(thread_world.GetUpdate(), 64) != 63
+    cfg.ABORT_IF_COALESCENT_FREQ()
+    && uitsl::shift_mod(update, cfg.ABORT_IF_COALESCENT_FREQ()) == 0
+    && dish2::has_coalesced<Spec>( thread_world )
+  ) {
+    emp_always_assert( !uitsl::is_multiprocess() );
+    emp_always_assert( cfg.N_THREADS() == 1 );
+    return false;
+  } else if (
+    // if we are going to dump data,
+    // only consider terminating if update is a multiple of 64, minus one
+    uitsl::shift_mod(update, 64) != 63
     && cfg.DATA_DUMP()
   ) return true;
   else return (
     !run_timer.IsComplete()
-    && thread_world.GetUpdate()
-      < ( dish2::cfg.RUN_UPDATES() ?: std::numeric_limits<size_t>::max() )
+    && update < (dish2::cfg.RUN_UPDATES() ?: std::numeric_limits<size_t>::max())
   );
 
 }

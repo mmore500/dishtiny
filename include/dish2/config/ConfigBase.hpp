@@ -249,6 +249,9 @@ EMP_BUILD_CONFIG(
   VALUE(ROOT_ABUNDANCES_FREQ, size_t, 0,
     "[NATIVE] How many updates should elapse between recording phylogenetic root abundances? If 0, never record phylogenetic root abundances. Must be power of two."
   ),
+  VALUE(ABORT_IF_COALESCENT_FREQ, size_t, 0,
+    "[NATIVE] How many updates should elapse between checking for coalescence? If 0, never check for coalescence. Must be power of two."
+  ),
   VALUE(REGULATION_VIZ_CLAMP, double, 10.0,
     "What bounds should we clamp regulation values into before running PCA visualization?"
   ),
