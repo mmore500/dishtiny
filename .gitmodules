@@ -33,5 +33,5 @@
   path = third-party/backward-cpp
   url = https://github.com/bombela/backward-cpp
 [submodule "third-party/magic_enum"]
-	path = third-party/magic_enum
-	url = https://github.com/Neargye/magic_enum
+  path = third-party/magic_enum
+  url = https://github.com/Neargye/magic_enum

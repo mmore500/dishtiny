@@ -46,7 +46,7 @@ public:
 
   }
 
-	const char* what () const noexcept {
+  const char* what () const noexcept {
     return what_.c_str();
   }
 
