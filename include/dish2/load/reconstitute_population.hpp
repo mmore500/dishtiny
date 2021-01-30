@@ -12,6 +12,7 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 
 #include "../algorithm/seed_genomes_into.hpp"
 #include "../genome/Genome.hpp"
@@ -33,7 +34,7 @@ void reconstitute_population(
       {"a", "population"},
       {"proc", emp::to_string( uitsl::get_proc_id() )},
       {"thread", emp::to_string( thread_idx )},
-      {"ext", ".bin"}
+      {"ext", ".bin.gz"}
     });
 
     emp_always_assert(
@@ -41,7 +42,7 @@ void reconstitute_population(
       eligible_population_paths.size(), eligible_population_paths
     );
 
-    std::fstream fs( eligible_population_paths.front() );
+    hogzstr::igzstream fs( eligible_population_paths.front() );
     cereal::BinaryInputArchive iarchive( fs );
     iarchive( reconstituted );
 

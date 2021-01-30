@@ -22,7 +22,7 @@ std::string make_dump_population_filename( const size_t thread_idx) {
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"thread", emp::to_string(thread_idx)},
-    {"ext", ".bin"}
+    {"ext", ".bin.gz"}
   };
 
   if ( std::getenv("REPRO_ID") ) {

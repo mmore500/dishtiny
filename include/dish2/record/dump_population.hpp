@@ -8,6 +8,7 @@
 #include "../../../third-party/cereal/include/cereal/archives/binary.hpp"
 #include "../../../third-party/cereal/include/cereal/types/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+#include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 
 #include "../world/iterators/GenotypeConstWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
@@ -28,7 +29,7 @@ void dump_population(
     dish2::make_dump_population_filename( thread_idx )
   );
 
-  std::ofstream os(filename, std::ios::binary);
+  hogzstr::ogzstream os(filename, std::ios::binary | std::ios::out);
   cereal::BinaryOutputArchive archive( os );
 
   archive( emp::vector< dish2::Genome<Spec> >(
