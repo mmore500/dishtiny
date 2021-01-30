@@ -20,7 +20,7 @@ namespace dish2 {
 
 template<typename Spec>
 void thread_evolve(
-  const size_t thread_idx, dish2::ThreadWorld<Spec> thread_world
+  const size_t thread_idx, dish2::ThreadWorld<Spec>& thread_world
 ) {
 
   std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
