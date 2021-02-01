@@ -36,5 +36,5 @@
   path = third-party/magic_enum
   url = https://github.com/Neargye/magic_enum
 [submodule "third-party/header-only-gzstream"]
-	path = third-party/header-only-gzstream
-	url = https://github.com/mmore500/header-only-gzstream.git
+  path = third-party/header-only-gzstream
+  url = https://github.com/mmore500/header-only-gzstream.git
