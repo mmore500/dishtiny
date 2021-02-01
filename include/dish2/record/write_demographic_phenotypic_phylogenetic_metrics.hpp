@@ -32,6 +32,7 @@
 #include "../introspection/get_mean_elapsed_point_mutations.hpp"
 #include "../introspection/get_mean_epoch.hpp"
 #include "../introspection/get_mean_generation.hpp"
+#include "../introspection/get_mean_genome_compression_ratio.hpp"
 #include "../introspection/get_mean_incoming_inter_message_count.hpp"
 #include "../introspection/get_mean_incoming_intra_message_count.hpp"
 #include "../introspection/get_mean_kin_group_age.hpp"
@@ -40,6 +41,7 @@
 #include "../introspection/get_mean_resource_received.hpp"
 #include "../introspection/get_mean_resource_stockpile.hpp"
 #include "../introspection/get_mean_spawn_count.hpp"
+#include "../introspection/get_population_compression_ratio.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
 #include "../introspection/make_causes_of_death_string_histogram.hpp"
 
@@ -139,6 +141,18 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   {
     metric = "Number Unique Genotypes";
     value = dish2::count_unique_coding_genotypes<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Population Compression Ratio";
+    value = dish2::get_population_compression_ratio<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Mean Genome Compression Ratio";
+    value = dish2::get_mean_genome_compression_ratio<Spec>( world );
     file.Update();
   }
 
