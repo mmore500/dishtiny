@@ -17,4 +17,4 @@ Or download the [tarball](https://github.com/mmore500/dishtiny/tarball/master):
 ## Docker Container
 
 This project has a [containerized build enviroment](https://docs.docker.com/engine/reference/commandline/build/) available with all its dependencies installed. Either build a copy of the container locally from the project's `Dockerfile`,
-or get a copy of the container from [DockerHub](https://hub.docker.com/r/mmore500/dishtiny}).
+or get a copy of the container from [DockerHub](https://hub.docker.com/r/mmore500/dishtiny).
