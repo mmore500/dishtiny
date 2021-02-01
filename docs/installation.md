@@ -53,3 +53,5 @@ mkdir temp && cd temp
 cp ../rundishtiny .
 ./rundishtiny --RUN_SECONDS 30
 ```
+
+Singularity mounts most of the host filesystem, meaning that any changes you make using the web editor will seamlessly apply inside the container. Nice!
