@@ -24,7 +24,7 @@ std::string make_cell_census_filename(
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"thread", emp::to_string(thread_idx)},
-    {"ext", ".csv"}
+    {"ext", ".csv.gz"}
   };
 
   if ( std::getenv("REPRO_ID") ) {

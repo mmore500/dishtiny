@@ -6,6 +6,7 @@
 
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
+#include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 
 #include "cell_census/write_cell_age.hpp"
 #include "cell_census/write_kin_group_age.hpp"
@@ -22,11 +23,10 @@ void write_cell_census(
   const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
 ) {
 
-  thread_local emp::DataFile file(
-    dish2::make_cell_census_filename(
-      thread_idx
-    )
+  thread_local auto out_stream = hogzstr::ogzstream(
+    dish2::make_cell_census_filename( thread_idx )
   );
+  thread_local emp::DataFile file( out_stream );
 
   thread_local std::string metric;
   thread_local double value;
