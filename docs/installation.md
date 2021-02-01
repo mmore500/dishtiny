@@ -14,16 +14,27 @@ Or download the [tarball](https://github.com/mmore500/dishtiny/tarball/master):
     $ curl  -OL https://github.com/mmore500/dishtiny/tarball/master
 ```
 
-## Docker Container
+## Containerization
 
 This project has a [containerized build enviroment](https://docs.docker.com/engine/reference/commandline/build/) available with all its dependencies installed. Either build a copy of the container locally from the project's `Dockerfile`,
 or get a copy of the container from [DockerHub](https://hub.docker.com/r/mmore500/dishtiny).
 
-## Web-based Cloud Solution with GUI!
+If you have [Docker](https://docs.docker.com/) installed, you can launch an interactive shell inside the dishtiny container like so,
+```bash
+sudo docker run -it mmore500/dishtiny
+```
+
+Likewise, if you have [Singularity](https://sylabs.io/docs/) installed,
+```bash
+singularity shell docker://mmore500/dishtiny
+```
+
+## Use Cloud-based Development Environment with Web GUI :sunglasses:
 
 Go to <https://shell.cloud.google.com>.
+As of Febuary 2021, Google provides this service free of charge!
 
-```
+```bash
 sudo wget -O- http://neuro.debian.net/lists/xenial.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list && \
     sudo apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 && \
     sudo apt-get update
@@ -31,10 +42,10 @@ sudo apt-get install -y singularity-container
 singularity shell docker://mmore500/dishtiny
 ```
 
-(At this point, it'll take a few minutes so go get yourself a cup of coffee :coffee:)
-
-Then check out the code, make, and run.
-```
+This'll take a few minutes, so go get yourself a cup of coffee :coffee:.
+When you get back, a shell prompt from the container should be ready to rock and roll.
+At this point, you can check out the source code, make, and run!
+```bash
 git clone https://github.com/mmore500/dishtiny.git --recursive --shallow-submodules
 cd dishtiny
 make
@@ -42,5 +53,3 @@ mkdir temp && cd temp
 cp ../rundishtiny .
 ./rundishtiny --RUN_SECONDS 30
 ```
-
-As of Febuary 2021, Google provides this service free of charge!
