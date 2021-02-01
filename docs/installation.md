@@ -29,7 +29,7 @@ Likewise, if you have [Singularity](https://sylabs.io/docs/) installed,
 singularity shell docker://mmore500/dishtiny
 ```
 
-## Use Cloud-based Development Environment with Web GUI :sunglasses:
+## Hassle-free Cloud-based Development Environment with Web GUI :sunglasses:
 
 Go to <https://shell.cloud.google.com>.
 As of Febuary 2021, Google provides this service free of charge!
