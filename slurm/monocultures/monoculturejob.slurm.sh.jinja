@@ -87,7 +87,7 @@ echo "downloading ${f}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
     "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" \
-    "root_id=0+${f}" \
+    "${f}" \
     && echo "  ${f} download success" && break \
     || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
@@ -131,7 +131,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   mpiexec.hydra -n "${N_PROCS}" \
   singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
     ./rundishtiny \
-    -N_THREADS "${N_THREADS}" -RUN_SECONDS 3600 -GENESIS "innoculate" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -MUTATION_RATE "0 0 0" -STINT {{ stint }} -SERIES {{ series }} \
+    -N_THREADS "${N_THREADS}" -RUN_SECONDS 3600 -GENESIS "monoculture" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -MUTATION_RATE "0 0 0" -STINT {{ stint }} -SERIES {{ series }} \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
 MPIEXEC_HEREDOC_EOF
