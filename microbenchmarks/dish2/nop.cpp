@@ -9,6 +9,7 @@
 
 #include "dish2/config/cfg.hpp"
 #include "dish2/spec/Spec.hpp"
+#include "dish2/utility/backtrace_enable.hpp"
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
 
