@@ -39,8 +39,8 @@ std::string make_demographic_phenotypic_phylogenetic_metrics_filename(
     keyname_attributes[ "stint" ] = emp::to_string( cfg.STINT() );
   }
 
-  if ( cfg.REPLICATE() != std::numeric_limits<uint32_t>::max() ) {
-    keyname_attributes[ "replicate" ] = emp::to_string( cfg.REPLICATE() );
+  if ( !cfg.REPLICATE().empty() ) {
+    keyname_attributes[ "replicate" ] = cfg.REPLICATE();
   }
 
   if ( dish2::get_endeavor() ) {

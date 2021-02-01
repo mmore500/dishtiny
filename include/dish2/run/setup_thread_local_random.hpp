@@ -21,7 +21,9 @@ void setup_thread_local_random( const size_t thread_idx ) {
 
   const uint32_t computed_preseed = []{
     return dish2::sha256_reduce( emp::vector< uint32_t >{
-      dish2::cfg.STINT(), dish2::cfg.SERIES(), dish2::cfg.REPLICATE()
+      dish2::cfg.STINT(),
+      dish2::cfg.SERIES(),
+      dish2::sha256_reduce( dish2::cfg.REPLICATE() )
     } );
   }();
 

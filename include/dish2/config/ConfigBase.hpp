@@ -60,7 +60,7 @@ EMP_BUILD_CONFIG(
   VALUE(PHENOTYPIC_DIVERGENCE_N_CELLS, size_t, 100, "TODO"),
   VALUE(STINT, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
   VALUE(SERIES, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
-  VALUE(REPLICATE, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
+  VALUE(REPLICATE, std::string, "", "TODO"),
   VALUE(
     GENESIS, std::string, "generate",
     "generate, reconstitute, monoculture, or innoculate"
