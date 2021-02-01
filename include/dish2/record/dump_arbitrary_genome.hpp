@@ -5,12 +5,12 @@
 #include <fstream>
 #include <string>
 
-#include "../../../third-party/cereal/include/cereal/archives/json.hpp"
-
 #include "../introspection/count_live_cells.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 
 #include "../world/ThreadWorld.hpp"
+
+#include "dump_genome.hpp"
 
 #include "make_filename/make_dump_arbitrary_genome_filename.hpp"
 
@@ -28,14 +28,10 @@ bool dump_arbitrary_genome(
   const auto genome
     = *(dish2::LiveCellIterator<Spec>::make_begin( world.population )->genome);
 
-  {
-    const std::string filename = dish2::make_dump_arbitrary_genome_filename(
-      thread_idx, "wildtype"
-    );
-    std::ofstream os( filename );
-    cereal::JSONOutputArchive archive( os );
-    archive( genome );
-  }
+  dish2::dump_genome< Spec >(
+    genome,
+    dish2::make_dump_arbitrary_genome_filename( thread_idx, "wildtype" )
+  );
 
   return true;
 
