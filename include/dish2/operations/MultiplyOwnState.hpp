@@ -2,6 +2,9 @@
 #ifndef DISH2_OPERATIONS_MULTIPLYOWNSTATE_HPP_INCLUDE
 #define DISH2_OPERATIONS_MULTIPLYOWNSTATE_HPP_INCLUDE
 
+#include <string>
+#include <set>
+
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Instruction.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
@@ -43,8 +46,8 @@ public:
 
   static size_t prevalence() { return 5; }
 
-  template<typename Spec>
-  static auto descriptors( const sgpl::Instruction<Spec>& inst ) {
+  template<typename SgplSpec>
+  static auto descriptors( const sgpl::Instruction<SgplSpec>& inst ) {
 
     return std::map<std::string, std::string>{
       { "argument a", emp::to_string( static_cast<int>( inst.args[0] ) ) },
@@ -59,6 +62,21 @@ public:
           GetAddr( inst )
         ) )
       },
+    };
+
+  }
+
+  template<typename SgplSpec>
+  static auto categories( const sgpl::Instruction<SgplSpec>& inst ) {
+
+    const bool nop_target = dish2::WritableState< DishSpec >::GetLeafTypeName(
+      GetAddr( inst )
+    ).find("NopState") != std::string::npos;
+
+    return std::set<std::string>{
+      nop_target ? "actuator" : "calculation",
+      nop_target ? "intrinsic" : "extrinsic",
+      "op",
     };
 
   }

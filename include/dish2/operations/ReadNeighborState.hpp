@@ -2,6 +2,9 @@
 #ifndef DISH2_OPERATIONS_READNEIGHBORSTATE_HPP_INCLUDE
 #define DISH2_OPERATIONS_READNEIGHBORSTATE_HPP_INCLUDE
 
+#include <set>
+#include <string>
+
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Instruction.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
@@ -61,6 +64,15 @@ public:
       },
     };
 
+  }
+
+  template<typename Spec>
+  static std::set<std::string> categories( const sgpl::Instruction<Spec>& ) {
+    return {
+      "extrinsic",
+      "sensor",
+      "op",
+    };
   }
 
 };

@@ -2,6 +2,8 @@
 #ifndef DISH2_OPERATIONS_BCSTINTRAMESSAGEIF_HPP_INCLUDE
 #define DISH2_OPERATIONS_BCSTINTRAMESSAGEIF_HPP_INCLUDE
 
+#include <string>
+#include <set>
 #include <tuple>
 
 #include "../../../third-party/Empirical/include/emp/tools/hash_namify.hpp"
@@ -45,6 +47,15 @@ struct BcstIntraMessageIf {
       { "summary", "if a, send message to all other cardinals within cell" },
       { "tag bits", emp::to_string( inst.tag ) },
       { "tag moniker", emp::hash_namify( std::hash< tag_t >{}( inst.tag ) ) }
+    };
+  }
+
+  template<typename Spec>
+  static std::set<std::string> categories( const sgpl::Instruction<Spec>& ) {
+    return {
+      "intrinsic",
+      "flow",
+      "op",
     };
   }
 

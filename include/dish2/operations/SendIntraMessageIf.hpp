@@ -2,7 +2,8 @@
 #ifndef DISH2_OPERATIONS_SENDINTRAMESSAGEIF_HPP_INCLUDE
 #define DISH2_OPERATIONS_SENDINTRAMESSAGEIF_HPP_INCLUDE
 
-#include <tuple>
+#include <set>
+#include <string>
 
 #include "../../../third-party/Empirical/include/emp/tools/hash_namify.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
@@ -52,6 +53,15 @@ struct SendIntraMessageIf {
       { "summary", "if a, send message another cardinal within cell" },
       { "tag bits", emp::to_string( inst.tag ) },
       { "tag moniker", emp::hash_namify( std::hash< tag_t >{}( inst.tag ) ) },
+    };
+  }
+
+  template<typename Spec>
+  static std::set<std::string> categories( const sgpl::Instruction<Spec>& ) {
+    return {
+      "intrinsic",
+      "flow",
+      "op",
     };
   }
 

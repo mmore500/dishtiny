@@ -2,6 +2,9 @@
 #ifndef DISH2_OPERATIONS_ADDTOOWNSTATE_HPP_INCLUDE
 #define DISH2_OPERATIONS_ADDTOOWNSTATE_HPP_INCLUDE
 
+#include <string>
+#include <set>
+
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Instruction.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
@@ -60,6 +63,21 @@ public:
         ) )
       },
     };
+  }
+
+  template<typename SgplSpec>
+  static auto categories( const sgpl::Instruction<SgplSpec>& inst ) {
+
+    const bool nop_target = dish2::WritableState< DishSpec >::GetLeafTypeName(
+      GetAddr( inst )
+    ).find("NopState") != std::string::npos;
+
+    return std::set<std::string>{
+      nop_target ? "actuator" : "calculation",
+      nop_target ? "intrinsic" : "extrinsic",
+      "op",
+    };
+
   }
 
 };

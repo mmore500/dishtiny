@@ -2,6 +2,8 @@
 #ifndef DISH2_OPERATIONS_SENDINTERMESSAGEIF_HPP_INCLUDE
 #define DISH2_OPERATIONS_SENDINTERMESSAGEIF_HPP_INCLUDE
 
+#include <set>
+#include <string>
 #include <tuple>
 
 #include "../../../third-party/Empirical/include/emp/tools/hash_namify.hpp"
@@ -43,6 +45,16 @@ struct SendInterMessageIf {
       { "summary", "if a, send message to neighbor cell" },
       { "tag bits", emp::to_string( inst.tag ) },
       { "tag moniker", emp::hash_namify( std::hash< tag_t >{}( inst.tag ) ) },
+    };
+  }
+
+  template<typename Spec>
+  static std::set<std::string> categories( const sgpl::Instruction<Spec>& ) {
+    return {
+      "actuator",
+      "extrinsic",
+      "intermessaging",
+      "op",
     };
   }
 
