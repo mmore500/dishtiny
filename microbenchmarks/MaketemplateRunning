@@ -9,7 +9,7 @@ DISH_MPICXX ?= mpicxx
 default: bench
 
 bench-%: %.cpp
-	$(DISH_MPICXX) $(FLAGS) $< -g -lbenchmark -lpthread -lmetis -lz -lcurl -lsfml-graphics -o $@.out
+	$(DISH_MPICXX) $(FLAGS) $< -g -lbenchmark -lpthread -lmetis -lz -lcurl -lsfml-graphics -ldwarf -o $@.out
 	# execute bench
 	./$@.out --benchmark_counters_tabular=true --benchmark_format=json --benchmark_out="task=$*+ext=.json" | $(TO_ROOT)/microbenchmarks/script/headtail.sh;
 
@@ -18,7 +18,7 @@ bench: $(addprefix bench-, $(TARGET_NAMES))
 	rm -rf bench*.out
 
 build-%: %.cpp
-	$(DISH_MPICXX) $(FLAGS) $< -lbenchmark -lpthread -lmetis -lz -lcurl -lsfml-graphics -o $@.out
+	$(DISH_MPICXX) $(FLAGS) $< -lbenchmark -lpthread -lmetis -lz -lcurl -lsfml-graphics -ldwarf -o $@.out
 
 # Test in debug mode without pointer tracker
 build: $(addprefix build-, $(TARGET_NAMES))
