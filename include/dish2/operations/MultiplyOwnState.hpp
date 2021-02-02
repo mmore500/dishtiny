@@ -2,8 +2,8 @@
 #ifndef DISH2_OPERATIONS_MULTIPLYOWNSTATE_HPP_INCLUDE
 #define DISH2_OPERATIONS_MULTIPLYOWNSTATE_HPP_INCLUDE
 
-#include <string>
 #include <set>
+#include <string>
 
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Instruction.hpp"

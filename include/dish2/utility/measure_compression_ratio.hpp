@@ -4,9 +4,9 @@
 
 #include <fstream>
 
-#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/conduit/include/uitsl/fetch/make_temp_filepath.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 
 namespace dish2 {

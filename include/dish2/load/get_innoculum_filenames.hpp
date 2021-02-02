@@ -9,8 +9,8 @@
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_transform.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
-#include "get_root_ids.hpp"
 #include "get_innoculum_filename.hpp"
+#include "get_root_ids.hpp"
 
 namespace dish2 {
 

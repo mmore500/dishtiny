@@ -2,8 +2,8 @@
 #ifndef DISH2_OPERATIONS_BCSTINTRAMESSAGEIF_HPP_INCLUDE
 #define DISH2_OPERATIONS_BCSTINTRAMESSAGEIF_HPP_INCLUDE
 
-#include <string>
 #include <set>
+#include <string>
 #include <tuple>
 
 #include "../../../third-party/Empirical/include/emp/tools/hash_namify.hpp"

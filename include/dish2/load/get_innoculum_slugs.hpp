@@ -13,8 +13,8 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
-#include "get_root_ids.hpp"
 #include "get_innoculum_slug.hpp"
+#include "get_root_ids.hpp"
 
 namespace dish2 {
 
