@@ -25,6 +25,10 @@ static void DoBench(benchmark::State& state) {
   if (state.thread_index == 0) {
     dish2::cfg.Set("N_CELLS", emp::to_string(NUM_CELLS));
     dish2::cfg.Set("N_THREADS", emp::to_string(state.threads));
+    // disable some services to prevent extinction
+    dish2::cfg.Set("APOPTOSIS_SERVICE_FREQUENCY", 0);
+    dish2::cfg.Set("CELL_AGE_SERVICE_FREQUENCY", 0);
+    dish2::cfg.Set("QUORUM_CAP_SERVICE_FREQUENCY", 0);
     netuit::internal::MeshIDCounter::Reset();
     proc_world.emplace();
     flag = true;
