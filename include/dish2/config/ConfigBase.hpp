@@ -255,6 +255,9 @@ EMP_BUILD_CONFIG(
   VALUE(REGULATION_VIZ_CLAMP, double, 10.0,
     "What bounds should we clamp regulation values into before running PCA visualization?"
   ),
+  VALUE(RUNNING_LOG_DURATION, size_t, 16,
+    "How many purge epochs should we keep events in the running log?"
+  ),
   // VALUE(UPDATES_PER_CHUNK, size_t, 64,
   //   "[NATIVE] "
   //   "How many updates should we save in each dimension per dataset chunk? Total number will be this parameter squared."
