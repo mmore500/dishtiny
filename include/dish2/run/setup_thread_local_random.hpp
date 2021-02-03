@@ -13,6 +13,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "../config/cfg.hpp"
+#include "../config/has_rng_preseed.hpp"
 #include "../utility/sha256_reduce.hpp"
 
 namespace dish2 {
@@ -27,8 +28,7 @@ void setup_thread_local_random( const size_t thread_idx ) {
     } );
   }();
 
-  const uint32_t preseed =
-    ( dish2::cfg.RNG_PRESEED() != std::numeric_limits<uint32_t>::max() )
+  const uint32_t preseed = dish2::has_rng_preseed()
     ? dish2::cfg.RNG_PRESEED()
     : computed_preseed
   ;

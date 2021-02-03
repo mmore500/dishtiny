@@ -3,7 +3,6 @@
 #define DISH2_RECORD_MAKE_FILENAME_MAKE_DUMP_ABUNDANCE_GENOME_FILENAME_HPP_INCLUDE
 
 #include <cstdlib>
-#include <limits>
 #include <string>
 
 #include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
@@ -12,7 +11,10 @@
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../config/cfg.hpp"
-#include "../../introspection/get_endeavor.hpp"
+#include "../../config/get_endeavor.hpp"
+#include "../../config/has_replicate.hpp"
+#include "../../config/has_series.hpp"
+#include "../../config/has_stint.hpp"
 
 namespace dish2 {
 
@@ -37,15 +39,15 @@ std::string make_dump_abundance_genome_filename(
     keyname_attributes[ "repro" ] = std::getenv("REPRO_ID");
   }
 
-  if ( cfg.SERIES() != std::numeric_limits<uint32_t>::max() ) {
+  if ( dish2::has_series() ) {
     keyname_attributes[ "series" ] = emp::to_string( cfg.SERIES() );
   }
 
-  if ( cfg.STINT() != std::numeric_limits<uint32_t>::max() ) {
+  if ( dish2::has_stint() ) {
     keyname_attributes[ "stint" ] = emp::to_string( cfg.STINT() );
   }
 
-  if ( !cfg.REPLICATE().empty() ) {
+  if ( dish2::has_replicate() ) {
     keyname_attributes[ "replicate" ] = cfg.REPLICATE();
   }
 

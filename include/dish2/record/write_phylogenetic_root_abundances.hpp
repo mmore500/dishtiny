@@ -6,6 +6,9 @@
 
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 
+#include "../config/has_replicate.hpp"
+#include "../config/has_series.hpp"
+#include "../config/has_stint.hpp"
 #include "../introspection/get_root_id_prevalence.hpp"
 #include "../introspection/get_unique_root_ids.hpp"
 
@@ -32,6 +35,10 @@ void write_phylogenetic_root_abundances(
 
   thread_local std::once_flag once_flag;
   std::call_once(once_flag, [](){
+    if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
+    if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
+    if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
+
     file.AddVar(root_id, "Root ID");
     file.AddVar(prevalence, "Prevalence");
     file.AddVar(update, "Update");

@@ -10,6 +10,9 @@
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 
+#include "../config/has_replicate.hpp"
+#include "../config/has_series.hpp"
+#include "../config/has_stint.hpp"
 #include "../introspection/get_root_id_prevalence.hpp"
 #include "../load/count_root_ids.hpp"
 #include "../load/get_innoculum_filename.hpp"
@@ -33,6 +36,10 @@ void dump_coalescence_result(
       thread_idx
     )
   );
+
+  if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
+  if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
+  if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
 
   const size_t population_size = world.GetSize();
   const size_t update = world.GetUpdate();

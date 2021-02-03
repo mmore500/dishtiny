@@ -8,6 +8,10 @@
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 #include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 
+#include "../config/has_replicate.hpp"
+#include "../config/has_series.hpp"
+#include "../config/has_stint.hpp"
+
 #include "cell_census/write_cell_age.hpp"
 #include "cell_census/write_kin_group_age.hpp"
 #include "cell_census/write_kin_group_id.hpp"
@@ -37,6 +41,10 @@ void write_cell_census(
 
   thread_local std::once_flag once_flag;
   std::call_once(once_flag, [](){
+    if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
+    if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
+    if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
+
     file.AddVar(metric, "Metric");
     file.AddVar(value, "Value");
     file.AddVar(cell_idx, "Cell");

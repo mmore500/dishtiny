@@ -16,6 +16,9 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
+#include "../config/has_replicate.hpp"
+#include "../config/has_series.hpp"
+#include "../config/has_stint.hpp"
 #include "../genome/Genome.hpp"
 #include "../load/make_genome_slug.hpp"
 #include "../utility/measure_compression_ratio.hpp"
@@ -36,6 +39,10 @@ void dump_genome_statistics(
   emp::DataFile file(
     dish2::make_genome_statistics_filename( genome_filename )
   );
+
+  if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
+  if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
+  if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
 
   const std::string slug = dish2::make_genome_slug( genome_filename );
   file.AddVar(slug, "Genome Slug");

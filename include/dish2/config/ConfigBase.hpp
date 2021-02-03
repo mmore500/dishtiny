@@ -44,7 +44,7 @@ EMP_BUILD_CONFIG(
   VALUE(SYNC_FREQ_MILLISECONDS, size_t, 100,
     "[NATIVE] How often updates occur synchronously across threads and processes for async mode 1?"
   ),
-  VALUE(RNG_PRESEED, uint32_t, std::numeric_limits<uint32_t>::max(),
+  VALUE(RNG_PRESEED, uint64_t, std::numeric_limits<uint64_t>::max(),
     "[NATIVE] Optionally override the calculated rng preseed."
   ),
   VALUE(THROW_ON_EXTINCTION, bool, true,
@@ -180,7 +180,7 @@ EMP_BUILD_CONFIG(
   VALUE(CPU_EXECUTION_SERVICE_FREQUENCY, size_t, 1,
     "Run service every ?? updates."
   ),
-  VALUE(DEATH_LOG_CLEAR_SERVICE_FREQUENCY, size_t, 64,
+  VALUE(RUNNING_LOG_PURGE_SERVICE_FREQUENCY, size_t, 64,
     "Run service every ?? updates."
   ),
   VALUE(DECAY_TO_BASELINE_SERVICE_FREQUENCY, size_t, 32,

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_INTROSPECTION_GET_ENDEAVOR_HPP_INCLUDE
-#define DISH2_INTROSPECTION_GET_ENDEAVOR_HPP_INCLUDE
+#ifndef DISH2_CONFIG_GET_ENDEAVOR_HPP_INCLUDE
+#define DISH2_CONFIG_GET_ENDEAVOR_HPP_INCLUDE
 
 #include <cstdlib>
 #include <limits>
@@ -10,12 +10,13 @@
 
 #include "../config/cfg.hpp"
 
+#include "has_series.hpp"
+
 namespace dish2 {
 
 emp::optional<uint32_t> get_endeavor() {
 
-  if ( cfg.SERIES() != std::numeric_limits<uint32_t>::max() )
-    return cfg.SERIES() / 1000;
+  if ( dish2::has_series() ) return cfg.SERIES() / 1000;
   else if ( std::getenv("DISHTINY_ENDEAVOR") )
     return uitsl::stoszt( std::getenv("DISHTINY_ENDEAVOR") );
   else return std::nullopt;
@@ -24,4 +25,4 @@ emp::optional<uint32_t> get_endeavor() {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_INTROSPECTION_GET_ENDEAVOR_HPP_INCLUDE
+#endif // #ifndef DISH2_CONFIG_GET_ENDEAVOR_HPP_INCLUDE

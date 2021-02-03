@@ -18,6 +18,10 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
+#include "../config/has_replicate.hpp"
+#include "../config/has_series.hpp"
+#include "../config/has_stint.hpp"
+
 #include "make_filename/make_montage_filename.hpp"
 
 namespace dish2 {
@@ -34,15 +38,15 @@ std::string make_drawing_archive_filename() {
     keyname_attributes[ "repro" ] = std::getenv("REPRO_ID");
   }
 
-  if ( cfg.SERIES() != std::numeric_limits<uint32_t>::max() ) {
+  if ( dish2::has_series() ) {
     keyname_attributes[ "series" ] = emp::to_string( cfg.SERIES() );
   }
 
-  if ( cfg.STINT() != std::numeric_limits<uint32_t>::max() ) {
+  if ( dish2::has_stint() ) {
     keyname_attributes[ "stint" ] = emp::to_string( cfg.STINT() );
   }
 
-  if ( !cfg.REPLICATE().empty() ) {
+  if ( dish2::has_replicate() ) {
     keyname_attributes[ "replicate" ] = cfg.REPLICATE();
   }
 
