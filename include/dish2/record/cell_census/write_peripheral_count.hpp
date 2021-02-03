@@ -9,7 +9,7 @@
 #include "../../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../../world/iterators/LiveCellIterator.hpp"
-#include "../../world/iterators/PeripheralCountWrapper.hpp"
+#include "../../world/iterators/PeripheralityLevWrapper.hpp"
 #include "../../world/ThreadWorld.hpp"
 
 namespace dish2 {
@@ -27,12 +27,12 @@ void write_peripheral_count(
 
   using lcit_t = dish2::LiveCellIterator<Spec>;
 
-  using iterator_t = dish2::PeripheralCountWrapper<
+  using iterator_t = dish2::PeripheralityLevWrapper<
     lcit_t
   >;
 
   for (size_t lev{}; lev < Spec::NLEV; ++lev) {
-    metric = emp::to_string("Peripheral Count Level ", lev);
+    metric = emp::to_string("Peripherality Level ", lev);
     uitsl::for_each(
       iterator_t{ lcit_t::make_begin( population ), lev},
       iterator_t{ lcit_t::make_end( population ), lev },

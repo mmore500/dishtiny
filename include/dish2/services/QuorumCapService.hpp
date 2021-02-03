@@ -34,7 +34,7 @@ struct QuorumCapService {
 
     const float p = std::min(1.0f,
       cfg.P_QUORUM_CAP_KILL()[ lev ]
-      * cell.IsPeripheral( lev )
+      * cell.GetPeripherality( lev )
       //^ don't kill cels on interior, kill periphery
       // more non-kin neighbors = more likely to be killed
       * (num_quorum_bits - cfg.QUORUM_CAP()[ lev ])

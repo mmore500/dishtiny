@@ -50,7 +50,7 @@ using DrawerCollection = dish2::DrawerManager<
   // >,
   // dish2::SeriesDrawer<
   //   Spec,
-  //   dish2::IsPeripheralLevArtist<>
+  //   dish2::PeripheralityLevArtist<>
   // >,
   dish2::SeriesDrawer<
     Spec,

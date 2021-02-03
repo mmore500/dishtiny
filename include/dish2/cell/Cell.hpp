@@ -154,7 +154,7 @@ struct Cell {
     return genome.has_value();
   }
 
-  size_t IsPeripheral( const size_t lev ) const {
+  size_t GetPeripherality( const size_t lev ) const {
     if ( !IsAlive() ) return false;
 
     const auto kin_group_id = genome->kin_group_id.GetBuffer()[ lev ];
@@ -165,6 +165,12 @@ struct Cell {
         return kin_group_id != neighbor_kin_group_id_view.Get( lev );
       }
     );
+  }
+
+  auto GetPeripherality() const {
+    emp::array<size_t, Spec::NLEV> res;
+    for (size_t l{}; l < Spec::NLEV; ++l) res[l] = GetPeripherality(l);
+    return res;
   }
 
   size_t GetNumCardinals() const { return cardinals.size(); }

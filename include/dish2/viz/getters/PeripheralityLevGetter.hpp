@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_VIZ_GETTERS_ISPERIPHERALLEVGETTER_HPP_INCLUDE
-#define DISH2_VIZ_GETTERS_ISPERIPHERALLEVGETTER_HPP_INCLUDE
+#ifndef DISH2_VIZ_GETTERS_PERIPHERALITYLEVGETTER_HPP_INCLUDE
+#define DISH2_VIZ_GETTERS_PERIPHERALITYLEVGETTER_HPP_INCLUDE
 
 #include <functional>
 
@@ -13,7 +13,7 @@
 namespace dish2 {
 
 template<typename Spec>
-class IsPeripheralLevGetter {
+class PeripheralityLevGetter {
 
   std::reference_wrapper<const dish2::ThreadWorld<Spec>> thread_world;
 
@@ -24,7 +24,7 @@ public:
   using value_type = size_t;
 
   template< typename... Args >
-  IsPeripheralLevGetter(
+  PeripheralityLevGetter(
     const dish2::ThreadWorld<Spec>& thread_world_,
     const size_t idx,
     Args&&...
@@ -36,7 +36,7 @@ public:
   const value_type Get(
     const size_t cell_idx, const size_t cardinal_idx=0
   ) const {
-    return thread_world.get().GetCell( cell_idx ).IsPeripheral( lev );
+    return thread_world.get().GetCell( cell_idx ).Peripherality( lev );
   }
 
   size_t GetNumCells() const { return thread_world.get().GetSize(); }
@@ -49,4 +49,4 @@ public:
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_VIZ_GETTERS_ISPERIPHERALLEVGETTER_HPP_INCLUDE
+#endif // #ifndef DISH2_VIZ_GETTERS_PERIPHERALITYLEVGETTER_HPP_INCLUDE

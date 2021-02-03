@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_VIZ_ARTISTS_ISPERIPHERALLEVARTIST_HPP_INCLUDE
-#define DISH2_VIZ_ARTISTS_ISPERIPHERALLEVARTIST_HPP_INCLUDE
+#ifndef DISH2_VIZ_ARTISTS_PERIPHERALITYLEVARTIST_HPP_INCLUDE
+#define DISH2_VIZ_ARTISTS_PERIPHERALITYLEVARTIST_HPP_INCLUDE
 
 #include <string>
 
@@ -9,8 +9,7 @@
 #include "../border_colormaps/MatchBorderColorMap.hpp"
 #include "../fill_colormaps/BooleanColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
-#include "../getters/IsPeripheralLevGetter.hpp"
-#include "../getters/IsPeripheralLevGetter.hpp"
+#include "../getters/PeripheralityLevGetter.hpp"
 #include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
 
@@ -18,16 +17,16 @@
 
 namespace dish2 {
 
-namespace internal::is_peripheral_lev_artist {
+namespace internal::peripherality_lev_artist {
 
   template<
     typename IsAliveGetter,
-    typename IsPeripheralLevGetter
+    typename PeripheralityLevGetter
   >
   using parent_t = dish2::Artist<
     dish2::CellFillRenderer<
       dish2::BooleanColorMap,
-      IsPeripheralLevGetter
+      PeripheralityLevGetter
     >,
     dish2::CellFillRenderer<
       dish2::IsAliveColorMap,
@@ -35,25 +34,25 @@ namespace internal::is_peripheral_lev_artist {
     >,
     dish2::CellBorderRenderer<
       dish2::MatchBorderColorMap,
-      IsPeripheralLevGetter
+      PeripheralityLevGetter
     >
   >;
 
-} // namespace internal::is_peripheral_lev_artist
+} // namespace internal::peripherality_lev_artist
 
 template<
   typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename IsPeripheralLevGetter=dish2::IsPeripheralLevGetter<dish2::Spec>
+  typename PeripheralityLevGetter=dish2::PeripheralityLevGetter<dish2::Spec>
 >
-class IsPeripheralLevArtist
-: public internal::is_peripheral_lev_artist::parent_t<
+class PeripheralityLevArtist
+: public internal::peripherality_lev_artist::parent_t<
   IsAliveGetter,
-  IsPeripheralLevGetter
+  PeripheralityLevGetter
 > {
 
-  using parent_t = internal::is_peripheral_lev_artist::parent_t<
+  using parent_t = internal::peripherality_lev_artist::parent_t<
     IsAliveGetter,
-    IsPeripheralLevGetter
+    PeripheralityLevGetter
   >;
 
 public:
@@ -61,7 +60,7 @@ public:
   // inherit constructors
   using parent_t::parent_t;
 
-  static std::string GetName() { return "Is Peripheral by Lev"; }
+  static std::string GetName() { return "Peripherality by Lev"; }
 
   template< typename Spec >
   static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
@@ -72,4 +71,4 @@ public:
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_VIZ_ARTISTS_ISPERIPHERALLEVARTIST_HPP_INCLUDE
+#endif // #ifndef DISH2_VIZ_ARTISTS_PERIPHERALITYLEVARTIST_HPP_INCLUDE
