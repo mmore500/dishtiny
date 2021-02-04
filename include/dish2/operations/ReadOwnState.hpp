@@ -66,12 +66,12 @@ public:
   template<typename SgplSpec>
   static auto categories( const sgpl::Instruction<SgplSpec>& inst ) {
 
-    const bool nop_target = dish2::WritableState< DishSpec >::GetLeafTypeName(
+    const bool nop_target = dish2::ReadableState< DishSpec >::GetLeafTypeName(
       GetAddr( inst )
     ).find("NopState") != std::string::npos;
 
     return std::set<std::string>{
-      nop_target ? "sensor" : "calculation",
+      nop_target ? "calculation" : "sensor",
       nop_target ? "intrinsic" : "extrinsic",
       "op",
     };

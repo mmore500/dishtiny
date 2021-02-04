@@ -76,7 +76,7 @@ public:
     ).find("NopState") != std::string::npos;
 
     return std::set<std::string>{
-      nop_target ? "actuator" : "calculation",
+      nop_target ? "calculation" : "actuator",
       nop_target ? "intrinsic" : "extrinsic",
       "op",
     };
