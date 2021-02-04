@@ -24,7 +24,7 @@ struct QuorumCapService {
   }
 
   template<typename Cell>
-  static bool DoService( Cell& cell, const size_t lev ) {
+  static bool ServiceImpl( Cell& cell, const size_t lev ) {
 
     const dish2::LogScope guard{ "quorum cap service", "TODO", 3 };
 
@@ -56,7 +56,7 @@ struct QuorumCapService {
     using spec_t = typename Cell::spec_t;
 
     for (size_t lev{}; lev < spec_t::NLEV; ++lev) {
-      if ( DoService( cell, lev ) ) break;
+      if ( ServiceImpl( cell, lev ) ) break;
     }
 
   }
