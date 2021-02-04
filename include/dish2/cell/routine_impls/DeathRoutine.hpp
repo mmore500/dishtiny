@@ -22,7 +22,9 @@ void Cell<Spec>::DeathRoutine(
 
   const dish2::LogScope guard{ "death routine", "TODO", 3 };
 
-  death_log.push_back( cause_of_death );
+  running_logs.Record( dish2::DeathEvent<Spec>{
+    cause_of_death, GetPeripherality()
+  } );
 
   // check is alive consistency
   emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(

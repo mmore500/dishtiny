@@ -20,6 +20,9 @@ class RunningLog {
 
 public:
 
+  using const_iterator = typename decltype(events)::const_iterator;
+  using iterator = typename decltype(events)::iterator;
+
   void Record( const Event& event ){
     events.push_front( event );
     ++epoch_counts.front();
@@ -38,12 +41,14 @@ public:
 
   }
 
+  size_t GetSize() const { return events.size(); }
+
   auto begin() { return std::begin( events ); }
-  // auto begin() const { return std::begin( events ); }
+  auto begin() const { return std::begin( events ); }
   auto cbegin() const { return std::cbegin( events ); }
 
   auto end() { return std::end( events ); }
-  // auto end() const { return std::end( events ); }
+  auto end() const { return std::end( events ); }
   auto cend() const { return std::cend( events ); }
 
 };

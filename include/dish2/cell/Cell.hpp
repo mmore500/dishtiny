@@ -17,6 +17,7 @@
 #include "../events/_index.hpp"
 #include "../genome/Genome.hpp"
 #include "../quorum/CellQuorumState.hpp"
+#include "../runninglog/RunningLogs.hpp"
 #include "../services/_index.hpp"
 #include "../services/ServiceManager.hpp"
 
@@ -32,7 +33,7 @@ struct Cell {
 
   emp::vector< dish2::Cardinal<Spec> > cardinals;
 
-  emp::vector< dish2::CauseOfDeath > death_log;
+  dish2::RunningLogs<Spec> running_logs;
 
   using genome_t = dish2::Genome<Spec>;
   emp::optional< genome_t > genome{ std::in_place, std::in_place };
@@ -182,7 +183,7 @@ struct Cell {
     // TODO put these in order
     using service_manager_t = dish2::ServiceManager<
       dish2::DecayToBaselineService, // should run before cpu execution service
-      dish2::DeathLogClearService, // should run before cpu execution service
+      dish2::RunningLogPurgeService, // should run before cpu execution service
       dish2::WritableStateNoiseService,
       dish2::CpuExecutionService,
 

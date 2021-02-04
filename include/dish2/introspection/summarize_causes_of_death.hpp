@@ -7,6 +7,7 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../enum/CauseOfDeath.hpp"
+#include "../runninglog/DeathEvent.hpp"
 
 namespace dish2 {
 
@@ -15,16 +16,24 @@ emp::vector< dish2::CauseOfDeath > summarize_causes_of_death(
   const ThreadWorld& world
 ) {
 
+  using spec_t = typename ThreadWorld::spec_t;
+
   const auto& population = world.population;
 
   emp::vector< dish2::CauseOfDeath > res;
 
   std::for_each(
-    std::begin( population ),
-    std::end( population ),
-    [&]( const auto& cell ){ res.insert(
-      std::end( res ), std::begin( cell.death_log ), std::end( cell.death_log )
-    ); }
+    std::begin( population ), std::end( population ),
+    [&]( const auto& cell ){
+      const auto& log = cell.running_logs.template GetLog<
+        dish2::DeathEvent<spec_t>
+      >();
+      std::transform(
+        std::begin( log ), std::end( log ),
+        std::back_inserter( res ),
+        []( const auto& death_event ){ return death_event.cause_of_death; }
+      );
+    }
   );
 
   return res;

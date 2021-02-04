@@ -6,7 +6,10 @@
 #include <utility>
 
 #include "../../../third-party/cereal/include/cereal/types/array.hpp"
+#include "../../../third-party/conduit/include/uitsl/algorithm/count_equal.hpp"
+#include "../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
 #include "../../../third-party/Empirical/include/emp/base/array.hpp"
+#include "../../../third-party/Empirical/include/emp/base/assert.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 namespace dish2 {
@@ -53,6 +56,20 @@ struct KinGroupID {
       std::end( data ),
       std::next( std::begin( other.data ), lev )
     );
+  }
+
+  size_t CountCommonality( const KinGroupID& other ) const {
+    const auto mismatch = std::mismatch(
+      std::rbegin( data ), std::rend( data ),
+      std::rbegin( other.data )
+    ).first;
+    const size_t res = uitsl::audit_cast<size_t>(
+      std::distance( std::rbegin(data), mismatch )
+    );
+    emp_assert( res == uitsl::count_equal(
+      std::begin(data), std::end(data), std::begin(other.data)
+    ) );
+    return res;
   }
 
   template <class Archive>

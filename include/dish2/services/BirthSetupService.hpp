@@ -47,24 +47,46 @@ struct BirthSetupService {
       const size_t cardinal_idx = fresh_input_idxs[
         sgpl::tlrand.Get().GetUInt( fresh_input_idxs.size() )
       ];
-      const size_t epoch = cell.cardinals[
-        cardinal_idx
-      ].peripheral.readable_state.template Get<
+      const auto& peripheral = cell.cardinals[ cardinal_idx ].peripheral;
+      const size_t epoch = peripheral.readable_state.template Get<
         dish2::Epoch
       >();
 
-      cell.DeathRoutine( dish2::CauseOfDeath::birth );
-
-      cell.genome = std::as_const(
+      const auto& incoming_genome = std::as_const(
         cell.cardinals[ cardinal_idx ].genome_node_input
       ).Get();
+      const size_t replev = std::as_const(
+        peripheral.state_node_input
+      ).Get().template Get< dish2::RepLevRequest< spec_t > >().GetRepLev();
 
-      const auto& replev_request = std::as_const(
-        cell.cardinals[ cardinal_idx ].peripheral.state_node_input
-      ).Get().template Get<
-        dish2::RepLevRequest< spec_t >
-      >();
-      cell.genome->ElapseGeneration( replev_request.GetRepLev(), epoch );
+      // record birth event in running log
+      const size_t kin_id_commonality_parent_daughter
+        = spec_t::NLEV - replev;
+      const size_t kin_id_commonality_daughter_eliminated = cell.genome
+        ? cell.genome->kin_group_id.CountCommonality(
+          incoming_genome.kin_group_id
+        )
+        : 0;
+      const size_t kin_id_commonality_parent_eliminated =
+        peripheral.readable_state.template Get<
+          dish2::KinGroupIDView<spec_t>
+        >().CountCommonality(
+          std::as_const( peripheral.state_node_input ).Get().template Get<
+            dish2::KinGroupIDView<spec_t>
+          >()
+        );
+      cell.running_logs.Record( dish2::BirthEvent<spec_t>{
+        kin_id_commonality_daughter_eliminated,
+        kin_id_commonality_parent_daughter,
+        kin_id_commonality_parent_eliminated,
+        cell.GetPeripherality(),
+        replev
+      } );
+
+      // setup new genome
+      cell.DeathRoutine( dish2::CauseOfDeath::elimination );
+      cell.genome = incoming_genome;
+      cell.genome->ElapseGeneration( replev, epoch );
 
       cell.MakeAliveRoutine();
     }

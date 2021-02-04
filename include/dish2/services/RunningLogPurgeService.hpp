@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_SERVICES_DEATHLOGCLEARSERVICE_HPP_INCLUDE
-#define DISH2_SERVICES_DEATHLOGCLEARSERVICE_HPP_INCLUDE
+#ifndef DISH2_SERVICES_RUNNINGLOGPURGESERVICE_HPP_INCLUDE
+#define DISH2_SERVICES_RUNNINGLOGPURGESERVICE_HPP_INCLUDE
 
 #include <algorithm>
 
@@ -15,10 +15,10 @@
 
 namespace dish2 {
 
-struct DeathLogClearService {
+struct RunningLogPurgeService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {
-    const size_t freq = dish2::cfg.DEATH_LOG_CLEAR_SERVICE_FREQUENCY();
+    const size_t freq = dish2::cfg.RUNNING_LOG_PURGE_SERVICE_FREQUENCY();
     return
       freq > 0
       && uitsl::shift_mod( update, freq ) == 0;
@@ -27,9 +27,9 @@ struct DeathLogClearService {
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
-    const dish2::LogScope guard{ "death log clear service", "TODO", 3 };
+    const dish2::LogScope guard{ "running log purge service", "TODO", 3 };
 
-    cell.death_log.clear();
+    cell.running_logs.Purge();
 
   }
 
@@ -37,4 +37,4 @@ struct DeathLogClearService {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_SERVICES_DEATHLOGCLEARSERVICE_HPP_INCLUDE
+#endif // #ifndef DISH2_SERVICES_RUNNINGLOGPURGESERVICE_HPP_INCLUDE

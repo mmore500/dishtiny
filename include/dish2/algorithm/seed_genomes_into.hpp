@@ -26,7 +26,7 @@ void seed_genomes_into(
   auto& population = world.population;
 
   for ( auto& cell : population ) cell.DeathRoutine(
-    dish2::CauseOfDeath::birth
+    dish2::CauseOfDeath::elimination
   );
 
   if ( seeds.size() ) {
