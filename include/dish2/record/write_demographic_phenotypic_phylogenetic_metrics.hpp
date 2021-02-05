@@ -47,6 +47,8 @@
 #include "../introspection/get_population_compression_ratio.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
 #include "../introspection/make_causes_of_death_string_histogram.hpp"
+#include "../introspection/sum_entire_elapsed_instruction_cycles_for_live_cells.hpp"
+#include "../introspection/sum_entire_elapsed_instruction_cycles.hpp"
 
 #include "make_filename/make_demographic_phenotypic_phylogenetic_metrics_filename.hpp"
 
@@ -316,6 +318,23 @@ void write_demographic_phenotypic_phylogenetic_metrics(
     file.Update();
   }
 
+  {
+    metric = "Mean Instructions Executed per Cardinal-update";
+    const size_t num_cardinal_updates
+      = dish2::count_cardinals<Spec>( world ) * world.GetUpdate();
+    value = dish2::sum_entire_elapsed_instruction_cycles<Spec>( world )
+      / static_cast<double>( num_cardinal_updates );
+    file.Update();
+  }
+
+  {
+    metric = "Num Instructions Executed per Live Cardinal-update";
+    const size_t num_live_cardinal_updates
+      = dish2::count_live_cardinals<Spec>( world ) * world.GetUpdate();
+      value = dish2::sum_entire_elapsed_instruction_cycles<Spec>( world )
+        / static_cast<double>( num_live_cardinal_updates );
+    file.Update();
+  }
 
 }
 
