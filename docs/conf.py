@@ -40,6 +40,7 @@ extensions = [
     'breathe',
     'exhale',
     'myst_parser',
+    'sphinxemoji.sphinxemoji',
 ]
 
 # Setup the breathe extension
