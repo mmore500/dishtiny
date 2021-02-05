@@ -9,12 +9,12 @@
 
 #include "dish2/config/make_arg_specs.hpp"
 #include "dish2/config/setup.hpp"
+#include "dish2/debug/backtrace_enable.hpp"
 #include "dish2/record/global_records_finalize.hpp"
 #include "dish2/record/global_records_initialize.hpp"
 #include "dish2/run/setup_thread_local_random.hpp"
 #include "dish2/run/thread_job.hpp"
 #include "dish2/spec/Spec.hpp"
-#include "dish2/utility/backtrace_enable.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
 using Spec = dish2::Spec;
