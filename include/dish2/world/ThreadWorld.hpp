@@ -14,7 +14,7 @@
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 #include "../introspection/make_causes_of_death_string_histogram.hpp"
-#include "../utility/PopulationExtinctionException.hpp"
+#include "../debug/PopulationExtinctionException.hpp"
 
 namespace dish2 {
 
