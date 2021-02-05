@@ -12,9 +12,11 @@
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
 #include "../introspection/count_birth_events.hpp"
+#include "../introspection/count_cardinals.hpp"
 #include "../introspection/count_dead_cells.hpp"
 #include "../introspection/count_death_events.hpp"
 #include "../introspection/count_kin_neighbors.hpp"
+#include "../introspection/count_live_cardinals.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/count_spawn_events.hpp"
 #include "../introspection/count_unique_coding_genotypes.hpp"
@@ -104,6 +106,18 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   });
 
   {
+    metric = "Number Cells";
+    value = world.GetSize();
+    file.Update();
+  }
+
+  {
+    metric = "Number Cardinals";
+    value = dish2::count_cardinals<Spec>( world );
+    file.Update();
+  }
+
+  {
     metric = "Mean Current Epoch";
     value = dish2::get_mean_epoch<Spec>( world );
     file.Update();
@@ -164,6 +178,12 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   {
     metric = "Number Live Cells";
     value = dish2::count_live_cells<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Number Live Cardinals";
+    value = dish2::count_live_cardinals<Spec>( world );
     file.Update();
   }
 
