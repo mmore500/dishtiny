@@ -36,7 +36,7 @@ public:
   const value_type Get(
     const size_t cell_idx, const size_t cardinal_idx=0
   ) const {
-    return thread_world.get().GetCell( cell_idx ).Peripherality( lev );
+    return thread_world.get().GetCell( cell_idx ).GetPeripherality( lev );
   }
 
   size_t GetNumCells() const { return thread_world.get().GetSize(); }
