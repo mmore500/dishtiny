@@ -38,7 +38,11 @@ As of Febuary 2021, Google provides this service free of charge!
 sudo wget -O- http://neuro.debian.net/lists/xenial.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list && \
     sudo apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 && \
     sudo apt-get update
-sudo apt-get install -y singularity-container
+yes | sudo apt-get install -y singularity-container xvfb
+export DISPLAY=":$$"
+rm -f "/tmp/.X$$-lock"
+Xvfb "${DISPLAY}" -auth /dev/null/ &
+export XVFB_PID=$!
 singularity shell docker://mmore500/dishtiny
 ```
 
@@ -51,7 +55,13 @@ cd dishtiny
 make
 mkdir temp && cd temp
 cp ../rundishtiny .
-./rundishtiny --RUN_SECONDS 30
+./rundishtiny --RUN_SECONDS 30 --DATA_DUMP 1
 ```
+
+You might see the message `(EE) Failed to open authorization file "/dev/null/": Not a directory`.
+That's okay!
+
+Compiling takes a minute or so and dumping data (in particular, PNG grid visualizations) takes a few minutes.
+That's also okay!
 
 Singularity mounts most of the host filesystem, meaning that any changes you make using the web editor will seamlessly apply inside the container. Nice!
