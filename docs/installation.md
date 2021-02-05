@@ -29,7 +29,7 @@ Likewise, if you have [Singularity](https://sylabs.io/docs/) installed,
 singularity shell docker://mmore500/dishtiny
 ```
 
-## Hassle-free Cloud-based Development Environment with Web GUI :sunglasses:
+## Hassle-free Cloud-based Development Environment with Web GUI |:sunglasses:|
 
 Go to <https://shell.cloud.google.com>.
 As of Febuary 2021, Google provides this service free of charge!
@@ -46,7 +46,7 @@ export XVFB_PID=$!
 singularity shell docker://mmore500/dishtiny
 ```
 
-This'll take a few minutes, so go get yourself a cup of coffee :coffee:.
+This'll take a few minutes, so go get yourself a cup of coffee |:coffee:|.
 When you get back, a shell prompt from the container should be ready to rock and roll.
 At this point, you can check out the source code, make, and run!
 ```bash
