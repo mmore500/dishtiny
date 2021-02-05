@@ -11,8 +11,12 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../introspection/count_birth_events.hpp"
 #include "../introspection/count_dead_cells.hpp"
+#include "../introspection/count_death_events.hpp"
+#include "../introspection/count_kin_neighbors.hpp"
 #include "../introspection/count_live_cells.hpp"
+#include "../introspection/count_spawn_events.hpp"
 #include "../introspection/count_unique_coding_genotypes.hpp"
 #include "../introspection/count_unique_module_expression_profiles.hpp"
 #include "../introspection/count_unique_module_regulation_profiles.hpp"
@@ -44,6 +48,10 @@
 #include "../introspection/get_mean_resource_received.hpp"
 #include "../introspection/get_mean_resource_stockpile.hpp"
 #include "../introspection/get_mean_spawn_count.hpp"
+#include "../introspection/get_num_running_log_cardinal_updates.hpp"
+#include "../introspection/get_num_running_log_cell_updates.hpp"
+#include "../introspection/get_num_running_log_live_cardinal_updates.hpp"
+#include "../introspection/get_num_running_log_live_cell_updates.hpp"
 #include "../introspection/get_population_compression_ratio.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
 #include "../introspection/make_causes_of_death_string_histogram.hpp"
@@ -313,9 +321,96 @@ void write_demographic_phenotypic_phylogenetic_metrics(
       world
     )
   ) {
-    metric = emp::to_string("Num deaths ", k);
-    value = v;
+
+    {
+      metric = emp::to_string("Num Deaths ", k);
+      value = v;
+      file.Update();
+    }
+
+    {
+      metric = emp::to_string("Fraction Deaths ", k);
+      value = v / static_cast<double>( dish2::count_death_events<Spec>( world ) );
+      file.Update();
+    }
+
+
+    {
+      metric = emp::to_string("Num Deaths per Cell-update ", k);
+      value = v / static_cast<double>(
+        dish2::get_num_running_log_cell_updates<Spec>( world )
+      );
+      file.Update();
+    }
+
+    {
+      metric = emp::to_string("Num Deaths per Live Cell-update ", k);
+      value = v / static_cast<double>(
+        dish2::get_num_running_log_live_cell_updates<Spec>( world )
+      );
+      file.Update();
+    }
+
+  } // end loop over death enum
+
+  {
+    metric = emp::to_string("Num Deaths per Cell-update");
+    value = dish2::count_death_events<Spec>( world ) / static_cast<double>(
+      dish2::get_num_running_log_cell_updates<Spec>( world )
+    );
     file.Update();
+  }
+
+  {
+    metric = emp::to_string("Num Deaths per Live Cell-update ");
+    value = dish2::count_death_events<Spec>( world ) / static_cast<double>(
+      dish2::get_num_running_log_live_cell_updates<Spec>( world )
+    );
+    file.Update();
+  }
+
+  {
+    metric = emp::to_string("Num Births per Cell-update");
+    value = dish2::count_birth_events<Spec>( world ) / static_cast<double>(
+      dish2::get_num_running_log_cell_updates<Spec>( world )
+    );
+    file.Update();
+  }
+
+  {
+    metric = emp::to_string("Num Births per Live Cell-update ");
+    value = dish2::count_birth_events<Spec>( world ) / static_cast<double>(
+      dish2::get_num_running_log_live_cell_updates<Spec>( world )
+    );
+    file.Update();
+  }
+
+  {
+    metric = emp::to_string("Num Spawn Events per Cell-update");
+    value = dish2::count_spawn_events<Spec>( world ) / static_cast<double>(
+      dish2::get_num_running_log_cell_updates<Spec>( world )
+    );
+    file.Update();
+  }
+
+  {
+    metric = emp::to_string("Num Spawn Events per Live Cell-update ");
+    value = dish2::count_spawn_events<Spec>( world ) / static_cast<double>(
+      dish2::get_num_running_log_live_cell_updates<Spec>( world )
+    );
+    file.Update();
+  }
+
+  for ( size_t lev{}; lev < Spec::NLEV; ++lev ) {
+
+    const size_t num_kin_neighbors
+      = dish2::count_kin_neighbors<Spec>( world, lev );
+    const size_t num_neighbors = dish2::count_live_cardinals<Spec>( world );
+
+    metric = emp::to_string("Fraction Neighbors Kin Level ", lev);
+    value = num_kin_neighbors / static_cast<double>( num_neighbors );
+    file.Update();
+
   }
 
   {
