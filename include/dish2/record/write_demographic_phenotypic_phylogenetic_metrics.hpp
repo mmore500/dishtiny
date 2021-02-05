@@ -22,17 +22,26 @@
 #include "../introspection/count_unique_module_regulation_profiles.hpp"
 #include "../introspection/count_unique_root_ids.hpp"
 #include "../introspection/count_unique_stint_root_ids.hpp"
-#include "../introspection/get_fraction_apoptosis_request.hpp"
+#include "../introspection/get_fraction_cardinals_apoptosis_request.hpp"
+#include "../introspection/get_fraction_cardinals_incoming_inter_message.hpp"
+#include "../introspection/get_fraction_cardinals_incoming_intra_message.hpp"
+#include "../introspection/get_fraction_cardinals_receiving_resource.hpp"
+#include "../introspection/get_fraction_cardinals_resource_receive_resistance.hpp"
+#include "../introspection/get_fraction_cardinals_resource_reserve_request.hpp"
+#include "../introspection/get_fraction_cardinals_resource_send_request.hpp"
+#include "../introspection/get_fraction_cardinals_spawn_arrest.hpp"
+#include "../introspection/get_fraction_cardinals_spawn_request.hpp"
+#include "../introspection/get_fraction_cells_apoptosis_request.hpp"
+#include "../introspection/get_fraction_cells_incoming_inter_message.hpp"
+#include "../introspection/get_fraction_cells_incoming_intra_message.hpp"
+#include "../introspection/get_fraction_cells_receiving_resource.hpp"
+#include "../introspection/get_fraction_cells_resource_receive_resistance.hpp"
+#include "../introspection/get_fraction_cells_resource_reserve_request.hpp"
+#include "../introspection/get_fraction_cells_resource_send_request.hpp"
+#include "../introspection/get_fraction_cells_spawn_arrest.hpp"
+#include "../introspection/get_fraction_cells_spawn_request.hpp"
 #include "../introspection/get_fraction_fecund_resource_stockpile.hpp"
-#include "../introspection/get_fraction_incoming_inter_message.hpp"
-#include "../introspection/get_fraction_incoming_intra_message.hpp"
 #include "../introspection/get_fraction_nulliparous.hpp"
-#include "../introspection/get_fraction_receiving_resource.hpp"
-#include "../introspection/get_fraction_resource_receive_resistance.hpp"
-#include "../introspection/get_fraction_resource_reserve_request.hpp"
-#include "../introspection/get_fraction_resource_send_request.hpp"
-#include "../introspection/get_fraction_spawn_arrest.hpp"
-#include "../introspection/get_fraction_spawn_request.hpp"
 #include "../introspection/get_mean_cell_age.hpp"
 #include "../introspection/get_mean_elapsed_insertions_deletions.hpp"
 #include "../introspection/get_mean_elapsed_mutation_occurences.hpp"
@@ -40,12 +49,15 @@
 #include "../introspection/get_mean_epoch.hpp"
 #include "../introspection/get_mean_generation.hpp"
 #include "../introspection/get_mean_genome_compression_ratio.hpp"
-#include "../introspection/get_mean_incoming_inter_message_count.hpp"
-#include "../introspection/get_mean_incoming_intra_message_count.hpp"
+#include "../introspection/get_mean_incoming_inter_message_count_per_cardinal.hpp"
+#include "../introspection/get_mean_incoming_inter_message_count_per_cell.hpp"
+#include "../introspection/get_mean_incoming_intra_message_count_per_cardinal.hpp"
+#include "../introspection/get_mean_incoming_intra_message_count_per_cell.hpp"
 #include "../introspection/get_mean_kin_group_age.hpp"
 #include "../introspection/get_mean_module_count.hpp"
 #include "../introspection/get_mean_program_length.hpp"
-#include "../introspection/get_mean_resource_received.hpp"
+#include "../introspection/get_mean_resource_received_per_cardinal.hpp"
+#include "../introspection/get_mean_resource_received_per_cell.hpp"
 #include "../introspection/get_mean_resource_stockpile.hpp"
 #include "../introspection/get_mean_spawn_count.hpp"
 #include "../introspection/get_num_running_log_cardinal_updates.hpp"
@@ -118,7 +130,7 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   }
 
   {
-    metric = "Mean Elapsed Insertion/Deletion Mutations";
+    metric = "Mean Elapsed Indel Mutations";
     value = dish2::get_mean_elapsed_insertions_deletions<Spec>( world );
     file.Update();
   }
@@ -232,44 +244,94 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   }
 
   {
-    metric = "Resource Receiving Fraction";
-    value = dish2::get_fraction_receiving_resource<Spec>( world );
+    metric = "Resource Receiving Cardinal Fraction";
+    value = dish2::get_fraction_cardinals_receiving_resource<Spec>( world );
+    file.Update();
+  }
+
+
+  {
+    metric = "Resource Receiving Cell Fraction";
+    value = dish2::get_fraction_cells_receiving_resource<Spec>( world );
     file.Update();
   }
 
   {
-    metric = "Mean Resource Received";
-    value = dish2::get_mean_resource_received<Spec>( world );
+    metric = "Mean Resource Received Per Cardinal";
+    value = dish2::get_mean_resource_received_per_cardinal<Spec>( world );
     file.Update();
   }
 
   {
-    metric = "Resource Send Request Fraction";
-    value = dish2::get_fraction_resource_send_request<Spec>( world );
+    metric = "Mean Resource Received Per Cell";
+    value = dish2::get_mean_resource_received_per_cell<Spec>( world );
     file.Update();
   }
 
   {
-    metric = "Resource Reserve Request Fraction";
-    value = dish2::get_fraction_resource_reserve_request<Spec>( world );
+    metric = "Resource Send Request Cardinal Fraction";
+    value = dish2::get_fraction_cardinals_resource_send_request<Spec>( world );
     file.Update();
   }
 
   {
-    metric = "Resource Receive Resistance Fraction";
-    value = dish2::get_fraction_resource_recieve_resistance<Spec>( world );
+    metric = "Resource Send Request Cell Fraction";
+    value = dish2::get_fraction_cells_resource_send_request<Spec>( world );
     file.Update();
   }
 
   {
-    metric = "Spawn Arrest Fraction";
-    value = dish2::get_fraction_spawn_arrest<Spec>( world );
+    metric = "Resource Reserve Request Cardinal Fraction";
+    value = dish2::get_fraction_cardinals_resource_reserve_request<Spec>(
+      world
+    );
+    file.Update();
+  }
+
+
+  {
+    metric = "Resource Reserve Request Cell Fraction";
+    value = dish2::get_fraction_cells_resource_reserve_request<Spec>(
+      world
+    );
     file.Update();
   }
 
   {
-    metric = "Spawn Request Fraction";
-    value = dish2::get_fraction_spawn_request<Spec>( world );
+    metric = "Resource Receive Resistance Cardinal Fraction";
+    value = dish2::get_fraction_cardinals_resource_recieve_resistance<Spec>(
+      world
+    );
+    file.Update();
+  }
+
+  {
+    metric = "Resource Receive Resistance Cell Fraction";
+    value = dish2::get_fraction_cells_resource_recieve_resistance<Spec>(world);
+    file.Update();
+  }
+
+  {
+    metric = "Spawn Arrest Cardinal Fraction";
+    value = dish2::get_fraction_cardinals_spawn_arrest<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Spawn Arrest Cell Fraction";
+    value = dish2::get_fraction_cells_spawn_arrest<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Spawn Request Cardinal Fraction";
+    value = dish2::get_fraction_cardinals_spawn_request<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Spawn Request Cell Fraction";
+    value = dish2::get_fraction_cells_spawn_request<Spec>( world );
     file.Update();
   }
 
@@ -286,32 +348,70 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   }
 
   {
-    metric = "Apoptosis Request Fraction";
-    value = dish2::get_fraction_apoptosis_request<Spec>( world );
+    metric = "Cardinal Apoptosis Request Fraction";
+    value = dish2::get_fraction_cardinals_apoptosis_request<Spec>( world );
     file.Update();
   }
 
   {
-    metric = "Mean Incoming Intra Message Count";
-    value = dish2::get_mean_incoming_intra_message_count<Spec>( world );
+    metric = "Cell Apoptosis Request Fraction";
+    value = dish2::get_fraction_cells_apoptosis_request<Spec>( world );
     file.Update();
   }
 
   {
-    metric = "Mean Incoming Inter Message Count";
-    value = dish2::get_mean_incoming_inter_message_count<Spec>( world );
+    metric = "Mean Incoming Intra Message Count Per Cardinal";
+    value = dish2::get_mean_incoming_intra_message_count_per_cardinal<Spec>(
+      world
+    );
     file.Update();
   }
 
   {
-    metric = "Incoming Intra Message Fraction";
-    value = dish2::get_fraction_incoming_intra_message<Spec>( world );
+    metric = "Mean Incoming Intra Message Count Per Cell";
+    value = dish2::get_mean_incoming_intra_message_count_per_cell<Spec>(
+      world
+    );
     file.Update();
   }
 
   {
-    metric = "Incoming Inter Message Fraction";
-    value = dish2::get_fraction_incoming_inter_message<Spec>( world );
+    metric = "Mean Incoming Inter Message Count Per Cardinal";
+    value = dish2::get_mean_incoming_inter_message_count_per_cardinal<Spec>(
+      world
+    );
+    file.Update();
+  }
+
+  {
+    metric = "Mean Incoming Inter Message Count Per Cell";
+    value = dish2::get_mean_incoming_inter_message_count_per_cell<Spec>(
+      world
+    );
+    file.Update();
+  }
+
+  {
+    metric = "Incoming Intra Message Cardinal Fraction";
+    value = dish2::get_fraction_cardinals_incoming_intra_message<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Incoming Intra Message Cell Fraction";
+    value = dish2::get_fraction_cells_incoming_intra_message<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Incoming Inter Message Cardinal Fraction";
+    value = dish2::get_fraction_cardinals_incoming_inter_message<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Incoming Inter Message Cell Fraction";
+    value = dish2::get_fraction_cells_incoming_inter_message<Spec>( world );
     file.Update();
   }
 

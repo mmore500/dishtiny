@@ -8,11 +8,12 @@
 #include <type_traits>
 #include <vector>
 
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 
 #include "../cell/cardinal_iterators/EpochWrapper.hpp"
 #include "../cell/Cell.hpp"
-#include "../world/iterators/WorldIteratorAdapter.hpp"
+#include "../world/iterators/WorldIteratorAbridger.hpp"
 #include "../world/ThreadWorld.hpp"
 
 namespace dish2 {
@@ -22,14 +23,13 @@ double get_mean_epoch( const dish2::ThreadWorld<Spec>& world ) {
 
   const auto& population = world.population;
 
-  using iterator_t = dish2::WorldIteratorAdapter<
-    typename std::vector< dish2::Cell< Spec > >::const_iterator,
+  using iterator_t = dish2::WorldIteratorAbridger<
+    typename emp::vector< dish2::Cell< Spec > >::const_iterator,
     dish2::EpochWrapper<Spec>
   >;
 
   return std::accumulate(
-    iterator_t::make_begin( std::begin(population) ),
-    iterator_t::make_end( std::end(population) ),
+    iterator_t( std::begin(population) ), iterator_t( std::end(population) ),
     0.0
   ) / population.size();
 

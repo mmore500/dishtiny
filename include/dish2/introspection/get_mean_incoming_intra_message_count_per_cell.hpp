@@ -1,11 +1,11 @@
 #pragma once
-#ifndef DISH2_INTROSPECTION_GET_MEAN_INCOMING_INTER_MESSAGE_COUNT_HPP_INCLUDE
-#define DISH2_INTROSPECTION_GET_MEAN_INCOMING_INTER_MESSAGE_COUNT_HPP_INCLUDE
+#ifndef DISH2_INTROSPECTION_GET_MEAN_INCOMING_INTRA_MESSAGE_COUNT_PER_CELL_HPP_INCLUDE
+#define DISH2_INTROSPECTION_GET_MEAN_INCOMING_INTRA_MESSAGE_COUNT_PER_CELL_HPP_INCLUDE
 
 #include <algorithm>
 #include <limits>
 
-#include "../cell/cardinal_iterators/IncomingInterMessageCounterWrapper.hpp"
+#include "../cell/cardinal_iterators/IncomingIntraMessageCounterWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/iterators/WorldIteratorAdapter.hpp"
 #include "../world/ThreadWorld.hpp"
@@ -16,7 +16,7 @@
 namespace dish2 {
 
 template< typename Spec >
-double get_mean_incoming_inter_message_count(
+double get_mean_incoming_intra_message_count_per_cell(
   const dish2::ThreadWorld<Spec>& world
 ) {
 
@@ -26,7 +26,7 @@ double get_mean_incoming_inter_message_count(
 
   using iterator_t = dish2::WorldIteratorAdapter<
     lcit_t,
-    dish2::IncomingInterMessageCounterWrapper<Spec>
+    dish2::IncomingIntraMessageCounterWrapper<Spec>
   >;
 
   if ( dish2::no_live_cells<Spec>( world ) ) {
@@ -41,4 +41,4 @@ double get_mean_incoming_inter_message_count(
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_INTROSPECTION_GET_MEAN_INCOMING_INTER_MESSAGE_COUNT_HPP_INCLUDE
+#endif // #ifndef DISH2_INTROSPECTION_GET_MEAN_INCOMING_INTRA_MESSAGE_COUNT_PER_CELL_HPP_INCLUDE

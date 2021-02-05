@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_INTROSPECTION_GET_FRACTION_RESOURCE_RESERVE_REQUEST_HPP_INCLUDE
-#define DISH2_INTROSPECTION_GET_FRACTION_RESOURCE_RESERVE_REQUEST_HPP_INCLUDE
+#ifndef DISH2_INTROSPECTION_GET_FRACTION_CELLS_RESOURCE_RESERVE_REQUEST_HPP_INCLUDE
+#define DISH2_INTROSPECTION_GET_FRACTION_CELLS_RESOURCE_RESERVE_REQUEST_HPP_INCLUDE
 
 #include <algorithm>
 #include <limits>
@@ -9,7 +9,7 @@
 
 #include "../cell/cardinal_iterators/ResourceReserveRequestWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
-#include "../world/iterators/WorldIteratorAdapter.hpp"
+#include "../world/iterators/WorldIteratorAnyOfer.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "count_live_cells.hpp"
@@ -18,7 +18,7 @@
 namespace dish2 {
 
 template< typename Spec >
-double get_fraction_resource_reserve_request(
+double get_fraction_cells_resource_reserve_request(
   const dish2::ThreadWorld<Spec>& world
 ) {
 
@@ -26,7 +26,7 @@ double get_fraction_resource_reserve_request(
 
   using lcit_t = dish2::LiveCellIterator<Spec>;
 
-  using iterator_t = dish2::WorldIteratorAdapter<
+  using iterator_t = dish2::WorldIteratorAnyOfer<
     lcit_t,
     dish2::ResourceReserveRequestWrapper<Spec>
   >;
@@ -34,8 +34,8 @@ double get_fraction_resource_reserve_request(
   if ( dish2::no_live_cells<Spec>( world ) ) {
     return std::numeric_limits<double>::quiet_NaN();
   } else return std::count_if(
-    iterator_t::make_begin( lcit_t::make_begin( population ) ),
-    iterator_t::make_end( lcit_t::make_end( population ) ),
+    iterator_t( lcit_t::make_begin( population ) ),
+    iterator_t( lcit_t::make_end( population ) ),
     std::identity
   ) / static_cast< double >( dish2::count_live_cells<Spec>( world ) );
 
@@ -43,4 +43,4 @@ double get_fraction_resource_reserve_request(
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_INTROSPECTION_GET_FRACTION_RESOURCE_RESERVE_REQUEST_HPP_INCLUDE
+#endif // #ifndef DISH2_INTROSPECTION_GET_FRACTION_CELLS_RESOURCE_RESERVE_REQUEST_HPP_INCLUDE

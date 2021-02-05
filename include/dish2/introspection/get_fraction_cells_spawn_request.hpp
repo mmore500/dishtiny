@@ -1,15 +1,15 @@
 #pragma once
-#ifndef DISH2_INTROSPECTION_GET_FRACTION_NULLIPAROUS_HPP_INCLUDE
-#define DISH2_INTROSPECTION_GET_FRACTION_NULLIPAROUS_HPP_INCLUDE
+#ifndef DISH2_INTROSPECTION_GET_FRACTION_CELLS_SPAWN_REQUEST_HPP_INCLUDE
+#define DISH2_INTROSPECTION_GET_FRACTION_CELLS_SPAWN_REQUEST_HPP_INCLUDE
 
 #include <algorithm>
 #include <limits>
 
 #include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 
-#include "../cell/cardinal_iterators/SpawnCountWrapper.hpp"
+#include "../cell/cardinal_iterators/SpawnRequestWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
-#include "../world/iterators/WorldIteratorAbridger.hpp"
+#include "../world/iterators/WorldIteratorAnyOfer.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "count_live_cells.hpp"
@@ -18,7 +18,7 @@
 namespace dish2 {
 
 template< typename Spec >
-double get_fraction_nulliparous(
+double get_fraction_cells_spawn_request(
   const dish2::ThreadWorld<Spec>& world
 ) {
 
@@ -26,9 +26,9 @@ double get_fraction_nulliparous(
 
   using lcit_t = dish2::LiveCellIterator<Spec>;
 
-  using iterator_t = dish2::WorldIteratorAbridger<
+  using iterator_t = dish2::WorldIteratorAnyOfer<
     lcit_t,
-    dish2::SpawnCountWrapper<Spec>
+    dish2::SpawnRequestWrapper<Spec>
   >;
 
   if ( dish2::no_live_cells<Spec>( world ) ) {
@@ -36,11 +36,11 @@ double get_fraction_nulliparous(
   } else return std::count_if(
     iterator_t( lcit_t::make_begin( population ) ),
     iterator_t( lcit_t::make_end( population ) ),
-    []( const auto& spawn_count ){ return spawn_count.Get() == 0; }
+    std::identity
   ) / static_cast< double >( dish2::count_live_cells<Spec>( world ) );
 
 }
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_INTROSPECTION_GET_FRACTION_NULLIPAROUS_HPP_INCLUDE
+#endif // #ifndef DISH2_INTROSPECTION_GET_FRACTION_CELLS_SPAWN_REQUEST_HPP_INCLUDE

@@ -1,24 +1,24 @@
 #pragma once
-#ifndef DISH2_INTROSPECTION_GET_FRACTION_RESOURCE_RECEIVE_RESISTANCE_HPP_INCLUDE
-#define DISH2_INTROSPECTION_GET_FRACTION_RESOURCE_RECEIVE_RESISTANCE_HPP_INCLUDE
+#ifndef DISH2_INTROSPECTION_GET_FRACTION_CARDINALS_SPAWN_ARREST_HPP_INCLUDE
+#define DISH2_INTROSPECTION_GET_FRACTION_CARDINALS_SPAWN_ARREST_HPP_INCLUDE
 
 #include <algorithm>
 #include <limits>
 
 #include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 
-#include "../cell/cardinal_iterators/ResourceReceiveResistanceWrapper.hpp"
+#include "../cell/cardinal_iterators/SpawnArrestWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/iterators/WorldIteratorAdapter.hpp"
 #include "../world/ThreadWorld.hpp"
 
-#include "count_live_cells.hpp"
+#include "count_live_cardinals.hpp"
 #include "no_live_cells.hpp"
 
 namespace dish2 {
 
 template< typename Spec >
-double get_fraction_resource_recieve_resistance(
+double get_fraction_cardinals_spawn_arrest(
   const dish2::ThreadWorld<Spec>& world
 ) {
 
@@ -28,7 +28,7 @@ double get_fraction_resource_recieve_resistance(
 
   using iterator_t = dish2::WorldIteratorAdapter<
     lcit_t,
-    dish2::ResourceReceiveResistanceWrapper<Spec>
+    dish2::SpawnArrestWrapper<Spec>
   >;
 
   if ( dish2::no_live_cells<Spec>( world ) ) {
@@ -37,10 +37,10 @@ double get_fraction_resource_recieve_resistance(
     iterator_t::make_begin( lcit_t::make_begin( population ) ),
     iterator_t::make_end( lcit_t::make_end( population ) ),
     std::identity
-  ) / static_cast< double >( dish2::count_live_cells<Spec>( world ) );
+  ) / static_cast< double >( dish2::count_live_cardinals<Spec>( world ) );
 
 }
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_INTROSPECTION_GET_FRACTION_RESOURCE_RECEIVE_RESISTANCE_HPP_INCLUDE
+#endif // #ifndef DISH2_INTROSPECTION_GET_FRACTION_CARDINALS_SPAWN_ARREST_HPP_INCLUDE

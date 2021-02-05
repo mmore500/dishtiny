@@ -7,7 +7,7 @@
 
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
-#include "../world/iterators/WorldIteratorAdapter.hpp"
+#include "../world/iterators/WorldIteratorAbridger.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "count_live_cells.hpp"
@@ -24,7 +24,7 @@ double get_fraction_fecund_resource_stockpile(
 
   using lcit_t = dish2::LiveCellIterator<Spec>;
 
-  using iterator_t = dish2::WorldIteratorAdapter<
+  using iterator_t = dish2::WorldIteratorAbridger<
     lcit_t,
     dish2::ResourceStockpileWrapper<Spec>
   >;
@@ -32,8 +32,8 @@ double get_fraction_fecund_resource_stockpile(
   if ( dish2::no_live_cells<Spec>( world ) ) {
     return std::numeric_limits<double>::quiet_NaN();
   } else return std::count_if(
-    iterator_t::make_begin( lcit_t::make_begin( population ) ),
-    iterator_t::make_end( lcit_t::make_end( population ) ),
+    iterator_t( lcit_t::make_begin( population ) ),
+    iterator_t( lcit_t::make_end( population ) ),
     []( const double stockpile ){  return stockpile >= 1.0; }
   ) / static_cast< double >( dish2::count_live_cells<Spec>( world ) );
 

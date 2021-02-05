@@ -31,6 +31,8 @@ class LiveCellIterator
 
 public:
 
+  LiveCellIterator(const LiveCellIterator &) = default;
+
   static LiveCellIterator make_begin(
     const emp::vector<dish2::Cell<Spec>>& population
   ) {

@@ -7,7 +7,7 @@
 
 #include "../cell/cardinal_iterators/KinGroupAgeWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
-#include "../world/iterators/WorldIteratorAdapter.hpp"
+#include "../world/iterators/WorldIteratorAbridger.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "count_live_cells.hpp"
@@ -24,7 +24,7 @@ double get_mean_kin_group_age(
 
   using lcit_t = dish2::LiveCellIterator<Spec>;
 
-  using iterator_t = dish2::WorldIteratorAdapter<
+  using iterator_t = dish2::WorldIteratorAbridger<
     lcit_t,
     dish2::KinGroupAgeWrapper<Spec>
   >;
@@ -32,8 +32,8 @@ double get_mean_kin_group_age(
   if ( dish2::no_live_cells<Spec>( world ) ) {
     return std::numeric_limits<double>::quiet_NaN();
   } else return std::accumulate(
-    iterator_t::make_begin( lcit_t::make_begin( population ) ),
-    iterator_t::make_end( lcit_t::make_end( population ) ),
+    iterator_t( lcit_t::make_begin( population ) ),
+    iterator_t( lcit_t::make_end( population ) ),
     0.0,
     [lev]( const double accumulator, const auto& kin_group_age ) {
       return accumulator + kin_group_age.Get( lev );

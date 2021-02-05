@@ -1,11 +1,12 @@
 #pragma once
-#ifndef DISH2_WORLD_ITERATORS_WORLDITERATORAVERAGER_HPP_INCLUDE
-#define DISH2_WORLD_ITERATORS_WORLDITERATORAVERAGER_HPP_INCLUDE
+#ifndef DISH2_WORLD_ITERATORS_WORLDITERATORANYOFER_HPP_INCLUDE
+#define DISH2_WORLD_ITERATORS_WORLDITERATORANYOFER_HPP_INCLUDE
 
 #include <iterator>
 #include <numeric>
 #include <tuple>
 
+#include "../../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 #include "../../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
@@ -15,7 +16,7 @@
 namespace dish2 {
 
 template< typename CellIterator, typename CardinalIterator >
-class WorldIteratorAverager : public CellIterator {
+class WorldIteratorAnyOfer : public CellIterator {
 
 public:
 
@@ -25,31 +26,27 @@ public:
   using iterator_category = std::forward_iterator_tag;
   using difference_type = std::ptrdiff_t;
 
-  WorldIteratorAverager(const CellIterator& cell_iterator)
+  WorldIteratorAnyOfer(const CellIterator& cell_iterator)
   : CellIterator( cell_iterator ) { }
 
   const double operator*() {
-    return std::accumulate(
+    return std::any_of(
       CellIterator::operator*().template begin<CardinalIterator>(),
       CellIterator::operator*().template end<CardinalIterator>(),
-      0.0
-    ) / std::distance(
-      CellIterator::operator*().template begin<CardinalIterator>(),
-      CellIterator::operator*().template end<CardinalIterator>()
+      std::identity
     );
   }
 
-  WorldIteratorAverager& operator++() {
+  WorldIteratorAnyOfer& operator++() {
     CellIterator::operator++();
     return *this;
   }
 
-  WorldIteratorAverager operator++(int) {
+  WorldIteratorAnyOfer operator++(int) {
     const auto res = *this;
     CellIterator::operator++();
     return res;
   }
-
 
   const value_type* operator->() = delete;
 
@@ -57,4 +54,4 @@ public:
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WORLD_ITERATORS_WORLDITERATORAVERAGER_HPP_INCLUDE
+#endif // #ifndef DISH2_WORLD_ITERATORS_WORLDITERATORANYOFER_HPP_INCLUDE

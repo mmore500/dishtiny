@@ -1,24 +1,22 @@
 #pragma once
-#ifndef DISH2_INTROSPECTION_GET_FRACTION_RESOURCE_SEND_REQUEST_HPP_INCLUDE
-#define DISH2_INTROSPECTION_GET_FRACTION_RESOURCE_SEND_REQUEST_HPP_INCLUDE
+#ifndef DISH2_INTROSPECTION_GET_MEAN_INCOMING_INTRA_MESSAGE_COUNT_PER_CARDINAL_HPP_INCLUDE
+#define DISH2_INTROSPECTION_GET_MEAN_INCOMING_INTRA_MESSAGE_COUNT_PER_CARDINAL_HPP_INCLUDE
 
 #include <algorithm>
 #include <limits>
 
-#include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
-
-#include "../cell/cardinal_iterators/ResourceSendRequestWrapper.hpp"
+#include "../cell/cardinal_iterators/IncomingIntraMessageCounterWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/iterators/WorldIteratorAdapter.hpp"
 #include "../world/ThreadWorld.hpp"
 
-#include "count_live_cells.hpp"
+#include "count_live_cardinals.hpp"
 #include "no_live_cells.hpp"
 
 namespace dish2 {
 
 template< typename Spec >
-double get_fraction_resource_send_request(
+double get_mean_incoming_intra_message_count_per_cardinal(
   const dish2::ThreadWorld<Spec>& world
 ) {
 
@@ -28,19 +26,19 @@ double get_fraction_resource_send_request(
 
   using iterator_t = dish2::WorldIteratorAdapter<
     lcit_t,
-    dish2::ResourceSendRequestWrapper<Spec>
+    dish2::IncomingIntraMessageCounterWrapper<Spec>
   >;
 
   if ( dish2::no_live_cells<Spec>( world ) ) {
     return std::numeric_limits<double>::quiet_NaN();
-  } else return std::count_if(
+  } else return std::accumulate(
     iterator_t::make_begin( lcit_t::make_begin( population ) ),
     iterator_t::make_end( lcit_t::make_end( population ) ),
-    std::identity
-  ) / static_cast< double >( dish2::count_live_cells<Spec>( world ) );
+    0.0
+  ) / dish2::count_live_cardinals< Spec >( world );
 
 }
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_INTROSPECTION_GET_FRACTION_RESOURCE_SEND_REQUEST_HPP_INCLUDE
+#endif // #ifndef DISH2_INTROSPECTION_GET_MEAN_INCOMING_INTRA_MESSAGE_COUNT_PER_CARDINAL_HPP_INCLUDE

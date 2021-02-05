@@ -23,7 +23,8 @@ public:
   using iterator_category = std::forward_iterator_tag;
   using difference_type = std::ptrdiff_t;
 
-  WorldIteratorAbridger() = default;
+  WorldIteratorAbridger(const CellIterator& cell_iterator)
+  : CellIterator( cell_iterator ) { }
 
   const value_type& operator*() {
     return *( CellIterator::operator*().template begin<CardinalIterator>() );
