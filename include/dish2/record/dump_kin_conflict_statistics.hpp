@@ -2,8 +2,6 @@
 #ifndef DISH2_RECORD_DUMP_KIN_CONFLICT_STATISTICS_HPP_INCLUDE
 #define DISH2_RECORD_DUMP_KIN_CONFLICT_STATISTICS_HPP_INCLUDE
 
-#include <algorithm>
-
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 #include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
@@ -12,7 +10,10 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../introspection/count_kin_neighbors.hpp"
+#include "../introspection/count_live_cardinals.hpp"
 #include "../introspection/count_spawn_events.hpp"
+#include "../introspection/get_total_spawn_event_kin_eliminated.hpp"
 #include "../introspection/get_total_spawn_event_kin_neighbors.hpp"
 #include "../introspection/get_total_spawn_event_neighbors.hpp"
 
@@ -34,65 +35,75 @@ void dump_kin_conflict_statistics(
   if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
 
   size_t kin_id_commonality_parent_eliminated;
-  size_t num_parents;
-  size_t total_parent_neighbors;
-  size_t total_parent_kin_neighbors;
+
+  const size_t num_spawn_events = dish2::count_spawn_events<Spec>( world );
+  const size_t total_neighbors = dish2::count_live_cardinals<Spec>( world );
+  const size_t total_spawn_event_neighbors
+    = dish2::get_total_spawn_event_neighbors<Spec>( world );
+
+  size_t total_neighbors_that_are_kin;
+  size_t total_spawn_event_neighbors_that_are_kin;
   size_t total_kin_eliminated;
 
   double fraction_eliminated_that_are_kin;
+  double fraction_spawn_event_neighbors_that_are_kin;
   double fraction_neighbors_that_are_kin;
+  double spawn_event_kin_conflict_ratio;
   double kin_conflict_ratio;
 
   file.AddVar(
     kin_id_commonality_parent_eliminated, "Parent-Eliminated Kin ID Commonality"
   );
 
-  file.AddVar( num_parents, "Num Parents" );
-  file.AddVar( total_parent_neighbors, "Total Num Parent Neighbors" );
-  file.AddVar( total_parent_kin_neighbors, "Total Num Parent Kin Neighbors" );
+  file.AddVar( num_spawn_events, "Num Spawn Events" );
+  file.AddVar( total_neighbors, "Total Num Neighbors" );
+  file.AddVar( total_neighbors_that_are_kin, "Total Num Neighbors that are Kin" );
+  file.AddVar( total_spawn_event_neighbors, "Total Num Spawn Event Neighbors" );
+  file.AddVar( total_spawn_event_neighbors_that_are_kin, "Total Num Spawn Event Neighbors that are Kin" );
   file.AddVar( total_kin_eliminated, "Total Num Kin Eliminated" );
 
   file.AddVar(
     fraction_eliminated_that_are_kin, "Fraction Eliminated that are Kin"
   );
   file.AddVar(
-    fraction_neighbors_that_are_kin, "Fraction Neighbors that are Kin"
+    fraction_spawn_event_neighbors_that_are_kin,
+    "Fraction Spawn Event Neighbors that are Kin"
+  );
+  file.AddVar(
+    fraction_neighbors_that_are_kin,
+    "Fraction Neighbors that are Kin"
   );
   file.AddVar( kin_conflict_ratio, "Kin Conflict Ratio" );
+  file.AddVar( spawn_event_kin_conflict_ratio, "Kin Conflict at Spawn Ratio" );
 
   file.PrintHeaderKeys();
 
-  for (
-    kin_id_commonality_parent_eliminated = 1;
-    kin_id_commonality_parent_eliminated < Spec::NLEV + 1;
-    ++kin_id_commonality_parent_eliminated
-  ) {
-    num_parents = dish2::count_spawn_events<Spec>(
-      world, kin_id_commonality_parent_eliminated
-    );
-    total_parent_neighbors
-      = dish2::get_total_spawn_event_neighbors<Spec>(
-        world, kin_id_commonality_parent_eliminated
-      );
-    const size_t highest_shared_kin_id_level
-      = kin_id_commonality_parent_eliminated - 1;
-    total_parent_kin_neighbors
-      = dish2::get_total_spawn_event_kin_neighbors<Spec>(
-        world, highest_shared_kin_id_level, kin_id_commonality_parent_eliminated
-      );
-    total_kin_eliminated
-      = dish2::get_total_spawn_event_kin_eliminated<Spec>(
+  for ( size_t kin_id_level{}; kin_id_level < Spec::NLEV; ++kin_id_level ) {
+
+    kin_id_commonality_parent_eliminated = kin_id_level + 1;
+
+    total_neighbors_that_are_kin
+      = dish2::count_kin_neighbors( world, kin_id_level );
+    total_spawn_event_neighbors_that_are_kin
+      = dish2::get_total_spawn_event_kin_neighbors<Spec>( world, kin_id_level );
+
+    total_kin_eliminated = dish2::get_total_spawn_event_kin_eliminated<Spec>(
         world, kin_id_commonality_parent_eliminated
       );
 
-    fraction_neighbors_that_are_kin =
-      total_parent_kin_neighbors
-      / static_cast<double>( total_parent_neighbors );
+    fraction_neighbors_that_are_kin = total_neighbors_that_are_kin
+      / static_cast<double>( total_neighbors );
+    fraction_spawn_event_neighbors_that_are_kin =
+      total_spawn_event_neighbors_that_are_kin
+      / static_cast<double>( total_spawn_event_neighbors );
+
     fraction_eliminated_that_are_kin =
-      total_kin_eliminated / static_cast<double>( num_parents );
+      total_kin_eliminated / static_cast<double>( num_spawn_events );
+
+    spawn_event_kin_conflict_ratio =
+      fraction_eliminated_that_are_kin / fraction_spawn_event_neighbors_that_are_kin;
     kin_conflict_ratio =
       fraction_eliminated_that_are_kin / fraction_neighbors_that_are_kin;
-
 
     file.Update();
   }

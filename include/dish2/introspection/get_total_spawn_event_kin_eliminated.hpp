@@ -35,7 +35,7 @@ size_t get_total_spawn_event_kin_eliminated(
     [=]( const size_t accumulator, const auto& event ){
       return accumulator + (
         event.kin_id_commonality_parent_eliminated
-        > kin_id_commonality_parent_eliminated
+        >= kin_id_commonality_parent_eliminated
       );
     }
   );
@@ -63,11 +63,11 @@ size_t get_total_spawn_event_kin_eliminated(
   return std::accumulate(
     begin, end, 0,
     [=]( const size_t accumulator, const auto& event ){
-      return event.replev == replev
-        ? accumulator + (
-          event.kin_id_commonality_parent_eliminated
-          > kin_id_commonality_parent_eliminated
-        ) : accumulator;
+      return accumulator + (
+        event.replev == replev
+        && event.kin_id_commonality_parent_eliminated
+          >= kin_id_commonality_parent_eliminated
+      );
     }
   );
 

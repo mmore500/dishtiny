@@ -32,8 +32,7 @@ size_t count_spawn_events( const dish2::ThreadWorld<Spec>& world ) {
 
 template< typename Spec >
 size_t count_spawn_events(
-  const dish2::ThreadWorld<Spec>& world,
-  const size_t kin_id_commonality_parent_eliminated
+  const dish2::ThreadWorld<Spec>& world, const size_t replev
 ) {
 
   const auto& population = world.population;
@@ -50,43 +49,7 @@ size_t count_spawn_events(
   return std::accumulate(
     begin, end, 0,
     [=]( const size_t accumulator, const auto& event ){
-      return (
-        event.kin_id_commonality_parent_eliminated
-        == kin_id_commonality_parent_eliminated
-      ) ? accumulator + 1
-        : accumulator;
-    }
-  );
-
-}
-
-template< typename Spec >
-size_t count_spawn_events(
-  const dish2::ThreadWorld<Spec>& world,
-  const size_t kin_id_commonality_parent_eliminated,
-  const size_t replev
-) {
-
-  const auto& population = world.population;
-
-  using iterator_t = dish2::LogIteratorAdapter<
-    dish2::SpawnEvent<Spec>,
-    decltype( std::begin(population) )
-  >;
-
-  const auto [begin, end] = iterator_t::make(
-    std::begin( population ), std::end( population )
-  );
-
-  return std::accumulate(
-    begin, end, 0,
-    [=]( const size_t accumulator, const auto& event ){
-      return (
-        event.replev == replev
-        && event.kin_id_commonality_parent_eliminated
-          == kin_id_commonality_parent_eliminated
-      ) ? accumulator + 1
-        : accumulator;
+      return accumulator + ( event.replev == replev );
     }
   );
 

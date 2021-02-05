@@ -40,37 +40,7 @@ size_t get_total_spawn_event_neighbors(
 
 template< typename Spec >
 size_t get_total_spawn_event_neighbors(
-  const dish2::ThreadWorld<Spec>& world, const size_t kin_id_commonality_parent_eliminated
-) {
-
-  const auto& population = world.population;
-
-  using iterator_t = dish2::LogIteratorAdapter<
-    dish2::SpawnEvent<Spec>,
-    decltype( std::begin(population) )
-  >;
-
-  const auto [begin, end] = iterator_t::make(
-    std::begin( population ), std::end( population )
-  );
-
-  return std::accumulate(
-    begin, end, 0,
-    [=]( const size_t accumulator, const auto& event ){
-      return (
-        event.kin_id_commonality_parent_eliminated
-        == kin_id_commonality_parent_eliminated
-      ) ? accumulator + event.num_neighbors_parent
-        : accumulator;
-    }
-  );
-
-}
-
-template< typename Spec >
-size_t get_total_spawn_event_neighbors(
   const dish2::ThreadWorld<Spec>& world,
-   const size_t kin_id_commonality_parent_eliminated,
    const size_t replev
 ) {
 
@@ -88,12 +58,8 @@ size_t get_total_spawn_event_neighbors(
   return std::accumulate(
     begin, end, 0,
     [=]( const size_t accumulator, const auto& event ){
-      return (
-        event.replev == replev &&
-        event.kin_id_commonality_parent_eliminated
-        == kin_id_commonality_parent_eliminated
-      ) ? accumulator + event.num_neighbors_parent
-        : accumulator;
+      return accumulator
+        + event.num_neighbors_parent * ( event.replev == replev );
     }
   );
 
