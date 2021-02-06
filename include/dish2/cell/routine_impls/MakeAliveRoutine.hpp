@@ -8,6 +8,7 @@
 #include "../cardinal_iterators/CpuWrapper.hpp"
 #include "../cardinal_iterators/EpochWrapper.hpp"
 #include "../cardinal_iterators/IsAliveWrapper.hpp"
+#include "../cardinal_iterators/KinGroupAgeWrapper.hpp"
 #include "../cardinal_iterators/KinGroupIDViewWrapper.hpp"
 #include "../../debug/LogScope.hpp"
 

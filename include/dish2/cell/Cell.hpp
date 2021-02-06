@@ -18,8 +18,6 @@
 #include "../genome/Genome.hpp"
 #include "../quorum/CellQuorumState.hpp"
 #include "../runninglog/RunningLogs.hpp"
-#include "../services/_index.hpp"
-#include "../services/ServiceManager.hpp"
 
 #include "Cardinal.hpp"
 
@@ -180,36 +178,7 @@ struct Cell {
 
   void Update(const size_t update) {
 
-    // TODO put these in order
-    using service_manager_t = dish2::ServiceManager<
-      dish2::DecayToBaselineService, // should run before cpu execution service
-      dish2::RunningLogPurgeService, // should run before cpu execution service
-      dish2::WritableStateNoiseService,
-      dish2::CpuExecutionService,
-
-      dish2::BirthSetupService,
-      dish2::CellAgeService,
-      dish2::CollectiveHarvestingService,
-      dish2::ConduitFlushService,
-      dish2::EventLaunchingService,
-      dish2::InterMessageLaunchingService,
-      dish2::InterMessagePurgingService,
-      dish2::IntraMessageLaunchingService,
-      dish2::MessageCounterClearService,
-      dish2::QuorumCapService,
-      dish2::QuorumService,
-      dish2::ResourceDecayService,
-      dish2::ResourceHarvestingService,
-      dish2::ResourceReceivingService,
-      dish2::ResourceSendingService,
-      dish2::SpawnSendingService,
-      dish2::StateInputJumpService,
-      dish2::StateOutputPutService,
-
-      dish2::EpochAdvanceService,
-      dish2::CellDeathService, // must run last
-      dish2::ApoptosisService // must run last
-    >;
+    using service_manager_t = typename Spec::service_manager_t;
 
     service_manager_t::template Run<this_t>( *this, update, IsAlive() );
 

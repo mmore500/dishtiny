@@ -15,6 +15,8 @@
 #include "../events/_index.hpp"
 #include "../operations/OpLibrary.hpp"
 #include "../peripheral/Peripheral.hpp"
+#include "../services/_index.hpp"
+#include "../services/ServiceManager.hpp"
 
 #include "GenomeMeshSpec.hpp"
 #include "IntraMessageMeshSpec.hpp"
@@ -63,6 +65,37 @@ struct Spec {
   using intra_topology_factory_t = netuit::CompleteTopologyFactory;
 
   using program_t = sgpl::Program< sgpl_spec_t >;
+
+  // TODO put these in order
+  using service_manager_t = dish2::ServiceManager<
+    dish2::DecayToBaselineService, // should run before cpu execution service
+    dish2::RunningLogPurgeService, // should run before cpu execution service
+    dish2::WritableStateNoiseService,
+    dish2::CpuExecutionService,
+
+    dish2::BirthSetupService,
+    dish2::CellAgeService,
+    dish2::CollectiveHarvestingService,
+    dish2::ConduitFlushService,
+    dish2::EventLaunchingService,
+    dish2::InterMessageLaunchingService,
+    dish2::InterMessagePurgingService,
+    dish2::IntraMessageLaunchingService,
+    dish2::MessageCounterClearService,
+    dish2::QuorumCapService,
+    dish2::QuorumService,
+    dish2::ResourceDecayService,
+    dish2::ResourceHarvestingService,
+    dish2::ResourceReceivingService,
+    dish2::ResourceSendingService,
+    dish2::SpawnSendingService,
+    dish2::StateInputJumpService,
+    dish2::StateOutputPutService,
+
+    dish2::EpochAdvanceService,
+    dish2::CellDeathService, // must run last
+    dish2::ApoptosisService // must run last
+  >;
 
 };
 
