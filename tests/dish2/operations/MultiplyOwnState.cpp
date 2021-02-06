@@ -6,10 +6,10 @@
 #include "Catch/single_include/catch2/catch.hpp"
 #include "cereal/include/cereal/archives/json.hpp"
 #include "conduit/include/uit/fixtures/Conduit.hpp"
-#include "signalgp-lite/include/sgpl/config/Spec.hpp"
 #include "signalgp-lite/include/sgpl/hardware/Cpu.hpp"
 #include "signalgp-lite/include/sgpl/library/OpLibrary.hpp"
 #include "signalgp-lite/include/sgpl/operations/unary/Terminal.hpp"
+#include "signalgp-lite/include/sgpl/spec/Spec.hpp"
 
 #include "dish2/operations/MultiplyOwnState.hpp"
 #include "dish2/operations/WriteOwnStateIf.hpp"

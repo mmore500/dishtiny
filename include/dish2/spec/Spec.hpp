@@ -7,11 +7,11 @@
 
 #include "../../../third-party/conduit/include/netuit/arrange/CompleteTopologyFactory.hpp"
 #include "../../../third-party/conduit/include/netuit/arrange/ToroidalTopologyFactory.hpp"
-#include "../../../third-party/signalgp-lite/include/sgpl/config/Spec.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/hardware/Core.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/library/OpLibraryCoupler.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/library/prefab/CompleteOpLibrary.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/spec/Spec.hpp"
 
 #include "../events/EventManager.hpp"
 #include "../events/EventSeries.hpp"
