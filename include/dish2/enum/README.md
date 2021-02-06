@@ -1,0 +1,1 @@
+Enumerated value classes.

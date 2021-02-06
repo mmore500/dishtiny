@@ -38,11 +38,15 @@ As of Febuary 2021, Google provides this service free of charge!
 sudo wget -O- http://neuro.debian.net/lists/xenial.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list && \
     sudo apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 && \
     sudo apt-get update
-yes | sudo apt-get install -y singularity-container xvfb
+yes | sudo apt-get install -y docker singularity-container xvfb
 export DISPLAY=":$$"
 rm -f "/tmp/.X$$-lock"
 Xvfb "${DISPLAY}" -auth /dev/null/ &
 export XVFB_PID=$!
+
+yes | docker system prune --all
+rm -rf ~/.singularity/docker/
+
 singularity shell docker://mmore500/dishtiny
 ```
 
@@ -61,7 +65,24 @@ cp ../rundishtiny .
 You might see the message `(EE) Failed to open authorization file "/dev/null/": Not a directory`.
 That's okay!
 
-Compiling takes a minute or so and dumping data (in particular, PNG grid visualizations) takes a few minutes.
+Compiling takes a minute or so and dumping data (in particular, png grid visualizations) takes a few minutes.
 That's also okay!
 
-Singularity mounts most of the host filesystem, meaning that any changes you make using the web editor will seamlessly apply inside the container. Nice!
+If you want to build and run the web app from Cloud Shell, run these commands from inside the container in the `dishtiny` source directory,
+```bash
+cd third-party/ && ./install_emsdk.sh; cd -
+make web
+cd web && python3 -m SimpleHTTPServer 8080
+```
+
+Then, use Cloud Shell's [Web Preview](https://cloud.google.com/shell/docs/using-web-preview) feature to view the web app in your own browser.
+As of February 2021, there's a button in the top right hand corner of the user interface that lets you launch the web preview.
+(Note that, for now, the web app will only work properly in Google Chrome.)
+
+Singularity mounts most of the host filesystem, meaning that any changes you make using the web editor will seamlessly apply inside the container.
+Nice!
+
+Your source code files should persist across Cloud Shell sessions, but your development environment only persists for the duration of your session.
+This means that you'll need to re-run the environment setup steps
+Kind of annoying, but on the plus side if you accidentally bork your development environment you can open up a new session for a fresh start!
+:man_shrugging:
