@@ -14,6 +14,7 @@
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 #include "../peripheral/readable_state/ReadableState.hpp"
+#include "../runninglog/BirthEvent.hpp"
 
 namespace dish2 {
 

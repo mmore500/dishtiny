@@ -19,6 +19,7 @@
 #include "../cell/cardinal_iterators/SpawnRequestWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
+#include "../runninglog/SpawnEvent.hpp"
 
 namespace dish2 {
 
