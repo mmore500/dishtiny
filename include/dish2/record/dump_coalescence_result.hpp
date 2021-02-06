@@ -69,7 +69,7 @@ void dump_coalescence_result(
 
   file.PrintHeaderKeys();
 
-  for ( const size_t root_id_ :  dish2::get_root_ids() ) {
+  for ( const size_t root_id_ : dish2::get_root_ids() ) {
 
     filename = dish2::get_innoculum_filename( root_id );
     slug = dish2::get_innoculum_slug( root_id );
