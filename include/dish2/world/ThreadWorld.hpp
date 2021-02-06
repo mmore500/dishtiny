@@ -13,8 +13,8 @@
 #include "../cell/Cell.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
-#include "../introspection/make_causes_of_death_string_histogram.hpp"
 #include "../debug/PopulationExtinctionException.hpp"
+#include "../introspection/make_causes_of_death_string_histogram.hpp"
 
 namespace dish2 {
 
