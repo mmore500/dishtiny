@@ -20,5 +20,5 @@ As of February 2021, you'll need to use the Google Chrome desktop web browser to
 Other browsers may have compatibility, but you will have to manually enable support for JavaScript `SharedArrayBuffer`.
 For more information, see [here](https://emscripten.org/docs/porting/pthreads.html) and [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer#security_requirements).
 
-To use code from this project in your own project, add `-Ipath/to/{{ cookiecutter.project_slug }}/include`
+To use code from this project in your own project, add `-Ipath/to/dishtiny/include`
 to your compiler flags, or add this project as a subrepo and use relative include paths.
