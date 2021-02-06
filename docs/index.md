@@ -12,7 +12,7 @@ development
 api/library_root
 contributing
 code_of_conduct
-authors
+acknowledgements
 ```
 
 ```{include} ../README.md

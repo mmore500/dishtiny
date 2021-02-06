@@ -17,23 +17,4 @@ Check out the live in-browser web app at <https://mmore500.com/dishtiny>.
 
 -   Free software: MIT license
 -   Documentation: <https://dishtiny.readthedocs.io>.
-
-## Features
-
--   TODO
-
-![cookie monster example](docs/assets/cookie.gif)
-
-## Credits
-
-This package was created with [Cookiecutter][] and the [devosoft/cookiecutter-empirical-project][] project template.
-
-This package uses [Empirical](https://github.com/devosoft/Empirical#readme), a library of tools for scientific software development, with emphasis on also being able to build web interfaces using Emscripten.
-
-## Dependencies
-
-To install [Empirical](https://github.com/devosoft/Empirical), pull down a clone of the Empirical repository.  See [Quick Start Guides](https://empirical.readthedocs.io/en/latest/QuickStartGuides) for directions on cloning and using the library.
-
-
-  [Cookiecutter]: https://github.com/audreyr/cookiecutter
-  [devosoft/cookiecutter-empirical-project]: https://github.com/devosoft/cookiecutter-empirical-project
+-   Header-only C++17 Library
