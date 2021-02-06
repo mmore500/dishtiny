@@ -20,12 +20,18 @@ a.out
 a.out.js
 rundishtiny
 
+docs/_build
+docs/api
+docs/doxyoutput
+docs/.Rhistory
+
+microbenchmarks/**/*.json
+
 web/dishtiny.js
 web/dishtiny.worker.js
 web/index.html
 
-build/
-doc/_build/
+temp*
 
 package-lock.json
 node_modules/
