@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_UTILITY_BACKTRACE_ENABLE_HPP_INCLUDE
-#define DISH2_UTILITY_BACKTRACE_ENABLE_HPP_INCLUDE
+#ifndef DISH2_DEBUG_BACKTRACE_ENABLE_HPP_INCLUDE
+#define DISH2_DEBUG_BACKTRACE_ENABLE_HPP_INCLUDE
 
 #define BACKWARD_HAS_DW 1
 
@@ -26,4 +26,4 @@ const backward::SignalHandling backtrace_handler;
 } // namespace internal
 } // namespace dish2
 
-#endif // #ifndef DISH2_UTILITY_BACKTRACE_ENABLE_HPP_INCLUDE
+#endif // #ifndef DISH2_DEBUG_BACKTRACE_ENABLE_HPP_INCLUDE
