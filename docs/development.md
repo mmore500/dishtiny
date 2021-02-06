@@ -191,6 +191,11 @@ A [whistle-stop tour](https://en.wikipedia.org/wiki/Whistle_stop_train_tour) of 
 ```{include} ../slurm/README.md
 ```
 
+### `web/`
+
+```{include} ../web/README.md
+```
+
 ## Dependencies
 
 Notably, this project is built on top of the [conduit](https://github.com/mmore500/conduit), [Empirical](https://github.com/devosoft/Empirical), and [signalgp-lite](https://github.com/mmore500/signalgp-lite) C++ libraries.
