@@ -59,7 +59,7 @@ echo "Extract payload of slurm scripts"
 echo "--------------------------------"
 ################################################################################
 
-uudecode | tar -xvf <<'PAYLOAD_HEREDOC_CLOSE'
+uudecode | tar -xvf - <<'PAYLOAD_HEREDOC_CLOSE'
 {{ payload }}
 PAYLOAD_HEREDOC_CLOSE
 
