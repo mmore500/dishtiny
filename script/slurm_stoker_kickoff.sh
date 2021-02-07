@@ -16,7 +16,10 @@ shift
 export repo_sha="${1}"
 shift
 
-export payload="$(tar -czvf - *.slurm.sh | uuencode -)"
+# load secrets into environment variables, if available
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
+
+export payload="$(tar -czvf - *.slurm.sh | singularity exec "docker://mmore500/dishtiny:${container_tag}" uuencode -)"
 
 source ~/.secrets.sh || :
 
