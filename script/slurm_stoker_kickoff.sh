@@ -5,6 +5,8 @@ set -e
 
 if (( "$#" != 2 )); then
   echo "USAGE: [container_tag] [repo_sha]"
+  echo "run this inside of a directory containing all the *.slurm.sh jobs"
+  echo "you want to queue up"
   exit 1
 fi
 
