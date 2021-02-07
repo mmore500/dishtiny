@@ -33,7 +33,7 @@ struct DecayToBaselineService {
     std::for_each(
       cell.template begin< dish2::CpuWrapper<spec_t> >(),
       cell.template end< dish2::CpuWrapper<spec_t> >(),
-      []( auto& cpu ) { cpu.DecayRegulators(); }
+      []( auto& cpu ) { cpu.DecayGlobalRegulators(); }
     );
 
     // reset controller-mapped cpu peripheral state

@@ -44,6 +44,7 @@ struct Spec {
     sgpl::global::RegulatorAdj<1>, // exposed regulator
     sgpl::global::RegulatorGet<1>, // exposed regulator
     sgpl::global::RegulatorSet<1>, // exposed regulator
+    sgpl::global::RegulatorDecay<1>, // exposed regulator
     dish2::AddToOwnState< this_t >,
     dish2::BcstIntraMessageIf,
     dish2::MultiplyOwnState< this_t >,
