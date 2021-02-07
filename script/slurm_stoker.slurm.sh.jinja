@@ -103,6 +103,9 @@ fi
 
 NEXT_PAYLOAD="$(tar -czvf - *.slurm.sh | uuencode -)"
 
+# clear out temporary files
+rm -rf *
+
 ################################################################################
 echo
 echo "Submit Next Slurm Stoker"
