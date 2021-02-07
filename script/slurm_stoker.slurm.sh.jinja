@@ -149,7 +149,7 @@ done
 
 export payload="${NEXT_PAYLOAD}"
 export container_tag="{{ container_tag }}"
-export repo_sha="{{ container_tag }}"
+export repo_sha="{{ repo_sha }}"
 j2 --import-env "" -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" -
 
 chmod +x "${JOB_SCRIPT}"
