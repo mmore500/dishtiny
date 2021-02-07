@@ -81,7 +81,7 @@ for JOB_SCRIPT in *.slurm.sh; do
       "${HOST_USERNAME}@$(hostname)" -X \
       'bash -login' \
   )
-  AVAILABLE_SLOTS=2
+  AVAILABLE_SLOTS=800
   if (( OCCUPIED_SLOTS > AVAILABLE_SLOTS )); then break; fi
 
   for retry in {1..10}; do
