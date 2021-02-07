@@ -19,11 +19,23 @@ shift
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
 
+# load pyenv, if available
+[[ -f ~/pyenv/bin/activate ]] && source ~/pyenv/bin/activate || echo "no pyenv"
+
+################################################################################
+echo
+echo "Zip *.slurm.sh files into payload"
+echo "-----------------------------------"
+################################################################################
+
 export payload="$(tar -czvf - *.slurm.sh | singularity exec "docker://mmore500/sharutils:sha-223389d" uuencode -)"
 
-source ~/.secrets.sh || :
+################################################################################
+echo
+echo "Download slurm stoker job template"
+echo "-----------------------------------"
+################################################################################
 
-# run jinja on template
 JOB_TEMPLATE="$(mktemp)"
 JOB_SCRIPT="$(mktemp)"
 
@@ -39,8 +51,24 @@ for retry in {1..20}; do
   if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
 done
 
+################################################################################
+echo
+echo "Instantiate slurm stoker job template"
+echo "-------------------------------------"
+################################################################################
+
 j2 --import-env "" -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" -
 
-chmod +x "${JOB_SCRIPT}"
+################################################################################
+echo
+echo "Submit slurm stoker job"
+echo "--------------------------------"
+################################################################################
 
-#sbatch "${JOB_SCRIPT}"
+sbatch "${JOB_SCRIPT}"
+
+################################################################################
+echo
+echo "Done! (SUCCESS)"
+echo "---------------"
+################################################################################
