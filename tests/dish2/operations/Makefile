@@ -1,6 +1,5 @@
 TARGET_NAMES += AddToOwnState
 TARGET_NAMES += MultiplyOwnState
-TARGET_NAMES += OpLibrary
 TARGET_NAMES += ReadNeighborState
 TARGET_NAMES += ReadOwnState
 TARGET_NAMES += SendInterMessageIf
