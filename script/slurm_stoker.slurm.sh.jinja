@@ -73,9 +73,15 @@ echo "--------------------------------"
 
 for slurmscript in *.slurm.sh; do
 
-  OCCUPIED_SLOTS="$(squeue -u $(whoami) | wc -l)"
+  # this will count one too many slots occupied, but that is okay
+  OCCUPIED_SLOTS=$(echo "squeue -u \$(whoami) | wc -l" \
+  | sshpass -p "${HOST_PASSWORD}" \
+    ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+      "${HOST_USERNAME}@$(hostname)" -X \
+      'bash -login' \
+  )
   AVAILABLE_SLOTS=2
-  if (( OCCUPIED_SLOTS >= AVAILABLE_SLOTS )); then break; fi
+  if (( OCCUPIED_SLOTS > AVAILABLE_SLOTS )); then break; fi
 
   sbatch "${slurmscript}" && rm "${slurmscript}"
 
