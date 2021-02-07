@@ -74,7 +74,7 @@ echo "--------------------------------"
 for slurmscript in *.slurm.sh; do
 
   OCCUPIED_SLOTS="$(squeue -u $(whoami) | wc -l)"
-  AVAILABLE_SLOTS=800
+  AVAILABLE_SLOTS=1
   if (( OCCUPIED_SLOTS >= AVAILABLE_SLOTS )); then break; fi
 
   sbatch "${slurmscript}" && rm "${slurmscript}"
