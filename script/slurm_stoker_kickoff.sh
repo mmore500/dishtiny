@@ -28,7 +28,7 @@ echo "Zip *.slurm.sh files into payload"
 echo "-----------------------------------"
 ################################################################################
 
-export payload="$(tar -czvf - *.slurm.sh | singularity exec "docker://mmore500/sharutils:sha-223389d" uuencode -)"
+export payload="$(tar -czvf - *.slurm.sh | singularity exec "docker://mmore500/sharutils:sha-223389d" uuencode -m -)"
 
 ################################################################################
 echo
