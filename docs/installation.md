@@ -29,7 +29,7 @@ Likewise, if you have [Singularity](https://sylabs.io/docs/) installed,
 singularity shell docker://mmore500/dishtiny
 ```
 
-## Hassle-free Cloud-based Development Environment with Web GUI |:sunglasses:|
+## Hassle-free Cloud-based Development Environment with Web GUI ::sunglasses::
 
 Go to <https://shell.cloud.google.com>.
 As of Febuary 2021, Google provides this service free of charge!
@@ -85,4 +85,4 @@ Nice!
 Your source code files should persist across Cloud Shell sessions, but your development environment only persists for the duration of your session.
 This means that you'll need to re-run the environment setup steps
 Kind of annoying, but on the plus side if you accidentally bork your development environment you can open up a new session for a fresh start!
-:man_shrugging:
+::man_shrugging:: ::rocket::

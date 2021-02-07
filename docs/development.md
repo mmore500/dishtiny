@@ -1,9 +1,8 @@
 # Development Overview
 
-|:bangbang:|
 You probably want to [check when this page was last updated](https://github.com/mmore500/dishtiny/commits/master/docs/development.md).
 
-|:raised_hand:|
+::hammer_and_wrench:: ::construction_worker_woman::
 If anything is unclear or out of date, please open [an issue](https://github.com/mmore500/dishtiny/issues/new) or [a pull request](https://github.com/mmore500/dishtiny/compare) so we can fix it!
 Also, if you have project-specific questions or any thing else you'd like to chat about you can always feel free to [get in touch directly](mailto:m.more500@gmail.com).
 I'd love to hear from you!
@@ -64,7 +63,7 @@ Most simulation customizations will probably involve copying and modifying a ser
 ## Repository Layout
 
 A [whistle-stop tour](https://en.wikipedia.org/wiki/Whistle_stop_train_tour) of the repository!
-:steam_locomotive:
+::steam_locomotive::
 
 ### `include/dish2/algorithm/`
 

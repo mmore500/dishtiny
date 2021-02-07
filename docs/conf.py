@@ -22,6 +22,7 @@ import os
 import sys
 import subprocess
 import sphinx_rtd_theme
+import json
 
 # -- General configuration ---------------------------------------------
 
@@ -63,6 +64,18 @@ exhale_args = {
     "exhaleExecutesDoxygen": True,
     "exhaleDoxygenStdin":    "INPUT = ../include"
 }
+
+
+myst_enable_extensions = [
+    "amsmath",
+    "dollarmath",
+    "substitution",
+]
+
+# Myst configuration for emoji plugin
+myst_sub_delimiters = [":", ":",]
+
+myst_substitutions = json.load(open("emojicodes.json", encoding='utf-8'))
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
