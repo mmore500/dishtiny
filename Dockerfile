@@ -45,6 +45,7 @@ RUN \
     libsfml-dev \
     libdw-dev \
     libomp-dev \
+    sharutils \
     sshpass \
     xauth \
     && \

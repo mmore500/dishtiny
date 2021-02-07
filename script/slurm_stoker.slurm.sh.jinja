@@ -1,0 +1,155 @@
+#!/bin/bash -login
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time=4:00:00
+#SBATCH --job-name a=slurm_stoker
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/a=slurm_stoker+job=%j+ext.log"
+#SBATCH --mem=4G
+#SBATCH --ntasks 1
+#SBATCH --cpus-per-task 1
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=mmore500@msu.edu
+
+# fail on error
+set -e
+
+# set up and jump into temporary work directory
+cd "$(mktemp -d)"
+
+# curl repro_runner.sh script into to a temporary file
+REPRO_RUNNER="$(mktemp)"
+for retry in {1..20}; do
+  curl \
+    -o "${REPRO_RUNNER}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh" \
+  && echo "  job template curl success" && break \
+  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
+done
+chmod +x "${REPRO_RUNNER}"
+
+################################################################################
+echo
+echo "Run Job with repro_runner.sh"
+echo "--------------------------------"
+################################################################################
+
+"${REPRO_RUNNER}" \
+  -p dnh2v -u mmore500 -s dishtiny \
+  --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
+  << 'REPRO_RUNNER_HEREDOC_EOF'
+
+################################################################################
+echo
+echo "Initialize and Log Config"
+echo "-------------------------"
+################################################################################
+
+# load secrets into environment variables, if available
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
+
+echo "container_tag {{ container_tag }}"
+echo "repo_sha {{ repo_sha }}"
+echo "payload length {{ payload|length }}"
+
+
+################################################################################
+echo
+echo "Extract payload of slurm scripts"
+echo "--------------------------------"
+################################################################################
+
+uudecode | tar -xvf <<'PAYLOAD_HEREDOC_CLOSE'
+{{ payload }}
+PAYLOAD_HEREDOC_CLOSE
+
+ls
+
+################################################################################
+echo
+echo "Submit jobs into available slots"
+echo "--------------------------------"
+################################################################################
+
+for slurmscript in *.slurm.sh; do
+
+  OCCUPIED_SLOTS="$(squeue -u $(whoami) | wc -l)"
+  AVAILABLE_SLOTS=800
+  if (( OCCUPIED_SLOTS >= AVAILABLE_SLOTS )); then break; fi
+
+  sbatch "${slurmscript}" && rm "${slurmscript}"
+
+done
+
+################################################################################
+echo
+echo "Zip up remaining jobs"
+echo "--------------------------------"
+################################################################################
+
+# if there are remaining jobs
+if ls *.slurm.sh 1> /dev/null 2>&1; then
+  echo "$(ls *.slurm.sh | wc -l) jobs remain"
+else
+  echo "no remaining jobs, exiting SUCCESS"
+  exit 0
+fi
+
+NEXT_PAYLOAD="$(tar -czvf - *.slurm.sh | uuencode -)"
+
+################################################################################
+echo
+echo "Submit Next Slurm Stoker"
+echo "------------------------"
+################################################################################
+
+# run jinja on template
+JOB_TEMPLATE="$(mktemp)"
+JOB_SCRIPT="$(mktemp)"
+
+echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
+echo "JOB_SCRIPT ${JOB_SCRIPT}"
+
+for retry in {1..20}; do
+  curl \
+    -o "${JOB_TEMPLATE}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker.slurm.sh.jinja" \
+  && echo "  job template curl success" && break \
+  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
+done
+
+export payload="${NEXT_PAYLOAD}"
+export container_tag="{{ container_tag }}"
+export repo_sha="{{ container_tag }}"
+j2 --import-env "" -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" -
+
+chmod +x "${JOB_SCRIPT}"
+
+for retry in {1..10}; do
+  sshpass -p "${HOST_PASSWORD}" \
+    scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+      "${JOB_SCRIPT}" "${HOST_USERNAME}@$(hostname):${JOB_SCRIPT}" \
+  && echo "  job script copy success" && break \
+  || (echo "retrying job script copy (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==10)); then echo "  job script copy fail" && exit 123123; fi
+done
+
+for retry in {1..10}; do
+  echo "sbatch \"${JOB_SCRIPT}\"" \
+  | sshpass -p "${HOST_PASSWORD}" \
+    ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+      "${HOST_USERNAME}@$(hostname)" -X \
+      'bash -login'  \
+  && echo "  job submit success" && break \
+  || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==10)); then echo "  job submit fail" && exit 123123; fi
+done
+
+################################################################################
+echo
+echo "Done! (SUCCESS)"
+echo "---------------"
+################################################################################
+
+REPRO_RUNNER_HEREDOC_EOF
