@@ -72,7 +72,7 @@ echo "Submit jobs into available slots"
 echo "--------------------------------"
 ################################################################################
 
-for slurmscript in *.slurm.sh; do
+for JOB_SCRIPT in *.slurm.sh; do
 
   # this will count one too many slots occupied, but that is okay
   OCCUPIED_SLOTS=$(echo "squeue -u \$(whoami) | wc -l" \
@@ -84,7 +84,25 @@ for slurmscript in *.slurm.sh; do
   AVAILABLE_SLOTS=2
   if (( OCCUPIED_SLOTS > AVAILABLE_SLOTS )); then break; fi
 
-  sbatch "${slurmscript}" && rm "${slurmscript}"
+  for retry in {1..10}; do
+    sshpass -p "${HOST_PASSWORD}" \
+      scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+        "${JOB_SCRIPT}" "${HOST_USERNAME}@$(hostname):${JOB_SCRIPT}" \
+    && echo "  job script copy success" && break \
+    || (echo "retrying job script copy (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "  job script copy fail" && exit 123123; fi
+  done
+
+  for retry in {1..10}; do
+    echo "sbatch \"${JOB_SCRIPT}\" && rm \"${JOB_SCRIPT}\"" \
+    | sshpass -p "${HOST_PASSWORD}" \
+      ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+        "${HOST_USERNAME}@$(hostname)" -X \
+        'bash -login'  \
+    && echo "  job submit success" && break \
+    || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==10)); then echo "  job submit fail" && exit 123123; fi
+  done && rm -f "${JOB_SCRIPT}"
 
 done
 
