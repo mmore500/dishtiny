@@ -32,7 +32,12 @@ void monoculture_population(
     [](const auto& entry){
       const auto attrs = emp::keyname::unpack(entry.path());
       return attrs.count("a") && attrs.at("a") == "genome"
-        && attrs.count("ext") && attrs.at("ext") == ".json";
+        && attrs.count("ext") && (
+          attrs.at("ext") == ".json"
+          || attrs.at("ext") == ".json.gz"
+          || attrs.at("ext") == ".bin"
+          || attrs.at("ext") == ".bin.gz"
+        );
     }
   );
 

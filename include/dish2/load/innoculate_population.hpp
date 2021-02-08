@@ -34,7 +34,12 @@ void innoculate_population(
       const auto attrs = emp::keyname::unpack(entry.path());
       return attrs.count("a") && attrs.at("a") == "genome"
         && attrs.count("root_id")
-        && attrs.count("ext") && attrs.at("ext") == ".json";
+        && attrs.count("ext") && (
+          attrs.at("ext") == ".json"
+          || attrs.at("ext") == ".json.gz"
+          || attrs.at("ext") == ".bin"
+          || attrs.at("ext") == ".bin.gz"
+        );
     }
   );
 
