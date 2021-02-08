@@ -27,6 +27,7 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "make_filename/make_coalescence_result_filename.hpp"
+#include "make_filename/make_data_path.hpp"
 
 namespace dish2 {
 
@@ -36,9 +37,9 @@ void dump_coalescence_result(
 ) {
 
   emp::DataFile file(
-    dish2::make_coalescence_result_filename(
+    dish2::make_data_path( dish2::make_coalescence_result_filename(
       thread_idx
-    )
+    ) )
   );
 
   if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Competition Stint");

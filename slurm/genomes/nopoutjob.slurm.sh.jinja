@@ -139,7 +139,10 @@ echo "--------------"
 ################################################################################
 
 echo "uploading any genome files..."
-for f in *a=genome*morph=phenotype_equivalent_nopout* *a=genome_statistics*morph=phenotype_equivalent_nopout* *a=nopout_divergence_updates*; do
+for f in \
+  outartifacts/*a=genome*morph=phenotype_equivalent_nopout* \
+  outartifacts/*a=genome_statistics*morph=phenotype_equivalent_nopout* \ outartifacts/*a=nopout_divergence_updates* \
+; do
   echo uploading "${f}"
   for retry in {1..20}; do
     aws s3 cp --quiet \

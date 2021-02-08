@@ -12,6 +12,7 @@
 #include "../genome/Genome.hpp"
 
 #include "dump_genome_statistics.hpp"
+#include "make_filename/make_artifact_path.hpp"
 
 namespace dish2 {
 
@@ -23,11 +24,11 @@ void dump_genome(
   const auto attrs = emp::keyname::unpack( genome_filename );
 
   if ( attrs.count( "ext" ) && attrs.at( "ext" ) == ".json" ) {
-    std::ofstream os( genome_filename );
+    std::ofstream os( dish2::make_artifact_path( genome_filename ) );
     cereal::JSONOutputArchive archive( os );
     archive( genome );
   } else if ( attrs.count( "ext" ) && attrs.at( "ext" ) == ".json.gz" ) {
-    hogzstr::ogzstream os( genome_filename );
+    hogzstr::ogzstream os( dish2::make_artifact_path( genome_filename ) );
     cereal::JSONOutputArchive archive( os );
     archive( genome );
   } else { emp_always_assert( false, genome_filename ); }

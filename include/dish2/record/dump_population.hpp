@@ -15,6 +15,7 @@
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
 
+#include "make_filename/make_artifact_path.hpp"
 #include "make_filename/make_dump_population_filename.hpp"
 
 namespace dish2 {
@@ -26,9 +27,9 @@ void dump_population(
 
   const auto& population = world.population;
 
-  const std::string filename(
+  const std::string filename( dish2::make_artifact_path(
     dish2::make_dump_population_filename( thread_idx )
-  );
+  ) );
 
   hogzstr::ogzstream os(filename, std::ios::binary | std::ios::out);
   cereal::BinaryOutputArchive archive( os );

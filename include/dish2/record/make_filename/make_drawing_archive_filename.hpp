@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_DRAWING_FILENAME_HPP_INCLUDE
-#define DISH2_RECORD_MAKE_FILENAME_MAKE_DRAWING_FILENAME_HPP_INCLUDE
+#ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_DRAWING_ARCHIVE_FILENAME_HPP_INCLUDE
+#define DISH2_RECORD_MAKE_FILENAME_MAKE_DRAWING_ARCHIVE_FILENAME_HPP_INCLUDE
 
 #include <cstdlib>
 #include <string>
@@ -19,21 +19,12 @@
 
 namespace dish2 {
 
-std::string make_drawing_filename(
-  const size_t series_idx,
-  const size_t thread_idx,
-  const size_t update,
-  const std::string& artist_slug
-) {
+std::string make_drawing_archive_filename() {
 
   auto keyname_attributes = emp::keyname::unpack_t{
-    {"a", artist_slug},
-    {"idx", emp::to_string( series_idx )},
-    {"proc", emp::to_string( uitsl::get_proc_id() )},
+    {"a", "outdrawings"},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
-    {"thread", emp::to_string(thread_idx)},
-    {"update", emp::to_string(update)},
-    {"ext", ".png"}
+    {"ext", ".tar.gz"},
   };
 
   if ( dish2::get_repro() ) {
@@ -62,4 +53,4 @@ std::string make_drawing_filename(
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_DRAWING_FILENAME_HPP_INCLUDE
+#endif // #ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_DRAWING_ARCHIVE_FILENAME_HPP_INCLUDE

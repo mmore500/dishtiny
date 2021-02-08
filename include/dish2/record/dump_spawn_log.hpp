@@ -13,6 +13,7 @@
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
 
+#include "make_filename/make_data_path.hpp"
 #include "make_filename/make_spawn_log_filename.hpp"
 
 namespace dish2 {
@@ -24,9 +25,9 @@ void dump_spawn_log(
 
   const auto& population = world.population;
 
-  thread_local auto out_stream = hogzstr::ogzstream(
+  thread_local auto out_stream = hogzstr::ogzstream( dish2::make_data_path(
     dish2::make_spawn_log_filename( thread_idx )
-  );
+  ) );
   emp::DataFile file( out_stream );
 
   if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");

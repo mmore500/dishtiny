@@ -19,6 +19,7 @@
 #include "cell_census/write_resource_stockpile.hpp"
 #include "cell_census/write_spawn_count.hpp"
 #include "make_filename/make_cell_census_filename.hpp"
+#include "make_filename/make_data_path.hpp"
 
 namespace dish2 {
 
@@ -28,7 +29,7 @@ void write_cell_census(
 ) {
 
   thread_local auto out_stream = hogzstr::ogzstream(
-    dish2::make_cell_census_filename( thread_idx )
+    dish2::make_data_path( dish2::make_cell_census_filename( thread_idx ) )
   );
   thread_local emp::DataFile file( out_stream );
 

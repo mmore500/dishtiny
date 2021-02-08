@@ -18,125 +18,70 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
-#include "../config/has_replicate.hpp"
-#include "../config/has_series.hpp"
-#include "../config/has_stint.hpp"
-
+#include "create_montage.hpp"
+#include "make_filename/make_drawing_archive_filename.hpp"
+#include "make_filename/make_drawing_path.hpp"
 #include "make_filename/make_montage_filename.hpp"
+#include "make_filename/make_zip_path.hpp"
 
 namespace dish2 {
-
-std::string make_drawing_archive_filename() {
-
-  auto keyname_attributes = emp::keyname::unpack_t{
-    {"a", "drawings"},
-    {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
-    {"ext", ".tar.gz"},
-  };
-
-  if ( std::getenv("REPRO_ID") ) {
-    keyname_attributes[ "repro" ] = std::getenv("REPRO_ID");
-  }
-
-  if ( dish2::has_series() ) {
-    keyname_attributes[ "series" ] = emp::to_string( cfg.SERIES() );
-  }
-
-  if ( dish2::has_stint() ) {
-    keyname_attributes[ "stint" ] = emp::to_string( cfg.STINT() );
-  }
-
-  if ( dish2::has_replicate() ) {
-    keyname_attributes[ "replicate" ] = cfg.REPLICATE();
-  }
-
-  if ( dish2::get_endeavor() ) {
-    keyname_attributes[ "endeavor" ] = emp::to_string( *dish2::get_endeavor() );
-  }
-
-  return emp::keyname::pack( keyname_attributes );
-
-}
-
 
 void create_deduplicated_drawing_archive() {
 
   uitsl::err_verify( std::system(
-    "rdfind -makesymlinks true -makeresultsfile false drawings/"
+    "rdfind -makesymlinks true -makeresultsfile false outdrawings/"
   ) );
 
   const std::string zip_command( emp::to_string(
-    "GZIP=-9 tar -czf ", make_drawing_archive_filename(), " drawings/"
+    "GZIP=-9 tar -czf ",
+    dish2::make_zip_path( dish2::make_drawing_archive_filename() ),
+    " outdrawings/"
   ) );
   uitsl::err_verify( std::system( zip_command.c_str() ) );
-
-}
-
-void create_montage() {
-
-  const size_t last_update = uitsl::keyname_directory_max(
-    "update",
-    {{"proc", "0"}, {"thread", "0"}, {"ext", ".png"}},
-    "drawings/",
-    uitsl::stoszt
-  );
-
-  // use only drawings from thread 0 proc 0
-  auto target_drawings = uitsl::keyname_directory_filter(
-    {
-      {"update", emp::to_string( last_update )},
-      {"proc", "0"},
-      {"thread", "0"},
-      {"ext", ".png"},
-    }, "drawings/"
-  );
-  std::sort(std::begin(target_drawings), std::end(target_drawings));
-
-  // attach label as metadata to source files, which montage will then read in
-  // adapted from https://stackoverflow.com/a/32012488
-  for (const auto& target : target_drawings) {
-    const auto keyname_attrs =  emp::keyname::unpack( target );
-    const std::string a = keyname_attrs.at( "a" );
-    const std::string idx = keyname_attrs.count( "idx" )
-      ? keyname_attrs.at( "idx" )
-      : ""
-    ;
-    const std::string command =
-      std::string{} + "mogrify -label '" + a + " " + idx + "' " + target.string();
-    uitsl_err_audit( std::system(command.c_str()) );
-  }
-
-  const std::string command = (
-    std::string{}
-    + "montage -verbose -label '%l' -font 'Liberation-Mono' -pointsize 20 -background 'black' -fill 'white' -define png:size=500x500 -geometry 500x500+2+2 -auto-orient "
-    + emp::join_on( target_drawings, " " )
-    + " " + dish2::make_montage_filename( last_update )
-    + " || echo \"montage exit code was $?\""
-  );
-
-  // montage is returning an error code of 1, so don't verify
-  uitsl::err_discard( std::system(command.c_str()) );
 
 }
 
 void finalize_drawings() {
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system(
-    "cd drawings && for f in *a=*; do"
+    "cd outdrawings && for f in *a=*; do"
     "  keyname stash --move \"${f}\" a proc thread update stint series ext"
     "; done"
   ) );
   create_deduplicated_drawing_archive();
-  create_montage();
+  dish2::create_montage();
 }
 
-void finalize_metadata() {
+void finalize_artifacts() {
+  // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system(
-    "for f in *a=*; do"
+    "cd outartifacts && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
     "    a criteria morph proc stint series thread ext"
     "    nopout_coarseness nopout_target transform root_id"
     "    $(echo \"$f\" | grep -o 'root_id@[[:digit:]]\\+')"
+    "; done"
+  ) );
+}
+
+void finalize_data() {
+  // cd doesn't propagate out of std::system call
+  uitsl::err_verify( std::system(
+    "cd outdata && for f in *a=*; do"
+    "  keyname stash --move \"${f}\""
+    "    a criteria morph proc stint series thread ext"
+    "    nopout_coarseness nopout_target transform root_id"
+    "    $(echo \"$f\" | grep -o 'root_id@[[:digit:]]\\+')"
+    "; done"
+  ) );
+}
+
+void finalize_zip() {
+  // cd doesn't propagate out of std::system call
+  uitsl::err_verify( std::system(
+    "cd outzips && for f in *a=*; do"
+    "  keyname stash --move \"${f}\""
+    "    a proc stint series thread ext"
     "; done"
   ) );
 }
@@ -147,7 +92,9 @@ void global_records_finalize() {
 
   if ( uitsl::is_root() && cfg.DATA_DUMP() ) {
     finalize_drawings();
-    finalize_metadata();
+    finalize_artifacts();
+    finalize_data();
+    finalize_zip();
   }
 
 }

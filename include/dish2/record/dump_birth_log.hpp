@@ -14,6 +14,7 @@
 #include "../config/has_stint.hpp"
 
 #include "make_filename/make_birth_log_filename.hpp"
+#include "make_filename/make_data_path.hpp"
 
 namespace dish2 {
 
@@ -25,7 +26,7 @@ void dump_birth_log(
   const auto& population = world.population;
 
   thread_local auto out_stream = hogzstr::ogzstream(
-    dish2::make_birth_log_filename( thread_idx )
+    dish2::make_data_path( dish2::make_birth_log_filename( thread_idx ) )
   );
   emp::DataFile file( out_stream );
 

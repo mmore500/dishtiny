@@ -13,6 +13,7 @@
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
 
+#include "make_filename/make_data_path.hpp"
 #include "make_filename/make_death_log_filename.hpp"
 
 namespace dish2 {
@@ -25,7 +26,7 @@ void dump_death_log(
   const auto& population = world.population;
 
   thread_local auto out_stream = hogzstr::ogzstream(
-    dish2::make_death_log_filename( thread_idx )
+    dish2::make_data_path( dish2::make_death_log_filename( thread_idx ) )
   );
   emp::DataFile file( out_stream );
 

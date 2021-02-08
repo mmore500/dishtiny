@@ -15,6 +15,7 @@
 #include "../debug/log_event.hpp"
 #include "../debug/LogScope.hpp"
 #include "../genome/Genome.hpp"
+#include "../record/make_filename/make_data_path.hpp"
 #include "../record/make_filename/make_divergence_updates_filename.hpp"
 
 #include "nop_out_phenotypically_neutral_instructions.hpp"
@@ -53,8 +54,8 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
       = dish2::nop_out_phenotypically_neutral_modules< Spec >( genome );
     genome = nopped_genome;
 
-    std::ofstream os( dish2::make_divergence_updates_filename(
-      criteria, 1, "module"
+    std::ofstream os( dish2::make_data_path(
+      dish2::make_divergence_updates_filename( criteria, 1, "module" )
     ) );
 
     for (const auto& upd : divergence_updates) os << upd << std::endl;
@@ -70,8 +71,8 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     genome = nopped_genome;
 
-    std::ofstream os( dish2::make_divergence_updates_filename(
-      criteria, 8, "inst"
+    std::ofstream os( dish2::make_data_path(
+      dish2::make_divergence_updates_filename( criteria, 8, "inst" )
     ) );
 
     for (const auto& upd : divergence_updates) os << upd << std::endl;
@@ -83,8 +84,8 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     genome = nopped_genome;
 
-    std::ofstream os( dish2::make_divergence_updates_filename(
-      criteria, 4, "inst"
+    std::ofstream os( dish2::make_data_path(
+      dish2::make_divergence_updates_filename( criteria, 4, "inst" )
     ) );
 
     for (const auto& upd : divergence_updates) os << upd << std::endl;
@@ -96,8 +97,8 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     genome = nopped_genome;
 
-    std::ofstream os( dish2::make_divergence_updates_filename(
-      criteria, 2, "inst"
+    std::ofstream os( dish2::make_data_path(
+      dish2::make_divergence_updates_filename( criteria, 2, "inst" )
     ) );
 
     for (const auto& upd : divergence_updates) os << upd << std::endl;
@@ -109,8 +110,8 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     genome = nopped_genome;
 
-    std::ofstream os( dish2::make_divergence_updates_filename(
-      criteria, 1, "inst"
+    std::ofstream os( dish2::make_data_path(
+      dish2::make_divergence_updates_filename( criteria, 1, "inst" )
     ) );
 
     for (const auto& upd : divergence_updates) os << upd << std::endl;

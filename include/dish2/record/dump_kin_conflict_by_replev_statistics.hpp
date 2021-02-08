@@ -17,6 +17,7 @@
 #include "../introspection/get_total_spawn_event_kin_neighbors.hpp"
 #include "../introspection/get_total_spawn_event_neighbors.hpp"
 
+#include "make_filename/make_data_path.hpp"
 #include "make_filename/make_kin_conflict_by_replev_statistics_filename.hpp"
 
 namespace dish2 {
@@ -26,9 +27,9 @@ void dump_kin_conflict_by_replev_statistics(
   const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
 ) {
 
-  emp::DataFile file(
+  emp::DataFile file( dish2::make_data_path(
     dish2::make_kin_conflict_by_replev_statistics_filename( thread_idx )
-  );
+  ) );
 
   if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
   if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");

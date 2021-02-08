@@ -14,6 +14,7 @@
 #include "../../world/ThreadWorld.hpp"
 
 #include "../make_filename/make_drawing_filename.hpp"
+#include "../make_filename/make_drawing_path.hpp"
 
 namespace dish2 {
 
@@ -54,7 +55,7 @@ public:
 
     artist.Draw( canvas );
 
-    canvas.SavePNG( filename );
+    canvas.SavePNG( dish2::make_drawing_path( filename ) );
 
   }
 
