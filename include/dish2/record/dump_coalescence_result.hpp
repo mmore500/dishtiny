@@ -6,10 +6,14 @@
 #include <string>
 
 #include "../../../third-party/conduit/include/uitsl/meta/function_cast.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_key_union.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
+#include "../config/get_endeavor.hpp"
+#include "../config/get_repro.hpp"
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
@@ -37,9 +41,19 @@ void dump_coalescence_result(
     )
   );
 
-  if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
-  if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
-  if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
+  if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Competition Stint");
+  if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Competition Series");
+  if ( dish2::has_replicate() ) file.AddVal(
+    cfg.REPLICATE(), "Competition Replicate"
+  );
+  if ( dish2::get_endeavor() ) file.AddVal(
+    *dish2::get_endeavor(), "Competition Endeavor"
+  );
+  if ( dish2::get_repro() ) file.AddVal(
+    *dish2::get_repro(), "Competition Repro"
+  );
+  file.AddVal( thread_idx, "Competition Thread" );
+  file.AddVal( uitsl::get_proc_id(), "Competition Process" );
 
   const size_t population_size = world.GetSize();
   const size_t update = world.GetUpdate();
@@ -61,11 +75,12 @@ void dump_coalescence_result(
   for (
     const auto& key
     : uitsl::keyname_key_union( dish2::get_innoculum_filenames() )
-  ) file.AddVal( [&](){
+  ) if (key != "_" ) file.AddFun( uitsl::function_cast( [key, &filename](){
+    // unpacks /current/ filename for specified key
     const auto attrs = emp::keyname::unpack( filename );
     const auto res = attrs.find( key );
     return res != std::end( attrs ) ? res->second : "";
-  }() );
+  } ), emp::to_string("genome ", key) );
 
   file.PrintHeaderKeys();
 
