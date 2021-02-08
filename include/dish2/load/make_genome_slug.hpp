@@ -18,7 +18,8 @@ std::string make_genome_slug( const std::string& genome_filename ) {
     std::begin( innoculum_attrs ), std::end( innoculum_attrs ),
     std::inserter( res_attrs, std::begin( res_attrs ) ),
     []( const auto& kv_pair ){ return std::unordered_set<std::string>{
-      "criteria", "morph", "proc", "replicate", "series", "stint", "thread"
+      "criteria", "morph", "proc", "replicate",
+      "series", "stint", "thread", "transform"
     }.count( kv_pair.first ); }
   );
 

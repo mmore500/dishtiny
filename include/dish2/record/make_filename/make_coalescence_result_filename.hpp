@@ -15,6 +15,7 @@
 #include "../../config/has_replicate.hpp"
 #include "../../config/has_series.hpp"
 #include "../../config/has_stint.hpp"
+#include "../../load/get_innoculum_slugs.hpp"
 
 namespace dish2 {
 
@@ -28,6 +29,10 @@ std::string make_coalescence_result_filename(
     {"thread", emp::to_string(thread_idx)},
     {"ext", ".csv"}
   };
+
+  for (const auto& [root_id, slug] : dish2::get_innoculum_slugs()) {
+    keyname_attributes[ emp::to_string("root_id@", root_id) ] = slug;
+  }
 
   if ( std::getenv("REPRO_ID") ) {
     keyname_attributes[ "repro" ] = std::getenv("REPRO_ID");
