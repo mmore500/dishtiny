@@ -12,6 +12,7 @@
 
 #include "../../config/cfg.hpp"
 #include "../../config/get_endeavor.hpp"
+#include "../../config/get_repro.hpp"
 #include "../../config/has_replicate.hpp"
 #include "../../config/has_series.hpp"
 #include "../../config/has_stint.hpp"
@@ -29,8 +30,8 @@ std::string make_kin_conflict_by_replev_statistics_filename(
     {"ext", ".csv"}
   };
 
-  if ( std::getenv("REPRO_ID") ) {
-    keyname_attributes[ "repro" ] = std::getenv("REPRO_ID");
+  if ( dish2::get_repro() ) {
+    keyname_attributes[ "repro" ] = *dish2::get_repro();
   }
 
   if ( dish2::has_series() ) {
