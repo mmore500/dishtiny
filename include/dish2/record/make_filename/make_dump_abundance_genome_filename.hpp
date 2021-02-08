@@ -35,7 +35,7 @@ std::string make_dump_abundance_genome_filename(
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"thread", emp::to_string(thread_idx)},
-    {"ext", ".json"}
+    {"ext", ".json.gz"}
   };
 
   if ( dish2::get_repro() ) {
