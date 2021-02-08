@@ -61,11 +61,11 @@ void dump_coalescence_result(
   for (
     const auto& key
     : uitsl::keyname_key_union( dish2::get_innoculum_filenames() )
-  ) file.AddFun( uitsl::function_cast( [key, &filename](){
+  ) file.AddVal( [&](){
     const auto attrs = emp::keyname::unpack( filename );
     const auto res = attrs.find( key );
     return res != std::end( attrs ) ? res->second : "";
-  } ) );
+  }() );
 
   file.PrintHeaderKeys();
 

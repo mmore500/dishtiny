@@ -25,8 +25,9 @@ dish2::Genome<Spec> load_innoculum(
 
   dish2::Genome<Spec> innoculum;
 
-  if (!emp::keyname::unpack(path).count("ext")) emp_always_assert(false, path);
-  else if ( emp::keyname::unpack( path ).at("ext") == ".json" ) {
+  if ( emp::keyname::unpack(path).count("ext") == 0 ) {
+    emp_always_assert(false, path);
+  } else if ( emp::keyname::unpack( path ).at("ext") == ".json" ) {
     std::ifstream fs( path );
     cereal::JSONInputArchive iarchive( fs );
     iarchive( innoculum );
@@ -42,7 +43,9 @@ dish2::Genome<Spec> load_innoculum(
     hogzstr::igzstream fs( path );
     cereal::BinaryInputArchive iarchive( fs );
     iarchive( innoculum );
-  } else emp_always_assert(false, path, emp::keyname::unpack( path ).at("ext"));
+  } else {
+    emp_always_assert(false, path, emp::keyname::unpack( path ).at("ext"));
+  }
 
   // all innoculums must specify root id
   emp_always_assert(emp::keyname::unpack( path ).count("root_id"), path);
