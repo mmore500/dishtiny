@@ -6,3 +6,4 @@ breathe==4.19.2
 myst-parser==0.12.9
 idna==2.8
 sphinxemoji==0.1.8
+markdown-it-py==0.6.2
