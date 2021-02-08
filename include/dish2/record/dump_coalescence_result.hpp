@@ -71,10 +71,10 @@ void dump_coalescence_result(
 
   for ( const size_t root_id_ : dish2::get_root_ids() ) {
 
-    filename = dish2::get_innoculum_filename( root_id );
-    slug = dish2::get_innoculum_slug( root_id );
+    filename = dish2::get_innoculum_filename( root_id_ );
+    slug = dish2::get_innoculum_slug( root_id_ );
     root_id = root_id_;
-    prevalence =  dish2::get_root_id_prevalence< Spec >( root_id, world );
+    prevalence =  dish2::get_root_id_prevalence< Spec >( root_id_, world );
 
     fitness_differential = dish2::calc_fitness_differential(
       update, prevalence, dish2::count_root_ids()
