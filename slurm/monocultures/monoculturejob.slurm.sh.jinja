@@ -145,11 +145,12 @@ echo "--------------"
 shopt -s nullglob
 
 echo "uploading any metrics files..."
-for f in outdata/*a={demographic_phenotypic_phylogenetic_metrics, ,kin_conflict_statistics,kin_conflict_by_replev_statistics}*; do
-  echo uploading "${f}"
+for p in outdata/*a={demographic_phenotypic_phylogenetic_metrics,kin_conflict_statistics,kin_conflict_by_replev_statistics}*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
   for retry in {1..20}; do
     aws s3 cp --quiet \
-      "${f}" \
+      "${p}" \
       "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/metrics/stint={{ stint }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
@@ -162,11 +163,12 @@ for f in outdata/*a={demographic_phenotypic_phylogenetic_metrics, ,kin_conflict_
 done
 
 echo "uploading any running log files..."
-for f in outdata/*a={birth_log,death_log,spawn_log}*; do
-  echo uploading "${f}"
+for p in outdata/*a={birth_log,death_log,spawn_log}*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
   for retry in {1..20}; do
     aws s3 cp --quiet \
-      "${f}" \
+      "${p}" \
       "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/runninglogs/stint={{ stint }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
@@ -179,11 +181,12 @@ for f in outdata/*a={birth_log,death_log,spawn_log}*; do
 done
 
 echo "uploading any census files..."
-for f in outdata/*a=cell_census*; do
-  echo uploading "${f}";
+for p in outdata/*a=cell_census*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}";
   for retry in {1..20}; do
     aws s3 cp --quiet \
-      "${f}" \
+      "${p}" \
       "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/censuses/stint={{ stint }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
@@ -196,11 +199,12 @@ for f in outdata/*a=cell_census*; do
 done
 
 echo "uploading any montage files..."
-for f in outdrawings/*a=montage*; do
-  echo uploading "${f}"
+for p in outdrawings/*a=montage*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
   for retry in {1..20}; do
     aws s3 cp --quiet \
-      "${f}" \
+      "${p}" \
       "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/montages/stint={{ stint }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
@@ -213,11 +217,12 @@ for f in outdrawings/*a=montage*; do
 done
 
 echo "uploading any drawing archives..."
-for f in outzips/*a=drawings*; do
-  echo uploading "${f}"
+for p in outzips/*a=drawings*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
   for retry in {1..20}; do
     aws s3 cp --quiet \
-      "${f}" \
+      "${p}" \
       "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/drawings/stint={{ stint }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
