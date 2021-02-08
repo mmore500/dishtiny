@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <string>
 #include <unordered_map>
+#include <utility>
 
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_transform.hpp"
@@ -26,7 +27,7 @@ std::unordered_map<size_t, std::string> get_innoculum_slugs() {
   std::transform(
     std::begin( roots ), std::end( roots ),
     std::inserter( res, std::begin( res ) ),
-    []( const size_t root_id ){ return {
+    []( const size_t root_id ){ return std::pair<size_t, std::string>{
       root_id, dish2::get_innoculum_slug( root_id )
     }; }
   );
