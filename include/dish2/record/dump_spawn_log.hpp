@@ -25,7 +25,7 @@ void dump_spawn_log(
 
   const auto& population = world.population;
 
-  thread_local auto out_stream = hogzstr::ogzstream( dish2::make_data_path(
+  thread_local bxz::ofstream out_stream( dish2::make_data_path(
     dish2::make_spawn_log_filename( thread_idx )
   ) );
   emp::DataFile file( out_stream );

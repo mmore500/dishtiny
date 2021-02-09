@@ -4,9 +4,9 @@
 
 #include <algorithm>
 
+#include "../../../third-party/bxzstr/include/bxzstr.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
-#include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../config/has_replicate.hpp"
@@ -25,8 +25,9 @@ void dump_death_log(
 
   const auto& population = world.population;
 
-  thread_local auto out_stream = hogzstr::ogzstream(
-    dish2::make_data_path( dish2::make_death_log_filename( thread_idx ) )
+  thread_local bxz::ofstream out_stream(
+    dish2::make_data_path( dish2::make_death_log_filename( thread_idx ) ),
+    bxz::lzma, 9
   );
   emp::DataFile file( out_stream );
 

@@ -71,7 +71,7 @@ $(PROJECT):	source/native.cpp include/
 	@echo DISH_MPICXX $(DISH_MPICXX)
 	@echo MPICH_CXX $(MPICH_CXX)
 	@echo OMPI_CXX $(OMPI_CXX)
-	$(DISH_MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -ldw -o run$(PROJECT) $(OMP_LINKER_FLAG) -lstdc++fs
+	$(DISH_MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -ldw -llzma -o run$(PROJECT) $(OMP_LINKER_FLAG) -lstdc++fs
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/

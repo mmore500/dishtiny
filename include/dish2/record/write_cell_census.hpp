@@ -4,9 +4,9 @@
 
 #include <mutex>
 
+#include "../../../third-party/bxzstr/include/bxzstr.hpp"
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
-#include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
@@ -28,8 +28,9 @@ void write_cell_census(
   const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
 ) {
 
-  thread_local auto out_stream = hogzstr::ogzstream(
-    dish2::make_data_path( dish2::make_cell_census_filename( thread_idx ) )
+  thread_local bxz::ofstream out_stream(
+    dish2::make_data_path( dish2::make_cell_census_filename( thread_idx ) ),
+    bxz::lzma, 9
   );
   thread_local emp::DataFile file( out_stream );
 

@@ -27,7 +27,7 @@ std::string make_spawn_log_filename(
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"thread", emp::to_string(thread_idx)},
-    {"ext", ".csv.gz"}
+    {"ext", ".csv.xz"}
   };
 
   if ( dish2::get_repro() ) {

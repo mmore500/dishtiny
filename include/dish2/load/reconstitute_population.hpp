@@ -4,6 +4,7 @@
 
 #include <fstream>
 
+#include "../../../third-party/bxzstr/include/bxzstr.hpp"
 #include "../../../third-party/cereal/include/cereal/archives/binary.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
@@ -12,7 +13,6 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
-#include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 
 #include "../algorithm/seed_genomes_into.hpp"
 #include "../genome/Genome.hpp"
@@ -34,7 +34,7 @@ void reconstitute_population(
       {"a", "population"},
       {"proc", emp::to_string( uitsl::get_proc_id() )},
       {"thread", emp::to_string( thread_idx )},
-      {"ext", ".bin.gz"}
+      {"ext", ".bin.xz"}
     });
 
     emp_always_assert(
@@ -42,8 +42,8 @@ void reconstitute_population(
       eligible_population_paths.size(), eligible_population_paths
     );
 
-    hogzstr::igzstream fs( eligible_population_paths.front() );
-    cereal::BinaryInputArchive iarchive( fs );
+    bxz::ifstream ifs( eligible_population_paths.front() );
+    cereal::BinaryInputArchive iarchive( ifs );
     iarchive( reconstituted );
 
     std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx

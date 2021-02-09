@@ -38,3 +38,6 @@
 [submodule "third-party/header-only-gzstream"]
   path = third-party/header-only-gzstream
   url = https://github.com/mmore500/header-only-gzstream.git
+[submodule "third-party/bxzstr"]
+  path = third-party/bxzstr
+  url = https://github.com/mmore500/bxzstr.git

@@ -5,10 +5,10 @@
 #include <fstream>
 #include <string>
 
+#include "../../../third-party/bxzstr/include/bxzstr.hpp"
 #include "../../../third-party/cereal/include/cereal/archives/binary.hpp"
 #include "../../../third-party/cereal/include/cereal/types/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
-#include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 
 #include "../genome/Genome.hpp"
 #include "../world/iterators/GenotypeConstWrapper.hpp"
@@ -31,7 +31,7 @@ void dump_population(
     dish2::make_dump_population_filename( thread_idx )
   ) );
 
-  hogzstr::ogzstream os(filename, std::ios::binary | std::ios::out);
+  bxz::ofstream os(filename, bxz::lzma, 9);
   cereal::BinaryOutputArchive archive( os );
 
   archive( emp::vector< dish2::Genome<Spec> >(
