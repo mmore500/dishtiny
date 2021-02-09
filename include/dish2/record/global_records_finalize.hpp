@@ -58,7 +58,7 @@ void finalize_artifacts() {
     "cd outartifacts && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
     "    a criteria morph proc stint series thread ext"
-    "    nopout_coarseness nopout_target transform root_id"
+    "    nopout_coarseness nopout_target variation root_id"
     "    $(echo \"$f\" | grep -o 'root_id@[[:digit:]]\\+')"
     "; done"
   ) );
@@ -70,7 +70,7 @@ void finalize_data() {
     "cd outdata && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
     "    a criteria morph proc stint series thread ext"
-    "    nopout_coarseness nopout_target transform root_id"
+    "    nopout_coarseness nopout_target variation root_id"
     "    $(echo \"$f\" | grep -o 'root_id@[[:digit:]]\\+')"
     "; done"
   ) );
