@@ -187,6 +187,8 @@ for p in outdata/*a={demographic_phenotypic_phylogenetic_metrics,kin_conflict_st
 
 done
 
+# upload every tenth stint
+if (( {{ stint }} % 10 == 0 )); then
 echo "uploading any running log files..."
 for p in outdata/*a={birth_log,death_log,spawn_log}*; do
   f="$(basename "${p}")"
@@ -204,7 +206,10 @@ for p in outdata/*a={birth_log,death_log,spawn_log}*; do
   while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
 
 done
+fi
 
+# upload every tenth stint
+if (( {{ stint }} % 10 == 0 )); then
 echo "uploading any census files..."
 for p in outdata/*a=cell_census*; do
   f="$(basename "${p}")"
@@ -222,6 +227,7 @@ for p in outdata/*a=cell_census*; do
   while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
 
 done
+fi
 
 echo "uploading any montage files..."
 for p in outdrawings/*a=montage*; do
@@ -241,6 +247,8 @@ for p in outdrawings/*a=montage*; do
 
 done
 
+# upload every tenth stint
+if (( {{ stint }} % 10 == 0 )); then
 echo "uploading any drawing archives..."
 for p in outzips/*a=drawings*; do
   f="$(basename "${p}")"
@@ -258,6 +266,7 @@ for p in outzips/*a=drawings*; do
   while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
 
 done
+fi
 
 echo "uploading any genome files..."
 for p in \
