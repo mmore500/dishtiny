@@ -34,11 +34,16 @@ singularity shell docker://mmore500/dishtiny
 Go to <https://shell.cloud.google.com>.
 As of Febuary 2021, Google provides this service free of charge!
 
+You can paste these commands all in at once.
 ```bash
 source <(curl -s https://raw.githubusercontent.com/mmore500/dishtiny/master/script/setup_cloudshell.sh)
 
 singularity shell docker://mmore500/dishtiny
 ```
+
+::bangbang::
+If the script hangs on a "gpg"-related step, hit `ctrl-c` and try again a few times.
+If you get an error like `Error downloading https://index.docker.io/v2/(...). Do you have permission to write to /home/mmore500/.singularity/docker?` hit `ctrl-\` and then retry the `singularity shell` step.
 
 This'll take a few minutes, so go get yourself a cup of coffee |:coffee:|.
 When you get back, a shell prompt from the container should be ready to rock and roll.
@@ -76,3 +81,5 @@ Your source code files should persist across Cloud Shell sessions, but your deve
 This means that you'll need to re-run the environment setup steps
 Kind of annoying, but on the plus side if you accidentally bork your development environment you can open up a new session for a fresh start!
 ::man_shrugging:: ::rocket::
+If you do bork your environment, give the command `exit` until your the terminal pane closes then refresh the page.
+If the command prompt is hanging, you might have to mash `ctrl-c`, `ctrl-\`, or `ctrl-z` first.
