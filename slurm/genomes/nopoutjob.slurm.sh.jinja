@@ -209,6 +209,8 @@ echo "Upload Nopped Op Variants of phenotype_equivalent_nopout"
 echo "--------------------------------------------------------"
 ################################################################################
 
+shopt -s nullglob
+
 echo "uploading any genome files..."
 for p in *a=genome*morph=phenotype_equivalent_nopout*variation=* ; do
   f="$(basename "${p}")"
@@ -229,6 +231,8 @@ done
 
 # wait on all forked upload jobs
 wait
+
+shopt -u nullglob
 
 ################################################################################
 echo
@@ -285,9 +289,13 @@ echo "Generate WT vs Variant Competition Runscripts"
 echo "---------------------------------------------"
 ################################################################################
 
+shopt -s nullglob
+
 wt=$(basename "${PHENOTYPE_EQUIVALENT_GENOME}")
 
 for variant in *a=genome*morph=phenotype_equivalent_nopout*variation=* ; do
+
+echo "variant ${variant}"
 
 variation="$(echo "${variant}" | keyname extract variation)"
 echo "variation ${variation}"
@@ -311,6 +319,8 @@ J2_HEREDOC_EOF
 chmod +x "${JOB_SCRIPT}"
 
 done
+
+shopt -u nullglob
 
 ################################################################################
 echo
