@@ -4,9 +4,7 @@ mkdir -p ~/.cloudshell/ && touch ~/.cloudshell/no-apt-get-warning
 sudo wget -O- http://neuro.debian.net/lists/xenial.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list && \
     sudo apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 && \
     sudo apt-get update
-sudo ubuntu-report -f send no
-sudo apt-get remove -y popularity-contest
-sudo apt-get purge -y popularity-contest
+sudo apt-get install -y popularity-contest
 sudo apt-get install -y docker singularity-container xvfb
 export DISPLAY=":$$"
 rm -f "/tmp/.X$$-lock"
