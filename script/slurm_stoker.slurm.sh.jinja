@@ -161,7 +161,7 @@ j2 --import-env "" -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" -
 chmod +x "${JOB_SCRIPT}"
 
 for retry in {1..10}; do
-  sshpass -p "${HOST_PASSWORD}" \
+  timeout 30s sshpass -p "${HOST_PASSWORD}" \
     scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${JOB_SCRIPT}" "${HOST_USERNAME}@$(hostname):${JOB_SCRIPT}" \
   && echo "  job script copy success" && break \
@@ -170,7 +170,7 @@ for retry in {1..10}; do
 done
 
 for retry in {1..10}; do
-  echo "sbatch \"${JOB_SCRIPT}\"" \
+  timeout 30s echo "echo pre-sbatch; sbatch \"${JOB_SCRIPT}\"; echo post-sbatch" \
   | sshpass -p "${HOST_PASSWORD}" \
     ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${HOST_USERNAME}@$(hostname)" -X \
