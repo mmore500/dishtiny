@@ -401,7 +401,7 @@ else
       --branch "${arg_branch}" \
     && echo "  source clone success" \
     && break \
-    || (echo "retrying manifest upload (${retry})" && sleep $((RANDOM % 10)))
+    || (echo "source clone upload (${retry})" && sleep $((RANDOM % 10)))
 
     if ((${retry}==20)); then echo "source clone fail" && exit 123123; fi
   done
