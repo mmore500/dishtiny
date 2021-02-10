@@ -102,7 +102,7 @@ for JOB_SCRIPT in *.slurm.sh; do
     && echo "  job submit success" && break \
     || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==10)); then echo "  job submit fail" && exit 123123; fi
-  done && rm -f "${JOB_SCRIPT}"
+  done && rm -f "${JOB_SCRIPT}" && echo "${JOB_SCRIPT} submitted"
 
 done
 
