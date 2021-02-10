@@ -35,7 +35,7 @@ Go to <https://shell.cloud.google.com>.
 As of Febuary 2021, Google provides this service free of charge!
 
 ```bash
-curl -s https://raw.githubusercontent.com/mmore500/dishtiny/master/script/setup_cloudshell.sh | sudo bash
+source <(curl -s https://raw.githubusercontent.com/mmore500/dishtiny/master/script/setup_cloudshell.sh)
 
 singularity shell docker://mmore500/dishtiny
 ```
