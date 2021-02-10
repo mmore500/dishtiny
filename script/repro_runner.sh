@@ -34,18 +34,18 @@ for each session:
     * bonus points if you use the REPRO_ID environment variable in output filenames so that the files can be traced back to this session
 
   9. the following artifacts are added to the OSF project's storage
-    * \"repro/\${REPRO_ID}/a=runner+repro=\${REPRO_ID}+ext=.sh\"
+    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=runner+repro={REPRO_ID}+ext=.sh\"
       * this script
-    * \"repro/\${REPRO_ID}/a=stdin+repro=\${REPRO_ID}+ext=.txt\"
+    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=stdin+repro={REPRO_ID}+ext=.txt\"
       * commands recorded during the shell session
-    * \"repro/\${REPRO_ID}/a=output+repro=\${REPRO_ID}+ext=.tar.gz\"
+    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=output+repro={REPRO_ID}+ext=.tar.gz\"
       * tar.gz archive of the output folder
-    * \"repro/\${REPRO_ID}/a=manifest+repro=\${REPRO_ID}+ext=.tar.gz\"
+    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=manifest+repro={REPRO_ID}+ext=.tar.gz\"
       * hierarchical listing of output folder contents
-    * \"repro/\${REPRO_ID}/a=rerun+repro=\${REPRO_ID}+ext=.sh\"
+    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=rerun+repro={REPRO_ID}+ext=.sh\"
       * script to rerun computations from the current session
       * using sha's to ensure the same exact same source and container
-    * \"repro/\${REPRO_ID}/a=log+repro=\${REPRO_ID}+ext=.txt\"
+    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=log+repro={REPRO_ID}+ext=.txt\"
       * output from the current session
 
   10. if the shell session exited an error code, a pushover notification is dispatched
@@ -70,7 +70,12 @@ optional arguments:
   -r / --repo_sha repo sha to check out (default: none)
 
 exported environment variables:
-  REPRO_ID a 16-character string uniquely identifying this session
+  REPRO_ID a randomly generated 16-character string identifying this session
+  REPRO_YEAR
+  REPRO_MONTH
+  REPRO_DAY
+  REPRO_HOUR
+
 "
 
 echo "${0} ${@}"
@@ -163,8 +168,20 @@ echo "Generate REPRO_ID"
 echo "--------------------------------------"
 ################################################################################
 
-export REPRO_ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
+export REPRO_ID="$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)"
+export REPRO_YEAR="$(date +'%Y')"
+export REPRO_MONTH="$(date +'%m')"
+export REPRO_DAY="$(date +'%d')"
+export REPRO_HOUR="$(date +'%H')"
+
+echo "REPRO_YEAR ${REPRO_YEAR}"
+echo "REPRO_MONTH ${REPRO_MONTH}"
+echo "REPRO_DAY ${REPRO_DAY}"
+echo "REPRO_HOUR ${REPRO_HOUR}"
 echo "REPRO_ID ${REPRO_ID}"
+
+REPRO_PATH="a=repro+year=${REPRO_YEAR}/month=${REPRO_MONTH}/day=${REPRO_DAY}/hour=${REPRO_HOUR}/id=${REPRO_ID}"
+echo "REPRO_PATH ${REPRO_PATH}"
 
 ################################################################################
 echo
@@ -197,7 +214,7 @@ function on_exit {
   # for retry in {1..3}; do
   #   osf -p "${arg_project}" upload \
   #     "${stdin}" \
-  #     "repro/${REPRO_ID}/a=stdin+repro=${REPRO_ID}+ext=.txt" \
+  #     "${REPRO_PATH}/a=stdin+repro=${REPRO_ID}+ext=.txt" \
   #   && echo "  stdin upload success" \
   #   && break \
   #     || (echo "retrying stdin upload (${retry})" && sleep $((RANDOM % 10)))
@@ -225,7 +242,7 @@ END_OF_HEREDOC" >> "${rerun}"
   for retry in {1..3}; do
     osf -p "${arg_project}" upload \
       "${rerun}" \
-      "repro/${REPRO_ID}/a=rerun+repro=${REPRO_ID}+ext=.sh" \
+      "${REPRO_PATH}/a=rerun+repro=${REPRO_ID}+ext=.sh" \
     && echo "  rerun upload success" \
     && break \
       || (echo "retrying rerun upload (${retry})" && sleep $((RANDOM % 10)))
@@ -236,7 +253,7 @@ END_OF_HEREDOC" >> "${rerun}"
   for retry in {1..3}; do
     osf -p "${arg_project}" upload \
       "${log}" \
-      "repro/${REPRO_ID}/a=log+repro=${REPRO_ID}+ext=.txt" \
+      "${REPRO_PATH}/a=log+repro=${REPRO_ID}+ext=.txt" \
     && echo "  log upload success" \
     && break \
       || (echo "retrying log upload (${retry})" && sleep $((RANDOM % 10)))
@@ -251,7 +268,7 @@ END_OF_HEREDOC" >> "${rerun}"
     for retry in {1..3}; do
       osf -p "${arg_project}" upload \
         "${manifest}" \
-        "repro/${REPRO_ID}/a=manifest+repro=${REPRO_ID}+ext=.txt" \
+        "${REPRO_PATH}/a=manifest+repro=${REPRO_ID}+ext=.txt" \
       && echo "  manifest upload success" \
       && break \
         || (echo "retrying manifest upload (${retry})" && sleep $((RANDOM % 10)))
@@ -263,7 +280,7 @@ END_OF_HEREDOC" >> "${rerun}"
     for retry in {1..10}; do
       osf -p "${arg_project}" upload \
         "${output}" \
-        "repro/${REPRO_ID}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
+        "${REPRO_PATH}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
       && echo "  output upload success" \
       && break \
         || (echo "retrying output upload (${retry})" && sleep $((RANDOM % 10)))
@@ -271,7 +288,7 @@ END_OF_HEREDOC" >> "${rerun}"
     done
 
     raw_output_url=$(osf -p "${arg_project}" geturl \
-      "repro/${REPRO_ID}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
+      "${REPRO_PATH}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
     )
     output_url=$(curl -Ls -o /dev/null -w %{url_effective} $raw_output_url)
     echo "output uploaded to ${output_url}"
@@ -333,7 +350,7 @@ function on_error() {
   bash <(curl https://raw.githubusercontent.com/mmore500/pushover.sh/master/pushover.sh) \
    -T "$PUSHOVER_APP_TOKEN" -U "$PUSHOVER_USER_TOKEN" \
    -u $(osf -p "${arg_project}" geturl \
-      "repro/${REPRO_ID}/a=log+repro=${REPRO_ID}+ext=.txt" \
+      "${REPRO_PATH}/a=log+repro=${REPRO_ID}+ext=.txt" \
     ) \
     "${SLURM_JOB_ID} ${SLURM_JOB_NAME} error code ${1}, restart count ${SLURM_RESTART_COUNT}"
 
