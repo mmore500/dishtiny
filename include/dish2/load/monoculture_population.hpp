@@ -17,6 +17,8 @@
 #include "../genome/Genome.hpp"
 #include "../world/ThreadWorld.hpp"
 
+#include "load_genome.hpp"
+
 namespace dish2 {
 
 template< typename Spec >
@@ -43,15 +45,12 @@ void monoculture_population(
 
   emp_always_assert(
     monoculture_paths.size() == 1,
-    monoculture_paths.size(), std::system( "ls *a=genome*ext=.json" )
+    monoculture_paths.size(), std::system( "ls *a=genome*" )
   );
 
-  dish2::Genome<Spec> monoculture;
-  {
-    std::ifstream fs( monoculture_paths.front() );
-    cereal::JSONInputArchive iarchive( fs );
-    iarchive( monoculture );
-  }
+  dish2::Genome<Spec> monoculture(
+    dish2::load_genome<Spec>( monoculture_paths.front() )
+  );
 
   std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " loaded monoculture from " << monoculture_paths.front() << std::endl;

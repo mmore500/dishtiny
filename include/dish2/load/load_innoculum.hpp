@@ -16,6 +16,8 @@
 
 #include "../genome/Genome.hpp"
 
+#include "load_genome.hpp"
+
 namespace dish2 {
 
 template< typename Spec >
@@ -23,29 +25,7 @@ dish2::Genome<Spec> load_innoculum(
   const size_t thread_idx, const std::filesystem::path& path
 ) {
 
-  dish2::Genome<Spec> innoculum;
-
-  if ( emp::keyname::unpack(path).count("ext") == 0 ) {
-    emp_always_assert(false, path);
-  } else if ( emp::keyname::unpack( path ).at("ext") == ".json" ) {
-    std::ifstream fs( path );
-    cereal::JSONInputArchive iarchive( fs );
-    iarchive( innoculum );
-  } else if ( emp::keyname::unpack( path ).at("ext") == ".json.gz" ) {
-    hogzstr::igzstream fs( path );
-    cereal::JSONInputArchive iarchive( fs );
-    iarchive( innoculum );
-  } else if ( emp::keyname::unpack( path ).at("ext") == ".bin" ) {
-    std::ifstream fs( path );
-    cereal::BinaryInputArchive iarchive( fs );
-    iarchive( innoculum );
-  } else if ( emp::keyname::unpack( path ).at("ext") == ".bin.gz" ) {
-    hogzstr::igzstream fs( path );
-    cereal::BinaryInputArchive iarchive( fs );
-    iarchive( innoculum );
-  } else {
-    emp_always_assert(false, path, emp::keyname::unpack( path ).at("ext"));
-  }
+  dish2::Genome<Spec> innoculum( dish2::load_genome<Spec>( path ) );
 
   // all innoculums must specify root id
   emp_always_assert(emp::keyname::unpack( path ).count("root_id"), path);
