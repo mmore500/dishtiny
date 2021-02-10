@@ -25,7 +25,7 @@ void thread_data_write(
   dish2::write_demographic_phenotypic_phylogenetic_metrics<Spec>(
     thread_world, thread_idx
   );
-  dish2::write_drawings<Spec>(
+  if ( dish2::cfg.DRAWINGS_WRITE() ) dish2::write_drawings<Spec>(
     thread_world, thread_idx
   );
 
