@@ -332,9 +332,9 @@ function on_error() {
 
   # disk info
   echo "lsblk" && lsblk
-  echo "ioping -c /tmp" && ioping -c /tmp
-  echo "ioping -c ." && ioping -c .
-  echo "ioping -c ~" && ioping -c ~
+  # echo "ioping -c /tmp" && ioping -c /tmp
+  # echo "ioping -c ." && ioping -c .
+  # echo "ioping -c ~" && ioping -c ~
 
   # network info
   echo "curl -I https://google.com" && curl -I https://google.com
