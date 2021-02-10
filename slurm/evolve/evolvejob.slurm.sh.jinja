@@ -202,7 +202,7 @@ for p in outdata/*a={birth_log,death_log,spawn_log}*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/runninglogs/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/runninglogs/stint={{ stint }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
