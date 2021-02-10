@@ -1,0 +1,185 @@
+#!/bin/bash -login
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time=2:00:00
+#SBATCH --job-name a=competition+output_url={{ output_url }}+first_competitor_url={{ first_competitor_url }}+second_competitor_url={{ second_competitor_url }}
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/a=competition+job=%j+ext.log"
+#SBATCH --mem=4G
+#SBATCH --ntasks 1
+#SBATCH --cpus-per-task 1
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=mmore500@msu.edu
+
+# fail on error
+set -e
+
+# specify display, start the Xvfb server, and save the process ID
+# adapted from https://wiki.hpcc.msu.edu/display/~colbrydi@msu.edu/2013/10
+export DISPLAY=":${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X11-unix/X${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X${SLURM_JOB_ID-1}-lock"
+Xvfb "${DISPLAY}" -auth /dev/null/ &
+export XVFB_PID=$!
+
+# set up and jump into temporary work directory
+cd "$(mktemp -d)"
+
+# curl repro_runner.sh script into to a temporary file
+REPRO_RUNNER="$(mktemp)"
+for retry in {1..20}; do
+  curl \
+    -o "${REPRO_RUNNER}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh" \
+  && echo "  repro_runner curl success" && break \
+  || (echo "retrying repro_runner curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "repro_runner curl fail" && exit 123123; fi
+done
+chmod +x "${REPRO_RUNNER}"
+
+################################################################################
+echo
+echo "Run Job with repro_runner.sh"
+echo "--------------------------------"
+################################################################################
+
+"${REPRO_RUNNER}" \
+  -p dnh2v -u mmore500 -s dishtiny \
+  --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
+  << 'REPRO_RUNNER_HEREDOC_EOF'
+
+# fail on error
+set -e
+
+################################################################################
+echo
+echo "Initialize and Log Config"
+echo "-------------------------"
+################################################################################
+
+# load secrets into environment variables, if available
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
+
+ENDEAVOR="{{ endeavor }}"
+N_PROCS=1
+N_THREADS=1
+
+echo "ENDEAVOR ${ENDEAVOR}"
+echo "N_PROCS ${N_PROCS}"
+echo "N_THREADS ${N_THREADS}"
+echo "series {{ series | default('-1') }}"
+echo "stint {{ stint | default('-1') }}"
+echo "replicate {{ replicate }}"
+echo "container_tag {{ container_tag }}"
+echo "repo_sha {{ repo_sha }}"
+
+################################################################################
+echo
+echo "Set Up Work Directory"
+echo "-------------------------"
+################################################################################
+
+mkdir work
+cd work
+
+echo "downloading competitors..."
+
+echo "downloading {{ first_competitor_url }}"
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "{{ first_competitor_url }}" \
+    "root_id=0+$(basename {{ first_competitor_url }})" \
+    && echo "  {{ first_competitor_url }} download success" && break \
+    || (echo "retrying {{ first_competitor_url }} download (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "{{ first_competitor_url }} download fail" && exit 123123; fi
+done &
+
+echo "downloading {{ second_competitor_url }}"
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "{{ second_competitor_url }}" \
+    "root_id=0+$(basename {{ second_competitor_url }})" \
+    && echo "  {{ second_competitor_url }} download success" && break \
+    || (echo "retrying {{ second_competitor_url }} download (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "{{ second_competitor_url }} download fail" && exit 123123; fi
+done &
+
+make production -C ../dishtiny/
+cp ../dishtiny/rundishtiny .
+
+# compile and download concurrently!
+wait
+
+################################################################################
+echo
+echo "Run Simulation"
+echo "------------------"
+################################################################################
+
+# note:
+# we have to cut off stdin, stdout, stderr on mpiexec
+# for compatibility with repro_runner.sh and prevent a funky
+# tee: read error: Resource temporarily unavailable
+# ssh accomplishes this right now, but otherwise something else would be needed
+
+# use ssh to access host then launch mpi jobs there (e.g., "hybrid approach")
+# see https://sylabs.io/guides/3.3/user-guide/mpi.html
+
+# have to use login shell so module command loads correctly
+
+# put stint and series in "'s with preceeding space so that we can
+# pass -1 without it being recognized as a flag
+
+sshpass -p "${HOST_PASSWORD}" \
+ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+  "${HOST_USERNAME}@$(hostname)" -X 'bash -login'\
+<< MPIEXEC_HEREDOC_EOF
+  [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
+  module load --ignore-cache GCC/7.2.0-2.29 MPICH/3.2.1|| :
+  module list || :
+  echo "modules loaded..."
+  export REPRO_ID="${REPRO_ID}"
+  export DISPLAY="${DISPLAY}"
+  export XVFB_PID="${XVFB_PID}"
+  mpiexec.hydra --version
+  mpiexec.hydra -n "${N_PROCS}" \
+  singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
+    ./rundishtiny \
+    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series < 1000 else 3600 }} -GENESIS "innoculate" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -MUTATION_RATE "0 0 0" -STINT " {{ stint | default('-1') }}" -SERIES " {{ series | default('-1') }}" --REPLICATE "{{ replicate }}" -ABORT_IF_COALESCENT_FREQ 64 \
+  && echo "simulation exit success" \
+  || ( echo "simulation error code $?" && exit 1 )
+MPIEXEC_HEREDOC_EOF
+
+################################################################################
+echo
+echo "Upload Data"
+echo "--------------"
+################################################################################
+
+echo "uploading coalescence_result files..."
+for p in outdata/*a=coalescence_result*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
+  for retry in {1..20}; do
+    aws s3 cp --quiet \
+      "${p}" \
+      "{{ output_url }}" \
+    && echo "  ${f} upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+  done &
+
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
+
+done
+
+# wait on all forked upload jobs
+wait
+
+################################################################################
+echo
+echo "Done! (SUCCESS)"
+echo "---------------"
+################################################################################
+
+REPRO_RUNNER_HEREDOC_EOF

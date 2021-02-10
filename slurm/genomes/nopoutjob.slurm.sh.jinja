@@ -76,6 +76,9 @@ echo "-------------------------"
 mkdir work
 cd work
 
+WORK_DIRECTORY="$(pwd)"
+echo "WORK_DIRECTORY ${WORK_DIRECTORY}"
+
 echo "downloading genome from target stint and series..."
 
 f="a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={{ stint }}+thread=0+ext=.json.gz"
@@ -162,6 +165,171 @@ done
 
 # wait on all forked upload jobs
 wait
+
+
+#===============================================================================
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#===============================================================================
+# dispatch fitness complexity competitions only every fortieth stint
+if (( {{ stint }} % 40 == 0 )); then
+echo
+echo "Dispatching Fitness Complexity Competitions"
+echo "==========================================="
+
+(
+cd "$(mktemp -d)"
+pwd
+
+#===============================================================================
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#===============================================================================
+
+PHENOTYPE_EQUIVALENT_GENOME="${WORK_DIRECTORY}"/outartifacts/*a=genome*morph=phenotype_equivalent_nopout*.json.gz
+echo "PHENOTYPE_EQUIVALENT_GENOME ${PHENOTYPE_EQUIVALENT_GENOME}"
+
+################################################################################
+echo
+echo "Generate Nopped Op Variats of phenotype_equivalent_nopout"
+echo "---------------------------------------------------------"
+################################################################################
+
+# adapted from https://superuser.com/a/689340
+# and https://stackoverflow.com/a/31687663
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/make_nopped_op_variants.py | python3 - "${PHENOTYPE_EQUIVALENT_GENOME}"
+
+################################################################################
+echo
+echo "Upload Nopped Op Variants of phenotype_equivalent_nopout"
+echo "--------------------------------------------------------"
+################################################################################
+
+echo "uploading any genome files..."
+for p in *a=genome*morph=phenotype_equivalent_nopout*variation=* ; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
+  for retry in {1..20}; do
+    aws s3 cp --quiet \
+      "${p}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" \
+    && echo "  $f upload success" && break \
+      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+  done &
+
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
+
+done
+
+# wait on all forked upload jobs
+wait
+
+################################################################################
+echo
+echo "Get Runscript Template"
+echo "----------------------------------------"
+################################################################################
+
+# run jinja on template
+JOB_TEMPLATE="$(mktemp)"
+echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
+
+for retry in {1..20}; do
+  curl \
+    -o "${JOB_TEMPLATE}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/competitionjob.slurm.sh.jinja" \
+  && echo "  job template curl success" && break \
+  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
+done
+
+################################################################################
+echo
+echo "Generate WT vs WT Competition Runscripts"
+echo "----------------------------------------"
+################################################################################
+
+wt=$(basename "${PHENOTYPE_EQUIVALENT_GENOME}")
+
+for REPLICATE in {0..19}; do
+
+JOB_SCRIPT="$( \
+  keyname pack --a "wt_vs_wt" --replicate "${REPLICATE}" --ext ".slurm.sh" \
+)"
+
+j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+container_tag: {{ container_tag }}
+repo_sha: {{ repo_sha }}
+first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${wt}"
+second_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${wt}"
+output_url: "s3://dnh2v/endeavor=${ENDEAVOR}/variant-competitions/stint={{ stint }}/series={{ series }}/"
+replicate: "${REPLICATE}"
+endeavor: "${ENDEAVOR}"
+stint: {{ stint }}
+series: {{ series }}
+J2_HEREDOC_EOF
+
+chmod +x "${JOB_SCRIPT}"
+
+done # for REPLICATE in {0..19}; do
+
+################################################################################
+echo
+echo "Generate WT vs Variant Competition Runscripts"
+echo "---------------------------------------------"
+################################################################################
+
+wt=$(basename "${PHENOTYPE_EQUIVALENT_GENOME}")
+
+for variant in *a=genome*morph=phenotype_equivalent_nopout*variation=* ; do
+
+variation="$(echo "${variant}" | keyname extract variation)"
+echo "variation ${variation}"
+
+JOB_SCRIPT="$( keyname pack \
+  --a "wt_vs_variant" --variation "${variation}" --ext ".slurm.sh" \
+)"
+
+j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+container_tag: {{ container_tag }}
+repo_sha: {{ repo_sha }}
+first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${wt}"
+second_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${variant}"
+output_url: "s3://dnh2v/endeavor=${ENDEAVOR}/variant-competitions/stint={{ stint }}/series={{ series }}/"
+replicate: 0
+endeavor: "${ENDEAVOR}"
+stint: {{ stint }}
+series: {{ series }}
+J2_HEREDOC_EOF
+
+chmod +x "${JOB_SCRIPT}"
+
+done
+
+################################################################################
+echo
+echo "Bundle and Submit Generated Runscripts"
+echo "--------------------------------------"
+################################################################################
+
+echo "num generated runscripts $(ls *.slurm.sh | wc -l)"
+
+# uses slurm stoker script, which zips all runscripts in the current directory
+# inside itself, then submits itself as a job to gradually feed runscripts onto
+# the queue
+
+# adapted from https://superuser.com/a/689340
+# and https://stackoverflow.com/a/4642975
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh | bash -s {{ container_tag }} {{ repo_sha }}
+
+#===============================================================================
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#===============================================================================
+) # leave temporary work directory
+fi # run fitness complexity competitions only every Xth stint
+#===============================================================================
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#===============================================================================
 
 ################################################################################
 echo
