@@ -1,6 +1,6 @@
 #!/bin/bash -login
 ########## Define Resources Needed with SBATCH Lines ##########
-#SBATCH --time=2:00:00
+#SBATCH --time=4:00:00
 #SBATCH --job-name a=monoculture+series={{ series }}+stint={{ stint }}
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/a=monoculture+job=%j+series={{ series }}+stint={{ stint }}+ext.log"
