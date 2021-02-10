@@ -190,7 +190,7 @@ pwd
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #===============================================================================
 
-PHENOTYPE_EQUIVALENT_GENOME="${WORK_DIRECTORY}"/outartifacts/*a=genome*morph=phenotype_equivalent_nopout*.json.gz
+PHENOTYPE_EQUIVALENT_GENOME="$(ls "${WORK_DIRECTORY}"/outartifacts/*a=genome*morph=phenotype_equivalent_nopout*.json.gz)"
 echo "PHENOTYPE_EQUIVALENT_GENOME ${PHENOTYPE_EQUIVALENT_GENOME}"
 
 ################################################################################
