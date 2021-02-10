@@ -1,5 +1,11 @@
 #!/bin/sh
 
+################################################################################
+echo
+echo "running setup_cloudshell.sh"
+echo "---------------------------"
+################################################################################
+
 export DEBIAN_FRONTEND="noninteractive"
 
 mkdir -p ~/.cloudshell/ && touch ~/.cloudshell/no-apt-get-warning
