@@ -15,15 +15,19 @@ if (( "$#" < 4 )); then
 fi
 
 CONTAINER_TAG="${1}"
+echo "CONTAINER_TAG ${CONTAINER_TAG}"
 shift
 
 REPO_SHA="${1}"
+echo "REPO_SHA ${REPO_SHA}"
 shift
 
 STINT="${1}"
+echo "STINT ${STINT}"
 shift
 
 SERIES="${@}"
+echo "SERIES ${SERIES}"
 
 # set up and jump into temporary work directory
 cd "$(mktemp -d)"

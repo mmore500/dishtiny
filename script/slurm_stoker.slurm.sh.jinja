@@ -78,6 +78,9 @@ echo "Submit jobs into available slots"
 echo "--------------------------------"
 ################################################################################
 
+
+echo "$(ls *.slurm.sh | wc -l) jobs to submit"
+
 for JOB_SCRIPT in *.slurm.sh; do
 
   # this will count one too many slots occupied, but that is okay
@@ -88,7 +91,13 @@ for JOB_SCRIPT in *.slurm.sh; do
       'bash -login' \
   )
   AVAILABLE_SLOTS=800
-  if (( OCCUPIED_SLOTS > AVAILABLE_SLOTS )); then break; fi
+  if (( OCCUPIED_SLOTS > AVAILABLE_SLOTS )); then
+    echo "OCCUPIED_SLOTS ${OCCUPIED_SLOTS}"
+    echo "all ${AVAILABLE_SLOTS} AVAILABLE_SLOTS occupied"
+    echo "breaking out of job submission loop"
+    echo "$(ls *.slurm.sh | wc -l) jobs left to submit"
+    break
+  fi
 
   for retry in {1..10}; do
     sshpass -p "${HOST_PASSWORD}" \
