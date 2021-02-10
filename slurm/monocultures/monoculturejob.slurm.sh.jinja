@@ -97,13 +97,18 @@ for retry in {1..20}; do
     && echo "  ${f} download success" && break \
     || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
-done &
+done & pids+=($!)
 
 make production -C ../dishtiny/
 cp ../dishtiny/rundishtiny .
 
 # compile and download concurrently!
-wait
+for pid in "${pids[@]}"; do
+  # if child process fails, we fail
+  wait "${pid}"
+done
+
+unset pids
 
 ################################################################################
 echo
@@ -161,7 +166,7 @@ for p in outdata/*a={demographic_phenotypic_phylogenetic_metrics,kin_conflict_st
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
-  done &
+  done & pids+=($!)
 
   # limit to twenty concurrent upload jobs
   while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
@@ -179,7 +184,7 @@ for p in outdata/*a={birth_log,death_log,spawn_log}*; do
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
-  done &
+  done & pids+=($!)
 
   # limit to twenty concurrent upload jobs
   while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
@@ -197,7 +202,7 @@ for p in outdata/*a=cell_census*; do
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
-  done &
+  done & pids+=($!)
 
   # limit to twenty concurrent upload jobs
   while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
@@ -215,7 +220,7 @@ for p in outdrawings/*a=montage*; do
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
-  done &
+  done & pids+=($!)
 
   # limit to twenty concurrent upload jobs
   while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
@@ -233,7 +238,7 @@ for p in outzips/*a=drawings*; do
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
-  done &
+  done & pids+=($!)
 
   # limit to twenty concurrent upload jobs
   while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
@@ -241,7 +246,12 @@ for p in outzips/*a=drawings*; do
 done
 
 # wait on all forked upload jobs
-wait
+for pid in "${pids[@]}"; do
+  # if child process fails, we fail
+  wait "${pid}"
+done
+
+unset pids
 
 shopt -u nullglob
 
