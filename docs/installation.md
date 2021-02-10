@@ -35,17 +35,7 @@ Go to <https://shell.cloud.google.com>.
 As of Febuary 2021, Google provides this service free of charge!
 
 ```bash
-sudo wget -O- http://neuro.debian.net/lists/xenial.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list && \
-    sudo apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 && \
-    sudo apt-get update
-yes | sudo apt-get install -y docker singularity-container xvfb
-export DISPLAY=":$$"
-rm -f "/tmp/.X$$-lock"
-Xvfb "${DISPLAY}" -auth /dev/null/ &
-export XVFB_PID=$!
-
-yes | docker system prune --all
-rm -rf ~/.singularity/docker/
+curl -s https://raw.githubusercontent.com/mmore500/dishtiny/master/script/setup_cloudshell.sh | sudo bash
 
 singularity shell docker://mmore500/dishtiny
 ```
