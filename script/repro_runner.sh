@@ -444,7 +444,7 @@ echo "TIMEOUT_SECONDS ${TIMEOUT_SECONDS}"
 # pipe input into the container, record a copy to $STDIN
 # Docker references with both a tag and digest are currently not supported in
 # singularity so we have to strip everything before @sha256:digest
-timeout "${TIMEOUT_SECONDS}s" tee "${stdin}" | \
+cat "-" | timeout "${TIMEOUT_SECONDS}s" tee "${stdin}" | \
   singularity shell \
     --env "SECONDS=${SECONDS}" \
     -B "${HOME}:/home/user" \
