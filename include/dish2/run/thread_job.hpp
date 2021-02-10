@@ -11,6 +11,7 @@
 #include "../record/make_filename/make_elapsed_updates_filename.hpp"
 #include "../world/ThreadWorld.hpp"
 
+#include "thread_artifacts_dump.hpp"
 #include "thread_data_dump.hpp"
 #include "thread_data_write.hpp"
 #include "thread_evolve.hpp"
@@ -31,10 +32,16 @@ void thread_job(
     dish2::make_elapsed_updates_filename( thread_idx )
   ) << thread_world.GetUpdate() << std::endl;
 
+  if ( cfg.ARTIFACTS_DUMP() ) {
+    dish2::thread_artifacts_dump<Spec>( thread_world, thread_idx );
+    std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " artifacts dump complete" << std::endl;
+  }
+
   if ( cfg.DATA_DUMP() ) {
     dish2::thread_data_dump<Spec>( thread_world, thread_idx );
     std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-      << " dump complete" << std::endl;
+      << " data dump complete" << std::endl;
 
     dish2::thread_data_write<Spec>( thread_world, thread_idx );
     std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
@@ -46,7 +53,7 @@ void thread_job(
   }
 
   std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-    << " data recorded" << std::endl;
+    << " thread job complete" << std::endl;
 
 }
 

@@ -44,6 +44,7 @@ void create_deduplicated_drawing_archive() {
 void finalize_drawings() {
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system(
+    "shopt -s nullglob; "
     "cd outdrawings && for f in *a=*; do"
     "  keyname stash --move \"${f}\" a proc thread update stint series ext"
     "; done"
@@ -55,6 +56,7 @@ void finalize_drawings() {
 void finalize_artifacts() {
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system(
+    "shopt -s nullglob; "
     "cd outartifacts && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
     "    a criteria morph proc stint series thread ext"
@@ -67,6 +69,7 @@ void finalize_artifacts() {
 void finalize_data() {
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system(
+    "shopt -s nullglob; "
     "cd outdata && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
     "    a criteria morph proc stint series thread ext"
@@ -79,6 +82,7 @@ void finalize_data() {
 void finalize_zip() {
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system(
+    "shopt -s nullglob; "
     "cd outzips && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
     "    a proc stint series thread ext"
