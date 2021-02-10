@@ -43,51 +43,51 @@ void create_deduplicated_drawing_archive() {
 
 void finalize_drawings() {
   // cd doesn't propagate out of std::system call
-  uitsl::err_verify( std::system(
+  uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
     "cd outdrawings && for f in *a=*; do"
     "  keyname stash --move \"${f}\" a proc thread update stint series ext"
     "; done"
-  ) );
+  "'" ) );
   create_deduplicated_drawing_archive();
   dish2::create_montage();
 }
 
 void finalize_artifacts() {
   // cd doesn't propagate out of std::system call
-  uitsl::err_verify( std::system(
+  uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
     "cd outartifacts && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
     "    a criteria morph proc stint series thread ext"
     "    nopout_coarseness nopout_target variation root_id"
-    "    $(echo \"$f\" | grep -o 'root_id@[[:digit:]]\\+')"
+    "    $(echo \"$f\" | grep -o \"root_id@[[:digit:]]\\+\")"
     "; done"
-  ) );
+  "'" ) );
 }
 
 void finalize_data() {
   // cd doesn't propagate out of std::system call
-  uitsl::err_verify( std::system(
+  uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
     "cd outdata && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
     "    a criteria morph proc stint series thread ext"
     "    nopout_coarseness nopout_target variation root_id"
-    "    $(echo \"$f\" | grep -o 'root_id@[[:digit:]]\\+')"
+    "    $(echo \"$f\" | grep -o \"root_id@[[:digit:]]\\+\")"
     "; done"
-  ) );
+  "'" ) );
 }
 
 void finalize_zip() {
   // cd doesn't propagate out of std::system call
-  uitsl::err_verify( std::system(
+  uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
     "cd outzips && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
     "    a proc stint series thread ext"
     "; done"
-  ) );
+  "'" ) );
 }
 
 void global_records_finalize() {
