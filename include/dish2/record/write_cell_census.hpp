@@ -3,6 +3,7 @@
 #define DISH2_RECORD_WRITE_CELL_CENSUS_HPP_INCLUDE
 
 #include <mutex>
+#include <string>
 
 #include "../../../third-party/bxzstr/include/bxzstr.hpp"
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
@@ -11,6 +12,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../utility/pare_keyname_filename.hpp"
 
 #include "cell_census/write_cell_age.hpp"
 #include "cell_census/write_kin_group_age.hpp"
@@ -28,9 +30,13 @@ void write_cell_census(
   const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
 ) {
 
+  const thread_local std::string out_filename = dish2::pare_keyname_filename(
+    dish2::make_cell_census_filename( thread_idx ),
+    dish2::make_data_path()
+  );
+
   thread_local bxz::ofstream out_stream(
-    dish2::make_data_path( dish2::make_cell_census_filename( thread_idx ) ),
-    bxz::lzma, 9
+    dish2::make_data_path( out_filename ), bxz::lzma, 9
   );
   thread_local emp::DataFile file( out_stream );
 

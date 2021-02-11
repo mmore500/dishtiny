@@ -5,6 +5,7 @@ TARGET_NAMES += peripheral
 TARGET_NAMES += runninglog
 TARGET_NAMES += services
 TARGET_NAMES += spec
+TARGET_NAMES += utility
 #TARGET_NAMES += viz TODO
 #TARGET_NAMES += web TODO
 TARGET_NAMES += world

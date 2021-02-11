@@ -3,6 +3,7 @@
 #define DISH2_RECORD_DUMP_SPAWN_LOG_HPP_INCLUDE
 
 #include <algorithm>
+#include <string>
 
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
@@ -12,6 +13,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../utility/pare_keyname_filename.hpp"
 
 #include "make_filename/make_data_path.hpp"
 #include "make_filename/make_spawn_log_filename.hpp"
@@ -25,8 +27,13 @@ void dump_spawn_log(
 
   const auto& population = world.population;
 
+  const thread_local std::string out_filename = dish2::pare_keyname_filename(
+    dish2::make_spawn_log_filename( thread_idx ),
+    dish2::make_data_path()
+  );
+
   thread_local bxz::ofstream out_stream( dish2::make_data_path(
-    dish2::make_spawn_log_filename( thread_idx )
+    out_filename
   ) );
   emp::DataFile file( out_stream );
 

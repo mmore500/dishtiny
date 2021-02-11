@@ -24,6 +24,7 @@
 #include "../load/get_innoculum_slug.hpp"
 #include "../load/get_root_ids.hpp"
 #include "../utility/calc_fitness_differential.hpp"
+#include "../utility/pare_keyname_filename.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "make_filename/make_coalescence_result_filename.hpp"
@@ -36,11 +37,12 @@ void dump_coalescence_result(
   const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
 ) {
 
-  emp::DataFile file(
-    dish2::make_data_path( dish2::make_coalescence_result_filename(
-      thread_idx
-    ) )
+  const std::string out_filename = dish2::pare_keyname_filename(
+    dish2::make_coalescence_result_filename( thread_idx ),
+    dish2::make_data_path()
   );
+
+  emp::DataFile file( dish2::make_data_path( out_filename ) );
 
   if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Competition Stint");
   if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Competition Series");

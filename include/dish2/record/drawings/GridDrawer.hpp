@@ -12,6 +12,7 @@
 #include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
 #include "../../world/ThreadWorld.hpp"
+#include "../../utility/pare_keyname_filename.hpp"
 
 #include "../make_filename/make_drawing_filename.hpp"
 #include "../make_filename/make_drawing_path.hpp"
@@ -53,9 +54,13 @@ public:
       emp::slugify( Artist::GetName() )
     );
 
+    const std::string out_filename = dish2::pare_keyname_filename(
+      filename, dish2::make_drawing_path()
+    );
+
     artist.Draw( canvas );
 
-    canvas.SavePNG( dish2::make_drawing_path( filename ) );
+    canvas.SavePNG( dish2::make_drawing_path( out_filename ) );
 
   }
 

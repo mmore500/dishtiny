@@ -6,7 +6,7 @@
 
 namespace dish2 {
 
-std::string make_zip_path( const std::string& filename ) {
+std::string make_zip_path( const std::string& filename="" ) {
   return std::string("outzips/") + filename;
 }
 

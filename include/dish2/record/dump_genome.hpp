@@ -10,6 +10,7 @@
 #include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 
 #include "../genome/Genome.hpp"
+#include "../utility/pare_keyname_filename.hpp"
 
 #include "dump_genome_statistics.hpp"
 #include "make_filename/make_artifact_path.hpp"
@@ -23,12 +24,17 @@ void dump_genome(
 
   const auto attrs = emp::keyname::unpack( genome_filename );
 
+  const std::string out_filename = dish2::pare_keyname_filename(
+    genome_filename,
+    dish2::make_artifact_path()
+  );
+
   if ( attrs.count( "ext" ) && attrs.at( "ext" ) == ".json" ) {
-    std::ofstream os( dish2::make_artifact_path( genome_filename ) );
+    std::ofstream os( dish2::make_artifact_path( out_filename ) );
     cereal::JSONOutputArchive archive( os );
     archive( genome );
   } else if ( attrs.count( "ext" ) && attrs.at( "ext" ) == ".json.gz" ) {
-    hogzstr::ogzstream os( dish2::make_artifact_path( genome_filename ) );
+    hogzstr::ogzstream os( dish2::make_artifact_path( out_filename ) );
     cereal::JSONOutputArchive archive( os );
     archive( genome );
   } else { emp_always_assert( false, genome_filename ); }

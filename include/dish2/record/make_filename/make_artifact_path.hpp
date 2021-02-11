@@ -6,7 +6,7 @@
 
 namespace dish2 {
 
-std::string make_artifact_path( const std::string& filename ) {
+std::string make_artifact_path( const std::string& filename="" ) {
   return std::string("outartifacts/") + filename;
 }
 

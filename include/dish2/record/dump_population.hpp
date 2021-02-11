@@ -11,6 +11,7 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../genome/Genome.hpp"
+#include "../utility/pare_keyname_filename.hpp"
 #include "../world/iterators/GenotypeConstWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
@@ -27,11 +28,12 @@ void dump_population(
 
   const auto& population = world.population;
 
-  const std::string filename( dish2::make_artifact_path(
-    dish2::make_dump_population_filename( thread_idx )
+  const std::string out_filename( dish2::pare_keyname_filename(
+    dish2::make_dump_population_filename( thread_idx ),
+    dish2::make_artifact_path()
   ) );
 
-  bxz::ofstream os(filename, bxz::lzma, 9);
+  bxz::ofstream os( dish2::make_artifact_path( out_filename ), bxz::lzma, 9);
   cereal::BinaryOutputArchive archive( os );
 
   archive( emp::vector< dish2::Genome<Spec> >(

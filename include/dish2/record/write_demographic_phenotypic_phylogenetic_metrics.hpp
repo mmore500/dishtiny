@@ -75,6 +75,7 @@
 #include "../introspection/make_causes_of_death_string_histogram.hpp"
 #include "../introspection/sum_entire_elapsed_instruction_cycles_for_live_cells.hpp"
 #include "../introspection/sum_entire_elapsed_instruction_cycles.hpp"
+#include "../utility/pare_keyname_filename.hpp"
 
 #include "make_filename/make_data_path.hpp"
 #include "make_filename/make_demographic_phenotypic_phylogenetic_metrics_filename.hpp"
@@ -86,10 +87,15 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
 ) {
 
-  thread_local emp::DataFile file( dish2::make_data_path(
+  const thread_local std::string out_filename = dish2::pare_keyname_filename(
     dish2::make_demographic_phenotypic_phylogenetic_metrics_filename(
       thread_idx
-    )
+    ),
+    dish2::make_data_path()
+  );
+
+  thread_local emp::DataFile file( dish2::make_data_path(
+    out_filename
   ) );
 
   thread_local std::string metric;

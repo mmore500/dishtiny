@@ -3,6 +3,7 @@
 #define DISH2_RECORD_WRITE_PHYLOGENETIC_ROOT_ABUNDANCES_HPP_INCLUDE
 
 #include <mutex>
+#include <string>
 
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 
@@ -11,7 +12,9 @@
 #include "../config/has_stint.hpp"
 #include "../introspection/get_root_id_prevalence.hpp"
 #include "../introspection/get_unique_root_ids.hpp"
+#include "../utility/pare_keyname_filename.hpp"
 
+#include "make_filename/make_data_path.hpp"
 #include "make_filename/make_phylogenetic_root_abundances_filename.hpp"
 
 namespace dish2 {
@@ -21,11 +24,12 @@ void write_phylogenetic_root_abundances(
   const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
 ) {
 
-  thread_local emp::DataFile file(
-    dish2::make_phylogenetic_root_abundances_filename(
-      thread_idx
-    )
+  const thread_local std::string out_filename = dish2::pare_keyname_filename(
+    dish2::make_phylogenetic_root_abundances_filename( thread_idx ),
+    dish2::make_data_path()
   );
+
+  thread_local emp::DataFile file( dish2::make_data_path( out_filename ) );
 
   thread_local size_t root_id;
   thread_local double prevalence;

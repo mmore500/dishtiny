@@ -16,6 +16,7 @@
 #include "../introspection/get_total_spawn_event_kin_eliminated.hpp"
 #include "../introspection/get_total_spawn_event_kin_neighbors.hpp"
 #include "../introspection/get_total_spawn_event_neighbors.hpp"
+#include "../utility/pare_keyname_filename.hpp"
 
 #include "make_filename/make_data_path.hpp"
 #include "make_filename/make_kin_conflict_statistics_filename.hpp"
@@ -27,9 +28,12 @@ void dump_kin_conflict_statistics(
   const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
 ) {
 
-  emp::DataFile file( dish2::make_data_path(
-    dish2::make_kin_conflict_statistics_filename( thread_idx )
-  ) );
+  const std::string out_filename = dish2::pare_keyname_filename(
+    dish2::make_kin_conflict_statistics_filename( thread_idx ),
+    dish2::make_data_path()
+  );
+
+  emp::DataFile file( dish2::make_data_path( out_filename ) );
 
   if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
   if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
