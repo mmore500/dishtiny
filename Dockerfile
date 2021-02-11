@@ -47,6 +47,7 @@ RUN \
     libomp-dev \
     sharutils \
     sshpass \
+    tree \
     xauth \
     && \
   apt-get clean \
