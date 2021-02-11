@@ -5,7 +5,7 @@
 #include <fstream>
 #include <string>
 
-#include "../introspection/count_live_cells.hpp"
+#include "../introspection/no_live_cells.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 
 #include "../world/ThreadWorld.hpp"
@@ -22,7 +22,7 @@ bool dump_arbitrary_genome(
 ) {
 
   // abort if no live cells
-  if ( dish2::count_live_cells<Spec>(world) == 0 ) return false;
+  if ( dish2::no_live_cells<Spec>(world) ) return false;
 
   // get the first /live/ cell
   const auto genome

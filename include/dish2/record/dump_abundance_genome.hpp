@@ -6,6 +6,7 @@
 #include <string>
 
 #include "../algorithm/make_phenotype_equivalent_nopout.hpp"
+#include "../introspection/no_live_cells.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_prevalent_coding_genotype_genome.hpp"
 
@@ -23,7 +24,7 @@ bool dump_abundance_genome(
 ) {
 
   // abort if no live cells
-  if ( dish2::count_live_cells<Spec>(world) == 0 ) return false;
+  if ( dish2::no_live_cells<Spec>(world) ) return false;
 
   const auto [genome, abundance_tally]
     = dish2::get_prevalent_coding_genotype_genome<Spec>( world );
