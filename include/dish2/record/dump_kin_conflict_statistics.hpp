@@ -113,6 +113,9 @@ void dump_kin_conflict_statistics(
     file.Update();
   }
 
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " dumped kin conflict statistics" << std::endl;
+
 }
 
 } // namespace dish2

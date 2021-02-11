@@ -29,6 +29,8 @@ bool thread_should_contine(
   ) {
     emp_always_assert( !uitsl::is_multiprocess() );
     emp_always_assert( cfg.N_THREADS() == 1 );
+    std::cout << "coalescence detected at update " << update << std::endl;
+    std::cout << "aborting!";
     return false;
   } else if (
     // if we are going to dump data,

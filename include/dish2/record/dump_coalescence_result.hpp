@@ -102,6 +102,8 @@ void dump_coalescence_result(
 
   }
 
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " dumped coalescence result" << std::endl;
 
 }
 

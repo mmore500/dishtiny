@@ -82,6 +82,9 @@ void dump_spawn_log(
     }
   );
 
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " dumped spawn log" << std::endl;
+
 }
 
 } // namespace dish2

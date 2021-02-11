@@ -127,6 +127,9 @@ void dump_kin_conflict_by_replev_statistics(
     }
   }
 
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " dumped kin conflict by replev statistics" << std::endl;
+
 }
 
 } // namespace dish2

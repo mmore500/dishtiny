@@ -48,7 +48,7 @@ void write_cell_census(
   update = world.GetUpdate();
 
   thread_local std::once_flag once_flag;
-  std::call_once(once_flag, [](){
+  std::call_once(once_flag, [thread_idx](){
     if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
     if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
     if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
@@ -58,6 +58,9 @@ void write_cell_census(
     file.AddVar(cell_idx, "Cell");
     file.AddVar(update, "Update");
     file.PrintHeaderKeys();
+
+    std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " wrote cell census" << std::endl;
   });
 
 

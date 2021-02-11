@@ -82,6 +82,9 @@ void dump_birth_log(
     }
   );
 
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " dumped birth log" << std::endl;
+
 }
 
 } // namespace dish2

@@ -69,6 +69,9 @@ void create_montage() {
   // montage is returning an error code of 1, so don't verify
   uitsl::err_discard( std::system(command.c_str()) );
 
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " created montage" << std::endl;
+
 }
 
 } // namespace dish2

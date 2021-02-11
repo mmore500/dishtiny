@@ -71,6 +71,9 @@ void dump_death_log(
     }
   );
 
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " dumped death log" << std::endl;
+
 }
 
 } // namespace dish2

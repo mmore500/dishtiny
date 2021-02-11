@@ -45,6 +45,9 @@ void dump_population(
     )
   ) );
 
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " dumped population" << std::endl;
+
 }
 
 } // namespace dish2
