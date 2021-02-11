@@ -11,8 +11,8 @@
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
-#include "../../world/ThreadWorld.hpp"
 #include "../../utility/pare_keyname_filename.hpp"
+#include "../../world/ThreadWorld.hpp"
 
 #include "../make_filename/make_drawing_filename.hpp"
 #include "../make_filename/make_drawing_path.hpp"

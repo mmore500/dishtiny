@@ -6,9 +6,9 @@
 #include <string>
 
 #include "../algorithm/make_phenotype_equivalent_nopout.hpp"
-#include "../introspection/no_live_cells.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_prevalent_coding_genotype_genome.hpp"
+#include "../introspection/no_live_cells.hpp"
 
 #include "../world/ThreadWorld.hpp"
 
