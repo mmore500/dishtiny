@@ -3,12 +3,16 @@
 #define DISH2_UTILITY_PARE_KEYNAME_FILENAME_HPP_INCLUDE
 
 #include <cstdio>
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
 #include <string>
 #include <utility>
 
+#include <unistd.h>
+
+#include "../../../third-party/conduit/include/uitsl/debug/safe_compare.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/erase_if.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/Empirical/include/emp/base/optional.hpp"
@@ -22,9 +26,21 @@ namespace dish2 {
 
 namespace internal {
 
-constexpr size_t LONGLINK_FILENAME_MAX = FILENAME_MAX - 16;
-
 using kv_t = std::pair<std::string, std::string>;
+
+constexpr const char* longlink_suffix = "@longlink";
+
+size_t get_longlinked_filename_max( const std::filesystem::path& path ) {
+
+  constexpr size_t reserved = std::strlen(longlink_suffix);
+
+  emp_assert( uitsl::safe_greater(
+    pathconf( path.c_str(), _PC_NAME_MAX ), reserved
+  ) );
+
+  return pathconf( path.c_str(), _PC_NAME_MAX ) - reserved;
+
+}
 
 emp::optional<std::string> longlink_longest_value(
   const std::string& filename, const bool try_a=false
@@ -62,7 +78,9 @@ emp::optional<std::string> longlink_longest_value(
 }
 
 std::string longlink_entire_filename(
-  const std::string& filename, const bool try_a=true
+  const std::string& filename,
+  const std::filesystem::path& path,
+  const bool try_a=true
 ) {
 
   auto attrs = emp::keyname::unpack( filename );
@@ -78,11 +96,11 @@ std::string longlink_entire_filename(
   attrs["longlink"] = uid;
 
   const auto res = emp::keyname::pack( attrs );
-  if ( res.size() <= LONGLINK_FILENAME_MAX ) return res;
-  else if ( try_a ) return longlink_entire_filename( filename, false );
+  if ( res.size() <= internal::get_longlinked_filename_max( path ) ) return res;
+  else if ( try_a ) return longlink_entire_filename( filename, path, false );
   else return emp::keyname::pack({
     {"a", uid},
-    {"ext", ".longlink"}
+    {"ext", ".longlinked"}
   });
 
 }
@@ -93,26 +111,33 @@ std::string pare_keyname_filename(
   const std::string& original_filename, const std::filesystem::path& path="./"
 ) {
 
-  if ( original_filename.size() <= FILENAME_MAX ) return original_filename;
+  const size_t filename_max = pathconf( path.c_str(), _PC_NAME_MAX );
+
+  if ( original_filename.size() <= filename_max ) return original_filename;
 
   std::string filename( original_filename );
 
-  while ( filename.size() > internal::LONGLINK_FILENAME_MAX ) {
+  while ( filename.size() > internal::get_longlinked_filename_max( path ) ) {
 
     const auto res = internal::longlink_longest_value( filename );
 
     if ( res ) filename = *res;
-    else filename = internal::longlink_entire_filename( original_filename );
+    else filename = internal::longlink_entire_filename(original_filename, path);
 
   }
 
+  emp_assert( filename.size() <= internal::get_longlinked_filename_max(path) );
+
   std::cout << "paring filename " << original_filename
     << " -> " << filename << std::endl;
-  std::ofstream( path / ( filename + "@longlink" ) )
-    << original_filename << std::endl;
 
-  emp_assert( filename.size() <= FILENAME_MAX );
+  // create additional suffixed-file at path/ containing original filename
+  const auto meta_filename = filename + internal::longlink_suffix;
+  emp_assert( meta_filename.size() <= filename_max );
+  std::ofstream( path / meta_filename ) << original_filename << std::endl;
 
+  // return shortened filename
+  emp_assert( filename.size() <= filename_max );
   return filename;
 
 }
