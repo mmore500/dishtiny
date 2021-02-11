@@ -77,7 +77,7 @@ python3 "dishtiny/script/layout_interstrain_tournament.py" "\${TOURNAMENT_LAYOUT
   echo "FIRST_COMPETITOR \${FIRST_COMPETITOR}"
   echo "SECOND_COMPETITOR \${SECOND_COMPETITOR}"
 
-  j2 --format=yaml -o "a=competition+first_competitor=\${FIRST_COMPETITOR_SERIES}+second_competitor=\${SECOND_COMPETITOR_SERIES}+stint=${STINT}+ext=.slurm.sh" "dishtiny/slurm/evolve/competitionjob.slurm.sh.jinja" << J2_HEREDOC_EOF
+  j2 --format=yaml -o "a=competition+first_competitor=\${FIRST_COMPETITOR_SERIES}+second_competitor=\${SECOND_COMPETITOR_SERIES}+stint=${STINT}+ext=.slurm.sh" "dishtiny/slurm/competition/competitionjob.slurm.sh.jinja" << J2_HEREDOC_EOF
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
 first_competitor_url: "\${FIRST_COMPETITOR}"
