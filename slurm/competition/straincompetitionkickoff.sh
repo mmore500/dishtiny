@@ -48,6 +48,9 @@ echo "--------------------------------"
   --repo_sha "${REPO_SHA}" --container_tag "${CONTAINER_TAG}" \
   << REPRO_RUNNER_HEREDOC_EOF
 
+# fail on error
+set -e
+
 source ~/.secrets.sh || :
 
 ENDEAVOR="$(( STINT / 1000 ))"
