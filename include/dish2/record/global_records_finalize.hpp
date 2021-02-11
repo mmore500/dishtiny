@@ -8,6 +8,7 @@
 
 #include "../../../third-party/conduit/include/uitsl/debug/err_discard.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/err_verify.hpp"
+#include "../../../third-party/conduit/include/uitsl/debug/list_cwd.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/audited_routines.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
@@ -99,6 +100,14 @@ void global_records_finalize() {
     finalize_artifacts();
     finalize_data();
     finalize_zip();
+
+    #ifndef __EMSCRIPTEN__
+      // hash all files, excluding source directory
+      uitsl::err_verify( std::system( "tree --du -h" ) );
+    #else
+      uitsl::list_cwd();
+    #endif // #ifndef __EMSCRIPTEN__
+
   }
 
 }
