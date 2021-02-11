@@ -67,7 +67,7 @@ If you want to build and run the web app from Cloud Shell, run these commands fr
 ```bash
 cd third-party/ && ./install_emsdk.sh; cd -
 make web
-cd web && python3 -m SimpleHTTPServer 8080
+cd web && python3 -m http.server 8080
 ```
 
 Then, use Cloud Shell's [Web Preview](https://cloud.google.com/shell/docs/using-web-preview) feature to view the web app in your own browser.
