@@ -36,6 +36,7 @@
 #include "../introspection/get_fraction_cells_apoptosis_request.hpp"
 #include "../introspection/get_fraction_cells_incoming_inter_message.hpp"
 #include "../introspection/get_fraction_cells_incoming_intra_message.hpp"
+#include "../introspection/get_fraction_cells_kin_group_loners.hpp"
 #include "../introspection/get_fraction_cells_receiving_resource.hpp"
 #include "../introspection/get_fraction_cells_resource_receive_resistance.hpp"
 #include "../introspection/get_fraction_cells_resource_reserve_request.hpp"
@@ -44,6 +45,7 @@
 #include "../introspection/get_fraction_cells_spawn_request.hpp"
 #include "../introspection/get_fraction_fecund_resource_stockpile.hpp"
 #include "../introspection/get_fraction_nulliparous.hpp"
+#include "../introspection/get_maximum_kin_group_size.hpp"
 #include "../introspection/get_mean_cell_age.hpp"
 #include "../introspection/get_mean_elapsed_insertions_deletions.hpp"
 #include "../introspection/get_mean_elapsed_mutation_occurences.hpp"
@@ -56,12 +58,14 @@
 #include "../introspection/get_mean_incoming_intra_message_count_per_cardinal.hpp"
 #include "../introspection/get_mean_incoming_intra_message_count_per_cell.hpp"
 #include "../introspection/get_mean_kin_group_age.hpp"
+#include "../introspection/get_mean_kin_group_size.hpp"
 #include "../introspection/get_mean_module_count.hpp"
 #include "../introspection/get_mean_program_length.hpp"
 #include "../introspection/get_mean_resource_received_per_cardinal.hpp"
 #include "../introspection/get_mean_resource_received_per_cell.hpp"
 #include "../introspection/get_mean_resource_stockpile.hpp"
 #include "../introspection/get_mean_spawn_count.hpp"
+#include "../introspection/get_median_kin_group_size.hpp"
 #include "../introspection/get_num_running_log_cardinal_updates.hpp"
 #include "../introspection/get_num_running_log_cell_updates.hpp"
 #include "../introspection/get_num_running_log_live_cardinal_updates.hpp"
@@ -530,6 +534,38 @@ void write_demographic_phenotypic_phylogenetic_metrics(
 
     metric = emp::to_string("Fraction Neighbors Kin Level ", lev);
     value = num_kin_neighbors / static_cast<double>( num_neighbors );
+    file.Update();
+
+  }
+
+  for ( size_t lev{}; lev < Spec::NLEV; ++lev ) {
+
+    metric = emp::to_string("Mean Kin Group Size Level ", lev);
+    value = dish2::get_maximum_kin_group_size<Spec>( world, lev );
+    file.Update();
+
+  }
+
+  for ( size_t lev{}; lev < Spec::NLEV; ++lev ) {
+
+    metric = emp::to_string("Mean Kin Group Size Level ", lev);
+    value = dish2::get_mean_kin_group_size<Spec>( world, lev );
+    file.Update();
+
+  }
+
+  for ( size_t lev{}; lev < Spec::NLEV; ++lev ) {
+
+    metric = emp::to_string("Median Kin Group Size Level ", lev);
+    value = dish2::get_median_kin_group_size<Spec>( world, lev );
+    file.Update();
+
+  }
+
+  for ( size_t lev{}; lev < Spec::NLEV; ++lev ) {
+
+    metric = emp::to_string("Fraction Kin Group Loner Cells Level ", lev);
+    value = dish2::get_fraction_cells_kin_group_loners<Spec>( world, lev );
     file.Update();
 
   }
