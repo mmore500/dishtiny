@@ -238,7 +238,7 @@ function on_exit {
   echo "git -C ${arg_slug} fetch --depth 1 origin ${repo_sha}" >> "${rerun}"
   echo "git -C ${arg_slug} checkout FETCH_HEAD" >> "${rerun}"
   echo "git -C ${arg_slug} submodule update --init --recursive --depth 1" >> "${rerun}"
-  echo "singularity shell docker://${arg_username}/${arg_slug}:${container_tag#*@} \
+  echo "singularity shell docker://${arg_username}/${arg_slug}@${container_tag#*@} \
 << 'END_OF_HEREDOC'
 ${INPUT}
 END_OF_HEREDOC" >> "${rerun}"
