@@ -398,8 +398,10 @@ echo "--------------------------------------"
 # no, user has to make output folder if they want it
 # mkdir -p output
 
-# setup latest project source
+echo "repo_sha before asset get ${repo_sha}"
+
 if [ -n "${repo_sha}" ]; then
+  echo "setting up pinned project source at revision ${repo_sha}..."
   for retry in {1..20}; do
     rm -rf "${arg_slug}" \
     && mkdir "${arg_slug}" \
@@ -412,9 +414,10 @@ if [ -n "${repo_sha}" ]; then
     && break \
     || (echo "source setup failure (${retry})" && sleep $((RANDOM % 10)))
 
-    if ((${retry}==20)); then echo "source clone fail" && exit 123123; fi
+    if ((${retry}==20)); then echo "source setup fail" && exit 123123; fi
   done
 else
+  echo "setting up latest project source..."
   for retry in {1..20}; do
     rm -rf "${arg_slug}"
     git clone "https://github.com/${arg_username}/${arg_slug}.git" \
@@ -429,7 +432,7 @@ else
   repo_sha=$(git -C "${arg_slug}" rev-parse HEAD)
 fi
 
-echo "repo_sha ${repo_sha}"
+echo "repo_sha after asset get ${repo_sha}"
 
 # get sha of latest docker container
 if [[ "${container_tag}" != *"@sha256:"* ]]; then
