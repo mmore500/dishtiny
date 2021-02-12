@@ -30,10 +30,12 @@ namespace internal {
 using kv_t = std::pair<std::string, std::string>;
 
 constexpr const char* longlink_suffix = "@longlink";
+constexpr const char* meta_suffix = ".meta";
 
 size_t get_longlinked_filename_max( const std::filesystem::path& path ) {
 
-  constexpr size_t reserved = std::strlen(longlink_suffix);
+  constexpr size_t reserved
+    = std::strlen(longlink_suffix) + std::strlen(meta_suffix);
 
   emp_assert( uitsl::safe_greater(
     pathconf( path.c_str(), _PC_NAME_MAX ), reserved
@@ -137,7 +139,9 @@ std::string pare_keyname_filename(
   const size_t longlinked_filename_max
     = internal::get_longlinked_filename_max( path );
 
-  if ( original_filename.size() <= filename_max ) return original_filename;
+  const size_t projected_size
+    = original_filename.size() + std::strlen(internal::meta_suffix);
+  if ( projected_size <= filename_max ) return original_filename;
 
   std::string filename( original_filename );
 
