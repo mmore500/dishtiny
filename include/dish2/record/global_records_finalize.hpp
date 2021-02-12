@@ -47,7 +47,8 @@ void finalize_drawings() {
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
     "cd outdrawings && for f in *a=*; do"
-    "  keyname stash --move \"${f}\" a proc thread update stint series ext"
+    "  keyname stash --move \"${f}\""
+    "  a proc replicate thread update stint series variation ext"
     "; done"
   "'" ) );
   create_deduplicated_drawing_archive();
@@ -61,7 +62,7 @@ void finalize_artifacts() {
     "cd outartifacts && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
     "    a criteria morph proc stint series thread ext"
-    "    nopout_coarseness nopout_target variation root_id"
+    "    nopout_coarseness nopout_target replicate variation root_id"
     "    $(echo \"$f\" | grep -o \"root_id@[[:digit:]]\\+\")"
     "; done"
   "'" ) );
@@ -74,7 +75,7 @@ void finalize_data() {
     "cd outdata && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
     "    a criteria morph proc stint series thread ext"
-    "    nopout_coarseness nopout_target variation root_id"
+    "    nopout_coarseness nopout_target replicate variation root_id"
     "    $(echo \"$f\" | grep -o \"root_id@[[:digit:]]\\+\")"
     "; done"
   "'" ) );
@@ -86,7 +87,7 @@ void finalize_zip() {
     "shopt -s nullglob; "
     "cd outzips && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
-    "    a proc stint series thread ext"
+    "    a proc replicate stint series thread ext"
     "; done"
   "'" ) );
 }
