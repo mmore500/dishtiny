@@ -3,7 +3,6 @@
 #define DISH2_UTILITY_PARE_KEYNAME_FILENAME_HPP_INCLUDE
 
 #include <cstdio>
-#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <stdlib.h>
@@ -21,6 +20,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "sha256_reduce.hpp"
+#include "strlen.hpp"
 #include "to_alnum.hpp"
 
 namespace dish2 {
@@ -35,7 +35,7 @@ constexpr const char* meta_suffix = ".meta";
 size_t get_longlinked_filename_max( const std::filesystem::path& path ) {
 
   constexpr size_t reserved
-    = __builtin_strlen(longlink_suffix) + __builtin_strlen(meta_suffix);
+    = dish2::strlen(longlink_suffix) + dish2::strlen(meta_suffix);
 
   emp_assert( uitsl::safe_greater(
     pathconf( path.c_str(), _PC_NAME_MAX ), reserved
