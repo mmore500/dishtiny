@@ -35,7 +35,7 @@ constexpr const char* meta_suffix = ".meta";
 size_t get_longlinked_filename_max( const std::filesystem::path& path ) {
 
   constexpr size_t reserved
-    = std::strlen(longlink_suffix) + std::strlen(meta_suffix);
+    = __builtin_strlen(longlink_suffix) + __builtin_strlen(meta_suffix);
 
   emp_assert( uitsl::safe_greater(
     pathconf( path.c_str(), _PC_NAME_MAX ), reserved
