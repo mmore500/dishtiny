@@ -12,8 +12,8 @@
 #include "../../../third-party/Empirical/include/emp/meta/meta.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
-#include "../config/cfg.hpp"
 #include "../config/calc_rng_preseed.hpp"
+#include "../config/cfg.hpp"
 #include "../utility/sha256_reduce.hpp"
 
 namespace dish2 {

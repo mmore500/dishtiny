@@ -2,8 +2,8 @@
 #ifndef DISH2_UTILITY_STRLEN_HPP_INCLUDE
 #define DISH2_UTILITY_STRLEN_HPP_INCLUDE
 
-#include <string>
 #include <cstring>
+#include <string>
 
 #include "../../../third-party/conduit/include/uitsl/polyfill/is_constant_evaluated.hpp"
 
