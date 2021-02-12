@@ -51,6 +51,17 @@ echo "--------------------------------"
 # fail on error
 set -e
 
+################################################################################
+echo
+echo "running evolvekickoff.sh"
+echo "------------------------"
+################################################################################
+
+echo "CONTAINER_TAG ${CONTAINER_TAG}"
+echo "REPO_SHA ${REPO_SHA}"
+echo "STINT ${STINT}"
+echo "SERIES ${SERIES}"
+
 source ~/.secrets.sh || :
 
 for just_one_series in ${SERIES}; do
