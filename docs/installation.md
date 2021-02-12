@@ -83,3 +83,9 @@ Kind of annoying, but on the plus side if you accidentally bork your development
 ::man_shrugging:: ::rocket::
 If you do bork your environment, give the command `exit` until your the terminal pane closes then refresh the page.
 If the command prompt is hanging, you might have to mash `ctrl-c`, `ctrl-\`, or `ctrl-z` first.
+
+If your environment continues to be borked, try
+```bash
+sudo apt-get purge -y docker singularity-container xvfb
+sudo apt-get install -y docker singularity-container xvfb
+```
