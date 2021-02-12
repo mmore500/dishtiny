@@ -19,7 +19,7 @@ std::string make_genome_slug( const std::string& genome_filename ) {
     std::inserter( res_attrs, std::begin( res_attrs ) ),
     []( const auto& kv_pair ){ return std::unordered_set<std::string>{
       "criteria", "morph", "proc", "replicate",
-      "series", "stint", "thread", "transform"
+      "series", "stint", "thread", "variation"
     }.count( kv_pair.first ); }
   );
 
