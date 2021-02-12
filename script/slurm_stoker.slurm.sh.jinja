@@ -182,7 +182,7 @@ for retry in {1..10}; do
   timeout 30s sshpass -p "${HOST_PASSWORD}" \
     scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${JOB_SCRIPT}" "${HOST_USERNAME}@$(hostname):${JOB_SCRIPT}" \
-  && echo "  job script copy success" && break \
+  && echo "  job script copy success" \
   || (echo "retrying job script copy (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==10)); then echo "  job script copy fail" && exit 123123; fi
 done
