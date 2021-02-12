@@ -80,6 +80,27 @@ exported environment variables:
 
 ################################################################################
 echo
+echo "Setup Temporary Files"
+echo "--------------------------------------"
+################################################################################
+
+stdin=$(mktemp)
+log=$(mktemp)
+context=$(mktemp)
+rerun=$(mktemp)
+output=$(mktemp)
+manifest=$(mktemp)
+runner=$(readlink -f $0) # get path to this script
+
+################################################################################
+echo
+echo "Redirect stdout and stderr to Log File"
+echo "--------------------------------------"
+################################################################################
+exec > >(tee "${log}") 2>&1
+
+################################################################################
+echo
 echo "running repro_runner.sh"
 echo "-----------------------"
 ################################################################################
@@ -141,35 +162,6 @@ test ${arg_username} || ( echo "no --username arg" && exit 1 )
 
 ################################################################################
 echo
-echo "Setup Temporary Files"
-echo "--------------------------------------"
-################################################################################
-
-stdin=$(mktemp)
-log=$(mktemp)
-context=$(mktemp)
-rerun=$(mktemp)
-output=$(mktemp)
-manifest=$(mktemp)
-runner=$(readlink -f $0) # get path to this script
-
-echo "stdin ${stdin}"
-echo "log ${log}"
-echo "context ${context}"
-echo "rerun ${rerun}"
-echo "output ${output}"
-echo "manifest ${manifest}"
-echo "runner ${runner}"
-
-################################################################################
-echo
-echo "Redirect stdout and stderr to Log File"
-echo "--------------------------------------"
-################################################################################
-exec > >(tee "${log}") 2>&1
-
-################################################################################
-echo
 echo "Generate REPRO_ID"
 echo "--------------------------------------"
 ################################################################################
@@ -199,6 +191,14 @@ echo "date $(date)"
 echo "hostname $(hostname)"
 echo "pwd $(pwd)"
 command -v qstat >/dev/null && test ${SLURM_JOB_ID} && bash -c "qstat -f \"${SLURM_JOB_ID}\""
+
+echo "stdin ${stdin}"
+echo "log ${log}"
+echo "context ${context}"
+echo "rerun ${rerun}"
+echo "output ${output}"
+echo "manifest ${manifest}"
+echo "runner ${runner}"
 
 ################################################################################
 echo
@@ -414,7 +414,7 @@ else
       --branch "${arg_branch}" \
     && echo "  source clone success" \
     && break \
-    || (echo "source clone upload (${retry})" && sleep $((RANDOM % 10)))
+    || (echo "source clone failure (${retry})" && sleep $((RANDOM % 10)))
 
     if ((${retry}==20)); then echo "source clone fail" && exit 123123; fi
   done
