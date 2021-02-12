@@ -17,6 +17,9 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../introspection/count_live_cells.hpp"
+#include "../introspection/get_root_id_abundance.hpp"
+#include "../introspection/get_root_id_count.hpp"
 #include "../introspection/get_root_id_prevalence.hpp"
 #include "../load/count_root_ids.hpp"
 #include "../load/get_innoculum_filename.hpp"
@@ -57,23 +60,26 @@ void dump_coalescence_result(
   );
   file.AddVal( thread_idx, "Competition Thread" );
   file.AddVal( uitsl::get_proc_id(), "Competition Process" );
+  file.AddVal( world.GetUpdate(), "Update" );
 
-  const size_t population_size = world.GetSize();
-  const size_t update = world.GetUpdate();
+  file.AddVal(world.GetSize(), "Population Slots");
+  file.AddVal(dish2::count_live_cells<Spec>( world ), "Num Live Cells");
 
   std::string filename;
   std::string slug;
   size_t root_id;
   double fitness_differential;
+  double abundance;
   double prevalence;
+  size_t root_id_count;
 
-  file.AddVar(population_size, "Population Size");
-  file.AddVar(prevalence, "Prevalence");
+  file.AddVar(abundance, "Abundance", "Fraction of available slots.");
+  file.AddVar(prevalence, "Prevalence", "Fraction of live cells.");
   file.AddVar(root_id, "Root ID");
   file.AddVar(slug, "Genome Slug");
   file.AddVar(filename, "Genome Filename");
-  file.AddVar(update, "Update");
   file.AddVar(fitness_differential, "Fitness Differential");
+  file.AddVar(root_id_count, "Count");
 
   for (
     const auto& key
@@ -93,9 +99,10 @@ void dump_coalescence_result(
     slug = dish2::get_innoculum_slug( root_id_ );
     root_id = root_id_;
     prevalence =  dish2::get_root_id_prevalence< Spec >( root_id_, world );
+    root_id_count =  dish2::get_root_id_count< Spec >( root_id_, world );
 
     fitness_differential = dish2::calc_fitness_differential(
-      update, prevalence, dish2::count_root_ids()
+      world.GetUpdate(), prevalence, dish2::count_root_ids()
     );
 
     file.Update();

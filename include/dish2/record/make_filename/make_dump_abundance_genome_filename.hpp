@@ -21,16 +21,18 @@ namespace dish2 {
 
 std::string make_dump_abundance_genome_filename(
   const size_t thread_idx,
-  const double abundance_tally,
-  const double abundance_proportion,
+  const size_t count,
+  const double abundance,
+  const double prevalence,
   const std::string& morph
 ) {
 
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "genome"},
     {"criteria", "abundance"},
-    {"abundance_tally", emp::to_string( abundance_tally )},
-    {"abundance_proportion", emp::to_string( abundance_proportion )},
+    {"count", emp::to_string( count )},
+    {"abundance", emp::to_string( abundance )},
+    {"prevalence", emp::to_string( prevalence )},
     {"morph", morph},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},

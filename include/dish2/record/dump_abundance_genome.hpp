@@ -26,17 +26,21 @@ bool dump_abundance_genome(
   // abort if no live cells
   if ( dish2::no_live_cells<Spec>(world) ) return false;
 
-  const auto [genome, abundance_tally]
+  const auto [genome, count]
     = dish2::get_prevalent_coding_genotype_genome<Spec>( world );
 
-  const double abundance_proportion{ abundance_tally / static_cast<double>(
+  const double abundance{ count / static_cast<double>(
+    world.GetSize()
+  ) };
+
+  const double prevalence{ count / static_cast<double>(
     dish2::count_live_cells<Spec>( world )
   ) };
 
   dish2::dump_genome< Spec >(
     genome,
     dish2::make_dump_abundance_genome_filename(
-      thread_idx, abundance_tally, abundance_proportion, "wildtype"
+      thread_idx, count, abundance, prevalence, "wildtype"
     )
   );
 
@@ -49,7 +53,7 @@ bool dump_abundance_genome(
         genome, "abundance"
       ),
       dish2::make_dump_abundance_genome_filename(
-        thread_idx, abundance_tally, abundance_proportion,
+        thread_idx, count, abundance, prevalence,
         "phenotype_equivalent_nopout"
       )
     );

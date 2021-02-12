@@ -10,6 +10,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../introspection/get_root_id_abundance.hpp"
 #include "../introspection/get_root_id_prevalence.hpp"
 #include "../introspection/get_unique_root_ids.hpp"
 #include "../utility/pare_keyname_filename.hpp"
@@ -32,6 +33,8 @@ void write_phylogenetic_root_abundances(
   thread_local emp::DataFile file( dish2::make_data_path( out_filename ) );
 
   thread_local size_t root_id;
+  thread_local double abundance;
+  thread_local size_t count;
   thread_local double prevalence;
   thread_local size_t update;
 
@@ -44,7 +47,9 @@ void write_phylogenetic_root_abundances(
     if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
 
     file.AddVar(root_id, "Root ID");
-    file.AddVar(prevalence, "Prevalence");
+    file.AddVar(abundance, "Abundance", "Proportion of available slots.");
+    file.AddVar(count, "Count");
+    file.AddVar(prevalence, "Prevalence", "Proportion of live cells.");
     file.AddVar(update, "Update");
     file.PrintHeaderKeys();
 
@@ -54,6 +59,8 @@ void write_phylogenetic_root_abundances(
 
   for ( const auto& root_id_ : dish2::get_unique_root_ids<Spec>(world) ) {
     root_id = root_id_;
+    abundance = dish2::get_root_id_abundance<Spec>( root_id, world );
+    count = dish2::get_root_id_count<Spec>( root_id, world );
     prevalence = dish2::get_root_id_prevalence<Spec>( root_id, world );
     file.Update();
   }
