@@ -191,8 +191,8 @@ unset pids
 #===============================================================================
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #===============================================================================
-# dispatch fitness complexity competitions only every fortieth stint
-if (( {{ stint }} % 40 == 0 )); then
+# dispatch fitness complexity competitions only every twentieth stint
+if (( {{ stint }} % 20 == 0 )); then
 echo
 echo "Dispatching Fitness Complexity Competitions"
 echo "==========================================="
