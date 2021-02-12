@@ -44,6 +44,8 @@ void create_deduplicated_drawing_archive() {
 
 void finalize_drawings() {
   // cd doesn't propagate out of std::system call
+  create_deduplicated_drawing_archive();
+  dish2::create_montage();
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
     "cd outdrawings && for f in *a=*; do"
@@ -51,8 +53,6 @@ void finalize_drawings() {
     "  a proc replicate thread update stint series variation ext"
     "; done"
   "'" ) );
-  create_deduplicated_drawing_archive();
-  dish2::create_montage();
 }
 
 void finalize_artifacts() {
