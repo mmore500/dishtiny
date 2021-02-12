@@ -20,6 +20,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
+#include "sha256_reduce.hpp"
 #include "to_alnum.hpp"
 
 namespace dish2 {
@@ -65,7 +66,7 @@ emp::optional<std::string> longlink_longest_value(
   );
 
   const std::string candidate_replacement = emp::to_string(
-    "longlink@", dish2::to_alnum(std::hash<std::string>{}( longest_value ))
+    "longlink@", dish2::to_alnum(dish2::sha256_reduce( longest_value ))
   );
 
   if ( candidate_replacement.size() < longest_value.size() ) {
@@ -91,7 +92,7 @@ std::string longlink_entire_filename(
     return !keep;
   });
 
-  const std::string uid = dish2::to_alnum( std::hash<std::string>{}(filename) );
+  const std::string uid = dish2::to_alnum( dish2::sha256_reduce(filename) );
 
   attrs["longlink"] = uid;
 
