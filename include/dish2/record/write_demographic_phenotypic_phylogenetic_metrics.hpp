@@ -11,6 +11,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../introspection/any_live_cells.hpp"
 #include "../introspection/count_birth_events.hpp"
 #include "../introspection/count_cardinals.hpp"
 #include "../introspection/count_dead_cells.hpp"
@@ -192,6 +193,12 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   {
     metric = "Number Live Cells";
     value = dish2::count_live_cells<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Extinct";
+    value = !dish2::any_live_cells<Spec>( world );
     file.Update();
   }
 

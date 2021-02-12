@@ -17,6 +17,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../introspection/any_live_cells.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_root_id_abundance.hpp"
 #include "../introspection/get_root_id_count.hpp"
@@ -64,6 +65,7 @@ void dump_coalescence_result(
 
   file.AddVal(world.GetSize(), "Population Slots");
   file.AddVal(dish2::count_live_cells<Spec>( world ), "Num Live Cells");
+  file.AddVal(!dish2::any_live_cells<Spec>( world ), "Population Extinct");
 
   std::string filename;
   std::string slug;
