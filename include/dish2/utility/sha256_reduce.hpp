@@ -10,6 +10,7 @@
 #include "../../../third-party/Empirical/include/emp/polyfill/span.hpp"
 #include "../../../third-party/PicoSHA2/picosha2.h"
 
+#include "BytewiseIterator.hpp"
 
 namespace dish2 {
 
@@ -21,7 +22,11 @@ uint32_t sha256_reduce(const It begin, const It end) {
 
   emp::array<unsigned char, picosha2::k_digest_size> hash;
 
-  picosha2::hash256(begin, end, std::begin(hash), std::end(hash));
+  using bytewise_wrapper_t = dish2::BytewiseIterator<It>;
+  picosha2::hash256(
+    bytewise_wrapper_t{ begin }, bytewise_wrapper_t{ end },
+    std::begin(hash), std::end(hash)
+  );
 
   uint32_t res;
   std::memcpy( &res, hash.data(), sizeof( uint32_t ) );

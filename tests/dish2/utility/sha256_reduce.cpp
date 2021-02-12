@@ -21,15 +21,21 @@ TEST_CASE("sha256_reduce determinstic") {
 TEST_CASE("sha256_reduce unique") {
 
   emp::vector<uint32_t> data{
+    dish2::sha256_reduce( emp::vector<uint32_t>{ 0, 1024, 0 } ),
+    dish2::sha256_reduce( emp::vector<uint32_t>{ 0, 1048576, 0 } ),
     dish2::sha256_reduce( emp::vector<uint32_t>{ 0, 0, 0 } ),
     dish2::sha256_reduce( emp::vector<uint32_t>{ 0, 1, 0 } ),
     dish2::sha256_reduce( emp::vector<uint32_t>{ 1, 1, 0 } ),
     dish2::sha256_reduce( emp::vector<uint32_t>{ 0, 9, 0 } ),
     dish2::sha256_reduce( emp::vector<uint32_t>{ 0, 0, 1 } ),
+    dish2::sha256_reduce( emp::vector<uint32_t>{ 0, 1048576 } ),
     dish2::sha256_reduce( emp::vector<uint32_t>{ 0, 0 } ),
     dish2::sha256_reduce( emp::vector<uint32_t>{ 0, 1 } ),
     dish2::sha256_reduce( emp::vector<uint32_t>{ 1, 1 } ),
-    dish2::sha256_reduce( emp::vector<uint32_t>{ 0, 9 } )
+    dish2::sha256_reduce( emp::vector<uint32_t>{ 0, 9 } ),
+    dish2::sha256_reduce( "" ),
+    dish2::sha256_reduce( "asdf" ),
+    dish2::sha256_reduce( "foobar" )
   };
 
   REQUIRE(
