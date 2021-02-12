@@ -320,6 +320,7 @@ function on_error() {
   echo "---------------------"
   echo
 
+  echo "squeue -u $(whoami) | wc -l" && squeue -u "$(whoami)" | wc -l
   echo "squeue -u $(whoami)" && squeue -u "$(whoami)"
 
   echo "hostname" && hostname
