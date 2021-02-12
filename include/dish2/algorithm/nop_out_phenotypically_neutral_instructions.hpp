@@ -3,6 +3,7 @@
 #define DISH2_ALGORITHM_NOP_OUT_PHENOTYPICALLY_NEUTRAL_INSTRUCTIONS_HPP_INCLUDE
 
 #include <algorithm>
+#include <iostream>
 #include <tuple>
 
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
@@ -47,7 +48,7 @@ auto nop_out_phenotypically_neutral_instructions(
     for (size_t i{}; i < nop_length; ++i) if ( idx + i < should_nop.size() ) {
       should_nop[idx + i] = (res == cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES());
       divergence_updates[idx + i] = res;
-      std::cout << ( should_nop[idx + i] ? "x" : "o" ) << std::flush;
+      if (i == 0) std::cout << (should_nop[idx + i] ? "x" : "o") << std::flush;
     }
 
   }

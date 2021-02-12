@@ -4,11 +4,13 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 
 #include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/streamstringify.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_instructions.hpp"
 
 #include "../config/TemporaryConfigOverride.hpp"
 #include "../debug/entry_types.hpp"
@@ -116,6 +118,10 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     for (const auto& upd : divergence_updates) os << upd << std::endl;
   }
+
+  std::cout << sgpl::count_instructions( genome.program, "op" );
+  std::cout << " op instructions remain in phenotype equivalent nopout";
+  std::cout << std::endl;
 
   return genome;
 
