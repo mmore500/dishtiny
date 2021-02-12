@@ -72,16 +72,16 @@ echo "Submit slurm stoker job"
 echo "--------------------------------"
 ################################################################################
 
-for retry in {1..10}; do
+for retry in {0..20}; do
+
+  if ((${retry}==20)); then echo "  job script submit fail" && exit 123123; fi
+
   sshpass -p "${HOST_PASSWORD}" \
     scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${JOB_SCRIPT}" "${HOST_USERNAME}@$(hostname):${JOB_SCRIPT}" \
   && echo "  job script copy success" \
-  || (echo "retrying job script copy (${retry})" && sleep $((RANDOM % 10)))
-  if ((${retry}==10)); then echo "  job script copy fail" && exit 123123; fi
-done
+  || (echo "retrying job script copy (${retry})" && sleep $((RANDOM % 10)) && continue)
 
-for retry in {1..10}; do
   echo "sbatch \"${JOB_SCRIPT}\"" \
   | sshpass -p "${HOST_PASSWORD}" \
     ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
@@ -89,7 +89,7 @@ for retry in {1..10}; do
       'bash -login'  \
   && echo "  job submit success" && break \
   || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)))
-  if ((${retry}==10)); then echo "  job submit fail" && exit 123123; fi
+
 done
 
 ################################################################################
