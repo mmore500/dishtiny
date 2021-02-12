@@ -320,6 +320,8 @@ function on_error() {
   echo "---------------------"
   echo
 
+  echo "squeue -u $(whoami)" && squeue -u "$(whoami)"
+
   echo "hostname" && hostname
   echo "lscpu" && lscpu
   echo "date" && date
