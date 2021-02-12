@@ -5,7 +5,7 @@
 #include <cstddef>
 #include <cstring>
 
-#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+#include "../../../third-party/Empirical/include/emp/base/array.hpp"
 #include "../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/polyfill/span.hpp"
 #include "../../../third-party/PicoSHA2/picosha2.h"
@@ -19,7 +19,7 @@ uint32_t sha256_reduce(const It begin, const It end) {
   // we'll use first sizeof( uint32_t ) bytes as the result
   static_assert( picosha2::k_digest_size >= sizeof( uint32_t ) );
 
-  emp::vector<unsigned char> hash( picosha2::k_digest_size );
+  emp::array<unsigned char, picosha2::k_digest_size> hash;
 
   picosha2::hash256(begin, end, std::begin(hash), std::end(hash));
 
