@@ -18,7 +18,7 @@ bool has_coalesced( const dish2::ThreadWorld<Spec>& world ) {
 
   const auto& population = world.population;
 
-  if ( dish2::no_live_cells<Spec>( world ) ) return false;
+  if ( dish2::no_live_cells<Spec>( world ) ) return true;
   else {
     const auto begin = dish2::LiveCellIterator<Spec>::make_begin(
       population
