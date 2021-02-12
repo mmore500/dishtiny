@@ -13,25 +13,14 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "../config/cfg.hpp"
-#include "../config/has_rng_preseed.hpp"
+#include "../config/calc_rng_preseed.hpp"
 #include "../utility/sha256_reduce.hpp"
 
 namespace dish2 {
 
 void setup_thread_local_random( const size_t thread_idx ) {
 
-  const uint32_t computed_preseed = []{
-    return dish2::sha256_reduce( emp::vector< uint32_t >{
-      dish2::cfg.STINT(),
-      dish2::cfg.SERIES(),
-      dish2::sha256_reduce( dish2::cfg.REPLICATE() )
-    } );
-  }();
-
-  const uint32_t preseed = dish2::has_rng_preseed()
-    ? dish2::cfg.RNG_PRESEED()
-    : computed_preseed
-  ;
+  const uint32_t preseed = dish2::calc_rng_preseed();
 
   std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " using rng preseed " << preseed << std::endl;
