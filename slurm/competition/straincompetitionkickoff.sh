@@ -66,10 +66,12 @@ source ~/.secrets.sh || :
 
 ENDEAVOR="$(( STINT / 1000 ))"
 TOURNAMENT_LAYOUT_SEED="${STINT}"
-NUM_COMPETITIONS_EACH=20
+NUM_SERIES="$( echo ${SERIES} | wc -w )"
+NUM_COMPETITIONS_EACH="\$(( NUM_SERIES - 1 > 20 ? 20 : NUM_SERIES - 1 ))"
 
 echo "ENDEAVOR \${ENDEAVOR}"
 echo "TOURNAMENT_LAYOUT_SEED \${TOURNAMENT_LAYOUT_SEED}"
+echo "NUM_SERIES \${NUM_SERIES}"
 echo "NUM_COMPETITIONS_EACH \${NUM_COMPETITIONS_EACH}"
 
 ################################################################################
