@@ -178,7 +178,7 @@ void dump_genome_statistics(
     std::end(genome.generation_counter.elapsed_generations ),
     sgpl::CountingIterator{},
     [&file]( const auto& generation, const size_t i ){
-      file.AddVar( generation, emp::to_string("Elapsed Generations Lev ", i) );
+      file.AddVar( generation, emp::to_string("Elapsed Generations Level ", i) );
     }
   );
 
@@ -201,7 +201,7 @@ void dump_genome_statistics(
     const auto attrs = emp::keyname::unpack( genome_filename );
     const auto res = attrs.find( key );
     return res != std::end( attrs ) ? res->second : "";
-  } ) );
+  } ), emp::to_string("genome ", key ));
 
 
   file.PrintHeaderKeys();
