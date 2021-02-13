@@ -4,7 +4,7 @@
 #SBATCH --job-name a=evolve+series={{ series }}+stint={{ stint }}
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/a=evolve+job=%j+series={{ series }}+stint={{ stint }}+ext.log"
-#SBATCH --mem=16G
+#SBATCH --mem=24G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 4
 #SBATCH --mail-type=FAIL

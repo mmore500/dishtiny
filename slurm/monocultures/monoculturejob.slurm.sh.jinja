@@ -4,7 +4,7 @@
 #SBATCH --job-name a=monoculture+series={{ series }}+stint={{ stint }}
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/home/mmore500/slurmlogs/a=monoculture+job=%j+series={{ series }}+stint={{ stint }}+ext.log"
-#SBATCH --mem=4G
+#SBATCH --mem=8G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 1
 #SBATCH --mail-type=FAIL
@@ -260,16 +260,6 @@ done
 unset pids
 
 shopt -u nullglob
-
-################################################################################
-echo
-echo "Running watch me evolve integration"
-echo "-----------------------------------"
-################################################################################
-
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/script/watch_me_evolve.py" && \
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/script/watch_me_monoculturejob.py" && \
-python3 watch_me_monoculturejob.py "{{ series }}" || :
 
 ################################################################################
 echo
