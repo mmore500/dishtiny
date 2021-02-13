@@ -28,6 +28,7 @@ std::string make_dump_arbitrary_genome_filename(
     {"a", "genome"},
     {"criteria", "arbitrary"},
     {"morph", morph},
+    {"variation", "master"},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"thread", emp::to_string(thread_idx)},

@@ -84,8 +84,8 @@ python3 "dishtiny/script/layout_interstrain_tournament.py" "\${TOURNAMENT_LAYOUT
 
   read -r FIRST_COMPETITOR_SERIES SECOND_COMPETITOR_SERIES <<<"\${LINE}"
 
-  FIRST_COMPETITOR="s3://dnh2v/endeavor=\${ENDEAVOR}/genomes/stint=${STINT}/series=\${FIRST_COMPETITOR_SERIES}/stage=0+what=generated/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${FIRST_COMPETITOR_SERIES}+stint=${STINT}+thread=0+ext=.json.gz"
-  SECOND_COMPETITOR="s3://dnh2v/endeavor=\${ENDEAVOR}/genomes/stint=${STINT}/series=\${SECOND_COMPETITOR_SERIES}/stage=0+what=generated/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${SECOND_COMPETITOR_SERIES}+stint=${STINT}+thread=0+ext=.json.gz"
+  FIRST_COMPETITOR="s3://dnh2v/endeavor=\${ENDEAVOR}/genomes/stint=${STINT}/series=\${FIRST_COMPETITOR_SERIES}/stage=0+what=generated/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${FIRST_COMPETITOR_SERIES}+stint=${STINT}+thread=0+variation=master+ext=.json.gz"
+  SECOND_COMPETITOR="s3://dnh2v/endeavor=\${ENDEAVOR}/genomes/stint=${STINT}/series=\${SECOND_COMPETITOR_SERIES}/stage=0+what=generated/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${SECOND_COMPETITOR_SERIES}+stint=${STINT}+thread=0+variation=master+ext=.json.gz"
 
   echo "FIRST_COMPETITOR \${FIRST_COMPETITOR}"
   echo "SECOND_COMPETITOR \${SECOND_COMPETITOR}"

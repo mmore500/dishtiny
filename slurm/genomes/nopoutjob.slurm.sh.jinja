@@ -93,7 +93,7 @@ echo "WORK_DIRECTORY ${WORK_DIRECTORY}"
 
 echo "downloading genome from target stint and series..."
 
-f="a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={{ stint }}+thread=0+ext=.json.gz"
+f="a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={{ stint }}+thread=0+variation=master+ext=.json.gz"
 echo "downloading ${f}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
