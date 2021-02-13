@@ -102,7 +102,7 @@ for ((proc=0;proc<N_PROCS;++proc)); do
     echo "downloading ${f}"
     for retry in {1..20}; do
       aws s3 cp --quiet \
-        "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint | int - 1 }}/${f}" \
+        "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint | int - 1 }}/stage=0+what=generated/${f}" \
         "${f}" \
       && echo "  ${f} download success" && break \
       || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
@@ -175,7 +175,7 @@ for p in outartifacts/*a=population*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint }}/series={{ series }}/stage=0+what=generated/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "  $f upload fail" && exit 123123; fi
@@ -193,7 +193,7 @@ for p in outdata/*a={demographic_phenotypic_phylogenetic_metrics,kin_conflict_st
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/metrics/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/metrics/stint={{ stint }}/series={{ series }}/stage=0+what=generated/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -213,7 +213,7 @@ for p in outdata/*a={birth_log,death_log,spawn_log}*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/runninglogs/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/runninglogs/stint={{ stint }}/series={{ series }}/stage=0+what=generated/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -234,7 +234,7 @@ for p in outdata/*a=cell_census*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/censuses/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/censuses/stint={{ stint }}/series={{ series }}/stage=0+what=generated/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -253,7 +253,7 @@ for p in outdrawings/*a=montage*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/montages/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/montages/stint={{ stint }}/series={{ series }}/stage=0+what=generated/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -273,7 +273,7 @@ for p in outzips/*a=drawings*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/drawings/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/drawings/stint={{ stint }}/series={{ series }}/stage=0+what=generated/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -296,7 +296,7 @@ for p in \
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/stage=0+what=generated/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
