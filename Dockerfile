@@ -56,6 +56,8 @@ RUN \
     && \
   echo "installed apt packages"
 
+COPY container/policy.xml /etc/ImageMagick-6/policy.xml
+
 RUN \
   pip3 install --timeout 60 --retries 100 -r /opt/dishtiny/docs/requirements.txt \
     && \

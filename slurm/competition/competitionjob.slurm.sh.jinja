@@ -201,6 +201,16 @@ unset pids
 
 ################################################################################
 echo
+echo "Running watch me evolve integration"
+echo "-----------------------------------"
+################################################################################
+
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/script/watch_me_evolve.py" && \
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/script/watch_me_competitionjob.py" && \
+python3 watch_me_competitionjob.py "{{ series | default('-1') }}" "{{ replicate }}" "{{ first_competitor_url }}" "{{ second_competitor_url }}" || :
+
+################################################################################
+echo
 echo "Done! (SUCCESS)"
 echo "---------------"
 ################################################################################

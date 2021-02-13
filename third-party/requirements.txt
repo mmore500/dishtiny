@@ -11,3 +11,5 @@ matplotlib==3.3.2
 iterpop==0.3.4
 python-slugify==4.0.1
 networkx==2.5
+tweepy==3.10.0
+image-slicer==2.1.1
