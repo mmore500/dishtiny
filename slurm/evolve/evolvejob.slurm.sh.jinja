@@ -102,7 +102,7 @@ for ((proc=0;proc<N_PROCS;++proc)); do
     echo "downloading ${f}"
     for retry in {1..20}; do
       aws s3 cp --quiet \
-        "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint | int - 1 }}/stage=0+what=generated/${f}" \
+        "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/populations/stint={{ stint | int - 1 }}/series={{ series }}/stage=0+what=generated/${f}" \
         "${f}" \
       && echo "  ${f} download success" && break \
       || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
