@@ -97,7 +97,7 @@ f="a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={
 echo "downloading ${f}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
-    "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/stage=0+what=generated/${f}" \
+    "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     "${f}" \
     && echo "  ${f} download success" && break \
     || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
@@ -169,7 +169,7 @@ for p in \
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/stage=1+what=generated/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  $f upload success" && break \
       || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -233,7 +233,7 @@ for p in *a=genome*morph=phenotype_equivalent_nopout*variation=* ; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/stage=1+what=generated/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  $f upload success" && break \
       || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -290,9 +290,9 @@ JOB_SCRIPT="$( \
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
-first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/stage=1+what=generated/${wt}"
-second_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/stage=1+what=generated/${wt}"
-output_url: "s3://dnh2v/endeavor=${ENDEAVOR}/variant-competitions/stint={{ stint }}/series={{ series }}/stage=2+what=generated/"
+first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+second_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+output_url: "s3://dnh2v/endeavor=${ENDEAVOR}/variant-competitions/stage=2+what=generated/stint={{ stint }}/series={{ series }}/"
 replicate: "${REPLICATE}"
 endeavor: "${ENDEAVOR}"
 stint: {{ stint }}
@@ -327,9 +327,9 @@ JOB_SCRIPT="$( keyname pack \
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
-first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/stage=1+what=generated/${wt}"
-second_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stint={{ stint }}/series={{ series }}/stage=1+what=generated/${variant}"
-output_url: "s3://dnh2v/endeavor=${ENDEAVOR}/variant-competitions/stint={{ stint }}/series={{ series }}/stage=2+what=generated/"
+first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+second_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${variant}"
+output_url: "s3://dnh2v/endeavor=${ENDEAVOR}/variant-competitions/stage=2+what=generated/stint={{ stint }}/series={{ series }}/"
 replicate: 0
 endeavor: "${ENDEAVOR}"
 stint: {{ stint }}
