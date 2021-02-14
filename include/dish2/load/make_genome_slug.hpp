@@ -24,7 +24,7 @@ std::string make_genome_slug( const std::string& genome_filename ) {
   );
 
   std::string res_str = emp::keyname::pack( res_attrs );
-  std::replace( std::begin( res_str ), std::end( res_str ), '+', '%' );
+  std::replace( std::begin( res_str ), std::end( res_str ), '+', '~' );
   std::replace( std::begin( res_str ), std::end( res_str ), '=', ':' );
 
   return res_str;

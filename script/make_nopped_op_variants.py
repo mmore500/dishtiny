@@ -51,7 +51,7 @@ for idx in ops:
 
     attrs = kn.unpack(target)
     attrs['variation'] = (
-        attrs['variation'] + f'%i{idx}:Nop-0'
+        f'{attrs['variation']}~i{idx}:Nop-0'
         if 'variation' in attrs else
         f'i{idx}:Nop-0'
     )
