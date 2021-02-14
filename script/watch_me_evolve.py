@@ -57,6 +57,7 @@ def make_catchphrase(which):
         f"I'm not like a regular {which}type, I'm a cool {which}type! 😎",
         f'404 {which}type not found 🦄',
         f'{which}typie!!! 🤳',
+        f"friends don't let friends skip {which}type day 🏋️",
     ]
     return random.choice(catchprases)
 
