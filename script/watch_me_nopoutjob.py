@@ -37,7 +37,8 @@ with tempfile.TemporaryDirectory() as dirpath:
 
     strain: {wme.make_name(series)}
     cell gens: {query("Elapsed Generations Level 0")}
-    accumulated muts: {query("Elapsed Mutations")}
+    indel muts: {query("Elapsed Indel Mutations")}
+    point muts: {query("Elapsed Point Mutations")}
     num modules: {query("Num Modules")}
     num sites: {query("Num Instructions")}
     num sites affecting phenotype: {query("Num Op Instructions")}

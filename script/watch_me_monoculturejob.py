@@ -27,7 +27,8 @@ status = f'''{wme.make_catchphrase('pheno')}
 
 strain: {wme.make_name(series)}
 cell gen: {query("Mean Elapsed Generations Level 0"):.2E}
-elapsed mutations: {query("Mean Elapsed Mutation Occurences"):.2E}
+elapsed indel muts: {query("Mean Elapsed Indel Mutations"):.2E}
+elapsed point muts: {query("Mean Elapsed Point Mutations"):.2E}
 inner group size: {query("Mean Kin Group Size Level 0"):.2E}
 outer group size: {query("Mean Kin Group Size Level 1"):.2E}
 reproduction rate: {query("Num Births per Cell-update"):.2E}
