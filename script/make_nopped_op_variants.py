@@ -7,9 +7,10 @@ import sys
 
 from keyname import keyname as kn
 
-__, target = sys.argv
+__, applyto, basedon = sys.argv
 
-assert 'ext' in kn.unpack( target )
+assert 'ext' in kn.unpack( applyto )
+assert 'ext' in kn.unpack( basedon )
 
 def multiloader(target):
     if kn.unpack( target )['ext'] == '.json':
@@ -32,24 +33,31 @@ def multiloader(target):
     raise ValueError
 
 
-data = multiloader( target )
+applytodata = multiloader( applyto )
+basedondata = multiloader( basedon )
+
+assert (
+    len( applytodata['value0']['program'] )
+    == len( basedondata['value0']['program'] )
+)
+
 
 ops = [
     idx
-    for idx, inst in enumerate(data['value0']['program'])
+    for idx, inst in enumerate(basedondata['value0']['program'])
     if 'Nop-' not in inst['operation']
 ]
 
-print(f'{target} has {len(data["value0"]["program"])} instructions')
-print(f'nopping out {len(ops)} op sites...')
+print(f'{basedon} has {len(basedondata["value0"]["program"])} instructions, {len(ops)} of which are ops')
+print(f'nopping out corresponding {len(ops)} sites on {applyto}...')
 
 for idx in ops:
 
-    variant = copy.deepcopy(data)
+    variant = copy.deepcopy(applytodata)
 
     variant['value0']['program'][ idx ]['operation'] = 'Nop-0'
 
-    attrs = kn.unpack(target)
+    attrs = kn.unpack(applyto)
     attrs['variation'] = (
         f'{attrs["variation"]}~i{idx}%Nop-0'
         if 'variation' in attrs

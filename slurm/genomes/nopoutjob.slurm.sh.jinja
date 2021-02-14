@@ -206,7 +206,10 @@ pwd
 #===============================================================================
 
 PHENOTYPE_EQUIVALENT_GENOME="$(ls "${WORK_DIRECTORY}"/outartifacts/*a=genome*morph=phenotype_equivalent_nopout*.json.gz)"
+WILDTYPE_GENOME="$(ls "${WORK_DIRECTORY}"/*a=genome*morph=wildtype*.json.gz)"
+
 echo "PHENOTYPE_EQUIVALENT_GENOME ${PHENOTYPE_EQUIVALENT_GENOME}"
+echo "WILDTYPE_GENOME ${WILD_TYPE_GENOME}"
 
 ################################################################################
 echo
@@ -216,7 +219,7 @@ echo "----------------------------------------------------------"
 
 # adapted from https://superuser.com/a/689340
 # and https://stackoverflow.com/a/31687663
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/make_nopped_op_variants.py | python3 - "${PHENOTYPE_EQUIVALENT_GENOME}"
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/make_nopped_op_variants.py | python3 - "${WILDTYPE_GENOME}" "${PHENOTYPE_EQUIVALENT_GENOME}"
 
 ################################################################################
 echo
@@ -227,7 +230,7 @@ echo "--------------------------------------------------------"
 shopt -s nullglob
 
 echo "uploading any genome files..."
-for p in *a=genome*morph=phenotype_equivalent_nopout*variation=* ; do
+for p in *a=genome*morph=wildtype*variation=* ; do
   f="$(basename "${p}")"
   echo "uploading ${p} -> ${f}"
   for retry in {1..20}; do
