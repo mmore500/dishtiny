@@ -13,7 +13,7 @@ def make_attribution():
     return textwrap.dedent(f'''
     I tweet data from experiments where computer programs evolve!
 
-    🌐 https://mmore500.com/mmore500/dishtiny
+    🌐 https://mmore500.com/dishtiny/
 
     🗃️ https://osf.io/dnh2v/
 
