@@ -269,7 +269,7 @@ echo "-----------------------------------"
 
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/script/watch_me_evolve.py" && \
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/script/watch_me_monoculturejob.py" && \
-python3 watch_me_monoculturejob.py "{{ series }}" || :
+python3 watch_me_monoculturejob.py "{{ series }}" "{{ stint }}" || :
 
 ################################################################################
 echo

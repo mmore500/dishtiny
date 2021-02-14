@@ -10,7 +10,7 @@ import tweepy
 
 import watch_me_evolve as wme
 
-series, = map(int, sys.argv[1:])
+series, stint = map(int, sys.argv[1:])
 
 if wme.make_id(series) not in (0, 1, 2):
     sys.exit(0)
