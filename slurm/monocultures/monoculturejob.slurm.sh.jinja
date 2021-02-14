@@ -168,7 +168,7 @@ for p in outdata/*a={demographic_phenotypic_phylogenetic_metrics,kin_conflict_st
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/metrics/stage=1+what=generated/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/metrics/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -186,7 +186,7 @@ for p in outdata/*a={birth_log,death_log,spawn_log}*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/stage=1+what=generated/runninglogs/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/stage=1+what=generated/runninglogs/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -204,7 +204,7 @@ for p in outdata/*a=cell_census*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/censuses/stage=1+what=generated/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/censuses/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -222,7 +222,7 @@ for p in outdrawings/*a=montage*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/montages/stage=1+what=generated/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/montages/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -240,7 +240,7 @@ for p in outzips/*a=drawings*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/drawings/stage=1+what=generated/stint={{ stint }}/${f}" \
+      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/drawings/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
