@@ -63,7 +63,7 @@ void finalize_artifacts() {
     "  keyname stash --move \"${f}\""
     "    a criteria morph proc stint series thread ext"
     "    nopout_coarseness nopout_target replicate variation root_id"
-    "    $(echo \"$f\" | grep -o \"root_id@[[:digit:]]\\+\")"
+    "    $(echo \"$f\" | grep -o \"root_id%[[:digit:]]\\+\")"
     "; done"
   "'" ) );
 }
@@ -76,7 +76,7 @@ void finalize_data() {
     "  keyname stash --move \"${f}\""
     "    a criteria morph proc stint series thread ext"
     "    nopout_coarseness nopout_target replicate variation root_id"
-    "    $(echo \"$f\" | grep -o \"root_id@[[:digit:]]\\+\")"
+    "    $(echo \"$f\" | grep -o \"root_id:[[:digit:]]\\+\")"
     "; done"
   "'" ) );
 }

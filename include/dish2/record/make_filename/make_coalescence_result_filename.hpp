@@ -32,7 +32,7 @@ std::string make_coalescence_result_filename(
   };
 
   for (const auto& [root_id, slug] : dish2::get_innoculum_slugs()) {
-    keyname_attributes[ emp::to_string("root_id@", root_id) ] = slug;
+    keyname_attributes[ emp::to_string("root_id:", root_id) ] = slug;
   }
 
   if ( dish2::get_repro() ) {
