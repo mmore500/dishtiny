@@ -20,6 +20,8 @@ def make_attribution():
     👥 @MorenoMatthewA
 
     🔣 #evolutioninaction #msuicer #scicomm #openscience
+
+    🆔 {os.getenv("SLURM_JOB_ID")}
     ''')
 
 def powerset(iterable):
