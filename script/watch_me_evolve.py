@@ -19,7 +19,7 @@ def make_attribution():
 
     👥 @MorenoMatthewA
 
-    🔣 #evolutioninaction #msuicer #scicomm #openscience
+    🔣 #evolutioninaction #icermsu #scicomm #openscience
 
     🆔 {os.getenv("SLURM_JOB_ID")}
     ''')
