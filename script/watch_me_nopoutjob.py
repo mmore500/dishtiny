@@ -29,7 +29,7 @@ with tempfile.TemporaryDirectory() as dirpath:
     os.system( f'gunzip -c "{dirpath}/out.json.gz" > "{dirpath}/out.txt"' )
 
     image_path = dirpath + '/out.png'
-    os.system( f'convert -size 1000x2000 xc:white -font "FreeMono" -pointsize 12 -fill black -annotate +15+15 "@{dirpath}/out.txt" -trim -bordercolor "#FFF" -border 10 +repage {image_path}' )
+    os.system( f'convert -size 1000x2000 xc:white -font "Liberation-Mono" -pointsize 12 -fill black -annotate +15+15 "@{dirpath}/out.txt" -trim -bordercolor "#FFF" -border 10 +repage {image_path}' )
     os.system(f'convert "{image_path}" -define png:extent=3000KB "{image_path}"')
 
 
