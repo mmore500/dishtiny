@@ -101,6 +101,7 @@ void dump_coalescence_result(
     slug = dish2::get_innoculum_slug( root_id_ );
     root_id = root_id_;
     prevalence =  dish2::get_root_id_prevalence< Spec >( root_id_, world );
+    abundance =  dish2::get_root_id_abundance< Spec >( root_id_, world );
     root_id_count =  dish2::get_root_id_count< Spec >( root_id_, world );
 
     fitness_differential = dish2::calc_fitness_differential(
