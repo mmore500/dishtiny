@@ -80,11 +80,11 @@ EMP_BUILD_CONFIG(
   VALUE(
     GROUP_EXPIRATION_DURATIONS,
     internal::nlev_size_t_t,
-    (internal::nlev_size_t_t{ std::kilo::num, 10 * std::kilo::num }),
+    (internal::nlev_size_t_t{ 1024, 2048 }),
     "After how many epochs should groups stop collecting resource?"
   ),
   VALUE(
-    CELL_AGE_DURATION, size_t, 2048, "After how many epochs should cells die?"
+    CELL_AGE_DURATION, size_t, 512, "After how many epochs should cells die?"
   ),
 
 
