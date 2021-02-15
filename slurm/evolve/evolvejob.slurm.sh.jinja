@@ -267,7 +267,7 @@ done
 # upload every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
 echo "uploading any drawing archives..."
-for p in outzips/*a=drawings*; do
+for p in outzips/*a=outdrawings*; do
   f="$(basename "${p}")"
   echo "uploading ${p} -> ${f}"
   for retry in {1..20}; do
