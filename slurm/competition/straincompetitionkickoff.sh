@@ -64,7 +64,7 @@ echo "SERIES ${SERIES}"
 
 source ~/.secrets.sh || :
 
-ENDEAVOR="$(( STINT / 1000 ))"
+ENDEAVOR="$(( SERIES / 1000 ))"
 TOURNAMENT_LAYOUT_SEED="${STINT}"
 NUM_SERIES="$( echo ${SERIES} | wc -w )"
 NUM_COMPETITIONS_EACH="\$(( NUM_SERIES - 1 > 20 ? 20 : NUM_SERIES - 1 ))"
