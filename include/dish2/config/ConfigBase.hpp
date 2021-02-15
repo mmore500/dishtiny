@@ -84,7 +84,7 @@ EMP_BUILD_CONFIG(
     "After how many epochs should groups stop collecting resource?"
   ),
   VALUE(
-    CELL_AGE_DURATION, size_t, 512, "After how many epochs should cells die?"
+    CELL_AGE_DURATION, size_t, 1024, "After how many epochs should cells die?"
   ),
 
 
