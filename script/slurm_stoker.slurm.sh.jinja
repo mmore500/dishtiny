@@ -99,7 +99,7 @@ for JOB_SCRIPT in *.slurm.sh; do
       "${HOST_USERNAME}@$(hostname)" -X \
       'bash -login' \
   )
-  AVAILABLE_SLOTS=800
+  AVAILABLE_SLOTS=600
   if (( OCCUPIED_SLOTS > AVAILABLE_SLOTS )); then
     echo "OCCUPIED_SLOTS ${OCCUPIED_SLOTS}"
     echo "all ${AVAILABLE_SLOTS} AVAILABLE_SLOTS occupied"
