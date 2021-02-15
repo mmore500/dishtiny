@@ -47,6 +47,8 @@ void thread_job(
     std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " write 0" << std::endl;
     thread_world.Update();
+    std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " update step" << std::endl;
     dish2::thread_data_write<Spec>( thread_world, thread_idx );
     std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " write 1" << std::endl;
