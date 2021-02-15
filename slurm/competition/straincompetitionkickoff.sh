@@ -115,7 +115,7 @@ echo "num generated runscripts \$(ls *.slurm.sh | wc -l)"
 # inside itself, then submits itself as a job to gradually feed runscripts onto
 # the queue
 
-echo dishtiny/script/slurm_stoker_containerized_kickoff.sh "${CONTAINER_TAG}" "${REPO_SHA}"
+dishtiny/script/slurm_stoker_containerized_kickoff.sh "${CONTAINER_TAG}" "${REPO_SHA}"
 
 ################################################################################
 echo
