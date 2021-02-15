@@ -556,7 +556,7 @@ void write_demographic_phenotypic_phylogenetic_metrics(
 
   for ( size_t lev{}; lev < Spec::NLEV; ++lev ) {
 
-    metric = emp::to_string("Mean Kin Group Size Level ", lev);
+    metric = emp::to_string("Maximum Kin Group Size Level ", lev);
     value = dish2::get_maximum_kin_group_size<Spec>( world, lev );
     file.Update();
 
