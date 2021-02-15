@@ -38,6 +38,10 @@ void thread_job(
       << " artifacts dump complete" << std::endl;
   }
 
+  if (dish2::cfg.GENESIS() == "innoculate") {
+    dish2::dump_coalescence_result<Spec>( thread_world, thread_idx );
+  }
+
   if ( cfg.DATA_DUMP() ) {
     dish2::thread_data_dump<Spec>( thread_world, thread_idx );
     std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx

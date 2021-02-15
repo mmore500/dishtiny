@@ -28,9 +28,6 @@ void thread_data_dump(
 ) {
 
 
-  if (dish2::cfg.GENESIS() == "innoculate") {
-    dish2::dump_coalescence_result<Spec>( thread_world, thread_idx );
-  }
   dish2::dump_kin_conflict_by_replev_statistics<Spec>(
     thread_world, thread_idx
   );
