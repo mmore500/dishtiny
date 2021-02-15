@@ -282,7 +282,7 @@ echo "Generate WT vs WT Competition Runscripts"
 echo "----------------------------------------"
 ################################################################################
 
-wt=$(basename "${PHENOTYPE_EQUIVALENT_GENOME}")
+wt=$(basename "${WILDTYPE_GENOME}")
 
 for REPLICATE in {0..19}; do
 
@@ -293,8 +293,8 @@ JOB_SCRIPT="$( \
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
-first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
-second_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+second_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
 output_url: "s3://dnh2v/endeavor=${ENDEAVOR}/variant-competitions/stage=2+what=generated/stint={{ stint }}/series={{ series }}/"
 replicate: "${REPLICATE}"
 endeavor: "${ENDEAVOR}"
@@ -314,7 +314,7 @@ echo "---------------------------------------------"
 
 shopt -s nullglob
 
-wt=$(basename "${PHENOTYPE_EQUIVALENT_GENOME}")
+wt=$(basename "${WILDTYPE_GENOME}")
 
 for variant in *a=genome*morph=phenotype_equivalent_nopout*variation=* ; do
 
@@ -330,7 +330,7 @@ JOB_SCRIPT="$( keyname pack \
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
-first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
 second_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${variant}"
 output_url: "s3://dnh2v/endeavor=${ENDEAVOR}/variant-competitions/stage=2+what=generated/stint={{ stint }}/series={{ series }}/"
 replicate: 0
