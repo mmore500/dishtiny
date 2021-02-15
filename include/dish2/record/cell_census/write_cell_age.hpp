@@ -5,9 +5,10 @@
 #include <algorithm>
 
 #include "../../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
-#include "../../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../../cell/cardinal_iterators/CellAgeWrapper.hpp"
+#include "../../introspection/any_live_cells.hpp"
+#include "../../world/iterators/LiveCellIdxIterator.hpp"
 #include "../../world/iterators/LiveCellIterator.hpp"
 #include "../../world/iterators/WorldIteratorAbridger.hpp"
 #include "../../world/ThreadWorld.hpp"
@@ -28,16 +29,17 @@ void write_cell_age(
   const auto& population = world.population;
 
   using lcit_t = dish2::LiveCellIterator<Spec>;
+  using lcidxit_t = dish2::LiveCellIdxIterator<Spec>;
 
   using iterator_t = dish2::WorldIteratorAbridger<
     lcit_t,
     dish2::CellAgeWrapper<Spec>
   >;
 
-  uitsl::for_each(
+  if (dish2::any_live_cells<Spec>( world )) uitsl::for_each(
     iterator_t{ lcit_t::make_begin( population ) },
     iterator_t{ lcit_t::make_end( population ) },
-    sgpl::CountingIterator{},
+    lcidxit_t::make_begin( population ),
     [&]( const auto& val, const size_t idx ) {
       value = val;
       cell_idx = idx;
