@@ -95,25 +95,9 @@ echo "Submit Runscript"
 echo "----------------"
 ################################################################################
 
-for retry in {0..20}; do
-
-  if ((\${retry}==20)); then echo "  job submit fail" && exit 123123; fi
-
-  sshpass -p "\${HOST_PASSWORD}" \
-    scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-      "\${JOB_SCRIPT}" "\${HOST_USERNAME}@\$(hostname):\${JOB_SCRIPT}" \
-  && echo "  job script copy success" \
-  || (echo "retrying job script copy (\${retry})" && sleep \$((RANDOM % 10)) && continue)
-
-  echo "sbatch \"\${JOB_SCRIPT}\"" \
-  | sshpass -p "\${HOST_PASSWORD}" \
-    ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-      "\${HOST_USERNAME}@\$(hostname)" -X \
-      'bash -login'  \
-  && echo "  job submit success" && break \
-  || (echo "retrying job submit (\${retry})" && sleep \$((RANDOM % 10)) && continue)
-
-done
+# adapted from https://superuser.com/a/689340
+# and https://stackoverflow.com/a/4642975
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/${REPO_SHA}/script/host_sbatch.sh" | bash -s "\${JOB_SCRIPT}"
 
 ################################################################################
 echo
