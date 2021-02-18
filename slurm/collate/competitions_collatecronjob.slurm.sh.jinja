@@ -140,7 +140,7 @@ echo "Do Collation"
 echo "---------------------------------------------------"
 ################################################################################
 
-python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/variant-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/variant-competitions/stage=2+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
 
 python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/strain-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
 
