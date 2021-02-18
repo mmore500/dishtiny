@@ -34,7 +34,7 @@ def summarize(values):
     if all(value.isdigit() for value in vals):
         return summarize_ranges(map(int, vals))
     elif len(set(vals)) < 3:
-        return '~'.join( set(vals) )
+        return '~'.join( sorted(set(vals)) )
     else:
         return f'num_unique%{len(set(vals))}'
 
