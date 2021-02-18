@@ -63,6 +63,8 @@ echo "running variant-competitions_collatecronjob.slurm.sh"
 echo "----------------------------------------------------"
 ################################################################################
 
+pip3 install awscli==1.18.105 s3fs==0.5.2 aiobotocore==1.1.2 botocore==1.17.28
+
 ################################################################################
 echo
 echo "Initialize and Log Config"
@@ -143,6 +145,7 @@ echo "---------------------------------------------------"
 python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/variant-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
 
 python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/strain-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+
 
 ################################################################################
 echo

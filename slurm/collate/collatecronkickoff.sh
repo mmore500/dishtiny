@@ -55,6 +55,8 @@ echo "--------------------------------"
 # fail on error
 set -e
 
+pip3 install awscli==1.18.105 s3fs==0.5.2 aiobotocore==1.1.2 botocore==1.17.28
+
 ################################################################################
 echo
 echo "running collatecronkickoff.sh"

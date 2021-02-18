@@ -63,6 +63,8 @@ echo "running evolve_collatecronjob.slurm.sh"
 echo "----------------------------"
 ################################################################################
 
+pip3 install awscli==1.18.105 s3fs==0.5.2 aiobotocore==1.1.2 botocore==1.17.28
+
 ################################################################################
 echo
 echo "Initialize and Log Config"
@@ -97,7 +99,7 @@ echo "------------------------------"
 stint_ready=true
 for series in {{ series }}; do
 
-  aws s3api head-object --bucket dnh2v --key "endeavor={{ endeavor }}/evolve/drawings/stage=0+what=generated/stint=${stint}/series=${series}/a=outdrawings+series=${series}+stint=${stint}+ext=.tar.xz" \
+  aws s3api head-object --bucket dnh2v --key "endeavor={{ endeavor }}/genomes/stage=0+what=generated/stint=${stint}/series=${series}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=${series}+stint=${stint}+thread=0+variation=master+ext=.json.gz" \
     && echo "series ${series} complete" && continue
 
   echo "series ${series} incomplete"
