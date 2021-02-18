@@ -15,6 +15,8 @@ tweepy==3.10.0
 image-slicer==2.1.1
 tqdm==4.50.2
 boto3==1.17.9
-botocore==1.20.9
 fsspec==0.8.5
 s3fs==0.5.2
+awscli==1.18.105
+aiobotocore==1.1.2
+botocore==1.17.28
