@@ -60,6 +60,26 @@ assert any(
     for segment in prefix.split('/')
 )
 
+stages, = [
+    list(kn.unpack(segment)['stage'].split('~'))
+    for segment in prefix.split('/')
+    if 'stage' in kn.unpack(segment) and 'what' in kn.unpack(segment)
+]
+
+print(f'stages {stages}')
+
+prefixes = [ '/'.join(
+    kn.pack({
+        **kn.unpack(segment),
+        **{ 'stage' : stage, },
+    })
+    if 'stage' in kn.unpack(segment) and 'what' in kn.unpack(segment)
+    else segment
+    for segment in prefix.split('/')
+) for stage in stages ]
+
+print(f'prefixes {prefixes}')
+
 ################################################################################
 print(                             )
 print( 'grepping for source files' )
@@ -68,20 +88,15 @@ print( '-------------------------' )
 
 client = boto3.client('s3', region_name='us-west-2',)
 
-# Create a reusable Paginator
-paginator = client.get_paginator('list_objects')
-
-# Create a PageIterator from the Paginator
-page_iterator = paginator.paginate(
-    Bucket=bucket,
-    Prefix=prefix,
-)
-
 pattern = re.compile('.*' + regex + '$')
 
 matches = [
     key['Key']
-    for page in page_iterator
+    for prefix in prefixes
+    for page in client.get_paginator('list_objects').paginate(
+        Bucket=bucket,
+        Prefix=prefix,
+    )
     for key in page['Contents']
     if pattern.match(key['Key'])
 ]
@@ -103,7 +118,9 @@ out_prefix = '/'.join(
     kn.pack({
         **kn.unpack(segment),
         **{
-            'stage' : int(kn.unpack(segment)['stage']) + 1,
+            'stage' : max(
+                map(int, stages),
+            ) + 1,
             'what' : 'collated',
         },
     })
