@@ -41,7 +41,6 @@ extensions = [
     'breathe',
     'exhale',
     'myst_parser',
-    'sphinxemoji.sphinxemoji',
 ]
 
 # Setup the breathe extension
@@ -73,7 +72,7 @@ myst_enable_extensions = [
 ]
 
 # Myst configuration for emoji plugin
-myst_sub_delimiters = [":", ":",]
+myst_sub_delimiters = [":", ":"]
 
 myst_substitutions = json.load(open("emojicodes.json", encoding='utf-8'))
 
