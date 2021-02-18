@@ -144,7 +144,7 @@ echo "--------------------"
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  cat dishtiny/slurm/competition/collatecronkickoff.sh | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+  cat dishtiny/slurm/collate/collatecronkickoff.sh | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
     "${HOST_USERNAME}@$(hostname)" -X \
     "cat | bash -login /dev/stdin evolve {{ container_tag }} {{ repo_sha }} ${stint} {{ series }}" \
     && echo "  continuation success" && break \
