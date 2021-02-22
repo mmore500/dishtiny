@@ -12,7 +12,7 @@ import seaborn as sns
 import sys
 import tempfile
 from tqdm import tqdm
-import scipy.stats as stats
+from scipy import stats
 
 # adapted from https://stackoverflow.com/a/43091576
 def to_ranges(integers):
@@ -125,11 +125,147 @@ def reshape_kin_conflict_by_replev(df):
 
 
 def tabulate_strain_fitness(strain_df):
-    res = strain_df.groupby(
-        ['genome series',],
-    )['Fitness Differential'].mean().reset_index()
-    res['Series'] = res['genome series']
-    return res
+
+    strain_df['Series'] = strain_df['genome series']
+
+    mean_differential = strain_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].mean().reset_index(
+        name='Mean Inter-Strain Fitness Differential',
+    )
+
+    frac_won = strain_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].apply(
+        lambda just_one_series:
+            (just_one_series > 0).sum() / len(just_one_series),
+    ).reset_index(
+        name='Fraction Inter-Strain Competitions Won',
+    )
+
+    null_p = strain_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].apply(
+        lambda just_one_series: stats.binom_test(
+            x=(just_one_series > 0).sum(), # number of successes
+            n=len(just_one_series), # number of trials
+            p=0.5,
+            alternative='two-sided',
+        ),
+    ).reset_index(
+        name='Inter-Strain Competition Null p-value',
+    )
+
+    return reduce(
+        lambda left, right: pd.merge(
+            left,
+            right,
+            on='Series',
+        ),
+        [
+            mean_differential,
+            frac_won,
+            null_p,
+        ],
+    )
+
+def tabulate_predecessor_fitness(predecessor_df):
+
+    # root id 0 is the control competitors (i.e., the predecessors)
+    predecessor_df = predecessor_df[
+        predecessor_df['Root ID'] == 1
+    ].reset_index()
+    predecessor_df['Series'] = predecessor_df['genome series']
+
+    mean_differential = predecessor_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].mean().reset_index(
+        name='Mean Fitness Differential Against Predecessor',
+    )
+
+    frac_won = predecessor_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].apply(
+        lambda just_one_series:
+            (just_one_series > 0).sum() / len(just_one_series),
+    ).reset_index(
+        name='Fraction Predecessor Competitions Won',
+    )
+
+    null_p = predecessor_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].apply(
+        lambda just_one_series: stats.binom_test(
+            x=(just_one_series > 0).sum(), # number of successes
+            n=len(just_one_series), # number of trials
+            p=0.5,
+            alternative='two-sided',
+        ),
+    ).reset_index(
+        name='Predecessor Competition Null p-value',
+    )
+
+    return reduce(
+        lambda left, right: pd.merge(
+            left,
+            right,
+            on='Series',
+        ),
+        [
+            mean_differential,
+            frac_won,
+            null_p,
+        ],
+    )
+
+def tabulate_progenitor_fitness(progenitor_df):
+
+    # root id 0 is the control competitors (i.e., the progenitors)
+    progenitor_df = progenitor_df[
+        progenitor_df['Root ID'] == 1
+    ].reset_index()
+    progenitor_df['Series'] = progenitor_df['genome series']
+
+    mean_differential = progenitor_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].mean().reset_index(
+        name='Mean Fitness Differential Against Progenitor',
+    )
+
+    frac_won = progenitor_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].apply(
+        lambda just_one_series:
+            (just_one_series > 0).sum() / len(just_one_series),
+    ).reset_index(
+        name='Fraction Progenitor Competitions Won',
+    )
+
+    null_p = progenitor_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].apply(
+        lambda just_one_series: stats.binom_test(
+            x=(just_one_series > 0).sum(), # number of successes
+            n=len(just_one_series), # number of trials
+            p=0.5,
+            alternative='two-sided',
+        ),
+    ).reset_index(
+        name='Progenitor Competition Null p-value',
+    )
+
+    return reduce(
+        lambda left, right: pd.merge(
+            left,
+            right,
+            on='Series',
+        ),
+        [
+            mean_differential,
+            frac_won,
+            null_p,
+        ],
+    )
 
 
 def filter_for_phenotype_neutral_nopout(genome_df):
@@ -250,6 +386,48 @@ if (stint % 20 == 0):
         tabulate_fitness_complexity( variant_df )
     )
     sources.append( variant_competitions.key )
+
+
+if (stint % 20 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling predecessor competitions'                                 )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+
+    predecessor_competitions, = my_bucket.objects.filter(
+        Prefix=f'endeavor={endeavor}/predecessor-competitions/stage=2+what=collated/stint={stint}/'
+    )
+
+    predecessor_df = pd.read_csv(
+        f's3://{bucket}/{predecessor_competitions.key}'
+    )
+
+    dataframes.append(
+        tabulate_predecessor_fitness( predecessor_df )
+    )
+    sources.append( predecessor_competitions.key )
+
+
+if (stint % 20 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling progenitor competitions'                                  )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+
+    progenitor_competitions, = my_bucket.objects.filter(
+        Prefix=f'endeavor={endeavor}/progenitor-competitions/stage=2+what=collated/stint={stint}/'
+    )
+
+    progenitor_df = pd.read_csv(f's3://{bucket}/{progenitor_competitions.key}')
+
+    dataframes.append(
+        tabulate_progenitor_fitness( progenitor_df )
+    )
+    sources.append( progenitor_competitions.key )
 
 
 if (stint % 10 == 0):
