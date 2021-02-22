@@ -45,7 +45,7 @@ singularity shell docker://mmore500/dishtiny
 If the script hangs on a "gpg"-related step, hit `ctrl-c` and try again a few times.
 If you get an error like `Error downloading https://index.docker.io/v2/(...). Do you have permission to write to /home/mmore500/.singularity/docker?` hit `ctrl-\` and then retry the `singularity shell` step.
 
-This'll take a few minutes, so go get yourself a cup of coffee |:coffee:|.
+This'll take a few minutes, so go get yourself a cup of coffee ::coffee::.
 When you get back, a shell prompt from the container should be ready to rock and roll.
 At this point, you can check out the source code, make, and run!
 ```bash

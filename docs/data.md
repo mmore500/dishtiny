@@ -56,12 +56,12 @@ To wok with these files, you'll need to use [`tar`](https://linux.die.net/man/1/
 ## Data Repository
 
 Our evolution experiments upload data to the [Open Science Framework](https://osf.io/) *as they run*.
-This means that our data is available hot off the presses! |:hotsprings:|
+This means that our data is available hot off the presses! ::hotsprings::
 You can find peruse and download at <https://osf.io/9vkd7/>.
 The [Center for Open Science](https://www.cos.io/) also provides a Python tool called [osfclient](https://github.com/osfclient/osfclient) that allows programatic file downloads.
 
 If you have interesting ideas of hypotheses to test or further experiments to run with this data, [get in touch](mailto:m.more500@gmail.com) to collaborate --- or, if you prefer, take the data and run with it on your own!
-(I'd still love to hear about what you're up to and what you find |:smile:|.)
+(I'd still love to hear about what you're up to and what you find ::smile::.)
 
 Inside the `repro/` folder, you'll find logs from our Slurm jobs --- not much of scientific interest to analyze here, but useful to verify how data was generated and troubleshoot technical issues.
 
