@@ -93,7 +93,7 @@ container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
 first_competitor_url: "\${FIRST_COMPETITOR}"
 second_competitor_url: "\${SECOND_COMPETITOR}"
-output_url: "s3://dnh2v/endeavor=\${ENDEAVOR}/predecessor-competitions/stage=1+what=generated/stint=${STINT}/"
+output_url: "s3://dnh2v/endeavor=\${ENDEAVOR}/predecessor-competitions/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
 replicate: "\${REPLICATE}"
 endeavor: "\${ENDEAVOR}"
 stint: "${STINT}"
