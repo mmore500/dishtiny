@@ -1,9 +1,9 @@
 #!/bin/bash -login
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --job-name a=straincompetitioncron+stint={{ stint }}
+#SBATCH --job-name a=monocultures_collatecron+stint={{ stint }}
 #SBATCH --account=devolab
-#SBATCH --output="/mnt/home/mmore500/slurmlogs/a=straincompetitioncron+job=%j+stint={{ stint }}+ext.log"
+#SBATCH --output="/mnt/home/mmore500/slurmlogs/a=monocultures_collatecron+job=%j+stint={{ stint }}+ext.log"
 #SBATCH --mem=4G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 1
@@ -13,7 +13,7 @@
 
 ################################################################################
 echo
-echo "running straincompetitioncronjob.slurm.sh"
+echo "running monocultures_collatecronjob.slurm.sh"
 echo "-----------------------------------------"
 ################################################################################
 
@@ -46,7 +46,7 @@ chmod +x "${REPRO_RUNNER}"
 ################################################################################
 echo
 echo "Run Job with repro_runner.sh"
-echo "--------------------------------"
+echo "----------------------------"
 ################################################################################
 
 "${REPRO_RUNNER}" \
@@ -59,8 +59,8 @@ set -e
 
 ################################################################################
 echo
-echo "running straincompetitioncron.slurm.sh"
-echo "--------------------------------------"
+echo "running monocultures_collatecronjob.slurm.sh"
+echo "----------------------------"
 ################################################################################
 
 ################################################################################
@@ -82,8 +82,8 @@ echo "repo_sha {{ repo_sha }}"
 
 ################################################################################
 echo
-echo "Launch Inter-strain Competitions for Next Ready Stints"
-echo "------------------------------------------------------"
+echo "Collate Data for Next Ready Stints"
+echo "----------------------------------"
 ################################################################################
 
 while true; do
@@ -97,7 +97,7 @@ echo "------------------------------"
 stint_ready=true
 for series in {{ series }}; do
 
-  aws s3api head-object --bucket dnh2v --key "endeavor={{ endeavor }}/evolve/drawings/stage=0+what=generated/stint=${stint}/series=${series}/a=outdrawings+series=${series}+stint=${stint}+ext=.tar.xz" \
+  aws s3api head-object --bucket dnh2v --key "endeavor={{ endeavor }}/monocultures/drawings/stage=1+what=generated/stint=${stint}/series=${series}/a=outdrawings+series=${series}+stint=${stint}+ext=.tar.xz" \
     && echo "series ${series} complete" && continue
 
   echo "series ${series} incomplete"
@@ -115,28 +115,24 @@ fi
 
 ################################################################################
 echo
-echo "Kick Off Inter-strain Competitions for Target Stint"
+echo "Do Collation"
 echo "---------------------------------------------------"
 ################################################################################
 
-for retry in {1..20}; do
-  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  cat dishtiny/slurm/competition/straincompetitionkickoff.sh | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    "cat | bash -login /dev/stdin {{ container_tag }} {{ repo_sha }} ${stint} {{ series }}" \
-    && echo "  competition kickoff success" && break \
-    || (echo "retrying competition kickoff (${retry})" && sleep $((RANDOM % 10)))
+python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/monocultures/metrics/stage=1+what=generated/stint=${stint}/" 'series=[0-9]+/a=demographic_phenotypic_phylogenetic_metrics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
 
-  if ((${retry}==20)); then echo "competition kickoff fail" && exit 123123; fi
-done
+python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/monocultures/metrics/stage=1+what=generated/stint=${stint}/" 'series=[0-9]+/a=kin_conflict_statistics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+
+python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/monocultures/metrics/stage=1+what=generated/stint=${stint}/" 'series=[0-9]+/a=kin_conflict_by_replev_statistics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+
 
 ################################################################################
 echo
 echo "Increment Stint then Rinse and Repeat"
-echo "-----------------------------------"
+echo "-------------------------------------"
 ################################################################################
 
-stint=$((stint+20))
+stint=$((stint+10))
 
 done
 
@@ -148,9 +144,9 @@ echo "--------------------"
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  cat dishtiny/slurm/competition/straincompetitioncronkickoff.sh | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+  cat dishtiny/slurm/collate/collatecronkickoff.sh | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
     "${HOST_USERNAME}@$(hostname)" -X \
-    "cat | bash -login /dev/stdin {{ container_tag }} {{ repo_sha }} ${stint} {{ series }}" \
+    "cat | bash -login /dev/stdin monocultures {{ container_tag }} {{ repo_sha }} ${stint} {{ series }}" \
     && echo "  continuation success" && break \
     || (echo "retrying continuation (${retry})" && sleep $((RANDOM % 10)))
 

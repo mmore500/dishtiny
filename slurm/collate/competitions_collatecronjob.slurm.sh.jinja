@@ -144,6 +144,10 @@ python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/variant-c
 
 python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/strain-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
 
+python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/predecessor-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+
+python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/progenitor-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+
 ################################################################################
 echo
 echo "Increment Stint then Rinse and Repeat"

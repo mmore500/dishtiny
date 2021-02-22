@@ -9,6 +9,7 @@
 [![code coverage status](https://codecov.io/gh/mmore500/dishtiny/branch/master/graph/badge.svg)](https://codecov.io/gh/mmore500/dishtiny)
 [![dotos](https://img.shields.io/endpoint?url=https%3A%2F%2Fmmore500.com%2Fdishtiny%2Fmaster%2Fdoto-badge.json)](https://github.com/mmore500/dishtiny/search?q=todo+OR+fixme&type=)
 [![GitHub stars](https://img.shields.io/github/stars/mmore500/dishtiny.svg?style=flat-square&logo=github&label=Stars&logoColor=white)](https://github.com/mmore500/dishtiny)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/mmore500/dishtiny/HEAD?filepath=binder%2Findex.ipynb)
 
 Framework for digital multicellularity research.
 

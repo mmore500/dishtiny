@@ -74,7 +74,7 @@ echo "--------------------------------"
 
 # adapted from https://superuser.com/a/689340
 # and https://stackoverflow.com/a/4642975
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/${REPO_SHA}/script/host_sbatch.sh" | bash -s "${JOB_SCRIPT}"
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/${repo_sha}/script/host_sbatch.sh" | bash -s "${JOB_SCRIPT}"
 
 
 ################################################################################

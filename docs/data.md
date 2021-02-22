@@ -1,8 +1,10 @@
 # Data Overview
 
-In order to write data files, you'll need to use the `--DATA_DUMP 1` command line flag.
-
 ## Data Files
+
+This section covers running the dishtiny executable yourself to generate your own data.
+
+In order to write data files, you'll need to use the `--DATA_DUMP 1` command line flag.
 
 Data file filenames look a little funny because they're named use a naming convention that allows metadata to be easily packed into and unpacked.
 Usually, look for `a=` field to get a description of what's actually in a file.
@@ -44,6 +46,9 @@ You should be able to open these with your preferred scripting language or sprea
 `*.gz` files are [gzipped](https://en.wikipedia.org/wiki/Gzip).
 To work with these files, you'll need to use [`gunzip`](https://linux.die.net/man/1/gunzip) to uncompress them.
 
+`*.xz` files are [xzipped](https://en.wikipedia.org/wiki/XZ_Utils).
+To work with these files, you'll need to use [`xz --decompress`](https://linux.die.net/man/1/xz) to uncompress them.
+
 `*.json` files are formatted using [JavaScript Object Notation](https://en.wikipedia.org/wiki/JSON).
 Your preferred scripting language should have [some tools](https://docs.python.org/3/library/json.html) to open these.
 
@@ -55,13 +60,26 @@ To wok with these files, you'll need to use [`tar`](https://linux.die.net/man/1/
 
 ## Data Repository
 
-Our evolution experiments upload data to the [Open Science Framework](https://osf.io/) *as they run*.
-This means that our data is available hot off the presses! |:hotsprings:|
-You can find peruse and download at <https://osf.io/9vkd7/>.
-The [Center for Open Science](https://www.cos.io/) also provides a Python tool called [osfclient](https://github.com/osfclient/osfclient) that allows programatic file downloads.
+This section covers using data generated from existing dishtiny experiments.
 
 If you have interesting ideas of hypotheses to test or further experiments to run with this data, [get in touch](mailto:m.more500@gmail.com) to collaborate --- or, if you prefer, take the data and run with it on your own!
-(I'd still love to hear about what you're up to and what you find |:smile:|.)
+(I'd still love to hear about what you're up to and what you find ::smile::.)
+
+### Hassle-free Pre-wrangled Data via Web GUI ::cowboy::
+
+We host a pre-configured Jupyter notebook for each of our consolidated datasets on <mybinder.org>.
+You can jump into them [here](https://mybinder.org/v2/gh/mmore500/dishtiny/HEAD?filepath=binder%2Findex.ipynb).
+
+Right now, the binder environment is stocked with a few Python data analysis and visualization tools.
+Binder also has other scripting languages like R and Julia on tap, though!
+If you don't see your preferred tools or packages in the binder, make a pull request, open an issue, or [send me an email](mailto:m.more500@gmail.com) and we'll make sure they're there.
+
+### Spelunking in the OSF Data Repository
+
+Our evolution experiments upload all data to the [Open Science Framework](https://osf.io/) *as they run*.
+This means that our data is available hot off the presses! ::hotsprings::
+You can find peruse and download at <https://osf.io/9vkd7/>.
+The [Center for Open Science](https://www.cos.io/) also provides a Python tool called [osfclient](https://github.com/osfclient/osfclient) that allows programatic file downloads.
 
 Inside the `repro/` folder, you'll find logs from our Slurm jobs --- not much of scientific interest to analyze here, but useful to verify how data was generated and troubleshoot technical issues.
 
