@@ -292,6 +292,7 @@ def tabulate_fitness_complexity(variant_df):
         ].reset_index()
 
         # fit a t distribution to the control data
+        # df is degrees of freedom
         df, loc, scale = stats.t.fit( wt_vs_wt_df['Fitness Differential'] )
 
         # calculate the probability of observing fitness differential result
