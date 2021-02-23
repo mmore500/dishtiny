@@ -19,7 +19,7 @@ namespace dish2 {
 
 template< typename Spec >
 void seed_genomes_into(
-  const emp::vector< dish2::Genome<Spec> >& seeds,
+  emp::vector< emp::vector<dish2::Genome<Spec>> > seed_buckets,
   dish2::ThreadWorld<Spec>& world
 ) {
 
@@ -29,17 +29,29 @@ void seed_genomes_into(
     dish2::CauseOfDeath::elimination
   );
 
-  if ( seeds.size() ) {
+  if ( seed_buckets.size() ) {
 
-    // fill incoming_population with genomes from seeds,
-    // looping through seeds as necessary to fill incoming_population...
+    // shuffle each bucket
+    for ( auto& bucket : seed_buckets ) {
+      emp::Shuffle( sgpl::tlrand.Get(), bucket );
+    }
+
+    // fill incoming_population with genomes from seed buckets,
+    // looping through buckets as necessary to fill incoming_population...
     emp::vector< dish2::Genome<Spec> > incoming_population;
     incoming_population.reserve( population.size() );
     std::transform(
       sgpl::CountingIterator{}, sgpl::CountingIterator{ population.size() },
       std::back_inserter( incoming_population ),
-      [&seeds]( const size_t idx ){
-        return seeds[ idx % seeds.size() ];
+      [&seed_buckets]( const size_t idx ){
+        const size_t bucket_idx = idx % seed_buckets.size();
+        const size_t bucket_pass_count = idx / seed_buckets.size();
+        const size_t cur_bucket_length = seed_buckets[bucket_idx].size();
+        return seed_buckets[
+          bucket_idx
+        ][
+          bucket_pass_count % cur_bucket_length
+        ];
       }
     );
 
@@ -58,6 +70,24 @@ void seed_genomes_into(
     );
 
   }
+
+}
+
+template< typename Spec >
+void seed_genomes_into(
+  const emp::vector< dish2::Genome<Spec> >& seeds,
+  dish2::ThreadWorld<Spec>& world
+) {
+
+  emp::vector< emp::vector<dish2::Genome<Spec>> > seed_buckets;
+
+  std::transform(
+    std::begin( seeds ), std::end( seeds ),
+    std::back_inserter( seed_buckets ),
+    []( const auto& seed ){ return emp::vector<dish2::Genome<Spec>>{ seed }; }
+  );
+
+  dish2::seed_genomes_into<Spec>( seed_buckets, world );
 
 }
 

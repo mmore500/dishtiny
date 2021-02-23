@@ -16,6 +16,7 @@
 
 #include "../algorithm/seed_genomes_into.hpp"
 #include "../genome/Genome.hpp"
+#include "../utility/autoload.hpp"
 #include "../world/ThreadWorld.hpp"
 
 namespace dish2 {
@@ -25,32 +26,26 @@ void reconstitute_population(
   const size_t thread_idx, dish2::ThreadWorld<Spec>& world
 ) {
 
+  const auto eligible_population_paths = uitsl::keyname_directory_filter({
+    {"a", "population"},
+    {"proc", emp::to_string( uitsl::get_proc_id() )},
+    {"thread", emp::to_string( thread_idx )},
+    {"ext", R"(\.bin|\.bin\.gz|\.bin\.xz|\.json|\.json\.gz|\.json\.xz)"}
+  }, ".", true);
+
+  emp_always_assert(
+    eligible_population_paths.size() == 1,
+    eligible_population_paths.size(), eligible_population_paths
+  );
+
   // must set root ids here?
-  emp::vector< dish2::Genome<Spec> > reconstituted;
+  auto reconstituted = dish2::autoload< emp::vector< dish2::Genome<Spec> > >(
+    eligible_population_paths.front()
+  );
 
-  {
-
-    const auto eligible_population_paths = uitsl::keyname_directory_filter({
-      {"a", "population"},
-      {"proc", emp::to_string( uitsl::get_proc_id() )},
-      {"thread", emp::to_string( thread_idx )},
-      {"ext", ".bin.xz"}
-    });
-
-    emp_always_assert(
-      eligible_population_paths.size() == 1,
-      eligible_population_paths.size(), eligible_population_paths
-    );
-
-    bxz::ifstream ifs( eligible_population_paths.front() );
-    cereal::BinaryInputArchive iarchive( ifs );
-    iarchive( reconstituted );
-
-    std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-      << " reconstituted " << reconstituted.size() << " cells from "
-      << eligible_population_paths.front() << std::endl;
-
-  }
+  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    << " reconstituted " << reconstituted.size() << " cells from "
+    << eligible_population_paths.front() << std::endl;
 
   dish2::seed_genomes_into<Spec>( reconstituted, world );
 

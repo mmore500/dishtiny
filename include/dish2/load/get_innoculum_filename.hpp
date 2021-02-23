@@ -7,6 +7,7 @@
 #include <string>
 
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
+#include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_filter.hpp"
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
@@ -21,23 +22,11 @@ std::string get_innoculum_filename( const size_t root_id ) {
 
   using dir_it_t = std::filesystem::directory_iterator;
 
-  emp::vector<std::filesystem::path> innoculum_paths;
-  std::copy_if(
-    dir_it_t( "." ), dir_it_t(),
-    std::back_inserter( innoculum_paths ),
-    [&]( const auto& entry ){
-      const auto attrs = emp::keyname::unpack( entry.path() );
-      return attrs.count("a") && attrs.at("a") == "genome"
-        && attrs.count("root_id")
-          && attrs.at("root_id") == emp::to_string( root_id )
-        && attrs.count("ext") && (
-          attrs.at("ext") == ".json"
-          || attrs.at("ext") == ".json.gz"
-          || attrs.at("ext") == ".bin"
-          || attrs.at("ext") == ".bin.gz"
-        );
-    }
-  );
+  auto innoculum_paths = uitsl::keyname_directory_filter({
+    {"a", "genome|population"},
+    {"root_id", emp::to_string( root_id )},
+    {"ext", R"(\.bin|\.bin\.gz|\.bin\.xz|\.json\.gz|\.json\.xz|\.json)"}
+  }, ".", true);
 
   emp_always_assert(
     innoculum_paths.size() == 1,
