@@ -10,7 +10,7 @@ echo "-------------------------------"
 set -e
 
 # increase stack size so that we can have very long lists of arguments
-ulimit -s unlimited
+ulimit -s 262144
 
 if (( "$#" != 2 )); then
   echo "USAGE: [container_tag] [repo_sha]"
