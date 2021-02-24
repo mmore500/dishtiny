@@ -357,16 +357,19 @@ if (stint % 20 == 0):
     print( '-----------------------------------------------------------------' )
     ############################################################################
 
-    strain_competitions, = my_bucket.objects.filter(
-        Prefix=f'endeavor={endeavor}/strain-competitions/stage=2+what=collated/stint={stint}/'
-    )
+    try:
+        strain_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/strain-competitions/stage=2+what=collated/stint={stint}/'
+        )
 
-    strain_df = pd.read_csv(f's3://{bucket}/{strain_competitions.key}')
+        strain_df = pd.read_csv(f's3://{bucket}/{strain_competitions.key}')
 
-    dataframes.append(
-        tabulate_strain_fitness( strain_df )
-    )
-    sources.append( strain_competitions.key )
+        dataframes.append(
+            tabulate_strain_fitness( strain_df )
+        )
+        sources.append( strain_competitions.key )
+    except ValueError:
+        print("missing strain competitions, skipping")
 
 
 if (stint % 20 == 0):
@@ -376,17 +379,19 @@ if (stint % 20 == 0):
     print( '-----------------------------------------------------------------' )
     ############################################################################
 
+    try:
+        variant_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+        )
 
-    variant_competitions, = my_bucket.objects.filter(
-        Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
-    )
+        variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
 
-    variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
-
-    dataframes.append(
-        tabulate_fitness_complexity( variant_df )
-    )
-    sources.append( variant_competitions.key )
+        dataframes.append(
+            tabulate_fitness_complexity( variant_df )
+        )
+        sources.append( variant_competitions.key )
+    except ValueError:
+        print("missing variant competitions, skipping")
 
 
 if (stint % 20 == 0):
@@ -396,20 +401,22 @@ if (stint % 20 == 0):
     print( '-----------------------------------------------------------------' )
     ############################################################################
 
+    try:
+        predecessor_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/predecessor-competitions/stage=2+what=collated/stint={stint}/'
+        )
 
-    predecessor_competitions, = my_bucket.objects.filter(
-        Prefix=f'endeavor={endeavor}/predecessor-competitions/stage=2+what=collated/stint={stint}/'
-    )
+        predecessor_df = pd.read_csv(
+            f's3://{bucket}/{predecessor_competitions.key}'
+        )
 
-    predecessor_df = pd.read_csv(
-        f's3://{bucket}/{predecessor_competitions.key}'
-    )
+        dataframes.append(
+            tabulate_predecessor_fitness( predecessor_df )
+        )
+        sources.append( predecessor_competitions.key )
 
-    dataframes.append(
-        tabulate_predecessor_fitness( predecessor_df )
-    )
-    sources.append( predecessor_competitions.key )
-
+    except ValueError:
+        print("missing predecessor competitions, skipping")
 
 if (stint % 20 == 0):
     ############################################################################
@@ -418,18 +425,19 @@ if (stint % 20 == 0):
     print( '-----------------------------------------------------------------' )
     ############################################################################
 
+    try:
+        progenitor_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/progenitor-competitions/stage=2+what=collated/stint={stint}/'
+        )
 
-    progenitor_competitions, = my_bucket.objects.filter(
-        Prefix=f'endeavor={endeavor}/progenitor-competitions/stage=2+what=collated/stint={stint}/'
-    )
+        progenitor_df = pd.read_csv(f's3://{bucket}/{progenitor_competitions.key}')
 
-    progenitor_df = pd.read_csv(f's3://{bucket}/{progenitor_competitions.key}')
-
-    dataframes.append(
-        tabulate_progenitor_fitness( progenitor_df )
-    )
-    sources.append( progenitor_competitions.key )
-
+        dataframes.append(
+            tabulate_progenitor_fitness( progenitor_df )
+        )
+        sources.append( progenitor_competitions.key )
+    except ValueError:
+        print("missing progenitor competitions, skipping")
 
 if (stint % 10 == 0):
     ############################################################################
@@ -438,16 +446,19 @@ if (stint % 10 == 0):
     print( '-----------------------------------------------------------------' )
     ############################################################################
 
-    genome_statistics, = my_bucket.objects.filter(
-        Prefix=f'endeavor={endeavor}/genomes/stage={2 if stint % 20 == 0 else 1}+what=collated/stint={stint}/'
-    )
+    try:
+        genome_statistics, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/genomes/stage={2 if stint % 20 == 0 else 1}+what=collated/stint={stint}/'
+        )
 
-    genome_df = pd.read_csv(f's3://{bucket}/{genome_statistics.key}')
+        genome_df = pd.read_csv(f's3://{bucket}/{genome_statistics.key}')
 
-    dataframes.append(
-        filter_for_phenotype_neutral_nopout( genome_df )
-    )
-    sources.append( genome_statistics.key )
+        dataframes.append(
+            filter_for_phenotype_neutral_nopout( genome_df )
+        )
+        sources.append( genome_statistics.key )
+    except ValueError:
+        print("missing phenotype neutral nopout genotype statistics, skipping")
 
 
 if (stint % 10 == 0):
@@ -457,19 +468,21 @@ if (stint % 10 == 0):
     print( '-----------------------------------------------------------------' )
     ############################################################################
 
-    monoculture_kin_conflict_statistics, = my_bucket.objects.filter(
-        Prefix=f'endeavor={endeavor}/monocultures/metrics/stage=2+what=collated/stint={stint}/a=kin_conflict_statistics+'
-    )
+    try:
+        monoculture_kin_conflict_statistics, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/monocultures/metrics/stage=2+what=collated/stint={stint}/a=kin_conflict_statistics+'
+        )
 
-    monoculture_kin_conflict_df = pd.read_csv(
-        f's3://{bucket}/{monoculture_kin_conflict_statistics.key}'
-    )
+        monoculture_kin_conflict_df = pd.read_csv(
+            f's3://{bucket}/{monoculture_kin_conflict_statistics.key}'
+        )
 
-    dataframes.append(
-        reshape_kin_conflict( monoculture_kin_conflict_df )
-    )
-    sources.append( monoculture_kin_conflict_statistics.key )
-
+        dataframes.append(
+            reshape_kin_conflict( monoculture_kin_conflict_df )
+        )
+        sources.append( monoculture_kin_conflict_statistics.key )
+    except ValueError:
+        print("missing monoculture kin conflict statistics, skipping")
 
 if (stint % 10 == 0):
     ############################################################################
@@ -478,19 +491,21 @@ if (stint % 10 == 0):
     print( '-----------------------------------------------------------------' )
     ############################################################################
 
-    monoculture_kin_conflict_by_replev_statistics, = my_bucket.objects.filter(
-        Prefix=f'endeavor={endeavor}/monocultures/metrics/stage=2+what=collated/stint={stint}/a=kin_conflict_by_replev_statistics+'
-    )
+    try:
+        monoculture_kin_conflict_by_replev_statistics, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/monocultures/metrics/stage=2+what=collated/stint={stint}/a=kin_conflict_by_replev_statistics+'
+        )
 
-    monoculture_kin_conflict_by_replev_df = pd.read_csv(
-        f's3://{bucket}/{monoculture_kin_conflict_by_replev_statistics.key}'
-    )
+        monoculture_kin_conflict_by_replev_df = pd.read_csv(
+            f's3://{bucket}/{monoculture_kin_conflict_by_replev_statistics.key}'
+        )
 
-    dataframes.append(
-        reshape_kin_conflict_by_replev( monoculture_kin_conflict_by_replev_df )
-    )
-    sources.append( monoculture_kin_conflict_by_replev_statistics.key )
-
+        dataframes.append(
+            reshape_kin_conflict_by_replev( monoculture_kin_conflict_by_replev_df )
+        )
+        sources.append( monoculture_kin_conflict_by_replev_statistics.key )
+    except ValueError:
+        print("missing monoculture kin conflict by replev statistics, skipping")
 
 if (stint % 10 == 0):
     ############################################################################
@@ -499,19 +514,21 @@ if (stint % 10 == 0):
     print( '-----------------------------------------------------------------' )
     ############################################################################
 
-    monoculture_dpp_metrics, = my_bucket.objects.filter(
-        Prefix=f'endeavor={endeavor}/monocultures/metrics/stage=2+what=collated/stint={stint}/a=demographic_phenotypic_phylogenetic_metrics+'
-    )
+    try:
+        monoculture_dpp_metrics, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/monocultures/metrics/stage=2+what=collated/stint={stint}/a=demographic_phenotypic_phylogenetic_metrics+'
+        )
 
-    monoculture_dpp_df = pd.read_csv(
-        f's3://{bucket}/{monoculture_dpp_metrics.key}'
-    )
+        monoculture_dpp_df = pd.read_csv(
+            f's3://{bucket}/{monoculture_dpp_metrics.key}'
+        )
 
-    dataframes.append(
-        reshape_dpp( monoculture_dpp_df )
-    )
-    sources.append( monoculture_dpp_metrics.key )
-
+        dataframes.append(
+            reshape_dpp( monoculture_dpp_df )
+        )
+        sources.append( monoculture_dpp_metrics.key )
+    except ValueError:
+        print("missing monoculture dpp metrics, skipping")
 
 ################################################################################
 print(                                                                         )
