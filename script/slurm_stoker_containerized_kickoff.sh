@@ -9,9 +9,6 @@ echo "---------------------------------------------"
 # fail on error
 set -e
 
-# increase stack size so that we can have very long lists of arguments
-ulimit -s 262144
-
 if (( "$#" != 2 )); then
   echo "USAGE: [container_tag] [repo_sha]"
   echo "run this inside of a directory containing all the *.slurm.sh jobs"
@@ -19,7 +16,7 @@ if (( "$#" != 2 )); then
   exit 1
 fi
 
-export container_tag="${1}"
+container_tag="${1}"
 shift
 
 export repo_sha="${1}"
@@ -27,16 +24,6 @@ shift
 
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
-
-################################################################################
-echo
-echo "Zip *.slurm.sh files into payload"
-echo "-----------------------------------"
-################################################################################
-
-echo "$(ls *.slurm.sh | wc -l) target files detected"
-
-payload="$(tar -czvf - *.slurm.sh | uuencode -m -)"
 
 ################################################################################
 echo
@@ -61,12 +48,27 @@ done
 
 ################################################################################
 echo
-echo "Instantiate slurm stoker job template"
+echo "Zip *.slurm.sh files into payload"
+echo "and instantiate slurm stoker job template"
 echo "-------------------------------------"
 ################################################################################
 
-export payload
-j2 --import-env "" -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" -
+echo "$(ls *.slurm.sh | wc -l) target files detected"
+
+tar -czvf - *.slurm.sh \
+| uuencode -m - \
+| python3 -c "
+
+import json
+import sys
+
+print( json.dumps( {
+  'payload' : sys.stdin.read(),
+  'container_tag' : '${container_tag}',
+  'repo_sha' : '${repo_sha}',
+} ) )
+
+" | j2 --format=json -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" -
 
 echo "job script instantiation size $(du -h "${JOB_SCRIPT}")"
 
