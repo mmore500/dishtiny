@@ -101,7 +101,7 @@ echo "downloading {{ first_competitor_url }}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
     "{{ first_competitor_url }}" \
-    "root_id=0+$(basename {{ first_competitor_url }})" \
+    "{{ first_competitor_attrs | default('') }}root_id=0+$(basename {{ first_competitor_url }})" \
     && echo "  {{ first_competitor_url }} download success" && break \
     || (echo "retrying {{ first_competitor_url }} download (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "{{ first_competitor_url }} download fail" && exit 123123; fi
@@ -111,7 +111,7 @@ echo "downloading {{ second_competitor_url }}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
     "{{ second_competitor_url }}" \
-    "root_id=1+$(basename {{ second_competitor_url }})" \
+    "{{ second_competitor_attrs | default('') }}root_id=1+$(basename {{ second_competitor_url }})" \
     && echo "  {{ second_competitor_url }} download success" && break \
     || (echo "retrying {{ second_competitor_url }} download (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "{{ second_competitor_url }} download fail" && exit 123123; fi

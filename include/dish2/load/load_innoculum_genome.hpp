@@ -24,15 +24,20 @@ dish2::Genome<Spec> load_innoculum_genome(
   const size_t thread_idx, const std::filesystem::path& path
 ) {
 
+  const auto attrs = emp::keyname::unpack( path );
+
   // all innoculums must specify root id
-  emp_always_assert(emp::keyname::unpack( path ).count("root_id"), path);
+  emp_always_assert(attrs.count("root_id"), path);
 
-  dish2::Genome<Spec> innoculum( dish2::autoload<dish2::Genome<Spec>>( path ) );
+  auto innoculum = dish2::autoload<dish2::Genome<Spec>>( path );
 
-  const size_t root_id = uitsl::stoszt(
-    emp::keyname::unpack( path ).at("root_id")
-  );
+  const size_t root_id = uitsl::stoszt( attrs.at("root_id") );
   innoculum.root_id.SetID( root_id );
+
+  if ( attrs.count("mutate_on_load") ) {
+    const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
+    for (size_t i{}; i < num_muts; ++i) innoculum.DoMutation();
+  }
 
   std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " loaded innoculum genome " << root_id << " from " << path << std::endl;

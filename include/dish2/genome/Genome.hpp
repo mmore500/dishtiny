@@ -103,16 +103,18 @@ struct Genome {
 
     if (
       sgpl::tlrand.Get().P( dish2::cfg.MUTATION_RATE()[rep_lev] )
-    ) {
-      mutation_counter.RecordMutationOccurrence();
-      MutateProgram();
-      mutation_counter.RecordPointMutation(
-        event_tags.ApplyPointMutations( dish2::cfg.POINT_MUTATION_RATE() )
-      );
-    }
+    ) DoMutation();
 
     // root_id and stint_root_id doesn't change
 
+  }
+
+  void DoMutation() {
+    mutation_counter.RecordMutationOccurrence();
+    MutateProgram();
+    mutation_counter.RecordPointMutation(
+      event_tags.ApplyPointMutations( dish2::cfg.POINT_MUTATION_RATE() )
+    );
   }
 
   void MutateProgram() {
