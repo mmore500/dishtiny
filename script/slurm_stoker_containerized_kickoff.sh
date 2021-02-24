@@ -36,7 +36,7 @@ echo "-----------------------------------"
 
 echo "$(ls *.slurm.sh | wc -l) target files detected"
 
-export payload="$(tar -czvf - *.slurm.sh | uuencode -m -)"
+payload="$(tar -czvf - *.slurm.sh | uuencode -m -)"
 
 ################################################################################
 echo
@@ -65,6 +65,7 @@ echo "Instantiate slurm stoker job template"
 echo "-------------------------------------"
 ################################################################################
 
+export payload
 j2 --import-env "" -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" -
 
 echo "job script instantiation size $(du -h "${JOB_SCRIPT}")"

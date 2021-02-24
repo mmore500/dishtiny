@@ -37,7 +37,7 @@ echo "Zip *.slurm.sh files into payload"
 echo "-----------------------------------"
 ################################################################################
 
-export payload="$(tar -czvf - *.slurm.sh | singularity exec "docker://mmore500/sharutils:sha-223389d" uuencode -m -)"
+payload="$(tar -czvf - *.slurm.sh | singularity exec "docker://mmore500/sharutils:sha-223389d" uuencode -m -)"
 
 ################################################################################
 echo
@@ -66,6 +66,7 @@ echo "Instantiate slurm stoker job template"
 echo "-------------------------------------"
 ################################################################################
 
+export payload
 j2 --import-env "" -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" -
 
 ################################################################################
