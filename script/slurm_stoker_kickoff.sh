@@ -9,6 +9,9 @@ echo "-------------------------------"
 # fail on error
 set -e
 
+# increase stack size so that we can have very long lists of arguments
+ulimit -s unlimited
+
 if (( "$#" != 2 )); then
   echo "USAGE: [container_tag] [repo_sha]"
   echo "run this inside of a directory containing all the *.slurm.sh jobs"
