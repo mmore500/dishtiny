@@ -218,6 +218,55 @@ def tabulate_predecessor_fitness(predecessor_df):
         ],
     )
 
+def tabulate_predecessor_battle_fitness(predecessor_df):
+
+    # root id 0 is the control competitors (i.e., the predecessors)
+    predecessor_df = predecessor_df[
+        predecessor_df['Root ID'] == 1
+    ].reset_index()
+    predecessor_df['Series'] = predecessor_df['genome series']
+
+    mean_differential = predecessor_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].mean().reset_index(
+        name='Mean Fitness Differential Against Predecessor Population',
+    )
+
+    frac_won = predecessor_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].apply(
+        lambda just_one_series:
+            (just_one_series > 0).sum() / len(just_one_series),
+    ).reset_index(
+        name='Fraction Predecessor Battles Won',
+    )
+
+    null_p = predecessor_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].apply(
+        lambda just_one_series: stats.binom_test(
+            x=(just_one_series > 0).sum(), # number of successes
+            n=len(just_one_series), # number of trials
+            p=0.5,
+            alternative='two-sided',
+        ),
+    ).reset_index(
+        name='Predecessor Battle Null p-value',
+    )
+
+    return reduce(
+        lambda left, right: pd.merge(
+            left,
+            right,
+            on='Series',
+        ),
+        [
+            mean_differential,
+            frac_won,
+            null_p,
+        ],
+    )
+
 def tabulate_progenitor_fitness(progenitor_df):
 
     # root id 0 is the control competitors (i.e., the progenitors)
@@ -417,6 +466,31 @@ if (stint % 20 == 0):
 
     except ValueError:
         print("missing predecessor competitions, skipping")
+
+
+if (stint % 20 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling predecessor battles'                                      )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        predecessor_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/predecessor-battles/stage=2+what=collated/stint={stint}/'
+        )
+
+        predecessor_df = pd.read_csv(
+            f's3://{bucket}/{predecessor_competitions.key}'
+        )
+
+        dataframes.append(
+            tabulate_predecessor_battle_fitness( predecessor_df )
+        )
+        sources.append( predecessor_competitions.key )
+
+    except ValueError:
+        print("missing predecessor battles, skipping")
 
 if (stint % 20 == 0):
     ############################################################################
