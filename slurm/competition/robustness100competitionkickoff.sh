@@ -91,7 +91,7 @@ container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
 first_competitor_url: "\${FIRST_COMPETITOR}"
 second_competitor_url: "\${SECOND_COMPETITOR}"
-second_competitor_attr: "mutate_on_load=100+"
+second_competitor_attrs: "mutate_on_load=100+"
 output_url: "s3://dnh2v/endeavor=\${ENDEAVOR}/robustness100-competitions/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
 replicate: "\${REPLICATE}"
 endeavor: "\${ENDEAVOR}"
