@@ -382,6 +382,70 @@ def tabulate_fitness_complexity(variant_df):
 
     return pd.DataFrame(res)
 
+def tabulate_robustness(robustness_df, variant_df):
+
+    robustness_df['Competition Series'] = robustness_df['genome series']
+
+    res = []
+    for series in robustness_df['Competition Series'].unique():
+
+        robustness_series_df = robustness_df[
+            robustness_df['Competition Series'] == series
+        ]
+        variant_series_df = variant_df[
+            variant_df['Competition Series'] == series
+        ]
+
+        wt_vs_wt_df = variant_series_df.groupby('Competition Repro').filter(
+            lambda x: (x['genome variation'] == 'master').all()
+        ).groupby('Competition Repro').first().reset_index()
+
+        wt_vs_mutant_df = robustness_series_df[
+            robustness_series_df['genome root_id'] == 1
+        ].reset_index()
+
+        # fit a t distribution to the control data
+        # df is degrees of freedom
+        df, loc, scale = stats.t.fit( wt_vs_wt_df['Fitness Differential'] )
+
+        # calculate the probability of observing fitness differential result
+        # under control data distribution
+        if len(wt_vs_mutant_df):
+            wt_vs_mutant_df['p'] =  wt_vs_mutant_df.apply(
+                lambda row: stats.t.cdf(
+                    row['Fitness Differential'],
+                    df,
+                    loc=loc,
+                    scale=scale,
+                ),
+                axis=1,
+            )
+        else:
+            # special case for an empty dataframe
+            # to prevent an exception
+            wt_vs_mutant_df['p'] = []
+
+
+        p_thresh = 1.0 / 100
+        num_more_fit_mutants = (wt_vs_mutant_df['p'] > 1 - p_thresh).sum()
+        num_less_fit_mutants = (wt_vs_mutant_df['p'] < p_thresh).sum()
+
+        res.append({
+            'Series' : series,
+            'Num More Fit Mutants' : num_more_fit_mutants,
+            'Num Less Fit Mutants' : num_less_fit_mutants,
+            'Fraction Mutations that are Advantageous'
+                : num_more_fit_mutants / len(wt_vs_mutant_df),
+            'Fraction Mutations that are Deleterious'
+                : num_less_fit_mutants  / len(wt_vs_mutant_df),
+            'Mean Mutant Fitness Differential'
+                : np.mean( wt_vs_mutant_df['Fitness Differential'] ),
+            'Median Mutant Fitness Differential'
+                : np.median( wt_vs_mutant_df['Fitness Differential'] ),
+        })
+
+    return pd.DataFrame(res)
+
 
 ################################################################################
 print(                                                                         )
@@ -441,6 +505,35 @@ if (stint % 20 == 0):
         sources.append( variant_competitions.key )
     except ValueError:
         print("missing variant competitions, skipping")
+
+if (stint % 20 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling robustness competitions'                                  )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        variant_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+        )
+
+        variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
+
+        robustness_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/robustness-competitions/stage=2+what=collated/stint={stint}/'
+        )
+
+        robustness_df = pd.read_csv(
+            f's3://{bucket}/{robustness_competitions.key}'
+        )
+
+        dataframes.append(
+            tabulate_robustness( robustness_df, variant_df )
+        )
+        sources.append( robustness_competitions.key )
+    except ValueError:
+        print("missing robustness competitions, skipping")
 
 
 if (stint % 20 == 0):
