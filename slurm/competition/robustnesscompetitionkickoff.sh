@@ -96,6 +96,7 @@ output_url: "s3://dnh2v/endeavor=\${ENDEAVOR}/robustness-competitions/stage=1+wh
 replicate: "\${REPLICATE}"
 endeavor: "\${ENDEAVOR}"
 stint: "${STINT}"
+series: "\${JUST_ONE_SERIES}"
 J2_HEREDOC_EOF
 
   done
