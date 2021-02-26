@@ -382,15 +382,13 @@ def tabulate_fitness_complexity(variant_df):
 
     return pd.DataFrame(res)
 
-def tabulate_robustness(robustness_df, variant_df):
-
-    robustness_df['Competition Series'] = robustness_df['genome series']
+def tabulate_mutant(mutant_df, variant_df):
 
     res = []
-    for series in robustness_df['Competition Series'].unique():
+    for series in mutant_df['Competition Series'].unique():
 
-        robustness_series_df = robustness_df[
-            robustness_df['Competition Series'] == series
+        mutant_series_df = mutant_df[
+            mutant_df['Competition Series'] == series
         ]
         variant_series_df = variant_df[
             variant_df['Competition Series'] == series
@@ -400,8 +398,8 @@ def tabulate_robustness(robustness_df, variant_df):
             lambda x: (x['genome variation'] == 'master').all()
         ).groupby('Competition Repro').first().reset_index()
 
-        wt_vs_mutant_df = robustness_series_df[
-            robustness_series_df['genome root_id'] == 1
+        wt_vs_mutant_df = mutant_series_df[
+            mutant_series_df['genome root_id'] == 1
         ].reset_index()
 
         # fit a t distribution to the control data
@@ -509,7 +507,7 @@ if (stint % 20 == 0):
 if (stint % 20 == 0):
     ############################################################################
     print(                                                                     )
-    print( 'handling robustness competitions'                                  )
+    print( 'handling mutant competitions'                                      )
     print( '-----------------------------------------------------------------' )
     ############################################################################
 
@@ -520,20 +518,20 @@ if (stint % 20 == 0):
 
         variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
 
-        robustness_competitions, = my_bucket.objects.filter(
-            Prefix=f'endeavor={endeavor}/robustness-competitions/stage=2+what=collated/stint={stint}/'
+        mutant_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/mutant-competitions/stage=2+what=collated/stint={stint}/'
         )
 
-        robustness_df = pd.read_csv(
-            f's3://{bucket}/{robustness_competitions.key}'
+        mutant_df = pd.read_csv(
+            f's3://{bucket}/{mutant_competitions.key}'
         )
 
         dataframes.append(
-            tabulate_robustness( robustness_df, variant_df )
+            tabulate_mutant( mutant_df, variant_df )
         )
-        sources.append( robustness_competitions.key )
+        sources.append( mutant_competitions.key )
     except ValueError:
-        print("missing robustness competitions, skipping")
+        print("missing mutant competitions, skipping")
 
 
 if (stint % 20 == 0):
