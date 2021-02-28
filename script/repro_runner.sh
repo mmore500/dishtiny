@@ -242,7 +242,7 @@ END_OF_HEREDOC" >> "${rerun}"
   #   if ((${retry}==3)); then echo "upload rerun fail"; fi
   # done &
 
-  xz -c "${log}" > "${logzip}"
+  xz -c -9e "${log}" > "${logzip}"
   echo "uploading log"
   for retry in {1..3}; do
     aws s3 cp --quiet \
