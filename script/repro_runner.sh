@@ -313,7 +313,7 @@ function on_error() {
   echo "---------------------"
   echo
 
-  if [[ test -v SLURM_RESTART_COUNT ]]; then
+  if test -v SLURM_RESTART_COUNT; then
     echo "job requeue failure, job has already been requeued"
     echo "SLURM_RESTART_COUNT ${SLURM_RESTART_COUNT}"
   else
