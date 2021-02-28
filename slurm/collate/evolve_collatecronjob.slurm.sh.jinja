@@ -11,6 +11,8 @@
 #SBATCH --mail-user=mmore500@msu.edu
 #SBATCH --begin=now+4hour
 #SBATCH --exclude=csn-002
+# Send SIGTERM when within 5 minutes of end time.
+#SBATCH --signal=B:TERM@05:00
 
 ################################################################################
 echo

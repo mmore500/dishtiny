@@ -449,7 +449,7 @@ echo "Do Work"
 echo "--------------------------------------"
 ################################################################################
 
-# Timeout with 5 minutes (300 seconds) left in job.
+# Timeout with 4 minutes (240 seconds) left in job.
 # If not a slurm job, set duration to 0 to disable the associated timeout.
 TIMEOUT_SECONDS=$( \
   test ${SLURM_JOB_ID} \
@@ -459,7 +459,7 @@ TIMEOUT_SECONDS=$( \
     | tac \
     | tr "\n" " " \
     |  awk '{ print $1 + $2*60 + $3*3600 + $4*86400 }' \
-    | awk '{print $1-300}' \
+    | awk '{print $1-240}' \
   || echo 0 \
 )
 echo "TIMEOUT_SECONDS ${TIMEOUT_SECONDS}"
