@@ -318,7 +318,7 @@ function on_error() {
     echo "SLURM_RESTART_COUNT ${SLURM_RESTART_COUNT}"
   elif test -v SLURM_JOB_ID; then
     command -v scontrol \
-    scontrol requeue "${SLURM_JOB_ID}" \
+    && scontrol requeue "${SLURM_JOB_ID}" \
     && echo "job requeue success" \
     || echo "job requeue failure, requeue error"
   else
