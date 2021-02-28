@@ -310,6 +310,22 @@ function on_error() {
   echo "---------------------"
   echo
 
+  if [[ test -v SLURM_RESTART_COUNT ]]; then
+    echo "job requeue failure, job has already been requeued"
+    echo "SLURM_RESTART_COUNT ${SLURM_RESTART_COUNT}"
+  else
+    command -v scontrol \
+    scontrol requeue "${SLURM_JOB_ID}" \
+    && echo "job requeue success" \
+    || echo "job requeue failure, requeue error"
+  fi
+
+  echo "sstat -j ${SLURM_JOB_ID}"
+  sstat -j "${SLURM_JOB_ID}"
+
+  echo "scontrol show jobid -dd ${SLURM_JOB_ID}"
+  scontrol show jobid -dd "${SLURM_JOB_ID}"
+
   echo "squeue -u $(whoami) | wc -l" && squeue -u "$(whoami)" | wc -l
   echo "squeue -u $(whoami)" && squeue -u "$(whoami)"
 
@@ -338,13 +354,6 @@ function on_error() {
   echo "ipcs" && ipcs
   echo "cat /proc/net/dev" && cat /proc/net/dev
   time curl -o /dev/null http://speedtest-blr1.digitalocean.com/10mb.test
-
-  if (( ${1} == 123123 )); then
-    command -v scontrol \
-      && scontrol requeue "${SLURM_JOB_ID}" \
-      && echo "error code 123123, job resubmit success, restart count ${SLURM_RESTART_COUNT}" \
-      || echo "error code 123123, job resubmit failure, restart count ${SLURM_RESTART_COUNT}"
-  fi
 
   # upload log files
   on_exit
