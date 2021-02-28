@@ -346,12 +346,12 @@ function on_error() {
 
   echo "Sending Pushover Notification"
   bash <(curl https://raw.githubusercontent.com/mmore500/pushover.sh/master/pushover.sh) \
+    -u $(curl --upload-file \
+      "${REPRO_PATH}/a=log+repro=${REPRO_ID}+ext=.txt" \
+      https://transfer.sh \
+    ) \
    -T "$PUSHOVER_APP_TOKEN" -U "$PUSHOVER_USER_TOKEN" \
     "${SLURM_JOB_ID} ${SLURM_JOB_NAME} error code ${1}, restart count ${SLURM_RESTART_COUNT}"
-
-    # -u $(osf -p "${arg_project}" geturl \
-    #    "${REPRO_PATH}/a=log+repro=${REPRO_ID}+ext=.txt" \
-    #  ) \
 
   # reset exit trap
   trap '' EXIT
