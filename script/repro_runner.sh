@@ -33,22 +33,7 @@ for each session:
     * if any files from the session should be saved, be sure to put them in the output folder during the shell session
     * bonus points if you use the REPRO_ID environment variable in output filenames so that the files can be traced back to this session
 
-  9. the following artifacts are added to the OSF project's storage
-    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=runner+repro={REPRO_ID}+ext=.sh\"
-      * this script
-    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=stdin+repro={REPRO_ID}+ext=.txt\"
-      * commands recorded during the shell session
-    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=output+repro={REPRO_ID}+ext=.tar.gz\"
-      * tar.gz archive of the output folder
-    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=manifest+repro={REPRO_ID}+ext=.tar.gz\"
-      * hierarchical listing of output folder contents
-    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=rerun+repro={REPRO_ID}+ext=.sh\"
-      * script to rerun computations from the current session
-      * using sha's to ensure the same exact same source and container
-    * \"a=repro+year={REPRO_YEAR}/month={REPRO_MONTH}/day={REPRO_DAY}/hour={REPRO_HOUR}/id={REPRO_ID}/a=log+repro={REPRO_ID}+ext=.txt\"
-      * output from the current session
-
-  10. if the shell session exited an error code, a pushover notification is dispatched
+  9. if the shell session exited an error code, a pushover notification is dispatched
     * contains \$SLURM_JOB_NAME
     * contains hyperlink to the job log file on OSF
 
@@ -244,65 +229,65 @@ ${INPUT}
 END_OF_HEREDOC" >> "${rerun}"
   chmod +x "${rerun}"
 
-  echo "uploading rerun"
-  for retry in {1..3}; do
-    osf -p "${arg_project}" upload \
-      "${rerun}" \
-      "${REPRO_PATH}/a=rerun+repro=${REPRO_ID}+ext=.sh" \
-    && echo "  rerun upload success" \
-    && break \
-      || (echo "retrying rerun upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==3)); then echo "upload rerun fail"; fi
-  done &
+  # echo "uploading rerun"
+  # for retry in {1..3}; do
+  #   osf -p "${arg_project}" upload \
+  #     "${rerun}" \
+  #     "${REPRO_PATH}/a=rerun+repro=${REPRO_ID}+ext=.sh" \
+  #   && echo "  rerun upload success" \
+  #   && break \
+  #     || (echo "retrying rerun upload (${retry})" && sleep $((RANDOM % 10)))
+  #   if ((${retry}==3)); then echo "upload rerun fail"; fi
+  # done &
 
-  echo "uploading log"
-  for retry in {1..3}; do
-    osf -p "${arg_project}" upload \
-      "${log}" \
-      "${REPRO_PATH}/a=log+repro=${REPRO_ID}+ext=.txt" \
-    && echo "  log upload success" \
-    && break \
-      || (echo "retrying log upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==3)); then echo "upload log fail"; fi
-  done &
+  # echo "uploading log"
+  # for retry in {1..3}; do
+  #   osf -p "${arg_project}" upload \
+  #     "${log}" \
+  #     "${REPRO_PATH}/a=log+repro=${REPRO_ID}+ext=.txt" \
+  #   && echo "  log upload success" \
+  #   && break \
+  #     || (echo "retrying log upload (${retry})" && sleep $((RANDOM % 10)))
+  #   if ((${retry}==3)); then echo "upload log fail"; fi
+  # done &
 
   # if user has created an output directory, upload it
-  if [ -d "${WORK_DIRECTORY}/output" ]; then
+  # if [ -d "${WORK_DIRECTORY}/output" ]; then
+  #
+  #   echo "uploading output manifest"
+  #   ls "${WORK_DIRECTORY}/output" > "${manifest}"
+  #   for retry in {1..3}; do
+  #     osf -p "${arg_project}" upload \
+  #       "${manifest}" \
+  #       "${REPRO_PATH}/a=manifest+repro=${REPRO_ID}+ext=.txt" \
+  #     && echo "  manifest upload success" \
+  #     && break \
+  #       || (echo "retrying manifest upload (${retry})" && sleep $((RANDOM % 10)))
+  #     if ((${retry}==3)); then echo "upload manifest fail"; fi
+  #   done &
+  #
+  #   echo "uploading output"
+  #   tar -czf "${output}" "${WORK_DIRECTORY}/output"
+  #   for retry in {1..10}; do
+  #     osf -p "${arg_project}" upload \
+  #       "${output}" \
+  #       "${REPRO_PATH}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
+  #     && echo "  output upload success" \
+  #     && break \
+  #       || (echo "retrying output upload (${retry})" && sleep $((RANDOM % 10)))
+  #     if ((${retry}==10)); then echo "upload output fail"; fi
+  #   done
+  #
+  #   raw_output_url=$(osf -p "${arg_project}" geturl \
+  #     "${REPRO_PATH}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
+  #   )
+  #   output_url=$(curl -Ls -o /dev/null -w %{url_effective} $raw_output_url)
+  #   echo "output uploaded to ${output_url}"
+  #   echo "  download a copy: curl -L ${output_url}download --output ${REPRO_ID}.tar.gz"
+  #
+  # fi
 
-    echo "uploading output manifest"
-    ls "${WORK_DIRECTORY}/output" > "${manifest}"
-    for retry in {1..3}; do
-      osf -p "${arg_project}" upload \
-        "${manifest}" \
-        "${REPRO_PATH}/a=manifest+repro=${REPRO_ID}+ext=.txt" \
-      && echo "  manifest upload success" \
-      && break \
-        || (echo "retrying manifest upload (${retry})" && sleep $((RANDOM % 10)))
-      if ((${retry}==3)); then echo "upload manifest fail"; fi
-    done &
-
-    echo "uploading output"
-    tar -czf "${output}" "${WORK_DIRECTORY}/output"
-    for retry in {1..10}; do
-      osf -p "${arg_project}" upload \
-        "${output}" \
-        "${REPRO_PATH}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
-      && echo "  output upload success" \
-      && break \
-        || (echo "retrying output upload (${retry})" && sleep $((RANDOM % 10)))
-      if ((${retry}==10)); then echo "upload output fail"; fi
-    done
-
-    raw_output_url=$(osf -p "${arg_project}" geturl \
-      "${REPRO_PATH}/a=output+repro=${REPRO_ID}+ext=.tar.gz" \
-    )
-    output_url=$(curl -Ls -o /dev/null -w %{url_effective} $raw_output_url)
-    echo "output uploaded to ${output_url}"
-    echo "  download a copy: curl -L ${output_url}download --output ${REPRO_ID}.tar.gz"
-
-  fi
-
-  wait
+  # wait
 
   echo "Exit Trap Complete"
 
@@ -362,10 +347,11 @@ function on_error() {
   echo "Sending Pushover Notification"
   bash <(curl https://raw.githubusercontent.com/mmore500/pushover.sh/master/pushover.sh) \
    -T "$PUSHOVER_APP_TOKEN" -U "$PUSHOVER_USER_TOKEN" \
-   -u $(osf -p "${arg_project}" geturl \
-      "${REPRO_PATH}/a=log+repro=${REPRO_ID}+ext=.txt" \
-    ) \
     "${SLURM_JOB_ID} ${SLURM_JOB_NAME} error code ${1}, restart count ${SLURM_RESTART_COUNT}"
+
+    # -u $(osf -p "${arg_project}" geturl \
+    #    "${REPRO_PATH}/a=log+repro=${REPRO_ID}+ext=.txt" \
+    #  ) \
 
   # reset exit trap
   trap '' EXIT
