@@ -71,6 +71,7 @@ echo "--------------------------------------"
 
 stdin=$(mktemp)
 log=$(mktemp)
+logzip=$(mktemp)
 context=$(mktemp)
 rerun=$(mktemp)
 output=$(mktemp)
@@ -179,6 +180,7 @@ command -v qstat >/dev/null && test ${SLURM_JOB_ID} && bash -c "qstat -f \"${SLU
 
 echo "stdin ${stdin}"
 echo "log ${log}"
+echo "logzip ${logzip}"
 echo "context ${context}"
 echo "rerun ${rerun}"
 echo "output ${output}"
@@ -240,16 +242,17 @@ END_OF_HEREDOC" >> "${rerun}"
   #   if ((${retry}==3)); then echo "upload rerun fail"; fi
   # done &
 
-  # echo "uploading log"
-  # for retry in {1..3}; do
-  #   osf -p "${arg_project}" upload \
-  #     "${log}" \
-  #     "${REPRO_PATH}/a=log+repro=${REPRO_ID}+ext=.txt" \
-  #   && echo "  log upload success" \
-  #   && break \
-  #     || (echo "retrying log upload (${retry})" && sleep $((RANDOM % 10)))
-  #   if ((${retry}==3)); then echo "upload log fail"; fi
-  # done &
+  xz -c "${log}" > "${logzip}"
+  echo "uploading log"
+  for retry in {1..3}; do
+    aws s3 cp --quiet \
+      "${logzip}" \
+      "s3://${arg_project}/repro/a=log+repro=${REPRO_ID}+ext=.txt.xz" \
+    && echo "  log upload success" \
+    && break \
+      || (echo "retrying log upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==3)); then echo "upload log fail"; fi
+  done &
 
   # if user has created an output directory, upload it
   # if [ -d "${WORK_DIRECTORY}/output" ]; then
@@ -287,7 +290,7 @@ END_OF_HEREDOC" >> "${rerun}"
   #
   # fi
 
-  # wait
+  wait
 
   mkdir -p ~/slurmscripts/
   command -v scontrol \
