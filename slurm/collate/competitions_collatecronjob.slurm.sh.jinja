@@ -143,13 +143,13 @@ echo "Do Collation"
 echo "---------------------------------------------------"
 ################################################################################
 
-python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/variant-competitions/stage=2+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+dishtiny/scriptroutines/collate_mutant_competition_series.sh "{{ endeavor }}" "${stint}"
 
-python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/strain-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+dishtiny/scriptroutines/collate_predecessor_battle_series.sh "{{ endeavor }}" "${stint}"
 
-python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/predecessor-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+dishtiny/scriptroutines/collate_strain_competition_series.sh "{{ endeavor }}" "${stint}"
 
-python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/progenitor-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+dishtiny/scriptroutines/collate_variant_competition_series.sh "{{ endeavor }}" "${stint}"
 
 ################################################################################
 echo
