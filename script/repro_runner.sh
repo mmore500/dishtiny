@@ -366,8 +366,8 @@ function on_error() {
   echo "Sending Pushover Notification"
   bash <(curl https://raw.githubusercontent.com/mmore500/pushover.sh/master/pushover.sh) \
     -u $(curl --upload-file \
-      "${REPRO_PATH}/a=log+repro=${REPRO_ID}+ext=.txt" \
-      https://transfer.sh \
+      "${log}" \
+      "https://transfer.sh/a=log+repro=${REPRO_ID}+ext=.txt" \
     ) \
    -T "$PUSHOVER_APP_TOKEN" -U "$PUSHOVER_USER_TOKEN" \
     "${SLURM_JOB_ID} ${SLURM_JOB_NAME} error code ${1}, restart count ${SLURM_RESTART_COUNT}"
