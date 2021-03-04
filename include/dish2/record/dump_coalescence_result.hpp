@@ -54,8 +54,10 @@ void dump_coalescence_result(
     cfg.REPLICATE(), "Competition Replicate"
   );
   file.AddVal( cfg.TREATMENT(), "Competition Treatment" );
-  for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
-    file.AddVal( emp::to_string("Competition Treatment ", k), v );
+  if ( cfg.TREATMENT().find('=') != std::string::npos ) {
+    for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
+      file.AddVal( emp::to_string("Treatment ", k), v );
+    }
   }
 
   if ( dish2::get_endeavor() ) file.AddVal(

@@ -56,8 +56,10 @@ void write_cell_census(
     if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
     if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
     file.AddVal(cfg.TREATMENT(), "Treatment");
-    for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
-      file.AddVal( emp::to_string("Treatment ", k), v );
+    if ( cfg.TREATMENT().find('=') != std::string::npos ) {
+      for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
+        file.AddVal( emp::to_string("Treatment ", k), v );
+      }
     }
     file.AddVal( "proc", emp::to_string( uitsl::get_proc_id() ) );
     file.AddVal( "thread", emp::to_string( thread_idx ) );
