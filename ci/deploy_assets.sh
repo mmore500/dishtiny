@@ -7,7 +7,7 @@ git config --global user.email '41898282+github-actions[bot]@users.noreply.githu
 git config --global user.name 'github-actions'
 git config --global init.defaultBranch 'master'
 
-for folder in $(realpath config/*/*/*); do
+for folder in $(realpath configpacks/*/*/*); do
 
   cd "${folder}"
 

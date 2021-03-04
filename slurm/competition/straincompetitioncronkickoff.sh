@@ -9,10 +9,14 @@ echo "---------------------------------------"
 # fail on error
 set -e
 
-if (( "$#" < 4 )); then
-  echo "USAGE: [container_tag] [repo_sha] [stint] [series...]"
+if (( "$#" < 5 )); then
+  echo "USAGE: [configpack] [container_tag] [repo_sha] [stint] [series...]"
   exit 1
 fi
+
+CONFIGPACK="${1}"
+echo "CONFIGPACK ${CONFIGPACK}"
+shift
 
 CONTAINER_TAG="${1}"
 echo "CONTAINER_TAG ${CONTAINER_TAG}"
@@ -57,6 +61,7 @@ echo "running straincompetitioncronkickoff.sh"
 echo "---------------------------------------"
 ################################################################################
 
+echo "CONFIGPACK ${CONFIGPACK}"
 echo "CONTAINER_TAG ${CONTAINER_TAG}"
 echo "REPO_SHA ${REPO_SHA}"
 echo "STINT ${STINT}"
@@ -80,6 +85,7 @@ JOB_SCRIPT="a=straincompetitioncron+ext=.slurm.sh"
 echo "JOB_SCRIPT \${JOB_SCRIPT}"
 
 j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/competition/straincompetitioncronjob.slurm.sh.jinja" << J2_HEREDOC_EOF
+configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
 endeavor: "\${ENDEAVOR}"

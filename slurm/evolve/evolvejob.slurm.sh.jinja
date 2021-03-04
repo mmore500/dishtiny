@@ -85,6 +85,7 @@ echo "N_PROCS ${N_PROCS}"
 echo "N_THREADS ${N_THREADS}"
 echo "series {{ series }}"
 echo "stint {{ stint }}"
+echo "configpack {{ configpack }}"
 echo "container_tag {{ container_tag }}"
 echo "repo_sha {{ repo_sha }}"
 
@@ -158,7 +159,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   mpiexec.hydra -n "${N_PROCS}" \
   singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
     ./rundishtiny \
-    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series | int < 1000 else 600 if series | int < 10000 else 10800 }} -GENESIS "${GENESIS}" -ARTIFACTS_DUMP 1 -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} -DRAWINGS_WRITE {{ 1 if stint | int % 10 == 0 else 0 }} \
+    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series | int < 1000 else 600 if series | int < 10000 else 10800 }} -GENESIS "${GENESIS}" -ARTIFACTS_DUMP 1 -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} -DRAWINGS_WRITE {{ 1 if stint | int % 10 == 0 else 0 }} -AUTOINSTALL "https://raw.githubusercontent.com/mmore500/dishtiny-assets/a=configpacks/bucket%dnh2v/{{ configpack }}/evolvejob/+revision={{ repo_sha }}/assets.tar.gz" \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
 MPIEXEC_HEREDOC_EOF
@@ -344,6 +345,7 @@ for retry in {1..20}; do
 done
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+configpack: {{ configpack }}
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
 series: {{ series }}
@@ -382,6 +384,7 @@ for retry in {1..20}; do
 done
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+configpack: {{ configpack }}
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
 series: {{ series }}
@@ -422,6 +425,7 @@ for retry in {1..20}; do
 done
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+configpack: {{ configpack }}
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
 series: {{ series }}

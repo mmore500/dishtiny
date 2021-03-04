@@ -9,10 +9,14 @@ echo "-----------------------------------"
 # fail on error
 set -e
 
-if (( "$#" < 4 )); then
-  echo "USAGE: [container_tag] [repo_sha] [stint] [series...]"
+if (( "$#" < 5 )); then
+  echo "USAGE: [configpack] [container_tag] [repo_sha] [stint] [series...]"
   exit 1
 fi
+
+CONFIGPACK="${1}"
+echo "CONFIGPACK ${CONFIGPACK}"
+shift
 
 CONTAINER_TAG="${1}"
 echo "CONTAINER_TAG ${CONTAINER_TAG}"
@@ -57,6 +61,7 @@ echo "running straincompetitionkickoff.sh"
 echo "-----------------------------------"
 ################################################################################
 
+echo "CONFIGPACK ${CONFIGPACK}"
 echo "CONTAINER_TAG ${CONTAINER_TAG}"
 echo "REPO_SHA ${REPO_SHA}"
 echo "STINT ${STINT}"
@@ -92,6 +97,7 @@ python3 "dishtiny/script/layout_interstrain_tournament.py" "\${TOURNAMENT_LAYOUT
   echo "SECOND_COMPETITOR \${SECOND_COMPETITOR}"
 
   j2 --format=yaml -o "a=competition+first_competitor=\${FIRST_COMPETITOR_SERIES}+second_competitor=\${SECOND_COMPETITOR_SERIES}+stint=${STINT}+ext=.slurm.sh" "dishtiny/slurm/competition/competitionjob.slurm.sh.jinja" << J2_HEREDOC_EOF
+configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
 first_competitor_url: "\${FIRST_COMPETITOR}"
