@@ -44,7 +44,12 @@ print( 'running collate.py' )
 print( '------------------' )
 ################################################################################
 
-prefix_url, regex = sys.argv[1:]
+try:
+    prefix_url, regex = sys.argv[1:]
+except:
+    print('bad arguments')
+    print('USAGE: [prefix_url] [regex]')
+    sys.exit(1)
 
 bucket = re.search('s3://(.+?)/', prefix_url).group(1)
 prefix = re.search(f's3://{bucket}/(.+)', prefix_url).group(1)

@@ -7,7 +7,12 @@ import sys
 
 from keyname import keyname as kn
 
-__, applyto, basedon = sys.argv
+try:
+    __, applyto, basedon = sys.argv
+except:
+    print('bad arguments')
+    print('USAGE: [applyto] [basedon]')
+    sys.exit(1)
 
 assert 'ext' in kn.unpack( applyto )
 assert 'ext' in kn.unpack( basedon )
