@@ -108,6 +108,7 @@ second_competitor_url: "\${SECOND_COMPETITOR}"
 output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/predecessor-battles/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
 replicate: "\${REPLICATE}"
 endeavor: "\${ENDEAVOR}"
+series: "\${JUST_ONE_SERIES}"
 stint: "${STINT}"
 J2_HEREDOC_EOF
 
