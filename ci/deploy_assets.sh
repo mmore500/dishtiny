@@ -17,7 +17,7 @@ for folder in $(realpath config/*/*/*); do
   ref_tag="a=$(git rev-parse --show-prefix)+ref=${GITHUB_REF}"
 
   git init
-  git remote add origin "https://${GITHUB_TOKEN}@github.com/mmore500/dishtiny-assets.git"
+  git remote add origin "https://mmore500:${PERSONAL_ACCESS_TOKEN}@github.com/mmore500/dishtiny-assets.git"
 
   git -c commit.gpgsign=false commit --allow-empty --message "Initial commit"
   git checkout --quiet $(git rev-parse HEAD)
