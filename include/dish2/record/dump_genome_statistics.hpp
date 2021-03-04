@@ -57,7 +57,6 @@ void dump_genome_statistics(
     }
   }
   file.AddVal( "proc", emp::to_string( uitsl::get_proc_id() ) );
-  file.AddVal( "thread", emp::to_string( thread_idx ) );
 
   const std::string slug = dish2::make_genome_slug( genome_filename );
   file.AddVar(slug, "Genome Slug");
