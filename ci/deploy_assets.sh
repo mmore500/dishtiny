@@ -23,7 +23,7 @@ for folder in $(realpath configpacks/*/*); do
   git checkout --quiet $(git rev-parse HEAD)
 
   # allows empty tar file
-  printf '' | tar -czf assets.tar.gz --files-from -
+  ls | tar -czvf assets.tar.gz --files-from -
   git add assets.tar.gz
 
   git -c commit.gpgsign=false commit --message "GITHUB ACTION"
