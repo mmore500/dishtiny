@@ -45,6 +45,16 @@ size_t get_longlinked_filename_max( const std::filesystem::path& path ) {
 
 }
 
+std::string strip_underscore_keys( const std::string& filename ){
+
+  auto attrs = emp::keyname::unpack( filename );
+  std::erase_if( attrs, []( const auto& kv ){
+    return kv.first.size() && kv.first[0] == '_';
+  } );
+  return emp::keyname::pack( attrs );
+
+}
+
 emp::optional<std::string> longlink_longest_value(
   const std::string& filename, const bool try_a=false
 ) {
@@ -143,7 +153,8 @@ std::string pare_keyname_filename(
     = original_filename.size() + std::strlen(internal::meta_suffix);
   if ( projected_size <= filename_max ) return original_filename;
 
-  std::string filename( original_filename );
+  std::string filename = internal::strip_underscore_keys( original_filename );
+
 
   while ( filename.size() > longlinked_filename_max ) {
 

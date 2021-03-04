@@ -24,15 +24,15 @@ std::string make_elapsed_updates_filename(
 ) {
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "elapsed_updates"},
-    {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
+    {"_source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"thread", emp::to_string(thread_idx)},
-    {"treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
+    {"_treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".txt"}
   };
 
   if ( dish2::get_repro() ) {
-    keyname_attributes[ "repro" ] = *dish2::get_repro();
+    keyname_attributes[ "_repro" ] = *dish2::get_repro();
   }
 
   if ( dish2::has_series() ) {
@@ -48,7 +48,7 @@ std::string make_elapsed_updates_filename(
   }
 
   if ( dish2::get_endeavor() ) {
-    keyname_attributes[ "endeavor" ] = emp::to_string( *dish2::get_endeavor() );
+    keyname_attributes[ "_endeavor" ] = emp::to_string(*dish2::get_endeavor());
   }
 
   return emp::keyname::pack( keyname_attributes );

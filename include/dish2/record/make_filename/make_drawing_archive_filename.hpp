@@ -24,12 +24,12 @@ std::string make_drawing_archive_filename() {
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "outdrawings"},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
-    {"treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
+    {"_treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".tar.xz"},
   };
 
   if ( dish2::get_repro() ) {
-    keyname_attributes[ "repro" ] = *dish2::get_repro();
+    keyname_attributes[ "_repro" ] = *dish2::get_repro();
   }
 
   if ( dish2::has_series() ) {
@@ -45,7 +45,7 @@ std::string make_drawing_archive_filename() {
   }
 
   if ( dish2::get_endeavor() ) {
-    keyname_attributes[ "endeavor" ] = emp::to_string( *dish2::get_endeavor() );
+    keyname_attributes[ "_endeavor" ] = emp::to_string(*dish2::get_endeavor());
   }
 
   return emp::keyname::pack( keyname_attributes );

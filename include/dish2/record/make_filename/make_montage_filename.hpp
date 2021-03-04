@@ -24,14 +24,14 @@ std::string make_montage_filename( const size_t update ) {
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "montage"},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
-    {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
-    {"treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
+    {"_source", EMP_STRINGIFY(DISHTINY_HASH_)},
+    {"_treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"update", emp::to_string( update )},
     {"ext", ".jpg"}
   };
 
   if ( dish2::get_repro() ) {
-    keyname_attributes[ "repro" ] = *dish2::get_repro();
+    keyname_attributes[ "_repro" ] = *dish2::get_repro();
   }
 
   if ( dish2::has_series() ) {
@@ -47,7 +47,7 @@ std::string make_montage_filename( const size_t update ) {
   }
 
   if ( dish2::get_endeavor() ) {
-    keyname_attributes[ "endeavor" ] = emp::to_string( *dish2::get_endeavor() );
+    keyname_attributes[ "_endeavor" ] = emp::to_string(*dish2::get_endeavor());
   }
 
   return emp::keyname::pack( keyname_attributes );
