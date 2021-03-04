@@ -50,7 +50,7 @@ void finalize_drawings() {
     "shopt -s nullglob; "
     "cd outdrawings && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
-    "  a proc replicate thread update stint series variation ext"
+    "  a proc replicate thread update stint series treatment variation ext"
     "; done"
   "'" ) );
 }
@@ -87,7 +87,7 @@ void finalize_zip() {
     "shopt -s nullglob; "
     "cd outzips && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
-    "    a proc replicate stint series thread ext"
+    "    a proc replicate stint series thread treatment ext"
     "; done"
   "'" ) );
 }

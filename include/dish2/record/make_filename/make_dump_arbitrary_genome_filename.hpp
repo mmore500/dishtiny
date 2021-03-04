@@ -32,6 +32,7 @@ std::string make_dump_arbitrary_genome_filename(
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"thread", emp::to_string(thread_idx)},
+    {"treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".json.gz"}
   };
 

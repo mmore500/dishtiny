@@ -24,6 +24,7 @@ std::string make_drawing_archive_filename() {
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "outdrawings"},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
+    {"treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".tar.xz"},
   };
 

@@ -7,14 +7,14 @@ git config --global user.email '41898282+github-actions[bot]@users.noreply.githu
 git config --global user.name 'github-actions'
 git config --global init.defaultBranch 'master'
 
-for folder in $(realpath configpacks/*/*/*); do
+for folder in $(realpath configpacks/*/*); do
 
   cd "${folder}"
 
   rm -rf .git
 
-  revision_tag="a=$(git rev-parse --show-prefix)+revision=${GITHUB_SHA}"
-  ref_tag="a=$(git rev-parse --show-prefix)+ref=${GITHUB_REF}"
+  revision_tag="$(git rev-parse --show-prefix)@${GITHUB_SHA}"
+  ref_tag="$(git rev-parse --show-prefix)@${GITHUB_REF}"
 
   git init
   git remote add origin "https://mmore500:${PERSONAL_ACCESS_TOKEN}@github.com/mmore500/dishtiny-assets.git"

@@ -27,6 +27,7 @@ std::string make_phylogenetic_root_abundances_filename(
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"thread", emp::to_string(thread_idx)},
+    {"treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".csv"}
   };
 

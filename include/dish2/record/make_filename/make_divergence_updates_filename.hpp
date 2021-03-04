@@ -35,6 +35,7 @@ std::string make_divergence_updates_filename(
     {"nopout_coarseness", emp::to_string( nopout_coarseness )},
     {"nopout_target", nopout_target},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
+    {"treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".txt"}
   };
 

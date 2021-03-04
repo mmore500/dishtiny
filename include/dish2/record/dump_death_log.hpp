@@ -8,6 +8,8 @@
 #include "../../../third-party/bxzstr/include/bxzstr.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../config/has_replicate.hpp"
@@ -40,6 +42,10 @@ void dump_death_log(
   if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
   if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
   if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
+  file.AddVal(cfg.TREATMENT(), "Treatment");
+  for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
+    file.AddVal( emp::to_string("Treatment ", k), v );
+  }
 
   dish2::DeathEvent<Spec> event;
 

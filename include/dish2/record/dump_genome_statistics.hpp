@@ -12,6 +12,7 @@
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_key_union.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_instructions.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
@@ -48,6 +49,10 @@ void dump_genome_statistics(
   if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
   if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
   if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
+  file.AddVal(cfg.TREATMENT(), "Treatment");
+  for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
+    file.AddVal( emp::to_string("Treatment ", k), v );
+  }
 
   const std::string slug = dish2::make_genome_slug( genome_filename );
   file.AddVar(slug, "Genome Slug");

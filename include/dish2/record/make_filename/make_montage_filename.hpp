@@ -25,6 +25,7 @@ std::string make_montage_filename( const size_t update ) {
     {"a", "montage"},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
+    {"treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"update", emp::to_string( update )},
     {"ext", ".jpg"}
   };

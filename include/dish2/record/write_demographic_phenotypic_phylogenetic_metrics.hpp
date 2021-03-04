@@ -6,6 +6,8 @@
 
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../config/cfg.hpp"
 #include "../config/has_replicate.hpp"
@@ -110,6 +112,10 @@ void write_demographic_phenotypic_phylogenetic_metrics(
     if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
     if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
     if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
+    file.AddVal(cfg.TREATMENT(), "Treatment");
+    for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
+      file.AddVal( emp::to_string("Treatment ", k), v );
+    }
 
     file.AddVar(metric, "Metric");
     file.AddVar(value, "Value");

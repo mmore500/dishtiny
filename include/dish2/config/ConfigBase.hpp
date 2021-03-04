@@ -61,6 +61,7 @@ EMP_BUILD_CONFIG(
   VALUE(STINT, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
   VALUE(SERIES, uint32_t, std::numeric_limits<uint32_t>::max(), "TODO"),
   VALUE(REPLICATE, std::string, "", "TODO"),
+  VALUE(TREATMENT, std::string, "none", "TODO"),
   VALUE(
     GENESIS, std::string, "generate",
     "generate, reconstitute, monoculture, or innoculate"

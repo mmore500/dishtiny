@@ -53,6 +53,11 @@ void dump_coalescence_result(
   if ( dish2::has_replicate() ) file.AddVal(
     cfg.REPLICATE(), "Competition Replicate"
   );
+  file.AddVal( cfg.TREATMENT(), "Competition Treatment" );
+  for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
+    file.AddVal( emp::to_string("Competition Treatment ", k), v );
+  }
+
   if ( dish2::get_endeavor() ) file.AddVal(
     *dish2::get_endeavor(), "Competition Endeavor"
   );
