@@ -52,7 +52,7 @@ echo "--------------------------------"
 ################################################################################
 
 "${REPRO_RUNNER}" \
-  -p dnh2v -u mmore500 -s dishtiny \
+  -p "{{ bucket }}" -u mmore500 -s dishtiny \
   --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
   << 'REPRO_RUNNER_HEREDOC_EOF'
 
@@ -83,6 +83,7 @@ echo "N_PROCS ${N_PROCS}"
 echo "N_THREADS ${N_THREADS}"
 echo "series {{ series }}"
 echo "stint {{ stint }}"
+echo "bucket {{ bucket }}"
 echo "container_tag {{ container_tag }}"
 echo "repo_sha {{ repo_sha }}"
 
@@ -101,7 +102,7 @@ f="a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={
 echo "downloading ${f}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
-    "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+    "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     "${f}" \
     && echo "  ${f} download success" && break \
     || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
@@ -151,7 +152,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   mpiexec.hydra -n "${N_PROCS}" \
   singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
     ./rundishtiny \
-    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series | int < 1000 else 600 if series | int < 10000 else 3600 }} -GENESIS "monoculture" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -MUTATION_RATE "0 0 0" -STINT {{ stint }} -SERIES {{ series }} -DRAWINGS_WRITE 1 -THROW_ON_EXTINCTION 0 -AUTOINSTALL "https://raw.githubusercontent.com/mmore500/dishtiny-assets/a=configpacks/bucket%dnh2v/{{ configpack }}/monoculturejob/+revision={{ repo_sha }}/assets.tar.gz" \
+    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series | int < 1000 else 600 if series | int < 10000 else 3600 }} -GENESIS "monoculture" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -MUTATION_RATE "0 0 0" -STINT {{ stint }} -SERIES {{ series }} -DRAWINGS_WRITE 1 -THROW_ON_EXTINCTION 0 -AUTOINSTALL "https://raw.githubusercontent.com/mmore500/dishtiny-assets/a=configpacks/{{ configpack }}/monoculturejob/+revision={{ repo_sha }}/assets.tar.gz" \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
 MPIEXEC_HEREDOC_EOF
@@ -171,7 +172,7 @@ for p in outdata/*a={demographic_phenotypic_phylogenetic_metrics,kin_conflict_st
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/metrics/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/monocultures/metrics/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -189,7 +190,7 @@ for p in outdata/*a={birth_log,death_log,spawn_log}*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/runninglogs/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/monocultures/runninglogs/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -207,7 +208,7 @@ for p in outdata/*a=cell_census*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/censuses/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/monocultures/censuses/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -225,7 +226,7 @@ for p in outdrawings/*a=montage*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/montages/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/monocultures/montages/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -243,7 +244,7 @@ for p in outzips/*a=outdrawings*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/monocultures/drawings/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/monocultures/drawings/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi

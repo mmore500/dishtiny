@@ -52,7 +52,7 @@ echo "--------------------------------"
 ################################################################################
 
 "${REPRO_RUNNER}" \
-  -p dnh2v -u mmore500 -s dishtiny \
+  -p "{{ bucket }}" -u mmore500 -s dishtiny \
   --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
   << 'REPRO_RUNNER_HEREDOC_EOF'
 
@@ -106,7 +106,7 @@ for ((proc=0;proc<N_PROCS;++proc)); do
     echo "downloading ${f}"
     for retry in {1..20}; do
       aws s3 cp --quiet \
-        "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint={{ stint | int - 1 }}/series={{ series }}/${f}" \
+        "s3://{{ bucket }}/endeavor=${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint={{ stint | int - 1 }}/series={{ series }}/${f}" \
         "${f}" \
       && echo "  ${f} download success" && break \
       || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
@@ -159,7 +159,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   mpiexec.hydra -n "${N_PROCS}" \
   singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
     ./rundishtiny \
-    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series | int < 1000 else 600 if series | int < 10000 else 10800 }} -GENESIS "${GENESIS}" -ARTIFACTS_DUMP 1 -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} -DRAWINGS_WRITE {{ 1 if stint | int % 10 == 0 else 0 }} -AUTOINSTALL "https://raw.githubusercontent.com/mmore500/dishtiny-assets/a=configpacks/bucket%dnh2v/{{ configpack }}/evolvejob/+revision={{ repo_sha }}/assets.tar.gz" \
+    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series | int < 1000 else 600 if series | int < 10000 else 10800 }} -GENESIS "${GENESIS}" -ARTIFACTS_DUMP 1 -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} -DRAWINGS_WRITE {{ 1 if stint | int % 10 == 0 else 0 }} -AUTOINSTALL "https://raw.githubusercontent.com/mmore500/dishtiny-assets/a=configpacks/{{ configpack }}/evolvejob/+revision={{ repo_sha }}/assets.tar.gz" \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
 MPIEXEC_HEREDOC_EOF
@@ -179,7 +179,7 @@ for p in outartifacts/*a=population*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "  $f upload fail" && exit 123123; fi
@@ -197,7 +197,7 @@ for p in outdata/*a={demographic_phenotypic_phylogenetic_metrics,kin_conflict_st
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/metrics/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/evolve/metrics/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -217,7 +217,7 @@ for p in outdata/*a={birth_log,death_log,spawn_log}*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/runninglogs/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/evolve/runninglogs/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -238,7 +238,7 @@ for p in outdata/*a=cell_census*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/censuses/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/evolve/censuses/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -257,7 +257,7 @@ for p in outdrawings/*a=montage*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/montages/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/evolve/montages/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -277,7 +277,7 @@ for p in outzips/*a=outdrawings*; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/evolve/drawings/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/evolve/drawings/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -300,7 +300,7 @@ for p in \
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -345,6 +345,7 @@ for retry in {1..20}; do
 done
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+bucket: {{ bucket }}
 configpack: {{ configpack }}
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
@@ -384,6 +385,7 @@ for retry in {1..20}; do
 done
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+bucket: {{ bucket }}
 configpack: {{ configpack }}
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
@@ -425,6 +427,7 @@ for retry in {1..20}; do
 done
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+bucket: {{ bucket }}
 configpack: {{ configpack }}
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}

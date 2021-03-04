@@ -52,7 +52,7 @@ echo "--------------------------------"
 ################################################################################
 
 "${REPRO_RUNNER}" \
-  -p dnh2v -u mmore500 -s dishtiny \
+  -p "{{ bucket }}" -u mmore500 -s dishtiny \
   --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
   << 'REPRO_RUNNER_HEREDOC_EOF'
 
@@ -79,6 +79,7 @@ ENDEAVOR={{ series | int // 1000 }}
 echo "ENDEAVOR ${ENDEAVOR}"
 echo "series {{ series }}"
 echo "stint {{ stint }}"
+echo "bucket {{ bucket }}"
 echo "configpack {{ configpack }}"
 echo "container_tag {{ container_tag }}"
 echo "repo_sha {{ repo_sha }}"
@@ -101,7 +102,7 @@ f="a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={
 echo "downloading ${f}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
-    "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+    "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     "${f}" \
     && echo "  ${f} download success" && break \
     || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
@@ -151,7 +152,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   mpiexec.hydra -n 1 \
   singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
     ./rundishtiny \
-    -RUN 0 -GENESIS "monoculture" -ARTIFACTS_DUMP 1 -PHENOTYPE_EQUIVALENT_NOPOUT 1 -STINT {{ stint }} -SERIES {{ series }} -THROW_ON_EXTINCTION 0 {{ "-PHENOTYPIC_DIVERGENCE_N_CELLS 16 -PHENOTYPIC_DIVERGENCE_N_UPDATES 16" if series | int < 1000 else "-PHENOTYPIC_DIVERGENCE_N_CELLS 64 -PHENOTYPIC_DIVERGENCE_N_UPDATES 256" if series | int < 10000 else "" }} -AUTOINSTALL "https://raw.githubusercontent.com/mmore500/dishtiny-assets/a=configpacks/bucket%dnh2v/{{ configpack }}/nopoutjob/+revision={{ repo_sha }}/assets.tar.gz" \
+    -RUN 0 -GENESIS "monoculture" -ARTIFACTS_DUMP 1 -PHENOTYPE_EQUIVALENT_NOPOUT 1 -STINT {{ stint }} -SERIES {{ series }} -THROW_ON_EXTINCTION 0 {{ "-PHENOTYPIC_DIVERGENCE_N_CELLS 16 -PHENOTYPIC_DIVERGENCE_N_UPDATES 16" if series | int < 1000 else "-PHENOTYPIC_DIVERGENCE_N_CELLS 64 -PHENOTYPIC_DIVERGENCE_N_UPDATES 256" if series | int < 10000 else "" }} -AUTOINSTALL "https://raw.githubusercontent.com/mmore500/dishtiny-assets/a=configpacks/{{ configpack }}/nopoutjob/+revision={{ repo_sha }}/assets.tar.gz" \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
 MPIEXEC_HEREDOC_EOF
@@ -173,7 +174,7 @@ for p in \
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  $f upload success" && break \
       || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -240,7 +241,7 @@ for p in *a=genome*morph=wildtype*variation=* ; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  $f upload success" && break \
       || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -295,12 +296,13 @@ JOB_SCRIPT="$( \
 )"
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+bucket: {{ bucket }}
 configpack: {{ configpack }}
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
-first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
-second_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
-output_url: "s3://dnh2v/endeavor=${ENDEAVOR}/variant-competitions/stage=2+what=generated/stint={{ stint }}/series={{ series }}/"
+first_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+second_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+output_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/variant-competitions/stage=2+what=generated/stint={{ stint }}/series={{ series }}/"
 replicate: "${REPLICATE}"
 endeavor: "${ENDEAVOR}"
 stint: {{ stint }}
@@ -333,12 +335,13 @@ JOB_SCRIPT="$( keyname pack \
 )"
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+bucket: {{ bucket }}
 configpack: {{ configpack }}
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
-first_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
-second_competitor_url: "s3://dnh2v/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${variant}"
-output_url: "s3://dnh2v/endeavor=${ENDEAVOR}/variant-competitions/stage=2+what=generated/stint={{ stint }}/series={{ series }}/"
+first_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+second_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${variant}"
+output_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/variant-competitions/stage=2+what=generated/stint={{ stint }}/series={{ series }}/"
 replicate: 0
 endeavor: "${ENDEAVOR}"
 stint: {{ stint }}
@@ -365,7 +368,7 @@ echo "num generated runscripts $(ls *.slurm.sh | wc -l)"
 
 # adapted from https://superuser.com/a/689340
 # and https://stackoverflow.com/a/4642975
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh | bash -s {{ container_tag }} {{ repo_sha }}
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh | bash -s "{{ bucket }}" "{{ container_tag }}" "{{ repo_sha }}"
 
 #===============================================================================
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

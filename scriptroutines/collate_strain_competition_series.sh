@@ -15,10 +15,14 @@ echo "parse command line arguments"
 echo "----------------------------"
 ################################################################################
 
-if (( "$#" < 2 )); then
-  echo "USAGE: [endeavor] [stint]"
+if (( "$#" < 3 )); then
+  echo "USAGE: [bucket] [endeavor] [stint]"
   exit 1
 fi
+
+bucket="$1"
+echo "bucket ${bucket}"
+shift
 
 endeavor="$1"
 echo "endeavor ${endeavor}"
@@ -46,5 +50,5 @@ echo "do collation"
 echo "------------"
 ################################################################################
 
-python3 "${script_dir}/../script/collate.py" "s3://dnh2v/endeavor=${endeavor}/strain-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv' \
+python3 "${script_dir}/../script/collate.py" "s3://${bucket}/endeavor=${endeavor}/strain-competitions/stage=1+what=generated/stint=${stint}/" 'a=coalescence_result\+proc=[0-9]+\+replicate=[0-9]+\+.*\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv' \
   || echo "strain competition collation across series failed"

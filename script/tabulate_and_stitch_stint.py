@@ -451,9 +451,17 @@ print( 'running tabulate_stint.py'                                             )
 print( '---------------------------------------------------------------------' )
 ################################################################################
 
-bucket = 'dnh2v'
+try:
+    bucket = sys.argv[1]
+    endeavor, stint = map(int, sys.argv[2:])
+except:
+    print('bad arguments')
+    print('USAGE: [bucket] [endeavor] [stint]')
+    sys.exit(1)
 
-endeavor, stint = map(int, sys.argv[1:])
+print(f'bucket {bucket}')
+print(f'endeavor {endeavor}')
+print(f'stint {stint}')
 
 s3 = boto3.resource('s3')
 my_bucket = s3.Bucket(bucket)

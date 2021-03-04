@@ -9,17 +9,23 @@ echo "-------------------------------"
 # fail on error
 set -e
 
-if (( "$#" != 2 )); then
-  echo "USAGE: [container_tag] [repo_sha]"
+if (( "$#" != 3 )); then
+  echo "USAGE: [bucket] [container_tag] [repo_sha]"
   echo "run this inside of a directory containing all the *.slurm.sh jobs"
   echo "you want to queue up"
   exit 1
 fi
 
+bucket="${1}"
+echo "bucket ${bucket}"
+shift
+
 container_tag="${1}"
+echo "container_tag ${container_tag}"
 shift
 
 repo_sha="${1}"
+echo "repo_sha ${repo_sha}"
 shift
 
 # load secrets into environment variables, if available
@@ -67,6 +73,7 @@ import sys
 
 print( json.dumps( {
   'payload' : sys.stdin.read(),
+  'bucket' : '${bucket}',
   'container_tag' : '${container_tag}',
   'repo_sha' : '${repo_sha}',
 } ) )

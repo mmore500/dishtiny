@@ -9,10 +9,14 @@ echo "-----------------------------------"
 # fail on error
 set -e
 
-if (( "$#" < 5 )); then
-  echo "USAGE: [configpack] [container_tag] [repo_sha] [stint] [series...]"
+if (( "$#" < 6 )); then
+  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [stint] [series...]"
   exit 1
 fi
+
+BUCKET="${1}"
+echo "BUCKET ${BUCKET}"
+shift
 
 CONFIGPACK="${1}"
 echo "CONFIGPACK ${CONFIGPACK}"
@@ -48,7 +52,7 @@ echo "--------------------------------"
 ################################################################################
 
 "${REPRO_RUNNER}" \
-  -p dnh2v -u mmore500 -s dishtiny \
+  -p "${BUCKET}" -u mmore500 -s dishtiny \
   --repo_sha "${REPO_SHA}" --container_tag "${CONTAINER_TAG}" \
   << REPRO_RUNNER_HEREDOC_EOF
 
@@ -61,6 +65,7 @@ echo "running predecessorbattlekickoff.sh"
 echo "-----------------------------------"
 ################################################################################
 
+echo "BUCKET ${BUCKET}"
 echo "CONFIGPACK ${CONFIGPACK}"
 echo "CONTAINER_TAG ${CONTAINER_TAG}"
 echo "REPO_SHA ${REPO_SHA}"
@@ -87,19 +92,20 @@ echo "------------------------------"
 for JUST_ONE_SERIES in ${SERIES}; do
   for REPLICATE in {0..9}; do
 
-    FIRST_COMPETITOR="s3://dnh2v/endeavor=\${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=\${PREDECESSOR_STINT}/series=\${JUST_ONE_SERIES}/a=population+proc=0+series=\${JUST_ONE_SERIES}+stint=\${PREDECESSOR_STINT}+thread=0+variation=master+ext=.bin.xz"
-    SECOND_COMPETITOR="s3://dnh2v/endeavor=\${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/a=population+proc=0+series=\${JUST_ONE_SERIES}+stint=${STINT}+thread=0+variation=master+ext=.bin.xz"
+    FIRST_COMPETITOR="s3://${BUCKET}/endeavor=\${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=\${PREDECESSOR_STINT}/series=\${JUST_ONE_SERIES}/a=population+proc=0+series=\${JUST_ONE_SERIES}+stint=\${PREDECESSOR_STINT}+thread=0+variation=master+ext=.bin.xz"
+    SECOND_COMPETITOR="s3://${BUCKET}/endeavor=\${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/a=population+proc=0+series=\${JUST_ONE_SERIES}+stint=${STINT}+thread=0+variation=master+ext=.bin.xz"
 
     echo "FIRST_COMPETITOR \${FIRST_COMPETITOR}"
     echo "SECOND_COMPETITOR \${SECOND_COMPETITOR}"
 
     j2 --format=yaml -o "a=battle+series=\${JUST_ONE_SERIES}+stint=${STINT}+replicate=\${REPLICATE}+ext=.slurm.sh" "dishtiny/slurm/competition/competitionjob.slurm.sh.jinja" << J2_HEREDOC_EOF
+bucket: ${BUCKET}
 configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
 first_competitor_url: "\${FIRST_COMPETITOR}"
 second_competitor_url: "\${SECOND_COMPETITOR}"
-output_url: "s3://dnh2v/endeavor=\${ENDEAVOR}/predecessor-battles/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
+output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/predecessor-battles/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
 replicate: "\${REPLICATE}"
 endeavor: "\${ENDEAVOR}"
 stint: "${STINT}"
@@ -120,7 +126,7 @@ echo "num generated runscripts \$(ls *.slurm.sh | wc -l)"
 # inside itself, then submits itself as a job to gradually feed runscripts onto
 # the queue
 
-dishtiny/script/slurm_stoker_containerized_kickoff.sh "${CONTAINER_TAG}" "${REPO_SHA}"
+dishtiny/script/slurm_stoker_containerized_kickoff.sh "${BUCKET}" "${CONTAINER_TAG}" "${REPO_SHA}"
 
 ################################################################################
 echo

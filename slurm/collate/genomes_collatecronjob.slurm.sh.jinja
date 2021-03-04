@@ -53,7 +53,7 @@ echo "----------------------------"
 ################################################################################
 
 "${REPRO_RUNNER}" \
-  -p dnh2v -u mmore500 -s dishtiny \
+  -p "{{ bucket }}" -u mmore500 -s dishtiny \
   --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
   << 'REPRO_RUNNER_HEREDOC_EOF'
 
@@ -100,10 +100,10 @@ echo "------------------------------"
 stint_ready=true
 for series in {{ series }}; do
 
-  aws s3api head-object --bucket dnh2v --key "endeavor={{ endeavor }}/genomes/stage=0+what=generated/stint=${stint}/series=${series}/a=genome_statistics+criteria=abundance+morph=wildtype+proc=0+series=${series}+stint=${stint}+thread=0+variation=master+ext=.csv" \
-  && aws s3api head-object --bucket dnh2v --key "endeavor={{ endeavor }}/genomes/stage=0+what=generated/stint=${stint}/series=${series}/a=genome_statistics+criteria=arbitrary+morph=wildtype+proc=0+series=${series}+stint=${stint}+thread=0+variation=master+ext=.csv" \
+  aws s3api head-object --bucket "{{ bucket }}" --key "endeavor={{ endeavor }}/genomes/stage=0+what=generated/stint=${stint}/series=${series}/a=genome_statistics+criteria=abundance+morph=wildtype+proc=0+series=${series}+stint=${stint}+thread=0+variation=master+ext=.csv" \
+  && aws s3api head-object --bucket "{{ bucket }}" --key "endeavor={{ endeavor }}/genomes/stage=0+what=generated/stint=${stint}/series=${series}/a=genome_statistics+criteria=arbitrary+morph=wildtype+proc=0+series=${series}+stint=${stint}+thread=0+variation=master+ext=.csv" \
   && if (( stint % 20 == 0 )); then \
-    aws s3api head-object --bucket dnh2v --key "endeavor={{ endeavor }}/genomes/stage=1+what=generated/stint=${stint}/series=${series}/a=genome_statistics+criteria=abundance+morph=phenotype_equivalent_nopout+proc=0+series=${series}+stint=${stint}+thread=0+variation=master+ext=.csv"; \
+    aws s3api head-object --bucket "{{ bucket }}" --key "endeavor={{ endeavor }}/genomes/stage=1+what=generated/stint=${stint}/series=${series}/a=genome_statistics+criteria=abundance+morph=phenotype_equivalent_nopout+proc=0+series=${series}+stint=${stint}+thread=0+variation=master+ext=.csv"; \
   fi \
   && echo "series ${series} complete" && continue
 
@@ -127,9 +127,9 @@ echo "---------------------------------------------------"
 ################################################################################
 
 if (( stint % 20 == 0 )); then
-  python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/genomes/stage=0~1+what=generated/stint=${stint}/" 'series=[0-9]+/a=genome_statistics\+criteria=.*\+morph=.*\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+variation=master\+ext=\.csv'
+  python3 dishtiny/script/collate.py "s3://{{ bucket }}/endeavor={{ endeavor }}/genomes/stage=0~1+what=generated/stint=${stint}/" 'series=[0-9]+/a=genome_statistics\+criteria=.*\+morph=.*\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+variation=master\+ext=\.csv'
 else
-  python3 dishtiny/script/collate.py "s3://dnh2v/endeavor={{ endeavor }}/genomes/stage=0+what=generated/stint=${stint}/" 'series=[0-9]+/a=genome_statistics\+criteria=.*\+morph=.*\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+variation=master\+ext=\.csv'
+  python3 dishtiny/script/collate.py "s3://{{ bucket }}/endeavor={{ endeavor }}/genomes/stage=0+what=generated/stint=${stint}/" 'series=[0-9]+/a=genome_statistics\+criteria=.*\+morph=.*\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+variation=master\+ext=\.csv'
 fi
 
 ################################################################################

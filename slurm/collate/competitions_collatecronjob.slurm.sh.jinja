@@ -53,7 +53,7 @@ echo "----------------------------"
 ################################################################################
 
 "${REPRO_RUNNER}" \
-  -p dnh2v -u mmore500 -s dishtiny \
+  -p "{{ bucket }}" -u mmore500 -s dishtiny \
   --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
   << 'REPRO_RUNNER_HEREDOC_EOF'
 
@@ -102,7 +102,7 @@ stint_ready=true
 test_stint=$((stint+2))
 for series in {{ series }}; do
 
-  aws s3api head-object --bucket dnh2v --key "endeavor={{ endeavor }}/genomes/stage=0+what=generated/stint=${test_stint}/series=${series}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=${series}+stint=${test_stint}+thread=0+variation=master+ext=.json.gz" \
+  aws s3api head-object --bucket "{{ bucket }}" --key "endeavor={{ endeavor }}/genomes/stage=0+what=generated/stint=${test_stint}/series=${series}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=${series}+stint=${test_stint}+thread=0+variation=master+ext=.json.gz" \
     && echo "series ${series} complete" && continue
 
   echo "series ${series} incomplete"

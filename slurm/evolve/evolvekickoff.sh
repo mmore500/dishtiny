@@ -9,10 +9,14 @@ echo "------------------------"
 # fail on error
 set -e
 
-if (( "$#" < 5 )); then
-  echo "USAGE: [configpack] [container_tag] [repo_sha] [stint] [series...]"
+if (( "$#" < 6 )); then
+  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [stint] [series...]"
   exit 1
 fi
+
+BUCKET="${1}"
+echo "BUCKET ${BUCKET}"
+shift
 
 CONFIGPACK="${1}"
 echo "CONFIGPACK ${CONFIGPACK}"
@@ -48,7 +52,7 @@ echo "--------------------------------"
 ################################################################################
 
 "${REPRO_RUNNER}" \
-  -p dnh2v -u mmore500 -s dishtiny \
+  -p "${BUCKET}" -u mmore500 -s dishtiny \
   --repo_sha "${REPO_SHA}" --container_tag "${CONTAINER_TAG}" \
   << REPRO_RUNNER_HEREDOC_EOF
 
@@ -61,7 +65,8 @@ echo "running evolvekickoff.sh"
 echo "------------------------"
 ################################################################################
 
-echo "CONFIG_PACK ${CONFIGPACK}"
+echo "BUCKET ${BUCKET}"
+echo "CONFIGPACK ${CONFIGPACK}"
 echo "CONTAINER_TAG ${CONTAINER_TAG}"
 echo "REPO_SHA ${REPO_SHA}"
 echo "STINT ${STINT}"
@@ -77,6 +82,7 @@ for just_one_series in ${SERIES}; do
   echo "JOB_SCRIPT \${JOB_SCRIPT}"
 
   j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/evolve/evolvejob.slurm.sh.jinja" << J2_HEREDOC_EOF
+bucket: "${BUCKET}"
 configpack: "${CONFIGPACK}"
 container_tag: "${CONTAINER_TAG}"
 repo_sha: "${REPO_SHA}"

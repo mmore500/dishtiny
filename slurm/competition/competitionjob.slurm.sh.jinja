@@ -52,7 +52,7 @@ echo "--------------------------------"
 ################################################################################
 
 "${REPRO_RUNNER}" \
-  -p dnh2v -u mmore500 -s dishtiny \
+  -p "{{ bucket }}" -u mmore500 -s dishtiny \
   --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
   << 'REPRO_RUNNER_HEREDOC_EOF'
 
@@ -85,6 +85,7 @@ echo "N_THREADS ${N_THREADS}"
 echo "series {{ series | default('-1') }}"
 echo "stint {{ stint | default('-1') }}"
 echo "replicate {{ replicate }}"
+echo "bucket {{ bucket }}"
 echo "configpack {{ configpack }}"
 echo "container_tag {{ container_tag }}"
 echo "repo_sha {{ repo_sha }}"
@@ -166,7 +167,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   mpiexec.hydra -n "${N_PROCS}" \
   singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
     ./rundishtiny \
-    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if endeavor | int < 1 else 600 if endeavor | int < 100 else 3600 }} -GENESIS "innoculate" -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -MUTATION_RATE "0 0 0" -STINT " {{ stint | default('-1') }}" -SERIES " {{ series | default('-1') }}" --REPLICATE "{{ replicate }}" -ABORT_IF_COALESCENT_FREQ 64 -THROW_ON_EXTINCTION 0 -AUTOINSTALL "https://raw.githubusercontent.com/mmore500/dishtiny-assets/a=configpacks/bucket%dnh2v/{{ configpack }}/evolvejob/+revision={{ repo_sha }}/assets.tar.gz" \
+    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if endeavor | int < 1 else 600 if endeavor | int < 100 else 3600 }} -GENESIS "innoculate" -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -MUTATION_RATE "0 0 0" -STINT " {{ stint | default('-1') }}" -SERIES " {{ series | default('-1') }}" --REPLICATE "{{ replicate }}" -ABORT_IF_COALESCENT_FREQ 64 -THROW_ON_EXTINCTION 0 -AUTOINSTALL "https://raw.githubusercontent.com/mmore500/dishtiny-assets/a=configpacks/{{ configpack }}/evolvejob/+revision={{ repo_sha }}/assets.tar.gz" \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
 MPIEXEC_HEREDOC_EOF

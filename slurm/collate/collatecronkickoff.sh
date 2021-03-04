@@ -9,13 +9,17 @@ echo "-----------------------------"
 # fail on error
 set -e
 
-if (( "$#" < 4 )); then
-  echo "USAGE: [which_cron] [container_tag] [repo_sha] [stint] [series...]"
+if (( "$#" < 6 )); then
+  echo "USAGE: [which_cron] [bucket] [container_tag] [repo_sha] [stint] [series...]"
   exit 1
 fi
 
 WHICH_CRON="${1}"
 echo "WHICH_CRON ${WHICH_CRON}"
+shift
+
+BUCKET="${1}"
+echo "BUCKET ${BUCKET}"
 shift
 
 CONTAINER_TAG="${1}"
@@ -48,7 +52,7 @@ echo "--------------------------------"
 ################################################################################
 
 "${REPRO_RUNNER}" \
-  -p dnh2v -u mmore500 -s dishtiny \
+  -p "${BUCKET}" -u mmore500 -s dishtiny \
   --repo_sha "${REPO_SHA}" --container_tag "${CONTAINER_TAG}" \
   << REPRO_RUNNER_HEREDOC_EOF
 
@@ -84,6 +88,7 @@ JOB_SCRIPT="a=${WHICH_CRON}_collatecron+ext=.slurm.sh"
 echo "JOB_SCRIPT \${JOB_SCRIPT}"
 
 j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/collate/${WHICH_CRON}_collatecronjob.slurm.sh.jinja" << J2_HEREDOC_EOF
+bucket: ${BUCKET}
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
 endeavor: "\${ENDEAVOR}"

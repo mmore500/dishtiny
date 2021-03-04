@@ -15,10 +15,14 @@ echo "parse command line arguments"
 echo "----------------------------"
 ################################################################################
 
-if (( "$#" < 1 )); then
-  echo "USAGE: [endeavor]"
+if (( "$#" < 2 )); then
+  echo "USAGE: [bucket] [endeavor]"
   exit 1
 fi
+
+bucket="$1"
+echo "bucket ${bucket}"
+shift
 
 endeavor="$1"
 echo "endeavor ${endeavor}"
@@ -42,5 +46,5 @@ echo "do collation"
 echo "------------"
 ################################################################################
 
-python3 script/collate.py "s3://dnh2v/endeavor=${endeavor}/stage=4+what=tabulated_and_stitched/" 'a=series_profiles\+stint=[0-9]+\+ext=\.csv.xz' \
+python3 script/collate.py "s3://${bucket}/endeavor=${endeavor}/stage=4+what=tabulated_and_stitched/" 'a=series_profiles\+stint=[0-9]+\+ext=\.csv.xz' \
 || echo "tabulated_and_stitched collation across stints failed"
