@@ -3,6 +3,7 @@
 #define DISH2_RECORD_DUMP_KIN_CONFLICT_STATISTICS_HPP_INCLUDE
 
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
@@ -44,6 +45,8 @@ void dump_kin_conflict_statistics(
   for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
     file.AddVal( emp::to_string("Treatment ", k), v );
   }
+  file.AddVal( "proc", emp::to_string( uitsl::get_proc_id() ) );
+  file.AddVal( "thread", emp::to_string( thread_idx ) );
 
   size_t kin_id_commonality_parent_eliminated;
 

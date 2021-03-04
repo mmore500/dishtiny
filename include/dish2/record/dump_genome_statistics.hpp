@@ -9,6 +9,7 @@
 #include "../../../third-party/cereal/include/cereal/archives/binary.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/conduit/include/uitsl/meta/function_cast.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_key_union.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
@@ -53,6 +54,8 @@ void dump_genome_statistics(
   for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
     file.AddVal( emp::to_string("Treatment ", k), v );
   }
+  file.AddVal( "proc", emp::to_string( uitsl::get_proc_id() ) );
+  file.AddVal( "thread", emp::to_string( thread_idx ) );
 
   const std::string slug = dish2::make_genome_slug( genome_filename );
   file.AddVar(slug, "Genome Slug");
