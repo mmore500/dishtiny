@@ -9,6 +9,17 @@ on:
     - cron: '0 0 * * 0'
 jobs:
 
+  deploy-assets:
+    name: Deploy Assets
+    runs-on: ubuntu-16.04
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+      - run: ./ci/deploy_assets.sh
+
   docker-build:
     name: Docker Build
     runs-on: ubuntu-16.04
