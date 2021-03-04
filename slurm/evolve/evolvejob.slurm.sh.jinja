@@ -468,9 +468,9 @@ echo "Running watch me evolve integration"
 echo "-----------------------------------"
 ################################################################################
 
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/script/watch_me_evolve.py" && \
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/script/watch_me_evolvejob.py" && \
-python3 watch_me_evolvejob.py "{{ series }}" "{{ stint }}" || :
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/watch_me_evolve.py" && \
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/wme_evolvejob.py" && \
+python3 wme_evolvejob.py "{{ series }}" "{{ stint }}" || :
 
 ################################################################################
 echo
