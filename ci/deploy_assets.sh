@@ -11,7 +11,7 @@ for folder in $(realpath configpacks/*/*); do
 
   cd "${folder}"
 
-  rm -rf .git
+  rm -rf .git assets.tar.gz
 
   revision_tag="$(git rev-parse --show-prefix)@${GITHUB_SHA}"
   ref_tag="$(git rev-parse --show-prefix)@${GITHUB_REF}"
