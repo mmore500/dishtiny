@@ -39,17 +39,22 @@ CFLAGS_nat_profile := -pg -DNDEBUG $(OMP_FLAG) $(CFLAGS_all)
 
 # Emscripten compiler information
 CXX_web := emcc
-OFLAGS_web_all := -s USE_PTHREADS=1 -s PROXY_TO_PTHREAD=1 -Wno-mismatched-tags -Wno-empty-body -s USE_ZLIB=1 -s USE_LIBLZMA=1 -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s TOTAL_MEMORY=671088640 --js-library $(EMP_DIR)/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback', '_empDoCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0 -I/usr/lib/x86_64-linux-gnu/openmpi/include/
+OFLAGS_web_all := -Wno-mismatched-tags -Wno-empty-body -s USE_ZLIB=1 -s USE_LIBLZMA=1 -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s TOTAL_MEMORY=671088640 --js-library $(EMP_DIR)/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback', '_empDoCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0 -I/usr/lib/x86_64-linux-gnu/openmpi/include/
+OFLAGS_web_pthread := -s USE_PTHREADS=1 -s PROXY_TO_PTHREAD=1
 OFLAGS_web := -O3 -DNDEBUG
 OFLAGS_web_debug := -g4 -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPPORT=1 -s ASSERTIONS=2 -s SAFE_HEAP=1 -s STACK_OVERFLOW_CHECK=2
 
 CFLAGS_web := $(CFLAGS_all) $(OFLAGS_web) $(OFLAGS_web_all)
-CFLAGS_web_debug := $(CFLAGS_all) $(OFLAGS_web_debug) $(OFLAGS_web_all)
+CFLAGS_web_pthread := $(CFLAGS_all) $(OFLAGS_web) $(OFLAGS_web_pthread) $(OFLAGS_web_all)
+CFLAGS_web_debug := $(CFLAGS_all) $(OFLAGS_web_debug) $(OFLAGS_web_pthread) $(OFLAGS_web_all)
 
 default: $(PROJECT)
 native: $(PROJECT)
 production: $(PROJECT)
 web: $(PROJECT).js web/index.html
+web-no-pthread: $(PROJECT)-no-pthread.js web/index.html
+web-deploy: web web-no-pthread
+
 all: $(PROJECT) $(PROJECT).js web/index.html
 
 debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
@@ -75,7 +80,10 @@ $(PROJECT):	source/native.cpp include/
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/
-	cd third-party/emsdk && . ./emsdk_env.sh && cd - && $(CXX_web) $(CFLAGS_web) source/web.cpp -o web/$(PROJECT).js
+	cd third-party/emsdk && . ./emsdk_env.sh && cd - && $(CXX_web) $(CFLAGS_web_pthread) source/web.cpp -o web/$(PROJECT).js
+
+$(PROJECT)-no-pthread.js: source/web.cpp include/
+	cd third-party/emsdk && . ./emsdk_env.sh && cd - && $(CXX_web) $(CFLAGS_web) source/web.cpp -o web/$(PROJECT)-no-pthread.js
 
 web/index.html: web/includes
 	python3 web/make_html.py
@@ -129,6 +137,7 @@ install-test-dependencies:
 .PHONY: debug
 .PHONY:	debug-web
 .PHONY:	default
+.PHONY: docs
 .PHONY:	documentation-coverage
 .PHONY:	documentation-coverage-badge.json
 .PHONY:	doto-badge.json

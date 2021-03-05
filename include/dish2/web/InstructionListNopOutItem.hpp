@@ -20,6 +20,7 @@ public:
 
   InstructionListNopOutItem( std::function<void()> callback ) {
 
+#ifdef __EMSCRIPTEN_PTHREADS__
     list_group_item.SetAttr(
       "class",
       "list-group-item list-group-item-action list-group-item-danger"
@@ -28,7 +29,12 @@ public:
     ).OnClick(
       [ callback ](){ callback(); }
     ) << "Do Nop Out";
-
+#else
+    list_group_item.SetAttr(
+      "class",
+      "list-group-item list-group-item-action list-group-item-danger disabled"
+    ) << "Phenotype-neutral Nop Out is not available in your browser.";
+#endif
   }
 
   operator emp::web::Div&() { return list_group_item; }

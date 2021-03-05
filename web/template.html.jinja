@@ -116,7 +116,17 @@
       </div>
     </div>
 
-    <script type="text/javascript" src="dishtiny.js"></script>
+
+    <!-- We include a different file depending on whether the browser has pthread support. -->
+    <script type="text/javascript">
+      const script = document.createElement('script')
+      if (typeof SharedArrayBuffer !== 'undefined') {
+        script.src = 'dishtiny.js';
+      } else {
+        script.src = 'dishtiny-no-pthread.js';
+      }
+      document.head.append(script)
+    </script>
 
   </body>
 </html>
