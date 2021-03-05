@@ -25,7 +25,7 @@ for retry in {0..20}; do
   && echo "  job script copy success" \
   || (echo "retrying job script copy (${retry})" && sleep $((RANDOM % 10)) && continue)
 
-  echo "JOB_ID=\"\$(sbatch --parsable \"${JOB_SCRIPT}\")\"; cp \"${JOB_SCRIPT}\" \$(realpath ~)/slurmscripts/slurm-\${JOB_ID}.sh && echo \"submitted batch job \${JOB_ID}\"" \
+  echo "JOB_ID=\"\$(sbatch --parsable \"${JOB_SCRIPT}\")\"; cp \"${JOB_SCRIPT}\" \"\$(realpath ~)/slurmscripts/slurm-\${JOB_ID}.sh\" && echo \"submitted batch job \${JOB_ID}\"" \
   | sshpass -p "${HOST_PASSWORD}" \
     ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${HOST_USERNAME}@$(hostname)" -X \

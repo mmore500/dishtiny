@@ -53,6 +53,7 @@ echo "and instantiate slurm stoker job template"
 echo "-------------------------------------"
 ################################################################################
 
+pwd
 echo "$(ls *.slurm.sh | wc -l) target files detected"
 
 tar -czvf - *.slurm.sh \

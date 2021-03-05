@@ -39,6 +39,7 @@ echo "SERIES ${SERIES}"
 
 # set up and jump into temporary work directory
 cd "$(mktemp -d)"
+pwd
 
 # curl repro_runner.sh script into to a temporary file
 REPRO_RUNNER="$(mktemp)"
