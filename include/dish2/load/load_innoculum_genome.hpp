@@ -42,6 +42,17 @@ dish2::Genome<Spec> load_innoculum_genome(
     for (size_t i{}; i < num_muts; ++i) innoculum.DoMutation();
   }
 
+  if ( attrs.count("set_mutation_occurence_rate_multiplicand") ) {
+    const double mutation_occurence_rate_multiplicand
+      = uitsl::stoszt( attrs.at("set_mutation_occurence_rate_multiplicand") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " setting mutation_occurence_rate_multiplicand to "
+      << mutation_occurence_rate_multiplicand
+      << "for genome " << root_id << " from " << path << std::endl;
+    innoculum.config_customizations.mutation_occurence_rate_multiplicand
+      = mutation_occurence_rate_multiplicand;
+  }
+
   std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " loaded innoculum genome " << root_id << " from " << path << std::endl;
 

@@ -25,18 +25,42 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
   const size_t thread_idx, const std::filesystem::path& path
 ) {
 
+
+  const auto attrs = emp::keyname::unpack( path );
+
   // all innoculums must specify root id
-  emp_always_assert(emp::keyname::unpack( path ).count("root_id"), path);
+  emp_always_assert(attrs.count("root_id"), path);
 
   using population_t = emp::vector<dish2::Genome<Spec>>;
   population_t innoculum(
     dish2::autoload<population_t>( path )
   );
 
-  const size_t root_id = uitsl::stoszt(
-    emp::keyname::unpack( path ).at("root_id")
-  );
+  const size_t root_id = uitsl::stoszt( attrs.at("root_id") );
   for (auto & genome : innoculum) genome.root_id.SetID( root_id );
+
+  if ( attrs.count("mutate_on_load") ) {
+    const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " applying " << num_muts << " mutations "
+      << "to population " << root_id << " from " << path << std::endl;
+    for (auto& genome : innoculum) {
+      for (size_t i{}; i < num_muts; ++i) genome.DoMutation();
+    }
+  }
+
+  if ( attrs.count("set_mutation_occurence_rate_multiplicand") ) {
+    const double mutation_occurence_rate_multiplicand
+      = uitsl::stoszt( attrs.at("set_mutation_occurence_rate_multiplicand") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " setting mutation_occurence_rate_multiplicand to "
+      << mutation_occurence_rate_multiplicand
+      << "for population " << root_id << " from " << path << std::endl;
+    for (auto& genome : innoculum) {
+      genome.config_customizations.mutation_occurence_rate_multiplicand
+        = mutation_occurence_rate_multiplicand;
+    }
+  }
 
   std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " loaded innoculum population " << root_id
