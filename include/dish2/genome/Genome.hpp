@@ -27,7 +27,62 @@
 namespace dish2 {
 
 template<typename Spec>
-struct Genome {
+class Genome {
+
+  void ApplyProgramSequenceMutation(
+    const bool do_insertion, const bool do_deletion
+  ) {
+    using inst_t = typename program_t::value_type;
+
+    const bool is_severe = sgpl::tlrand.Get().P(
+      dish2::cfg.SEVERE_SEQUENCE_MUTATION_RATE()
+    );
+
+    const size_t defect_bound = (
+      is_severe
+      ? program.size()
+      : dish2::cfg.MINOR_SEQUENCE_MUTATION_BOUND()
+    );
+
+    const double defect_rate_each
+      = config_customizations.CalcSequenceDefectRate() / 2.0;
+
+    const double defect_rate
+      = defect_rate_each * ( do_insertion + do_deletion );
+
+    // TODO perform the sloppy copy elsewhere for efficiency's sake?
+    // do severe sequence mutation
+    auto [copy, num_muts] = sgpl::sloppy_copy<inst_t, 0>(
+      program,
+      defect_rate,
+      { -defect_bound * do_insertion, defect_bound * do_deletion },
+      dish2::cfg.PROGRAM_MAX_SIZE()
+    );
+    mutation_counter.RecordInsertionDeletion( num_muts );
+    program = std::move( copy );
+
+  }
+
+  void ApplyPointMutation() {
+    const double point_mutation_rate
+      = config_customizations.CalcPointMutationRate();
+
+    const size_t num_muts = (
+      event_tags.ApplyPointMutations(point_mutation_rate)
+      + program.ApplyPointMutations( point_mutation_rate )
+    );
+
+    mutation_counter.RecordPointMutation( num_muts );
+
+  }
+
+  void RectifyAfterMutation() {
+    // todo, is this convenience worth optimizing out?
+    // also potentially would need to fix constructor
+    program.RotateGlobalAnchorToFront();
+  }
+
+public:
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
   using event_tags_t = dish2::EventTags<Spec>;
@@ -118,40 +173,27 @@ struct Genome {
 
   void DoMutation() {
     mutation_counter.RecordMutationOccurrence();
-    MutateProgram();
-    mutation_counter.RecordPointMutation( event_tags.ApplyPointMutations(
-      config_customizations.CalcPointMutationRate()
-    ) );
+    ApplyProgramSequenceMutation(true, true);
+    ApplyPointMutation();
+    RectifyAfterMutation();
   }
 
-  void MutateProgram() {
-    DoProgramSequenceMutation();
-    mutation_counter.RecordPointMutation( program.ApplyPointMutations(
-      config_customizations.CalcPointMutationRate()
-    ) );
-    // todo, is this convenience worth optimizing out?
-    // also potentially would need to fix constructor
-    program.RotateGlobalAnchorToFront();
+  // for experiments that isolate insertion mutations
+  void DoInsertionMutation() {
+    ApplyProgramSequenceMutation(true, false);
+    RectifyAfterMutation();
   }
 
-  void DoProgramSequenceMutation() {
-    using inst_t = typename program_t::value_type;
+  // for experiments that isolate deletion mutations
+  void DoDeletionMutation() {
+    ApplyProgramSequenceMutation(false, true);
+    RectifyAfterMutation();
+  }
 
-    const bool is_severe = sgpl::tlrand.Get().P(
-      dish2::cfg.SEVERE_SEQUENCE_MUTATION_RATE()
-    );
-
-    // TODO perform the sloppy copy elsewhere for efficiency's sake?
-    // do severe sequence mutation
-    auto [copy, num_muts] = sgpl::sloppy_copy<inst_t, 0>(
-      program,
-      config_customizations.CalcSequenceDefectRate(),
-      is_severe ? program.size() : dish2::cfg.MINOR_SEQUENCE_MUTATION_BOUND(),
-      dish2::cfg.PROGRAM_MAX_SIZE()
-    );
-    mutation_counter.RecordInsertionDeletion( num_muts );
-    program = std::move( copy );
-
+  // for experiments that isolate point mutations
+  void DoPointMutation() {
+    ApplyPointMutation();
+    RectifyAfterMutation();
   }
 
   void SetupSeededGenotype() {

@@ -42,6 +42,30 @@ dish2::Genome<Spec> load_innoculum_genome(
     for (size_t i{}; i < num_muts; ++i) innoculum.DoMutation();
   }
 
+  if ( attrs.count("point_mutate_on_load") ) {
+    const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " applying " << num_muts << " point mutations "
+      << "to genome " << root_id << " from " << path << std::endl;
+    for (size_t i{}; i < num_muts; ++i) innoculum.DoPointMutation();
+  }
+
+  if ( attrs.count("insertion_mutate_on_load") ) {
+    const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " applying " << num_muts << " insertion mutations "
+      << "to genome " << root_id << " from " << path << std::endl;
+    for (size_t i{}; i < num_muts; ++i) innoculum.DoInsertionMutation();
+  }
+
+  if ( attrs.count("deletion_mutate_on_load") ) {
+    const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " applying " << num_muts << " deletion mutations "
+      << "to genome " << root_id << " from " << path << std::endl;
+    for (size_t i{}; i < num_muts; ++i) innoculum.DoDeletionMutation();
+  }
+
   if ( attrs.count("set_mutation_occurence_rate_multiplicand") ) {
     const double mutation_occurence_rate_multiplicand
       = uitsl::stoszt( attrs.at("set_mutation_occurence_rate_multiplicand") );

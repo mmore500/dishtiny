@@ -42,10 +42,40 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
   if ( attrs.count("mutate_on_load") ) {
     const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-      << " applying " << num_muts << " mutations "
+      << " applying " << num_muts << " mutations each "
       << "to population " << root_id << " from " << path << std::endl;
     for (auto& genome : innoculum) {
       for (size_t i{}; i < num_muts; ++i) genome.DoMutation();
+    }
+  }
+
+  if ( attrs.count("point_mutate_on_load") ) {
+    const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " applying " << num_muts << " point mutations each "
+      << "to population " << root_id << " from " << path << std::endl;
+    for (auto& genome : innoculum) {
+      for (size_t i{}; i < num_muts; ++i) genome.DoPointMutation();
+    }
+  }
+
+  if ( attrs.count("insertion_mutate_on_load") ) {
+    const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " applying " << num_muts << " insertion mutations each "
+      << "to population " << root_id << " from " << path << std::endl;
+    for (auto& genome : innoculum) {
+      for (size_t i{}; i < num_muts; ++i) genome.DoInsertionMutation();
+    }
+  }
+
+  if ( attrs.count("deletion_mutate_on_load") ) {
+    const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " applying " << num_muts << " deletion mutations each "
+      << "to population " << root_id << " from " << path << std::endl;
+    for (auto& genome : innoculum) {
+      for (size_t i{}; i < num_muts; ++i) genome.DoDeletionMutation();
     }
   }
 
