@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <limits>
 
+#include "../../../third-party/cereal/include/cereal/cereal.hpp"
 #include "../../../third-party/cereal/include/cereal/types/array.hpp"
 #include "../../../third-party/Empirical/include/emp/base/array.hpp"
 #include "../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"

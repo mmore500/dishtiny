@@ -5,6 +5,8 @@
 #include <cstddef>
 #include <tuple>
 
+#include "../../../third-party/cereal/include/cereal/cereal.hpp"
+
 namespace dish2 {
 
 struct MutationCounter {

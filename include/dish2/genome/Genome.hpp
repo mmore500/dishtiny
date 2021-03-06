@@ -7,6 +7,7 @@
 #include <tuple>
 #include <utility>
 
+#include "../../../third-party/cereal/include/cereal/cereal.hpp"
 #include "../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/polyfill/span.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/sloppy_copy.hpp"
@@ -14,6 +15,7 @@
 
 #include "../config/cfg.hpp"
 
+#include "ConfigCustomizations.hpp"
 #include "EventTags.hpp"
 #include "GenerationCounter.hpp"
 #include "Genome.hpp"
@@ -31,6 +33,7 @@ struct Genome {
   using event_tags_t = dish2::EventTags<Spec>;
 
   event_tags_t event_tags;
+  dish2::ConfigCustomizations config_customizations;
   dish2::GenerationCounter<Spec> generation_counter;
   dish2::KinGroupEpochStamps<Spec> kin_group_epoch_stamps;
   dish2::KinGroupID<Spec> kin_group_id;
@@ -54,6 +57,7 @@ struct Genome {
   bool operator==(const Genome& other) const {
     // ignore kin_group_epoch_stamps,
     return std::tuple{
+      config_customizations,
       event_tags,
       generation_counter,
       kin_group_id,
@@ -62,6 +66,7 @@ struct Genome {
       root_id,
       stint_root_id
     } == std::tuple{
+      other.config_customizations,
       other.event_tags,
       other.generation_counter,
       other.kin_group_id,
@@ -75,6 +80,7 @@ struct Genome {
   bool operator<(const Genome& other) const {
     // ignore kin_group_epoch_stamps,
     return std::tuple{
+      config_customizations,
       event_tags,
       generation_counter,
       kin_group_id,
@@ -83,6 +89,7 @@ struct Genome {
       root_id,
       stint_root_id
     } < std::tuple{
+      other.config_customizations,
       other.event_tags,
       other.generation_counter,
       other.kin_group_id,
@@ -101,9 +108,9 @@ struct Genome {
     kin_group_epoch_stamps.ApplyInheritance( rep_lev, epoch );
     kin_group_id.ApplyInheritance( rep_lev );
 
-    if (
-      sgpl::tlrand.Get().P( dish2::cfg.MUTATION_RATE()[rep_lev] )
-    ) DoMutation();
+    if ( sgpl::tlrand.Get().P(
+      config_customizations.CalcMutationOccurenceRate( rep_lev )
+    ) ) DoMutation();
 
     // root_id and stint_root_id doesn't change
 
@@ -112,15 +119,15 @@ struct Genome {
   void DoMutation() {
     mutation_counter.RecordMutationOccurrence();
     MutateProgram();
-    mutation_counter.RecordPointMutation(
-      event_tags.ApplyPointMutations( dish2::cfg.POINT_MUTATION_RATE() )
-    );
+    mutation_counter.RecordPointMutation( event_tags.ApplyPointMutations(
+      config_customizations.CalcPointMutationRate()
+    ) );
   }
 
   void MutateProgram() {
     DoProgramSequenceMutation();
     mutation_counter.RecordPointMutation( program.ApplyPointMutations(
-      dish2::cfg.POINT_MUTATION_RATE()
+      config_customizations.CalcPointMutationRate()
     ) );
     // todo, is this convenience worth optimizing out?
     // also potentially would need to fix constructor
@@ -138,7 +145,7 @@ struct Genome {
     // do severe sequence mutation
     auto [copy, num_muts] = sgpl::sloppy_copy<inst_t, 0>(
       program,
-      dish2::cfg.SEQUENCE_DEFECT_RATE(),
+      config_customizations.CalcSequenceDefectRate(),
       is_severe ? program.size() : dish2::cfg.MINOR_SEQUENCE_MUTATION_BOUND(),
       dish2::cfg.PROGRAM_MAX_SIZE()
     );

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <utility>
 
+#include "../../../third-party/cereal/include/cereal/cereal.hpp"
 #include "../../../third-party/cereal/include/cereal/types/array.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/count_equal.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"

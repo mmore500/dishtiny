@@ -7,6 +7,7 @@
 #include <tuple>
 #include <utility>
 
+#include "../../../third-party/cereal/include/cereal/cereal.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
