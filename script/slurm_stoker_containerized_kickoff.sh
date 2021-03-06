@@ -16,10 +16,16 @@ if (( "$#" != 3 )); then
   exit 1
 fi
 
-container_tag="${1}"
+bucket="${1}"
+echo "bucket ${bucket}"
 shift
 
-export repo_sha="${1}"
+container_tag="${1}"
+echo "container_tag ${container_tag}"
+shift
+
+repo_sha="${1}"
+echo "repo_sha ${repo_sha}"
 shift
 
 # load secrets into environment variables, if available
