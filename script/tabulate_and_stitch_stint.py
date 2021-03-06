@@ -382,7 +382,7 @@ def tabulate_fitness_complexity(variant_df):
 
     return pd.DataFrame(res)
 
-def tabulate_mutant(mutant_df, variant_df):
+def tabulate_mutant(mutant_df, variant_df, mutation_type=''):
 
     res = []
     for series in mutant_df['Competition Series'].unique():
@@ -430,15 +430,15 @@ def tabulate_mutant(mutant_df, variant_df):
 
         res.append({
             'Series' : series,
-            'Num More Fit Mutants' : num_more_fit_mutants,
-            'Num Less Fit Mutants' : num_less_fit_mutants,
-            'Fraction Mutations that are Advantageous'
+            f'Num More Fit {mutation_type}Mutants' : num_more_fit_mutants,
+            f'Num Less Fit {mutation_type}Mutants' : num_less_fit_mutants,
+            f'Fraction {mutation_type}Mutations that are Advantageous'
                 : num_more_fit_mutants / len(wt_vs_mutant_df),
-            'Fraction Mutations that are Deleterious'
+            f'Fraction {mutation_type}Mutations that are Deleterious'
                 : num_less_fit_mutants  / len(wt_vs_mutant_df),
-            'Mean Mutant Fitness Differential'
+            f'Mean {mutation_type}Mutant Fitness Differential'
                 : np.mean( wt_vs_mutant_df['Fitness Differential'] ),
-            'Median Mutant Fitness Differential'
+            f'Median {mutation_type}Mutant Fitness Differential'
                 : np.median( wt_vs_mutant_df['Fitness Differential'] ),
         })
 
@@ -540,6 +540,94 @@ if (stint % 20 == 0):
         sources.append( mutant_competitions.key )
     except ValueError:
         print("missing mutant competitions, skipping")
+
+if (stint % 20 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling deletion mutant competitions'                             )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        variant_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+        )
+
+        variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
+
+        mutant_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/mutant-deletion-competitions/stage=2+what=collated/stint={stint}/'
+        )
+
+        mutant_df = pd.read_csv(
+            f's3://{bucket}/{mutant_competitions.key}'
+        )
+
+        dataframes.append(
+            tabulate_mutant( mutant_df, variant_df, 'Deletion ' )
+        )
+        sources.append( mutant_competitions.key )
+    except ValueError:
+        print("missing deletion mutant competitions, skipping")
+
+if (stint % 20 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling insertion mutant competitions'                            )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        variant_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+        )
+
+        variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
+
+        mutant_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/mutant-insertion-competitions/stage=2+what=collated/stint={stint}/'
+        )
+
+        mutant_df = pd.read_csv(
+            f's3://{bucket}/{mutant_competitions.key}'
+        )
+
+        dataframes.append(
+            tabulate_mutant( mutant_df, variant_df, 'Insertion ' )
+        )
+        sources.append( mutant_competitions.key )
+    except ValueError:
+        print("missing insertion mutant competitions, skipping")
+
+
+if (stint % 20 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling point mutant competitions'                                )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        variant_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+        )
+
+        variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
+
+        mutant_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/mutant-point-competitions/stage=2+what=collated/stint={stint}/'
+        )
+
+        mutant_df = pd.read_csv(
+            f's3://{bucket}/{mutant_competitions.key}'
+        )
+
+        dataframes.append(
+            tabulate_mutant( mutant_df, variant_df, 'Point ' )
+        )
+        sources.append( mutant_competitions.key )
+    except ValueError:
+        print("missing point mutant competitions, skipping")
 
 
 if (stint % 20 == 0):
