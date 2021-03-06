@@ -93,6 +93,19 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
     }
   }
 
+  if ( attrs.count("set_program_max_size_override") ) {
+    const double program_max_size_override
+      = uitsl::stoszt( attrs.at("set_program_max_size_override") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " setting program_max_size_override to "
+      << program_max_size_override
+      << "for population " << root_id << " from " << path << std::endl;
+    for (auto& genome : innoculum) {
+      genome.config_customizations.program_max_size_override
+        = program_max_size_override;
+    }
+  }
+
   std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " loaded innoculum population " << root_id
     << " with " << innoculum.size() << " genomes "

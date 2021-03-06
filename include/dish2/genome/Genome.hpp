@@ -56,7 +56,7 @@ class Genome {
       program,
       defect_rate,
       { -defect_bound * do_insertion, defect_bound * do_deletion },
-      dish2::cfg.PROGRAM_MAX_SIZE()
+      config_customizations.GetProgramMaxSize()
     );
     mutation_counter.RecordInsertionDeletion( num_muts );
     program = std::move( copy );
