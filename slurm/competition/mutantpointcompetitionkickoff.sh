@@ -104,7 +104,7 @@ repo_sha: ${REPO_SHA}
 first_competitor_url: "\${FIRST_COMPETITOR}"
 second_competitor_url: "\${SECOND_COMPETITOR}"
 second_competitor_attrs: "point_mutate_on_load=1+"
-output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/mutant-competitions/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
+output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/mutant-point-competitions/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
 replicate: "\${REPLICATE}"
 endeavor: "\${ENDEAVOR}"
 stint: "${STINT}"
