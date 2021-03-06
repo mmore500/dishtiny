@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <string>
 
 #include "../../../third-party/cereal/include/cereal/archives/binary.hpp"
 #include "../../../third-party/cereal/include/cereal/archives/json.hpp"
@@ -68,7 +69,7 @@ dish2::Genome<Spec> load_innoculum_genome(
 
   if ( attrs.count("set_mutation_occurence_rate_multiplicand") ) {
     const double mutation_occurence_rate_multiplicand
-      = uitsl::stoszt( attrs.at("set_mutation_occurence_rate_multiplicand") );
+      = std::stod( attrs.at("set_mutation_occurence_rate_multiplicand") );
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " setting mutation_occurence_rate_multiplicand to "
       << mutation_occurence_rate_multiplicand
