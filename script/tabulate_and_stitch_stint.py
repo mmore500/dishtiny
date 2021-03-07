@@ -599,6 +599,35 @@ if (stint % 20 == 0):
     except ValueError:
         print("missing insertion mutant competitions, skipping")
 
+if (stint % 20 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling mutating competitions'                                    )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        variant_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+        )
+
+        variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
+
+        mutant_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/mutating-competitions/stage=2+what=collated/stint={stint}/'
+        )
+
+        mutant_df = pd.read_csv(
+            f's3://{bucket}/{mutant_competitions.key}'
+        )
+
+        dataframes.append(
+            tabulate_mutant( mutant_df, variant_df, 'Mutating ' )
+        )
+        sources.append( mutant_competitions.key )
+    except ValueError:
+        print("missing mutating competitions, skipping")
+
 
 if (stint % 20 == 0):
     ############################################################################
