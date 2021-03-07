@@ -51,7 +51,7 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
   }
 
   if ( attrs.count("point_mutate_on_load") ) {
-    const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
+    const size_t num_muts = uitsl::stoszt( attrs.at("point_mutate_on_load") );
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " applying " << num_muts << " point mutations each "
       << "to population " << root_id << " from " << path << std::endl;
@@ -61,7 +61,7 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
   }
 
   if ( attrs.count("insertion_mutate_on_load") ) {
-    const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
+    const size_t num_muts = uitsl::stoszt(attrs.at("insertion_mutate_on_load"));
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " applying " << num_muts << " insertion mutations each "
       << "to population " << root_id << " from " << path << std::endl;
@@ -71,7 +71,7 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
   }
 
   if ( attrs.count("deletion_mutate_on_load") ) {
-    const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
+    const size_t num_muts = uitsl::stoszt( attrs.at("deletion_mutate_on_load"));
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " applying " << num_muts << " deletion mutations each "
       << "to population " << root_id << " from " << path << std::endl;
