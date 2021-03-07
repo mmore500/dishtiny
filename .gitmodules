@@ -41,3 +41,6 @@
 [submodule "third-party/bxzstr"]
   path = third-party/bxzstr
   url = https://github.com/mmore500/bxzstr.git
+[submodule "third-party/lazy-iterators"]
+  path = third-party/lazy-iterators
+  url = https://github.com/mmore500/lazy-iterators

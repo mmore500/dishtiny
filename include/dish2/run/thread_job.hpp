@@ -8,6 +8,7 @@
 
 #include "../config/cfg.hpp"
 #include "../load/load_world.hpp"
+#include "../record/dump_interroot_phenotype_differentiation.hpp"
 #include "../record/make_filename/make_elapsed_updates_filename.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -56,6 +57,10 @@ void thread_job(
     dish2::thread_data_write<Spec>( thread_world, thread_idx );
     std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " write 1" << std::endl;
+  }
+
+  if ( cfg.TEST_INTERROOT_PHENOTYPE_DIFFERENTIATION() ) {
+    dish2::dump_interroot_phenotype_differentiation( thread_world, thread_idx );
   }
 
   std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
