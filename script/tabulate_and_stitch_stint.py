@@ -327,6 +327,12 @@ def filter_for_phenotype_neutral_nopout(genome_df):
 
 def tabulate_fitness_complexity(variant_df):
 
+    # count competions where both strains went extinct simultaneously
+    # as 0 Fitness Differential
+    na_rows = variant_df['Fitness Differential'].isna()
+    assert all( variant_df[ na_rows ]['Population Extinct'] )
+    variant_df['Fitness Differential'].fillna(0, inplace=True,)
+
     res = []
     for series in variant_df['Competition Series'].unique():
 
@@ -383,6 +389,12 @@ def tabulate_fitness_complexity(variant_df):
     return pd.DataFrame(res)
 
 def tabulate_mutant(mutant_df, variant_df, mutation_type=''):
+
+    # count competions where both strains went extinct simultaneously
+    # as 0 Fitness Differential
+    na_rows = variant_df['Fitness Differential'].isna()
+    assert all( variant_df[ na_rows ]['Population Extinct'] )
+    variant_df['Fitness Differential'].fillna(0, inplace=True,)
 
     res = []
     for series in mutant_df['Competition Series'].unique():
