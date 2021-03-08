@@ -60,8 +60,8 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
     }
   }
 
-  if ( attrs.count("ins_mut") ) {
-    const size_t num_muts = uitsl::stoszt(attrs.at("ins_mut"));
+  if ( attrs.count("insertion_mutate_on_load") ) {
+    const size_t num_muts = uitsl::stoszt(attrs.at("insertion_mutate_on_load"));
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " applying " << num_muts << " insertion mutations each "
       << "to population " << root_id << " from " << path << std::endl;
@@ -93,9 +93,9 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
     }
   }
 
-  if ( attrs.count("prog_max") ) {
+  if ( attrs.count("set_program_max_size_override") ) {
     const double program_max_size_override
-      = uitsl::stoszt( attrs.at("prog_max") );
+      = uitsl::stoszt( attrs.at("set_program_max_size_override") );
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " setting program_max_size_override to "
       << program_max_size_override
