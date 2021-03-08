@@ -18,3 +18,4 @@ boto3==1.16.52
 fsspec==0.8.5
 s3fs==0.5.2
 botocore==1.19.52
+statsmodels==0.12.2
