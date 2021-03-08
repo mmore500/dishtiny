@@ -481,7 +481,7 @@ my_bucket = s3.Bucket(bucket)
 dataframes = []
 sources = []
 
-if (stint % 20 == 0):
+if (stint % 10 == 0):
     ############################################################################
     print(                                                                     )
     print( 'handling strain competitions'                                      )
@@ -503,7 +503,7 @@ if (stint % 20 == 0):
         print("missing strain competitions, skipping")
 
 
-if (stint % 20 == 0):
+if (stint % 10 == 0):
     ############################################################################
     print(                                                                     )
     print( 'handling variant competitions'                                     )
@@ -524,7 +524,7 @@ if (stint % 20 == 0):
     except ValueError:
         print("missing variant competitions, skipping")
 
-if (stint % 20 == 0):
+if (stint % 10 == 0):
     ############################################################################
     print(                                                                     )
     print( 'handling mutant competitions'                                      )
@@ -553,7 +553,7 @@ if (stint % 20 == 0):
     except ValueError:
         print("missing mutant competitions, skipping")
 
-if (stint % 20 == 0):
+if (stint % 10 == 0):
     ############################################################################
     print(                                                                     )
     print( 'handling deletion mutant competitions'                             )
@@ -582,7 +582,7 @@ if (stint % 20 == 0):
     except ValueError:
         print("missing deletion mutant competitions, skipping")
 
-if (stint % 20 == 0):
+if (stint % 10 == 0):
     ############################################################################
     print(                                                                     )
     print( 'handling insertion mutant competitions'                            )
@@ -611,7 +611,7 @@ if (stint % 20 == 0):
     except ValueError:
         print("missing insertion mutant competitions, skipping")
 
-if (stint % 20 == 0):
+if (stint % 10 == 0):
     ############################################################################
     print(                                                                     )
     print( 'handling mutating competitions'                                    )
@@ -641,7 +641,7 @@ if (stint % 20 == 0):
         print("missing mutating competitions, skipping")
 
 
-if (stint % 20 == 0):
+if (stint % 10 == 0):
     ############################################################################
     print(                                                                     )
     print( 'handling point mutant competitions'                                )
@@ -671,7 +671,7 @@ if (stint % 20 == 0):
         print("missing point mutant competitions, skipping")
 
 
-if (stint % 20 == 0):
+if (stint % 10 == 0):
     ############################################################################
     print(                                                                     )
     print( 'handling predecessor competitions'                                 )
@@ -696,7 +696,7 @@ if (stint % 20 == 0):
         print("missing predecessor competitions, skipping")
 
 
-if (stint % 20 == 0):
+if (stint % 10 == 0):
     ############################################################################
     print(                                                                     )
     print( 'handling predecessor battles'                                      )
@@ -720,7 +720,7 @@ if (stint % 20 == 0):
     except ValueError:
         print("missing predecessor battles, skipping")
 
-if (stint % 20 == 0):
+if (stint % 10 == 0):
     ############################################################################
     print(                                                                     )
     print( 'handling progenitor competitions'                                  )
@@ -750,7 +750,7 @@ if (stint % 10 == 0):
 
     try:
         genome_statistics, = my_bucket.objects.filter(
-            Prefix=f'endeavor={endeavor}/genomes/stage={2 if stint % 20 == 0 else 1}+what=collated/stint={stint}/'
+            Prefix=f'endeavor={endeavor}/genomes/stage={2 if stint % 10 == 0 else 1}+what=collated/stint={stint}/'
         )
 
         genome_df = pd.read_csv(f's3://{bucket}/{genome_statistics.key}')
