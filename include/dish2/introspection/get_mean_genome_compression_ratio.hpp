@@ -31,7 +31,7 @@ double get_mean_genome_compression_ratio(
   } else return std::accumulate(
     lcit_t::make_begin( population ),
     lcit_t::make_end( population ),
-    0.0,
+    double{},
     [](const double accum, const auto& cell){
       return accum + dish2::measure_compression_ratio([&](){
         std::ostringstream ss;

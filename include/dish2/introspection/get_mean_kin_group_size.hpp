@@ -18,7 +18,7 @@ double get_mean_kin_group_size(
 
   return std::accumulate(
     std::begin( group_counts ), std::end( group_counts ),
-    0.0,
+    double{},
     [](const auto& accumulator, const auto& group_count){
       const auto& [group, count] = group_count;
       return accumulator + count;

@@ -37,7 +37,7 @@ double get_mean_generation(
   } else return std::accumulate(
     wrapper_t{ dish2::LiveCellIterator<Spec>::make_begin( population ) },
     wrapper_t{ dish2::LiveCellIterator<Spec>::make_end( population ) },
-    0.0,
+    double{},
     [lev]( const auto& accumulator, const auto& generation_counter ){
       return accumulator + generation_counter.elapsed_generations[ lev ];
     }

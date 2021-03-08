@@ -34,7 +34,7 @@ double get_mean_incoming_intra_message_count_per_cell(
   } else return std::accumulate(
     iterator_t::make_begin( lcit_t::make_begin( population ) ),
     iterator_t::make_end( lcit_t::make_end( population ) ),
-    0.0
+    double{}
   ) / dish2::count_live_cells< Spec >( world );
 
 }

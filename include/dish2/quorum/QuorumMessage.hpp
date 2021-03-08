@@ -108,9 +108,8 @@ public:
 
   size_t GetNumBits() const {
     return std::accumulate(
-      std::begin( data ),
-      std::end( data ),
-      0,
+      std::begin( data ), std::end( data ),
+      size_t{},
       [](const auto& cumulator, const auto& bitset){
         return cumulator + bitset.CountOnes();
       }

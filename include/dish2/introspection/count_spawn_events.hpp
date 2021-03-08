@@ -19,7 +19,7 @@ size_t count_spawn_events( const dish2::ThreadWorld<Spec>& world ) {
 
   return std::accumulate(
     std::begin( population ), std::end( population ),
-    0,
+    size_t{},
     []( const size_t accumulator, const auto& cell ){
       const auto& log = cell.running_logs.template GetLog<
         dish2::SpawnEvent<Spec>
@@ -47,7 +47,7 @@ size_t count_spawn_events(
   );
 
   return std::accumulate(
-    begin, end, 0,
+    begin, end, size_t{},
     [=]( const size_t accumulator, const auto& event ){
       return accumulator + ( event.replev == replev );
     }

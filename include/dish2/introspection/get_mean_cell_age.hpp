@@ -32,7 +32,7 @@ double get_mean_cell_age( const dish2::ThreadWorld<Spec>& world ) {
   } else return std::accumulate(
     iterator_t( lcit_t::make_begin( population ) ),
     iterator_t( lcit_t::make_end( population ) ),
-    0.0
+    double{}
   ) / dish2::count_live_cells<Spec>( world );
 
 }

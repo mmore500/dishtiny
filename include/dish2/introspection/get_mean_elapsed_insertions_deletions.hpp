@@ -37,7 +37,7 @@ double get_mean_elapsed_insertions_deletions(
   } else return std::accumulate(
     wrapper_t{ dish2::LiveCellIterator<Spec>::make_begin( population ) },
     wrapper_t{ dish2::LiveCellIterator<Spec>::make_end( population ) },
-    0.0,
+    double{},
     []( const auto& accumulator, const auto& counter ){
       return accumulator + counter;
     }

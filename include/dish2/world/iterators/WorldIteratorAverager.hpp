@@ -32,7 +32,7 @@ public:
     return std::accumulate(
       CellIterator::operator*().template begin<CardinalIterator>(),
       CellIterator::operator*().template end<CardinalIterator>(),
-      0.0
+      double{}
     ) / std::distance(
       CellIterator::operator*().template begin<CardinalIterator>(),
       CellIterator::operator*().template end<CardinalIterator>()

@@ -32,7 +32,7 @@ size_t sum_entire_elapsed_instruction_cycles(
   return std::accumulate(
     iterator_t::make_begin( std::begin(population) ),
     iterator_t::make_end( std::end(population) ),
-    0
+    size_t{}
   );
 
 }

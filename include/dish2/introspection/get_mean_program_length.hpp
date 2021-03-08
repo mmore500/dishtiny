@@ -37,9 +37,8 @@ double get_mean_program_length( const dish2::ThreadWorld<Spec>& world ) {
     emp_assert( dish2::no_live_cells<Spec>( world ) );
     return std::numeric_limits<double>::quiet_NaN();
   } else return std::accumulate(
-    std::begin( program_lengths ),
-    std::end( program_lengths ),
-    0.0
+    std::begin( program_lengths ), std::end( program_lengths ),
+    double{}
   ) / program_lengths.size();
 
 }

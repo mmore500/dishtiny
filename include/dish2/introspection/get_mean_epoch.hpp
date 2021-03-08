@@ -30,7 +30,7 @@ double get_mean_epoch( const dish2::ThreadWorld<Spec>& world ) {
 
   return std::accumulate(
     iterator_t( std::begin(population) ), iterator_t( std::end(population) ),
-    0.0
+    double{}
   ) / population.size();
 
 }

@@ -31,7 +31,7 @@ size_t get_total_spawn_event_kin_eliminated(
   );
 
   return std::accumulate(
-    begin, end, 0,
+    begin, end, size_t{},
     [=]( const size_t accumulator, const auto& event ){
       return accumulator + (
         event.kin_id_commonality_parent_eliminated
@@ -61,7 +61,7 @@ size_t get_total_spawn_event_kin_eliminated(
   );
 
   return std::accumulate(
-    begin, end, 0,
+    begin, end, size_t{},
     [=]( const size_t accumulator, const auto& event ){
       return accumulator + (
         event.replev == replev

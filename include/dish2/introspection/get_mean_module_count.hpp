@@ -36,9 +36,8 @@ double get_mean_module_count( const dish2::ThreadWorld<Spec>& world ) {
     emp_assert( dish2::no_live_cells<Spec>( world ) );
     return std::numeric_limits<double>::quiet_NaN();
   } else return std::accumulate(
-    std::begin( module_counts ),
-    std::end( module_counts ),
-    0.0
+    std::begin( module_counts ), std::end( module_counts ),
+    double{}
   ) / module_counts.size();
 
 }

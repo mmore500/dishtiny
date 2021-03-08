@@ -184,9 +184,8 @@ struct ResourceSendingService {
 
     // multiply each send amount by its fraction of sum send amount
     const auto total_requested = std::accumulate(
-      std::begin( send_amounts ),
-      std::end( send_amounts ),
-      0.0f
+      std::begin( send_amounts ), std::end( send_amounts ),
+      float{}
     );
     if (total_requested) std::transform(
       std::begin( send_amounts ),

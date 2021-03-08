@@ -28,9 +28,8 @@ struct SendIntraMessageIf {
 
     const size_t num_addrs = outputs.size();
     const size_t addr = std::accumulate(
-      std::begin( inst.args ),
-      std::end( inst.args ),
-      0
+      std::begin( inst.args ), std::end( inst.args ),
+      size_t{}
     ) % num_addrs;
 
     outputs[ addr ].TryPut( std::make_tuple(

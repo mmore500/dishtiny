@@ -19,7 +19,7 @@ size_t count_birth_events( const dish2::ThreadWorld<Spec>& world ) {
 
   return std::accumulate(
     std::begin( population ), std::end( population ),
-    0,
+    size_t{},
     []( const size_t accumulator, const auto& cell ){
       const auto& log = cell.running_logs.template GetLog<
         dish2::BirthEvent<Spec>

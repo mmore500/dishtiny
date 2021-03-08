@@ -32,7 +32,7 @@ size_t sum_entire_elapsed_instruction_cycles_for_live_cells(
   else return std::accumulate(
     iterator_t::make_begin( lcit_t::make_begin( population ) ),
     iterator_t::make_end( lcit_t::make_end( population ) ),
-    0
+    size_t{}
   );
 
 }

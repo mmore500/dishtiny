@@ -22,7 +22,7 @@ size_t count_kin_neighbors(
   return std::accumulate(
     dish2::LiveCellIterator<Spec>::make_begin( population ),
     dish2::LiveCellIterator<Spec>::make_end( population ),
-    0,
+    size_t{},
     [lev]( const size_t accumulator, const auto& cell ) {
       emp_assert( cell.GetNumCardinals() >= cell.GetPeripherality( lev ) );
       const size_t num_kin_neighbors

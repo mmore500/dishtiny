@@ -30,7 +30,7 @@ size_t get_total_spawn_event_kin_neighbors(
   );
 
   return std::accumulate(
-    begin, end, 0,
+    begin, end, size_t{},
     [=]( const size_t accumulator, const auto& event ){
       const size_t peripherality = event.peripherality_parent[lev];
       emp_assert( event.num_neighbors_parent >= peripherality );
@@ -61,7 +61,7 @@ size_t get_total_spawn_event_kin_neighbors(
   );
 
   return std::accumulate(
-    begin, end, 0,
+    begin, end, size_t{},
     [=]( const size_t accumulator, const auto& event ){
       const size_t peripherality = event.peripherality_parent[lev];
       emp_assert( event.num_neighbors_parent >= peripherality );

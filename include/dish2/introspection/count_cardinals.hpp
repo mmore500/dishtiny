@@ -19,7 +19,7 @@ size_t count_cardinals( const dish2::ThreadWorld<Spec>& world ) {
 
   return std::accumulate(
     std::begin( population ), std::end( population ),
-    0,
+    size_t{},
     []( const auto accumulator, const auto& cell ) {
       return accumulator + cell.GetNumCardinals();
     }

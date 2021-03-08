@@ -34,7 +34,7 @@ double get_mean_kin_group_age(
   } else return std::accumulate(
     iterator_t( lcit_t::make_begin( population ) ),
     iterator_t( lcit_t::make_end( population ) ),
-    0.0,
+    double{},
     [lev]( const double accumulator, const auto& kin_group_age ) {
       return accumulator + kin_group_age.Get( lev );
     }

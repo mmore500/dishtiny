@@ -30,7 +30,7 @@ size_t get_total_spawn_event_neighbors(
   );
 
   return std::accumulate(
-    begin, end, 0,
+    begin, end, size_t{},
     []( const size_t accumulator, const auto& event ){
       return accumulator + event.num_neighbors_parent;
     }
@@ -56,7 +56,7 @@ size_t get_total_spawn_event_neighbors(
   );
 
   return std::accumulate(
-    begin, end, 0,
+    begin, end, size_t{},
     [=]( const size_t accumulator, const auto& event ){
       return accumulator
         + event.num_neighbors_parent * ( event.replev == replev );

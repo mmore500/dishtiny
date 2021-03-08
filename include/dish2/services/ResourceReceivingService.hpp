@@ -43,7 +43,7 @@ struct ResourceReceivingService {
     const float received_amount = std::accumulate(
       cell.template begin<dish2::ResourceNodeInputWrapper<spec_t>>(),
       cell.template end<dish2::ResourceNodeInputWrapper<spec_t>>(),
-      0.0f,
+      float{},
       [](const auto& cumulative_sum, auto& addend){ return addend.JumpGet(); }
     );
 
