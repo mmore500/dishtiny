@@ -394,7 +394,7 @@ function on_error() {
 
 }
 
-trap 'on_error $? $LINENO' ERR
+trap 'on_error $? $LINENO' ERR SIGINT
 trap on_exit EXIT
 
 ################################################################################
