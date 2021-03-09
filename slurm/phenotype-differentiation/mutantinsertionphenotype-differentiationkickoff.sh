@@ -103,7 +103,7 @@ container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
 first_subject_url: "\${FIRST_SUBJECT}"
 second_subject_url: "\${SECOND_SUBJECT}"
-second_subject_attrs: "ins_mut=1+prog_max=2000+"
+second_subject_attrs: "insertion_mutate_on_load=1+set_program_max_size_override=2000+"
 output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/mutant-insertion-phenotype-differentiation/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
 replicate: "\${REPLICATE}"
 endeavor: "\${ENDEAVOR}"
