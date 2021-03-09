@@ -456,6 +456,33 @@ def tabulate_mutant(mutant_df, variant_df, mutation_type=''):
 
     return pd.DataFrame(res)
 
+def tabulate_mutant_phenotype_differentiation(mutant_df, mutation_type=''):
+
+    assert all(
+        mutant_df['first genome series'] == mutant_df['second genome series']
+    )
+    mutant_df['Series'] = mutant_df['first genome series']
+
+    assert all( mutant_df['First Root ID'] == 0 )
+    assert all( mutant_df['Second Root ID'] == 1 )
+
+    phenotypically_expressed_col = (
+        f'Fraction Phenotypically-Expressed {mutation_type}Mutations'
+    )
+    phenotypically_neutral_col = (
+        f'Fraction Phenotypically-Neutral {mutation_type}Mutations'
+    )
+
+    res = mutant_df.groupby(
+        ['Series'],
+    )['Phenotype Divergence Detected'].mean().reset_index(
+        name=phenotypically_expressed_col,
+    )
+
+    res[phenotypically_neutral_col] = 1.0 - res[phenotypically_expressed_col]
+
+    return res
+
 
 ################################################################################
 print(                                                                         )
@@ -670,6 +697,98 @@ if (stint % 10 == 0):
     except ValueError:
         print("missing point mutant competitions, skipping")
 
+if (stint % 10 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling mutant phenotype-differentiation'                         )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        mutant_phenotype_differentiation, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/mutant-phenotype-differentiation/stage=2+what=collated/stint={stint}/',
+        )
+
+        mutant_df = pd.read_csv(
+            f's3://{bucket}/{mutant_phenotype_differentiation.key}',
+        )
+
+        dataframes.append( tabulate_mutant_phenotype_differentiation(
+            mutant_df,
+        ) )
+        sources.append( mutant_phenotype_differentiation.key )
+    except ValueError:
+        print("missing mutant phenotype-differentiation, skipping")
+
+if (stint % 10 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling deletion mutant phenotype-differentiation'                )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        mutant_phenotype_differentiation, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/mutant-deletion-phenotype-differentiation/stage=2+what=collated/stint={stint}/',
+        )
+
+        mutant_df = pd.read_csv(
+            f's3://{bucket}/{mutant_phenotype_differentiation.key}',
+        )
+
+        dataframes.append( tabulate_mutant_phenotype_differentiation(
+            mutant_df, 'Deletion ',
+        ) )
+        sources.append( mutant_phenotype_differentiation.key )
+    except ValueError:
+        print("missing deletion mutant phenotype-differentiation, skipping")
+
+if (stint % 10 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling insertion mutant phenotype-differentiation'               )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        mutant_phenotype_differentiation, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/mutant-insertion-phenotype-differentiation/stage=2+what=collated/stint={stint}/',
+        )
+
+        mutant_df = pd.read_csv(
+            f's3://{bucket}/{mutant_phenotype_differentiation.key}',
+        )
+
+        dataframes.append( tabulate_mutant_phenotype_differentiation(
+            mutant_df, 'Insertion ',
+        ) )
+        sources.append( mutant_phenotype_differentiation.key )
+    except ValueError:
+        print("missing insertion mutant phenotype-differentiation, skipping")
+
+if (stint % 10 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling point mutant phenotype-differentiation'                   )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+
+        mutant_phenotype_differentiation, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/mutant-point-phenotype-differentiation/stage=2+what=collated/stint={stint}/',
+        )
+
+        mutant_df = pd.read_csv(
+            f's3://{bucket}/{mutant_phenotype_differentiation.key}',
+        )
+
+        dataframes.append( tabulate_mutant_phenotype_differentiation(
+            mutant_df, 'Point ',
+        ) )
+        sources.append( mutant_phenotype_differentiation.key )
+    except ValueError:
+        print("missing point mutant phenotype-differentiation, skipping")
 
 if (stint % 10 == 0):
     ############################################################################
