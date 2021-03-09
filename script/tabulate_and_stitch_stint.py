@@ -799,11 +799,11 @@ if (stint % 10 == 0):
 
     try:
         predecessor_competitions, = my_bucket.objects.filter(
-            Prefix=f'endeavor={endeavor}/predecessor-competitions/stage=2+what=collated/stint={stint}/'
+            Prefix=f'endeavor={endeavor}/predecessor-competitions/stage=2+what=collated/stint={stint}/',
         )
 
         predecessor_df = pd.read_csv(
-            f's3://{bucket}/{predecessor_competitions.key}'
+            f's3://{bucket}/{predecessor_competitions.key}',
         )
 
         dataframes.append(
@@ -824,11 +824,11 @@ if (stint % 10 == 0):
 
     try:
         predecessor_competitions, = my_bucket.objects.filter(
-            Prefix=f'endeavor={endeavor}/predecessor-battles/stage=2+what=collated/stint={stint}/'
+            Prefix=f'endeavor={endeavor}/predecessor-battles/stage=2+what=collated/stint={stint}/',
         )
 
         predecessor_df = pd.read_csv(
-            f's3://{bucket}/{predecessor_competitions.key}'
+            f's3://{bucket}/{predecessor_competitions.key}',
         )
 
         dataframes.append(
