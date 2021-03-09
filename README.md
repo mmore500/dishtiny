@@ -18,4 +18,5 @@ Check out the live in-browser web app at <https://mmore500.com/dishtiny>.
 
 -   Free software: MIT license
 -   Documentation: <https://dishtiny.readthedocs.io>.
+-   Microbenchmark results: <https://osf.io/3v9kp/>
 -   Header-only C++17 Library
