@@ -2,6 +2,7 @@
 
 import boto3
 from functools import reduce
+from iterpop import iterpop as ip
 import itertools
 from keyname import keyname as kn
 import numpy as np
@@ -375,6 +376,7 @@ def tabulate_fitness_complexity(variant_df):
         expected_false_positives = len(wt_vs_variant_df) * p_thresh
 
         res.append({
+            'Stint' : ip.pophomogeneous( variant_df['Competition Stint'] ),
             'Series' : series,
             'Flagged Advantageous Sites' : num_less_fit_variants,
             'Flagged Deleterious Sites' : num_more_fit_variants,
