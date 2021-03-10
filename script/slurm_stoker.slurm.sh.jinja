@@ -125,8 +125,9 @@ done
 
 ################################################################################
 echo
-echo "Zip up remaining jobs"
-echo "--------------------------------"
+echo "Zip *.slurm.sh files into payload"
+echo "and instantiate slurm stoker job template"
+echo "-------------------------------------"
 ################################################################################
 
 # if there are remaining jobs
@@ -137,44 +138,10 @@ else
   exit 0
 fi
 
-NEXT_PAYLOAD="$(tar -czvf - *.slurm.sh | uuencode -)"
-
-# clear out temporary files
-rm -rf *
-
-################################################################################
-echo
-echo "Submit Next Slurm Stoker"
-echo "------------------------"
-################################################################################
-
-# run jinja on template
-JOB_TEMPLATE="$(mktemp)"
-JOB_SCRIPT="$(mktemp)"
-
-echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
-echo "JOB_SCRIPT ${JOB_SCRIPT}"
-
-for retry in {1..20}; do
-  curl \
-    -o "${JOB_TEMPLATE}" \
-    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker.slurm.sh.jinja" \
-  && echo "  job template curl success" && break \
-  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
-  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
-done
-
-export payload="${NEXT_PAYLOAD}"
-export bucket="{{ bucket }}"
-export container_tag="{{ container_tag }}"
-export repo_sha="{{ repo_sha }}"
-j2 --import-env "" -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" -
-
-chmod +x "${JOB_SCRIPT}"
-
-# adapted from https://superuser.com/a/689340
-# and https://stackoverflow.com/a/4642975
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_sbatch.sh" | bash -s "${JOB_SCRIPT}"
+host_kickoff_url="https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh"
+echo "host_sbatch_url ${host_kickoff_url}"
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "${host_kickoff_url}" \
+| bash -s "{{ bucket }}" "{{ container_tag }}" "{{ repo_sha }}"
 
 ################################################################################
 echo
