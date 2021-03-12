@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 # Project-specific settings
 PROJECT := dishtiny
 EMP_DIR := third-party/Empirical/include/emp
@@ -25,12 +27,16 @@ IS_CLANG := $(shell ($(DISH_MPICXX) --version | grep -q clang); echo $$?)
 ifeq (${IS_CLANG},0)
 	OMP_FLAG := -fopenmp=libomp
 	OMP_LINKER_FLAG := -fopenmp=libiomp5
+	# default to haswell
+	CFLAGS_march_native := -march=haswell
 else
 	OMP_FLAG := -fopenmp
 	OMP_LINKER_FLAG := -fopenmp
+	# adapted from https://stackoverflow.com/a/18963118
+	CFLAGS_march_native := $(shell g++ -\#\#\# -E - -march=native 2>&1 | sed -r '/cc1/!d;s/(")|(^.* - )//g' )
 endif
 
-CFLAGS_nat := -O3 -march=native -flto -DNDEBUG -ffast-math $(CFLAGS_all) $(OMP_FLAG)
+CFLAGS_nat := -O3 $(CFLAGS_march_native) -flto -DNDEBUG -ffast-math $(CFLAGS_all) $(OMP_FLAG)
 CFLAGS_nat_production := $(CFLAGS_nat) -g
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
 CFLAGS_nat_debug := -g -DEMP_TRACK_MEM $(OMP_FLAG) $(CFLAGS_all)
@@ -76,7 +82,10 @@ $(PROJECT):	source/native.cpp include/
 	@echo DISH_MPICXX $(DISH_MPICXX)
 	@echo MPICH_CXX $(MPICH_CXX)
 	@echo OMPI_CXX $(OMPI_CXX)
-	$(DISH_MPICXX) $(CFLAGS_nat) source/native.cpp -lmetis -lz -lcurl -lsfml-graphics -ldw -llzma -o run$(PROJECT) $(OMP_LINKER_FLAG) -lstdc++fs
+	# use ccache for compile stage
+	ccache $(DISH_MPICXX) $(CFLAGS_nat) -c source/native.cpp
+	# perform link stage
+	$(DISH_MPICXX) $(CFLAGS_nat) -o run$(PROJECT) native.o $(OMP_LINKER_FLAG) -lstdc++fs -lmetis -lz -lcurl -lsfml-graphics -ldw -llzma
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/
