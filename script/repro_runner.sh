@@ -427,7 +427,7 @@ if [ -n "${repo_sha}" ]; then
     && git -C "${arg_slug}" remote add origin "https://github.com/${arg_username}/${arg_slug}.git" \
     && git -C "${arg_slug}" fetch --quiet --depth 1 origin "${repo_sha}" \
     && git -C "${arg_slug}" checkout FETCH_HEAD \
-    && git -C "${arg_slug}" submodule update --quiet --init --recursive --depth 1 \
+    && git -C "${arg_slug}" submodule update --quiet --init --recursive --depth 1 --jobs 8 \
     && echo "  source setup success" \
     && break \
     || (echo "source setup failure (${retry})" && sleep $((RANDOM % 10)))
@@ -439,7 +439,7 @@ else
   for retry in {1..20}; do
     rm -rf "${arg_slug}"
     git clone "https://github.com/${arg_username}/${arg_slug}.git" \
-      --quiet --depth 1 --recursive --shallow-submodules \
+      --quiet --depth 1 --jobs 8 --recursive --shallow-submodules \
       --branch "${arg_branch}" \
     && echo "  source clone success" \
     && break \
