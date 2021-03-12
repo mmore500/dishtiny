@@ -8,7 +8,7 @@
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 1
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user=mmore500@msu.edu
+# No --mail-user, the default value is the submitting user
 #SBATCH --exclude=csn-002,amr-250
 # Send interrupt when within 5 minutes of end time.
 #SBATCH --signal=SIGINT@300
