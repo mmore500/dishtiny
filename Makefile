@@ -12,7 +12,7 @@ DISHTINY_SOURCE_DIR := $(shell pwd)
 # make ARGS="-DMETRIC=streak -DSELECTOR=roulette"
 
 # Flags to use regardless of compiler
-CFLAGS_all := -std=c++17 -pipe -Wall -Wno-unused-function -Wno-unused-private-field -Wno-empty-body \
+CFLAGS_all := -std=c++17 -Wall -Wno-unused-function -Wno-unused-private-field -Wno-empty-body \
   -Iinclude -Ithird-party/ \
 	-DDISHTINY_HASH_=$(DISHTINY_HASH)$(DISHTINY_DIRTY) \
 	-DDISHTINY_SOURCE_DIR_=$(DISHTINY_SOURCE_DIR)\
