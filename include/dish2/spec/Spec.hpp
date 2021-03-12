@@ -39,6 +39,8 @@ struct Spec {
 
   constexpr inline static size_t AMT_NOP_MEMORY = 4;
 
+  constexpr inline static size_t WRITABLE_STATE_EXCHANGE_CHAIN_LENGTH = 128;
+
   using op_library_t = sgpl::OpLibraryCoupler<
     sgpl::CompleteOpLibrary,
     sgpl::global::RegulatorAdj<1>, // exposed regulator
@@ -92,7 +94,10 @@ struct Spec {
     dish2::DecayToBaselineService, // should run before cpu execution service
     dish2::RunningLogPurgeService, // should run before cpu execution service
     dish2::WritableStateNoiseService,
+    dish2::IntermittentCpuResetService,
     dish2::CpuExecutionService,
+    dish2::IntermittentWritableStateExchangeService<this_t>,
+    dish2::IntermittentWritableStateRotateService,
 
     dish2::BirthSetupService,
     dish2::CellAgeService,
@@ -114,6 +119,10 @@ struct Spec {
     dish2::StateOutputPutService,
 
     dish2::EpochAdvanceService,
+
+    dish2::IntermittentWritableStateRotateRestoreService,
+    dish2::IntermittentWritableStateExchangeRestoreService,
+
     dish2::CellDeathService, // must run last
     dish2::ApoptosisService // must run last
   >;

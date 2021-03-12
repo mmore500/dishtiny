@@ -99,10 +99,49 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " setting program_max_size_override to "
       << program_max_size_override
-      << "for population " << root_id << " from " << path << std::endl;
+      << " for population " << root_id << " from " << path << std::endl;
     for (auto& genome : innoculum) {
       genome.config_customizations.program_max_size_override
         = program_max_size_override;
+    }
+  }
+
+  if ( attrs.count("set_intermittent_cpu_reset_probability") ) {
+    const double intermittent_cpu_reset_probability
+      = std::stod( attrs.at("set_intermittent_cpu_reset_probability") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " setting intermittent_cpu_reset_probability to "
+      << intermittent_cpu_reset_probability
+      << " for population " << root_id << " from " << path << std::endl;
+    for (auto& genome : innoculum) {
+      genome.config_customizations.intermittent_cpu_reset_probability
+        = intermittent_cpu_reset_probability;
+    }
+  }
+
+  if ( attrs.count("set_intermittent_writable_state_rotate_probability") ) {
+    const double intermittent_writable_state_rotate_probability
+      = std::stod( attrs.at("set_intermittent_writable_state_rotate_probability") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " setting intermittent_writable_state_rotate_probability to "
+      << intermittent_writable_state_rotate_probability
+      << " for population " << root_id << " from " << path << std::endl;
+    for (auto& genome : innoculum) {
+      genome.config_customizations.intermittent_writable_state_rotate_probability
+        = intermittent_writable_state_rotate_probability;
+    }
+  }
+
+  if ( attrs.count("set_intermittent_writable_state_exchange_probability") ) {
+    const double intermittent_writable_state_exchange_probability
+      = std::stod( attrs.at("set_intermittent_writable_state_exchange_probability") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " setting intermittent_writable_state_exchange_probability to "
+      << intermittent_writable_state_exchange_probability
+      << " for population " << root_id << " from " << path << std::endl;
+    for (auto& genome : innoculum) {
+      genome.config_customizations.intermittent_writable_state_exchange_probability
+        = intermittent_writable_state_exchange_probability;
     }
   }
 
