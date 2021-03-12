@@ -10,5 +10,6 @@ OSF_PATH="microbenchmarks/context=${CONTEXT}/nnode=${NNODE}+nproc=${NPROC}/time=
 set -o xtrace
 
 for f in $(find . -type f -name "*.json" -o -name "*.png" -o -name "*.csv"); do
-  osf -u $OSF_USERNAME -p 3v9kp upload $f $OSF_PATH/$f;
+  #TODO fixme, currently broken by server issues on osf's end
+  #osf -u $OSF_USERNAME -p 3v9kp upload $f $OSF_PATH/$f;
 done
