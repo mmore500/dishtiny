@@ -7,7 +7,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --job-name dishtiny-internode
 #SBATCH --account=devolab
-#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A.out"
+#SBATCH --output="/mnt/scratch/%u/slurmlogs/slurm-%A.out"
 #SBATCH --mail-type=FAIL
 # No --mail-user, the default value is the submitting user
 

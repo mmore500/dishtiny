@@ -6,7 +6,7 @@
 #SBATCH --ntasks=8
 #SBATCH --job-name dishtiny-intranode
 #SBATCH --account=devolab
-#SBATCH --output="/mnt/home/mmore500/slurmlogs/slurm-%A.out"
+#SBATCH --output="/mnt/scratch/%u/slurmlogs/slurm-%A.out"
 #SBATCH --mail-type=FAIL
 # No --mail-user, the default value is the submitting user
 

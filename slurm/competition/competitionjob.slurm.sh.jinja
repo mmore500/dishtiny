@@ -3,7 +3,7 @@
 #SBATCH --time=4:00:00
 #SBATCH --job-name a=competition+output_url={{ output_url }}+first_competitor_url={{ first_competitor_url }}+second_competitor_url={{ second_competitor_url }}
 #SBATCH --account=devolab
-#SBATCH --output="/mnt/home/mmore500/slurmlogs/a=competition+job=%j+ext.log"
+#SBATCH --output="/mnt/scratch/%u/slurmlogs/a=competition+job=%j+ext.log"
 #SBATCH --mem=8G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 1
