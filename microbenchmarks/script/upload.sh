@@ -12,4 +12,5 @@ set -o xtrace
 for f in $(find . -type f -name "*.json" -o -name "*.png" -o -name "*.csv"); do
   #TODO fixme, currently broken by server issues on osf's end
   #osf -u $OSF_USERNAME -p 3v9kp upload $f $OSF_PATH/$f;
+  true
 done
