@@ -27,8 +27,8 @@ IS_CLANG := $(shell ($(DISH_MPICXX) --version | grep -q clang); echo $$?)
 ifeq (${IS_CLANG},0)
 	OMP_FLAG := -fopenmp=libomp
 	OMP_LINKER_FLAG := -fopenmp=libiomp5
-	# default to haswell
-	CFLAGS_march_native := -march=haswell
+	# adapted from https://unix.stackexchange.com/a/530726
+	CFLAGS_march_native := -march=$(shell cat /sys/devices/cpu/caps/pmu_name)
 else
 	OMP_FLAG := -fopenmp
 	OMP_LINKER_FLAG := -fopenmp
