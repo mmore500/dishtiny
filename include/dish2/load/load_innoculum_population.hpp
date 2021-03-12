@@ -86,7 +86,7 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " setting mutation_occurence_rate_multiplicand to "
       << mutation_occurence_rate_multiplicand
-      << "for population " << root_id << " from " << path << std::endl;
+      << " for population " << root_id << " from " << path << std::endl;
     for (auto& genome : innoculum) {
       genome.config_customizations.mutation_occurence_rate_multiplicand
         = mutation_occurence_rate_multiplicand;
