@@ -77,6 +77,7 @@ print( json.dumps( {
   'payload' : sys.stdin.read(),
   'bucket' : '${bucket}',
   'container_tag' : '${container_tag}',
+  'num_jobs' : '$(ls *.slurm.sh | wc -l)',
   'repo_sha' : '${repo_sha}',
   'title' : '${title}',
 } ) )
