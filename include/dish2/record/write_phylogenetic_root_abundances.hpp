@@ -10,6 +10,9 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
+#include "../config/get_endeavor.hpp"
+#include "../config/get_repro.hpp"
+#include "../config/get_slurm_job_id.hpp"
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
@@ -54,6 +57,15 @@ void write_phylogenetic_root_abundances(
         file.AddVal( emp::to_string("Treatment ", k), v );
       }
     }
+    if ( dish2::get_endeavor() ) file.AddVal(*dish2::get_endeavor(), "Endeavor"
+    );
+    if ( dish2::get_repro() ) file.AddVal(
+      *dish2::get_repro(), "Repro"
+    );
+    if ( dish2::get_slurm_job_id() ) file.AddVal(
+      *dish2::get_slurm_job_id(), "Slurm Job ID"
+    );
+
     file.AddVal( "proc", emp::to_string( uitsl::get_proc_id() ) );
     file.AddVal( "thread", emp::to_string( thread_idx ) );
 

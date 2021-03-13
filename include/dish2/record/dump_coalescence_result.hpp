@@ -14,6 +14,7 @@
 
 #include "../config/get_endeavor.hpp"
 #include "../config/get_repro.hpp"
+#include "../config/get_slurm_job_id.hpp"
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
@@ -65,6 +66,9 @@ void dump_coalescence_result(
   );
   if ( dish2::get_repro() ) file.AddVal(
     *dish2::get_repro(), "Competition Repro"
+  );
+  if ( dish2::get_slurm_job_id() ) file.AddVal(
+    *dish2::get_slurm_job_id(), "Competition Slurm Job ID"
   );
   file.AddVal( thread_idx, "Competition Thread" );
   file.AddVal( uitsl::get_proc_id(), "Competition Process" );

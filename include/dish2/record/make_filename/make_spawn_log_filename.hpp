@@ -13,6 +13,7 @@
 #include "../../config/cfg.hpp"
 #include "../../config/get_endeavor.hpp"
 #include "../../config/get_repro.hpp"
+#include "../../config/get_slurm_job_id.hpp"
 #include "../../config/has_replicate.hpp"
 #include "../../config/has_series.hpp"
 #include "../../config/has_stint.hpp"
@@ -49,6 +50,12 @@ std::string make_spawn_log_filename(
 
   if ( dish2::get_endeavor() ) {
     keyname_attributes[ "_endeavor" ] = emp::to_string(*dish2::get_endeavor());
+  }
+
+  if ( dish2::get_slurm_job_id() ) {
+    keyname_attributes[ "_slurm_job_id" ] = emp::to_string(
+      *dish2::get_slurm_job_id()
+    );
   }
 
   return emp::keyname::pack( keyname_attributes );
