@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import git
 import os
 import random
 import sys
@@ -10,6 +11,12 @@ import tweepy
 from itertools import chain, combinations, islice
 
 def make_attribution():
+
+    repo = git.Repo(
+        os.path.realpath(__file__),
+        search_parent_directories=True,
+    )
+
     return textwrap.dedent(f'''
     I tweet data from experiments where computer programs evolve!
 
@@ -22,6 +29,8 @@ def make_attribution():
     🔣 #evolutioninaction #icermsu #scicomm #openscience
 
     🆔 {os.getenv("SLURM_JOB_ID")}
+
+    📌 {repo.head.object.hexsha[:7]}
     ''')
 
 def powerset(iterable):

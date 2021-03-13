@@ -44,6 +44,10 @@ fsspec==0.8.5
     # via
     #   -r requirements.in
     #   s3fs
+gitdb==4.0.5
+    # via gitpython
+gitpython==3.1.14
+    # via -r requirements.in
 idna==2.10
     # via
     #   requests
@@ -140,6 +144,8 @@ six==1.15.0
     #   patsy
     #   python-dateutil
     #   tweepy
+smmap==3.0.5
+    # via gitdb
 statsmodels==0.12.2
     # via -r requirements.in
 text-unidecode==1.3
