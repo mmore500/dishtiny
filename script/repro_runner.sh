@@ -307,7 +307,7 @@ END_OF_HEREDOC" >> "${rerun}"
   wait
 
   test -v SLURM_JOB_ID && command -v scontrol \
-    && mkdir -p "/mnt/scratch/$(whoami)/slurmscripts/"
+    && mkdir -p "/mnt/scratch/$(whoami)/slurmscripts/" \
     && scontrol write batch_script "${SLURM_JOB_ID}" "/mnt/scratch/$(whoami)/slurmscripts/slurm-${SLURM_JOB_ID}.sh" \
     && echo "wrote current slurm script to /mnt/scratch/$(whoami)/slurmscripts"
 
