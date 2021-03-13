@@ -27,9 +27,9 @@ for retry in {0..20}; do
 
   echo "JOB_ID=\"\$(sbatch --parsable \"${JOB_SCRIPT}\")\"; mkdir -p \"/mnt/scratch/$(whoami)/slurmscripts/\"; cp \"${JOB_SCRIPT}\" \"/mnt/scratch/$(whoami)/slurmscripts/slurm-\${JOB_ID}.sh\" && echo \"submitted batch job \${JOB_ID}\"" \
   | sshpass -p "${HOST_PASSWORD}" \
-    ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+    ssh -q -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${HOST_USERNAME}@$(hostname)" -X \
-      'bash -login'  \
+      'bash'  \
   && echo "  job submit success" && break \
   || (echo "retrying job submit (${retry})" && sleep $((RANDOM % 10)) && continue)
 
