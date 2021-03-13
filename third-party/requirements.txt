@@ -152,8 +152,9 @@ s3transfer==0.3.4
     # via
     #   awscli
     #   boto3
-scipy==1.6.1
+scipy==1.5.4
     # via
+    #   -r requirements.in
     #   seaborn
     #   statsmodels
 seaborn==0.11.0
