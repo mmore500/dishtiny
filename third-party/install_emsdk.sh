@@ -7,7 +7,7 @@ git submodule update --init --recursive
 cd emsdk
 
 # Fetch the latest version of the emsdk (not needed the first time you clone)
-git pull
+# git pull
 
 # Download and install the latest SDK tools.
 ./emsdk install 2.0.5
