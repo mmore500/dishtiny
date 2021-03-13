@@ -1,7 +1,7 @@
 #!/bin/bash -login
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --job-name a=slurm_stoker+paylen={{ payload|length }}
+#SBATCH --job-name a=slurm_stoker+paylen={{ payload|length }}+title={{ title }}
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/scratch/%u/slurmlogs/a=slurm_stoker+job=%j+ext.log"
 #SBATCH --mem=4G
@@ -70,7 +70,7 @@ echo "-------------------------"
 echo "container_tag {{ container_tag }}"
 echo "repo_sha {{ repo_sha }}"
 echo "payload length {{ payload|length }}"
-
+echo "title {{ title }}"
 
 ################################################################################
 echo
@@ -141,7 +141,7 @@ fi
 host_kickoff_url="https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh"
 echo "host_sbatch_url ${host_kickoff_url}"
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "${host_kickoff_url}" \
-| bash -s "{{ bucket }}" "{{ container_tag }}" "{{ repo_sha }}"
+| bash -s "{{ bucket }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ title }}"
 
 ################################################################################
 echo

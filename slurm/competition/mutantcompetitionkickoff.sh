@@ -126,7 +126,7 @@ echo "num generated runscripts \$(ls *.slurm.sh | wc -l)"
 # inside itself, then submits itself as a job to gradually feed runscripts onto
 # the queue
 
-dishtiny/script/slurm_stoker_containerized_kickoff.sh "${BUCKET}" "${CONTAINER_TAG}" "${REPO_SHA}"
+dishtiny/script/slurm_stoker_containerized_kickoff.sh "${BUCKET}" "${CONTAINER_TAG}" "${REPO_SHA}" "mutant-competition~configpack%${CONFIGPACK}~series%${SERIES%% *}...~stint%${STINT}"
 
 ################################################################################
 echo
