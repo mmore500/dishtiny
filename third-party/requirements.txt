@@ -94,8 +94,9 @@ multidict==5.1.0
     #   yarl
 networkx==2.5
     # via -r requirements.in
-numpy==1.20.1
+numpy==1.19.5
     # via
+    #   -r requirements.in
     #   matplotlib
     #   pandas
     #   patsy
