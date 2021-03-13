@@ -1,4 +1,3 @@
-TARGET_NAMES += ConfigCustomizations
 TARGET_NAMES += EventTags
 TARGET_NAMES += GenerationCounter
 TARGET_NAMES += Genome

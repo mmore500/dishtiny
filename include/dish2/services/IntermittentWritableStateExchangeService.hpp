@@ -53,7 +53,7 @@ struct IntermittentWritableStateExchangeService {
     emp_assert( stash.empty() );
 
     if (
-      cell.genome->config_customizations.ShouldExchangeWritableState()
+      cell.genome->GetRootPerturbationConfig().ShouldExchangeWritableState()
     ) std::for_each(
       cell.template begin<dish2::WritableStateWrapper<spec_t>>(),
       cell.template end<dish2::WritableStateWrapper<spec_t>>(),

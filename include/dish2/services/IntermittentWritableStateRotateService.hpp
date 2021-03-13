@@ -50,7 +50,7 @@ struct IntermittentWritableStateRotateService {
     current_rotation = rotation;
 
     if (
-      cell.genome->config_customizations.ShouldRotateWritableState()
+      cell.genome->GetRootPerturbationConfig().ShouldRotateWritableState()
     ) std::rotate(
       cell.template begin<dish2::WritableStateWrapper<spec_t>>(),
       cell.template begin<dish2::WritableStateWrapper<spec_t>>() + rotation,

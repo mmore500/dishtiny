@@ -14,8 +14,9 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
 #include "../config/cfg.hpp"
+#include "../configbyroot/root_mutation_configs.hpp"
+#include "../configbyroot/root_perturbation_configs.hpp"
 
-#include "ConfigCustomizations.hpp"
 #include "EventTags.hpp"
 #include "GenerationCounter.hpp"
 #include "Genome.hpp"
@@ -45,7 +46,7 @@ class Genome {
     );
 
     const double defect_rate_each
-      = config_customizations.CalcSequenceDefectRate() / 2.0;
+      = GetRootMutationConfig().CalcSequenceDefectRate() / 2.0;
 
     const double defect_rate
       = defect_rate_each * ( do_insertion + do_deletion );
@@ -56,7 +57,7 @@ class Genome {
       program,
       defect_rate,
       { -defect_bound * do_insertion, defect_bound * do_deletion },
-      config_customizations.GetProgramMaxSize()
+      GetRootMutationConfig().GetProgramMaxSize()
     );
     mutation_counter.RecordInsertionDeletion( num_muts );
     program = std::move( copy );
@@ -65,7 +66,7 @@ class Genome {
 
   void ApplyPointMutation() {
     const double point_mutation_rate
-      = config_customizations.CalcPointMutationRate();
+      = GetRootMutationConfig().CalcPointMutationRate();
 
     const size_t num_muts = (
       event_tags.ApplyPointMutations(point_mutation_rate)
@@ -88,7 +89,6 @@ public:
   using event_tags_t = dish2::EventTags<Spec>;
 
   event_tags_t event_tags;
-  dish2::ConfigCustomizations config_customizations;
   dish2::GenerationCounter<Spec> generation_counter;
   dish2::KinGroupEpochStamps<Spec> kin_group_epoch_stamps;
   dish2::KinGroupID<Spec> kin_group_id;
@@ -112,7 +112,6 @@ public:
   bool operator==(const Genome& other) const {
     // ignore kin_group_epoch_stamps,
     return std::tuple{
-      config_customizations,
       event_tags,
       generation_counter,
       kin_group_id,
@@ -121,7 +120,6 @@ public:
       root_id,
       stint_root_id
     } == std::tuple{
-      other.config_customizations,
       other.event_tags,
       other.generation_counter,
       other.kin_group_id,
@@ -135,7 +133,6 @@ public:
   bool operator<(const Genome& other) const {
     // ignore kin_group_epoch_stamps,
     return std::tuple{
-      config_customizations,
       event_tags,
       generation_counter,
       kin_group_id,
@@ -144,7 +141,6 @@ public:
       root_id,
       stint_root_id
     } < std::tuple{
-      other.config_customizations,
       other.event_tags,
       other.generation_counter,
       other.kin_group_id,
@@ -153,6 +149,14 @@ public:
       other.root_id,
       other.stint_root_id
     };
+  }
+
+  const auto& GetRootMutationConfig() const {
+    return dish2::root_mutation_configs.View( root_id.GetID() );
+  }
+
+  const auto& GetRootPerturbationConfig() const {
+    return dish2::root_perturbation_configs.View( root_id.GetID() );
   }
 
   bool operator!=(const Genome& other) const { return !operator==(other); }
@@ -164,7 +168,7 @@ public:
     kin_group_id.ApplyInheritance( rep_lev );
 
     if ( sgpl::tlrand.Get().P(
-      config_customizations.CalcMutationOccurenceRate( rep_lev )
+      GetRootMutationConfig().CalcMutationOccurenceRate( rep_lev )
     ) ) DoMutation();
 
     // root_id and stint_root_id doesn't change

@@ -16,6 +16,8 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 
+#include "../configbyroot/root_mutation_configs.hpp"
+#include "../configbyroot/root_perturbation_configs.hpp"
 #include "../genome/Genome.hpp"
 #include "../utility/autoload.hpp"
 
@@ -86,11 +88,11 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " setting mutation_occurence_rate_multiplicand to "
       << mutation_occurence_rate_multiplicand
-      << " for population " << root_id << " from " << path << std::endl;
-    for (auto& genome : innoculum) {
-      genome.config_customizations.mutation_occurence_rate_multiplicand
-        = mutation_occurence_rate_multiplicand;
-    }
+      << " for root id " << root_id << " from " << path << std::endl;
+    dish2::root_mutation_configs.Get(
+      root_id
+    ).mutation_occurence_rate_multiplicand
+      = mutation_occurence_rate_multiplicand;
   }
 
   if ( attrs.count("set_program_max_size_override") ) {
@@ -99,11 +101,11 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " setting program_max_size_override to "
       << program_max_size_override
-      << " for population " << root_id << " from " << path << std::endl;
-    for (auto& genome : innoculum) {
-      genome.config_customizations.program_max_size_override
-        = program_max_size_override;
-    }
+      << " for root id " << root_id << " from " << path << std::endl;
+    dish2::root_mutation_configs.Get(
+      root_id
+    ).program_max_size_override
+      = program_max_size_override;
   }
 
   if ( attrs.count("set_intermittent_cpu_reset_probability") ) {
@@ -112,11 +114,11 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " setting intermittent_cpu_reset_probability to "
       << intermittent_cpu_reset_probability
-      << " for population " << root_id << " from " << path << std::endl;
-    for (auto& genome : innoculum) {
-      genome.config_customizations.intermittent_cpu_reset_probability
-        = intermittent_cpu_reset_probability;
-    }
+      << " for root id " << root_id << " from " << path << std::endl;
+    dish2::root_perturbation_configs.Get(
+      root_id
+    ).intermittent_cpu_reset_probability
+      = intermittent_cpu_reset_probability;
   }
 
   if ( attrs.count("set_intermittent_writable_state_rotate_probability") ) {
@@ -125,11 +127,11 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " setting intermittent_writable_state_rotate_probability to "
       << intermittent_writable_state_rotate_probability
-      << " for population " << root_id << " from " << path << std::endl;
-    for (auto& genome : innoculum) {
-      genome.config_customizations.intermittent_writable_state_rotate_probability
-        = intermittent_writable_state_rotate_probability;
-    }
+      << " for root id " << root_id << " from " << path << std::endl;
+    dish2::root_perturbation_configs.Get(
+      root_id
+    ).intermittent_writable_state_rotate_probability
+      = intermittent_writable_state_rotate_probability;
   }
 
   if ( attrs.count("set_intermittent_writable_state_exchange_probability") ) {
@@ -138,11 +140,11 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
     std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
       << " setting intermittent_writable_state_exchange_probability to "
       << intermittent_writable_state_exchange_probability
-      << " for population " << root_id << " from " << path << std::endl;
-    for (auto& genome : innoculum) {
-      genome.config_customizations.intermittent_writable_state_exchange_probability
-        = intermittent_writable_state_exchange_probability;
-    }
+      << " for root id " << root_id << " from " << path << std::endl;
+    dish2::root_perturbation_configs.Get(
+      root_id
+    ).intermittent_writable_state_exchange_probability
+      = intermittent_writable_state_exchange_probability;
   }
 
   std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx

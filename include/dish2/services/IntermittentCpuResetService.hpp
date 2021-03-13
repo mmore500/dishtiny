@@ -35,7 +35,7 @@ struct IntermittentCpuResetService {
     using spec_t = typename Cell::spec_t;
 
     if (
-      cell.genome->config_customizations.ShouldResetCpu()
+      cell.genome->GetRootPerturbationConfig().ShouldResetCpu()
     ) std::for_each(
       cell.template begin<dish2::CpuWrapper<spec_t>>(),
       cell.template end<dish2::CpuWrapper<spec_t>>(),
