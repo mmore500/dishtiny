@@ -94,14 +94,17 @@ echo "--------------------------------"
 pwd
 echo "$(ls *.slurm.sh | wc -l) jobs to submit"
 
+host_squeue_url="https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_squeue.sh"
+echo "host_squeue_url ${host_squeue_url}"
+host_squeue_script="$(mktemp)"
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "${host_squeue_url}" > "${host_squeue_script}"
+chmod +x "${host_squeue_script}"
+
 for JOB_SCRIPT in *.slurm.sh; do
 
   # this will count one too many slots occupied, but that is okay
-  OCCUPIED_SLOTS=$(echo "squeue -u \$(whoami) | wc -l" \
-  | sshpass -p "${HOST_PASSWORD}" \
-    ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-      "${HOST_USERNAME}@$(hostname)" -X \
-      'bash -login' \
+  OCCUPIED_SLOTS=$( \
+    "${host_squeue_script}" -u "\$(whoami)" | wc -l \
   )
   AVAILABLE_SLOTS=600
   if (( OCCUPIED_SLOTS > AVAILABLE_SLOTS )); then

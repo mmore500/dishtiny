@@ -118,12 +118,15 @@ else
   break
 fi
 
+host_squeue_url="https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_squeue.sh"
+echo "host_squeue_url ${host_squeue_url}"
+host_squeue_script="$(mktemp)"
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "${host_squeue_url}" > "${host_squeue_script}"
+chmod +x "${host_squeue_script}"
 
-JOB_NAMES=$(echo "squeue -u \$(whoami) --format "%j"" \
-| sshpass -p "${HOST_PASSWORD}" \
-  ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    'bash -login' \
+
+JOB_NAMES=$( \
+  "${host_squeue}" -u "\$(whoami)" --format "%j" \
 )
 
 echo "JOB_NAMES"
