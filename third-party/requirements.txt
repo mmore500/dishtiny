@@ -146,7 +146,7 @@ requests[socks]==2.25.1
     #   tweepy
 rsa==4.5
     # via awscli
-s3fs==0.5.2
+s3fs==0.5.1
     # via -r requirements.in
 s3transfer==0.3.4
     # via
