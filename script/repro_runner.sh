@@ -148,6 +148,20 @@ test ${arg_username} || ( echo "no --username arg" && exit 1 )
 
 ################################################################################
 echo
+echo "Check quota"
+echo "--------------------------------------"
+################################################################################
+
+# adapted from https://superuser.com/a/689340
+# and https://stackoverflow.com/a/4642975
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/master/script/check_quota.sh" | bash \
+|| wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/pushover.sh/master/pushover.sh" | bash -s  \
+  -T "${PUSHOVER_APP_TOKEN}" -U "${PUSHOVER_USER_TOKEN}" \
+  "check_quota.sh fail $(/usr/local/hpcc/bin/display_user_quota.pl)"
+
+
+################################################################################
+echo
 echo "Generate REPRO_ID"
 echo "--------------------------------------"
 ################################################################################
@@ -321,6 +335,8 @@ function on_error() {
 
   echo "squeue -u $(whoami) | wc -l" && squeue -u "$(whoami)" | wc -l
   echo "squeue -u $(whoami)" && squeue -u "$(whoami)"
+
+  quota
 
   echo "hostname" && hostname
   echo "lscpu" && lscpu
