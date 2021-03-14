@@ -3,9 +3,12 @@
 #define DISH2_CONFIGBYROOT_ROOTMUTATIONCONFIG_HPP_INCLUDE
 
 #include <cstddef>
+#include <map>
+#include <string>
 
 #include "../../../third-party/Empirical/include/emp/base/assert.hpp"
 #include "../../../third-party/Empirical/include/emp/base/optional.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../config/cfg.hpp"
 
@@ -44,6 +47,19 @@ struct RootMutationConfig {
     return program_max_size_override.value_or(
       dish2::cfg.PROGRAM_MAX_SIZE()
     );
+  }
+
+  std::map<std::string, std::string> MakeSummary() const {
+    return {
+      {"Point Mutation Rate Multiplicand",
+        emp::to_string(point_mutation_rate_multiplicand)},
+      {"Sequence Defect Rate Multiplicand",
+        emp::to_string(sequence_defect_rate_multiplicand)},
+      {"Mutation Occurence Rate Multiplicand",
+        emp::to_string(mutation_occurence_rate_multiplicand)},
+      {"Program Max Size Override",
+        emp::to_string(program_max_size_override)},
+    };
   }
 
 };

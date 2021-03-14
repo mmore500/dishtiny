@@ -18,6 +18,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../configbyroot/summarize_root_config.hpp"
 #include "../introspection/any_live_cells.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_root_id_abundance.hpp"
@@ -94,6 +95,17 @@ void dump_coalescence_result(
   file.AddVar(fitness_differential, "Fitness Differential");
   file.AddVar(root_id_count, "Count");
 
+  const auto root_ids = dish2::get_root_ids();
+
+  // add columns for root id configuration
+  for (
+    const auto& [key, value] : dish2::summarize_root_config( 0 )
+  ) file.AddFun( uitsl::function_cast( [&root_id, key=key](){
+    // gets value for /current/ root id
+    return dish2::summarize_root_config( root_id ).at( key );
+  } ), key );
+
+  // add columns for genome attributes
   for (
     const auto& key
     : uitsl::keyname_key_union( dish2::get_innoculum_filenames() )
