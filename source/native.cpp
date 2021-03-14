@@ -14,6 +14,7 @@
 #include "dish2/record/global_records_initialize.hpp"
 #include "dish2/run/setup_thread_local_random.hpp"
 #include "dish2/run/thread_job.hpp"
+#include "dish2/spec/print_spec.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
@@ -22,6 +23,7 @@ using Spec = dish2::Spec;
 int main(int argc, char* argv[]) {
 
   dish2::setup( emp::ArgManager{ argc, argv, dish2::make_arg_specs() } );
+  if ( uitsl::is_root() ) dish2::print_spec<Spec>();
   dish2::global_records_initialize();
 
   dish2::ProcWorld<Spec> proc_world;

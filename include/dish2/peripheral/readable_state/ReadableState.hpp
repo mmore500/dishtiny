@@ -29,6 +29,7 @@ template<typename Spec>
 struct ReadableState : public internal::readable_state_parent_t<Spec> {
 
   using parent_t = internal::readable_state_parent_t<Spec>;
+  constexpr inline static size_t parent_size = parent_t::GetSize();
 
   // https://stackoverflow.com/a/63046442
   template<size_t Templateify=0>
