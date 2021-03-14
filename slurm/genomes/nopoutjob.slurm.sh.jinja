@@ -284,38 +284,6 @@ done
 
 ################################################################################
 echo
-echo "Generate WT vs WT Competition Runscripts"
-echo "----------------------------------------"
-################################################################################
-
-wt=$(basename "${WILDTYPE_GENOME}")
-
-for REPLICATE in {0..19}; do
-
-JOB_SCRIPT="$( \
-  keyname pack --a "wt_vs_wt" --replicate "${REPLICATE}" --ext ".slurm.sh" \
-)"
-
-j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
-bucket: {{ bucket }}
-configpack: {{ configpack }}
-container_tag: {{ container_tag }}
-repo_sha: {{ repo_sha }}
-first_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
-second_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
-output_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/variant-competitions/stage=2+what=generated/stint={{ stint }}/series={{ series }}/"
-replicate: "${REPLICATE}"
-endeavor: "${ENDEAVOR}"
-stint: {{ stint }}
-series: {{ series }}
-J2_HEREDOC_EOF
-
-chmod +x "${JOB_SCRIPT}"
-
-done # for REPLICATE in {0..19}; do
-
-################################################################################
-echo
 echo "Generate WT vs Variant Competition Runscripts"
 echo "---------------------------------------------"
 ################################################################################
