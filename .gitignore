@@ -14,6 +14,7 @@
 *.wast
 *-bak.cpp
 *tmp.*
+*.o.ccache*
 
 .DS_Store
 a.out
