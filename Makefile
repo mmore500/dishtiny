@@ -83,9 +83,9 @@ $(PROJECT):	source/native.cpp include/
 	@echo MPICH_CXX $(MPICH_CXX)
 	@echo OMPI_CXX $(OMPI_CXX)
 	# use ccache for compile stage
-	ccache $(DISH_MPICXX) $(CFLAGS_nat) -c source/native.cpp
+	time ccache $(DISH_MPICXX) $(CFLAGS_nat) -c source/native.cpp
 	# perform link stage
-	$(DISH_MPICXX) $(CFLAGS_nat) -o run$(PROJECT) native.o $(OMP_LINKER_FLAG) -lstdc++fs -lmetis -lz -lcurl -lsfml-graphics -ldw -llzma
+	time $(DISH_MPICXX) $(CFLAGS_nat) -o run$(PROJECT) native.o $(OMP_LINKER_FLAG) -lstdc++fs -lmetis -lz -lcurl -lsfml-graphics -ldw -llzma
 	@echo To build the web version use: make web
 
 $(PROJECT).js: source/web.cpp include/
