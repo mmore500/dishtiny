@@ -326,7 +326,7 @@ def filter_for_phenotype_neutral_nopout(genome_df):
     return res
 
 
-def tabulate_fitness_complexity(variant_df):
+def tabulate_fitness_complexity(variant_df, control_df):
 
     # count competions where both strains went extinct simultaneously
     # as 0 Fitness Differential
@@ -334,17 +334,23 @@ def tabulate_fitness_complexity(variant_df):
     assert all( variant_df[ na_rows ]['Population Extinct'] )
     variant_df['Fitness Differential'].fillna(0, inplace=True,)
 
+    na_rows = control_df['Fitness Differential'].isna()
+    assert all( control_df[ na_rows ]['Population Extinct'] )
+    control_df['Fitness Differential'].fillna(0, inplace=True,)
+
     res = []
     for series in variant_df['Competition Series'].unique():
 
-        series_df = variant_df[ variant_df['Competition Series'] == series ]
+        series_v_df = variant_df[ variant_df['Competition Series'] == series ]
+        series_c_df = control_df[ control_df['Competition Series'] == series ]
 
-        wt_vs_wt_df = series_df.groupby('Competition Repro').filter(
+        # legacy data was mixed inside of the variant_df
+        wt_vs_wt_df = series_c_df.groupby('Competition Repro').filter(
             lambda x: (x['genome variation'] == 'master').all()
         ).groupby('Competition Repro').first().reset_index()
 
-        wt_vs_variant_df = series_df[
-            series_df['genome variation'] != 'master'
+        wt_vs_variant_df = series_v_df[
+            series_v_df['genome variation'] != 'master'
         ].reset_index()
 
         # fit a t distribution to the control data
@@ -390,13 +396,13 @@ def tabulate_fitness_complexity(variant_df):
 
     return pd.DataFrame(res)
 
-def tabulate_mutant(mutant_df, variant_df, mutation_type=''):
+def tabulate_mutant(mutant_df, control_df, mutation_type=''):
 
     # count competions where both strains went extinct simultaneously
     # as 0 Fitness Differential
-    na_rows = variant_df['Fitness Differential'].isna()
-    assert all( variant_df[ na_rows ]['Population Extinct'] )
-    variant_df['Fitness Differential'].fillna(0, inplace=True,)
+    na_rows = control_df['Fitness Differential'].isna()
+    assert all( control_df[ na_rows ]['Population Extinct'] )
+    control_df['Fitness Differential'].fillna(0, inplace=True,)
 
     res = []
     for series in mutant_df['Competition Series'].unique():
@@ -404,11 +410,11 @@ def tabulate_mutant(mutant_df, variant_df, mutation_type=''):
         mutant_series_df = mutant_df[
             mutant_df['Competition Series'] == series
         ]
-        variant_series_df = variant_df[
-            variant_df['Competition Series'] == series
+        control_series_df = control_df[
+            control_df['Competition Series'] == series
         ]
 
-        wt_vs_wt_df = variant_series_df.groupby('Competition Repro').filter(
+        wt_vs_wt_df = control_series_df.groupby('Competition Repro').filter(
             lambda x: (x['genome variation'] == 'master').all()
         ).groupby('Competition Repro').first().reset_index()
 
@@ -540,6 +546,12 @@ if (stint % 10 == 0):
     ############################################################################
 
     try:
+        control_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/control-competitions/stage=2+what=collated/stint={stint}/'
+        )
+
+        control_df = pd.read_csv(f's3://{bucket}/{control_competitions.key}')
+
         variant_competitions, = my_bucket.objects.filter(
             Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
         )
@@ -547,7 +559,7 @@ if (stint % 10 == 0):
         variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
 
         dataframes.append(
-            tabulate_fitness_complexity( variant_df )
+            tabulate_fitness_complexity( variant_df, control_df )
         )
         sources.append( variant_competitions.key )
     except ValueError:
@@ -561,11 +573,11 @@ if (stint % 10 == 0):
     ############################################################################
 
     try:
-        variant_competitions, = my_bucket.objects.filter(
-            Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+        control_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/control-competitions/stage=2+what=collated/stint={stint}/'
         )
 
-        variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
+        control = pd.read_csv(f's3://{bucket}/{control_competitions.key}')
 
         mutant_competitions, = my_bucket.objects.filter(
             Prefix=f'endeavor={endeavor}/mutant-competitions/stage=2+what=collated/stint={stint}/'
@@ -576,7 +588,7 @@ if (stint % 10 == 0):
         )
 
         dataframes.append(
-            tabulate_mutant( mutant_df, variant_df )
+            tabulate_mutant( mutant_df, control_df )
         )
         sources.append( mutant_competitions.key )
     except ValueError:
@@ -590,11 +602,11 @@ if (stint % 10 == 0):
     ############################################################################
 
     try:
-        variant_competitions, = my_bucket.objects.filter(
-            Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+        control_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/control-competitions/stage=2+what=collated/stint={stint}/'
         )
 
-        variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
+        control_df = pd.read_csv(f's3://{bucket}/{control_competitions.key}')
 
         mutant_competitions, = my_bucket.objects.filter(
             Prefix=f'endeavor={endeavor}/mutant-deletion-competitions/stage=2+what=collated/stint={stint}/'
@@ -605,7 +617,7 @@ if (stint % 10 == 0):
         )
 
         dataframes.append(
-            tabulate_mutant( mutant_df, variant_df, 'Deletion ' )
+            tabulate_mutant( mutant_df, control_df, 'Deletion ' )
         )
         sources.append( mutant_competitions.key )
     except ValueError:
@@ -619,11 +631,11 @@ if (stint % 10 == 0):
     ############################################################################
 
     try:
-        variant_competitions, = my_bucket.objects.filter(
-            Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+        control_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/control-competitions/stage=2+what=collated/stint={stint}/'
         )
 
-        variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
+        control_df = pd.read_csv(f's3://{bucket}/{control_competitions.key}')
 
         mutant_competitions, = my_bucket.objects.filter(
             Prefix=f'endeavor={endeavor}/mutant-insertion-competitions/stage=2+what=collated/stint={stint}/'
@@ -634,7 +646,7 @@ if (stint % 10 == 0):
         )
 
         dataframes.append(
-            tabulate_mutant( mutant_df, variant_df, 'Insertion ' )
+            tabulate_mutant( mutant_df, control_df, 'Insertion ' )
         )
         sources.append( mutant_competitions.key )
     except ValueError:
@@ -648,11 +660,11 @@ if (stint % 10 == 0):
     ############################################################################
 
     try:
-        variant_competitions, = my_bucket.objects.filter(
-            Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+        control_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/control-competitions/stage=2+what=collated/stint={stint}/'
         )
 
-        variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
+        control_df = pd.read_csv(f's3://{bucket}/{control_competitions.key}')
 
         mutant_competitions, = my_bucket.objects.filter(
             Prefix=f'endeavor={endeavor}/mutating-competitions/stage=2+what=collated/stint={stint}/'
@@ -663,7 +675,7 @@ if (stint % 10 == 0):
         )
 
         dataframes.append(
-            tabulate_mutant( mutant_df, variant_df, 'Mutating ' )
+            tabulate_mutant( mutant_df, control_df, 'Mutating ' )
         )
         sources.append( mutant_competitions.key )
     except ValueError:
@@ -678,11 +690,11 @@ if (stint % 10 == 0):
     ############################################################################
 
     try:
-        variant_competitions, = my_bucket.objects.filter(
-            Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+        control_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/control-competitions/stage=2+what=collated/stint={stint}/'
         )
 
-        variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
+        control_df = pd.read_csv(f's3://{bucket}/{control_competitions.key}')
 
         mutant_competitions, = my_bucket.objects.filter(
             Prefix=f'endeavor={endeavor}/mutant-point-competitions/stage=2+what=collated/stint={stint}/'
@@ -693,7 +705,7 @@ if (stint % 10 == 0):
         )
 
         dataframes.append(
-            tabulate_mutant( mutant_df, variant_df, 'Point ' )
+            tabulate_mutant( mutant_df, control_df, 'Point ' )
         )
         sources.append( mutant_competitions.key )
     except ValueError:
