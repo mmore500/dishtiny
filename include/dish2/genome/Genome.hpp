@@ -13,9 +13,9 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/sloppy_copy.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
-#include "../config/cfg.hpp"
 #include "../configbyroot/root_mutation_configs.hpp"
 #include "../configbyroot/root_perturbation_configs.hpp"
+#include "../config/cfg.hpp"
 
 #include "EventTags.hpp"
 #include "GenerationCounter.hpp"

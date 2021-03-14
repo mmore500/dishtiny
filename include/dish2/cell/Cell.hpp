@@ -132,12 +132,22 @@ struct Cell {
     for (auto& cardinal : cardinals) cardinal.Reset();
   }
 
-  template<typename T=dish2::IdentityWrapper<Spec>>
-  T begin() { return T{ cardinals.begin() }; }
+  template<
+    typename T=dish2::IdentityWrapper<Spec>, typename... Args
+  >
+  T begin( Args&&... args ) {
+    return T{ cardinals.begin(), std::forward<Args>(args)... };
+  }
 
   // TODO fix bad const_cast
-  template<typename T=dish2::IdentityWrapper<Spec>>
-  T begin() const { return T{ const_cast<Cell*>(this)->cardinals.begin() }; }
+  template<
+    typename T=dish2::IdentityWrapper<Spec>, typename... Args
+  >
+  T begin( Args&&... args ) const {
+    return T{
+      const_cast<Cell*>(this)->cardinals.begin(),
+    };
+  }
 
   template<typename T=dish2::IdentityWrapper<Spec>>
   T end() { return T{ cardinals.end() }; }

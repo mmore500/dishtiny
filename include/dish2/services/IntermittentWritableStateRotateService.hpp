@@ -12,6 +12,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/execute_cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
+#include "../cell/cardinal_iterators/WritableStateIndexedSwapWrapper.hpp"
 #include "../cell/cardinal_iterators/WritableStateWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
@@ -41,6 +42,10 @@ struct IntermittentWritableStateRotateService {
 
     using spec_t = typename Cell::spec_t;
 
+    const auto& perm_config = cell.genome->GetRootPerturbationConfig();
+
+    if ( !perm_config.ShouldRotateWritableState() ) return;
+
     const size_t rotation = sgpl::tlrand.Get().GetUInt(
       cell.GetNumCardinals()
     );
@@ -49,9 +54,14 @@ struct IntermittentWritableStateRotateService {
     emp_assert( current_rotation == 0 );
     current_rotation = rotation;
 
-    if (
-      cell.genome->GetRootPerturbationConfig().ShouldRotateWritableState()
-    ) std::rotate(
+    using indexed_swapper_t = dish2::WritableStateIndexedSwapWrapper<spec_t>;
+
+    const auto& target_idx = perm_config.writable_state_target_idx;
+    if ( target_idx.has_value() ) std::rotate(
+      cell.template begin<indexed_swapper_t>( *target_idx ),
+      cell.template begin<indexed_swapper_t>( *target_idx ) + rotation,
+      cell.template end<indexed_swapper_t>()
+    ); else std::rotate(
       cell.template begin<dish2::WritableStateWrapper<spec_t>>(),
       cell.template begin<dish2::WritableStateWrapper<spec_t>>() + rotation,
       cell.template end<dish2::WritableStateWrapper<spec_t>>()

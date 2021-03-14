@@ -2,6 +2,7 @@
 #ifndef DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_WRITABLESTATE_HPP_INCLUDE
 #define DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_WRITABLESTATE_HPP_INCLUDE
 
+#include <algorithm>
 #include <cstring>
 #include <limits>
 #include <string>
@@ -110,6 +111,54 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
     switch ( idx ) {
 
       EMP_WRAP_EACH( DISH2_WRITABLE_STATE_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION )
+
+    }
+
+  }
+
+  void Assign(const size_t idx, const WritableState& other) {
+
+    #define DISH2_WRITABLE_STATE_ASSIGN_CASE_PAYLOAD(N) \
+      case N: \
+        if constexpr ( N  < parent_size ) { \
+          this->parent_t::template GetByIndex<N>() \
+          = static_cast<parent_t>(other).template GetByIndex<N>(); \
+        } \
+      break;
+
+    emp_assert( idx < parent_size );
+    static_assert( parent_size < 256 );
+
+    switch ( idx ) {
+
+      EMP_WRAP_EACH(
+        DISH2_WRITABLE_STATE_ASSIGN_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
+      )
+
+    }
+
+  }
+
+  void Swap(const size_t idx, WritableState& other) {
+
+    #define DISH2_WRITABLE_STATE_SWAP_CASE_PAYLOAD(N) \
+      case N: \
+        if constexpr ( N  < parent_size ) { \
+          std::swap( \
+            this->parent_t::template GetByIndex<N>(), \
+            static_cast<parent_t>(other).template GetByIndex<N>() \
+          ); \
+        } \
+      break;
+
+    emp_assert( idx < parent_size );
+    static_assert( parent_size < 256 );
+
+    switch ( idx ) {
+
+      EMP_WRAP_EACH(
+        DISH2_WRITABLE_STATE_SWAP_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
+      )
 
     }
 

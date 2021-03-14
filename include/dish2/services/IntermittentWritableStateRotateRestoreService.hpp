@@ -12,6 +12,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/execute_cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
+#include "../cell/cardinal_iterators/WritableStateIndexedSwapWrapper.hpp"
 #include "../cell/cardinal_iterators/WritableStateWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
@@ -45,7 +46,18 @@ struct IntermittentWritableStateRotateRestoreService {
       0
     );
 
-    if ( rotation ) std::rotate(
+    if ( rotation == 0 ) return;
+
+    const auto& perturbation_config = cell.genome->GetRootPerturbationConfig();
+    const auto& target_idx = perturbation_config.writable_state_target_idx;
+
+    using indexed_swapper_t = dish2::WritableStateIndexedSwapWrapper<spec_t>;
+
+    if ( target_idx.has_value() ) std::rotate(
+      cell.template begin<indexed_swapper_t>( *target_idx ),
+      cell.template begin<indexed_swapper_t>( *target_idx ) + rotation,
+      cell.template end<indexed_swapper_t>()
+    ); else std::rotate(
       cell.template begin<dish2::WritableStateWrapper<spec_t>>(),
       cell.template begin<dish2::WritableStateWrapper<spec_t>>()
         + cell.GetNumCardinals() - rotation,

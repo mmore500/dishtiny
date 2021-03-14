@@ -147,6 +147,19 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
       = intermittent_writable_state_exchange_probability;
   }
 
+  if ( attrs.count("set_writable_state_target_idx") ) {
+    const size_t writable_state_target_idx
+      = uitsl::stoszt( attrs.at("set_writable_state_target_idx") );
+    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << " setting writable_state_target_idx to "
+      << writable_state_target_idx
+      << " for root id " << root_id << " from " << path << std::endl;
+    dish2::root_perturbation_configs.Get(
+      root_id
+    ).writable_state_target_idx
+      = writable_state_target_idx;
+  }
+
   std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " loaded innoculum population " << root_id
     << " with " << innoculum.size() << " genomes "

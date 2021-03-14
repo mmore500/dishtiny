@@ -52,12 +52,13 @@ struct IntermittentWritableStateExchangeService {
 
     emp_assert( stash.empty() );
 
-    if (
-      cell.genome->GetRootPerturbationConfig().ShouldExchangeWritableState()
-    ) std::for_each(
+    const auto& perturbation_config = cell.genome->GetRootPerturbationConfig();
+    const auto& target_idx = perturbation_config.writable_state_target_idx;
+
+    if ( perturbation_config.ShouldExchangeWritableState() ) std::for_each(
       cell.template begin<dish2::WritableStateWrapper<spec_t>>(),
       cell.template end<dish2::WritableStateWrapper<spec_t>>(),
-      []( auto& writable_state ){
+      [&]( auto& writable_state ){
         thread_local exchange_buffer_t fifo;
 
         // stash state to be reverted in restore service
@@ -66,9 +67,15 @@ struct IntermittentWritableStateExchangeService {
         // fill fifo up and then start exchanging
         if ( !fifo.IsFull() ) fifo.PushHead( writable_state );
         else {
-          fifo.PushHead( std::exchange(
-            writable_state, fifo.GetPopTail()
-          ) );
+
+          const auto incoming = fifo.GetTail();
+          fifo.PopTail();
+          fifo.PushHead( writable_state );
+
+          if ( target_idx.has_value() ) {
+            writable_state.Assign( *target_idx, incoming );
+          } else writable_state = incoming;
+
         }
 
       }
