@@ -22,9 +22,11 @@ emp::vector<dish2::Genome<Spec>> load_innoculum(
   const size_t thread_idx, const std::filesystem::path& path
 ) {
 
-  emp_assert( emp::keyname::unpack( path ).count("a") );
+  const auto attrs = emp::keyname::unpack( path );
 
-  const auto& a = emp::keyname::unpack( path ).at("a");
+  emp_assert( attrs.count("a") );
+
+  const auto& a = attrs.at("a");
 
   if ( a == "genome" ) return {dish2::load_innoculum_genome<Spec>(
     thread_idx, path
