@@ -80,6 +80,11 @@ A [whistle-stop tour](https://en.wikipedia.org/wiki/Whistle_stop_train_tour) of 
 ```{include} ../include/dish2/config/README.md
 ```
 
+### `include/dish2/configbyroot/`
+
+```{include} ../include/dish2/configbyroot/README.md
+```
+
 ### `include/dish2/debug/`
 
 ```{include} ../include/dish2/debug/README.md
