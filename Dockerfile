@@ -88,8 +88,5 @@ USER user
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
-# set ccache to home directory, which singularity mounts
-ENV CCACHE_DIR="~/.cache/ccache/"
-
 # Define default working directory.
 WORKDIR /opt/dishtiny
