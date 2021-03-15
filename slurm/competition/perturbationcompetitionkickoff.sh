@@ -127,7 +127,7 @@ repo_sha: ${REPO_SHA}
 first_competitor_url: "\${FIRST_COMPETITOR}"
 second_competitor_url: "\${SECOND_COMPETITOR}"
 second_competitor_attrs: "set_intermittent_${STATE_TARGET}_state_${PERTURBATION}_probability=${INTERMITTENT_P}+set_${STATE_TARGET}_state_target_idx=\${JUST_ONE_TARGET_IDX}+"
-output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/perturbation-${STATE_TARGET}-state-${PERTURBATION}-competitions/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/intermittent_p=${INTERMITTENT_P}+target_idx=${TARGET_IDX}/"
+output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/perturbation-${STATE_TARGET}-state-${PERTURBATION}-competitions/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/intermittent_p=${INTERMITTENT_P}+target_idx=\${JUST_ONE_TARGET_IDX}/"
 replicate: "\${REPLICATE}"
 endeavor: "\${ENDEAVOR}"
 stint: "${STINT}"
