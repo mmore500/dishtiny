@@ -436,7 +436,7 @@ echo "repo_sha before asset get ${repo_sha}"
 
 if [ -n "${repo_sha}" ]; then
   echo "setting up pinned project source at revision ${repo_sha}..."
-  for retry in {1..20}; do
+  time for retry in {1..20}; do
     rm -rf "${arg_slug}" \
     && mkdir "${arg_slug}" \
     && git -C "${arg_slug}" init \
@@ -452,9 +452,9 @@ if [ -n "${repo_sha}" ]; then
   done
 else
   echo "setting up latest project source..."
-  for retry in {1..20}; do
-    rm -rf "${arg_slug}"
-    git clone "https://github.com/${arg_username}/${arg_slug}.git" \
+  time for retry in {1..20}; do
+    rm -rf "${arg_slug}" \
+    && git clone "https://github.com/${arg_username}/${arg_slug}.git" \
       --quiet --depth 1 --jobs 16 --recursive --shallow-submodules \
       --branch "${arg_branch}" \
     && echo "  source clone success" \
