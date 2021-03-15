@@ -10,6 +10,11 @@ namespace dish2 {
 
 struct RootPerturbationConfig {
 
+  double intermittent_extrospective_state_exchange_probability{};
+  double intermittent_extrospective_state_rotate_probability{};
+
+  emp::optional<size_t> extrospective_state_target_idx;
+
   double intermittent_introspective_state_exchange_probability{};
   double intermittent_introspective_state_rotate_probability{};
 
@@ -19,6 +24,20 @@ struct RootPerturbationConfig {
   double intermittent_writable_state_rotate_probability{};
 
   emp::optional<size_t> writable_state_target_idx;
+
+  bool ShouldExchangeExtrospectiveState() const {
+    return intermittent_extrospective_state_exchange_probability
+      && sgpl::tlrand.Get().P(
+        intermittent_extrospective_state_exchange_probability
+      );
+    }
+
+  bool ShouldRotateExtrospectiveState() const {
+    return intermittent_extrospective_state_rotate_probability
+    && sgpl::tlrand.Get().P(
+      intermittent_extrospective_state_rotate_probability
+    );
+  }
 
   bool ShouldExchangeIntrospectiveState() const {
     return intermittent_introspective_state_exchange_probability
@@ -50,6 +69,12 @@ struct RootPerturbationConfig {
 
   std::map<std::string, std::string> MakeSummary() const {
     return {
+      {"Intermittent Extrospective State Exchange Probability",
+        emp::to_string(intermittent_introspective_state_exchange_probability)},
+      {"Intermittent Extrospective State Rotate Probability",
+        emp::to_string(intermittent_introspective_state_rotate_probability)},
+      {"Extrospective State Target Idx",
+        emp::to_string(introspective_state_target_idx)},
       {"Intermittent Introspective State Exchange Probability",
         emp::to_string(intermittent_introspective_state_exchange_probability)},
       {"Intermittent Introspective State Rotate Probability",

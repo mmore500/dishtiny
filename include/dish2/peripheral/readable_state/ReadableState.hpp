@@ -56,6 +56,54 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
 
   }
 
+  void Assign(const size_t idx, const ReadableState& other) {
+
+    #define DISH2_READABLE_STATE_ASSIGN_CASE_PAYLOAD(N) \
+      case N: \
+        if constexpr ( N  < parent_size ) { \
+          this->parent_t::template GetByIndex<N>() \
+          = static_cast<parent_t>(other).template GetByIndex<N>(); \
+        } \
+      break;
+
+    emp_assert( idx < parent_size );
+    static_assert( parent_size < 256 );
+
+    switch ( idx ) {
+
+      EMP_WRAP_EACH(
+        DISH2_READABLE_STATE_ASSIGN_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
+      )
+
+    }
+
+  }
+
+  void Swap(const size_t idx, ReadableState& other) {
+
+    #define DISH2_READABLE_STATE_SWAP_CASE_PAYLOAD(N) \
+      case N: \
+        if constexpr ( N  < parent_size ) { \
+          std::swap( \
+            this->parent_t::template GetByIndex<N>(), \
+            static_cast<parent_t>(other).template GetByIndex<N>() \
+          ); \
+        } \
+      break;
+
+    emp_assert( idx < parent_size );
+    static_assert( parent_size < 256 );
+
+    switch ( idx ) {
+
+      EMP_WRAP_EACH(
+        DISH2_READABLE_STATE_SWAP_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
+      )
+
+    }
+
+  }
+
   static std::string GetLeafTypeName( const size_t idx ) {
 
     #define DISH2_READABLE_STATE_NAME_CASE_PAYLOAD(N) \

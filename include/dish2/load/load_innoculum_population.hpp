@@ -53,6 +53,14 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
   dish2::set_mutation_occurence_rate_multiplicand<Spec>( path, thread_idx );
   dish2::set_program_max_size_override<Spec>( path, thread_idx );
 
+  dish2::set_intermittent_extrospective_state_exchange_probability<Spec>(
+    path, thread_idx
+  );
+  dish2::set_intermittent_extrospective_state_rotate_probability<Spec>(
+    path, thread_idx
+  );
+  dish2::set_extrospective_state_target_idx<Spec>( path, thread_idx );
+
   dish2::set_intermittent_introspective_state_exchange_probability<Spec>(
     path, thread_idx
   );
