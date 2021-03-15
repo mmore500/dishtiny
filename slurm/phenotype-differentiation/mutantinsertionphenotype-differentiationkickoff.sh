@@ -91,7 +91,7 @@ for JUST_ONE_SERIES in ${SERIES}; do
   for REPLICATE in 0; do
 
     FIRST_SUBJECT="s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${JUST_ONE_SERIES}+stint=${STINT}+thread=0+variation=master+ext=.json.gz"
-    SECOND_SUBJECT="s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${JUST_ONE_SERIES}+stint=${STINT}+thread=0+variation=master+ext=.json.gz"
+    SECOND_SUBJECT="\${FIRST_SUBJECT}"
 
     echo "FIRST_SUBJECT \${FIRST_SUBJECT}"
     echo "SECOND_SUBJECT \${SECOND_SUBJECT}"
