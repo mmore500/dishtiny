@@ -9,7 +9,7 @@ echo "-------------------------------------------------"
 # fail on error
 set -e
 
-if (( "$#" < 6 )); then
+if (( "$#" < 10 )); then
   echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [extrospective/introspective/writable] [exchange/rotate] [intermittent_p] [target_idx] [stint] [series...]"
   echo "where [target_idx] can be empty string \"\" or a brace expandable"
   exit 1

@@ -15,8 +15,8 @@ echo "parse command line arguments"
 echo "----------------------------"
 ################################################################################
 
-if (( "$#" < 3 )); then
-  echo "USAGE: [bucket] [endeavor] [stint] [extrospective/introspective/writable] [exchange/rotate] "
+if (( "$#" < 5 )); then
+  echo "USAGE: [bucket] [endeavor] [stint] [extrospective/introspective/writable] [exchange/rotate]"
   exit 1
 fi
 
