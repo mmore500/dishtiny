@@ -6,7 +6,6 @@
 #include "apply_insertion_mutate_on_load.hpp"
 #include "apply_mutate_on_load.hpp"
 #include "apply_point_mutate_on_load.hpp"
-#include "set_intermittent_cpu_reset_probability.hpp"
 #include "set_intermittent_writable_state_exchange_probability.hpp"
 #include "set_intermittent_writable_state_rotate_probability.hpp"
 #include "set_mutation_occurence_rate_multiplicand.hpp"

@@ -94,7 +94,6 @@ struct Spec {
     dish2::DecayToBaselineService, // should run before cpu execution service
     dish2::RunningLogPurgeService, // should run before cpu execution service
     dish2::WritableStateNoiseService,
-    dish2::IntermittentCpuResetService,
     dish2::CpuExecutionService,
     dish2::IntermittentWritableStateExchangeService<this_t>,
     dish2::IntermittentWritableStateRotateService,

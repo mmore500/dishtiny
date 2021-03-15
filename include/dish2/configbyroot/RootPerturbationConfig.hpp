@@ -10,15 +10,10 @@ namespace dish2 {
 
 struct RootPerturbationConfig {
 
-  double intermittent_cpu_reset_probability{};
   double intermittent_writable_state_exchange_probability{};
   double intermittent_writable_state_rotate_probability{};
 
   emp::optional<size_t> writable_state_target_idx;
-
-  bool ShouldResetCpu() const {
-    return sgpl::tlrand.Get().P( intermittent_cpu_reset_probability );
-  }
 
   bool ShouldExchangeWritableState() const { return sgpl::tlrand.Get().P(
     intermittent_writable_state_exchange_probability
@@ -30,8 +25,6 @@ struct RootPerturbationConfig {
 
   std::map<std::string, std::string> MakeSummary() const {
     return {
-      {"Intermittent CPU Reset Probability",
-        emp::to_string(intermittent_cpu_reset_probability)},
       {"Intermittent Writable State Exchange Probability",
         emp::to_string(intermittent_writable_state_exchange_probability)},
       {"Intermittent Writable State Rotate Probability",

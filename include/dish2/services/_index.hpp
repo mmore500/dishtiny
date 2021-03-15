@@ -15,7 +15,6 @@
 #include "InterMessageLaunchingService.hpp"
 #include "InterMessageLaunchingService.hpp"
 #include "InterMessagePurgingService.hpp"
-#include "IntermittentCpuResetService.hpp"
 #include "IntermittentWritableStateExchangeRestoreService.hpp"
 #include "IntermittentWritableStateExchangeService.hpp"
 #include "IntermittentWritableStateRotateRestoreService.hpp"
