@@ -15,6 +15,7 @@
 #include "dump_config.hpp"
 #include "print_assets.hpp"
 #include "print_config.hpp"
+#include "print_pwd.hpp"
 #include "setup_assets.hpp"
 #include "setup_config.hpp"
 
@@ -33,6 +34,7 @@ void setup( emp::ArgManager arg_manager ) {
   setup_config( arg_manager );
 
   if ( uitsl::is_root() ) {
+    print_pwd();
     print_assets();
     print_config();
   }
