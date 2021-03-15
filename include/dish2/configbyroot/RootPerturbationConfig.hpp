@@ -29,6 +29,8 @@ struct RootPerturbationConfig {
         emp::to_string(intermittent_writable_state_exchange_probability)},
       {"Intermittent Writable State Rotate Probability",
         emp::to_string(intermittent_writable_state_rotate_probability)},
+      {"Writable State Target Idx",
+        emp::to_string(writable_state_target_idx)},
     };
   }
 
