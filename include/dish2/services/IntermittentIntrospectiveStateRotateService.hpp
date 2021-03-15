@@ -46,9 +46,11 @@ struct IntermittentIntrospectiveStateRotateService {
 
     if ( !perm_config.ShouldRotateIntrospectiveState() ) return;
 
-    const size_t rotation = sgpl::tlrand.Get().GetUInt(
-      cell.GetNumCardinals()
-    );
+    // for experimental simplicity rotate by constant
+    const size_t rotation = 1;
+    // sgpl::tlrand.Get().GetUInt(
+    //   cell.GetNumCardinals()
+    // );
 
     // stash rotation to be reversed in restore service
     emp_assert( current_rotation == 0 );
