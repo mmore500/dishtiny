@@ -20,20 +20,32 @@ struct RootPerturbationConfig {
 
   emp::optional<size_t> writable_state_target_idx;
 
-  bool ShouldExchangeIntrospectiveState() const { return sgpl::tlrand.Get().P(
-    intermittent_introspective_state_exchange_probability
-  ); }
+  bool ShouldExchangeIntrospectiveState() const {
+    return intermittent_introspective_state_exchange_probability
+      && sgpl::tlrand.Get().P(
+        intermittent_introspective_state_exchange_probability
+      );
+    }
 
-  bool ShouldRotateIntrospectiveState() const { return sgpl::tlrand.Get().P(
-    intermittent_introspective_state_rotate_probability
-  ); }
+  bool ShouldRotateIntrospectiveState() const {
+    return intermittent_introspective_state_rotate_probability
+    && sgpl::tlrand.Get().P(
+      intermittent_introspective_state_rotate_probability
+    );
+  }
 
-  bool ShouldExchangeWritableState() const { return sgpl::tlrand.Get().P(
-    intermittent_writable_state_exchange_probability
-  ); }
+  bool ShouldExchangeWritableState() const {
+    return intermittent_writable_state_exchange_probability
+    && sgpl::tlrand.Get().P(
+      intermittent_writable_state_exchange_probability
+    );
+  }
 
   bool ShouldRotateWritableState() const {
-    return sgpl::tlrand.Get().P(intermittent_writable_state_rotate_probability);
+    return intermittent_writable_state_rotate_probability
+    && sgpl::tlrand.Get().P(
+      intermittent_writable_state_rotate_probability
+    );
   }
 
   std::map<std::string, std::string> MakeSummary() const {
