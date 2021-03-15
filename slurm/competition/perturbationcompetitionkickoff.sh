@@ -2,7 +2,7 @@
 
 ################################################################################
 echo
-echo "running intermittentwritablestateexchangecompetitionkickoff.sh"
+echo "running perturbationcompetitionkickoff.sh"
 echo "-------------------------------------------------"
 ################################################################################
 
@@ -10,7 +10,8 @@ echo "-------------------------------------------------"
 set -e
 
 if (( "$#" < 6 )); then
-  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [intermittent_p] [stint] [series...]"
+  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [extrospective/introspective/writable] [exchange/rotate] [intermittent_p] [target_idx] [stint] [series...]"
+  echo "where [target_idx] can be empty string \"\" or a brace expandable"
   exit 1
 fi
 
@@ -30,8 +31,20 @@ REPO_SHA="${1}"
 echo "REPO_SHA ${REPO_SHA}"
 shift
 
+STATE_TARGET="${1}"
+echo "STATE_TARGET ${STATE_TARGET}"
+shift
+
+PERTURBATION="${1}"
+echo "PERTURBATION ${PERTURBATION}"
+shift
+
 INTERMITTENT_P="${1}"
 echo "INTERMITTENT_P ${INTERMITTENT_P}"
+shift
+
+TARGET_IDX="${1}"
+echo "TARGET_IDX ${TARGET_IDX}"
 shift
 
 STINT="${1}"
@@ -65,7 +78,7 @@ set -e
 
 ################################################################################
 echo
-echo "running intermittentwritablestateexchangecompetitionkickoff.sh"
+echo "running perturbationcompetitionkickoff.sh"
 echo "-------------------------------------------------"
 ################################################################################
 
@@ -74,6 +87,7 @@ echo "CONFIGPACK ${CONFIGPACK}"
 echo "CONTAINER_TAG ${CONTAINER_TAG}"
 echo "REPO_SHA ${REPO_SHA}"
 echo "INTERMITTENT_P ${INTERMITTENT_P}"
+echo "TARGET_IDX ${TARGET_IDX}"
 echo "STINT ${STINT}"
 echo "SERIES ${SERIES}"
 
@@ -92,30 +106,33 @@ echo "Generate Tournament Runscripts"
 echo "------------------------------"
 ################################################################################
 
-for JUST_ONE_SERIES in ${SERIES}; do
-  for REPLICATE in 0; do
+# "" on end for empty string
+for JUST_ONE_TARGET_IDX in $(eval echo ${TARGET_IDX})""; do
+  for JUST_ONE_SERIES in ${SERIES}; do
+    for REPLICATE in 0; do
 
-    FIRST_COMPETITOR="s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${JUST_ONE_SERIES}+stint=${STINT}+thread=0+variation=master+ext=.json.gz"
-    SECOND_COMPETITOR="\${FIRST_COMPETITOR}"
+      FIRST_COMPETITOR="s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${JUST_ONE_SERIES}+stint=${STINT}+thread=0+variation=master+ext=.json.gz"
+      SECOND_COMPETITOR="\${FIRST_COMPETITOR}"
 
-    echo "FIRST_COMPETITOR \${FIRST_COMPETITOR}"
-    echo "SECOND_COMPETITOR \${SECOND_COMPETITOR}"
+      echo "FIRST_COMPETITOR \${FIRST_COMPETITOR}"
+      echo "SECOND_COMPETITOR \${SECOND_COMPETITOR}"
 
-    j2 --format=yaml -o "a=competition+series=\${JUST_ONE_SERIES}+stint=${STINT}+replicate=\${REPLICATE}+ext=.slurm.sh" "dishtiny/slurm/competition/competitionjob.slurm.sh.jinja" << J2_HEREDOC_EOF
+      j2 --format=yaml -o "a=competition+series=\${JUST_ONE_SERIES}+stint=${STINT}+replicate=\${REPLICATE}+ext=.slurm.sh" "dishtiny/slurm/competition/competitionjob.slurm.sh.jinja" << J2_HEREDOC_EOF
 bucket: ${BUCKET}
 configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
 first_competitor_url: "\${FIRST_COMPETITOR}"
 second_competitor_url: "\${SECOND_COMPETITOR}"
-second_competitor_attrs: "set_intermittent_writable_state_rotate_probability=${INTERMITTENT_P}+"
-output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/intermittent-writable-state-rotate-competitions/p=${INTERMITTENT_P}/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
+second_competitor_attrs: "set_intermittent_${STATE_TARGET}_state_${PERTURBATION}_probability=${INTERMITTENT_P}+set_${STATE_TARGET}_state_target_idx=\${JUST_ONE_TARGET_IDX}+"
+output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/perturbation-${STATE_TARGET}-state-${PERTURBATION}-competitions/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/intermittent_p=${INTERMITTENT_P}+target_idx=${TARGET_IDX}/"
 replicate: "\${REPLICATE}"
 endeavor: "\${ENDEAVOR}"
 stint: "${STINT}"
 series: "\${JUST_ONE_SERIES}"
 J2_HEREDOC_EOF
 
+  done
   done
 done
 
@@ -131,7 +148,7 @@ echo "num generated runscripts \$(ls *.slurm.sh | wc -l)"
 # inside itself, then submits itself as a job to gradually feed runscripts onto
 # the queue
 
-dishtiny/script/slurm_stoker_containerized_kickoff.sh "${BUCKET}" "${CONTAINER_TAG}" "${REPO_SHA}" "intermittent-writable-state-rotate-competition~configpack%${CONFIGPACK}~series%${SERIES%% *}...~stint%${STINT}~intermittent_p%${INTERMITTENT_P}"
+dishtiny/script/slurm_stoker_containerized_kickoff.sh "${BUCKET}" "${CONTAINER_TAG}" "${REPO_SHA}" "intermittent-${STATE_TARGET}-state-${PERTURBATION}-competition~configpack%${CONFIGPACK}~series%${SERIES%% *}...~stint%${STINT}~intermittent_p%${INTERMITTENT_P}"
 
 ################################################################################
 echo
