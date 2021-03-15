@@ -9,7 +9,7 @@ DISHTINY_DIRTY := $(shell \
     ( git diff-index --quiet HEAD -- && echo "-clean" || echo "-dirty" ) \
     | tr -d '\040\011\012\015' \
   )
-DISHTINY_SOURCE_DIR := $(shell pwd)
+DISHTINY_SOURCE_DIR := $(shell test -d /opt/dishtiny && echo /opt/dishtiny || pwd)
 # to compile different metrics/selecctors
 # make ARGS="-DMETRIC=streak -DSELECTOR=roulette"
 
@@ -37,7 +37,7 @@ else
 endif
 
 CFLAGS_nat := -O3 $(CFLAGS_march_native) -flto -DNDEBUG -ffast-math $(CFLAGS_all) $(OMP_FLAG)
-CFLAGS_nat_production := $(CFLAGS_nat) -g
+CFLAGS_nat_production := $(CFLAGS_nat) -g -fdebug-prefix-map=$(PWD)=.
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
 CFLAGS_nat_debug := -g -DEMP_TRACK_MEM $(OMP_FLAG) $(CFLAGS_all)
 CFLAGS_nat_sanitize := -fsanitize=address -fsanitize=undefined $(CFLAGS_nat_debug)

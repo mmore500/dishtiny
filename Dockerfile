@@ -58,6 +58,9 @@ RUN \
 
 COPY container/policy.xml /etc/ImageMagick-6/policy.xml
 
+COPY container/ccache.conf /etc/ccache.conf
+ENV CCACHE_CONFIGPATH=/etc/ccache.conf
+
 RUN \
   pip3 install --timeout 60 --retries 100 -r /opt/dishtiny/docs/requirements.txt \
     && \

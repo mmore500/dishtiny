@@ -17,7 +17,7 @@ const uitsl::ScopeGuard source_path_export_guard(
   [](){ setenv(
     "BACKWARD_CXX_SOURCE_PREFIXES",
     EMP_STRINGIFY(DISHTINY_SOURCE_DIR_),
-    0
+    0 // won't overwrite
   ); }
 );
 

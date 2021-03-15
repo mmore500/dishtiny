@@ -162,6 +162,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   echo "modules loaded..."
   export REPRO_ID="${REPRO_ID}"
   export DISPLAY="${DISPLAY}"
+  export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_DIR}/dishtiny/"
   export XVFB_PID="${XVFB_PID}"
   mpiexec.hydra --version
   mpiexec.hydra -n "${N_PROCS}" \
