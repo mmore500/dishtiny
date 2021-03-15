@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_SERVICES_INTERMITTENTWRITABLESTATEEXCHANGESERVICE_HPP_INCLUDE
-#define DISH2_SERVICES_INTERMITTENTWRITABLESTATEEXCHANGESERVICE_HPP_INCLUDE
+#ifndef DISH2_SERVICES_INTERMITTENTINTROSPECTIVESTATEEXCHANGESERVICE_HPP_INCLUDE
+#define DISH2_SERVICES_INTERMITTENTINTROSPECTIVESTATEEXCHANGESERVICE_HPP_INCLUDE
 
 #include <algorithm>
 #include <numeric>
@@ -14,16 +14,18 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/execute_cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
-#include "../cell/cardinal_iterators/WritableStateWrapper.hpp"
+#include "../cell/cardinal_iterators/IntrospectiveStateWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
 template<typename Spec>
-struct IntermittentWritableStateExchangeService {
+struct IntermittentIntrospectiveStateExchangeService {
 
-  inline static thread_local emp::vector< dish2::WritableState<Spec> > stash{};
+  inline static thread_local emp::vector<
+    dish2::IntrospectiveState<Spec>
+  > stash{};
 
   static bool ShouldRun( const size_t update, const bool alive ) {
     const size_t freq
@@ -38,43 +40,43 @@ struct IntermittentWritableStateExchangeService {
   static void DoService( Cell& cell ) {
 
     const dish2::LogScope guard{
-      "intermittent writable state exchange service", "TODO", 3
+      "intermittent introspective state exchange service", "TODO", 3
     };
 
     using spec_t = typename Cell::spec_t;
 
-    using writable_state_t = dish2::WritableState<spec_t>;
+    using introspective_state_t = dish2::IntrospectiveState<spec_t>;
 
     constexpr size_t exchange_chain_length
       = spec_t::STATE_EXCHANGE_CHAIN_LENGTH;
     using exchange_buffer_t
-      = uitsl::RingBuffer<writable_state_t, exchange_chain_length>;
+      = uitsl::RingBuffer<introspective_state_t, exchange_chain_length>;
 
     emp_assert( stash.empty() );
 
     const auto& perturbation_config = cell.genome->GetRootPerturbationConfig();
-    const auto& target_idx = perturbation_config.writable_state_target_idx;
+    const auto& target_idx = perturbation_config.introspective_state_target_idx;
 
-    if ( perturbation_config.ShouldExchangeWritableState() ) std::for_each(
-      cell.template begin<dish2::WritableStateWrapper<spec_t>>(),
-      cell.template end<dish2::WritableStateWrapper<spec_t>>(),
-      [&]( auto& writable_state ){
+    if ( perturbation_config.ShouldExchangeIntrospectiveState() ) std::for_each(
+      cell.template begin<dish2::IntrospectiveStateWrapper<spec_t>>(),
+      cell.template end<dish2::IntrospectiveStateWrapper<spec_t>>(),
+      [&]( auto& introspective_state ){
         thread_local exchange_buffer_t fifo;
 
         // stash state to be reverted in restore service
-        stash.push_back( writable_state );
+        stash.push_back( introspective_state );
 
         // fill fifo up and then start exchanging
-        if ( !fifo.IsFull() ) fifo.PushHead( writable_state );
+        if ( !fifo.IsFull() ) fifo.PushHead( introspective_state );
         else {
 
           const auto incoming = fifo.GetTail();
           fifo.PopTail();
-          fifo.PushHead( writable_state );
+          fifo.PushHead( introspective_state );
 
           if ( target_idx.has_value() ) {
-            writable_state.Assign( *target_idx, incoming );
-          } else writable_state = incoming;
+            introspective_state.Assign( *target_idx, incoming );
+          } else introspective_state = incoming;
 
         }
 
@@ -87,4 +89,4 @@ struct IntermittentWritableStateExchangeService {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_SERVICES_INTERMITTENTWRITABLESTATEEXCHANGESERVICE_HPP_INCLUDE
+#endif // #ifndef DISH2_SERVICES_INTERMITTENTINTROSPECTIVESTATEEXCHANGESERVICE_HPP_INCLUDE

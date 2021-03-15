@@ -10,10 +10,23 @@ namespace dish2 {
 
 struct RootPerturbationConfig {
 
+  double intermittent_introspective_state_exchange_probability{};
+  double intermittent_introspective_state_rotate_probability{};
+
+  emp::optional<size_t> introspective_state_target_idx;
+
   double intermittent_writable_state_exchange_probability{};
   double intermittent_writable_state_rotate_probability{};
 
   emp::optional<size_t> writable_state_target_idx;
+
+  bool ShouldExchangeIntrospectiveState() const { return sgpl::tlrand.Get().P(
+    intermittent_introspective_state_exchange_probability
+  ); }
+
+  bool ShouldRotateIntrospectiveState() const { return sgpl::tlrand.Get().P(
+    intermittent_introspective_state_rotate_probability
+  ); }
 
   bool ShouldExchangeWritableState() const { return sgpl::tlrand.Get().P(
     intermittent_writable_state_exchange_probability
@@ -25,6 +38,12 @@ struct RootPerturbationConfig {
 
   std::map<std::string, std::string> MakeSummary() const {
     return {
+      {"Intermittent Introspective State Exchange Probability",
+        emp::to_string(intermittent_introspective_state_exchange_probability)},
+      {"Intermittent Introspective State Rotate Probability",
+        emp::to_string(intermittent_introspective_state_rotate_probability)},
+      {"Introspective State Target Idx",
+        emp::to_string(introspective_state_target_idx)},
       {"Intermittent Writable State Exchange Probability",
         emp::to_string(intermittent_writable_state_exchange_probability)},
       {"Intermittent Writable State Rotate Probability",

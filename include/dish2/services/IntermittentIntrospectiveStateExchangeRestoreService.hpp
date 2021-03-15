@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_SERVICES_INTERMITTENTWRITABLESTATEEXCHANGERESTORESERVICE_HPP_INCLUDE
-#define DISH2_SERVICES_INTERMITTENTWRITABLESTATEEXCHANGERESTORESERVICE_HPP_INCLUDE
+#ifndef DISH2_SERVICES_INTERMITTENTINTROSPECTIVESTATEEXCHANGERESTORESERVICE_HPP_INCLUDE
+#define DISH2_SERVICES_INTERMITTENTINTROSPECTIVESTATEEXCHANGERESTORESERVICE_HPP_INCLUDE
 
 #include <algorithm>
 #include <numeric>
@@ -14,15 +14,15 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/execute_cpu.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
-#include "../cell/cardinal_iterators/WritableStateWrapper.hpp"
+#include "../cell/cardinal_iterators/IntrospectiveStateWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 
-#include "IntermittentWritableStateExchangeService.hpp"
+#include "IntermittentIntrospectiveStateExchangeService.hpp"
 
 namespace dish2 {
 
-struct IntermittentWritableStateExchangeRestoreService {
+struct IntermittentIntrospectiveStateExchangeRestoreService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {
     const size_t freq
@@ -38,19 +38,19 @@ struct IntermittentWritableStateExchangeRestoreService {
   static void DoService( Cell& cell ) {
 
     const dish2::LogScope guard{
-      "intermittent writable state exchange restore service", "TODO", 3
+      "intermittent introspective state exchange restore service", "TODO", 3
     };
 
     using spec_t = typename Cell::spec_t;
 
-    auto& stash = IntermittentWritableStateExchangeService<spec_t>::stash;
+    auto& stash = IntermittentIntrospectiveStateExchangeService<spec_t>::stash;
 
     emp_assert( stash.empty() || stash.size() == cell.GetNumCardinals() );
 
     if ( stash.size() ) std::copy(
       std::begin( stash ),
       std::end( stash ),
-      cell.template begin<dish2::WritableStateWrapper<spec_t>>()
+      cell.template begin<dish2::IntrospectiveStateWrapper<spec_t>>()
     );
 
     stash.clear();
@@ -61,4 +61,4 @@ struct IntermittentWritableStateExchangeRestoreService {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_SERVICES_INTERMITTENTWRITABLESTATEEXCHANGERESTORESERVICE_HPP_INCLUDE
+#endif // #ifndef DISH2_SERVICES_INTERMITTENTINTROSPECTIVESTATEEXCHANGERESTORESERVICE_HPP_INCLUDE
