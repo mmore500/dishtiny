@@ -5,6 +5,15 @@ USER root
 COPY . /opt/dishtiny
 
 RUN \
+  git -C /opt/dishtiny remote --verbose \
+    && \
+  git -C /opt/dishtiny submodule update --init --recursive \
+    && \
+  git -C /opt/dishtiny fetch --recurse-submodules --jobs 16 \
+    && \
+  echo "unshallowed source for use as cache"
+
+RUN \
   echo "deb http://archive.ubuntu.com/ubuntu focal main restricted universe multiverse" >> "/etc/apt/sources.list" \
     && \
   echo "Package: libhdf5-dev" >> "/etc/apt/preferences" \
