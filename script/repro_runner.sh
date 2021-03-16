@@ -426,6 +426,21 @@ echo "WORK_DIRECTORY ${WORK_DIRECTORY}"
 
 ################################################################################
 echo
+echo "Get sha tag for docker container"
+echo "--------------------------------------"
+################################################################################
+
+if [[ "${container_tag}" != *"@sha256:"* ]]; then
+  container_tag="${container_tag}@sha256:$(\
+    singularity exec "docker://${arg_username}/${arg_slug}:${container_tag}" \
+      bash -c 'echo ${SINGULARITY_NAME}' \
+  )"
+fi
+echo "container_tag with sha256 ${container_tag}"
+
+
+################################################################################
+echo
 echo "Get Assets"
 echo "--------------------------------------"
 ################################################################################
@@ -440,10 +455,14 @@ if [ -n "${repo_sha}" ]; then
   echo "setting up pinned project source at revision ${repo_sha}..."
   time for retry in {1..20}; do
 
-    test -d "/opt/${arg_slug}" \
-    && git -C "/opt/${arg_slug}" rev-parse \
-    && git clone --recursive "https://github.com/${arg_username}/${arg_slug}.git" --reference-if-able "/opt/${arg_slug}" --jobs 16 --depth 1 \
-    && git checkout "${repo_sha}" --recurse-submodules \
+    singularity exec \
+    "docker://${arg_username}/${arg_slug}@${container_tag#*@}" \
+    bash -c " \
+      test -d \"/opt/${arg_slug}\" \
+      && git -C \"/opt/${arg_slug}\" rev-parse \
+      && git clone --recursive \"https://github.com/${arg_username}/${arg_slug}.git\" --reference-if-able \"/opt/${arg_slug}\" --jobs 16 --depth 1 \
+      && git -C \"${arg_slug}\" checkout \"${repo_sha}\" --recurse-submodules \
+    " \
     && echo "  source setup success using cache" \
     && break \
     || echo "no /opt/${arg_slug} cache, trying another way.."
@@ -478,15 +497,6 @@ else
 fi
 
 echo "repo_sha after asset get ${repo_sha}"
-
-# get sha of latest docker container
-if [[ "${container_tag}" != *"@sha256:"* ]]; then
-  container_tag="${container_tag}@sha256:$(\
-    singularity exec "docker://${arg_username}/${arg_slug}:${container_tag}" \
-      bash -c 'echo ${SINGULARITY_NAME}' \
-  )"
-fi
-echo "container_tag with sha256 ${container_tag}"
 
 ################################################################################
 echo
