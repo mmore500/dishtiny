@@ -21,6 +21,9 @@ echo "running slurm_stoker.slurm.sh"
 echo "-----------------------------"
 ################################################################################
 
+# print message on exit (for debugging)
+trap 'echo exiting slurm_stoker.slurm.sh' EXIT
+
 # fail on error
 set -e
 
@@ -111,6 +114,8 @@ chmod +x "${host_sbatch_script}"
 
 for JOB_SCRIPT in *.slurm.sh; do
 
+  echo "JOB_SCRIPT $(( COUNTER++ )) ${JOB_SCRIPT}"
+
   # this will count one too many slots occupied, but that is okay
   OCCUPIED_SLOTS=$( \
     "${host_squeue_script}" -u "\$(whoami)" | wc -l \
@@ -121,8 +126,11 @@ for JOB_SCRIPT in *.slurm.sh; do
     echo "all ${AVAILABLE_SLOTS} AVAILABLE_SLOTS occupied"
     echo "breaking out of job submission loop"
     echo "$(ls *.slurm.sh | wc -l) jobs left to submit"
+    echo "most recent exit status $?"
     break
   fi
+
+  echo "OCCUPIED_SLOTS ${OCCUPIED_SLOTS}"
 
   "${host_sbatch_script}" "${JOB_SCRIPT}" \
     && rm -f "${JOB_SCRIPT}" \
