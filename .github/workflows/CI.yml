@@ -27,6 +27,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
+          fetch-depth: 0 # fetch all history for all branches and tags
       - name: Push to Docker Hub
         uses: docker/build-push-action@v1
         with:
