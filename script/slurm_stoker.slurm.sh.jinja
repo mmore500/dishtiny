@@ -136,7 +136,11 @@ for JOB_SCRIPT in *.slurm.sh; do
     && rm -f "${JOB_SCRIPT}" \
     && echo "${JOB_SCRIPT} submitted"
 
-done
+done &
+
+# not sure why, but the script was prematurely exiting at break statement above
+# forking the for loop and waiting on it seems to fix the issue
+wait
 
 ################################################################################
 echo
