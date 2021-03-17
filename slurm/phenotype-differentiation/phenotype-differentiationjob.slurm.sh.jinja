@@ -141,13 +141,16 @@ unset pids
 # double check that all downloads are complete
 wait
 
+ls
+
 # an attempt to address intermittent failure where downloaded files aren't found
 # when running the executable
 sshpass -p "${HOST_PASSWORD}" \
   scp -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
     * "${HOST_USERNAME}@$(hostname):$(pwd)" \
-&& echo "  local asset copy success"
+&& echo "  local asset copy success" || echo "  local asset copy fail"
 
+ls
 
 ################################################################################
 echo
