@@ -388,7 +388,7 @@ function on_error() {
 
     # preserve existing attempt's logfile
     # which will be overwritten by the requeue'd job
-    slurm_logfile="$(shopt -s nullglob; ls ~/slurmlogs/*${SLURM_JOB_ID}*)"
+    slurm_logfile="$(shopt -s nullglob; ls "/mnt/scratch/$(whoami)/slurmlogs/"*${SLURM_JOB_ID}*)"
     echo "slurm_logfile ${slurm_logfile}"
 
     for file in ${slurm_logfile}; do
@@ -398,6 +398,7 @@ function on_error() {
 
     # job will be cancelled immediately upon requeue
     command -v scontrol \
+    && echo "attempting job requeue"
     && scontrol requeue "${SLURM_JOB_ID}" \
     && echo "job requeue success" \
     || echo "job requeue failure, requeue error"
