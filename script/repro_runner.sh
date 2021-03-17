@@ -540,3 +540,6 @@ cat "-" | timeout "${TIMEOUT_SECONDS}s" tee "${stdin}" | \
     -B "${HOME}:/home/user" \
     --dns 8.8.8.8,8.8.4.4 \
     "${container_file}"
+
+# not critical clean up, so not bothering with exit trap
+rm -f "${container_file}"
