@@ -24,7 +24,7 @@ std::map<std::string, std::string> summarize_root_config(
   res.merge( mutation_summary );
   emp_assert( mutation_summary.empty() );
 
-  auto perturbation_summary = dish2::root_mutation_configs.View(
+  auto perturbation_summary = dish2::root_perturbation_configs.View(
     root_id
   ).MakeSummary();
   res.merge( perturbation_summary );
