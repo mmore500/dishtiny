@@ -460,7 +460,7 @@ if [ -n "${repo_sha}" ]; then
     bash -c " \
       test -d \"/opt/${arg_slug}\" \
       && git -C \"/opt/${arg_slug}\" rev-parse \
-      && git clone --recursive \"https://github.com/${arg_username}/${arg_slug}.git\" --reference-if-able \"/opt/${arg_slug}\" --jobs 16 --depth 1 \
+      && git clone --recursive \"https://github.com/${arg_username}/${arg_slug}.git\" --reference-if-able \"/opt/${arg_slug}\" --jobs 16 \
       && git -C \"${arg_slug}\" checkout \"${repo_sha}\" --recurse-submodules \
     " \
     && echo "  source setup success using cache" \
