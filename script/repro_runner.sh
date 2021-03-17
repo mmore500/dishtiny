@@ -188,6 +188,11 @@ echo
 echo "Log Job Info"
 echo "--------------------------------------"
 ################################################################################
+
+echo "SLURM_JOB_ID ${SLURM_JOB_ID}"
+echo "SLURM_JOB_NAME ${SLURM_JOB_NAME}"
+echo "SLURM_RESTART_COUNT ${SLURM_RESTART_COUNT}"
+
 echo "REPRO_ID ${REPRO_ID}"
 echo "date $(date)"
 echo "hostname $(hostname)"
@@ -214,6 +219,8 @@ function on_exit {
   echo
   echo "Run Exit Trap"
   echo "-------------"
+
+  echo "SLURM_RESTART_COUNT ${SLURM_RESTART_COUNT}"
 
   echo "log job duration..."
   echo "  date $(date)"
