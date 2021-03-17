@@ -431,9 +431,12 @@ echo "--------------------------------------"
 ################################################################################
 
 if [[ "${container_tag}" != *"@sha256:"* ]]; then
+
+  # use several retries to fix intermittent TLS handshake timeout
   container_tag="${container_tag}@sha256:$(\
-    singularity exec "docker://${arg_username}/${arg_slug}:${container_tag}" \
+    until singularity exec "docker://${arg_username}/${arg_slug}:${container_tag}" \
       bash -c 'echo ${SINGULARITY_NAME}' \
+    || (( retry++ >=5 )); do sleep 10; done \
   )"
 fi
 echo "container_tag with sha256 ${container_tag}"
@@ -444,6 +447,14 @@ echo
 echo "Get Assets"
 echo "--------------------------------------"
 ################################################################################
+
+# use several retries to fix intermittent TLS handshake timeout
+container_file="$(mktemp)"
+retry=0
+time until singularity pull --force "${container_file}" "docker://${arg_username}/${arg_slug}@${container_tag#*@}"; do
+  (( retry++ >= 5 )) && echo "too many singularity pull retries" && exit 1
+  echo "failed singularity pull ${retry}, trying agian" && sleep 10
+done
 
 # setup output folder
 # no, user has to make output folder if they want it
@@ -456,7 +467,7 @@ if [ -n "${repo_sha}" ]; then
   time for retry in {1..20}; do
 
     singularity exec \
-    "docker://${arg_username}/${arg_slug}@${container_tag#*@}" \
+    "${container_file}" \
     bash -c " \
       test -d \"/opt/${arg_slug}\" \
       && git -C \"/opt/${arg_slug}\" rev-parse \
@@ -528,4 +539,4 @@ cat "-" | timeout "${TIMEOUT_SECONDS}s" tee "${stdin}" | \
     --env "SECONDS=${SECONDS}" \
     -B "${HOME}:/home/user" \
     --dns 8.8.8.8,8.8.4.4 \
-    "docker://${arg_username}/${arg_slug}@${container_tag#*@}"
+    "${container_file}"
