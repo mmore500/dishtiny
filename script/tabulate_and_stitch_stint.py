@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import boto3
+from collections import defaultdict
 from functools import reduce
 from iterpop import iterpop as ip
 import itertools
@@ -44,6 +45,35 @@ def summarize(values):
     else:
         return f'num_unique%{len(set(vals))}'
 
+def fit_control_t_distns(control_df):
+
+    na_rows = control_df['Fitness Differential'].isna()
+    assert all( control_df[ na_rows ]['Population Extinct'] )
+    control_df['Fitness Differential'].fillna(0, inplace=True,)
+
+    res = []
+    for series in control_df['Competition Series'].unique():
+
+        series_df = control_df[ control_df['Competition Series'] == series ]
+
+        # legacy data was mixed inside of the variant_df
+        wt_vs_wt_df = series_df.groupby('Competition Repro').filter(
+            lambda x: (x['genome variation'] == 'master').all()
+        ).groupby('Competition Repro').first().reset_index()
+
+        # fit a t distribution to the control data
+        # df is degrees of freedom
+        df, loc, scale = stats.t.fit( wt_vs_wt_df['Fitness Differential'] )
+
+
+        res.append({
+            'Series' : series,
+            'Fit Degrees of Freedom' : df,
+            'Fit Loc' : loc,
+            'Fit Scale' : scale,
+        })
+
+    return pd.DataFrame(res)
 
 def reshape_dpp(df):
 
@@ -326,7 +356,7 @@ def filter_for_phenotype_neutral_nopout(genome_df):
     return res
 
 
-def tabulate_fitness_complexity(variant_df, control_df):
+def tabulate_fitness_complexity(variant_df, control_fits_df):
 
     # count competions where both strains went extinct simultaneously
     # as 0 Fitness Differential
@@ -334,28 +364,20 @@ def tabulate_fitness_complexity(variant_df, control_df):
     assert all( variant_df[ na_rows ]['Population Extinct'] )
     variant_df['Fitness Differential'].fillna(0, inplace=True,)
 
-    na_rows = control_df['Fitness Differential'].isna()
-    assert all( control_df[ na_rows ]['Population Extinct'] )
-    control_df['Fitness Differential'].fillna(0, inplace=True,)
-
     res = []
     for series in variant_df['Competition Series'].unique():
 
-        series_v_df = variant_df[ variant_df['Competition Series'] == series ]
-        series_c_df = control_df[ control_df['Competition Series'] == series ]
+        series_df = variant_df[ variant_df['Competition Series'] == series ]
 
-        # legacy data was mixed inside of the variant_df
-        wt_vs_wt_df = series_c_df.groupby('Competition Repro').filter(
-            lambda x: (x['genome variation'] == 'master').all()
-        ).groupby('Competition Repro').first().reset_index()
-
-        wt_vs_variant_df = series_v_df[
-            series_v_df['genome variation'] != 'master'
+        wt_vs_variant_df = series_df[
+            series_df['genome variation'] != 'master'
         ].reset_index()
 
-        # fit a t distribution to the control data
-        # df is degrees of freedom
-        df, loc, scale = stats.t.fit( wt_vs_wt_df['Fitness Differential'] )
+        h0_fit = ip.popsingleton( control_fits_df[
+            control_fits_df['Series'] == series
+        ].to_dict(
+            orient='records',
+        ) )
 
         # calculate the probability of observing fitness differential result
         # under control data distribution
@@ -363,9 +385,9 @@ def tabulate_fitness_complexity(variant_df, control_df):
             wt_vs_variant_df['p'] =  wt_vs_variant_df.apply(
                 lambda row: stats.t.cdf(
                     row['Fitness Differential'],
-                    df,
-                    loc=loc,
-                    scale=scale,
+                    h0_fit['Fit Degrees of Freedom'],
+                    loc=h0_fit['Fit Loc'],
+                    scale=h0_fit['Fit Scale'],
                 ),
                 axis=1,
             )
@@ -396,13 +418,7 @@ def tabulate_fitness_complexity(variant_df, control_df):
 
     return pd.DataFrame(res)
 
-def tabulate_mutant(mutant_df, control_df, mutation_type=''):
-
-    # count competions where both strains went extinct simultaneously
-    # as 0 Fitness Differential
-    na_rows = control_df['Fitness Differential'].isna()
-    assert all( control_df[ na_rows ]['Population Extinct'] )
-    control_df['Fitness Differential'].fillna(0, inplace=True,)
+def tabulate_mutant(mutant_df, control_fits_df, mutation_type=''):
 
     res = []
     for series in mutant_df['Competition Series'].unique():
@@ -410,21 +426,16 @@ def tabulate_mutant(mutant_df, control_df, mutation_type=''):
         mutant_series_df = mutant_df[
             mutant_df['Competition Series'] == series
         ]
-        control_series_df = control_df[
-            control_df['Competition Series'] == series
-        ]
-
-        wt_vs_wt_df = control_series_df.groupby('Competition Repro').filter(
-            lambda x: (x['genome variation'] == 'master').all()
-        ).groupby('Competition Repro').first().reset_index()
 
         wt_vs_mutant_df = mutant_series_df[
             mutant_series_df['genome root_id'] == 1
         ].reset_index()
 
-        # fit a t distribution to the control data
-        # df is degrees of freedom
-        df, loc, scale = stats.t.fit( wt_vs_wt_df['Fitness Differential'] )
+        h0_fit = ip.popsingleton( control_fits_df[
+            control_fits_df['Series'] == series
+        ].to_dict(
+            orient='records',
+        ) )
 
         # calculate the probability of observing fitness differential result
         # under control data distribution
@@ -432,9 +443,9 @@ def tabulate_mutant(mutant_df, control_df, mutation_type=''):
             wt_vs_mutant_df['p'] =  wt_vs_mutant_df.apply(
                 lambda row: stats.t.cdf(
                     row['Fitness Differential'],
-                    df,
-                    loc=loc,
-                    scale=scale,
+                    h0_fit['Fit Degrees of Freedom'],
+                    loc=h0_fit['Fit Loc'],
+                    scale=h0_fit['Fit Scale'],
                 ),
                 axis=1,
             )
@@ -463,6 +474,99 @@ def tabulate_mutant(mutant_df, control_df, mutation_type=''):
         })
 
     return pd.DataFrame(res)
+
+def tabulate_perturbation(
+    perturbation_df, control_fits_df, target_state, perturbation_type,
+):
+
+    intermittent_p_col = f'Intermittent {target_state} State {perturbation_type} Probability'
+
+    if intermittent_p_col not in perturbation_df.columns:
+        perturbation_df[intermittent_p_col] = 1
+
+    if f'{target_state} State Target Idx' not in perturbation_df.columns:
+        perturbation_df[f'{target_state} State Target Idx'] = range(
+            len(perturbation_df)
+        )
+
+    # count competions where both strains went extinct simultaneously
+    # as 0 Fitness Differential
+    res_by_series = defaultdict(dict)
+    for (series, intermittent_p), subset_df in perturbation_df.groupby([
+        'Competition Series',
+        intermittent_p_col,
+    ]):
+
+        idx_perturbed_df = subset_df[
+            (subset_df[f'{target_state} State Target Idx'].notnull())
+            & (subset_df['genome root_id'] == 1)
+        ].reset_index()
+
+        # not doing anything with this data for now
+        entire_perturbed_df = subset_df[
+            (subset_df[f'{target_state} State Target Idx'].isnull())
+            & (subset_df['genome root_id'] == 1)
+        ].reset_index()
+
+        h0_fit = ip.popsingleton( control_fits_df[
+            control_fits_df['Series'] == series
+        ].to_dict(
+            orient='records',
+        ) )
+
+        wt_vs_perturbed_df = idx_perturbed_df
+
+        # ensure that perturbation idxs are unique
+        assert len(idx_perturbed_df) == len(
+            idx_perturbed_df[f'{target_state} State Target Idx'].unique()
+        )
+
+        # calculate the probability of observing fitness differential result
+        # under control data distribution
+        if len(wt_vs_perturbed_df):
+            wt_vs_perturbed_df['p'] =  wt_vs_perturbed_df.apply(
+                lambda row: stats.t.cdf(
+                    row['Fitness Differential'],
+                    h0_fit['Fit Degrees of Freedom'],
+                    loc=h0_fit['Fit Loc'],
+                    scale=h0_fit['Fit Scale'],
+                ),
+                axis=1,
+            )
+        else:
+            # special case for an empty dataframe
+            # to prevent an exception
+            wt_vs_perturbed_df['p'] = []
+
+
+        p_thresh = 1.0 / 100
+        num_more_fit_perturbations = (
+            wt_vs_perturbed_df['p'] > 1 - p_thresh
+        ).sum()
+        num_less_fit_perturbations = (wt_vs_perturbed_df['p'] < p_thresh).sum()
+
+
+        suffixes = [f' @ Intermittent P {intermittent_p}']
+        if intermittent_p == 1: suffixes.append('')
+        for suffix in suffixes:
+            res_by_series[series].update({
+                'Series' : series,
+                f'Num More Fit Under {target_state} State {perturbation_type}s{suffix}' : num_more_fit_perturbations,
+                f'Num Less Fit Under {target_state} State {perturbation_type}s{suffix}' : num_less_fit_perturbations,
+                f'Fraction {target_state} State {perturbation_type}s that are Advantageous{suffix}'
+                    : num_more_fit_perturbations / len(wt_vs_perturbed_df),
+                f'Fraction {target_state} State {perturbation_type}s that are Deleterious{suffix}'
+                    : num_less_fit_perturbations  / len(wt_vs_perturbed_df),
+                f'Mean {target_state} State {perturbation_type} Fitness Differential{suffix}'
+                    : np.mean( wt_vs_perturbed_df['Fitness Differential'] ),
+                f'Median {target_state} State {perturbation_type} Fitness Differential{suffix}'
+                    : np.median( wt_vs_perturbed_df['Fitness Differential'] ),
+            })
+
+    return pd.concat([
+        pd.DataFrame.from_records( [just_one_series] )
+        for just_one_series in res_by_series.values()
+    ])
 
 def tabulate_mutant_phenotype_differentiation(mutant_df, mutation_type=''):
 
@@ -559,11 +663,63 @@ if (stint % 10 == 0):
         variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
 
         dataframes.append(
-            tabulate_fitness_complexity( variant_df, control_df )
+            tabulate_fitness_complexity(
+                variant_df, fit_control_t_distns(control_df)
+            )
         )
         sources.append( variant_competitions.key )
     except ValueError:
         print("missing variant competitions, skipping")
+
+if (stint % 10 == 0):
+    for target_state in ["Extrospective", "Introspective", "Writable"]:
+        try:
+            control_competitions, = my_bucket.objects.filter(
+                Prefix=f'endeavor={endeavor}/control-competitions/stage=2+what=collated/stint={stint}/'
+            )
+        except ValueError:
+            print("missing control data for perturbation competitions")
+            print("skipping")
+            break
+
+        control_df = pd.read_csv(f's3://{bucket}/{control_competitions.key}')
+        control_distns = fit_control_t_distns(control_df)
+
+        for perturbation_type in ["Rotate", "Exchange"]:
+            ####################################################################
+            print(                                                             )
+            print(
+                f'handling {target_state} state {perturbation_type}'
+                f' perturbation competitions'
+            )
+            print( '---------------------------------------------------------' )
+            ####################################################################
+
+            try:
+                perturbation_competitions, = my_bucket.objects.filter(
+                    Prefix=f'endeavor={endeavor}/perturbation-{target_state.lower()}-state-{perturbation_type.lower()}-competitions/stage=2+what=collated/stint={stint}/'
+                )
+
+                perturbation_df = pd.read_csv(
+                    f's3://{bucket}/{perturbation_competitions.key}'
+                )
+
+                dataframes.append(
+                    tabulate_perturbation(
+                        perturbation_df,
+                        control_distns,
+                        target_state,
+                        perturbation_type,
+                    )
+                )
+                sources.append( perturbation_competitions.key )
+
+            except ValueError:
+                print(
+                    f'missing {target_state} state {perturbation_type}'
+                    f' perturbation competitions'
+                )
+                print("skipping")
 
 if (stint % 10 == 0):
     ############################################################################
@@ -588,7 +744,7 @@ if (stint % 10 == 0):
         )
 
         dataframes.append(
-            tabulate_mutant( mutant_df, control_df )
+            tabulate_mutant( mutant_df, fit_control_t_distns(control_df) )
         )
         sources.append( mutant_competitions.key )
     except ValueError:
@@ -617,7 +773,9 @@ if (stint % 10 == 0):
         )
 
         dataframes.append(
-            tabulate_mutant( mutant_df, control_df, 'Deletion ' )
+            tabulate_mutant(
+                mutant_df, fit_control_t_distns(control_df), 'Deletion ',
+            )
         )
         sources.append( mutant_competitions.key )
     except ValueError:
@@ -646,7 +804,9 @@ if (stint % 10 == 0):
         )
 
         dataframes.append(
-            tabulate_mutant( mutant_df, control_df, 'Insertion ' )
+            tabulate_mutant(
+                mutant_df, fit_control_t_distns(control_df), 'Insertion ',
+            )
         )
         sources.append( mutant_competitions.key )
     except ValueError:
@@ -675,7 +835,9 @@ if (stint % 10 == 0):
         )
 
         dataframes.append(
-            tabulate_mutant( mutant_df, control_df, 'Mutating ' )
+            tabulate_mutant(
+                mutant_df, fit_control_t_distns(control_df), 'Mutating ',
+            )
         )
         sources.append( mutant_competitions.key )
     except ValueError:
@@ -705,7 +867,9 @@ if (stint % 10 == 0):
         )
 
         dataframes.append(
-            tabulate_mutant( mutant_df, control_df, 'Point ' )
+            tabulate_mutant(
+                mutant_df, fit_control_t_distns(control_df), 'Point ',
+            )
         )
         sources.append( mutant_competitions.key )
     except ValueError:
