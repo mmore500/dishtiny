@@ -405,7 +405,7 @@ function on_error() {
 
     # job will be cancelled immediately upon requeue
     command -v scontrol \
-    && echo "attempting job requeue"
+    && echo "attempting job requeue" \
     && scontrol requeue "${SLURM_JOB_ID}" \
     && echo "job requeue success" \
     || echo "job requeue failure, requeue error"
