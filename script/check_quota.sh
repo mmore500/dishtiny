@@ -15,7 +15,7 @@ quota_result="$( /usr/local/hpcc/bin/display_user_quota.pl )"
 # then get fourth word
 # then strip non-alphanumeric characters
 HOME_SPACE_PERCENT_USED="$( \
-  echo ${quota_result} \
+  echo "${quota_result}" \
   | grep /mnt/home \
   | tr -s " " \
   | cut -d " " -f 5 \
@@ -24,7 +24,7 @@ HOME_SPACE_PERCENT_USED="$( \
 echo "HOME_SPACE_PERCENT_USED ${HOME_SPACE_PERCENT_USED}"
 
 HOME_FILES_PERCENT_USED="$( \
-  echo ${quota_result} \
+  echo "${quota_result}" \
   | grep /mnt/home \
   | tr -s " " \
   | cut -d " " -f 9 \
@@ -33,7 +33,7 @@ HOME_FILES_PERCENT_USED="$( \
 echo "HOME_FILES_PERCENT_USED ${HOME_FILES_PERCENT_USED}"
 
 SCRATCH_SPACE_PERCENT_USED="$( \
-  echo ${quota_result} \
+  echo "${quota_result}" \
   | grep -A1 /mnt/scratch \
   | tail -n1 \
   | tr -s " " \
@@ -43,7 +43,7 @@ SCRATCH_SPACE_PERCENT_USED="$( \
 echo "SCRATCH_SPACE_PERCENT_USED ${SCRATCH_SPACE_PERCENT_USED}"
 
 SCRATCH_FILES_PERCENT_USED="$( \
-  echo ${quota_result} \
+  echo "${quota_result}" \
   | grep -A1 /mnt/scratch \
   | tail -n1 \
   | tr -s " " \
