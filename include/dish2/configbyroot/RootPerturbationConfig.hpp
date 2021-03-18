@@ -25,6 +25,12 @@ struct RootPerturbationConfig {
 
   emp::optional<size_t> writable_state_target_idx;
 
+  size_t inter_message_selfsend_filter_mod{};
+  size_t inter_message_selfsend_filter_target{};
+
+  size_t intra_message_selfsend_filter_mod{};
+  size_t intra_message_selfsend_filter_target{};
+
   bool ShouldExchangeExtrospectiveState() const {
     return intermittent_extrospective_state_exchange_probability
       && sgpl::tlrand.Get().P(
@@ -67,6 +73,22 @@ struct RootPerturbationConfig {
     );
   }
 
+  template< typename Tag >
+  bool ShouldSelfSendInterMessage( const Tag& tag ) const {
+    return inter_message_selfsend_filter_mod && (
+      std::hash<Tag>{}( tag ) % inter_message_selfsend_filter_mod
+      == inter_message_selfsend_filter_target
+    );
+  }
+
+  template< typename Tag >
+  bool ShouldSelfSendIntraMessage( const Tag& tag ) const {
+    return intra_message_selfsend_filter_mod && (
+      std::hash<Tag>{}( tag ) % intra_message_selfsend_filter_mod
+      == intra_message_selfsend_filter_target
+    );
+  }
+
   std::map<std::string, std::string> MakeSummary() const {
     return {
       {"Intermittent Extrospective State Exchange Probability",
@@ -87,6 +109,14 @@ struct RootPerturbationConfig {
         emp::to_string(intermittent_writable_state_rotate_probability)},
       {"Writable State Target Idx",
         emp::to_string(writable_state_target_idx)},
+      {"Inter Message Self-Send Fitler Mod",
+        emp::to_string(inter_message_selfsend_filter_mod)},
+      {"Inter Message Self-Send Fitler Target",
+        emp::to_string(inter_message_selfsend_filter_target)},
+      {"Intra Message Self-Send Fitler Mod",
+        emp::to_string(intra_message_selfsend_filter_mod)},
+      {"Intra Message Self-Send Fitler Target",
+        emp::to_string(intra_message_selfsend_filter_target)},
     };
   }
 

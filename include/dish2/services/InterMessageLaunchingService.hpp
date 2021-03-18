@@ -8,6 +8,7 @@
 #include "../cell/cardinal_iterators/CpuWrapper.hpp"
 #include "../cell/cardinal_iterators/IncomingInterMessageCounterWrapper.hpp"
 #include "../cell/cardinal_iterators/MessageNodeInputWrapper.hpp"
+#include "../cell/cardinal_iterators/PeripheralWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 
@@ -34,18 +35,43 @@ struct InterMessageLaunchingService {
       cell.template begin< dish2::MessageNodeInputWrapper<spec_t> >(),
       cell.template end< dish2::MessageNodeInputWrapper<spec_t> >(),
       cell.template begin< dish2::CpuWrapper<spec_t> >(),
+      cell.template begin< dish2::PeripheralWrapper<spec_t> >(),
       cell.template begin<dish2::IncomingInterMessageCounterWrapper<spec_t> >(),
-      []( auto& message_input, auto& cpu, auto& message_counter ) {
+      [](
+        auto& message_input, auto& cpu,
+        auto& peripheral, auto& message_counter
+      ) {
+
+        auto& selfsend_buffer = peripheral.inter_message_selfsend_buffer;
+
+        const auto try_launch = [&]( const auto& message ){
+
+          const auto& [tag, data] = message;
+          const bool res = cpu.TryLaunchCore( tag, 1 );
+          if (res) {
+            cpu.GetFreshestCore().SetRegisters( data );
+            ++message_counter; // TODO fixme should increment outside if statement
+          }
+          return res;
+
+        };
+
+        // interleave selfsend messages while there are any of either
         while(
-          message_input.TryStep()
-          && cpu.TryLaunchCore( std::get<0>( message_input.Get() ), 1)
-        ) {
-          cpu.GetFreshestCore().SetRegisters(
-            std::get<1>( message_input.Get() )
-          );
-          ++message_counter;
-        }
-        // leftover messages purged in a seperate service
+          message_input.TryStep() && try_launch( message_input.Get() )
+          + (
+            selfsend_buffer.size()
+            && (
+              try_launch( selfsend_buffer.front() )
+              + [&](){ selfsend_buffer.pop_front(); return 0; }()
+            )
+          )
+        );
+
+        message_counter += selfsend_buffer.size();
+        selfsend_buffer.clear();
+
+        // non-self-send leftover messages purged in a seperate service
         // everyone must jump at once because it's an aggregated duct
       }
     );

@@ -2,6 +2,8 @@
 #ifndef DISH2_PERIPHERAL_PERIPHERAL_HPP_INCLUDE
 #define DISH2_PERIPHERAL_PERIPHERAL_HPP_INCLUDE
 
+#include <deque>
+
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeInput.hpp"
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNodeOutput.hpp"
@@ -34,6 +36,11 @@ struct Peripheral {
   using state_mesh_spec_t = dish2::StateMeshSpec<Spec>;
   using state_node_input_t = netuit::MeshNodeInput<state_mesh_spec_t>;
   state_node_input_t state_node_input;
+
+  size_t root_id;
+
+  std::deque<typename Spec::message_t> inter_message_selfsend_buffer;
+  std::deque<typename Spec::message_t> intra_message_selfsend_buffer;
 
   static Peripheral make_dummy() {
     intra_message_node_outputs_t intra_message_node_outputs{};

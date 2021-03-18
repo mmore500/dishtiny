@@ -81,12 +81,9 @@ void Cell<Spec>::MakeAliveRoutine() {
 
 
   // load program onto all CPUs
-  std::for_each(
-    begin<dish2::CpuWrapper<Spec>>(),
-    end<dish2::CpuWrapper<Spec>>(),
-    [this](auto& cpu){ cpu.InitializeAnchors( genome->program ); }
+  for (auto& cardinal : cardinals) cardinal.LoadProgram(
+    genome->program, genome->root_id.GetID()
   );
-
 
 }
 

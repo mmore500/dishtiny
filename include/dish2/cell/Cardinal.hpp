@@ -90,8 +90,11 @@ struct Cardinal {
   )
   {}
 
-  void LoadProgram(const sgpl::Program<sgpl_spec_t>& program) {
+  void LoadProgram(
+    const sgpl::Program<sgpl_spec_t>& program, const size_t root_id
+  ) {
     cpu.InitializeAnchors( program );
+    peripheral.root_id = root_id;
   }
 
   void Reset() { cpu.Reset(); peripheral.Clear(); }

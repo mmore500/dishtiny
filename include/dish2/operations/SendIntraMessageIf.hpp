@@ -10,6 +10,8 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Instruction.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
+#include "../configbyroot/root_perturbation_configs.hpp"
+
 namespace dish2 {
 
 struct SendIntraMessageIf {
@@ -32,9 +34,15 @@ struct SendIntraMessageIf {
       size_t{}
     ) % num_addrs;
 
-    outputs[ addr ].TryPut( std::make_tuple(
+    const auto message = std::make_tuple(
       inst.tag, core.GetRegisters()
-    ) );
+    );
+    const size_t root_id = peripheral.root_id;
+    const auto& root_config = dish2::root_perturbation_configs.View( root_id );
+
+    if ( root_config.ShouldSelfSendIntraMessage( inst.tag ) ) {
+      peripheral.intra_message_selfsend_buffer.push_back( message );
+    } else outputs[ addr ].TryPut( message );
 
   }
 

@@ -10,6 +10,7 @@
 #include "../cell/cardinal_iterators/CpuWrapper.hpp"
 #include "../cell/cardinal_iterators/IncomingIntraMessageCounterWrapper.hpp"
 #include "../cell/cardinal_iterators/IntraMessageNodeWrapper.hpp"
+#include "../cell/cardinal_iterators/PeripheralWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 
@@ -37,12 +38,16 @@ struct IntraMessageLaunchingService {
       cell.template begin< dish2::IntraMessageNodeWrapper<spec_t> >(),
       cell.template end< dish2::IntraMessageNodeWrapper<spec_t> >(),
       cell.template begin< dish2::CpuWrapper<spec_t> >(),
+      cell.template begin< dish2::PeripheralWrapper<spec_t> >(),
       cell.template begin<dish2::IncomingIntraMessageCounterWrapper<spec_t> >(),
-      []( auto& im_node, auto& cpu, auto& counter ){
+      []( auto& im_node, auto& cpu, auto& peripheral, auto& counter ){
         thread_local emp::vector< tag_t > deduplicator;
         deduplicator.clear();
 
-        // keep doing while any input succeeds at spawning a message
+        auto& selfsend_buffer = peripheral.intra_message_selfsend_buffer;
+
+        // interleave selfsend messages while there are any of either
+        // keep doing nonselfsend while any input succeeds at spawning a message
         while( std::count_if(
           std::begin( im_node.GetInputs() ), std::end( im_node.GetInputs() ),
           // deduplicator doesn't need to be captured because it is thread_local
@@ -67,7 +72,32 @@ struct IntraMessageLaunchingService {
             return res;
 
           }
-      ) ); }
+        ) + [&selfsend_buffer, &counter, &cpu](){// interleave selfsent messages
+
+          if ( selfsend_buffer.empty() ) return false;
+
+          ++counter;
+
+          const auto [tag, data] = selfsend_buffer.front();
+          selfsend_buffer.pop_front();
+
+          // don't spawn more than one core for each tag to prevent
+          // out of control execution triggering with all cardinals bcsting
+          if ( std::find(
+            std::begin( deduplicator ), std::end( deduplicator ), tag
+          ) != std::end( deduplicator ) ) return true;
+          else deduplicator.push_back( tag );
+
+          const bool res = cpu.TryLaunchCore( tag );
+          if ( res ) cpu.GetFreshestCore().SetRegisters( data );
+          else {
+            counter += selfsend_buffer.size();
+            selfsend_buffer.clear();
+          }
+          return res;
+
+        }() );
+      }
     );
 
   }

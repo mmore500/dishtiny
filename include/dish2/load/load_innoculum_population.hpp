@@ -77,6 +77,11 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
   );
   dish2::set_writable_state_target_idx<Spec>( path, thread_idx );
 
+  dish2::set_inter_message_selfsend_filter_mod<Spec>( path, thread_idx );
+  dish2::set_inter_message_selfsend_filter_target<Spec>( path, thread_idx );
+
+  dish2::set_intra_message_selfsend_filter_mod<Spec>( path, thread_idx );
+  dish2::set_intra_message_selfsend_filter_target<Spec>( path, thread_idx );
 
   std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
     << " loaded innoculum population " << root_id

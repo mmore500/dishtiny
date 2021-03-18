@@ -11,6 +11,8 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Instruction.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
+#include "../configbyroot/root_perturbation_configs.hpp"
+
 namespace dish2 {
 
 struct SendInterMessageIf {
@@ -25,9 +27,15 @@ struct SendInterMessageIf {
 
     if ( !core.registers[ inst.args[0] ] ) return;
 
-    peripheral.message_node_output.TryPut( std::make_tuple(
+    const auto message = std::make_tuple(
       inst.tag, core.GetRegisters()
-    ) );
+    );
+    const size_t root_id = peripheral.root_id;
+    const auto& root_config = dish2::root_perturbation_configs.View( root_id );
+
+    if ( root_config.ShouldSelfSendInterMessage( inst.tag ) ) {
+      peripheral.inter_message_selfsend_buffer.push_back( message );
+    } else peripheral.message_node_output.TryPut( message );
 
   }
 
