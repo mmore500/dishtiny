@@ -38,10 +38,6 @@ FILTER_MOD="${1}"
 echo "FILTER_MOD ${FILTER_MOD}"
 shift
 
-TARGET_IDX="${1}"
-echo "TARGET_IDX ${TARGET_IDX}"
-shift
-
 STINT="${1}"
 echo "STINT ${STINT}"
 shift
