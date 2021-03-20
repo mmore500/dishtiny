@@ -97,8 +97,7 @@ echo "Generate Tournament Runscripts"
 echo "------------------------------"
 ################################################################################
 
-# "" on end for empty string
-for FILTER_TARGET in {0..${FILTER_MOD}}; do
+for FILTER_TARGET in {0..$((FILTER_MOD - 1))}; do
   for JUST_ONE_SERIES in ${SERIES}; do
     for REPLICATE in 0; do
 
