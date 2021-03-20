@@ -18,6 +18,7 @@
 #include "../events/_index.hpp"
 #include "../operations/_index.hpp"
 #include "../peripheral/Peripheral.hpp"
+#include "../push/PushMessage.hpp"
 #include "../services/_index.hpp"
 #include "../services/ServiceManager.hpp"
 
@@ -25,6 +26,7 @@
 #include "IntraMessageMeshSpec.hpp"
 #include "MessageMeshSpec.hpp"
 #include "_NLEV.hpp"
+#include "PushMeshSpec.hpp"
 #include "QuorumMeshSpec.hpp"
 #include "ResourceMeshSpec.hpp"
 #include "StateMeshSpec.hpp"
@@ -77,9 +79,12 @@ struct Spec {
     typename sgpl::Core< sgpl_spec_t >::registers_t
   >;
 
+  using push_message_t = dish2::PushMessage;
+
   using genome_mesh_spec_t = dish2::GenomeMeshSpec<this_t>;
   using intra_message_mesh_spec_t = dish2::IntraMessageMeshSpec< this_t >;
   using message_mesh_spec_t = dish2::MessageMeshSpec< this_t >;
+  using push_mesh_spec_t = dish2::PushMeshSpec<this_t>;
   using quorum_mesh_spec_t = dish2::QuorumMeshSpec<this_t>;
   using resource_mesh_spec_t = dish2::ResourceMeshSpec;
   using state_mesh_spec_t = dish2::StateMeshSpec<this_t>;
@@ -124,6 +129,7 @@ struct Spec {
     dish2::InterMessagePurgingService,
     dish2::IntraMessageLaunchingService,
     dish2::MessageCounterClearService,
+    dish2::PushService,
     dish2::QuorumCapService,
     dish2::QuorumService,
     dish2::ResourceDecayService,

@@ -5,6 +5,7 @@
 #include "ApoptosisRequestArtist.hpp"
 #include "CardinalOrderArtist.hpp"
 #include "CellBirthArtist.hpp"
+#include "DistanceToGraphCenterArtist.hpp"
 #include "DummyArtist.hpp"
 #include "EpochArtist.hpp"
 #include "ExpressionByModuleArtist.hpp"

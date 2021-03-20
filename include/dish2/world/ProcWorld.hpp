@@ -97,6 +97,13 @@ struct ProcWorld {
     assignments.first
   };
 
+  using push_mesh_spec_t = typename Spec::push_mesh_spec_t;
+  netuit::Mesh<push_mesh_spec_t> push_mesh{
+    topology,
+    assignments.second,
+    assignments.first
+  };
+
   using quorum_mesh_spec_t = typename Spec::quorum_mesh_spec_t;
   netuit::Mesh<quorum_mesh_spec_t> quorum_mesh{
     topology,
@@ -124,9 +131,11 @@ struct ProcWorld {
     return dish2::ThreadWorld<Spec>(
       genome_mesh.GetSubmesh( thread_id ),
       message_mesh.GetSubmesh( thread_id ),
+      push_mesh.GetSubmesh( thread_id ),
       quorum_mesh.GetSubmesh( thread_id ),
       resource_mesh.GetSubmesh( thread_id ),
-      state_mesh.GetSubmesh( thread_id )
+      state_mesh.GetSubmesh( thread_id ),
+      thread_id
     );
   }
 

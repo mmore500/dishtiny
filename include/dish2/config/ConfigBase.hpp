@@ -211,6 +211,9 @@ EMP_BUILD_CONFIG(
   VALUE(STATE_OUTPUT_PUT_SERVICE_FREQUENCY, size_t, 8,
     "Run service every ?? updates."
   ),
+  VALUE(PUSH_SERVICE_FREQUENCY, size_t, 16,
+    "Run service every ?? updates."
+  ),
   VALUE(QUORUM_CAP_SERVICE_FREQUENCY, size_t, 16,
     "Run service every ?? updates."
   ),

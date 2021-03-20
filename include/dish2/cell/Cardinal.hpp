@@ -35,6 +35,12 @@ struct Cardinal {
   message_node_input_t message_node_input;
   message_node_output_t message_node_output;
 
+  using push_mesh_spec_t = typename Spec::push_mesh_spec_t;
+  using push_node_input_t = netuit::MeshNodeInput<push_mesh_spec_t>;
+  using push_node_output_t = netuit::MeshNodeOutput<push_mesh_spec_t>;
+  push_node_input_t push_node_input;
+  push_node_output_t push_node_output;
+
   using quorum_mesh_spec_t = typename Spec::quorum_mesh_spec_t;
   using quorum_node_input_t = netuit::MeshNodeInput<quorum_mesh_spec_t>;
   using quorum_node_output_t = netuit::MeshNodeOutput<quorum_mesh_spec_t>;
@@ -67,6 +73,8 @@ struct Cardinal {
     const genome_node_output_t& genome_node_output_,
     const message_node_input_t& message_node_input_,
     const message_node_output_t& message_node_output_,
+    const push_node_input_t& push_node_input_,
+    const push_node_output_t& push_node_output_,
     const quorum_node_input_t& quorum_node_input_,
     const quorum_node_output_t& quorum_node_output_,
     const resource_node_input_t& resource_node_input_,
@@ -80,6 +88,8 @@ struct Cardinal {
   , intra_message_node( intra_message_node_ )
   , message_node_input( message_node_input_ )
   , message_node_output( message_node_output_ )
+  , push_node_input( push_node_input_ )
+  , push_node_output( push_node_output_ )
   , cardinal_quorum_state( quorum_node_input_, quorum_node_output_ )
   , resource_node_input( resource_node_input_ )
   , resource_node_output( resource_node_output_ )

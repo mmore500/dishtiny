@@ -29,6 +29,7 @@
 #include "IntermittentWritableStateRotateService.hpp"
 #include "IntraMessageLaunchingService.hpp"
 #include "MessageCounterClearService.hpp"
+#include "PushService.hpp"
 #include "QuorumCapService.hpp"
 #include "QuorumService.hpp"
 #include "ResourceDecayService.hpp"
