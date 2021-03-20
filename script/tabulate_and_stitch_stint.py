@@ -659,6 +659,64 @@ def tabulate_selfsend(
         for just_one_series in res_by_series.values()
     ])
 
+def tabulate_phenotype_equivalent_nopout_fitness( df, control_fits_df ):
+
+    res = []
+    for (series), series_df in df[
+        df['genome root_id'] == 1
+    ].groupby([
+        'Competition Series',
+    ]):
+
+        assert len(series_df) == 1
+
+        h0_fit = ip.popsingleton( control_fits_df[
+            control_fits_df['Series'] == series
+        ].to_dict(
+            orient='records',
+        ) )
+
+        # calculate the probability of observing fitness differential result
+        # under control data distribution
+        if len(series_df):
+            series_df['p'] =  series_df.apply(
+                lambda row: stats.t.cdf(
+                    row['Fitness Differential'],
+                    h0_fit['Fit Degrees of Freedom'],
+                    loc=h0_fit['Fit Loc'],
+                    scale=h0_fit['Fit Scale'],
+                ),
+                axis=1,
+            )
+        else:
+            # special case for an empty dataframe
+            # to prevent an exception
+            series_df['p'] = []
+
+
+        p_thresh = 1.0 / 100
+        is_more_fit = (
+            ip.popsingleton(series_df['p']) > 1 - p_thresh
+        )
+        is_less_fit = (
+            ip.popsingleton(series_df['p']) < p_thresh
+        )
+
+        assert not ( is_more_fit and is_less_fit )
+
+        res.append({
+            'Series' : series,
+            'Phenotype-Neutral Nopout Is More Fit' : is_more_fit,
+            'Phenotype-Neutral Nopout Is Less Fit' : is_less_fit,
+            'Phenotype-Neutral Nopout Is Neutral'
+                : not (is_more_fit or is_less_fit),
+            'Phenotype-Neutral Nopout Fitness' : is_more_fit - is_less_fit,
+            'Phenotype-Neutral Nopout Fitness Differential'
+                : ip.popsingleton( series_df['Fitness Differential'] ),
+        })
+
+    return pd.DataFrame(res)
+
 def tabulate_mutant_phenotype_differentiation(mutant_df, mutation_type=''):
 
     assert all(
@@ -882,6 +940,36 @@ if (stint % 10 == 0):
         sources.append( mutant_competitions.key )
     except ValueError:
         print("missing mutant competitions, skipping")
+
+if (stint % 10 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling phenotype neutral nopout fitness competitions'            )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        control_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/control-competitions/stage=2+what=collated/stint={stint}/'
+        )
+
+        control = pd.read_csv(f's3://{bucket}/{control_competitions.key}')
+
+        phenotype_neutral_nopout_competitions, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/phenotype-neutral-nopout-competitions/stage=3+what=collated/stint={stint}/'
+        )
+
+        phenotype_neutral_nopout_competition_df = pd.read_csv(
+            f's3://{bucket}/{phenotype_neutral_nopout_competitions.key}'
+        )
+
+        dataframes.append( tabulate_phenotype_equivalent_nopout_fitness(
+            phenotype_neutral_nopout_competition_df,
+            fit_control_t_distns(control_df),
+        ) )
+        sources.append( phenotype_neutral_nopout_competitions.key )
+    except ValueError:
+        print("missing phenotype neutral nopout competitions, skipping")
 
 if (stint % 10 == 0):
     ############################################################################
