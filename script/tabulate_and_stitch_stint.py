@@ -1406,6 +1406,7 @@ df_stitched = reduce(
         left,
         right,
         on=list(left.columns & right.columns),
+        how='outer',
     ),
     dataframes,
 )
