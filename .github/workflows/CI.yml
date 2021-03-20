@@ -147,6 +147,10 @@ jobs:
       - run: make -C /opt/dishtiny/ badges
       - run: git clone https://github.com/mmore500/dishtiny.git -b web-archive deploy/
       - run: cp -r /opt/dishtiny/web/ deploy/master/
+      # fix for https://github.com/mmore500/dishtiny/runs/2146191664?check_suite_focus=true#step:7:1
+      # /usr/bin/git config user.name mmore500
+      # fatal: not in a git directory
+      - run: git -C deploy/ init
       - uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
           branch: gh-pages # The branch the action should deploy to.
