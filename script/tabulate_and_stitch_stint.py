@@ -568,6 +568,97 @@ def tabulate_perturbation(
         for just_one_series in res_by_series.values()
     ])
 
+def tabulate_selfsend(
+    selfsend_df, control_fits_df, messaging_target,
+):
+
+    # fixes typo in older data
+    if f'{messaging_target} Message Self-Send Fitler Mod' in selfsend_df.columns:
+        selfsend_df[f'{messaging_target} Message Self-Send Filter Mod'] = selfsend_df[f'{messaging_target} Message Self-Send Fitler Mod']
+
+    # fixes typo in older data
+    if f'{messaging_target} Message Self-Send Fitler Target' in selfsend_df.columns:
+        selfsend_df[f'{messaging_target} Message Self-Send Filter Target'] = selfsend_df[f'{messaging_target} Message Self-Send Fitler Target']
+
+    # count competions where both strains went extinct simultaneously
+    # as 0 Fitness Differential
+    res_by_series = defaultdict(dict)
+    for (series, mod), wt_vs_selfsend_df in selfsend_df[
+        selfsend_df['genome root_id'] == 1
+    ].groupby([
+        'Competition Series',
+        f'{messaging_target} Message Self-Send Filter Mod',
+    ]):
+
+        assert all(wt_vs_selfsend_df[
+            f'{messaging_target} Message Self-Send Filter Target'
+        ].notnull())
+
+        h0_fit = ip.popsingleton( control_fits_df[
+            control_fits_df['Series'] == series
+        ].to_dict(
+            orient='records',
+        ) )
+
+        # ensure that perturbation idxs are unique
+        assert len(wt_vs_selfsend_df) == len(
+            wt_vs_selfsend_df[f'{messaging_target} Message Self-Send Filter Target'].unique()
+        )
+
+        # calculate the probability of observing fitness differential result
+        # under control data distribution
+        if len(wt_vs_selfsend_df):
+            wt_vs_selfsend_df['p'] =  wt_vs_selfsend_df.apply(
+                lambda row: stats.t.cdf(
+                    row['Fitness Differential'],
+                    h0_fit['Fit Degrees of Freedom'],
+                    loc=h0_fit['Fit Loc'],
+                    scale=h0_fit['Fit Scale'],
+                ),
+                axis=1,
+            )
+        else:
+            # special case for an empty dataframe
+            # to prevent an exception
+            wt_vs_selfsend_df['p'] = []
+
+
+        p_thresh = 1.0 / 100
+        num_more_fit_selfsends = (
+            wt_vs_selfsend_df['p'] > 1 - p_thresh
+        ).sum()
+        num_less_fit_selfsends = (wt_vs_selfsend_df['p'] < p_thresh).sum()
+
+
+        suffixes = [f' @ Fitler Mod {mod}']
+        if len( selfsend_df[
+            selfsend_df['genome root_id'] == 1
+        ][
+            f'{messaging_target} Message Self-Send Fitler Mod'
+        ].unique() ) == 1:
+            suffixes.append('')
+        for suffix in suffixes:
+            res_by_series[series].update({
+                'Series' : series,
+                f'Num More Fit Under {messaging_target} Self-Send{suffix}'
+                    : num_more_fit_selfsends,
+                f'Num Less Fit Under {messaging_target} Self-Send{suffix}'
+                    : num_less_fit_selfsends,
+                f'Fraction {messaging_target} Self-Sends that are Advantageous{suffix}'
+                    : num_more_fit_selfsends / len(wt_vs_selfsend_df),
+                f'Fraction {messaging_target} Self-Sends that are Deleterious{suffix}'
+                    : num_less_fit_selfsends  / len(wt_vs_selfsend_df),
+                f'Mean {messaging_target} Self-Send Fitness Differential{suffix}'
+                    : np.mean( wt_vs_selfsend_df['Fitness Differential'] ),
+                f'Median {messaging_target} Self-Send Fitness Differential{suffix}'
+                    : np.median( wt_vs_selfsend_df['Fitness Differential'] ),
+            })
+
+    return pd.concat([
+        pd.DataFrame.from_records( [just_one_series] )
+        for just_one_series in res_by_series.values()
+    ])
+
 def tabulate_mutant_phenotype_differentiation(mutant_df, mutation_type=''):
 
     assert all(
@@ -719,6 +810,48 @@ if (stint % 10 == 0):
                     f'missing {target_state} state {perturbation_type}'
                     f' perturbation competitions'
                 )
+                print("skipping")
+
+if (stint % 10 == 0):
+    for messaging_target in ["Inter", "Intra"]:
+        try:
+            control_competitions, = my_bucket.objects.filter(
+                Prefix=f'endeavor={endeavor}/control-competitions/stage=2+what=collated/stint={stint}/'
+            )
+        except ValueError:
+            print("missing control data for selfsend competitions")
+            print("skipping")
+            break
+
+        control_df = pd.read_csv(f's3://{bucket}/{control_competitions.key}')
+        control_distns = fit_control_t_distns(control_df)
+
+        ########################################################################
+        print(                                                                 )
+        print( f'handling {target_state} messaging self-send competitions'     )
+        print( '-------------------------------------------------------------' )
+        ####################################################################
+
+        try:
+            selfsend_competitions, = my_bucket.objects.filter(
+                Prefix=f'endeavor={endeavor}/selfsend-{messaging_target.lower()}-competitions/stage=2+what=collated/stint={stint}/'
+            )
+
+            selfsend_df = pd.read_csv(
+                f's3://{bucket}/{selfsend_competitions.key}'
+            )
+
+            dataframes.append(
+                tabulate_selfsend(
+                    selfsend_df,
+                    control_distns,
+                    messaging_target,
+                )
+            )
+            sources.append( selfsend_competitions.key )
+
+        except ValueError:
+                print( f'missing {messaging_target} selfsend competitions' )
                 print("skipping")
 
 if (stint % 10 == 0):
