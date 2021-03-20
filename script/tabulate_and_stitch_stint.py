@@ -717,6 +717,25 @@ def tabulate_phenotype_equivalent_nopout_fitness( df, control_fits_df ):
 
     return pd.DataFrame(res)
 
+def tabulate_phenotype_neutral_nopout_phenotype_differentiation( df ):
+
+    assert all( df['first genome series'] == df['second genome series'] )
+    df['Series'] = df['first genome series']
+
+    assert all( df['First Root ID'] == 0 )
+    assert all( df['Second Root ID'] == 1 )
+
+    assert( len( df['Series'].unique() ) == len( df ) )
+
+    df['Phenotype Neutral Nopout is Phenotypically Divergent'] = df[
+        'Phenotype Divergence Detected'
+    ] == 1
+    df['Phenotype Neutral Nopout is Phenotypically Identical'] = df[
+        'Phenotype Divergence Detected'
+    ] == 0
+
+    return df
+
 def tabulate_mutant_phenotype_differentiation(mutant_df, mutation_type=''):
 
     assert all(
@@ -1095,6 +1114,32 @@ if (stint % 10 == 0):
         sources.append( mutant_competitions.key )
     except ValueError:
         print("missing point mutant competitions, skipping")
+
+if (stint % 10 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling phenotype neutral nopout phenotype-differentiation'       )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        phenotype_neutral_nopout_phenotype_differentiation, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/phenotype-neutral-nopout-phenotype-differentiation/stage=3+what=collated/stint={stint}/',
+        )
+
+        phenotype_neutral_nopout_phenotype_differentiation_df = pd.read_csv(
+            f's3://{bucket}/{phenotype_neutral_nopout_phenotype_differentiation.key}',
+        )
+
+        dataframes.append(
+            tabulate_phenotype_neutral_nopout_phenotype_differentiation(
+                phenotype_neutral_nopout_phenotype_differentiation_df,
+            )
+        )
+        sources.append( phenotype_neutral_nopout_phenotype_differentiation.key )
+    except ValueError:
+        print("missing phenotype neutral nopout phenotype-differentiation")
+        print("skipping")
 
 if (stint % 10 == 0):
     ############################################################################
