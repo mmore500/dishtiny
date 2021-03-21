@@ -18,14 +18,16 @@
 #include "dish2/spec/Spec.hpp"
 #include "dish2/spec/StateMeshSpec.hpp"
 
+using Spec = dish2::Spec_default;
+
 using library_t = sgpl::OpLibrary<
-  dish2::AddToOwnState<dish2::Spec>,
+  dish2::AddToOwnState<Spec>,
   sgpl::Terminal
 >;
 
 using sgpl_spec_t = sgpl::Spec<
   library_t,
-  dish2::Peripheral<dish2::Spec>
+  dish2::Peripheral<Spec>
 >;
 
 using program_t = sgpl::Program< sgpl_spec_t >;
@@ -87,12 +89,12 @@ TEST_CASE("Test AddToOwnState") {
   cpu.InitializeAnchors( program );
 
   // peripheral
-  dish2::Peripheral<dish2::Spec> peripheral{
-    dish2::Peripheral<dish2::Spec>::make_dummy()
+  dish2::Peripheral<Spec> peripheral{
+    dish2::Peripheral<Spec>::make_dummy()
   };
   const auto& readable_state = peripheral.readable_state;
   const auto& writable_state = readable_state.template Get<
-    dish2::WritableState<dish2::Spec>
+    dish2::WritableState<Spec>
   >();
 
   REQUIRE( cpu.TryLaunchCore() );
@@ -108,7 +110,7 @@ TEST_CASE("Test AddToOwnState") {
     peripheral
   );
 
-  dish2::AddToOwnState<dish2::Spec>::run(
+  dish2::AddToOwnState<Spec>::run(
     cpu.GetActiveCore(),
     program[1],
     program,
@@ -125,7 +127,7 @@ TEST_CASE("Test AddToOwnState") {
 
   REQUIRE( counter == 1 );
 
-  dish2::AddToOwnState<dish2::Spec>::run(
+  dish2::AddToOwnState<Spec>::run(
     cpu.GetActiveCore(),
     program[2],
     program,
@@ -135,7 +137,7 @@ TEST_CASE("Test AddToOwnState") {
   REQUIRE( writable_state.Get<0>() == 1 );
   REQUIRE( writable_state.Get<1>() == 1 );
 
-  dish2::AddToOwnState<dish2::Spec>::run(
+  dish2::AddToOwnState<Spec>::run(
     cpu.GetActiveCore(),
     program[1],
     program,

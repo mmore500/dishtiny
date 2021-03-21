@@ -16,7 +16,7 @@
 
 const uitsl::MpiGuard guard;
 
-emp::optional<dish2::ProcWorld<dish2::Spec>> proc_world;
+emp::optional<dish2::ProcWorld<dish2::Spec_default>> proc_world;
 std::atomic<size_t> flag{false};
 
 template<size_t NUM_CELLS>

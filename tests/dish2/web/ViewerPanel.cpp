@@ -11,11 +11,13 @@
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
 
+using Spec = dish2::Spec_default;
+
 const emp::web::NodeDomShim shim{{ "grid_viewer", "view_selctor" }};
 
 TEST_CASE("Test ViewerPanel") {
 
-  auto thread_world = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
+  auto thread_world = dish2::ProcWorld<Spec>{}.MakeThreadWorld(0);
 
   new dish2::ViewerPanel{ thread_world };
 

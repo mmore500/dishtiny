@@ -8,11 +8,13 @@
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
 
+using Spec = dish2::Spec_default;
+
 const uitsl::MpiGuard guard;
 
 TEST_CASE("Test ThreadWorld") {
 
-  auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
+  auto tw = dish2::ProcWorld<Spec>{}.MakeThreadWorld(0);
 
   for (size_t i{}; i < std::centi::num; ++i) tw.Update();
 

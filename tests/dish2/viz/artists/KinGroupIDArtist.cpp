@@ -16,6 +16,8 @@
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
 
+using Spec = dish2::Spec_default;
+
 const emp::web::NodeDomShim shim;
 
 emp::web::Document emp_base{ "emp_base" };
@@ -28,7 +30,7 @@ TEST_CASE("Test KinGroupIDArtist") {
   emp::web::Canvas canvas(500, 500);
   emp_base << canvas;
 
-  auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
+  auto tw = dish2::ProcWorld<Spec>{}.MakeThreadWorld(0);
 
   dish2::KinGroupIDArtist<> artist{ tw };
 

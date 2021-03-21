@@ -10,13 +10,15 @@
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
 
+using Spec = dish2::Spec_default;
+
 const emp::web::NodeDomShim shim;
 
 emp::web::Document emp_base{ "emp_base" };
 
 TEST_CASE("Test ViewerCollection") {
 
-  auto thread_world = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
+  auto thread_world = dish2::ProcWorld<Spec>{}.MakeThreadWorld(0);
 
   dish2::ViewerCollection{
     uitsl::TupleConstructEach<dish2::ViewerCollection>::Make(

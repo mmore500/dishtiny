@@ -5,7 +5,7 @@
 #include "dish2/cell/cardinal_iterators/SpawnArrestWrapper.hpp"
 #include "dish2/spec/Spec.hpp"
 
-using Spec = dish2::Spec;
+using Spec = dish2::Spec_default;
 
 TEST_CASE("Test SpawnArrestWrapper") {
   dish2::SpawnArrestWrapper<Spec>{};

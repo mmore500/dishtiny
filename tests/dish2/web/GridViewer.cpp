@@ -10,13 +10,15 @@
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
 
+using Spec = dish2::Spec_default;
+
 const emp::web::NodeDomShim shim;
 
 emp::web::Document emp_base{ "emp_base" };
 
 TEST_CASE("Test GridViewer") {
 
-  auto thread_world = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
+  auto thread_world = dish2::ProcWorld<Spec>{}.MakeThreadWorld(0);
 
   dish2::GridViewer<dish2::DummyArtist> viewer2{ thread_world, emp_base };
 

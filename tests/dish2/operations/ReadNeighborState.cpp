@@ -19,13 +19,15 @@
 #include "dish2/spec/Spec.hpp"
 #include "dish2/spec/StateMeshSpec.hpp"
 
+using Spec = dish2::Spec_default;
+
 using library_t = sgpl::OpLibrary<
-  dish2::ReadNeighborState<dish2::Spec>
+  dish2::ReadNeighborState<Spec>
 >;
 
 using sgpl_spec_t = sgpl::Spec<
   library_t,
-  dish2::Peripheral<dish2::Spec>
+  dish2::Peripheral<Spec>
 >;
 
 using program_t = sgpl::Program< sgpl_spec_t >;
@@ -77,18 +79,18 @@ TEST_CASE("Test ReadNeighborState") {
   cpu.InitializeAnchors( program );
 
   // conduit
-  uit::Conduit<dish2::MessageMeshSpec<dish2::Spec>> message_conduit;
-  uit::Conduit<dish2::StateMeshSpec<dish2::Spec>> state_conduit;
+  uit::Conduit<dish2::MessageMeshSpec<Spec>> message_conduit;
+  uit::Conduit<dish2::StateMeshSpec<Spec>> state_conduit;
 
-  using intra_message_mesh_spec_t = dish2::IntraMessageMeshSpec< dish2::Spec >;
+  using intra_message_mesh_spec_t = dish2::IntraMessageMeshSpec< Spec >;
   using intra_message_node_outputs_t
     = typename netuit::MeshNode<intra_message_mesh_spec_t>::outputs_t;
   intra_message_node_outputs_t intra_message_node_outputs;
   using message_node_output_t = netuit::MeshNodeOutput<
-    dish2::MessageMeshSpec< dish2::Spec >
+    dish2::MessageMeshSpec< Spec >
   >;
   using state_node_input_t = netuit::MeshNodeInput<
-    dish2::StateMeshSpec< dish2::Spec >
+    dish2::StateMeshSpec< Spec >
   >;
   message_node_output_t message_node_output{ message_conduit.GetInlet(), 0 };
   state_node_input_t state_node_input{ state_conduit.GetOutlet(), 0 };
@@ -123,7 +125,7 @@ TEST_CASE("Test ReadNeighborState") {
   ) );
 
   // read from first readable_state position
-  dish2::ReadNeighborState<dish2::Spec>::run(
+  dish2::ReadNeighborState<Spec>::run(
     cpu.GetActiveCore(),
     program[0],
     program,
@@ -137,7 +139,7 @@ TEST_CASE("Test ReadNeighborState") {
   ) == 42.0f );
 
   // read from second readable_state position
-  dish2::ReadNeighborState<dish2::Spec>::run(
+  dish2::ReadNeighborState<Spec>::run(
     cpu.GetActiveCore(),
     program[1],
     program,

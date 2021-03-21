@@ -5,6 +5,8 @@
 #include "dish2/spec/MessageMeshSpec.hpp"
 #include "dish2/spec/Spec.hpp"
 
+using Spec = dish2::Spec_default;
+
 TEST_CASE("Test MessageMeshSpec") {
-  dish2::MessageMeshSpec<dish2::Spec>{};
+  dish2::MessageMeshSpec<Spec>{};
 }

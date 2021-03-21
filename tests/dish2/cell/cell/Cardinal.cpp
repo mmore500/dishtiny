@@ -5,7 +5,7 @@
 #include "dish2/cell/Cardinal.hpp"
 #include "dish2/spec/Spec.hpp"
 
-using Spec = dish2::Spec;
+using Spec = dish2::Spec_default;
 
 TEST_CASE("Test Cardinal") {
   // dish2::Cardinal<Spec>{};

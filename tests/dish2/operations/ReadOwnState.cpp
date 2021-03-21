@@ -17,13 +17,15 @@
 #include "dish2/spec/Spec.hpp"
 #include "dish2/spec/StateMeshSpec.hpp"
 
+using Spec = dish2::Spec_default;
+
 using library_t = sgpl::OpLibrary<
-  dish2::ReadOwnState<dish2::Spec>
+  dish2::ReadOwnState<Spec>
 >;
 
 using sgpl_spec_t = sgpl::Spec<
   library_t,
-  dish2::Peripheral<dish2::Spec>
+  dish2::Peripheral<Spec>
 >;
 
 using program_t = sgpl::Program< sgpl_spec_t >;
@@ -75,8 +77,8 @@ TEST_CASE("Test ReadOwnState") {
   cpu.InitializeAnchors( program );
 
   // peripheral
-  dish2::Peripheral<dish2::Spec> peripheral{
-    dish2::Peripheral<dish2::Spec>::make_dummy()
+  dish2::Peripheral<Spec> peripheral{
+    dish2::Peripheral<Spec>::make_dummy()
   };
   auto& readable_state = peripheral.readable_state;
 
@@ -101,7 +103,7 @@ TEST_CASE("Test ReadOwnState") {
   ) );
 
   // read from first readable_state position
-  dish2::ReadOwnState< dish2::Spec >::run(
+  dish2::ReadOwnState< Spec >::run(
     cpu.GetActiveCore(),
     program[0],
     program,
@@ -115,7 +117,7 @@ TEST_CASE("Test ReadOwnState") {
   ) == 42.0f );
 
   // read from second readable_state position
-  dish2::ReadOwnState< dish2::Spec >::run(
+  dish2::ReadOwnState< Spec >::run(
     cpu.GetActiveCore(),
     program[1],
     program,
