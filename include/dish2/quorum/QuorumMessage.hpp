@@ -110,8 +110,8 @@ public:
     return std::accumulate(
       std::begin( data ), std::end( data ),
       size_t{},
-      [](const auto& cumulator, const auto& bitset){
-        return cumulator + bitset.CountOnes();
+      [](const auto& accumulator, const auto& bitset){
+        return accumulator + bitset.CountOnes();
       }
     );
   }
