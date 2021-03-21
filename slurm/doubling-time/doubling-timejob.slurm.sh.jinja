@@ -128,8 +128,10 @@ unset pids
 # double check that all downloads are complete
 wait
 
-ls
+# get assets now so they don't conflict inside of the run loop
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -c "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/doubling-timejob/@{{ repo_sha }}/assets.tar.gz" -O - | tar -xvz
 
+ls
 # an attempt to address intermittent failure where downloaded files aren't found
 # when running the executable
 sshpass -p "${HOST_PASSWORD}" \
@@ -176,7 +178,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   mpiexec.hydra -n "${N_PROCS}" \
   singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
     ./rundishtiny \
-    -N_THREADS "${N_THREADS}" -GENESIS "innoculate" -WEAK_SCALING 1 -N_CELLS 3600 -RUN_SECONDS 1800 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/doubling-timejob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" -REPLICATE "\${REPLICATE}" -SEED_FILL_FRACTION 0.25 -ABORT_AT_LIVE_CELL_FRACTION 0.5 -STINT "{{ stint | default(-1) }}" -DATA_DUMP 1 \
+    -N_THREADS "${N_THREADS}" -GENESIS "innoculate" -WEAK_SCALING 1 -N_CELLS 3600 -RUN_SECONDS 1800 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -TREATMENT "{{ configpack }}" -REPLICATE "\${REPLICATE}" -SEED_FILL_FRACTION 0.25 -ABORT_AT_LIVE_CELL_FRACTION 0.5 -STINT "{{ stint | default(-1) }}" -DATA_DUMP 1 \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 ) \
   ; done
