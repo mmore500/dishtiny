@@ -9,6 +9,9 @@ git config --global init.defaultBranch 'master'
 
 for folder in $(realpath configpacks/*/*); do
 
+  # skip non-directories
+  test -d "${folder}" || continue
+
   cd "${folder}"
 
   rm -rf .git assets.tar.gz
