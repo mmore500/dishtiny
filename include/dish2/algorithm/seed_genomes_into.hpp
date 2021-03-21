@@ -11,6 +11,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../cell/Cell.hpp"
+#include "../config/cfg.hpp"
 #include "../enum/CauseOfDeath.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
@@ -36,12 +37,14 @@ void seed_genomes_into(
       emp::Shuffle( sgpl::tlrand.Get(), bucket );
     }
 
+    const size_t fill_to = population.size() * cfg.SEED_FILL_FRACTION();
+
     // fill incoming_population with genomes from seed buckets,
     // looping through buckets as necessary to fill incoming_population...
     emp::vector< dish2::Genome<Spec> > incoming_population;
-    incoming_population.reserve( population.size() );
+    incoming_population.reserve( fill_to );
     std::transform(
-      sgpl::CountingIterator{}, sgpl::CountingIterator{ population.size() },
+      sgpl::CountingIterator{}, sgpl::CountingIterator{ fill_to },
       std::back_inserter( incoming_population ),
       [&seed_buckets]( const size_t idx ){
         const size_t bucket_idx = idx % seed_buckets.size();
@@ -60,9 +63,9 @@ void seed_genomes_into(
 
     // ... then inject into ThreadWorld's population
     uitsl::for_each(
-      std::begin( population ), std::end( population ),
-      std::begin( incoming_population ),
-      []( auto& cell, const auto& seed ){
+      std::begin( incoming_population ), std::end( incoming_population ),
+      std::begin( population ),
+      []( const auto& seed, auto& cell ){
         cell.genome = seed;
         cell.genome->SetupSeededGenotype();
         cell.MakeAliveRoutine();

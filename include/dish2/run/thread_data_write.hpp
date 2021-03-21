@@ -10,6 +10,7 @@
 #include "../record/write_cell_census.hpp"
 #include "../record/write_demographic_phenotypic_phylogenetic_metrics.hpp"
 #include "../record/write_drawings.hpp"
+#include "../record/write_phylogenetic_root_abundances.hpp"
 #include "../world/ThreadWorld.hpp"
 
 namespace dish2 {
@@ -25,6 +26,7 @@ void thread_data_write(
   dish2::write_demographic_phenotypic_phylogenetic_metrics<Spec>(
     thread_world, thread_idx
   );
+  dish2::write_phylogenetic_root_abundances<Spec>( thread_world, thread_idx );
   if ( dish2::cfg.DRAWINGS_WRITE() ) dish2::write_drawings<Spec>(
     thread_world, thread_idx
   );

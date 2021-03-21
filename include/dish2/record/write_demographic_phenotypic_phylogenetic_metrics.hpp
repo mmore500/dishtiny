@@ -48,6 +48,7 @@
 #include "../introspection/get_fraction_cells_spawn_arrest.hpp"
 #include "../introspection/get_fraction_cells_spawn_request.hpp"
 #include "../introspection/get_fraction_fecund_resource_stockpile.hpp"
+#include "../introspection/get_fraction_live_cells.hpp"
 #include "../introspection/get_fraction_nulliparous.hpp"
 #include "../introspection/get_maximum_kin_group_size.hpp"
 #include "../introspection/get_mean_cell_age.hpp"
@@ -204,6 +205,12 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   {
     metric = "Number Live Cells";
     value = dish2::count_live_cells<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Fraction Live Cells";
+    value = dish2::get_fraction_live_cells<Spec>( world );
     file.Update();
   }
 

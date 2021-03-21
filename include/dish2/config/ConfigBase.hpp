@@ -63,6 +63,11 @@ EMP_BUILD_CONFIG(
   VALUE(REPLICATE, std::string, "", "TODO"),
   VALUE(TREATMENT, std::string, "none", "TODO"),
   VALUE(
+    SEED_FILL_FRACTION, double, 1.0,
+    "If we are seeding the population, "
+    "what fraction of available slots should we fill?"
+  ),
+  VALUE(
     GENESIS, std::string, "generate",
     "generate, reconstitute, monoculture, or innoculate"
   ),
@@ -306,6 +311,10 @@ EMP_BUILD_CONFIG(
   ),
   VALUE(ABORT_IF_COALESCENT_FREQ, size_t, 0,
     "[NATIVE] How many updates should elapse between checking for coalescence? If 0, never check for coalescence. Must be power of two."
+  ),
+  VALUE(ABORT_AT_LIVE_CELL_FRACTION, double, 0.0,
+    "[NATIVE] Should we terminate once a live cell fraction is reached? "
+    "If 0, will not terminate."
   ),
   VALUE(REGULATION_VIZ_CLAMP, double, 10.0,
     "What bounds should we clamp regulation values into before running PCA visualization?"
