@@ -48,7 +48,7 @@ void write_phylogenetic_root_abundances(
   update = world.GetUpdate();
 
   thread_local std::once_flag once_flag;
-  std::call_once(once_flag, [](){
+  std::call_once(once_flag, [num_slots=world.GetSize()](){
     if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
     if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
     if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
@@ -70,7 +70,7 @@ void write_phylogenetic_root_abundances(
     file.AddVal( uitsl::get_proc_id(), "proc" );
     file.AddVal( dish2::thread_idx, "thread" );
 
-    file.AddVal(world.GetSize(), "Population Slots");
+    file.AddVal(num_slots, "Population Slots");
     file.AddVar(root_id, "Root ID");
     file.AddVar(abundance, "Abundance", "Proportion of available slots.");
     file.AddVar(count, "Count");
