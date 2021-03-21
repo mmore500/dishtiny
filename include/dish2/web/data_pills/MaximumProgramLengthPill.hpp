@@ -5,22 +5,22 @@
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../introspection/get_maximum_program_length.hpp"
-#include "../../spec/Spec.hpp"
 #include "../../world/ThreadWorld.hpp"
 
 #include "../DataPill.hpp"
 
 namespace dish2 {
 
+template< typename Spec >
 class MaximumProgramLengthPill {
 
-  static auto DoWork( const ThreadWorld<dish2::Spec>& world ) {
-    return dish2::get_maximum_program_length<dish2::Spec>( world );
+  static auto DoWork( const ThreadWorld<Spec>& world ) {
+    return dish2::get_maximum_program_length<Spec>( world );
   }
 
 public:
 
-  static emp::web::Div Make( const ThreadWorld<dish2::Spec>& world ) {
+  static emp::web::Div Make( const ThreadWorld<Spec>& world ) {
     return dish2::DataPill(
       "Maximum Program Length",
       [&world](){ return emp::to_string( DoWork( world ) ); },

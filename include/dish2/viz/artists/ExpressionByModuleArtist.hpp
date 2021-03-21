@@ -6,7 +6,6 @@
 #include <string>
 
 #include "../../introspection/get_maximum_module_count.hpp"
-#include "../../spec/Spec.hpp"
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -47,10 +46,10 @@ namespace internal::expression_by_module_artist {
 } // namespace internal::expression_by_module_artist
 
 template<
-  typename ExpressionByModuleGetter
-    =dish2::ExpressionByModuleGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename ExpressionByModuleGetter=dish2::ExpressionByModuleGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class ExpressionByModuleArtist
 : public internal::expression_by_module_artist::parent_t<
@@ -72,7 +71,6 @@ public:
 
   static std::string GetName() { return "Expression by Module"; }
 
-  template< typename Spec >
   static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
     return std::min(
       32ul,

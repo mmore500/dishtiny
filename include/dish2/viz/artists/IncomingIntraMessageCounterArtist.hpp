@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IncomingInterMessageCounterColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -45,10 +43,11 @@ namespace internal::incoming_intra_message_counter_artist {
 } // namespace internal::incoming_intra_message_counter_artist
 
 template<
+  typename Spec,
   typename IncomingIntraMessageCounterGetter
-    =dish2::IncomingIntraMessageCounterGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+    =dish2::IncomingIntraMessageCounterGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class IncomingIntraMessageCounterArtist
 : public internal::incoming_intra_message_counter_artist::parent_t<

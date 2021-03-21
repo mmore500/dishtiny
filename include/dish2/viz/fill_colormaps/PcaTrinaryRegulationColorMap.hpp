@@ -22,6 +22,7 @@
 
 namespace dish2 {
 
+template< typename Spec >
 class PcaTrinaryRegulationColorMap {
 
   std::reference_wrapper< const dish2::ThreadWorld<Spec> > thread_world;

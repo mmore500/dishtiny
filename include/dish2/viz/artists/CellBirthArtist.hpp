@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/CellBirthColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -44,9 +42,10 @@ namespace internal::cell_birth_artist {
 } // namespace internal::cell_birth_artist
 
 template<
-  typename CellAgeGetter=dish2::CellAgeGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename CellAgeGetter=dish2::CellAgeGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class CellBirthArtist
 : public internal::cell_birth_artist::parent_t<

@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/KinGroupAgeColorMap.hpp"
@@ -44,9 +42,10 @@ namespace internal::kin_group_age_artist {
 } // namespace internal::kin_group_age_artist
 
 template<
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>,
-  typename KinGroupAgeGetter=dish2::KinGroupAgeGetter<dish2::Spec>
+  typename Spec,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>,
+  typename KinGroupAgeGetter=dish2::KinGroupAgeGetter<Spec>
 >
 class KinGroupAgeArtist
 : public internal::kin_group_age_artist::parent_t<
@@ -68,8 +67,7 @@ public:
 
   static std::string GetName() { return "Kin Group Age"; }
 
-  template< typename Spec >
-  static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
+  static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>&) {
     return Spec::NLEV;
   }
 

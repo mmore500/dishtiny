@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/PhylogeneticRootColorMap.hpp"
 #include "../getters/CardinalOrderGetter.hpp"
@@ -38,8 +36,9 @@ namespace internal::cardinal_order_artist {
 } // namespace internal::cardinal_order_artist
 
 template<
-  typename CardinalOrderGetter=dish2::CardinalOrderGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename CardinalOrderGetter=dish2::CardinalOrderGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class CardinalOrderArtist
 : public internal::cardinal_order_artist::parent_t<

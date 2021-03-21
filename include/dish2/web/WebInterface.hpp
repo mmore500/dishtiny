@@ -3,7 +3,6 @@
 #define DISH2_WEB_WEBINTERFACE_HPP_INCLUDE
 
 #include "../load/load_world.hpp"
-#include "../spec/Spec.hpp"
 #include "../world/ProcWorld.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -16,10 +15,11 @@
 
 namespace dish2 {
 
+template< typename Spec >
 class WebInterface {
 
-  dish2::ThreadWorld<dish2::Spec> thread_world{
-    dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0)
+  dish2::ThreadWorld<Spec> thread_world{
+    dish2::ProcWorld<Spec>{}.MakeThreadWorld(0)
   };
 
   dish2::ControlPanel control_panel{
@@ -31,9 +31,9 @@ class WebInterface {
   };
   dish2::ExecutionLogPanel execution_log_panel;
   dish2::ModalLogReadoutPanel modal_log_readout_panel;
-  dish2::PrevalentGenotypePanel prevalent_genotype_panel{ thread_world };
-  dish2::SystematicsPanel systematics_panel{ thread_world };
-  dish2::ViewerPanel view_panel{ thread_world };
+  dish2::PrevalentGenotypePanel<Spec> prevalent_genotype_panel{ thread_world };
+  dish2::SystematicsPanel<Spec> systematics_panel{ thread_world };
+  dish2::ViewerPanel<Spec> view_panel{ thread_world };
 
 public:
 

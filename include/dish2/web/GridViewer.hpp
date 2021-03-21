@@ -17,14 +17,16 @@
 #include "../../../third-party/Empirical/include/emp/web/Element.hpp"
 #include "../../../third-party/Empirical/include/emp/web/js_utils.hpp"
 
-#include "../spec/Spec.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "DocumentHandles.hpp"
 
 namespace dish2 {
 
-template<typename Artist, typename Category, bool InitiallyActivated=false>
+template<
+  typename Spec,
+  typename Artist, typename Category, bool InitiallyActivated=false
+>
 class GridViewer {
 
   Artist artist;
@@ -44,7 +46,7 @@ class GridViewer {
 
 public:
 
-  GridViewer( const dish2::ThreadWorld<dish2::Spec>& thread_world )
+  GridViewer( const dish2::ThreadWorld<Spec>& thread_world )
   : artist( thread_world )
   // , description( MakeID("key") )
   {

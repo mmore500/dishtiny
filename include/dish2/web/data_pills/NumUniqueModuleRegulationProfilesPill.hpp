@@ -5,22 +5,22 @@
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../introspection/count_unique_module_regulation_profiles.hpp"
-#include "../../spec/Spec.hpp"
 #include "../../world/ThreadWorld.hpp"
 
 #include "../DataPill.hpp"
 
 namespace dish2 {
 
+template< typename Spec >
 class NumUniqueModuleRegulationProfilesPill {
 
-  static auto DoWork( const ThreadWorld<dish2::Spec>& world ) {
-    return dish2::count_unique_module_regulation_profiles<dish2::Spec>( world );
+  static auto DoWork( const ThreadWorld<Spec>& world ) {
+    return dish2::count_unique_module_regulation_profiles<Spec>( world );
   }
 
 public:
 
-  static emp::web::Div Make( const ThreadWorld<dish2::Spec>& world ) {
+  static emp::web::Div Make( const ThreadWorld<Spec>& world ) {
     return dish2::DataPill(
       "Num Unique Module Regulation Profiles",
       [&world](){ return emp::to_string( DoWork( world ) ); },

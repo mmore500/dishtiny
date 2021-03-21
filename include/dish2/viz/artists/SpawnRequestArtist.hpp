@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/BooleanColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -45,10 +43,10 @@ namespace internal::spawn_request_artist {
 } // namespace internal::spawn_request_artist
 
 template<
-  typename SpawnRequestGetter
-    =dish2::SpawnRequestGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename SpawnRequestGetter=dish2::SpawnRequestGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class SpawnRequestArtist
 : public internal::spawn_request_artist::parent_t<

@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/KinGroupIDFillColorMap.hpp"
@@ -45,10 +43,11 @@ namespace internal::neighbor_kin_group_id_view_artist {
 } // namespace internal::neighbor_kin_group_id_view_artist
 
 template<
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>,
+  typename Spec,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>,
   typename NeighborKinGroupIDViewGetter
-    =dish2::NeighborKinGroupIDViewGetter<dish2::Spec>
+    =dish2::NeighborKinGroupIDViewGetter<Spec>
 >
 class NeighborKinGroupIDViewArtist
 : public internal::neighbor_kin_group_id_view_artist::parent_t<

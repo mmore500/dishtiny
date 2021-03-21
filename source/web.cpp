@@ -14,9 +14,9 @@
 #include "dish2/web/WebInterface.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
-using Spec = dish2::Spec;
+using Spec = DISH2_SPEC;
 
-thread_local dish2::WebInterface* interface;
+thread_local dish2::WebInterface<Spec>* interface;
 
 int main() {
 
@@ -25,7 +25,7 @@ int main() {
   } );
   dish2::print_spec<Spec>();
 
-  interface = new dish2::WebInterface;
+  interface = new dish2::WebInterface<Spec>;
 
   // set up web interface
   interface->Redraw();

@@ -18,7 +18,7 @@
 #include "dish2/spec/Spec.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
-using Spec = dish2::Spec;
+using Spec = DISH2_SPEC;
 
 int main(int argc, char* argv[]) {
 

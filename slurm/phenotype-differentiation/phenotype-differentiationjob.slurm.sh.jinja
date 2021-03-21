@@ -127,7 +127,7 @@ for retry in {1..20}; do
   if ((${retry}==20)); then echo "{{ second_subject_url }} download fail" && exit 123123; fi
 done & pids+=($!)
 
-make production -C ../dishtiny/
+bash -c "cd ../dishtiny && ./configpacks/{{ configpack }}/build_native.sh"
 cp ../dishtiny/rundishtiny .
 
 # compile and download concurrently!

@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/DummyBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../getters/IsAliveGetter.hpp"
@@ -32,7 +30,10 @@ namespace internal::is_alive_artist {
 
 } // namespace internal::is_alive_artist
 
-template<typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>>
+template<
+  typename Spec,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>
+>
 class IsAliveArtist
 : public internal::is_alive_artist::parent_t<IsAliveGetter> {
 

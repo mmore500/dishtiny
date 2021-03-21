@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include "../../spec/Spec.hpp"
-
 #include "../fill_colormaps/DistanceToGraphCenterColorMap.hpp"
 #include "../getters/DistanceToGraphCenterGetter.hpp"
 #include "../renderers/CellBorderRenderer.hpp"
@@ -30,8 +28,8 @@ namespace internal::distance_to_graph_center_artist {
 } // namespace internal::distance_to_graph_center_artist
 
 template<
-  typename DistanceToGraphCenterGetter
-    =dish2::DistanceToGraphCenterGetter<dish2::Spec>
+  typename Spec,
+  typename DistanceToGraphCenterGetter=dish2::DistanceToGraphCenterGetter<Spec>
 >
 class DistanceToGraphCenterArtist
 : public internal::distance_to_graph_center_artist::parent_t<

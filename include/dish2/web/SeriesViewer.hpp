@@ -19,7 +19,6 @@
 #include "../../../third-party/Empirical/include/emp/web/Element.hpp"
 #include "../../../third-party/Empirical/include/emp/web/js_utils.hpp"
 
-#include "../spec/Spec.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "DocumentHandles.hpp"
@@ -27,6 +26,7 @@
 namespace dish2 {
 
 template<
+  typename Spec,
   typename Artist, typename Category,
   size_t SeriesLength, bool InitiallyActivated=false
 >
@@ -47,7 +47,7 @@ class SeriesViewer {
     return emp::to_string( this_slug, "-", descriptor );
   }
 
-  void SetupOne( const dish2::ThreadWorld<dish2::Spec>& thread_world ) {
+  void SetupOne( const dish2::ThreadWorld<Spec>& thread_world ) {
     const size_t i = artists.size();
 
     artists.emplace_back(
@@ -80,7 +80,7 @@ class SeriesViewer {
 
 public:
 
-  SeriesViewer( const dish2::ThreadWorld<dish2::Spec>& thread_world )
+  SeriesViewer( const dish2::ThreadWorld<Spec>& thread_world )
   // , description( MakeID("key") )
   {
 

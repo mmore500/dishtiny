@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/MatchBorderColorMap.hpp"
 #include "../fill_colormaps/BooleanColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -41,8 +39,9 @@ namespace internal::peripherality_lev_artist {
 } // namespace internal::peripherality_lev_artist
 
 template<
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename PeripheralityLevGetter=dish2::PeripheralityLevGetter<dish2::Spec>
+  typename Spec,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename PeripheralityLevGetter=dish2::PeripheralityLevGetter<Spec>
 >
 class PeripheralityLevArtist
 : public internal::peripherality_lev_artist::parent_t<
@@ -62,8 +61,7 @@ public:
 
   static std::string GetName() { return "Peripherality by Lev"; }
 
-  template< typename Spec >
-  static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
+  static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>&) {
     return Spec::NLEV;
   }
 

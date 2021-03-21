@@ -32,7 +32,7 @@ public:
     const dish2::ThreadWorld<Spec>& thread_world,
     const size_t thread_idx_
   ) : thread_idx( thread_idx_ )
-  , drawers( Artist::template GetSeriesLength<Spec>( thread_world ) ) {
+  , drawers( Artist::GetSeriesLength( thread_world ) ) {
 
     for (size_t i{}; i < drawers.size(); ++i) drawers[i].emplace(
       thread_world, thread_idx, i

@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/MatchBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/KinGroupIDLevFillColorMap.hpp"
@@ -42,8 +40,9 @@ namespace internal::kin_group_id_lev_artist {
 } // namespace internal::kin_group_id_lev_artist
 
 template<
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDLevGetter=dish2::KinGroupIDLevGetter<dish2::Spec>
+  typename Spec,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDLevGetter=dish2::KinGroupIDLevGetter<Spec>
 >
 class KinGroupIDLevArtist
 : public internal::kin_group_id_lev_artist::parent_t<
@@ -63,8 +62,7 @@ public:
 
   static std::string GetName() { return "Kin Group ID by Lev"; }
 
-  template< typename Spec >
-  static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
+  static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>&) {
     return Spec::NLEV;
   }
 

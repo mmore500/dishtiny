@@ -15,9 +15,9 @@ namespace dish2 {
 
 namespace internal {
 
-using nlev_float_t = emp::array<float, dish2::internal::NLEV>;
-using nreplev_float_t = emp::array<float, dish2::internal::NLEV + 1>;
-using nlev_size_t_t = emp::array<size_t, dish2::internal::NLEV>;
+using nlev_float_t = emp::array<float, DISH2_NLEV>;
+using nreplev_float_t = emp::array<float, DISH2_NLEV + 1>;
+using nlev_size_t_t = emp::array<size_t, DISH2_NLEV>;
 
 } // namespace internal
 
@@ -76,7 +76,7 @@ EMP_BUILD_CONFIG(
     UITSL_IF_WEB_ELSE(3600, 10000), "How many cells should be simulated?"
   ),
   VALUE(WEAK_SCALING, bool, false, "[NATIVE] Should number of total cells be multiplied by the total number of threads (num procs times threads per proc)?"),
-  VALUE(N_DIMS, size_t, 2,
+  VALUE(N_DIMS, size_t, DISH2_NLEV,
     "What dimensionality should the toroidal mesh have?"),
   VALUE(
     GROUP_EXPIRATION_DURATIONS,
@@ -105,27 +105,57 @@ EMP_BUILD_CONFIG(
     "How much resource should cells accrue per update?"
   ),
   VALUE(COLLECTIVE_HARVEST_RATE, internal::nlev_float_t,
+    #if DISH2_NLEV == 1
+    (internal::nlev_float_t{0.25}),
+    #elif DISH2_NLEV == 2
     (internal::nlev_float_t{0.25, 0.25}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "How much resource should cells accrue per update?"
   ),
   VALUE(OPTIMAL_QUORUM_COUNT, internal::nlev_size_t_t,
+    #if DISH2_NLEV == 1
+    (internal::nlev_size_t_t{6}),
+    #elif DISH2_NLEV == 2
     (internal::nlev_size_t_t{6, 24}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "What group size does collective harvest work most effectively at?"
   ),
 
   GROUP(QUORUM, "QUORUM"),
   VALUE(P_SET_QUORUM_BIT, internal::nlev_float_t,
+    #if DISH2_NLEV == 1
+    (internal::nlev_float_t{1.0}),
+    #elif DISH2_NLEV == 2
     (internal::nlev_float_t{1.0, 1.0}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "What fraction of cells should have a quorum bit set?"
   ),
 
   GROUP(QUORUM_CAPS, "QUORUM_CAPS"),
   VALUE(QUORUM_CAP, internal::nlev_size_t_t,
+    #if DISH2_NLEV == 1
+    (internal::nlev_size_t_t{12}),
+    #elif DISH2_NLEV == 2
     (internal::nlev_size_t_t{12, 36}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "At what quorum size should cell death be triggered?"
   ),
   VALUE(P_QUORUM_CAP_KILL, internal::nlev_float_t,
+    #if DISH2_NLEV == 1
+    (internal::nlev_float_t{0.0825}),
+    #elif DISH2_NLEV == 2
     (internal::nlev_float_t{0.0825, 0.0825}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "With what probability should quorum death be enforced?"
   ),
 
@@ -133,7 +163,13 @@ EMP_BUILD_CONFIG(
   VALUE(PROGRAM_START_SIZE, size_t, 100, "How big should initial programs be?"),
   VALUE(PROGRAM_MAX_SIZE, size_t, 1000, "What size should programs be capped at?"),
   VALUE(MUTATION_RATE, internal::nreplev_float_t,
+    #if DISH2_NLEV == 1
+    (internal::nreplev_float_t{0.2, 0.5}),
+    #elif DISH2_NLEV == 2
     (internal::nreplev_float_t{0.1, 0.2, 0.5}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "For each replev, what fraction of cells should be mutated at all?"
   ),
   VALUE(POINT_MUTATION_RATE, float, 0.0002,

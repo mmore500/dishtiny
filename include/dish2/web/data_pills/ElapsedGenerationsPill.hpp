@@ -5,23 +5,22 @@
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../introspection/get_mean_generation.hpp"
-#include "../../spec/Spec.hpp"
 #include "../../world/ThreadWorld.hpp"
 
 #include "../DataPill.hpp"
 
 namespace dish2 {
 
-template<size_t Lev>
+template<typename Spec, size_t Lev>
 class ElapsedGenerationsPill {
 
-  static auto DoWork(const ThreadWorld<dish2::Spec>& world) {
-    return dish2::get_mean_generation<dish2::Spec>( world, Lev );
+  static auto DoWork(const ThreadWorld<Spec>& world) {
+    return dish2::get_mean_generation<Spec>( world, Lev );
   }
 
 public:
 
-  static emp::web::Div Make( const ThreadWorld<dish2::Spec>& world ) {
+  static emp::web::Div Make( const ThreadWorld<Spec>& world ) {
     return dish2::DataPill(
       Lev
         ? emp::to_string("Mean Elapsed Group Generation ", Lev)
