@@ -9,6 +9,7 @@
 
 #include "dish2/config/make_arg_specs.hpp"
 #include "dish2/config/setup.hpp"
+#include "dish2/config/thread_idx.hpp"
 #include "dish2/debug/backtrace_enable.hpp"
 #include "dish2/record/global_records_finalize.hpp"
 #include "dish2/record/global_records_initialize.hpp"
@@ -35,9 +36,10 @@ int main(int argc, char* argv[]) {
 
   // launch threads to run simulation
   for ( size_t thread{}; thread < dish2::cfg.N_THREADS(); ++thread ) team.Add(
-    [thread, &proc_world](){
-      dish2::setup_thread_local_random( thread );
-      dish2::thread_job<Spec>( thread, proc_world.MakeThreadWorld( thread ) );
+    [&proc_world, thread](){
+      dish2::thread_idx = thread;
+      dish2::setup_thread_local_random();
+      dish2::thread_job<Spec>( proc_world.MakeThreadWorld() );
     }
   );
 

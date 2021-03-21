@@ -4,6 +4,7 @@
 
 #include <mutex>
 
+#include "../config/thread_idx.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "drawings/DrawerCollection.hpp"
@@ -11,17 +12,16 @@
 namespace dish2 {
 
 template< typename Spec >
-void write_drawings(
-  const dish2::ThreadWorld< Spec >& thread_world, const size_t thread_idx
-) {
+void write_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
-  dish2::DrawerCollection<Spec> drawers( thread_world, thread_idx );
+  dish2::DrawerCollection<Spec> drawers( thread_world );
   drawers.SaveToFile();
 
   thread_local std::once_flag once_flag;
-  std::call_once(once_flag, [thread_idx](){
+  std::call_once(once_flag, [](){
 
-    std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    std::cout << "proc " << uitsl::get_proc_id()
+      << " thread " << dish2::thread_idx
       << " wrote drawings" << std::endl;
   });
 

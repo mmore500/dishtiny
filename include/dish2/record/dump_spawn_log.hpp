@@ -16,6 +16,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../config/thread_idx.hpp"
 #include "../utility/pare_keyname_filename.hpp"
 
 #include "make_filename/make_data_path.hpp"
@@ -24,14 +25,12 @@
 namespace dish2 {
 
 template< typename Spec >
-void dump_spawn_log(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
-) {
+void dump_spawn_log( const dish2::ThreadWorld< Spec >& world ) {
 
   const auto& population = world.population;
 
   const thread_local std::string out_filename = dish2::pare_keyname_filename(
-    dish2::make_spawn_log_filename( thread_idx ),
+    dish2::make_spawn_log_filename(),
     dish2::make_data_path()
   );
 
@@ -50,7 +49,7 @@ void dump_spawn_log(
     }
   }
   file.AddVal( uitsl::get_proc_id(), "proc" );
-  file.AddVal( thread_idx, "thread" );
+  file.AddVal( dish2::thread_idx, "thread" );
 
   dish2::SpawnEvent<Spec> event;
 
@@ -93,7 +92,8 @@ void dump_spawn_log(
     }
   );
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
     << " dumped spawn log" << std::endl;
 
 }

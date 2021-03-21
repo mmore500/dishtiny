@@ -14,6 +14,7 @@
 #include "../cell/cardinal_iterators/PushNodeOutputWrapper.hpp"
 #include "../cell/Cell.hpp"
 #include "../config/cfg.hpp"
+#include "../config/thread_idx.hpp"
 #include "../debug/LogScope.hpp"
 #include "../debug/PopulationExtinctionException.hpp"
 #include "../introspection/make_causes_of_death_string_histogram.hpp"
@@ -66,8 +67,7 @@ struct ThreadWorld {
     const push_submesh_t& push_submesh,
     const quorum_submesh_t& quorum_submesh,
     const resource_submesh_t& resource_submesh,
-    const state_submesh_t& state_submesh,
-    const size_t thread_idx
+    const state_submesh_t& state_submesh
   ) {
 
     emp_assert(( 1 == std::set<size_t>{
@@ -89,7 +89,7 @@ struct ThreadWorld {
     );
 
     // kick off distributed distance to center computation
-    if ( uitsl::is_root() && thread_idx == 0 && population.size() ) {
+    if ( uitsl::is_root() && dish2::thread_idx == 0 && population.size() ) {
       auto& target = population.front();
 
       auto& center_dist = std::get<dish2::DistanceToGraphCenterCellState>(

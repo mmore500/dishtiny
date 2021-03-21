@@ -27,7 +27,7 @@ namespace dish2 {
 
 template< typename Spec >
 emp::vector<dish2::Genome<Spec>> load_innoculum_population(
-  const size_t thread_idx, const std::filesystem::path& path
+  const std::filesystem::path& path
 ) {
 
   const auto attrs = emp::keyname::unpack( path );
@@ -44,46 +44,35 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
   for (auto & genome : innoculum) genome.root_id.SetID( root_id );
 
   for (auto& genome : innoculum) {
-    dish2::apply_mutate_on_load<Spec>( genome, path, thread_idx );
-    dish2::apply_deletion_mutate_on_load<Spec>( genome, path, thread_idx );
-    dish2::apply_insertion_mutate_on_load<Spec>( genome, path, thread_idx );
-    dish2::apply_point_mutate_on_load<Spec>( genome, path, thread_idx );
+    dish2::apply_mutate_on_load<Spec>( genome, path );
+    dish2::apply_deletion_mutate_on_load<Spec>( genome, path );
+    dish2::apply_insertion_mutate_on_load<Spec>( genome, path );
+    dish2::apply_point_mutate_on_load<Spec>( genome, path );
   }
 
-  dish2::set_mutation_occurence_rate_multiplicand<Spec>( path, thread_idx );
-  dish2::set_program_max_size_override<Spec>( path, thread_idx );
+  dish2::set_mutation_occurence_rate_multiplicand<Spec>( path );
+  dish2::set_program_max_size_override<Spec>( path );
 
-  dish2::set_intermittent_extrospective_state_exchange_probability<Spec>(
-    path, thread_idx
-  );
-  dish2::set_intermittent_extrospective_state_rotate_probability<Spec>(
-    path, thread_idx
-  );
-  dish2::set_extrospective_state_target_idx<Spec>( path, thread_idx );
+  dish2::set_intermittent_extrospective_state_exchange_probability<Spec>(path);
+  dish2::set_intermittent_extrospective_state_rotate_probability<Spec>( path );
+  dish2::set_extrospective_state_target_idx<Spec>( path );
 
-  dish2::set_intermittent_introspective_state_exchange_probability<Spec>(
-    path, thread_idx
-  );
-  dish2::set_intermittent_introspective_state_rotate_probability<Spec>(
-    path, thread_idx
-  );
-  dish2::set_introspective_state_target_idx<Spec>( path, thread_idx );
+  dish2::set_intermittent_introspective_state_exchange_probability<Spec>(path);
+  dish2::set_intermittent_introspective_state_rotate_probability<Spec>( path );
+  dish2::set_introspective_state_target_idx<Spec>( path );
 
-  dish2::set_intermittent_writable_state_exchange_probability<Spec>(
-    path, thread_idx
-  );
-  dish2::set_intermittent_writable_state_rotate_probability<Spec>(
-    path, thread_idx
-  );
-  dish2::set_writable_state_target_idx<Spec>( path, thread_idx );
+  dish2::set_intermittent_writable_state_exchange_probability<Spec>( path );
+  dish2::set_intermittent_writable_state_rotate_probability<Spec>( path );
+  dish2::set_writable_state_target_idx<Spec>( path );
 
-  dish2::set_inter_message_selfsend_filter_mod<Spec>( path, thread_idx );
-  dish2::set_inter_message_selfsend_filter_target<Spec>( path, thread_idx );
+  dish2::set_inter_message_selfsend_filter_mod<Spec>( path );
+  dish2::set_inter_message_selfsend_filter_target<Spec>( path );
 
-  dish2::set_intra_message_selfsend_filter_mod<Spec>( path, thread_idx );
-  dish2::set_intra_message_selfsend_filter_target<Spec>( path, thread_idx );
+  dish2::set_intra_message_selfsend_filter_mod<Spec>( path );
+  dish2::set_intra_message_selfsend_filter_target<Spec>( path );
 
-  std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+  std::cout  << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
     << " loaded innoculum population " << root_id
     << " with " << innoculum.size() << " genomes "
     << " from " << path << std::endl;

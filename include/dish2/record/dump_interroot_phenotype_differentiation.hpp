@@ -22,6 +22,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../config/thread_idx.hpp"
 #include "../introspection/any_live_cells.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_root_id_abundance.hpp"
@@ -43,11 +44,11 @@ namespace dish2 {
 
 template< typename Spec >
 void dump_interroot_phenotype_differentiation(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
+  const dish2::ThreadWorld< Spec >& world
 ) {
 
   const std::string out_filename = dish2::pare_keyname_filename(
-    dish2::make_interroot_phenotype_differentiation_filename( thread_idx ),
+    dish2::make_interroot_phenotype_differentiation_filename(),
     dish2::make_data_path()
   );
 
@@ -128,15 +129,16 @@ void dump_interroot_phenotype_differentiation(
     root_id = root_pair;
 
     phenotype_divergence_detected = dish2::detect_phenotypic_divergence<Spec>(
-      dish2::load_innoculum<Spec>( thread_idx, root_id.first ).front(),
-      dish2::load_innoculum<Spec>( thread_idx, root_id.second ).front()
+      dish2::load_innoculum<Spec>( root_id.first ).front(),
+      dish2::load_innoculum<Spec>( root_id.second ).front()
     );
 
     file.Update();
 
   }
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
     << " dumped interroot_phenotype_differentiation result" << std::endl;
 
 }

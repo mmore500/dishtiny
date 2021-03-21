@@ -15,7 +15,7 @@ namespace dish2 {
 
 template<typename Spec>
 void set_intra_message_selfsend_filter_target(
-  const std::filesystem::path& path, const size_t thread_idx
+  const std::filesystem::path& path
 ) {
 
   const auto attrs = emp::keyname::unpack( path );
@@ -26,7 +26,8 @@ void set_intra_message_selfsend_filter_target(
     const size_t intra_message_selfsend_filter_target = uitsl::stoszt(
       attrs.at("set_intra_message_selfsend_filter_target")
     );
-    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    std::cout  << "proc " << uitsl::get_proc_id()
+      << " thread " << dish2::thread_idx
       << " setting intra_message_selfsend_filter_target to "
       << intra_message_selfsend_filter_target
       << " for root id " << root_id << " from " << path << std::endl;

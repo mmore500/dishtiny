@@ -10,6 +10,7 @@
 #include "../introspection/get_prevalent_coding_genotype_genome.hpp"
 #include "../introspection/no_live_cells.hpp"
 
+#include "../config/thread_idx.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "dump_genome.hpp"
@@ -19,9 +20,7 @@
 namespace dish2 {
 
 template< typename Spec >
-bool dump_abundance_genome(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
-) {
+bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
 
   // abort if no live cells
   if ( dish2::no_live_cells<Spec>(world) ) return false;
@@ -40,12 +39,14 @@ bool dump_abundance_genome(
   dish2::dump_genome< Spec >(
     genome,
     dish2::make_dump_abundance_genome_filename(
-      thread_idx, count, abundance, prevalence, "wildtype"
+      count, abundance, prevalence, "wildtype"
     )
   );
 
   if (
-    cfg.PHENOTYPE_EQUIVALENT_NOPOUT() && thread_idx == 0 && uitsl::is_root()
+    cfg.PHENOTYPE_EQUIVALENT_NOPOUT()
+    && dish2::thread_idx == 0
+    && uitsl::is_root()
   ) {
     std::cout << "recording phenotype equivalent nopout" << std::endl;
     dish2::dump_genome< Spec >(
@@ -53,7 +54,7 @@ bool dump_abundance_genome(
         genome, "abundance"
       ),
       dish2::make_dump_abundance_genome_filename(
-        thread_idx, count, abundance, prevalence,
+        count, abundance, prevalence,
         "phenotype_equivalent_nopout"
       )
     );

@@ -15,6 +15,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../config/thread_idx.hpp"
 #include "../utility/pare_keyname_filename.hpp"
 
 #include "cell_census/write_cell_age.hpp"
@@ -29,12 +30,10 @@
 namespace dish2 {
 
 template< typename Spec >
-void write_cell_census(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
-) {
+void write_cell_census( const dish2::ThreadWorld< Spec >& world ) {
 
   const thread_local std::string out_filename = dish2::pare_keyname_filename(
-    dish2::make_cell_census_filename( thread_idx ),
+    dish2::make_cell_census_filename(),
     dish2::make_data_path()
   );
 
@@ -51,7 +50,7 @@ void write_cell_census(
   update = world.GetUpdate();
 
   thread_local std::once_flag once_flag;
-  std::call_once(once_flag, [thread_idx](){
+  std::call_once(once_flag, [](){
     if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
     if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
     if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
@@ -62,7 +61,7 @@ void write_cell_census(
       }
     }
     file.AddVal( uitsl::get_proc_id(), "proc" );
-    file.AddVal( thread_idx, "thread");
+    file.AddVal( dish2::thread_idx, "thread");
 
     file.AddVar(metric, "Metric");
     file.AddVar(value, "Value");
@@ -70,7 +69,8 @@ void write_cell_census(
     file.AddVar(update, "Update");
     file.PrintHeaderKeys();
 
-    std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    std::cout << "proc " << uitsl::get_proc_id()
+      << " thread " << dish2::thread_idx
       << " wrote cell census" << std::endl;
   });
 

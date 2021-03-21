@@ -17,9 +17,7 @@
 namespace dish2 {
 
 template< typename Spec >
-bool dump_arbitrary_genome(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
-) {
+bool dump_arbitrary_genome( const dish2::ThreadWorld< Spec >& world ) {
 
   // abort if no live cells
   if ( dish2::no_live_cells<Spec>(world) ) return false;
@@ -30,7 +28,7 @@ bool dump_arbitrary_genome(
 
   dish2::dump_genome< Spec >(
     genome,
-    dish2::make_dump_arbitrary_genome_filename( thread_idx, "wildtype" )
+    dish2::make_dump_arbitrary_genome_filename( "wildtype" )
   );
 
   return true;

@@ -19,6 +19,7 @@
 
 #include "../config/cfg.hpp"
 #include "../config/num_cells_global.hpp"
+#include "../config/thread_idx.hpp"
 
 #include "ThreadWorld.hpp"
 
@@ -127,15 +128,14 @@ struct ProcWorld {
 
   ProcWorld() { if (use_metis) std::cout << "assign used metis" << std::endl; }
 
-  dish2::ThreadWorld<Spec> MakeThreadWorld(const uitsl::thread_id_t thread_id) {
+  dish2::ThreadWorld<Spec> MakeThreadWorld() {
     return dish2::ThreadWorld<Spec>(
-      genome_mesh.GetSubmesh( thread_id ),
-      message_mesh.GetSubmesh( thread_id ),
-      push_mesh.GetSubmesh( thread_id ),
-      quorum_mesh.GetSubmesh( thread_id ),
-      resource_mesh.GetSubmesh( thread_id ),
-      state_mesh.GetSubmesh( thread_id ),
-      thread_id
+      genome_mesh.GetSubmesh( dish2::thread_idx ),
+      message_mesh.GetSubmesh( dish2::thread_idx ),
+      push_mesh.GetSubmesh( dish2::thread_idx ),
+      quorum_mesh.GetSubmesh( dish2::thread_idx ),
+      resource_mesh.GetSubmesh( dish2::thread_idx ),
+      state_mesh.GetSubmesh( dish2::thread_idx )
     );
   }
 

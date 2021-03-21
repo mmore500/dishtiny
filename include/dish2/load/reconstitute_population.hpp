@@ -22,14 +22,12 @@
 namespace dish2 {
 
 template< typename Spec >
-void reconstitute_population(
-  const size_t thread_idx, dish2::ThreadWorld<Spec>& world
-) {
+void reconstitute_population( dish2::ThreadWorld<Spec>& world ) {
 
   const auto eligible_population_paths = uitsl::keyname_directory_filter({
     {"a", "population"},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
-    {"thread", emp::to_string( thread_idx )},
+    {"thread", emp::to_string( dish2::thread_idx )},
     {"ext", R"(\.bin|\.bin\.gz|\.bin\.xz|\.json|\.json\.gz|\.json\.xz)"}
   }, ".", true);
 
@@ -43,7 +41,8 @@ void reconstitute_population(
     eligible_population_paths.front()
   );
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
     << " reconstituted " << reconstituted.size() << " cells from "
     << eligible_population_paths.front() << std::endl;
 

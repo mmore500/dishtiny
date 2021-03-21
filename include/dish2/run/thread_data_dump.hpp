@@ -22,21 +22,15 @@ namespace dish2 {
 
 // data collection tasks that must be run only once
 template<typename Spec>
-void thread_data_dump(
-  const dish2::ThreadWorld<Spec>& thread_world,
-  const size_t thread_idx
-) {
+void thread_data_dump( const dish2::ThreadWorld<Spec>& thread_world ) {
 
 
-  dish2::dump_kin_conflict_by_replev_statistics<Spec>(
-    thread_world, thread_idx
-  );
-  dish2::dump_kin_conflict_statistics<Spec>(
-    thread_world, thread_idx
-  );
-  dish2::dump_birth_log<Spec>( thread_world, thread_idx );
-  dish2::dump_death_log<Spec>( thread_world, thread_idx );
-  dish2::dump_spawn_log<Spec>( thread_world, thread_idx );
+  dish2::dump_kin_conflict_by_replev_statistics<Spec>( thread_world );
+  dish2::dump_kin_conflict_statistics<Spec>( thread_world );
+
+  dish2::dump_birth_log<Spec>( thread_world );
+  dish2::dump_death_log<Spec>( thread_world );
+  dish2::dump_spawn_log<Spec>( thread_world );
 
 }
 

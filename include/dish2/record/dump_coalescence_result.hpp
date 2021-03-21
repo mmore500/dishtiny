@@ -19,6 +19,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../config/thread_idx.hpp"
 #include "../introspection/any_live_cells.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_root_id_abundance.hpp"
@@ -39,12 +40,10 @@
 namespace dish2 {
 
 template< typename Spec >
-void dump_coalescence_result(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
-) {
+void dump_coalescence_result( const dish2::ThreadWorld< Spec >& world ) {
 
   const std::string out_filename = dish2::pare_keyname_filename(
-    dish2::make_coalescence_result_filename( thread_idx ),
+    dish2::make_coalescence_result_filename(),
     dish2::make_data_path()
   );
 
@@ -71,7 +70,7 @@ void dump_coalescence_result(
   if ( dish2::get_slurm_job_id() ) file.AddVal(
     *dish2::get_slurm_job_id(), "Competition Slurm Job ID"
   );
-  file.AddVal( thread_idx, "Competition Thread" );
+  file.AddVal( dish2::thread_idx, "Competition Thread" );
   file.AddVal( uitsl::get_proc_id(), "Competition Process" );
   file.AddVal( world.GetUpdate(), "Update" );
 
@@ -135,7 +134,8 @@ void dump_coalescence_result(
 
   }
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
     << " dumped coalescence result" << std::endl;
 
 }

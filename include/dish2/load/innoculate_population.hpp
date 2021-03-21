@@ -15,6 +15,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../algorithm/seed_genomes_into.hpp"
+#include "../config/thread_idx.hpp"
 #include "../genome/Genome.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -23,9 +24,7 @@
 namespace dish2 {
 
 template< typename Spec >
-void innoculate_population(
-  const size_t thread_idx, dish2::ThreadWorld<Spec>& world
-) {
+void innoculate_population( dish2::ThreadWorld<Spec>& world ) {
 
   const auto innoculum_paths = uitsl::keyname_directory_filter({
     {"a", "genome|population"},
@@ -38,8 +37,8 @@ void innoculate_population(
     std::begin( innoculum_paths ),
     std::end( innoculum_paths ),
     std::back_inserter( innoculum_buckets ),
-    [thread_idx](const auto& path){
-      return dish2::load_innoculum<Spec>(thread_idx, path);
+    [](const auto& path){
+      return dish2::load_innoculum<Spec>(path);
     }
   );
 
@@ -77,7 +76,8 @@ void innoculate_population(
 
   dish2::seed_genomes_into<Spec>( innoculum_buckets, world );
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
     << " loaded " << innoculum_buckets.size() << " innoculum buckets "
     << std::endl;
 

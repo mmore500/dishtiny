@@ -16,9 +16,7 @@
 namespace dish2 {
 
 template<typename Spec>
-void set_writable_state_target_idx(
-  const std::filesystem::path& path, const size_t thread_idx
-) {
+void set_writable_state_target_idx( const std::filesystem::path& path ) {
 
   const auto attrs = emp::keyname::unpack( path );
 
@@ -33,7 +31,8 @@ void set_writable_state_target_idx(
       : idx_t{ uitsl::stoszt(attrs.at("set_writable_state_target_idx")) }
     ;
 
-    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    std::cout  << "proc " << uitsl::get_proc_id()
+      << " thread " << dish2::thread_idx
       << " setting writable_state_target_idx to \""
       << emp::to_string(writable_state_target_idx)
       << "\" for root id " << root_id << " from " << path << std::endl;

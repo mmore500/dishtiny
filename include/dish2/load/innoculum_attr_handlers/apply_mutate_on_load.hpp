@@ -9,14 +9,14 @@
 #include "../../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 
+#include "../../config/thread_idx.hpp"
 #include "../../genome/Genome.hpp"
 
 namespace dish2 {
 
 template<typename Spec>
 void apply_mutate_on_load(
-  dish2::Genome<Spec>& innoculum, const std::filesystem::path& path,
-  const size_t thread_idx
+  dish2::Genome<Spec>& innoculum, const std::filesystem::path& path
 ) {
 
   thread_local std::filesystem::path last_path;
@@ -27,7 +27,8 @@ void apply_mutate_on_load(
   if ( attrs.count("mutate_on_load") ) {
     const size_t num_muts = uitsl::stoszt( attrs.at("mutate_on_load") );
     if ( should_announce ) std::cout
-      << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << "proc " << uitsl::get_proc_id()
+      << " thread " << dish2::thread_idx
       << " applying " << num_muts << " mutations "
       << "to genome " << attrs.at("root_id") << " from " << path << std::endl;
 

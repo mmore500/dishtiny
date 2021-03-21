@@ -10,13 +10,12 @@
 #include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 
 #include "../../configbyroot/root_perturbation_configs.hpp"
+#include "../../config/thread_idx.hpp"
 
 namespace dish2 {
 
 template<typename Spec>
-void set_inter_message_selfsend_filter_mod(
-  const std::filesystem::path& path, const size_t thread_idx
-) {
+void set_inter_message_selfsend_filter_mod(const std::filesystem::path& path) {
 
   const auto attrs = emp::keyname::unpack( path );
 
@@ -26,7 +25,8 @@ void set_inter_message_selfsend_filter_mod(
     const size_t inter_message_selfsend_filter_mod = uitsl::stoszt(
       attrs.at("set_inter_message_selfsend_filter_mod")
     );
-    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    std::cout  << "proc " << uitsl::get_proc_id()
+      << " thread " << dish2::thread_idx
       << " setting inter_message_selfsend_filter_mod to "
       << inter_message_selfsend_filter_mod
       << " for root id " << root_id << " from " << path << std::endl;

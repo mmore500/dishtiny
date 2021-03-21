@@ -9,6 +9,7 @@
 #include "dish2/config/cfg.hpp"
 #include "dish2/config/make_arg_specs.hpp"
 #include "dish2/config/setup.hpp"
+#include "dish2/config/thread_idx.hpp"
 #include "dish2/spec/print_spec.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/web/WebInterface.hpp"
@@ -19,6 +20,8 @@ using Spec = DISH2_SPEC;
 thread_local dish2::WebInterface<Spec>* interface;
 
 int main() {
+
+  dish2::thread_idx = 0;
 
   dish2::setup( emp::ArgManager{
     emp::web::GetUrlParams(), dish2::make_arg_specs()

@@ -19,7 +19,7 @@ template< typename Spec >
 class WebInterface {
 
   dish2::ThreadWorld<Spec> thread_world{
-    dish2::ProcWorld<Spec>{}.MakeThreadWorld(0)
+    dish2::ProcWorld<Spec>{}.MakeThreadWorld()
   };
 
   dish2::ControlPanel control_panel{
@@ -38,7 +38,7 @@ class WebInterface {
 public:
 
   WebInterface() {
-    dish2::load_world<Spec>( 0, thread_world );
+    dish2::load_world<Spec>( thread_world );
   }
 
   void Redraw( const bool render_toggle=true, const size_t render_freq=1 ) {

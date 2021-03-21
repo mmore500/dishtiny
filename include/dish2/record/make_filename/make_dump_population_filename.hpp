@@ -17,16 +17,17 @@
 #include "../../config/has_replicate.hpp"
 #include "../../config/has_series.hpp"
 #include "../../config/has_stint.hpp"
+#include "../../config/thread_idx.hpp"
 
 namespace dish2 {
 
-std::string make_dump_population_filename( const size_t thread_idx) {
+std::string make_dump_population_filename() {
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "population"},
     {"variation", "master"},
     {"_source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
-    {"thread", emp::to_string(thread_idx)},
+    {"thread", emp::to_string( dish2::thread_idx )},
     {"_treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".bin.xz"}
   };

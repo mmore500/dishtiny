@@ -28,20 +28,16 @@ class GridDrawer {
 
   const dish2::ThreadWorld<Spec>& thread_world;
 
-  size_t thread_idx;
-
   size_t series_idx;
 
 public:
 
   GridDrawer(
     const dish2::ThreadWorld<Spec>& thread_world_,
-    const size_t thread_idx_,
     const size_t series_idx_=0
   )
   : artist( thread_world_, series_idx_ )
   , thread_world( thread_world_ )
-  , thread_idx( thread_idx_ )
   , series_idx( series_idx_ )
   { }
 
@@ -49,7 +45,6 @@ public:
 
     const std::string filename = dish2::make_drawing_filename(
       series_idx,
-      thread_idx,
       thread_world.GetUpdate(),
       emp::slugify( Artist::GetName() )
     );
