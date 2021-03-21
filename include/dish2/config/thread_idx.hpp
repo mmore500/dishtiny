@@ -6,7 +6,7 @@
 
 namespace dish2 {
 
-thread_local size_t thread_idx{ std::numeric_limits<size_t>::max() };
+thread_local uint32_t thread_idx{ std::numeric_limits<uint32_t>::max() };
 
 } // namespace dish2
 
