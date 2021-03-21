@@ -178,7 +178,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   mpiexec.hydra -n "${N_PROCS}" \
   singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
     ./rundishtiny \
-    -N_THREADS "${N_THREADS}" -GENESIS "innoculate" -WEAK_SCALING 1 -N_CELLS 3600 -RUN_SECONDS 1800 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -TREATMENT "{{ configpack }}" -REPLICATE "\${REPLICATE}" -SEED_FILL_FRACTION 0.25 -ABORT_AT_LIVE_CELL_FRACTION 0.5 -STINT "{{ stint | default(-1) }}" -DATA_DUMP 1 \
+    -N_THREADS "${N_THREADS}" -GENESIS "innoculate" -WEAK_SCALING 1 -N_CELLS 3600 -RUN_SECONDS 1800 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -TREATMENT "{{ configpack }}" -REPLICATE "\${REPLICATE}" -SEED_FILL_FRACTION 0.25 -ABORT_AT_LIVE_CELL_FRACTION 0.5 -STINT "{{ stint | default(-1) }}" -DATA_DUMP 1 -SERIES "{{ series | default(-1) }}" \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 ) \
   ; done
