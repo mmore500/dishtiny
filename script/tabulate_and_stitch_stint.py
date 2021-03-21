@@ -736,6 +736,23 @@ def tabulate_phenotype_neutral_nopout_phenotype_differentiation( df ):
 
     return df
 
+def tabulate_wildtype_doubling_time( df ):
+
+    df['Series'] = df['Competition Series']
+
+    df['Doubling Time Growth Rate'] = np.power(
+        df['Abundance'] / 0.25,
+        1 / df['Update']
+    )
+
+    res = df.groupby([
+        'Series',
+    ])['Doubling Time Growth Rate'].mean().reset_index(
+        name='Mean Doubling Time Growth Rate',
+    )
+
+    return res
+
 def tabulate_mutant_phenotype_differentiation(mutant_df, mutation_type=''):
 
     assert all(
@@ -1114,6 +1131,32 @@ if (stint % 10 == 0):
         sources.append( mutant_competitions.key )
     except ValueError:
         print("missing point mutant competitions, skipping")
+
+if (stint % 10 == 0):
+    ############################################################################
+    print(                                                                     )
+    print( 'handling wildtype doubling-time'       )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        wildtype_doubling_time, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/wildtype-doubling-time/stage=2+what=collated/stint={stint}/',
+        )
+
+        wildtype_doubling_time_df = pd.read_csv(
+            f's3://{bucket}/{wildtype_doubling_time.key}',
+        )
+
+        dataframes.append(
+            tabulate_wildtype_doubling_time(
+                wildtype_doubling_time_df,
+            )
+        )
+        sources.append( wildtype_doubling_time.key )
+    except ValueError:
+        print("missing wildtype doubling-time")
+        print("skipping")
 
 if (stint % 10 == 0):
     ############################################################################
