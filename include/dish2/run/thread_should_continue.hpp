@@ -9,7 +9,7 @@
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 
 #include "../config/cfg.hpp"
-#include "../introspection/count_live_cells.hpp"
+#include "../introspection/get_fraction_live_cells.hpp"
 #include "../introspection/has_coalesced.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -35,7 +35,7 @@ bool thread_should_contine(
     return false;
   } else if (
     cfg.ABORT_AT_LIVE_CELL_FRACTION()
-    && dish2::count_live_cells<Spec>( thread_world )
+    && dish2::get_fraction_live_cells<Spec>( thread_world )
       >= cfg.ABORT_AT_LIVE_CELL_FRACTION()
   ) {
     emp_always_assert( !uitsl::is_multiprocess() );
@@ -44,7 +44,7 @@ bool thread_should_contine(
       << "live cell fraction threshold "
       << cfg.ABORT_AT_LIVE_CELL_FRACTION()
       << " exceeded at update " << update
-      << " with value " << dish2::count_live_cells<Spec>( thread_world )
+      << " with value " << dish2::get_fraction_live_cells<Spec>( thread_world )
       << std::endl;
     std::cout << "aborting!" << std::endl;
     return false;
