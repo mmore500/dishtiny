@@ -9,6 +9,7 @@
 #include "../config/cfg.hpp"
 #include "../config/thread_idx.hpp"
 #include "../load/load_world.hpp"
+#include "../record/dump_coalescence_result.hpp"
 #include "../record/dump_interroot_phenotype_differentiation.hpp"
 #include "../record/make_filename/make_elapsed_updates_filename.hpp"
 #include "../world/ThreadWorld.hpp"
