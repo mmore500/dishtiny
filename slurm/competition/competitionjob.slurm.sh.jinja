@@ -181,6 +181,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   module load --ignore-cache GCC/7.2.0-2.29 MPICH/3.2.1|| :
   module list || :
   echo "modules loaded..."
+  export DISHTINY_ENDEAVOR="{{ endeavor }}"
   export REPRO_ID="${REPRO_ID}"
   export DISPLAY="${DISPLAY}"
   export XVFB_PID="${XVFB_PID}"
