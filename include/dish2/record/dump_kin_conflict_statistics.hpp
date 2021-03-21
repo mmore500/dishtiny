@@ -47,8 +47,8 @@ void dump_kin_conflict_statistics(
       file.AddVal( emp::to_string("Treatment ", k), v );
     }
   }
-  file.AddVal( "proc", emp::to_string( uitsl::get_proc_id() ) );
-  file.AddVal( "thread", emp::to_string( thread_idx ) );
+  file.AddVal( uitsl::get_proc_id(), "proc" );
+  file.AddVal( thread_idx, "thread" );
 
   size_t kin_id_commonality_parent_eliminated;
 

@@ -46,11 +46,11 @@ void dump_spawn_log(
   file.AddVal(cfg.TREATMENT(), "Treatment");
   if ( cfg.TREATMENT().find('=') != std::string::npos ) {
     for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
-      file.AddVal( emp::to_string("Treatment ", k), v );
+      file.AddVal( v, emp::to_string("Treatment ", k) );
     }
   }
-  file.AddVal( "proc", emp::to_string( uitsl::get_proc_id() ) );
-  file.AddVal( "thread", emp::to_string( thread_idx ) );
+  file.AddVal( uitsl::get_proc_id(), "proc" );
+  file.AddVal( thread_idx, "thread" );
 
   dish2::SpawnEvent<Spec> event;
 

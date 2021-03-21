@@ -54,7 +54,7 @@ void write_phylogenetic_root_abundances(
     file.AddVal(cfg.TREATMENT(), "Treatment");
     if ( cfg.TREATMENT().find('=') != std::string::npos ) {
       for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
-        file.AddVal( emp::to_string("Treatment ", k), v );
+        file.AddVal( v, emp::to_string("Treatment ", k) );
       }
     }
     if ( dish2::get_endeavor() ) file.AddVal(*dish2::get_endeavor(), "Endeavor"
@@ -66,8 +66,8 @@ void write_phylogenetic_root_abundances(
       *dish2::get_slurm_job_id(), "Slurm Job ID"
     );
 
-    file.AddVal( "proc", emp::to_string( uitsl::get_proc_id() ) );
-    file.AddVal( "thread", emp::to_string( thread_idx ) );
+    file.AddVal( uitsl::get_proc_id(), "proc" );
+    file.AddVal( thread_idx, "thread" );
 
     file.AddVar(root_id, "Root ID");
     file.AddVar(abundance, "Abundance", "Proportion of available slots.");

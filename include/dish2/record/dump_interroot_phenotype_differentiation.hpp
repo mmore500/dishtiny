@@ -61,7 +61,7 @@ void dump_interroot_phenotype_differentiation(
   file.AddVal( cfg.TREATMENT(), "Test Treatment" );
   if ( cfg.TREATMENT().find('=') != std::string::npos ) {
     for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
-      file.AddVal( emp::to_string("Treatment ", k), v );
+      file.AddVal( v, emp::to_string("Treatment ", k) );
     }
   }
 
@@ -74,7 +74,7 @@ void dump_interroot_phenotype_differentiation(
   if ( dish2::get_slurm_job_id() ) file.AddVal(
     *dish2::get_slurm_job_id(), "Competition Slurm Job ID"
   );
-  file.AddVal( thread_idx, "Test Thread" );
+  file.AddVal( dish2::thread_idx, "Test Thread" );
   file.AddVal( uitsl::get_proc_id(), "Test Process" );
   file.AddVal( world.GetUpdate(), "Update" );
 
