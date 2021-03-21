@@ -94,8 +94,6 @@ void dump_coalescence_result( const dish2::ThreadWorld< Spec >& world ) {
   file.AddVar(fitness_differential, "Fitness Differential");
   file.AddVar(root_id_count, "Count");
 
-  const auto root_ids = dish2::get_root_ids();
-
   // add columns for root id configuration
   for (
     const auto& [key, value] : dish2::summarize_root_config( 0 )

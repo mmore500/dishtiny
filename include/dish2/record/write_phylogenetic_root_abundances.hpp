@@ -70,11 +70,13 @@ void write_phylogenetic_root_abundances(
     file.AddVal( uitsl::get_proc_id(), "proc" );
     file.AddVal( dish2::thread_idx, "thread" );
 
+    file.AddVal(world.GetSize(), "Population Slots");
     file.AddVar(root_id, "Root ID");
     file.AddVar(abundance, "Abundance", "Proportion of available slots.");
     file.AddVar(count, "Count");
     file.AddVar(prevalence, "Prevalence", "Proportion of live cells.");
     file.AddVar(update, "Update");
+
     file.PrintHeaderKeys();
 
     std::cout << "proc " << uitsl::get_proc_id()
