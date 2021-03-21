@@ -99,7 +99,7 @@ configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
 subject_url: "\${SUBJECT}"
-output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/doubling-time/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
+output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/wildtype-doubling-time/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
 endeavor: "\${ENDEAVOR}"
 stint: "${STINT}"
 series: "\${JUST_ONE_SERIES}"
