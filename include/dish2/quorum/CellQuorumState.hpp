@@ -61,6 +61,14 @@ public:
     return known_quorum_bits.GetNumBits( lev );
   }
 
+  bool GetQuorumBit( const size_t lev, const size_t bit ) const {
+    return known_quorum_bits.GetBit( lev, bit );
+  }
+
+  bool GetOwnQuorumBit( const size_t lev, const size_t bit ) const {
+    return own_quorum_bits.GetBit( lev, bit );
+  }
+
 
 };
 

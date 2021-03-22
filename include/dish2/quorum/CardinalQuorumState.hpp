@@ -53,7 +53,15 @@ public:
   , output( output_ )
   {}
 
+  size_t GetNumLearnedBits( const size_t lev ) const {
+    return learned_bits.GetNumBits( lev );
+  }
+
   size_t GetNumLearnedBits() const { return learned_bits.GetNumBits(); }
+
+  bool GetLearnedBit( const size_t lev, const size_t bit ) const {
+    return learned_bits.GetBit( lev, bit );
+  }
 
   void ResetTripCounter() { half_trip_counter %= 2; }
 

@@ -106,6 +106,10 @@ public:
 
   size_t GetNumBits(const size_t lev) const { return data[ lev ].CountOnes(); }
 
+  bool GetBit(const size_t lev, const size_t bit) const {
+    return data[ lev ][ bit ];
+  }
+
   size_t GetNumBits() const {
     return std::accumulate(
       std::begin( data ), std::end( data ),

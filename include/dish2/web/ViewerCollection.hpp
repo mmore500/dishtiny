@@ -97,6 +97,12 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::SeriesViewer<
     Spec,
+    dish2::LearnedQuorumBitArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
+  >,
+  dish2::SeriesViewer<
+    Spec,
     dish2::LearnedQuorumBitsArtist<Spec>,
     dish2::GroupStructureCategory,
     Spec::NLEV
@@ -148,7 +154,25 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::SeriesViewer<
     Spec,
+    dish2::QuorumBitArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::QuorumBitOwnArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
+  >,
+  dish2::SeriesViewer<
+    Spec,
     dish2::QuorumBitsArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::QuorumCapArtist<Spec>,
     dish2::GroupStructureCategory,
     Spec::NLEV
   >,
