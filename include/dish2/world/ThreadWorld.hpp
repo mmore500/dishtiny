@@ -9,7 +9,6 @@
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
-#include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../cell/cardinal_iterators/PushNodeOutputWrapper.hpp"
 #include "../cell/Cell.hpp"
@@ -20,6 +19,7 @@
 #include "../introspection/make_causes_of_death_string_histogram.hpp"
 #include "../push/DistanceToGraphCenterCellState.hpp"
 #include "../push/DistanceToGraphCenterMessage.hpp"
+#include "../utility/IndexShuffler.hpp"
 
 namespace dish2 {
 
@@ -111,18 +111,20 @@ struct ThreadWorld {
 
   template<bool THROW_ON_EXTINCTION=true>
   void Update() {
-    uitsl::for_each(
-      std::begin( population ), std::end( population ),
-      sgpl::CountingIterator{},
-      [this](auto& cell, const size_t i){
-        const dish2::LogScope guard{
-          emp::to_string("updating cell ", i),
-          "We're having the nth cell run its program and interact with the environment. All cells will take a turn at this one-by-one.",
-          3
-        };
-        cell.Update(update);
-      }
-    );
+
+    thread_local dish2::IndexShuffler shuffler;
+    shuffler.Resize( population.size() );
+    shuffler.Shuffle();
+
+    for ( const size_t i : shuffler ) {
+      const dish2::LogScope guard{
+        emp::to_string("updating cell ", i),
+        "We're having the nth cell run its program and interact with the environment. All cells will take a turn at this one-by-one.",
+        3
+      };
+      auto& cell = population[i];
+      cell.Update(update);
+    }
 
     if constexpr ( THROW_ON_EXTINCTION ) {
       if ( dish2::cfg.THROW_ON_EXTINCTION() && std::none_of(
