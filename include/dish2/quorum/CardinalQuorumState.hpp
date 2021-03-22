@@ -92,17 +92,23 @@ public:
     const emp::array< char, Spec::NLEV > kin_match_by_lev
   ) {
 
-    const message_t known_bits_before
-      = cell_quorum_state.GetKnownBits();
+    const message_t known_bits_before = cell_quorum_state.GetKnownBits();
+    const message_t learned_bits_before = learned_bits;
 
     ForgetLearnedBits( cell_quorum_state );
 
-    // filter blacklisted bits from received bits
     learned_bits = std::as_const(input).Get();
-    learned_bits.UnsetMask(
-      cell_quorum_state.GetBlacklistedBits()
-    );
 
+    // filter blacklisted bits from received bits
+    learned_bits.UnsetMask( cell_quorum_state.GetBlacklistedBits() );
+
+    // we didn't learn bits we already knew from somewhere else
+    const message_t bits_learned_from_elsewhere = uitsl::unset_mask(
+      known_bits_before, learned_bits_before
+    );
+    learned_bits.UnsetMask( bits_learned_from_elsewhere );
+
+    // ignore bits from non-kin neighbors
     for (size_t lev{}; lev < Spec::NLEV; ++lev) {
       if ( kin_match_by_lev[lev] == false ) learned_bits.ClearLev( lev );
     }
@@ -110,8 +116,8 @@ public:
     cell_quorum_state.LearnBits( learned_bits );
 
     // what bits did we know before that we no longer know?
-    const message_t deactivated_bits = (
-      known_bits_before & (~cell_quorum_state.GetKnownBits())
+    const message_t deactivated_bits = uitsl::unset_mask(
+      known_bits_before, cell_quorum_state.GetKnownBits()
     );
 
     cell_quorum_state.BlacklistBits( deactivated_bits );

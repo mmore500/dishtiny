@@ -54,9 +54,9 @@ class QuorumService {
       cell.template begin< dish2::KinMatchWrapper<spec_t> >(),
       [&cell_quorum_state]( auto& cardinal, const auto kin_match_array ){
         if ( cardinal.ShouldPull() ) {
-          if ( cardinal.TryPullIncomingBits( ) ) {
+          if ( cardinal.TryPullIncomingBits() ) {
             cardinal.LearnPulledBits( cell_quorum_state, kin_match_array );
-          } else cardinal.ForgetLearnedBits( cell_quorum_state );
+          }
         }
       }
     );
