@@ -1,14 +1,14 @@
 #pragma once
-#ifndef DISH2_PERIPHERAL_READABLE_STATE_INTROSPECTIVE_STATE_KINGROUPIDVIEW_HPP_INCLUDE
-#define DISH2_PERIPHERAL_READABLE_STATE_INTROSPECTIVE_STATE_KINGROUPIDVIEW_HPP_INCLUDE
+#ifndef DISH2_PERIPHERAL_READABLE_STATE_INTROSPECTIVE_STATE_RAW_INTROSPECTIVE_STATE_KINGROUPIDVIEW_HPP_INCLUDE
+#define DISH2_PERIPHERAL_READABLE_STATE_INTROSPECTIVE_STATE_RAW_INTROSPECTIVE_STATE_KINGROUPIDVIEW_HPP_INCLUDE
 
 #include <algorithm>
 
-#include "../../../../../third-party/conduit/include/uitsl/algorithm/count_equal.hpp"
-#include "../../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
-#include "../../../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
-#include "../../../../../third-party/conduit/include/uitsl/meta/TypeName.hpp"
-#include "../../../../../third-party/Empirical/include/emp/base/assert.hpp"
+#include "../../../../../../third-party/conduit/include/uitsl/algorithm/count_equal.hpp"
+#include "../../../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
+#include "../../../../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
+#include "../../../../../../third-party/conduit/include/uitsl/meta/TypeName.hpp"
+#include "../../../../../../third-party/Empirical/include/emp/base/assert.hpp"
 
 namespace dish2 {
 
@@ -44,4 +44,4 @@ UITSL_ENABLE_TYPENAME_TEMPLATE( dish2::KinGroupIDView );
 
 } // namespace uitsl
 
-#endif // #ifndef DISH2_PERIPHERAL_READABLE_STATE_INTROSPECTIVE_STATE_KINGROUPIDVIEW_HPP_INCLUDE
+#endif // #ifndef DISH2_PERIPHERAL_READABLE_STATE_INTROSPECTIVE_STATE_RAW_INTROSPECTIVE_STATE_KINGROUPIDVIEW_HPP_INCLUDE

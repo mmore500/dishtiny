@@ -6,16 +6,8 @@
 #include "../../../../../third-party/conduit/include/uitsl/meta/TypeName.hpp"
 #include "../../../../../third-party/signalgp-lite/include/sgpl/utility/ByteEnumeration.hpp"
 
-#include "CellAge.hpp"
-#include "Epoch.hpp"
-#include "IncomingInterMessageCounter.hpp"
-#include "IncomingIntraMessageCounter.hpp"
-#include "IsAlive.hpp"
-#include "KinGroupAge.hpp"
-#include "KinGroupIDView.hpp"
-#include "ResourceStockpile.hpp"
-#include "SpawnCount.hpp"
-#include "SpawnedFrom.hpp"
+#include "interpreted_introspective_state/InterpretedIntrospectiveState.hpp"
+#include "raw_introspective_state/RawIntrospectiveState.hpp"
 
 namespace dish2 {
 
@@ -23,16 +15,8 @@ namespace internal {
 
 template< typename Spec >
 using introspective_state_parent_t = uitsl::PodInternalNode<
-  dish2::CellAge,
-  dish2::Epoch,
-  dish2::IncomingInterMessageCounter,
-  dish2::IncomingIntraMessageCounter,
-  dish2::IsAlive,
-  dish2::KinGroupAge<Spec>,
-  dish2::KinGroupIDView<Spec>,
-  dish2::ResourceStockpile,
-  dish2::SpawnCount,
-  dish2::SpawnedFrom
+  dish2::InterpretedIntrospectiveState<Spec>,
+  dish2::RawIntrospectiveState<Spec>
   >;
 
 } // namespace internal
