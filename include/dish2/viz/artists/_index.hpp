@@ -20,6 +20,7 @@
 #include "KinMatchArtist.hpp"
 #include "LearnedQuorumBitArtist.hpp"
 #include "LearnedQuorumBitsArtist.hpp"
+#include "MostRecentCauseOfDeathArtist.hpp"
 #include "NeighborKinGroupIDViewArtist.hpp"
 #include "NeighborPosArtist.hpp"
 #include "NumBusyCoresArtist.hpp"
