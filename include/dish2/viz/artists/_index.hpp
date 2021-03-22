@@ -40,6 +40,7 @@
 #include "ResourceInputPeekArtist.hpp"
 #include "ResourceStockpileArtist.hpp"
 #include "SpawnArrestArtist.hpp"
+#include "SpawnedFromArtist.hpp"
 #include "SpawnRequestArtist.hpp"
 #include "TaxaArtist.hpp"
 

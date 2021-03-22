@@ -210,6 +210,11 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::GridViewer<
     Spec,
+    dish2::SpawnedFromArtist<Spec>,
+    dish2::GroupStructureCategory
+  >,
+  dish2::GridViewer<
+    Spec,
     dish2::SpawnRequestArtist<Spec>,
     dish2::SharingCategory
   >,
