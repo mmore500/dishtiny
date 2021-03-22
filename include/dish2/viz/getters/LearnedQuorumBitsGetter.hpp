@@ -38,7 +38,9 @@ public:
   ) const {
     return thread_world.get().GetCell(
       cell_idx
-    ).cardinals[ cardinal_idx ].cardinal_quorum_state.GetNumLearnedBits();
+    ).cardinals[ cardinal_idx ].cardinal_quorum_state.GetNumLearnedBits(
+      lev
+    );
   }
 
   size_t GetNumCells() const { return thread_world.get().GetSize(); }
