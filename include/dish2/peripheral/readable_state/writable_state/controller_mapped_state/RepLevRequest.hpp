@@ -15,11 +15,14 @@ struct RepLevRequest : public uitsl::PodLeafNode<char, Spec::NLEV> {
   using parent_t::parent_t;
 
   size_t GetRepLev() const {
-    return std::count_if(
+
+    const size_t count = std::count_if(
       std::begin( parent_t::GetBuffer() ),
       std::end( parent_t::GetBuffer() ),
       std::identity
     );
+    if ( count == 0 ) return Spec::NLEV;
+    else return count - 1;
   }
 };
 
