@@ -51,6 +51,7 @@ struct Spec_default {
     sgpl::global::RegulatorDecay<1>, // exposed regulator
     dish2::AddToOwnState< this_t >,
     dish2::BcstIntraMessageIf,
+    dish2::ClearOwnState< this_t >,
     dish2::MultiplyOwnState< this_t >,
     dish2::ReadNeighborState< this_t >,
     dish2::ReadOwnState< this_t >,
