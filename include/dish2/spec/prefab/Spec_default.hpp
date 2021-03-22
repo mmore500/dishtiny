@@ -106,6 +106,7 @@ struct Spec_default {
     dish2::IntermittentIntrospectiveStateExchangeService<this_t>,
     dish2::IntermittentIntrospectiveStateRotateService,
     dish2::CpuExecutionService,
+    dish2::EventLaunchingService,
     dish2::IntermittentIntrospectiveStateRotateRestoreService,
     dish2::IntermittentIntrospectiveStateExchangeRestoreService,
     dish2::IntermittentExtrospectiveStateRotateRestoreService,
@@ -118,13 +119,6 @@ struct Spec_default {
     dish2::CellAgeService,
     dish2::CollectiveHarvestingService,
     dish2::ConduitFlushService,
-
-    // todo consolidate with cpu execution
-    dish2::IntermittentExtrospectiveStateExchangeService<this_t>,
-    dish2::IntermittentExtrospectiveStateRotateService,
-    dish2::EventLaunchingService,
-    dish2::IntermittentExtrospectiveStateRotateRestoreService,
-    dish2::IntermittentExtrospectiveStateExchangeRestoreService,
 
     dish2::InterMessageLaunchingService,
     dish2::InterMessagePurgingService,
