@@ -15,6 +15,7 @@
 #include "KinGroupIDView.hpp"
 #include "ResourceStockpile.hpp"
 #include "SpawnCount.hpp"
+#include "SpawnedFrom.hpp"
 
 namespace dish2 {
 
@@ -30,7 +31,8 @@ using introspective_state_parent_t = uitsl::PodInternalNode<
   dish2::KinGroupAge<Spec>,
   dish2::KinGroupIDView<Spec>,
   dish2::ResourceStockpile,
-  dish2::SpawnCount
+  dish2::SpawnCount,
+  dish2::SpawnedFrom
   >;
 
 } // namespace internal

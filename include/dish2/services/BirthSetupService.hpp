@@ -90,6 +90,12 @@ struct BirthSetupService {
       cell.genome->ElapseGeneration( replev, epoch );
 
       cell.MakeAliveRoutine();
+
+      // record SpawnedFrom direction
+      cell.cardinals[cardinal_idx].peripheral.readable_state.template Get<
+        dish2::SpawnedFrom
+      >() = replev + 1;
+
     }
 
   }
