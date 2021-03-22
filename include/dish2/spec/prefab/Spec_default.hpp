@@ -21,6 +21,8 @@
 #include "../../push/PushMessage.hpp"
 #include "../../services/_index.hpp"
 #include "../../services/ServiceManager.hpp"
+#include "../../services_threadlocal/_index.hpp"
+#include "../../services_threadlocal/ThreadLocalServiceManager.hpp"
 
 #include "../GenomeMeshSpec.hpp"
 #include "../IntraMessageMeshSpec.hpp"
@@ -142,6 +144,11 @@ struct Spec_default {
 
     dish2::CellDeathService, // must run last
     dish2::ApoptosisService // must run last
+  >;
+
+  using thread_local_service_manager_t = dish2::ThreadLocalServiceManager<
+    dish2::CellUpdateService,
+    dish2::DiversityMaintenanceService
   >;
 
 };

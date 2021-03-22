@@ -149,6 +149,11 @@ struct Spec_dnh2v {
     dish2::ApoptosisService // must run last
   >;
 
+  using thread_local_service_manager_t = dish2::ThreadLocalServiceManager<
+    dish2::CellUpdateService
+    // dish2::DiversityMaintenanceService
+  >;
+
 };
 
 

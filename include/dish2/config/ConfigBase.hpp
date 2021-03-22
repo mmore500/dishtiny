@@ -225,6 +225,12 @@ EMP_BUILD_CONFIG(
   VALUE(RUNNING_LOG_PURGE_SERVICE_FREQUENCY, size_t, 64,
     "Run service every ?? updates."
   ),
+  VALUE(DIVERSITY_MAINTENANCE_SERVICE_FREQUENCY, size_t, 8,
+    "Run service every ?? updates."
+  ),
+  VALUE(DIVERSITY_MAINTENANCE_PREVALENCE, double, 0.25,
+    "TODO"
+  ),
   VALUE(DECAY_TO_BASELINE_SERVICE_FREQUENCY, size_t, 32,
     "Run service every ?? updates."
   ),

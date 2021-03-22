@@ -19,7 +19,6 @@
 #include "../introspection/make_causes_of_death_string_histogram.hpp"
 #include "../push/DistanceToGraphCenterCellState.hpp"
 #include "../push/DistanceToGraphCenterMessage.hpp"
-#include "../utility/IndexShuffler.hpp"
 
 namespace dish2 {
 
@@ -27,6 +26,8 @@ template<typename Spec>
 struct ThreadWorld {
 
   using spec_t = Spec;
+
+  using this_t = ThreadWorld<Spec>;
 
   using population_t = emp::vector< dish2::Cell<Spec> >;
   population_t population;
@@ -112,19 +113,10 @@ struct ThreadWorld {
   template<bool THROW_ON_EXTINCTION=true>
   void Update() {
 
-    thread_local dish2::IndexShuffler shuffler;
-    shuffler.Resize( population.size() );
-    shuffler.Shuffle();
+    using thread_local_service_manager_t
+      = typename Spec::thread_local_service_manager_t;
 
-    for ( const size_t i : shuffler ) {
-      const dish2::LogScope guard{
-        emp::to_string("updating cell ", i),
-        "We're having the nth cell run its program and interact with the environment. All cells will take a turn at this one-by-one.",
-        3
-      };
-      auto& cell = population[i];
-      cell.Update(update);
-    }
+    thread_local_service_manager_t::template Run<this_t>( *this, update );
 
     if constexpr ( THROW_ON_EXTINCTION ) {
       if ( dish2::cfg.THROW_ON_EXTINCTION() && std::none_of(
