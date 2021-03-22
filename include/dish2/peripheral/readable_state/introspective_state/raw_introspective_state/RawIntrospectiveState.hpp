@@ -13,6 +13,7 @@
 #include "IsAlive.hpp"
 #include "KinGroupAge.hpp"
 #include "KinGroupIDView.hpp"
+#include "NumKnownQuorumBits.hpp"
 #include "ResourceStockpile.hpp"
 #include "SpawnCount.hpp"
 #include "SpawnedFrom.hpp"
@@ -30,6 +31,7 @@ using raw_introspective_state_parent_t = uitsl::PodInternalNode<
   dish2::IsAlive,
   dish2::KinGroupAge<Spec>,
   dish2::KinGroupIDView<Spec>,
+  dish2::NumKnownQuorumBits<Spec>,
   dish2::ResourceStockpile,
   dish2::SpawnCount,
   dish2::SpawnedFrom

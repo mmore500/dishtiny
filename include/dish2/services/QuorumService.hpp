@@ -10,6 +10,7 @@
 
 #include "../cell/cardinal_iterators/CardinalQuorumStateWrapper.hpp"
 #include "../cell/cardinal_iterators/KinMatchWrapper.hpp"
+#include "../cell/cardinal_iterators/NumKnownQuorumBitsWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 
@@ -83,6 +84,26 @@ class QuorumService {
 
   }
 
+  template<typename Cell>
+  static void UpdateIntrospectiveState( Cell& cell ) {
+
+    using spec_t = typename Cell::spec_t;
+
+    auto& cell_quorum_state = cell.cell_quorum_state;
+
+    std::for_each(
+      cell.template begin<dish2::NumKnownQuorumBitsWrapper<spec_t>>(),
+      cell.template end<dish2::NumKnownQuorumBitsWrapper<spec_t>>(),
+      [&cell_quorum_state]( auto& num_quorum_bits_state ){
+        for (size_t lev{}; lev < spec_t::NLEV; ++lev) {
+          num_quorum_bits_state.Get( lev )
+            = cell_quorum_state.GetNumKnownQuorumBits( lev );
+        }
+      }
+    );
+
+  }
+
 public:
 
   static bool ShouldRun( const size_t update, const bool alive ) {
@@ -102,6 +123,9 @@ public:
     UpdateKnownBits<Cell>( cell );
 
     PushKnownBits<Cell>( cell );
+
+    // so that cpus can sense num quorum bits
+    UpdateIntrospectiveState<Cell>( cell );
 
   }
 
