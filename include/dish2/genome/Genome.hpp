@@ -110,10 +110,10 @@ public:
   }
 
   bool operator==(const Genome& other) const {
-    // ignore kin_group_epoch_stamps,
     return std::tuple{
       event_tags,
       generation_counter,
+      kin_group_epoch_stamps,
       kin_group_id,
       mutation_counter,
       program,
@@ -122,6 +122,7 @@ public:
     } == std::tuple{
       other.event_tags,
       other.generation_counter,
+      other.kin_group_epoch_stamps,
       other.kin_group_id,
       other.mutation_counter,
       other.program,
@@ -131,11 +132,11 @@ public:
   }
 
   bool operator<(const Genome& other) const {
-    // ignore kin_group_epoch_stamps,
     return std::tuple{
       event_tags,
       generation_counter,
       kin_group_id,
+      kin_group_epoch_stamps,
       mutation_counter,
       program,
       root_id,
@@ -144,6 +145,7 @@ public:
       other.event_tags,
       other.generation_counter,
       other.kin_group_id,
+      other.kin_group_epoch_stamps,
       other.mutation_counter,
       other.program,
       other.root_id,
@@ -201,6 +203,7 @@ public:
   }
 
   void SetupSeededGenotype() {
+    kin_group_epoch_stamps = dish2::KinGroupEpochStamps<Spec>{};
     kin_group_id = dish2::KinGroupID<Spec>{ std::in_place };
     stint_root_id = dish2::RootID{ std::in_place };
   }
@@ -211,6 +214,7 @@ public:
     CEREAL_NVP( generation_counter ),
     CEREAL_NVP( mutation_counter ),
     CEREAL_NVP( kin_group_id ),
+    CEREAL_NVP( kin_group_epoch_stamps ),
     CEREAL_NVP( program ),
     CEREAL_NVP( root_id ),
     CEREAL_NVP( stint_root_id )
