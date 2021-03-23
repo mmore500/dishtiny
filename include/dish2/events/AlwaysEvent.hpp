@@ -10,7 +10,7 @@ template<typename Spec>
 struct AlwaysEvent {
 
   template< typename Cardinal, size_t SeriesIdx >
-  static bool Test( Cardinal& ) { return true; }
+  static bool Test( const Cardinal& ) { return true; }
 
 };
 
