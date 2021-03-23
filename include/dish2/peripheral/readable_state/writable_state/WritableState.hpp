@@ -11,6 +11,7 @@
 #include "../../../../../third-party/conduit/include/uitsl/algorithm/clamp_cast.hpp"
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
+#include "../../../../../third-party/Empirical/include/emp/base/assert.hpp"
 #include "../../../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../../../third-party/signalgp-lite/include/sgpl/utility/ByteEnumeration.hpp"
 
@@ -60,6 +61,10 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
 
       EMP_WRAP_EACH( DISH2_ADD_TO_STATE_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION )
 
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
+
     }
 
   }
@@ -85,6 +90,10 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
     switch ( idx ) {
 
       EMP_WRAP_EACH( DISH2_MULTIPLY_STATE_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION )
+
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
 
     }
 
@@ -112,6 +121,10 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
 
       EMP_WRAP_EACH( DISH2_WRITABLE_STATE_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION )
 
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
+
     }
 
   }
@@ -134,6 +147,10 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
       EMP_WRAP_EACH(
         DISH2_WRITABLE_STATE_ASSIGN_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
+
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
 
     }
 
@@ -160,6 +177,10 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         DISH2_WRITABLE_STATE_SWAP_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
 
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
+
     }
 
   }
@@ -183,9 +204,14 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         DISH2_WRITABLE_STATE_NAME_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
 
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
+
     }
 
-    return "bad idx";
+    emp_assert( false, idx );
+    __builtin_unreachable();
 
   }
 
@@ -206,9 +232,14 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         DISH2_WRITABLE_STATE_INDEX_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
 
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
+
     }
 
-    return std::numeric_limits<size_t>::max();
+    emp_assert( false, idx );
+    __builtin_unreachable();
 
   }
 

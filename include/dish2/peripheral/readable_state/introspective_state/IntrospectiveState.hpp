@@ -4,6 +4,7 @@
 
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
 #include "../../../../../third-party/conduit/include/uitsl/meta/TypeName.hpp"
+#include "../../../../../third-party/Empirical/include/emp/base/assert.hpp"
 #include "../../../../../third-party/signalgp-lite/include/sgpl/utility/ByteEnumeration.hpp"
 
 #include "interpreted_introspective_state/InterpretedIntrospectiveState.hpp"
@@ -47,6 +48,10 @@ struct IntrospectiveState : public internal::introspective_state_parent_t<Spec>{
         DISH2_INTROSPECTIVE_STATE_ASSIGN_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
 
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
+
     }
 
   }
@@ -71,6 +76,10 @@ struct IntrospectiveState : public internal::introspective_state_parent_t<Spec>{
       EMP_WRAP_EACH(
         DISH2_INTROSPECTIVE_STATE_SWAP_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
+
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
 
     }
 
