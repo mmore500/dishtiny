@@ -485,8 +485,8 @@ echo "Submit Predecessor Battle Jobs"
 echo "-----------------------------------"
 ################################################################################
 
-# run predecessor battle job every twentieth stint
-if (( {{ stint }} % 20 == 0 )); then
+# run predecessor battle job every tenth stint
+if (( {{ stint }} % 10 == 0 )); then
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
