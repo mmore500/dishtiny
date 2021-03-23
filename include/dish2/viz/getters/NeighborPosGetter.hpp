@@ -52,10 +52,10 @@ public:
         // south
         return (cell_idx + dimension) % cardinality;
       default:
-        emp_always_assert( false );
-        return 0;
+        emp_assert( false, cardinal_idx );
+        __builtin_unreachable();
     }
-    return cardinal_idx;
+
   }
 
   size_t GetNumCells() const { return thread_world.get().GetSize(); }
