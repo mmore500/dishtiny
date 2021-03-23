@@ -219,6 +219,24 @@ for p in outdata/*a=coalescence_result*; do
 
 done
 
+echo "uploading as_configured files..."
+for p in outmeta/*a=as_configured*.csv*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
+  for retry in {1..20}; do
+    aws s3 cp --quiet \
+      "${p}" \
+      "{{ output_url }}" \
+    && echo "  ${f} upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+  done & pids+=($!)
+
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
+
+done
+
 # wait on all forked upload jobs
 for pid in "${pids[@]}"; do
   # if child process fails, we fail

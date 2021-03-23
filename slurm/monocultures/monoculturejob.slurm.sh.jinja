@@ -255,6 +255,24 @@ for p in outdrawings/*a=montage*; do
 
 done
 
+echo "uploading any as_configured files..."
+for p in outmeta/*a=as_configured*.csv*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
+  for retry in {1..20}; do
+    aws s3 cp --quiet \
+      "${p}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/monocultures/config-records/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+    && echo "  ${f} upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+  done & pids+=($!)
+
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
+
+done
+
 echo "uploading any drawing archives..."
 for p in outzips/*a=outdrawings*; do
   f="$(basename "${p}")"
