@@ -13,6 +13,7 @@
 #include "../run/setup_thread_local_random.hpp"
 
 #include "dump_config.hpp"
+#include "dump_config_csv.hpp"
 #include "print_assets.hpp"
 #include "print_config.hpp"
 #include "print_pwd.hpp"
@@ -40,6 +41,7 @@ void setup( emp::ArgManager arg_manager ) {
   }
 
   dump_config();
+  dump_config_csv();
 
   // setup main thread thread local random
   dish2::setup_thread_local_random();
