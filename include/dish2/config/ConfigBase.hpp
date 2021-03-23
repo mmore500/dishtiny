@@ -86,8 +86,8 @@ EMP_BUILD_CONFIG(
   VALUE(
     GROUP_EXPIRATION_DURATIONS,
     internal::nlev_size_t_t,
-    (internal::nlev_size_t_t{ 1024, 2048 }),
-    "After how many epochs should groups stop collecting resource?"
+    (internal::nlev_size_t_t{ 256, 1024 }),
+    "After how many /epochs/ should groups stop collecting resource?"
   ),
   VALUE(
     CELL_AGE_DURATION, size_t, 1024, "After how many epochs should cells die?"
@@ -169,9 +169,9 @@ EMP_BUILD_CONFIG(
   VALUE(PROGRAM_MAX_SIZE, size_t, 4096, "What size should programs be capped at?"),
   VALUE(MUTATION_RATE, internal::nreplev_float_t,
     #if DISH2_NLEV == 1
-    (internal::nreplev_float_t{0.2, 0.5}),
+    (internal::nreplev_float_t{0.1, 1.0}),
     #elif DISH2_NLEV == 2
-    (internal::nreplev_float_t{0.1, 0.2, 0.5}),
+    (internal::nreplev_float_t{0.1, 0.1, 1.0}),
     #else
     (internal::nlev_float_t{}),
     #endif
