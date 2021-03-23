@@ -45,6 +45,8 @@ struct Spec_default {
 
   constexpr inline static size_t STATE_EXCHANGE_CHAIN_LENGTH = 128;
 
+  constexpr inline static bool SET_QUORUM_BITS_BY_KIN_GROUP = true;
+
   using op_library_t = sgpl::OpLibraryCoupler<
     sgpl::CompleteOpLibrary,
     sgpl::global::RegulatorAdj<1>, // exposed regulator

@@ -16,8 +16,14 @@ namespace dish2 {
 template< typename Spec >
 class QuorumMessage {
 
+public:
+
+  static constexpr size_t bitset_width = 64;
+
+private:
+
   // TODO swtich back to emp::array after https://github.com/devosoft/Empirical/issues/408 is resolved
-  std::array< emp::BitSet<64>, Spec::NLEV > data{};
+  std::array< emp::BitSet<bitset_width>, Spec::NLEV > data{};
 
 public:
 
@@ -103,6 +109,10 @@ public:
   void Clear() { for (auto& bs : data) bs.Clear(); }
 
   void ClearLev( const size_t lev ) { data[ lev ].Clear(); }
+
+  void SetBit( const size_t lev, const size_t which_bit ) {
+    data[ lev ][ which_bit ] = 1;
+  }
 
   size_t GetNumBits(const size_t lev) const { return data[ lev ].CountOnes(); }
 

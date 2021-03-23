@@ -37,6 +37,13 @@ class CellQuorumState {
 
 public:
 
+  void UpdateOwnBit( const size_t lev, const size_t new_bit ) {
+    ForgetBits( own_quorum_bits );
+    own_quorum_bits.ClearLev( lev );
+    own_quorum_bits.SetBit( lev, new_bit );
+    RefreshOwnBits();
+  }
+
   message_t GetBlacklistedBits() const {
     return fresh_blacklisted_bits | stale_blacklisted_bits;
   }
