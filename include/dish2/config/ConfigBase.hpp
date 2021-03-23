@@ -165,8 +165,8 @@ EMP_BUILD_CONFIG(
   ),
 
   GROUP(GENOME, "GENOME"),
-  VALUE(PROGRAM_START_SIZE, size_t, 100, "How big should initial programs be?"),
-  VALUE(PROGRAM_MAX_SIZE, size_t, 1000, "What size should programs be capped at?"),
+  VALUE(PROGRAM_START_SIZE, size_t, 128, "How big should initial programs be?"),
+  VALUE(PROGRAM_MAX_SIZE, size_t, 4096, "What size should programs be capped at?"),
   VALUE(MUTATION_RATE, internal::nreplev_float_t,
     #if DISH2_NLEV == 1
     (internal::nreplev_float_t{0.2, 0.5}),

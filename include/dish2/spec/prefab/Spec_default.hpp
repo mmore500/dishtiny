@@ -64,10 +64,12 @@ struct Spec_default {
     dish2::WriteOwnStateIf< this_t >
   >;
 
-  using sgpl_spec_t = sgpl::Spec<
+  struct sgpl_spec_t : public sgpl::Spec<
     op_library_t,
     dish2::Peripheral<this_t>
-  >;
+  > {
+    static constexpr inline size_t num_cores{ 32 };
+  };
 
   using event_manager_t = dish2::EventManager<
     dish2::EventSeries< dish2::AlwaysEvent<this_t> >,
