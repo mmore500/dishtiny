@@ -4,7 +4,6 @@
 
 #include "AddToOwnState.hpp"
 #include "BcstIntraMessageIf.hpp"
-#include "ClearOwnState.hpp"
 #include "MultiplyOwnState.hpp"
 #include "ReadNeighborState.hpp"
 #include "ReadOwnState.hpp"
