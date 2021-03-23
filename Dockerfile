@@ -100,5 +100,9 @@ USER user
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 
+# default to clang, which gives ~5% better performance than GCC
+ENV MPICH_CXX=clang++
+ENV OMPI_CXX=clang++
+
 # Define default working directory.
 WORKDIR /opt/dishtiny
