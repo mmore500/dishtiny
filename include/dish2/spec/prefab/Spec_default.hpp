@@ -72,9 +72,30 @@ struct Spec_default {
   };
 
   using event_manager_t = dish2::EventManager<
-    dish2::EventSeries< dish2::AlwaysEvent<this_t> >,
-    dish2::EventSeries< dish2::KinGroupMatchEvent<this_t>, NLEV - 1 >,
-    dish2::EventSeries< dish2::KinGroupMismatchEvent<this_t>, NLEV - 1 >
+    dish2::EventSeries< dish2::AlwaysEvent >,
+    dish2::EventSeries< dish2::IsChildCellOfEvent >,
+    dish2::EventSeries< dish2::IsChildGroupOfEvent, NLEV - 1 >,
+    dish2::EventSeries< dish2::IsNewbornEvent >,
+    dish2::EventSeries< dish2::IsParentCellOfEvent >,
+    dish2::EventSeries< dish2::KinGroupMatchEvent, NLEV - 1 >,
+    dish2::EventSeries< dish2::KinGroupMismatchEvent, NLEV - 1 >,
+    dish2::EventSeries< dish2::KinGroupWillExpireEvent, NLEV - 1 >,
+    dish2::EventSeries< dish2::KinGroupWillNotExpireEvent, NLEV - 1 >,
+    dish2::EventSeries< dish2::NeighborApoptosisEvent >,
+    dish2::EventSeries< dish2::NeighborFragmentedEvent >,
+    dish2::EventSeries< dish2::NeighborIsAliveEvent >,
+    dish2::EventSeries< dish2::NeighborIsNewbornEvent >,
+    dish2::EventSeries< dish2::NeighborIsNotAliveEvent >,
+    dish2::EventSeries< dish2::NeighborKinGroupWillExpireEvent, NLEV - 1 >,
+    dish2::EventSeries< dish2::NeighborOptimumQuorumExceededEvent, NLEV - 1 >,
+    dish2::EventSeries< dish2::OptimumQuorumExceededEvent, NLEV - 1 >,
+    dish2::EventSeries< dish2::OptimumQuorumNotExceededEvent, NLEV - 1 >,
+    dish2::EventSeries< dish2::ParentFragmentedEvent >,
+    dish2::EventSeries< dish2::PhylogeneticRootMatchEvent >,
+    dish2::EventSeries< dish2::PhylogeneticRootMismatchEvent >,
+    dish2::EventSeries< dish2::PoorerThanNeighborEvent >,
+    dish2::EventSeries< dish2::ReceivedResourceFromEvent >,
+    dish2::EventSeries< dish2::RicherThanNeighborEvent >
   >;
 
   constexpr inline static size_t NUM_EVENTS = event_manager_t::GetNumEvents();

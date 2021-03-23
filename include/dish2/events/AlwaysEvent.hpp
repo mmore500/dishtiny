@@ -6,7 +6,6 @@
 
 namespace dish2 {
 
-template<typename Spec>
 struct AlwaysEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

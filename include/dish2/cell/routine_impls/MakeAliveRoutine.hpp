@@ -9,6 +9,7 @@
 #include "../cardinal_iterators/EpochWrapper.hpp"
 #include "../cardinal_iterators/IsAliveWrapper.hpp"
 #include "../cardinal_iterators/KinGroupAgeWrapper.hpp"
+#include "../cardinal_iterators/KinGroupIDAncestorViewWrapper.hpp"
 #include "../cardinal_iterators/KinGroupIDViewWrapper.hpp"
 #include "../../debug/LogScope.hpp"
 
@@ -53,6 +54,16 @@ void Cell<Spec>::MakeAliveRoutine() {
     [this](auto& kgiv){ std::copy(
       std::begin( genome->kin_group_id.data ),
       std::end( genome->kin_group_id.data ),
+      std::begin( kgiv )
+    ); }
+  );
+
+  std::for_each(
+    begin<dish2::KinGroupIDAncestorViewWrapper<Spec>>(),
+    end<dish2::KinGroupIDAncestorViewWrapper<Spec>>(),
+    [this](auto& kgiv){ std::copy(
+      std::begin( genome->kin_group_id.ancestor_data ),
+      std::end( genome->kin_group_id.ancestor_data ),
       std::begin( kgiv )
     ); }
   );

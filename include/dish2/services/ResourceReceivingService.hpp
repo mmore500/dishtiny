@@ -7,6 +7,8 @@
 
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
+#include "../cell/cardinal_iterators/ReceivedResourceFromWrapper.hpp"
+#include "../cell/cardinal_iterators/ResourceInputPeekWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceNodeInputWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../config/cfg.hpp"
@@ -30,6 +32,13 @@ struct ResourceReceivingService {
     const dish2::LogScope guard{ "resource receiving service", "TODO", 3 };
 
     using spec_t = typename Cell::spec_t;
+
+    // write amount of incoming resource readable state
+    std::copy(
+      cell.template begin<dish2::ResourceInputPeekWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceInputPeekWrapper<spec_t>>(),
+      cell.template begin<dish2::ReceivedResourceFromWrapper<spec_t>>()
+    );
 
     // check resource stockpile consistency
     emp_assert((

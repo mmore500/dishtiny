@@ -9,6 +9,7 @@
 namespace dish2 {
 
 enum class CauseOfDeath {
+  unknown,
   age,
   apoptosis,
   elimination,

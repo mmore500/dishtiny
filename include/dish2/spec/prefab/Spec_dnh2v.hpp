@@ -67,9 +67,9 @@ struct Spec_dnh2v {
   >;
 
   using event_manager_t = dish2::EventManager<
-    dish2::EventSeries< dish2::AlwaysEvent<this_t> >,
-    dish2::EventSeries< dish2::KinGroupMatchEvent<this_t>, NLEV - 1 >,
-    dish2::EventSeries< dish2::KinGroupMismatchEvent<this_t>, NLEV - 1 >
+    dish2::EventSeries< dish2::AlwaysEvent >,
+    dish2::EventSeries< dish2::KinGroupMatchEvent, NLEV - 1 >,
+    dish2::EventSeries< dish2::KinGroupMismatchEvent, NLEV - 1 >
   >;
 
   constexpr inline static size_t NUM_EVENTS = event_manager_t::GetNumEvents();

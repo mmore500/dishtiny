@@ -12,8 +12,12 @@
 #include "IncomingIntraMessageCounter.hpp"
 #include "IsAlive.hpp"
 #include "KinGroupAge.hpp"
+#include "KinGroupIDAncestorView.hpp"
 #include "KinGroupIDView.hpp"
+#include "MostRecentCauseOfDeath.hpp"
 #include "NumKnownQuorumBits.hpp"
+#include "PhylogeneticRootView.hpp"
+#include "ReceivedResourceFrom.hpp"
 #include "ResourceStockpile.hpp"
 #include "SpawnCount.hpp"
 #include "SpawnedFrom.hpp"
@@ -30,8 +34,12 @@ using raw_introspective_state_parent_t = uitsl::PodInternalNode<
   dish2::IncomingIntraMessageCounter,
   dish2::IsAlive,
   dish2::KinGroupAge<Spec>,
+  dish2::KinGroupIDAncestorView<Spec>,
   dish2::KinGroupIDView<Spec>,
+  dish2::MostRecentCauseOfDeath,
   dish2::NumKnownQuorumBits<Spec>,
+  dish2::PhylogeneticRootView,
+  dish2::ReceivedResourceFrom,
   dish2::ResourceStockpile,
   dish2::SpawnCount,
   dish2::SpawnedFrom

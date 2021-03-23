@@ -68,6 +68,8 @@ struct Cardinal {
   using peripheral_t = dish2::Peripheral<Spec>;
   peripheral_t peripheral;
 
+  using spec_t = Spec;
+
   Cardinal(
     const genome_node_input_t& genome_node_input_,
     const genome_node_output_t& genome_node_output_,

@@ -8,19 +8,13 @@
 
 namespace dish2 {
 
-template<typename Spec>
 struct KinGroupMatchEvent {
 
   template< typename Cardinal, size_t SeriesIdx >
-  static bool Test( Cardinal& cardinal ) {
-    return std::as_const(
-      cardinal.peripheral.state_node_input
-    ).Get().template Get<
-      typename dish2::KinGroupIDView<Spec>
-    >().template Get<
-      SeriesIdx
-    >() == cardinal.peripheral.readable_state.template Get<
-      typename dish2::KinGroupIDView<Spec>
+  static bool Test( const Cardinal& cardinal ) {
+    using spec_t = typename Cardinal::spec_t;
+    return cardinal.peripheral.readable_state.template Get<
+      typename dish2::KinGroupMatch<spec_t>
     >().template Get<
       SeriesIdx
     >();

@@ -29,6 +29,7 @@
 #include "IntermittentWritableStateExchangeService.hpp"
 #include "IntermittentWritableStateRotateRestoreService.hpp"
 #include "IntermittentWritableStateRotateService.hpp"
+#include "InterpretedIntrospectiveStateRefreshService.hpp"
 #include "IntraMessageLaunchingService.hpp"
 #include "MessageCounterClearService.hpp"
 #include "PushService.hpp"
