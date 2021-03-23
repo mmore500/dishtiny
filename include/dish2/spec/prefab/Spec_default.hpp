@@ -107,6 +107,8 @@ struct Spec_default {
     dish2::RunningLogPurgeService, // should run before cpu execution service
     dish2::WritableStateNoiseService,
 
+    dish2::InterpretedIntrospectiveStateRefreshService,
+
     dish2::IntermittentExtrospectiveStateExchangeService<this_t>,
     dish2::IntermittentExtrospectiveStateRotateService,
     dish2::IntermittentIntrospectiveStateExchangeService<this_t>,
@@ -124,6 +126,7 @@ struct Spec_default {
     dish2::BirthSetupService,
     dish2::CellAgeService,
     dish2::CollectiveHarvestingService,
+    dish2::CollectiveResourceDecayService,
     dish2::ConduitFlushService,
 
     dish2::InterMessageLaunchingService,
@@ -131,7 +134,7 @@ struct Spec_default {
     dish2::IntraMessageLaunchingService,
     dish2::MessageCounterClearService,
     dish2::PushService,
-    dish2::QuorumCapService,
+    // dish2::QuorumCapService,
     dish2::QuorumService,
     dish2::ResourceDecayService,
     dish2::ResourceHarvestingService,
@@ -146,7 +149,8 @@ struct Spec_default {
     dish2::IntermittentWritableStateRotateRestoreService,
     dish2::IntermittentWritableStateExchangeRestoreService,
 
-    dish2::CellDeathService, // must run last
+    dish2::GroupExpirationService,
+    // dish2::CellDeathService, // must run last
     dish2::ApoptosisService // must run last
   >;
 

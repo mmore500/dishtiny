@@ -67,6 +67,7 @@ struct Cell {
 
   // out of class implementations
   void DeathRoutine(const dish2::CauseOfDeath);
+  void FragmentationRoutine();
   void HeirPayoutRoutine();
   void MakeAliveRoutine();
 

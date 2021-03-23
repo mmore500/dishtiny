@@ -222,6 +222,9 @@ EMP_BUILD_CONFIG(
   VALUE(CPU_EXECUTION_SERVICE_FREQUENCY, size_t, 1,
     "Run service every ?? updates."
   ),
+  VALUE(GROUP_EXPIRATION_SERVICE_FREQUENCY, size_t, 64,
+    "Run service every ?? updates."
+  ),
   VALUE(RUNNING_LOG_PURGE_SERVICE_FREQUENCY, size_t, 64,
     "Run service every ?? updates."
   ),

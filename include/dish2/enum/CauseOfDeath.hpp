@@ -12,6 +12,7 @@ enum class CauseOfDeath {
   age,
   apoptosis,
   elimination,
+  fragmentation,
   quorum,
 };
 

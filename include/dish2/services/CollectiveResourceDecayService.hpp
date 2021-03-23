@@ -1,38 +1,40 @@
 #pragma once
-#ifndef DISH2_SERVICES_COLLECTIVEHARVESTINGSERVICE_HPP_INCLUDE
-#define DISH2_SERVICES_COLLECTIVEHARVESTINGSERVICE_HPP_INCLUDE
+#ifndef DISH2_SERVICES_COLLECTIVERESOURCEDECAYSERVICE_HPP_INCLUDE
+#define DISH2_SERVICES_COLLECTIVERESOURCEDECAYSERVICE_HPP_INCLUDE
 
-#include <algorithm>
+#include <cmath>
 #include <set>
 #include <utility>
 
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
-#include "../cell/cardinal_iterators/KinGroupAgeWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 
 namespace dish2 {
 
-class CollectiveHarvestingService {
+class CollectiveResourceDecayService {
 
   template<typename Cell>
-  static float CalcHarvest( const Cell& cell, const size_t lev ) {
+  static float CalcDecayRate( const Cell& cell, const size_t lev ) {
 
     const size_t optimum = cfg.OPTIMAL_QUORUM_COUNT()[lev];
     const size_t quorum_count = cell.cell_quorum_state.GetNumKnownQuorumBits(
       lev
     );
-    const size_t effective_count = std::min( optimum, quorum_count );
 
-    return cfg.BASE_HARVEST_RATE() * effective_count;
+    if ( quorum_count > optimum ) {
+      const size_t num_over = quorum_count - optimum;
+      return std::pow( dish2::cfg.RESOURCE_DECAY(), num_over );
+    } else return 1.0f;
+
   }
 
 public:
 
   static bool ShouldRun( const size_t update, const bool alive ) {
-    const size_t freq = dish2::cfg.COLLECTIVE_HARVESTING_SERVICE_FREQUENCY();
+    const size_t freq = dish2::cfg.RESOURCE_DECAY_SERVICE_FREQUENCY();
     return
       alive
       && freq > 0
@@ -42,35 +44,34 @@ public:
   template<typename Cell>
   static void DoService( Cell& cell ) {
 
-    const dish2::LogScope guard{ "collective harvesting service", "TODO", 3 };
+    const dish2::LogScope guard{ "collective resource decay service", "TODO", 3 };
 
     using spec_t = typename Cell::spec_t;
 
     // check resource stockpile consistency
     emp_assert((
-      std::set< typename dish2::ResourceStockpileWrapper<spec_t>::value_type >(
+      std::set<typename dish2::ResourceStockpileWrapper<spec_t>::value_type>(
         cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
         cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
 
-    // how much resource have we harvested?
-    float harvest{};
+    float decay_rate = 1.0f;
     for (size_t lev{}; lev < spec_t::NLEV; ++lev) {
-      harvest += CalcHarvest<Cell>( cell, lev );
+      decay_rate *= CalcDecayRate( cell, lev );
     }
 
-    // update stockpiles to reflect harvested amount
+    // update stockpiles to reflect decay
     std::transform(
       cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
       cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
       cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
-      [harvest](const auto cur) { return cur + harvest; }
+      [decay_rate](const auto cur) { return cur * decay_rate; }
     );
 
     // check resource stockpile consistency
     emp_assert((
-      std::set<typename dish2::ResourceStockpileWrapper<spec_t>::value_type >(
+      std::set<typename dish2::ResourceStockpileWrapper<spec_t>::value_type>(
         cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
         cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
@@ -82,4 +83,4 @@ public:
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_SERVICES_COLLECTIVEHARVESTINGSERVICE_HPP_INCLUDE
+#endif // #ifndef DISH2_SERVICES_COLLECTIVERESOURCEDECAYSERVICE_HPP_INCLUDE
