@@ -10,6 +10,7 @@
 
 #include "../config/cfg.hpp"
 #include "../introspection/get_fraction_live_cells.hpp"
+#include "../introspection/is_extinct.hpp"
 #include "../introspection/has_coalesced.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -31,6 +32,16 @@ bool thread_should_contine(
     emp_always_assert( !uitsl::is_multiprocess() );
     emp_always_assert( cfg.N_THREADS() == 1 );
     std::cout << "coalescence detected at update " << update << '\n';
+    std::cout << "aborting!" << '\n';
+    return false;
+  } else if (
+    cfg.ABORT_IF_EXTINCT_FREQ()
+    && uitsl::shift_mod(update, cfg.ABORT_IF_EXTINCT_FREQ()) == 0
+    && dish2::is_extinct<Spec>( thread_world )
+  ) {
+    emp_always_assert( !uitsl::is_multiprocess() );
+    emp_always_assert( cfg.N_THREADS() == 1 );
+    std::cout << "extinction detected at update " << update << '\n';
     std::cout << "aborting!" << '\n';
     return false;
   } else if (

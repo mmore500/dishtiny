@@ -16,7 +16,7 @@
 namespace dish2 {
 
 template< typename Spec >
-size_t any_live_cells( const dish2::ThreadWorld<Spec>& world ) {
+bool any_live_cells( const dish2::ThreadWorld<Spec>& world ) {
 
   const auto& population = world.population;
 

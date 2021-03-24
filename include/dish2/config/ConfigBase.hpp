@@ -327,6 +327,9 @@ EMP_BUILD_CONFIG(
   VALUE(ABORT_IF_COALESCENT_FREQ, size_t, 0,
     "[NATIVE] How many updates should elapse between checking for coalescence? If 0, never check for coalescence. Must be power of two."
   ),
+  VALUE(ABORT_IF_EXTINCT_FREQ, size_t, 0,
+    "[NATIVE] How many updates should elapse between checking for coalescence? If 0, never check for coalescence. Must be power of two."
+  ),
   VALUE(ABORT_AT_LIVE_CELL_FRACTION, double, 0.0,
     "[NATIVE] Should we terminate once a live cell fraction is reached? "
     "If 0, will not terminate."
