@@ -4,11 +4,14 @@
 
 #include <algorithm>
 #include <limits>
+#include <random>
 #include <sstream>
 
 #include "../../../third-party/cereal/include/cereal/archives/binary.hpp"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../utility/measure_compression_ratio.hpp"
+#include "../world/iterators/GenotypeConstWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -24,23 +27,40 @@ double get_mean_genome_compression_ratio(
 
   const auto& population = world.population;
 
+  emp::vector< dish2::Genome<Spec> > sample;
+
   using lcit_t = dish2::LiveCellIterator<Spec>;
+  const auto begin = dish2::GenotypeConstWrapper<Spec>(
+    lcit_t::make_begin( population )
+  );
+  const auto end = dish2::GenotypeConstWrapper<Spec>(
+    lcit_t::make_end( population )
+  );
+
+  std::sample(
+    begin, end,
+    std::back_inserter( sample ),
+    20,
+    std::mt19937{}
+  );
+
 
   if ( dish2::no_live_cells<Spec>( world ) ) {
     return std::numeric_limits<double>::quiet_NaN();
   } else return std::accumulate(
-    lcit_t::make_begin( population ),
-    lcit_t::make_end( population ),
+    std::begin( sample ), std::end( sample ),
     double{},
-    [](const double accum, const auto& cell){
+    [](const double accum, const auto& genome){
       return accum + dish2::measure_compression_ratio([&](){
         std::ostringstream ss;
-        cereal::BinaryOutputArchive archive( ss );
-        archive( *cell.genome );
+        {
+          cereal::BinaryOutputArchive archive( ss );
+          archive( genome );
+        }
         return ss.str();
       }());
     }
-  ) / dish2::count_live_cells<Spec>( world );
+  ) / sample.size();
 
 }
 
