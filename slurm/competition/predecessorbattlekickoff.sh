@@ -78,7 +78,7 @@ source ~/.secrets.sh || :
 FIRST_SERIES=${SERIES%% *}
 ENDEAVOR="\$(( FIRST_SERIES / 1000 ))"
 NUM_SERIES="$( echo ${SERIES} | wc -w )"
-PREDECESSOR_STINT="$(( STINT > 20 ? STINT - 20 : 0 ))"
+PREDECESSOR_STINT="$(( STINT > 10 ? STINT - 10 : 0 ))"
 
 echo "ENDEAVOR \${ENDEAVOR}"
 echo "NUM_SERIES \${NUM_SERIES}"
