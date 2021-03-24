@@ -79,7 +79,7 @@ void innoculate_population( dish2::ThreadWorld<Spec>& world ) {
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
     << " loaded " << innoculum_buckets.size() << " innoculum buckets "
-    << std::endl;
+    << '\n';
 
 }
 

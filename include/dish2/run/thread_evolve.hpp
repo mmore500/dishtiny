@@ -24,7 +24,7 @@ void thread_evolve( dish2::ThreadWorld<Spec>& thread_world ) {
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " running " << thread_world.population.size() << " cells" << std::endl;
+    << " running " << thread_world.population.size() << " cells" << '\n';
 
   #ifndef __EMSCRIPTEN__
   // sync before starting job
@@ -45,7 +45,7 @@ void thread_evolve( dish2::ThreadWorld<Spec>& thread_world ) {
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
     << " simulation complete @ " << thread_world.GetUpdate() << " updates"
-    << std::endl;
+    << '\n';
 
 }
 

@@ -30,8 +30,8 @@ bool thread_should_contine(
   ) {
     emp_always_assert( !uitsl::is_multiprocess() );
     emp_always_assert( cfg.N_THREADS() == 1 );
-    std::cout << "coalescence detected at update " << update << std::endl;
-    std::cout << "aborting!" << std::endl;
+    std::cout << "coalescence detected at update " << update << '\n';
+    std::cout << "aborting!" << '\n';
     return false;
   } else if (
     cfg.ABORT_AT_LIVE_CELL_FRACTION()
@@ -45,8 +45,8 @@ bool thread_should_contine(
       << cfg.ABORT_AT_LIVE_CELL_FRACTION()
       << " exceeded at update " << update
       << " with value " << dish2::get_fraction_live_cells<Spec>( thread_world )
-      << std::endl;
-    std::cout << "aborting!" << std::endl;
+      << '\n';
+    std::cout << "aborting!" << '\n';
     return false;
   } else if (
     // if we are going to dump data,

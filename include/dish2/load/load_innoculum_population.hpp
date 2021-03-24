@@ -75,7 +75,7 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
     << " thread " << dish2::thread_idx
     << " loaded innoculum population " << root_id
     << " with " << innoculum.size() << " genomes "
-    << " from " << path << std::endl;
+    << " from " << path << '\n';
 
   return innoculum;
 

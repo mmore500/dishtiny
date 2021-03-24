@@ -30,7 +30,7 @@ void create_montage() {
     "outdrawings/"
   ).empty() ) {
     std::cout << "proc " << uitsl::get_proc_id()
-      << " no drawings to create montage, skipping" << std::endl;
+      << " no drawings to create montage, skipping" << '\n';
       return;
   }
 
@@ -79,7 +79,7 @@ void create_montage() {
   uitsl::err_discard( std::system(command.c_str()) );
 
   std::cout << "proc " << uitsl::get_proc_id()
-    << " created montage" << std::endl;
+    << " created montage" << '\n';
 
 }
 

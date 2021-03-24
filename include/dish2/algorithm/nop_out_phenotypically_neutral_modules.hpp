@@ -28,7 +28,7 @@ auto nop_out_phenotypically_neutral_modules(
   );
 
   const dish2::LogScope guard( "evaluating module-by-module" );
-  std::cout << "evaluating " << num_modules << " modules" << std::endl;
+  std::cout << "evaluating " << num_modules << " modules" << '\n';
 
   emp::vector< char > should_nop( num_modules );
   emp::vector< size_t > divergence_updates( num_modules );
@@ -53,7 +53,7 @@ auto nop_out_phenotypically_neutral_modules(
 
   }
 
-  std::cout << " done" << std::endl;
+  std::cout << " done" << '\n';
 
   genome.program
     = sgpl::nop_out_modules< sgpl_spec_t >( genome.program, should_nop );

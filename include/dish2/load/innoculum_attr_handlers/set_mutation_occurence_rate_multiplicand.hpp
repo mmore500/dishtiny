@@ -32,7 +32,7 @@ void set_mutation_occurence_rate_multiplicand(
       << " setting mutation_occurence_rate_multiplicand to "
       << mutation_occurence_rate_multiplicand
       << " for root id " << root_id << " from " << path
-      << std::endl;
+      << '\n';
 
     dish2::root_mutation_configs.Get(
       root_id

@@ -94,7 +94,7 @@ void dump_spawn_log( const dish2::ThreadWorld< Spec >& world ) {
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " dumped spawn log" << std::endl;
+    << " dumped spawn log" << '\n';
 
 }
 

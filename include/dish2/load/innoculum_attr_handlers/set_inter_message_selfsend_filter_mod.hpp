@@ -29,7 +29,7 @@ void set_inter_message_selfsend_filter_mod(const std::filesystem::path& path) {
       << " thread " << dish2::thread_idx
       << " setting inter_message_selfsend_filter_mod to "
       << inter_message_selfsend_filter_mod
-      << " for root id " << root_id << " from " << path << std::endl;
+      << " for root id " << root_id << " from " << path << '\n';
     dish2::root_perturbation_configs.Get(
       root_id
     ).inter_message_selfsend_filter_mod

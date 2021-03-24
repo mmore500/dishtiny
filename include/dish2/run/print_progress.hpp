@@ -37,7 +37,7 @@ void print_progress(
     << " (" << 100.0 * run_timer.GetFractionComplete() << "%)";
   }
 
-  std::cout << std::endl;
+  std::cout << '\n';
 
 }
 

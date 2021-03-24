@@ -12,17 +12,17 @@ namespace dish2 {
 
 void print_config() {
 
-  std::cout << "==============================" << std::endl;
-  std::cout << "|    How am I configured?    |" << std::endl;
-  std::cout << "==============================" << std::endl;
+  std::cout << "==============================" << '\n';
+  std::cout << "|    How am I configured?    |" << '\n';
+  std::cout << "==============================" << '\n';
   std::cout << "SOURCE DIRECTORY "
-    << EMP_STRINGIFY(DISHTINY_SOURCE_DIR_) << std::endl;
-  std::cout << "SOURCE HASH " << EMP_STRINGIFY(DISHTINY_HASH_) << std::endl;
-  std::cout << "------------------------------" << std::endl;
+    << EMP_STRINGIFY(DISHTINY_SOURCE_DIR_) << '\n';
+  std::cout << "SOURCE HASH " << EMP_STRINGIFY(DISHTINY_HASH_) << '\n';
+  std::cout << "------------------------------" << '\n';
 
   dish2::cfg.Write( std::cout );
 
-  std::cout << "==============================\n" << std::endl;
+  std::cout << "==============================\n" << '\n';
 
   // todo print directory contents (with hashes?)
 

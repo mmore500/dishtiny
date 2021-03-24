@@ -129,7 +129,7 @@ void write_demographic_phenotypic_phylogenetic_metrics(
 
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " wrote demographic phenotypic phylogenetic metrics" << std::endl;
+      << " wrote demographic phenotypic phylogenetic metrics" << '\n';
   });
 
   {

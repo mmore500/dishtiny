@@ -134,7 +134,7 @@ void dump_coalescence_result( const dish2::ThreadWorld< Spec >& world ) {
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " dumped coalescence result" << std::endl;
+    << " dumped coalescence result" << '\n';
 
 }
 

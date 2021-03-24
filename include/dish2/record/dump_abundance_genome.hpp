@@ -49,7 +49,7 @@ bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
     && dish2::thread_idx == 0
     && uitsl::is_root()
   ) {
-    std::cout << "recording phenotype equivalent nopout" << std::endl;
+    std::cout << "recording phenotype equivalent nopout" << '\n';
     dish2::dump_genome< Spec >(
       dish2::make_phenotype_equivalent_nopout< Spec >(
         genome, "abundance"

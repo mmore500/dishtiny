@@ -28,7 +28,7 @@ void apply_deletion_mutate_on_load(
     if ( should_announce ) std::cout
       << "proc " << uitsl::get_proc_id() << " thread " << dish2::thread_idx
       << " applying " << num_muts << " deletion mutations "
-      << "to genome " << attrs.at("root_id") << " from " << path << std::endl;
+      << "to genome " << attrs.at("root_id") << " from " << path << '\n';
 
     for (size_t i{}; i < num_muts; ++i) innoculum.DoDeletionMutation();
   }

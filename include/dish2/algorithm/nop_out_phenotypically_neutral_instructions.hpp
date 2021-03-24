@@ -25,7 +25,7 @@ auto nop_out_phenotypically_neutral_instructions(
   const dish2::LogScope guard{ "evaluating instruction-by-instruction" };
   std::cout
     << "evaluating " << genome.program.size() << " instructions "
-    << nop_length << " at a time" << std::endl;
+    << nop_length << " at a time" << '\n';
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
 
@@ -53,7 +53,7 @@ auto nop_out_phenotypically_neutral_instructions(
 
   }
 
-  std::cout << " done" << std::endl;
+  std::cout << " done" << '\n';
 
   genome.program
     = sgpl::nop_out_instructions< sgpl_spec_t >( genome.program, should_nop );

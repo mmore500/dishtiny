@@ -14,20 +14,20 @@ namespace dish2 {
 template<typename Spec>
 void print_spec() {
 
-  std::cout << "==============================" << std::endl;
-  std::cout << "|     How am I compiled?     |" << std::endl;
-  std::cout << "==============================" << std::endl;
+  std::cout << "==============================" << '\n';
+  std::cout << "|     How am I compiled?     |" << '\n';
+  std::cout << "==============================" << '\n';
   std::cout << "SOURCE DIRECTORY "
-    << EMP_STRINGIFY(DISHTINY_SOURCE_DIR_) << std::endl;
-  std::cout << "SOURCE HASH " << EMP_STRINGIFY(DISHTINY_HASH_) << std::endl;
-  std::cout << "------------------------------" << std::endl;
+    << EMP_STRINGIFY(DISHTINY_SOURCE_DIR_) << '\n';
+  std::cout << "SOURCE HASH " << EMP_STRINGIFY(DISHTINY_HASH_) << '\n';
+  std::cout << "------------------------------" << '\n';
 
   constexpr size_t readable_size = dish2::ReadableState<Spec>::parent_size;
   constexpr size_t writable_size = dish2::WritableState<Spec>::parent_size;
-  std::cout << "ReadableState size: " << readable_size << std::endl;
-  std::cout << "WritableState size: " << writable_size << std::endl;
+  std::cout << "ReadableState size: " << readable_size << '\n';
+  std::cout << "WritableState size: " << writable_size << '\n';
 
-  std::cout << "==============================\n" << std::endl;
+  std::cout << "==============================\n" << '\n';
 
 }
 

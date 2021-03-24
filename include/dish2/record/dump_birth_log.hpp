@@ -95,7 +95,7 @@ void dump_birth_log( const dish2::ThreadWorld< Spec >& world ) {
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " dumped birth log" << std::endl;
+    << " dumped birth log" << '\n';
 
 }
 

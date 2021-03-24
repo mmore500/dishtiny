@@ -30,7 +30,7 @@ void set_intra_message_selfsend_filter_target(
       << " thread " << dish2::thread_idx
       << " setting intra_message_selfsend_filter_target to "
       << intra_message_selfsend_filter_target
-      << " for root id " << root_id << " from " << path << std::endl;
+      << " for root id " << root_id << " from " << path << '\n';
     dish2::root_perturbation_configs.Get(
       root_id
     ).intra_message_selfsend_filter_target

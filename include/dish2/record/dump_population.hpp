@@ -45,7 +45,7 @@ void dump_population( const dish2::ThreadWorld< Spec >& world ) {
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " dumped population" << std::endl;
+    << " dumped population" << '\n';
 
 }
 

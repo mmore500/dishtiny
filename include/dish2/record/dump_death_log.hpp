@@ -83,7 +83,7 @@ void dump_death_log( const dish2::ThreadWorld< Spec >& world ) {
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " dumped death log" << std::endl;
+    << " dumped death log" << '\n';
 
 }
 

@@ -126,7 +126,7 @@ struct ProcWorld {
     assignments.first
   };
 
-  ProcWorld() { if (use_metis) std::cout << "assign used metis" << std::endl; }
+  ProcWorld() { if (use_metis) std::cout << "assign used metis" << '\n'; }
 
   dish2::ThreadWorld<Spec> MakeThreadWorld() {
     return dish2::ThreadWorld<Spec>(

@@ -25,9 +25,9 @@ void setup_config( emp::ArgManager& arg_manager ) {
   // so use stat as a backup for now
   // if ( std::filesystem::exists("dishtiny.cfg") ) {
   if ( dish2::path_exists("dishtiny.cfg") ) {
-    std::cout << "reading configuration from dishtiny.cfg" << std::endl;
+    std::cout << "reading configuration from dishtiny.cfg" << '\n';
     dish2::cfg.Read( "dishtiny.cfg" );
-  } else std::cout << "no configuration file found" << std::endl;
+  } else std::cout << "no configuration file found" << '\n';
 
   arg_manager.UseCallbacks();
 

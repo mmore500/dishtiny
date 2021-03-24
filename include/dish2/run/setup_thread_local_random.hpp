@@ -25,7 +25,7 @@ void setup_thread_local_random() {
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " using rng preseed " << preseed << std::endl;
+    << " using rng preseed " << preseed << '\n';
 
   const uint32_t hash = dish2::sha256_reduce( emp::vector< uint32_t >{
     preseed,
@@ -35,7 +35,7 @@ void setup_thread_local_random() {
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " calculated hash " << hash << std::endl;
+    << " calculated hash " << hash << '\n';
 
   // seed >= 1 so that rng is seeded deterministically
   const auto seed_addend = hash % ( std::numeric_limits<int32_t>::max() - 1 );
@@ -45,7 +45,7 @@ void setup_thread_local_random() {
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " applied rng seed " << seed << std::endl;
+    << " applied rng seed " << seed << '\n';
 
 }
 

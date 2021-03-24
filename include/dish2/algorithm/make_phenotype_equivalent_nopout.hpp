@@ -66,7 +66,7 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
       dish2::make_divergence_updates_filename( criteria, 1, "module" )
     ) );
 
-    for (const auto& upd : divergence_updates) os << upd << std::endl;
+    for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
   // nop out in increasingly fine-grained segments
@@ -83,7 +83,7 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
       dish2::make_divergence_updates_filename( criteria, 8, "inst" )
     ) );
 
-    for (const auto& upd : divergence_updates) os << upd << std::endl;
+    for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
   {
@@ -96,7 +96,7 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
       dish2::make_divergence_updates_filename( criteria, 4, "inst" )
     ) );
 
-    for (const auto& upd : divergence_updates) os << upd << std::endl;
+    for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
   {
@@ -109,7 +109,7 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
       dish2::make_divergence_updates_filename( criteria, 2, "inst" )
     ) );
 
-    for (const auto& upd : divergence_updates) os << upd << std::endl;
+    for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
   {
@@ -122,12 +122,12 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
       dish2::make_divergence_updates_filename( criteria, 1, "inst" )
     ) );
 
-    for (const auto& upd : divergence_updates) os << upd << std::endl;
+    for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
   std::cout << sgpl::count_instructions( genome.program, "op" );
   std::cout << " op instructions remain in phenotype equivalent nopout";
-  std::cout << std::endl;
+  std::cout << '\n';
 
   return genome;
 

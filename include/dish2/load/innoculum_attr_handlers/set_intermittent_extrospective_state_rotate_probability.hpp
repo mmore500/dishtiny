@@ -30,7 +30,7 @@ void set_intermittent_extrospective_state_rotate_probability(
       << " thread " << dish2::thread_idx
       << " setting intermittent_extrospective_state_rotate_probability to "
       << intermittent_extrospective_state_rotate_probability
-      << " for root id " << root_id << " from " << path << std::endl;
+      << " for root id " << root_id << " from " << path << '\n';
 
     dish2::root_perturbation_configs.Get(
       root_id

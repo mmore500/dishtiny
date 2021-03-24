@@ -81,7 +81,7 @@ void write_phylogenetic_root_abundances(
 
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " wrote phylogenetic root abundances" << std::endl;
+      << " wrote phylogenetic root abundances" << '\n';
   });
 
   for ( const auto& root_id_ : dish2::get_unique_root_ids<Spec>(world) ) {

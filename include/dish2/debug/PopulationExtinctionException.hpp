@@ -34,11 +34,11 @@ public:
   , cause_of_death_counts( cause_of_death_counts_ ) {
     std::stringstream ss;
 
-    ss << "Population Extinction Exception" << std::endl;
-    ss << "  update " << update << std::endl;
-    ss << "  population size " << population_size << std::endl;
+    ss << "Population Extinction Exception" << '\n';
+    ss << "  update " << update << '\n';
+    ss << "  population size " << population_size << '\n';
     for ( const auto& [k, v] : cause_of_death_counts ) {
-      ss << "  " << k << " " << v << std::endl;
+      ss << "  " << k << " " << v << '\n';
     }
 
 

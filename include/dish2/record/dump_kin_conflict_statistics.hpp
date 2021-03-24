@@ -124,7 +124,7 @@ void dump_kin_conflict_statistics( const dish2::ThreadWorld< Spec >& world ) {
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " dumped kin conflict statistics" << std::endl;
+    << " dumped kin conflict statistics" << '\n';
 
 }
 

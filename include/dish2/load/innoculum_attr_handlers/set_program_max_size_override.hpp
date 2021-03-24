@@ -26,7 +26,7 @@ void set_program_max_size_override( const std::filesystem::path& path ) {
       << " thread " << dish2::thread_idx
       << " setting program_max_size_override to "
       << program_max_size_override
-      << " for root id " << root_id << " from " << path << std::endl;
+      << " for root id " << root_id << " from " << path << '\n';
 
     dish2::root_mutation_configs.Get(
       root_id

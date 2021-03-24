@@ -141,7 +141,7 @@ void dump_kin_conflict_by_replev_statistics(
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " dumped kin conflict by replev statistics" << std::endl;
+    << " dumped kin conflict by replev statistics" << '\n';
 
 }
 

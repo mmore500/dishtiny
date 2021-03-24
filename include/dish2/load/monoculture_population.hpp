@@ -41,13 +41,13 @@ void monoculture_population( dish2::ThreadWorld<Spec>& world ) {
 
   std::cout  << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " loaded monoculture from " << monoculture_paths.front() << std::endl;
+    << " loaded monoculture from " << monoculture_paths.front() << '\n';
 
   dish2::seed_genomes_into<Spec>( {monoculture}, world );
 
   std::cout  << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " applied monoculture" << std::endl;
+    << " applied monoculture" << '\n';
 
 }
 

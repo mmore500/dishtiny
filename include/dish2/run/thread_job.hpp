@@ -31,13 +31,13 @@ void thread_job( dish2::ThreadWorld<Spec> thread_world ) {
   // write elapsed updates to file (for easier benchmark post-processing)
   if (cfg.BENCHMARKING_DUMP() ) std::ofstream(
     dish2::make_elapsed_updates_filename()
-  ) << thread_world.GetUpdate() << std::endl;
+  ) << thread_world.GetUpdate() << '\n';
 
   if ( cfg.ARTIFACTS_DUMP() ) {
     dish2::thread_artifacts_dump<Spec>( thread_world );
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " artifacts dump complete" << std::endl;
+      << " artifacts dump complete" << '\n';
   }
 
   if (dish2::cfg.GENESIS() == "innoculate") {
@@ -48,20 +48,20 @@ void thread_job( dish2::ThreadWorld<Spec> thread_world ) {
     dish2::thread_data_dump<Spec>( thread_world );
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " data dump complete" << std::endl;
+      << " data dump complete" << '\n';
 
     dish2::thread_data_write<Spec>( thread_world );
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " write 0" << std::endl;
+      << " write 0" << '\n';
     thread_world.Update();
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " update step" << std::endl;
+      << " update step" << '\n';
     dish2::thread_data_write<Spec>( thread_world );
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " write 1" << std::endl;
+      << " write 1" << '\n';
   }
 
   if ( cfg.TEST_INTERROOT_PHENOTYPE_DIFFERENTIATION() ) {
@@ -70,7 +70,7 @@ void thread_job( dish2::ThreadWorld<Spec> thread_world ) {
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " thread job complete" << std::endl;
+    << " thread job complete" << '\n';
 
 }
 

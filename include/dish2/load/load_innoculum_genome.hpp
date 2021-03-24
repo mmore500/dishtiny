@@ -65,7 +65,7 @@ dish2::Genome<Spec> load_innoculum_genome(const std::filesystem::path& path) {
 
   std::cout  << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " loaded innoculum genome " << root_id << " from " << path << std::endl;
+    << " loaded innoculum genome " << root_id << " from " << path << '\n';
 
   return innoculum;
 

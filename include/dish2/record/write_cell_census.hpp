@@ -71,7 +71,7 @@ void write_cell_census( const dish2::ThreadWorld< Spec >& world ) {
 
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " wrote cell census" << std::endl;
+      << " wrote cell census" << '\n';
   });
 
 

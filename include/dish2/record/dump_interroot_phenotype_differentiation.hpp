@@ -139,7 +139,7 @@ void dump_interroot_phenotype_differentiation(
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
-    << " dumped interroot_phenotype_differentiation result" << std::endl;
+    << " dumped interroot_phenotype_differentiation result" << '\n';
 
 }
 

@@ -34,7 +34,7 @@ void write_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
     worker.detach(); // we leave the thread still running
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " drawings write timed out" << std::endl;
+      << " drawings write timed out" << '\n';
   }
 
   thread_local std::once_flag once_flag;
@@ -42,7 +42,7 @@ void write_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " wrote drawings" << std::endl;
+      << " wrote drawings" << '\n';
   });
 
 }

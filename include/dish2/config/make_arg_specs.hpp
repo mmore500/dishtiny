@@ -33,7 +33,7 @@ auto make_arg_specs() {
         for ( const auto& asset_url : *args ) {
           const auto filename = uitsl::autoinstall( asset_url );
           std::cout << "autoinstalling " << asset_url
-            << " to " << filename << std::endl;
+            << " to " << filename << '\n';
         }
       } }, // callback
       false, // gobble_flags
@@ -47,7 +47,7 @@ auto make_arg_specs() {
       [](const auto& args){ if ( args ) {
         static_assert( dish2::IntrospectiveState<Spec>::parent_size );
         std::cout << dish2::IntrospectiveState<Spec>::parent_size - 1;
-        std::cout << std::endl;
+        std::cout << '\n';
         std::exit(0);
       } }, // callback
       false, // gobble_flags
@@ -62,7 +62,7 @@ auto make_arg_specs() {
         // neighbor's readable states are your extrospective states
         static_assert( dish2::ReadableState<Spec>::parent_size );
         std::cout << dish2::ReadableState<Spec>::parent_size - 1;
-        std::cout << std::endl;
+        std::cout << '\n';
         std::exit(0);
       } }, // callback
       false, // gobble_flags
@@ -74,7 +74,7 @@ auto make_arg_specs() {
       {}, // aliases
       [](const auto& args){ if ( args ) {
         static_assert( dish2::ReadableState<Spec>::parent_size );
-        std::cout << dish2::ReadableState<Spec>::parent_size - 1 << std::endl;
+        std::cout << dish2::ReadableState<Spec>::parent_size - 1 << '\n';
         std::exit(0);
       } }, // callback
       false, // gobble_flags
@@ -86,7 +86,7 @@ auto make_arg_specs() {
       {}, // aliases
       [](const auto& args){ if ( args ) {
         static_assert( dish2::WritableState<Spec>::parent_size );
-        std::cout << dish2::WritableState<Spec>::parent_size - 1 << std::endl;
+        std::cout << dish2::WritableState<Spec>::parent_size - 1 << '\n';
         std::exit(0);
       } }, // callback
       false, // gobble_flags

@@ -44,7 +44,7 @@ void reconstitute_population( dish2::ThreadWorld<Spec>& world ) {
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
     << " reconstituted " << reconstituted.size() << " cells from "
-    << eligible_population_paths.front() << std::endl;
+    << eligible_population_paths.front() << '\n';
 
   dish2::seed_genomes_into<Spec>( reconstituted, world );
 

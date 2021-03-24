@@ -36,7 +36,7 @@ void set_extrospective_state_target_idx( const std::filesystem::path& path ) {
       << " thread " << dish2::thread_idx
       << " setting extrospective_state_target_idx to \""
       << emp::to_string(extrospective_state_target_idx)
-      << "\" for root id " << root_id << " from " << path << std::endl;
+      << "\" for root id " << root_id << " from " << path << '\n';
 
     dish2::root_perturbation_configs.Get(
       root_id
