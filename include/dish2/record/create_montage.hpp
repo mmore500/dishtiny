@@ -25,6 +25,15 @@ namespace dish2 {
 
 void create_montage() {
 
+  if ( uitsl::keyname_directory_filter(
+    {{"proc", "0"}, {"thread", "0"}, {"ext", ".png"}},
+    "outdrawings/"
+  ).empty() ) {
+    std::cout << "proc " << uitsl::get_proc_id()
+      << " no drawings to create montage, skipping" << std::endl;
+      return;
+  }
+
   const size_t last_update = uitsl::keyname_directory_max(
     "update",
     {{"proc", "0"}, {"thread", "0"}, {"ext", ".png"}},
