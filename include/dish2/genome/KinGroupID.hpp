@@ -38,15 +38,15 @@ struct KinGroupID {
   void ApplyInheritance( const size_t rep_lev ) {
     emp_assert( rep_lev <= Spec::NLEV );
 
-    std::copy(
+    std::copy_n(
       std::begin( data ),
-      std::next( std::begin( data ), rep_lev ),
+      rep_lev,
       std::begin( ancestor_data )
     );
 
-    std::generate(
+    std::generate_n(
       std::begin( data ),
-      std::next( std::begin( data ), rep_lev ),
+      rep_lev,
       [](){
         size_t res;
         sgpl::tlrand.Get().RandFill(
