@@ -24,7 +24,12 @@ struct DiversityMaintenanceService {
 
   static bool ShouldRun( const size_t update ) {
     const size_t freq = dish2::cfg.DIVERSITY_MAINTENANCE_SERVICE_FREQUENCY();
-    return freq > 0 && uitsl::shift_mod( update, freq ) == 0;
+    return
+      freq > 0
+      && uitsl::shift_mod( update, freq ) == 0
+      && dish2::cfg.GENESIS() != "innoculate"
+      && dish2::cfg.GENESIS() != "monoculture"
+    ;
   }
 
   template<typename ThreadWorld>

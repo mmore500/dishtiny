@@ -37,6 +37,12 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
   const dish2::TemporaryConfigOverride weak_scaling(
     "WEAK_SCALING", false
   );
+  const dish2::TemporaryConfigOverride diversity_maintentance(
+    "DIVERSITY_MAINTENANCE_SERVICE_FREQUENCY", 0
+  );
+  const dish2::TemporaryConfigOverride stint_diversity_maintentance(
+    "STINT_DIVERSITY_MAINTENANCE_SERVICE_FREQUENCY", 0
+  );
   const dish2::TemporaryConfigOverride n_threads(
     "N_THREADS", 1
   );
