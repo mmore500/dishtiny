@@ -14,9 +14,13 @@ namespace dish2 {
 template< typename T >
 double measure_compression_ratio(const T& val) {
 
-  const std::string uncompressed_path = uitsl::make_temp_filepath();
-  const std::string compressed_path = uitsl::make_temp_filepath();
+  // make temp filepath is expensive, so reuse temp paths
+  thread_local const std::string uncompressed_path
+    = uitsl::make_temp_filepath();
+  thread_local const std::string compressed_path
+    = uitsl::make_temp_filepath();
 
+  // will overwrite
   {
     std::ofstream uncompressed_handle{ uncompressed_path };
     uncompressed_handle << val << std::flush;

@@ -34,9 +34,9 @@ void dump_spawn_log( const dish2::ThreadWorld< Spec >& world ) {
     dish2::make_data_path()
   );
 
-  thread_local bxz::ofstream out_stream( dish2::make_data_path(
-    out_filename
-  ) );
+  thread_local bxz::ofstream out_stream(
+    dish2::make_data_path( out_filename ), bxz::lzma, 6
+  );
   emp::DataFile file( out_stream );
 
   if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");

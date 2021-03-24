@@ -35,7 +35,7 @@ void dump_death_log( const dish2::ThreadWorld< Spec >& world ) {
   );
 
   thread_local bxz::ofstream out_stream(
-    dish2::make_data_path( out_filename ), bxz::lzma, 9
+    dish2::make_data_path( out_filename ), bxz::lzma, 6
   );
   emp::DataFile file( out_stream );
 
