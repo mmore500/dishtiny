@@ -9,7 +9,7 @@ echo "-------------------------------------------------"
 # fail on error
 set -e
 
-if (( "$#" < 10 )); then
+if (( "$#" < 8 )); then
   echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [inter/intra] [filter_mod] [stint] [series...]"
   exit 1
 fi
