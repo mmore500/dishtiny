@@ -234,6 +234,12 @@ EMP_BUILD_CONFIG(
   VALUE(DIVERSITY_MAINTENANCE_PREVALENCE, double, 0.25,
     "TODO"
   ),
+  VALUE(STINT_DIVERSITY_MAINTENANCE_SERVICE_FREQUENCY, size_t, 0,
+    "Run service every ?? updates."
+  ),
+  VALUE(STINT_DIVERSITY_MAINTENANCE_PREVALENCE, double, 0.25,
+    "TODO"
+  ),
   VALUE(DECAY_TO_BASELINE_SERVICE_FREQUENCY, size_t, 32,
     "Run service every ?? updates."
   ),

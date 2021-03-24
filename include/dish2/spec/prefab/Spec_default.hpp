@@ -176,7 +176,8 @@ struct Spec_default {
 
   using thread_local_service_manager_t = dish2::ThreadLocalServiceManager<
     dish2::CellUpdateService,
-    dish2::DiversityMaintenanceService
+    dish2::DiversityMaintenanceService,
+    dish2::StintDiversityMaintenanceService
   >;
 
 };
