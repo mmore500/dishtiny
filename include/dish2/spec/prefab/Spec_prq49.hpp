@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_SPEC_PREFAB_SPEC_DEFAULT_HPP_INCLUDE
-#define DISH2_SPEC_PREFAB_SPEC_DEFAULT_HPP_INCLUDE
+#ifndef DISH2_SPEC_PREFAB_SPEC_PRQ49_HPP_INCLUDE
+#define DISH2_SPEC_PREFAB_SPEC_PRQ49_HPP_INCLUDE
 
 #include <tuple>
 #include <type_traits>
@@ -185,4 +185,4 @@ struct Spec_prq49 {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_SPEC_PREFAB_SPEC_DEFAULT_HPP_INCLUDE
+#endif // #ifndef DISH2_SPEC_PREFAB_SPEC_PRQ49_HPP_INCLUDE
