@@ -59,9 +59,9 @@ public:
   using iterator_category = std::forward_iterator_tag;
   using difference_type = typename parent_t::difference_type;
 
-  const value_type& operator*() { return parent_t::operator*(); }
+  const value_type& operator*() const { return parent_t::operator*(); }
 
-  const value_type* operator->() { return &operator*(); }
+  const value_type* operator->() const { return &operator*(); }
 
   LiveCellIterator& operator++() {
 
