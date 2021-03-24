@@ -23,7 +23,7 @@ using Spec = DISH2_SPEC;
 
 int main(int argc, char* argv[]) {
 
-  dish2::setup( emp::ArgManager{ argc, argv, dish2::make_arg_specs() } );
+  dish2::setup( emp::ArgManager{ argc, argv, dish2::make_arg_specs<Spec>() } );
   if ( uitsl::is_root() ) dish2::print_spec<Spec>();
   dish2::global_records_initialize();
 

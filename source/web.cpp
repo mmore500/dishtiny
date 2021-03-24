@@ -24,7 +24,7 @@ int main() {
   dish2::thread_idx = 0;
 
   dish2::setup( emp::ArgManager{
-    emp::web::GetUrlParams(), dish2::make_arg_specs()
+    emp::web::GetUrlParams(), dish2::make_arg_specs<Spec>()
   } );
   dish2::print_spec<Spec>();
 
