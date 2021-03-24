@@ -226,8 +226,8 @@ for p in outdata/*a={demographic_phenotypic_phylogenetic_metrics,kin_conflict_st
 
 done
 
-echo "uploading any as_configured files..."
-for p in outmeta/*a=as_configured*.csv*; do
+echo "uploading any asconfigured files..."
+for p in outmeta/*a=asconfigured*.csv*; do
   f="$(basename "${p}")"
   echo "uploading ${p} -> ${f}"
   for retry in {1..20}; do

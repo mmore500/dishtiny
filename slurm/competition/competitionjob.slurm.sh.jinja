@@ -219,8 +219,8 @@ for p in outdata/*a=coalescence_result*; do
 
 done
 
-echo "uploading as_configured files..."
-for p in outmeta/*a=as_configured*.csv*; do
+echo "uploading asconfigured files..."
+for p in outmeta/*a=asconfigured*.csv*; do
   f="$(basename "${p}")"
   echo "uploading ${p} -> ${f}"
   for retry in {1..20}; do
