@@ -7,7 +7,7 @@
 
 #include "../algorithm/make_phenotype_equivalent_nopout.hpp"
 #include "../introspection/count_live_cells.hpp"
-#include "../introspection/get_prevalent_coding_genotype_genome.hpp"
+#include "../introspection/get_lowest_root_prevalent_coding_genotype_genome.hpp"
 #include "../introspection/no_live_cells.hpp"
 
 #include "../config/thread_idx.hpp"
@@ -19,6 +19,7 @@
 
 namespace dish2 {
 
+// dumps most abundant genome from the lowest phylogenetic root
 template< typename Spec >
 bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
 
@@ -26,7 +27,7 @@ bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
   if ( dish2::no_live_cells<Spec>(world) ) return false;
 
   const auto [genome, count]
-    = dish2::get_prevalent_coding_genotype_genome<Spec>( world );
+    = dish2::get_lowest_root_prevalent_coding_genotype_genome<Spec>( world );
 
   const double abundance{ count / static_cast<double>(
     world.GetSize()
