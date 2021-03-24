@@ -21,9 +21,9 @@
 #include "OptimumQuorumExceededEvent.hpp"
 #include "OptimumQuorumNotExceededEvent.hpp"
 #include "ParentFragmentedEvent.hpp"
-#include "PoorerThanNeighborEvent.hpp"
 #include "PhylogeneticRootMatchEvent.hpp"
 #include "PhylogeneticRootMismatchEvent.hpp"
+#include "PoorerThanNeighborEvent.hpp"
 #include "ReceivedResourceFromEvent.hpp"
 #include "RicherThanNeighborEvent.hpp"
 

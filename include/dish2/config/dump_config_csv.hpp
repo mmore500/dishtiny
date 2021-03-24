@@ -13,10 +13,10 @@
 #include "../utility/mkdir_exists_ok.hpp"
 #include "../utility/pare_keyname_filename.hpp"
 
+#include "cfg.hpp"
 #include "get_endeavor.hpp"
 #include "get_repro.hpp"
 #include "get_slurm_job_id.hpp"
-#include "cfg.hpp"
 
 namespace dish2 {
 
