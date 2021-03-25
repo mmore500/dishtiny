@@ -166,9 +166,10 @@ echo "------------------"
 
 # have to use login shell so module command loads correctly
 
-sshpass -p "${HOST_PASSWORD}" \
+if (( N_PROCS == 1 )); then bash -login /dev/stdin; else sshpass -p "${HOST_PASSWORD}" \
 ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   "${HOST_USERNAME}@$(hostname)" -X 'bash -login'\
+; fi \
 << MPIEXEC_HEREDOC_EOF
   [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
   module load --ignore-cache GCC/7.2.0-2.29 MPICH/3.2.1|| :

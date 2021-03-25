@@ -185,9 +185,10 @@ echo "------------------"
 # put stint and series in "'s with preceeding space so that we can
 # pass -1 without it being recognized as a flag
 
-sshpass -p "${HOST_PASSWORD}" \
+if (( N_PROCS == 1 )); then bash -login /dev/stdin; else sshpass -p "${HOST_PASSWORD}" \
 ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   "${HOST_USERNAME}@$(hostname)" -X 'bash -login'\
+; fi \
 << MPIEXEC_HEREDOC_EOF
   [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
   module load --ignore-cache GCC/7.2.0-2.29 MPICH/3.2.1|| :
