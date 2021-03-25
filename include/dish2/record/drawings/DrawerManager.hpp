@@ -2,9 +2,43 @@
 #ifndef DISH2_RECORD_DRAWINGS_DRAWERMANAGER_HPP_INCLUDE
 #define DISH2_RECORD_DRAWINGS_DRAWERMANAGER_HPP_INCLUDE
 
+#include <algorithm>
+#include <iterator>
+#include <string>
 #include <thread>
+#include <utility>
+#include <variant>
+
+#include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
+#include "../../../../third-party/Empirical/include/emp/base/array.hpp"
 
 namespace dish2 {
+
+template< typename... Drawers >
+class PolymorphicDrawer {
+
+    std::variant<Drawers...> impl;
+
+public:
+    PolymorphicDrawer() = delete;
+
+    PolymorphicDrawer(const PolymorphicDrawer&) = default;
+
+    PolymorphicDrawer& operator=(const PolymorphicDrawer&) = default;
+
+    template<typename Drawer, typename... Args>
+    PolymorphicDrawer( std::in_place_type_t<Drawer> tag, Args&&... args )
+    : impl( tag, std::forward<Args>( args )... )
+    { }
+
+    void SaveToFile() {
+        // call Draw on the variant impl
+        std::visit(
+            [&](auto& drawer){ drawer.SaveToFile(); },
+            impl
+        );
+    }
+};
 
 // base case
 template<typename... SubsequentDrawers> struct DrawerManager {
