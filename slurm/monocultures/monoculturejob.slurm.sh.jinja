@@ -180,8 +180,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   export XVFB_PID="${XVFB_PID}"
   export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_DIR}/dishtiny/"
   mpiexec.hydra --version
-  mpiexec.hydra -n "${N_PROCS}" \
-  singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
+  $( (( N_PROCS > 1 )) && echo mpiexec.hydra -n "${N_PROCS}" singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" ) \
     ./rundishtiny \
     -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series | int < 1000 else 600 if series | int < 10000 else 1800 }} -GENESIS "monoculture" -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -MUTATION_RATE "0 0 0" -STINT {{ stint }} -SERIES {{ series }} -DRAWINGS_WRITE 1 -THROW_ON_EXTINCTION 0 -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/monoculturejob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
   && echo "simulation exit success" \

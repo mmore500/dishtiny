@@ -200,8 +200,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   export XVFB_PID="${XVFB_PID}"
   export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_DIR}/dishtiny/"
   mpiexec.hydra --version
-  mpiexec.hydra -n "${N_PROCS}" \
-  singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
+  $( (( N_PROCS > 1 )) && echo mpiexec.hydra -n "${N_PROCS}" singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" ) \
     ./rundishtiny \
     -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if endeavor | int < 1 else 600 if endeavor | int < 100 else 3600 }} -GENESIS "innoculate" -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 {{ '' if ( enable_mutation | default(False) ) else '-MUTATION_RATE "0 0 0"' }} -STINT " {{ stint | default('-1') }}" -SERIES " {{ series | default('-1') }}" --REPLICATE "{{ replicate }}" -ABORT_IF_COALESCENT_FREQ 64 -THROW_ON_EXTINCTION 0 -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/competitionjob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
   && echo "simulation exit success" \
