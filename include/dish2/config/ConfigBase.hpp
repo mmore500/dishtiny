@@ -274,6 +274,18 @@ EMP_BUILD_CONFIG(
   VALUE(RUNNING_LOG_DURATION, size_t, 4,
     "How many purge epochs should we keep events in the running log?"
   ),
+  VALUE(DRAWING_FREQ, size_t, 0,
+    "How often should we draw the current world?"
+  ),
+  VALUE(DRAWING_WIDTH, size_t, 2000,
+    "What should the width of the drawings be?"
+  ),
+  VALUE(DRAWING_HEIGHT, size_t, 2000,
+    "What should the height of the drawings be?"
+  ),
+  VALUE(DRAWINGS, std::string, "",
+    "What drawings should be make?"
+  ),
   // VALUE(UPDATES_PER_CHUNK, size_t, 64,
   //   "[NATIVE] "
   //   "How many updates should we save in each dimension per dataset chunk? Total number will be this parameter squared."
