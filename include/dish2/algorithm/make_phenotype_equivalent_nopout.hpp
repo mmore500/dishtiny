@@ -60,12 +60,18 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
   {
     const auto [nopped_genome, divergence_updates]
       = dish2::nop_out_phenotypically_neutral_modules< Spec >( genome );
+
     genome = nopped_genome;
 
-    std::ofstream os( dish2::make_data_path(
+    const auto out_path = dish2::make_data_path(
       dish2::make_divergence_updates_filename( criteria, 1, "module" )
-    ) );
+    );
 
+    std::cout << "dumping " << divergence_updates.size()
+      << " divergence updates for modulewise neutral nopout w/ coarseness 1 to "
+      << out_path  << '\n';
+
+    std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
@@ -79,10 +85,15 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     genome = nopped_genome;
 
-    std::ofstream os( dish2::make_data_path(
+    const auto out_path = dish2::make_data_path(
       dish2::make_divergence_updates_filename( criteria, 8, "inst" )
-    ) );
+    );
 
+    std::cout << "dumping " << divergence_updates.size()
+      << " divergence updates for instwise neutral nopout w/ coarseness 8 to "
+      << out_path << '\n';
+
+    std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
@@ -92,10 +103,15 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     genome = nopped_genome;
 
-    std::ofstream os( dish2::make_data_path(
+    const auto out_path = dish2::make_data_path(
       dish2::make_divergence_updates_filename( criteria, 4, "inst" )
-    ) );
+    );
 
+    std::cout << "dumping " << divergence_updates.size()
+      << " divergence updates for instwise neutral nopout w/ coarseness 4 to "
+      << out_path << '\n';
+
+    std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
@@ -105,10 +121,15 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     genome = nopped_genome;
 
-    std::ofstream os( dish2::make_data_path(
+    const auto out_path = dish2::make_data_path(
       dish2::make_divergence_updates_filename( criteria, 2, "inst" )
-    ) );
+    );
 
+    std::cout << "dumping " << divergence_updates.size()
+      << " divergence updates for instwise neutral nopout w/ coarseness 2 to "
+      << out_path << '\n';
+
+    std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
@@ -118,10 +139,15 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     genome = nopped_genome;
 
-    std::ofstream os( dish2::make_data_path(
+    const auto out_path = dish2::make_data_path(
       dish2::make_divergence_updates_filename( criteria, 1, "inst" )
-    ) );
+    );
 
+    std::cout << "dumping " << divergence_updates.size()
+      << " divergence updates for instwise neutral nopout w/ coarseness 1 to "
+      << out_path << '\n';
+
+    std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
