@@ -10,6 +10,7 @@
 
 #include "../config/cfg.hpp"
 #include "../record/write_phylogenetic_root_abundances.hpp"
+#include "../record/write_drawings.hpp"
 
 #include "print_progress.hpp"
 #include "setup_thread_local_random.hpp"
@@ -37,6 +38,14 @@ void thread_step(
 
   // update the simulation
   thread_world.Update();
+
+  if (
+    dish2::cfg.DRAWING_FREQ()
+    && uitsl::shift_mod( thread_world.GetUpdate(), dish2::cfg.DRAWING_FREQ() )
+      == 0
+  ) dish2::write_drawings<Spec>(
+    thread_world, thread_idx
+  );
 
   #ifndef __EMSCRIPTEN__
   // initialized first time thru the function,
