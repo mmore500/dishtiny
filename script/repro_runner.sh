@@ -336,6 +336,9 @@ function on_error() {
   echo "---------------------"
   echo
 
+  # adapted from https://unix.stackexchange.com/a/504829
+  awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$2 $0
+
   echo "sstat -j ${SLURM_JOB_ID}"
   sstat -j "${SLURM_JOB_ID}"
 

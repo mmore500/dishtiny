@@ -2,6 +2,12 @@
 
 # fail on error
 set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
 
 ################################################################################
 echo
