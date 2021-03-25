@@ -161,7 +161,20 @@ wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO-
 
 
 ################################################################################
+echo
+echo "Testing for existing repro_runner.sh session"
+echo "--------------------------------------------"
+################################################################################
 if test -v REPRO_ID; then
+
+echo "REPRO_ID already set"
+echo "REPRO_ID ${REPRO_ID}"
+echo "(invoked from inside another repro_runner.sh session)"
+echo "skipping exit and error trap setup"
+
+else # if test -v REPRO_ID; then
+
+################################################################################
 echo
 echo "Generate REPRO_ID"
 echo "--------------------------------------"
@@ -426,12 +439,6 @@ function on_error() {
 
 trap 'on_error $? $LINENO' ERR SIGINT
 trap on_exit EXIT
-
-else # if test -v REPRO_ID; then
-
-echo "REPRO_ID already set!"
-echo "(invoked from inside another repro_runner.sh)"
-echo "skipping exit and error trap setup"
 
 fi # if test -v REPRO_ID; then
 
