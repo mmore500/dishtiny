@@ -10,12 +10,28 @@ import tweepy
 
 from itertools import chain, combinations, islice
 
-def make_attribution():
+def get_hexsha():
+    try:
+        repo = git.Repo(
+            os.path.realpath(__file__),
+            search_parent_directories=True,
+        )
+        return repo.head.object.hexsha[:7]
+    except Exception as e:
+        print(e)
 
-    repo = git.Repo(
-        os.path.realpath(__file__),
-        search_parent_directories=True,
-    )
+    try:
+        repo = git.Repo(
+            f'{os.getenv('REPRO_DIR')}/dishtiny/'
+        )
+        return repo.head.object.hexsha[:7]
+    except Exception as e:
+        print(e)
+
+    return '???????'
+
+
+def make_attribution():
 
     return textwrap.dedent(f'''
     I tweet data from experiments where computer programs evolve!
@@ -30,7 +46,7 @@ def make_attribution():
 
     🆔 {os.getenv("SLURM_JOB_ID")}
 
-    📌 {repo.head.object.hexsha[:7]}
+    📌 {get_hexsha()}
     ''')
 
 def powerset(iterable):
