@@ -95,6 +95,7 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
+    os << std::flush;
   }
 
   {
@@ -113,6 +114,7 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
+    os << std::flush;
   }
 
   {
@@ -131,6 +133,7 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
+    os << std::flush;
   }
 
   {
@@ -149,6 +152,7 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
     std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
+    os << std::flush;
   }
 
   std::cout << sgpl::count_instructions( genome.program, "op" );
