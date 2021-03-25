@@ -368,6 +368,17 @@ fi # run fitness complexity competitions only every Xth stint
 
 ################################################################################
 echo
+echo "Create SLURM_STOKER_CONSOLIDATION_DIR"
+echo "-----------------------------------"
+################################################################################
+
+# so that we can consolidate subsequent kickoffs into one slurm stoker job
+
+export SLURM_STOKER_CONSOLIDATION_DIR="$(mktemp -d)"
+echo "SLURM_STOKER_CONSOLIDATION_DIR ${SLURM_STOKER_CONSOLIDATION_DIR}"
+
+################################################################################
+echo
 echo "Submit phenotype-neutral-nopout Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
@@ -413,6 +424,19 @@ for retry in {1..20}; do
 done
 
 fi
+
+################################################################################
+echo
+echo "Submit slurm scripts from SLURM_STOKER_CONSOLIDATION_DIR"
+echo "-----------------------------------"
+################################################################################
+
+
+cd "${SLURM_STOKER_CONSOLIDATION_DIR}"
+
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh" | bash -s "{{ bucket }}" "{{ container_tag }} "{{ repo_sha }}" "nopoutjob-consolidated-followups~series%{{ series }}~stint%{{ stint }}"
+
+cd -
 
 ################################################################################
 echo

@@ -122,11 +122,24 @@ echo "--------------------------------------"
 
 echo "num generated runscripts \$(ls *.slurm.sh | wc -l)"
 
+if test -v SLURM_STOKER_CONSOLIDATION_DIR; then
+
+echo "SLURM_STOKER_CONSOLIDATION_DIR \${SLURM_STOKER_CONSOLIDATION_DIR}"
+
+mkdir -p "\${SLURM_STOKER_CONSOLIDATION_DIR}"
+for target in *slurm.sh; do
+  cp "\${target}" "\${SLURM_STOKER_CONSOLIDATION_DIR}/\${RANDOM}_\${target}"
+done
+
+else
+
 # uses slurm stoker script, which zips all runscripts in the current directory
 # inside itself, then submits itself as a job to gradually feed runscripts onto
 # the queue
 
 dishtiny/script/slurm_stoker_containerized_kickoff.sh "${BUCKET}" "${CONTAINER_TAG}" "${REPO_SHA}" "mutant-deletion-phenotype-differentiation~configpack%${CONFIGPACK}~series%${SERIES%% *}...~stint%${STINT}"
+
+fi
 
 ################################################################################
 echo
