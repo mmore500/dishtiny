@@ -161,6 +161,7 @@ wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO-
 
 
 ################################################################################
+if test -v REPRO_ID; then
 echo
 echo "Generate REPRO_ID"
 echo "--------------------------------------"
@@ -425,6 +426,14 @@ function on_error() {
 
 trap 'on_error $? $LINENO' ERR SIGINT
 trap on_exit EXIT
+
+else # if test -v REPRO_ID; then
+
+echo "REPRO_ID already set!"
+echo "(invoked from inside another repro_runner.sh)"
+echo "skipping exit and error trap setup"
+
+fi # if test -v REPRO_ID; then
 
 ################################################################################
 echo

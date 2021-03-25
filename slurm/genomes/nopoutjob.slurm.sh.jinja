@@ -400,7 +400,7 @@ if (( {{ stint }} % 10 == 0 )); then
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/phenotype-neutral-nopoutcompetitionkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/phenotype-neutral-nopoutcompetitionkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
     "${HOST_USERNAME}@$(hostname)" -X \
     'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
     && echo "  phenotype-neutral-nopout competition kickoff success" && break \
@@ -424,7 +424,7 @@ if (( {{ stint }} % 10 == 0 )); then
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/phenotype-differentiation/phenotype-neutral-nopoutphenotype-differentiationkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/phenotype-differentiation/phenotype-neutral-nopoutphenotype-differentiationkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
     "${HOST_USERNAME}@$(hostname)" -X \
     'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
     && echo "  phenotype-neutral-nopout phenotype-differentiation kickoff success" && break \
