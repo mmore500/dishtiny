@@ -171,7 +171,7 @@ export REPRO_YEAR="$(date +'%Y')"
 export REPRO_MONTH="$(date +'%m')"
 export REPRO_DAY="$(date +'%d')"
 export REPRO_HOUR="$(date +'%H')"
-export RERO_DIR="$(pwd)"
+export REPRO_DIR="$(pwd)"
 
 echo "REPRO_YEAR ${REPRO_YEAR}"
 echo "REPRO_MONTH ${REPRO_MONTH}"
