@@ -2,7 +2,7 @@
 #ifndef DISH2_VIZ_ARTISTS_PERIPHERALITYLEVARTIST_HPP_INCLUDE
 #define DISH2_VIZ_ARTISTS_PERIPHERALITYLEVARTIST_HPP_INCLUDE
 
-#include <string>
+#include <string_view>
 
 #include "../../spec/Spec.hpp"
 
@@ -60,7 +60,7 @@ public:
   // inherit constructors
   using parent_t::parent_t;
 
-  static std::string GetName() { return "Peripherality by Lev"; }
+  static constexpr std::string_view GetName() { return "Peripherality by Lev"; }
 
   template< typename Spec >
   static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
