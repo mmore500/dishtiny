@@ -28,6 +28,8 @@ class SeriesDrawer {
 
 public:
 
+  using artist_t = Artist;
+
   SeriesDrawer(
     const dish2::ThreadWorld<Spec>& thread_world,
     const size_t thread_idx_

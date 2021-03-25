@@ -34,6 +34,7 @@ class GridDrawer {
   size_t series_idx;
 
 public:
+  using artist_t = Artist;
 
   GridDrawer(
     const dish2::ThreadWorld<Spec>& thread_world_,
@@ -47,12 +48,11 @@ public:
   { }
 
   void SaveToFile() {
-
     const std::string filename = dish2::make_drawing_filename(
       series_idx,
       thread_idx,
       thread_world.get().GetUpdate(),
-      emp::slugify( Artist::GetName() )
+      emp::slugify( std::string{Artist::GetName()} )
     );
 
     const std::string out_filename = dish2::pare_keyname_filename(
@@ -62,9 +62,7 @@ public:
     artist.Draw( canvas );
 
     canvas.SavePNG( dish2::make_drawing_path( out_filename ) );
-
   }
-
 
 };
 
