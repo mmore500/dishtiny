@@ -90,8 +90,12 @@ echo "-------------------------"
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
 
 ENDEAVOR={{ series | int // 1000 }}
+N_PROCS=1
+N_THREADS=4
 
 echo "ENDEAVOR ${ENDEAVOR}"
+echo "N_PROCS ${N_PROCS}"
+echo "N_THREADS ${N_THREADS}"
 echo "series {{ series }}"
 echo "stint {{ stint }}"
 echo "bucket {{ bucket }}"
