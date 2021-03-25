@@ -30,10 +30,10 @@ namespace dish2 {
 template<typename Spec>
 class Genome {
 
+  template<bool Scramble>
   void ApplyProgramSequenceMutation(
     const bool do_insertion, const bool do_deletion
   ) {
-    using inst_t = typename program_t::value_type;
 
     const bool is_severe = sgpl::tlrand.Get().P(
       dish2::cfg.SEVERE_SEQUENCE_MUTATION_RATE()
@@ -53,7 +53,7 @@ class Genome {
 
     // TODO perform the sloppy copy elsewhere for efficiency's sake?
     // do severe sequence mutation
-    auto [copy, num_muts] = sgpl::sloppy_copy<inst_t, 0>(
+    auto [copy, num_muts] = sgpl::sloppy_copy<program_t, Scramble, 0>(
       program,
       defect_rate,
       { -defect_bound * do_insertion, defect_bound * do_deletion },
@@ -179,20 +179,23 @@ public:
 
   void DoMutation() {
     mutation_counter.RecordMutationOccurrence();
-    ApplyProgramSequenceMutation(true, true);
+    ApplyProgramSequenceMutation<true>(true, true);
+    ApplyProgramSequenceMutation<false>(true, true);
     ApplyPointMutation();
     RectifyAfterMutation();
   }
 
   // for experiments that isolate insertion mutations
   void DoInsertionMutation() {
-    ApplyProgramSequenceMutation(true, false);
+    ApplyProgramSequenceMutation<true>(true, false);
+    ApplyProgramSequenceMutation<false>(true, false);
     RectifyAfterMutation();
   }
 
   // for experiments that isolate deletion mutations
   void DoDeletionMutation() {
-    ApplyProgramSequenceMutation(false, true);
+    ApplyProgramSequenceMutation<true>(false, true);
+    ApplyProgramSequenceMutation<false>(false, true);
     RectifyAfterMutation();
   }
 

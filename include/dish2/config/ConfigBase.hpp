@@ -180,13 +180,13 @@ EMP_BUILD_CONFIG(
   VALUE(POINT_MUTATION_RATE, float, 0.0002,
     "What fraction of bits should be scrambled?"
   ),
-  VALUE(SEQUENCE_DEFECT_RATE, float, 0.002,
+  VALUE(SEQUENCE_DEFECT_RATE, float, 0.001,
     "How often should sloppy copy defect occur?"
   ),
   VALUE(MINOR_SEQUENCE_MUTATION_BOUND, size_t, 8,
     "TODO"
   ),
-  VALUE(SEVERE_SEQUENCE_MUTATION_RATE, float, 0.05,
+  VALUE(SEVERE_SEQUENCE_MUTATION_RATE, float, 0.001,
     "TODO"
   ),
 
