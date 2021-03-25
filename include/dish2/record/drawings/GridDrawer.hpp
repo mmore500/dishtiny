@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <functional>
 #include <ratio>
 #include <string>
 
@@ -26,7 +27,7 @@ class GridDrawer {
 
   emp::web::Canvas canvas{ 2000, 2000 };
 
-  const dish2::ThreadWorld<Spec>& thread_world;
+  std::reference_wrapper<const dish2::ThreadWorld<Spec>> thread_world;
 
   size_t thread_idx;
 
@@ -50,7 +51,7 @@ public:
     const std::string filename = dish2::make_drawing_filename(
       series_idx,
       thread_idx,
-      thread_world.GetUpdate(),
+      thread_world.get().GetUpdate(),
       emp::slugify( Artist::GetName() )
     );
 
