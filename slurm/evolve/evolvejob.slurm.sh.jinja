@@ -1,9 +1,9 @@
 #!/bin/bash -login
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --job-name a=evolvefollowups+series={{ series }}+stint={{ stint }}
+#SBATCH --job-name a=evolve+series={{ series }}+stint={{ stint }}
 #SBATCH --account=devolab
-#SBATCH --output="/mnt/scratch/%u/slurmlogs/a=evolvefollowups+job=%j+series={{ series }}+stint={{ stint }}+ext.log"
+#SBATCH --output="/mnt/scratch/%u/slurmlogs/a=evolve+job=%j+series={{ series }}+stint={{ stint }}+ext.log"
 #SBATCH --mem=24G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 4
@@ -444,7 +444,7 @@ echo "JOB_SCRIPT ${JOB_SCRIPT}"
 for retry in {1..20}; do
   curl \
     -o "${JOB_TEMPLATE}" \
-    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/evolve/evolvejobfollowups.slurm.sh.jinja" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/evolve/evolvefollowupsjob.slurm.sh.jinja" \
   && echo "  job template curl success" && break \
   || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
