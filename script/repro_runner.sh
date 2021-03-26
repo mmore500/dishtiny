@@ -449,6 +449,7 @@ echo "--------------------------------------"
 ################################################################################
 rm -rf "${REPRO_ID}" && mkdir "${REPRO_ID}" && cd "${REPRO_ID}"
 export WORK_DIRECTORY="$(pwd)"
+export REPRO_WORK_DIRECTORY="${WORK_DIRECTORY}"
 echo "WORK_DIRECTORY ${WORK_DIRECTORY}"
 
 ################################################################################
