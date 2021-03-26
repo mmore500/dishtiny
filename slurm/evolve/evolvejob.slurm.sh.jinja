@@ -1,9 +1,9 @@
 #!/bin/bash -login
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --job-name a=evolve+series={{ series }}+stint={{ stint }}
+#SBATCH --job-name a=evolvefollowups+series={{ series }}+stint={{ stint }}
 #SBATCH --account=devolab
-#SBATCH --output="/mnt/scratch/%u/slurmlogs/a=evolve+job=%j+series={{ series }}+stint={{ stint }}+ext.log"
+#SBATCH --output="/mnt/scratch/%u/slurmlogs/a=evolvefollowups+job=%j+series={{ series }}+stint={{ stint }}+ext.log"
 #SBATCH --mem=24G
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 4
@@ -409,11 +409,11 @@ wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO-
 
 ################################################################################
 echo
-echo "Submit Nopout Job"
-echo "---------------"
+echo "Submit Folow-Up Jobs"
+echo "--------------------"
 ################################################################################
 
-# run nopout job every tenth stint
+# run follow up jobs every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
 
 # run jinja on template
@@ -426,7 +426,7 @@ echo "JOB_SCRIPT ${JOB_SCRIPT}"
 for retry in {1..20}; do
   curl \
     -o "${JOB_TEMPLATE}" \
-    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/genomes/nopoutjob.slurm.sh.jinja" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/evolve/evolvefollowupsjob.slurm.sh.jinja" \
   && echo "  job template curl success" && break \
   || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
@@ -448,285 +448,6 @@ chmod +x "${JOB_SCRIPT}"
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_sbatch.sh" | bash -s "${JOB_SCRIPT}"
 
 fi
-
-################################################################################
-echo
-echo "Submit Monoculture Job"
-echo "---------------"
-################################################################################
-
-# run monoculture job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
-
-# run jinja on template
-JOB_TEMPLATE="$(mktemp)"
-JOB_SCRIPT="$(mktemp)"
-
-echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
-echo "JOB_SCRIPT ${JOB_SCRIPT}"
-
-for retry in {1..20}; do
-  curl \
-    -o "${JOB_TEMPLATE}" \
-    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/monocultures/monoculturejob.slurm.sh.jinja" \
-  && echo "  job template curl success" && break \
-  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
-  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
-done
-
-j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
-bucket: {{ bucket }}
-configpack: {{ configpack }}
-container_tag: {{ container_tag }}
-repo_sha: {{ repo_sha }}
-series: {{ series }}
-stint: {{ stint | int }}
-J2_HEREDOC_EOF
-
-chmod +x "${JOB_SCRIPT}"
-
-# adapted from https://superuser.com/a/689340
-# and https://stackoverflow.com/a/4642975
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_sbatch.sh" | bash -s "${JOB_SCRIPT}"
-
-fi
-
-################################################################################
-echo
-echo "Create SLURM_STOKER_CONSOLIDATION_DIR"
-echo "-----------------------------------"
-################################################################################
-
-# so that we can consolidate subsequent kickoffs into one slurm stoker job
-
-export SLURM_STOKER_CONSOLIDATION_DIR="$(mktemp -d)"
-echo "SLURM_STOKER_CONSOLIDATION_DIR ${SLURM_STOKER_CONSOLIDATION_DIR}"
-
-################################################################################
-echo
-echo "Submit Predecessor Battle Jobs"
-echo "-----------------------------------"
-################################################################################
-
-# run predecessor battle job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
-
-for retry in {1..20}; do
-  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/predecessorbattlekickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
-    && echo "  predecessor kickoff success" && break \
-    || (echo "retrying predecessor kickoff (${retry})" && sleep $((RANDOM % 10)))
-
-  if ((${retry}==20)); then echo "predecessor kickoff fail" && exit 123123; fi
-done
-
-fi
-
-################################################################################
-echo
-echo "Submit Control Competition Jobs"
-echo "-----------------------------------"
-################################################################################
-
-# run control competition job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
-
-for retry in {1..20}; do
-  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/controlcompetitionkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
-    && echo "  control kickoff success" && break \
-    || (echo "retrying control kickoff (${retry})" && sleep $((RANDOM % 10)))
-
-  if ((${retry}==20)); then echo "control kickoff fail" && exit 123123; fi
-done
-
-fi
-
-################################################################################
-echo
-echo "Submit Doubling Time Jobs"
-echo "-----------------------------------"
-################################################################################
-
-# run doubling time job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
-
-for retry in {1..20}; do
-  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/doubling-time/wildtypedoubling-timekickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
-    && echo "  doubling time kickoff success" && break \
-    || (echo "retrying doubling time kickoff (${retry})" && sleep $((RANDOM % 10)))
-
-  if ((${retry}==20)); then
-    echo "doubling time kickoff fail" && exit 123123
-  fi
-done
-
-fi
-
-################################################################################
-echo
-echo "Submit Mutating Competition Jobs"
-echo "-----------------------------------"
-################################################################################
-
-# run mutating competition job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
-
-for retry in {1..20}; do
-  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/mutatingcompetitionkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
-    && echo "  mutating competition kickoff success" && break \
-    || (echo "retrying mutating competition kickoff (${retry})" && sleep $((RANDOM % 10)))
-
-  if ((${retry}==20)); then
-    echo "mutating competition kickoff fail" && exit 123123
-  fi
-done
-
-fi
-
-################################################################################
-echo
-echo "Submit Mutant Competition Jobs"
-echo "-----------------------------------"
-################################################################################
-
-# run mutating competition job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
-
-for retry in {1..20}; do
-  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/mutantcompetitionkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
-    && echo "  mutant competition kickoff success" && break \
-    || (echo "retrying mutant competition kickoff (${retry})" && sleep $((RANDOM % 10)))
-
-  if ((${retry}==20)); then
-    echo "mutant competition kickoff fail" && exit 123123
-  fi
-done
-
-fi
-
-################################################################################
-echo
-echo "Submit Mutant Phenotype Differentiation Jobs"
-echo "-----------------------------------"
-################################################################################
-
-# run mutating phenotype-differentiation job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
-
-for retry in {1..20}; do
-  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/phenotype-differentiation/mutantphenotype-differentiationkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
-    && echo "  mutant phenotype-differentiation kickoff success" && break \
-    || (echo "retrying mutant phenotype-differentiation kickoff (${retry})" && sleep $((RANDOM % 10)))
-
-  if ((${retry}==20)); then
-    echo "mutant phenotype-differentiation kickoff fail" && exit 123123
-  fi
-done
-
-fi
-
-################################################################################
-echo
-echo "Submit Perturbation Competition Jobs"
-echo "-----------------------------------"
-################################################################################
-
-# run mutating competition job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
-
-for perturbation_target in extrospective introspective writable; do
-for perturbation_method in exchange rotate; do
-
-echo "perturbation_target ${perturbation_target}"
-echo "perturbation_method ${perturbation_method}"
-
-for retry in {1..20}; do
-  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/perturbationcompetitionkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    "cat | bash -login /dev/stdin '{{ bucket }}' '{{ configpack }}' '{{ container_tag }}' '{{ repo_sha }}' \"${perturbation_target}\" \"${perturbation_method}\" 1 \"{0..$(./rundishtiny "-print_${perturbation_target}_state_size_minus_one" )}\" '{{ stint }}' '{{ series }}'" \
-    && echo "  perturbation competition kickoff success" && break \
-    || (echo "retrying perturbation competition kickoff (${retry})" && sleep $((RANDOM % 10)))
-
-  if ((${retry}==20)); then
-    echo "perturbation competition kickoff fail" && exit 123123
-  fi
-done
-
-done
-done
-
-fi
-
-################################################################################
-echo
-echo "Submit SelfSend Competition Jobs"
-echo "-----------------------------------"
-################################################################################
-
-# run mutating competition job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
-
-for selfsend_target in inter intra; do
-
-echo "selfsend_target ${selfsend_target}"
-
-for retry in {1..20}; do
-  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/selfsendcompetitionkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    "cat | bash -login /dev/stdin '{{ bucket }}' '{{ configpack }}' '{{ container_tag }}' '{{ repo_sha }}' \"${selfsend_target}\" 20 '{{ stint }}' '{{ series }}'" \
-    && echo "  selfsend competition kickoff success" && break \
-    || (echo "retrying selfsend competition kickoff (${retry})" && sleep $((RANDOM % 10)))
-
-  if ((${retry}==20)); then
-    echo "selfsend competition kickoff fail" && exit 123123
-  fi
-done
-
-done
-
-fi
-
-################################################################################
-echo
-echo "Submit slurm scripts from SLURM_STOKER_CONSOLIDATION_DIR"
-echo "-----------------------------------"
-################################################################################
-
-echo "${SLURM_STOKER_CONSOLIDATION_DIR}"
-cd "${SLURM_STOKER_CONSOLIDATION_DIR}"
-pwd
-
-# if there are follow up jobs
-if ls *.slurm.sh 1> /dev/null 2>&1; then
-
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh" | bash -s "{{ bucket }}" "{{ container_tag }}" "{{ repo_sha }}" "evolvejob-consolidated-followups~series%{{ series }}~stint%{{ stint }}"
-
-else
-
-echo "no follow up jobs to submit"
-
-fi
-
-cd -
 
 ################################################################################
 echo
