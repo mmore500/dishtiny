@@ -10,8 +10,8 @@
 
 #include "../config/cfg.hpp"
 #include "../introspection/get_fraction_live_cells.hpp"
-#include "../introspection/is_extinct.hpp"
 #include "../introspection/has_coalesced.hpp"
+#include "../introspection/is_extinct.hpp"
 #include "../world/ThreadWorld.hpp"
 
 namespace dish2 {
