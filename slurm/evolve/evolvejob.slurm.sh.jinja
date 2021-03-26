@@ -444,7 +444,7 @@ echo "JOB_SCRIPT ${JOB_SCRIPT}"
 for retry in {1..20}; do
   curl \
     -o "${JOB_TEMPLATE}" \
-    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/evolve/evolvefollowupsjob.slurm.sh.jinja" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/evolve/evolvejobfollowups.slurm.sh.jinja" \
   && echo "  job template curl success" && break \
   || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
