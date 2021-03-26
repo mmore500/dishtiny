@@ -118,6 +118,20 @@ wait # ignores exit code of time log step
 mkdir work
 cd work
 
+bash -c "cd ../dishtiny && ./configpacks/{{ configpack }}/build_native.sh"
+cp ../dishtiny/rundishtiny .
+
+ls
+
+# an attempt to address intermittent failure where downloaded files aren't found
+# when running the executable
+sshpass -p "${HOST_PASSWORD}" \
+  scp -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+    * "${HOST_USERNAME}@$(hostname):$(pwd)" \
+&& echo "  local asset copy success" || echo "  local asset copy fail"
+
+ls
+
 ################################################################################
 echo
 echo "Submit Nopout Job"
