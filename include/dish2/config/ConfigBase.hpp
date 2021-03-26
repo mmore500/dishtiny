@@ -277,10 +277,10 @@ EMP_BUILD_CONFIG(
   VALUE(DRAWING_FREQ, size_t, 0,
     "How often should we draw the current world?"
   ),
-  VALUE(DRAWING_WIDTH, size_t, 2000,
+  VALUE(DRAWING_WIDTH, double, 2000.0,
     "What should the width of the drawings be?"
   ),
-  VALUE(DRAWING_HEIGHT, size_t, 2000,
+  VALUE(DRAWING_HEIGHT, double, 2000.0,
     "What should the height of the drawings be?"
   ),
   VALUE(DRAWINGS, std::string, "",

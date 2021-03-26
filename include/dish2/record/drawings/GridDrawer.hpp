@@ -12,6 +12,7 @@
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
+#include "../../config/cfg.hpp"
 #include "../../utility/pare_keyname_filename.hpp"
 #include "../../world/ThreadWorld.hpp"
 
@@ -25,7 +26,7 @@ class GridDrawer {
 
   Artist artist;
 
-  emp::web::Canvas canvas{ 2000, 2000 };
+  emp::web::Canvas canvas{ cfg.DRAWING_WIDTH(), cfg.DRAWING_HEIGHT() };
 
   std::reference_wrapper<const dish2::ThreadWorld<Spec>> thread_world;
 
