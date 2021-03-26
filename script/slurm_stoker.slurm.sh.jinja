@@ -76,7 +76,7 @@ echo "Initialize and Log Config"
 echo "-------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
 
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
@@ -93,7 +93,7 @@ echo "Extract payload of slurm scripts"
 echo "--------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
 
 # adapted from https://unix.stackexchange.com/a/389007
 uudecode << "PAYLOAD_HEREDOC_CLOSE" | gunzip | tar -vxpf -
@@ -108,7 +108,7 @@ echo "Submit jobs into available slots"
 echo "--------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
 
 pwd
 echo "$(ls *.slurm.sh | wc -l) jobs to submit"
@@ -165,7 +165,7 @@ echo "and instantiate slurm stoker job template"
 echo "-------------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
 
 # if there are remaining jobs
 if ls *.slurm.sh 1> /dev/null 2>&1; then
@@ -186,6 +186,6 @@ echo "Done! (SUCCESS)"
 echo "---------------"
 ################################################################################
 
-timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
 
 REPRO_RUNNER_HEREDOC_EOF
