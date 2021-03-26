@@ -85,7 +85,7 @@ echo "Initialize and Log Config"
 echo "-------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
@@ -111,7 +111,7 @@ echo "Set Up Work Directory"
 echo "-------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 mkdir work
 cd work
@@ -122,7 +122,7 @@ echo "Submit Nopout Job"
 echo "---------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # run nopout job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -166,7 +166,7 @@ echo "Submit Monoculture Job"
 echo "---------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # run monoculture job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -210,7 +210,7 @@ echo "Create SLURM_STOKER_CONSOLIDATION_DIR"
 echo "-----------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # so that we can consolidate subsequent kickoffs into one slurm stoker job
 
@@ -223,7 +223,7 @@ echo "Submit Predecessor Battle Jobs"
 echo "-----------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # run predecessor battle job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -247,7 +247,7 @@ echo "Submit Control Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # run control competition job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -271,7 +271,7 @@ echo "Submit Doubling Time Jobs"
 echo "-----------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # run doubling time job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -297,7 +297,7 @@ echo "Submit Mutating Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # run mutating competition job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -323,7 +323,7 @@ echo "Submit Mutant Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # run mutating competition job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -349,7 +349,7 @@ echo "Submit Mutant Phenotype Differentiation Jobs"
 echo "-----------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # run mutating phenotype-differentiation job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -375,7 +375,7 @@ echo "Submit Perturbation Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # run mutating competition job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -410,7 +410,7 @@ echo "Submit SelfSend Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 # run mutating competition job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -442,7 +442,7 @@ echo "Submit slurm scripts from SLURM_STOKER_CONSOLIDATION_DIR"
 echo "-----------------------------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 echo "${SLURM_STOKER_CONSOLIDATION_DIR}"
 cd "${SLURM_STOKER_CONSOLIDATION_DIR}"
@@ -467,6 +467,6 @@ echo "Done! (SUCCESS)"
 echo "---------------"
 ################################################################################
 
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || echo "time log failed"
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 REPRO_RUNNER_HEREDOC_EOF
