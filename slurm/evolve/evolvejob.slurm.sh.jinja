@@ -85,7 +85,9 @@ echo "Initialize and Log Config"
 echo "-------------------------"
 ################################################################################
 
+set +e
 timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
+set -e
 
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
@@ -111,7 +113,9 @@ echo "Set Up Work Directory"
 echo "-------------------------"
 ################################################################################
 
+set +e
 timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
+set -e
 
 mkdir work
 cd work
@@ -166,7 +170,9 @@ echo "Run Simulation"
 echo "------------------"
 ################################################################################
 
+set +e
 timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
+set -e
 
 # note:
 # we have to cut off stdin, stdout, stderr on mpiexec
@@ -206,7 +212,9 @@ echo "Upload Data"
 echo "--------------"
 ################################################################################
 
+set +e
 timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
+set -e
 
 shopt -s nullglob
 
@@ -384,7 +392,9 @@ echo "Submit Next Job"
 echo "---------------"
 ################################################################################
 
+set +e
 timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
+set -e
 
 # run jinja on template
 JOB_TEMPLATE="$(mktemp)"
@@ -423,7 +433,9 @@ echo "Submit Folow-Up Jobs"
 echo "--------------------"
 ################################################################################
 
+set +e
 timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
+set -e
 
 # run follow up jobs every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -467,7 +479,9 @@ echo "Running watch me evolve integration"
 echo "-----------------------------------"
 ################################################################################
 
+set +e
 timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
+set -e
 
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/watch_me_evolve.py" && \
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/wme_evolvejob.py" && \

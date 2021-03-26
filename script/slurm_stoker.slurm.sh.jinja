@@ -76,7 +76,9 @@ echo "Initialize and Log Config"
 echo "-------------------------"
 ################################################################################
 
+set +e
 timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
+set -e
 
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
@@ -160,12 +162,14 @@ wait
 
 ################################################################################
 echo
-echo "Zip *.slurm.sh files into payload"
 echo "and instantiate slurm stoker job template"
 echo "-------------------------------------"
 ################################################################################
 
+set +e
 timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
+set -e
+
 
 # if there are remaining jobs
 if ls *.slurm.sh 1> /dev/null 2>&1; then
