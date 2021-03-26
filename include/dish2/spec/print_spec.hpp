@@ -8,6 +8,7 @@
 
 #include "../peripheral/readable_state/ReadableState.hpp"
 #include "../peripheral/readable_state/writable_state/WritableState.hpp"
+#include "../spec/Spec.hpp"
 
 namespace dish2 {
 
@@ -20,6 +21,7 @@ void print_spec() {
   std::cout << "SOURCE DIRECTORY "
     << EMP_STRINGIFY(DISHTINY_SOURCE_DIR_) << '\n';
   std::cout << "SOURCE HASH " << EMP_STRINGIFY(DISHTINY_HASH_) << '\n';
+  std::cout << "DISH2_SPEC " << EMP_STRINGIFY(DISH2_SPEC) << '\n';
   std::cout << "------------------------------" << '\n';
 
   constexpr size_t readable_size = dish2::ReadableState<Spec>::parent_size;
