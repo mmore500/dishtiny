@@ -396,9 +396,20 @@ echo "num generated runscripts $(ls *.slurm.sh | wc -l)"
 # inside itself, then submits itself as a job to gradually feed runscripts onto
 # the queue
 
+# if there are any .slurm.sh files
+if ls *.slurm.sh 1> /dev/null 2>&1; then
+
 # adapted from https://superuser.com/a/689340
 # and https://stackoverflow.com/a/4642975
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh | bash -s "{{ bucket }}" "{{ container_tag }}" "{{ repo_sha }}" "variant-competition~configpack%{{ configpack }}~series%{{ series }}~stint%{{ stint }}"
+
+else
+
+echo "WARNING no variant competition runscripts generated"
+echo "skipping slurm_stoker kickoff"
+ls
+
+fi
 
 #===============================================================================
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
