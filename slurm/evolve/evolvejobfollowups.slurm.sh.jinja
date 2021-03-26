@@ -85,6 +85,7 @@ echo "Initialize and Log Config"
 echo "-------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
 
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
@@ -110,6 +111,8 @@ echo "Set Up Work Directory"
 echo "-------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+
 mkdir work
 cd work
 
@@ -118,6 +121,8 @@ echo
 echo "Submit Nopout Job"
 echo "---------------"
 ################################################################################
+
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
 
 # run nopout job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -161,6 +166,8 @@ echo "Submit Monoculture Job"
 echo "---------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+
 # run monoculture job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
 
@@ -203,6 +210,8 @@ echo "Create SLURM_STOKER_CONSOLIDATION_DIR"
 echo "-----------------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+
 # so that we can consolidate subsequent kickoffs into one slurm stoker job
 
 export SLURM_STOKER_CONSOLIDATION_DIR="$(mktemp -d)"
@@ -213,6 +222,8 @@ echo
 echo "Submit Predecessor Battle Jobs"
 echo "-----------------------------------"
 ################################################################################
+
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
 
 # run predecessor battle job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -236,6 +247,8 @@ echo "Submit Control Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+
 # run control competition job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
 
@@ -257,6 +270,8 @@ echo
 echo "Submit Doubling Time Jobs"
 echo "-----------------------------------"
 ################################################################################
+
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
 
 # run doubling time job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -282,6 +297,8 @@ echo "Submit Mutating Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+
 # run mutating competition job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
 
@@ -305,6 +322,8 @@ echo
 echo "Submit Mutant Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
+
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
 
 # run mutating competition job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -330,6 +349,8 @@ echo "Submit Mutant Phenotype Differentiation Jobs"
 echo "-----------------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+
 # run mutating phenotype-differentiation job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
 
@@ -353,6 +374,8 @@ echo
 echo "Submit Perturbation Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
+
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
 
 # run mutating competition job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
@@ -387,6 +410,8 @@ echo "Submit SelfSend Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+
 # run mutating competition job every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
 
@@ -417,6 +442,8 @@ echo "Submit slurm scripts from SLURM_STOKER_CONSOLIDATION_DIR"
 echo "-----------------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+
 echo "${SLURM_STOKER_CONSOLIDATION_DIR}"
 cd "${SLURM_STOKER_CONSOLIDATION_DIR}"
 pwd
@@ -439,5 +466,7 @@ echo
 echo "Done! (SUCCESS)"
 echo "---------------"
 ################################################################################
+
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
 
 REPRO_RUNNER_HEREDOC_EOF

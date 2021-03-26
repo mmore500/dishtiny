@@ -85,6 +85,8 @@ echo "Initialize and Log Config"
 echo "-------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
 
@@ -113,6 +115,8 @@ echo
 echo "Set Up Work Directory"
 echo "-------------------------"
 ################################################################################
+
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
 
 mkdir work
 cd work
@@ -171,6 +175,8 @@ echo "Run Simulation"
 echo "------------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+
 # note:
 # we have to cut off stdin, stdout, stderr on mpiexec
 # for compatibility with repro_runner.sh and prevent a funky
@@ -212,6 +218,8 @@ echo
 echo "Upload Data"
 echo "--------------"
 ################################################################################
+
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
 
 echo "uploading coalescence_result files..."
 for p in outdata/*a=coalescence_result*; do
@@ -263,6 +271,8 @@ echo "Running watch me evolve integration"
 echo "-----------------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
+
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/watch_me_evolve.py" && \
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/wme_competitionjob.py" && \
 python3 wme_competitionjob.py "{{ series | default('-1') }}" "{{ replicate }}" "{{ first_competitor_url }}" "{{ second_competitor_url }}" || :
@@ -272,5 +282,7 @@ echo
 echo "Done! (SUCCESS)"
 echo "---------------"
 ################################################################################
+
+timeout 30s "${REPRO_DIR}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format "time: %M, time left: %L" --noheader || :
 
 REPRO_RUNNER_HEREDOC_EOF
