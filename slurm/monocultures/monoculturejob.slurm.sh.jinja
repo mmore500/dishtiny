@@ -85,9 +85,8 @@ echo "Initialize and Log Config"
 echo "-------------------------"
 ################################################################################
 
-set +e
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
-set -e
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
 
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
@@ -111,9 +110,8 @@ echo "Set Up Work Directory"
 echo "-------------------------"
 ################################################################################
 
-set +e
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
-set -e
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
 
 mkdir work
 cd work
@@ -163,9 +161,8 @@ echo "Run Simulation"
 echo "------------------"
 ################################################################################
 
-set +e
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
-set -e
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
 
 # note:
 # we have to cut off stdin, stdout, stderr on mpiexec
@@ -205,9 +202,8 @@ echo "Upload Data"
 echo "--------------"
 ################################################################################
 
-set +e
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
-set -e
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
 
 shopt -s nullglob
 
@@ -335,9 +331,8 @@ echo "Running watch me evolve integration"
 echo "-----------------------------------"
 ################################################################################
 
-set +e
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
-set -e
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
 
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/watch_me_evolve.py" && \
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/wme_monoculturejob.py" && \
@@ -349,8 +344,7 @@ echo "Done! (SUCCESS)"
 echo "---------------"
 ################################################################################
 
-set +e
-timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
-set -e
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
 
 REPRO_RUNNER_HEREDOC_EOF
