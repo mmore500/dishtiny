@@ -184,7 +184,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   export REPRO_ID="${REPRO_ID}"
   export DISPLAY="${DISPLAY}"
   export XVFB_PID="${XVFB_PID}"
-  export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_DIR}/dishtiny/"
+  export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_WORK_DIRECTORY}/dishtiny/"
   mpiexec.hydra --version
   $( (( N_PROCS > 1 )) && echo mpiexec.hydra -n "${N_PROCS}" singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" ) \
     ./rundishtiny \

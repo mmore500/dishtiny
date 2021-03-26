@@ -202,7 +202,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   export DISHTINY_ENDEAVOR="{{ endeavor }}"
   export REPRO_ID="${REPRO_ID}"
   export DISPLAY="${DISPLAY}"
-  export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_DIR}/dishtiny/"
+  export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_WORK_DIRECTORY}/dishtiny/"
   export XVFB_PID="${XVFB_PID}"
   mpiexec.hydra --version
   $( (( N_PROCS > 1 )) && echo mpiexec.hydra -n "${N_PROCS}" singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" ) \
