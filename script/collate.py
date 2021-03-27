@@ -4,12 +4,13 @@ import boto3
 from io import StringIO
 import itertools
 from keyname import keyname as kn
+import multiprocessing as mp
 import os
 import pandas as pd
 import re
 import sys
 import tempfile
-from tqdm import tqdm
+from tqdm.contrib.concurrent import process_map
 from math import gcd
 from functools import reduce
 
@@ -169,9 +170,14 @@ print( 'downloading and concatenating' )
 print( '-----------------------------' )
 ################################################################################
 
-df = pd.concat(tqdm(
-        (pd.read_csv(f's3://{bucket}/{match}') for match in matches),
-        total=len(matches),
+def getter(match):
+    return pd.read_csv(f's3://{bucket}/{match}')
+
+df = pd.concat(process_map(
+        getter,
+        matches,
+        chunksize=10,
+        max_workers=mp.cpu_count(),
 ))
 
 ################################################################################
