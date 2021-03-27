@@ -3,7 +3,10 @@
 #define DISH2_INTROSPECTION_GET_MEAN_RESOURCE_STOCKPILE_HPP_INCLUDE
 
 #include <algorithm>
+#include <cmath>
 #include <limits>
+
+#include "../../../third-party/Empirical/include/emp/base/assert.hpp"
 
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
@@ -26,6 +29,12 @@ double get_mean_resource_stockpile( const dish2::ThreadWorld<Spec>& world ) {
     lcit_t,
     dish2::ResourceStockpileWrapper<Spec>
   >;
+
+  emp_assert( dish2::no_live_cells<Spec>( world ) || std::none_of(
+    iterator_t( lcit_t::make_begin( population ) ),
+    iterator_t( lcit_t::make_end( population ) ),
+    []( const auto val ){ return std::isnan(val); }
+  ) );
 
   if ( dish2::no_live_cells<Spec>( world ) ) {
     return std::numeric_limits<double>::quiet_NaN();

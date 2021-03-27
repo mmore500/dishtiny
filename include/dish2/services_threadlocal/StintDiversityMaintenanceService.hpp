@@ -71,6 +71,8 @@ struct StintDiversityMaintenanceService {
 
           const double decay = std::max( 1.0 - excess_frac, 0.0 );
 
+          emp_assert( std::isfinite( decay ) );
+
           // update stockpiles to reflect decay
           std::transform(
             cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
@@ -78,6 +80,14 @@ struct StintDiversityMaintenanceService {
             cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
             [decay](const auto cur) { return cur * decay; }
           );
+
+          emp_assert( std::none_of(
+            cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+            cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+            []( const auto val ){ return std::isnan( val ); }
+          ), decay );
+
+
         }
 
       }

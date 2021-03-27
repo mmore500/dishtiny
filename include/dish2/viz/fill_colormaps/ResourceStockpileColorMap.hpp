@@ -2,6 +2,8 @@
 #ifndef DISH2_VIZ_FILL_COLORMAPS_RESOURCESTOCKPILECOLORMAP_HPP_INCLUDE
 #define DISH2_VIZ_FILL_COLORMAPS_RESOURCESTOCKPILECOLORMAP_HPP_INCLUDE
 
+#include <cmath>
+
 #include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
 
@@ -15,7 +17,8 @@ struct ResourceStockpileColorMap {
   template<typename ValueType>
   std::string Paint(const ValueType& leaf) const {
     const auto val = leaf.Get();
-    if (val > 1.0) return emp::ColorRGB(
+    if ( std::isnan(val) ) return "purple";
+    else if (val > 1.0) return emp::ColorRGB(
         std::min(255.0, (val - 1.0) * 25),
         255,
         0

@@ -3,6 +3,7 @@
 #define DISH2_SERVICES_COLLECTIVEHARVESTINGSERVICE_HPP_INCLUDE
 
 #include <algorithm>
+#include <cmath>
 #include <set>
 #include <utility>
 
@@ -60,6 +61,8 @@ public:
       harvest += CalcHarvest<Cell>( cell, lev );
     }
 
+    emp_assert( std::isfinite( harvest ), harvest );
+
     // update stockpiles to reflect harvested amount
     std::transform(
       cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
@@ -75,6 +78,14 @@ public:
         cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
+
+    emp_assert( std::none_of(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      []( const auto val ){ return std::isnan( val ); }
+    ), harvest );
+
+
 
   }
 

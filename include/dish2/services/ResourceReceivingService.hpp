@@ -2,6 +2,8 @@
 #ifndef DISH2_SERVICES_RESOURCERECEIVINGSERVICE_HPP_INCLUDE
 #define DISH2_SERVICES_RESOURCERECEIVINGSERVICE_HPP_INCLUDE
 
+#include <algorithm>
+#include <cmath>
 #include <set>
 #include <utility>
 
@@ -56,12 +58,16 @@ struct ResourceReceivingService {
       [](const auto& cumulative_sum, auto& addend){ return addend.JumpGet(); }
     );
 
+    emp_assert( std::isfinite( received_amount ), received_amount );
+
     // dead cells receive resource but do not absorb it
     if ( !cell.IsAlive() ) return;
 
     // how much do we already have?
     const float current_amount
       = *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>();
+
+      emp_assert( std::isfinite( current_amount ), current_amount );
 
     // update stockpiles
     std::fill(
@@ -77,6 +83,12 @@ struct ResourceReceivingService {
         cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
+
+    emp_assert( std::none_of(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      []( const auto val ){ return std::isnan( val ); }
+    ), received_amount, current_amount );
 
   }
 
