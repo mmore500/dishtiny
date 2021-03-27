@@ -48,8 +48,10 @@ public:
 
     using spec_t = typename Cell::spec_t;
 
+    auto& rand = sgpl::tlrand.Get();
+
     for (size_t lev{}; lev < spec_t::NLEV; ++lev) {
-      if ( IsExpired<Cell>( cell, lev ) ) {
+      if ( IsExpired<Cell>( cell, lev ) && rand.P( 0.05 ) ) {
         cell.FragmentationRoutine();
         break;
       }
