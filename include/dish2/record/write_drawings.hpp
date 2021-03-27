@@ -19,9 +19,13 @@ void write_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
   dish2::DrawerCollection<Spec> drawers( thread_world );
 
+  const auto parent_thread_idx = dish2::thread_idx;
 
   // drawings occasionally hang, so add a time out
-  std::packaged_task<void()> task( [&](){ drawers.SaveToFile(); } );
+  std::packaged_task<void()> task( [&](){
+    dish2::thread_idx = parent_thread_idx;
+    drawers.SaveToFile();
+  } );
 
   auto future = task.get_future();
   std::thread worker( std::move(task) );
