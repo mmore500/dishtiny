@@ -22,9 +22,13 @@ void Cell<Spec>::FragmentationRoutine() {
 
   const size_t epoch = *begin<dish2::EpochWrapper<Spec>>();
 
-  auto prev_genome = *genome;
+  emp_assert( genome.has_value() );
+
+  auto prev_genome = genome;
 
   DeathRoutine( dish2::CauseOfDeath::fragmentation );
+
+  emp_assert( prev_genome.has_value() );
 
   genome = prev_genome;
   genome->ElapseGeneration( Spec::NLEV, epoch );
