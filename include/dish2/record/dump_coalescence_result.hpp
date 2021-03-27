@@ -57,7 +57,7 @@ void dump_coalescence_result( const dish2::ThreadWorld< Spec >& world ) {
   file.AddVal( cfg.TREATMENT(), "Competition Treatment" );
   if ( cfg.TREATMENT().find('=') != std::string::npos ) {
     for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
-      file.AddVal( emp::to_string("Treatment ", k), v );
+      file.AddVal( v, emp::to_string("Treatment ", k) );
     }
   }
 

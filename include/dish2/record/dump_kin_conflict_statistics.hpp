@@ -42,7 +42,7 @@ void dump_kin_conflict_statistics( const dish2::ThreadWorld< Spec >& world ) {
   file.AddVal(cfg.TREATMENT(), "Treatment");
   if ( cfg.TREATMENT().find('=') != std::string::npos ) {
     for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
-      file.AddVal( emp::to_string("Treatment ", k), v );
+      file.AddVal( v, emp::to_string("Treatment ", k) );
     }
   }
   file.AddVal( uitsl::get_proc_id(), "proc" );
