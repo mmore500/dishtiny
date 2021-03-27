@@ -19,7 +19,7 @@ namespace dish2 {
 template<typename Spec>
 void thread_data_write( const dish2::ThreadWorld<Spec>& thread_world ) {
 
-  dish2::write_cell_census<Spec>( thread_world );
+  if ( cfg.CENSUS_WRITE() ) dish2::write_cell_census<Spec>( thread_world );
   dish2::write_demographic_phenotypic_phylogenetic_metrics<Spec>(thread_world);
   dish2::write_phylogenetic_root_abundances<Spec>( thread_world );
 

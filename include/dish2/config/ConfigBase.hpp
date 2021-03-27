@@ -315,6 +315,12 @@ EMP_BUILD_CONFIG(
   VALUE(DATA_DUMP, bool, false,
     "[NATIVE] Should we record data on the final state of the simulation?"
   ),
+  VALUE(RUNNINGLOGS_DUMP, bool, false,
+    "[NATIVE] Should we dump running logs at the end of the simulation? Must also enalbe DATA_DUMP."
+  ),
+  VALUE(CENSUS_WRITE, bool, false,
+    "[NATIVE] Should we write the cell census at the end of the simulation? Must also enalbe DATA_DUMP."
+  ),
   VALUE(ARTIFACTS_DUMP, bool, false,
     "[NATIVE] Should we record data on the final state of the simulation?"
   ),
