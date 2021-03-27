@@ -21,7 +21,7 @@ def find_gcd(list_):
 # adapted from https://stackoverflow.com/a/43091576
 def to_ranges(integers):
     integers = sorted(set(integers))
-    by = find_gcd( integers )
+    by = find_gcd( integers ) or 1
     for key, group in itertools.groupby(
         enumerate(integers),
         lambda t: (t[1] / by - t[0]),
