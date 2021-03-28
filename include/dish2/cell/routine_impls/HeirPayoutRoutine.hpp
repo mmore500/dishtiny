@@ -2,10 +2,12 @@
 #ifndef DISH2_CELL_ROUTINE_IMPLS_HEIRPAYOUTROUTINE_HPP_INCLUDE
 #define DISH2_CELL_ROUTINE_IMPLS_HEIRPAYOUTROUTINE_HPP_INCLUDE
 
+#include <cmath>
 #include <utility>
 
 #include "../../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
+#include "../../../../third-party/Empirical/include/emp/base/assert.hpp"
 
 #include "../../config/cfg.hpp"
 #include "../../peripheral/readable_state/ReadableState.hpp"
@@ -41,7 +43,11 @@ void Cell<Spec>::HeirPayoutRoutine() {
       std::identity
     );
 
+  emp_assert( std::isfinite( amt_total ), amt_total );
+
   const float amt_per_heir = amt_total / num_heirs;
+
+  emp_assert( std::isfinite( amt_per_heir ), amt_per_heir );
 
   // send resource to heirs
   uitsl::for_each(

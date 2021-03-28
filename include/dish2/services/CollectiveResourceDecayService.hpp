@@ -27,7 +27,9 @@ class CollectiveResourceDecayService {
 
     if ( quorum_count > optimum ) {
       const size_t num_over = quorum_count - optimum;
-      return std::pow( dish2::cfg.RESOURCE_DECAY(), num_over );
+      const float res = std::pow( dish2::cfg.RESOURCE_DECAY(), num_over );
+      emp_assert( std::isfinite( res ), res, num_over );
+      return res;
     } else return 1.0f;
 
   }

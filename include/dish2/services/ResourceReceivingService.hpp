@@ -67,7 +67,7 @@ struct ResourceReceivingService {
     const float current_amount
       = *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>();
 
-      emp_assert( std::isfinite( current_amount ), current_amount );
+    emp_assert( std::isfinite( current_amount ), current_amount );
 
     // update stockpiles
     std::fill(

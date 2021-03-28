@@ -62,7 +62,8 @@ struct DiversityMaintenanceService {
 
           const double excess_frac
             = excess / static_cast<double>( threshold_count );
-          emp_assert( excess_frac >= 0 );
+          emp_assert( excess_frac >= 0, excess_frac );
+          emp_assert( std::isfinite(excess_frac), excess_frac );
 
           const double decay = std::max( 1.0 - excess_frac, 0.0 );
 
@@ -80,6 +81,11 @@ struct DiversityMaintenanceService {
             cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
             cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
             []( const auto val ){ return std::isnan( val ); }
+          ), decay );
+          emp_assert( std::none_of(
+            cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+            cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+            []( const auto val ){ return std::isinf( val ); }
           ), decay );
 
         }
