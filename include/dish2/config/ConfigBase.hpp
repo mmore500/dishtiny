@@ -121,9 +121,9 @@ EMP_BUILD_CONFIG(
   ),
   VALUE(OPTIMAL_QUORUM_COUNT, internal::nlev_size_t_t,
     #if DISH2_NLEV == 1
-    (internal::nlev_size_t_t{8}),
+    (internal::nlev_size_t_t{12}),
     #elif DISH2_NLEV == 2
-    (internal::nlev_size_t_t{8, 8}),
+    (internal::nlev_size_t_t{12, 12}),
     #else
     (internal::nlev_float_t{}),
     #endif
