@@ -36,7 +36,7 @@ else
 	CFLAGS_march_native := $(shell g++ -\#\#\# -E - -march=native 2>&1 | sed -r '/cc1/!d;s/(")|(^.* - )//g' )
 endif
 
-CFLAGS_nat := -O3 $(CFLAGS_march_native) -flto -DNDEBUG -ffast-math $(CFLAGS_all) $(OMP_FLAG)
+CFLAGS_nat := -O3 $(CFLAGS_march_native) -flto -DNDEBUG -ffast-math -fno-finite-math-only $(CFLAGS_all) $(OMP_FLAG)
 CFLAGS_nat_production := $(CFLAGS_nat) -g -fdebug-prefix-map=$(PWD)=.
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
 CFLAGS_nat_debug := -g -DEMP_TRACK_MEM $(OMP_FLAG) $(CFLAGS_all)
