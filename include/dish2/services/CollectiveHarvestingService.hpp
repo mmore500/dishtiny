@@ -25,7 +25,12 @@ class CollectiveHarvestingService {
     const size_t quorum_count = cell.cell_quorum_state.GetNumKnownQuorumBits(
       lev
     );
-    const size_t effective_count = std::min( optimum, quorum_count );
+    emp_assert( quorum_count );
+    const size_t effective_count = std::min(
+      optimum,
+      // subtract 1 from quorum count for self, being cautious about overflow
+      quorum_count - static_cast<bool>( quorum_count )
+    );
 
     return cfg.BASE_HARVEST_RATE() * effective_count;
   }
