@@ -57,7 +57,7 @@ struct DiversityMaintenanceService {
       [&root_id_counts, threshold_count]( auto& cell, const size_t root_id ){
         const size_t count = root_id_counts.at( root_id );
 
-        if ( count > threshold_count ) {
+        if ( threshold_count && count > threshold_count ) {
           const size_t excess = count - threshold_count;
 
           const double excess_frac

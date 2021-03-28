@@ -62,7 +62,7 @@ struct StintDiversityMaintenanceService {
       ){
         const size_t count = stint_root_id_counts.at( stint_root_id );
 
-        if ( count > threshold_count ) {
+        if ( threshold_count && count > threshold_count ) {
           const size_t excess = count - threshold_count;
 
           const double excess_frac
