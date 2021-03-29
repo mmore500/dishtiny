@@ -491,21 +491,23 @@ def tabulate_perturbation(
 
     # count competions where both strains went extinct simultaneously
     # as 0 Fitness Differential
+    # filter prevents inclusion of intermittent_p_col nan or zero
+    # (from root id 0)
     res_by_series = defaultdict(dict)
-    for (series, intermittent_p), subset_df in perturbation_df.groupby([
+    for (series, intermittent_p), subset_df in perturbation_df[
+        perturbation_df['Root ID'] == 1
+    ].groupby([
         'Competition Series',
         intermittent_p_col,
     ]):
 
         idx_perturbed_df = subset_df[
-            (subset_df[f'{target_state} State Target Idx'].notnull())
-            & (subset_df['genome root_id'] == 1)
+            subset_df[f'{target_state} State Target Idx'].notnull()
         ].reset_index()
 
         # not doing anything with this data for now
         entire_perturbed_df = subset_df[
-            (subset_df[f'{target_state} State Target Idx'].isnull())
-            & (subset_df['genome root_id'] == 1)
+            subset_df[f'{target_state} State Target Idx'].isnull()
         ].reset_index()
 
         h0_fit = ip.popsingleton( control_fits_df[
