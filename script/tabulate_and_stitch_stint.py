@@ -810,6 +810,28 @@ sources = []
 if (stint % 10 == 0):
     ############################################################################
     print(                                                                     )
+    print( 'handling config records'                                           )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    try:
+        config_records, = my_bucket.objects.filter(
+            Prefix=f'endeavor={endeavor}/evolve/config-records/stage=1+what=collated/stint={stint}/'
+        )
+
+        config_records_df = pd.read_csv(f's3://{bucket}/{config_records.key}')
+        config_records_df['Series'] = config_records_df['SERIES']
+        config_records_df['Stint'] = config_records_df['STINT']
+
+        dataframes.append( config_records_df )
+
+        sources.append( config_records.key )
+    except ValueError:
+        print("missing config records, skipping")
+
+if (stint % 10 == 0):
+    ############################################################################
+    print(                                                                     )
     print( 'handling strain competitions'                                      )
     print( '-----------------------------------------------------------------' )
     ############################################################################
