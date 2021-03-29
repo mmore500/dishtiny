@@ -632,11 +632,11 @@ def tabulate_selfsend(
         num_less_fit_selfsends = (wt_vs_selfsend_df['p'] < p_thresh).sum()
 
 
-        suffixes = [f' @ Fitler Mod {mod}']
+        suffixes = [f' @ Filter Mod {mod}']
         if len( selfsend_df[
             selfsend_df['genome root_id'] == 1
         ][
-            f'{messaging_target} Message Self-Send Fitler Mod'
+            f'{messaging_target} Message Self-Send Filter Mod'
         ].unique() ) == 1:
             suffixes.append('')
         for suffix in suffixes:
