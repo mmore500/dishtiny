@@ -14,10 +14,11 @@ DISHTINY_SOURCE_DIR := $(shell test -d /opt/dishtiny && echo /opt/dishtiny || pw
 # make ARGS="-DMETRIC=streak -DSELECTOR=roulette"
 
 # Flags to use regardless of compiler
-CFLAGS_all := $(CXXFLAGS) -std=c++17 -Wall -Wno-unused-function -Wno-unused-private-field -Wno-empty-body -ffast-math -fno-finite-math-only \
+CFLAGS_all := $(CXXFLAGS) -std=c++17 -Wall -Wno-unused-function -Wno-unused-private-field -Wno-empty-body \
   -Iinclude -Ithird-party/ \
 	-DDISHTINY_HASH_=$(DISHTINY_HASH)$(DISHTINY_DIRTY) \
 	-DDISHTINY_SOURCE_DIR_=$(DISHTINY_SOURCE_DIR)\
+	-fno-signaling-nans -fno-trapping-math \
 	$(ARGS)
 
 # Native compiler information
@@ -45,7 +46,7 @@ CFLAGS_nat_profile := -pg -DNDEBUG $(OMP_FLAG) $(CFLAGS_all)
 
 # Emscripten compiler information
 CXX_web := emcc
-OFLAGS_web_all := $(CXXFLAGS) -ffast-math -fno-finite-math-only -Wno-mismatched-tags -Wno-empty-body -s USE_ZLIB=1 -s USE_LIBLZMA=1 -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s TOTAL_MEMORY=671088640 --js-library $(EMP_DIR)/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback', '_empDoCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0 -I/usr/lib/x86_64-linux-gnu/openmpi/include/
+OFLAGS_web_all := $(CXXFLAGS) -Wno-mismatched-tags -Wno-empty-body -s USE_ZLIB=1 -s USE_LIBLZMA=1 -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s TOTAL_MEMORY=671088640 --js-library $(EMP_DIR)/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback', '_empDoCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0 -I/usr/lib/x86_64-linux-gnu/openmpi/include/
 OFLAGS_web_pthread := -s USE_PTHREADS=1 -s PROXY_TO_PTHREAD=1
 OFLAGS_web := -O3 -DNDEBUG
 OFLAGS_web_debug := -g4 -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPPORT=1 -s ASSERTIONS=2 -s SAFE_HEAP=1 -s STACK_OVERFLOW_CHECK=2
