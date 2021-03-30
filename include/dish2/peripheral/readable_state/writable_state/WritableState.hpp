@@ -51,6 +51,9 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
           this->parent_t::template GetByIndex<N>() \
         ) > >( val ); \
         this->parent_t::template GetByIndex<N>() += clamped; \
+      } else { \
+        emp_assert( false, N ); \
+        __builtin_unreachable(); \
       } \
     break;
 
@@ -81,6 +84,9 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
           this->parent_t::template GetByIndex<N>() \
         ) > >( val ); \
         this->parent_t::template GetByIndex<N>() *= clamped; \
+      } else { \
+        emp_assert( false, N ); \
+        __builtin_unreachable(); \
       } \
     break;
 
@@ -111,6 +117,9 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
             this->parent_t::template GetByIndex<N>() \
           ) > >( val ); \
           this->parent_t::template GetByIndex<N>() = clamped; \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         } \
       break;
 
@@ -136,6 +145,9 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         if constexpr ( N  < parent_size ) { \
           this->parent_t::template GetByIndex<N>() \
           = static_cast<parent_t>(other).template GetByIndex<N>(); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         } \
       break;
 
@@ -165,6 +177,9 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
             this->parent_t::template GetByIndex<N>(), \
             static_cast<parent_t>(other).template GetByIndex<N>() \
           ); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         } \
       break;
 
@@ -193,6 +208,9 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
           return uitsl::TypeName< \
             typename parent_t::template leaf_t<N> \
           >::Get(); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         }
 
     emp_assert( idx < parent_size );
@@ -221,6 +239,9 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
       case N: \
         if constexpr ( N  < parent_size ) { \
           return parent_t::template GetLeafIndex<N>(); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         }
 
     emp_assert( idx < parent_size );

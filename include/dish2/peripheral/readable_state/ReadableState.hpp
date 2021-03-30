@@ -40,6 +40,9 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
       case N: \
         if constexpr (N < parent_t::GetSize()){ \
           return this->template Get<N + Templateify>(); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         } \
       break;
 
@@ -68,6 +71,9 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
         if constexpr ( N  < parent_size ) { \
           this->parent_t::template GetByIndex<N>() \
           = static_cast<parent_t>(other).template GetByIndex<N>(); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         } \
       break;
 
@@ -97,6 +103,9 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
             this->parent_t::template GetByIndex<N>(), \
             static_cast<parent_t>(other).template GetByIndex<N>() \
           ); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         } \
       break;
 
@@ -125,6 +134,9 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
           return uitsl::TypeName< \
             typename parent_t::template leaf_t<N> \
           >::Get(); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         }
 
     emp_assert( idx < parent_t::GetSize() );
@@ -153,6 +165,9 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
       case N: \
         if constexpr ( N  < parent_t::GetSize() ) { \
           return parent_t::template GetLeafIndex<N>(); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         }
 
     emp_assert( idx < parent_t::GetSize() );
