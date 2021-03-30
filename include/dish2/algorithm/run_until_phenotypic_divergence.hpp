@@ -31,6 +31,10 @@ size_t run_until_phenotypic_divergence(
 
   for ( size_t upd{}; upd < cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES(); ++upd ) {
 
+    emp_assert(
+      dish2::compare_resource_stockpiles<Spec>( control, experiment )
+    );
+
     const emp::Random bak = sgpl::tlrand.Get();
 
     control.Update();

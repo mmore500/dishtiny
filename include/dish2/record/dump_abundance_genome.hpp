@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 
+#include "../algorithm/make_jenga_phenotype_equivalent_nopout.hpp"
 #include "../algorithm/make_phenotype_equivalent_nopout.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_lowest_root_prevalent_coding_genotype_genome.hpp"
@@ -57,6 +58,23 @@ bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
       dish2::make_dump_abundance_genome_filename(
         count, abundance, prevalence,
         "phenotype_equivalent_nopout"
+      )
+    );
+  }
+
+  if (
+    cfg.JENGA_PHENOTYPE_EQUIVALENT_NOPOUT()
+    && dish2::thread_idx == 0
+    && uitsl::is_root()
+  ) {
+    std::cout << "recording phenotype equivalent nopout" << '\n';
+    dish2::dump_genome< Spec >(
+      dish2::make_jenga_phenotype_equivalent_nopout< Spec >(
+        genome, "abundance"
+      ),
+      dish2::make_dump_abundance_genome_filename(
+        count, abundance, prevalence,
+        "jenga_phenotype_equivalent_nopout"
       )
     );
   }

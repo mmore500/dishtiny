@@ -11,6 +11,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/enumerate_module_ids.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
+#include "../algorithm/make_jenga_phenotype_equivalent_nopout.hpp"
 #include "../algorithm/make_phenotype_equivalent_nopout.hpp"
 #include "../debug/LogLevelGuard.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
@@ -59,6 +60,22 @@ class PrevalentGenotypePanel {
 
       Redraw(
         dish2::make_phenotype_equivalent_nopout< Spec >(
+          genome, "prevalent"
+        )
+      );
+      // why is this necessary?
+      panel.SetAttr( "class", "list-group list-group-flush collapse show" );
+
+    } };
+
+    panel << (emp::web::Div) instruction_list_nop_out_item_t{ [this, genome](){
+
+      const dish2::ModalGuard guard{ "modal-log-readout" };
+
+      const dish2::LogLevelGuard guard2{ 2 };
+
+      Redraw(
+        dish2::make_jenga_phenotype_equivalent_nopout< Spec >(
           genome, "prevalent"
         )
       );

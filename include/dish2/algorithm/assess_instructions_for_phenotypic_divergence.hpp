@@ -3,6 +3,7 @@
 #define DISH2_ALGORITHM_ASSESS_INSTRUCTIONS_FOR_PHENOTYPIC_DIVERGENCE_HPP_INCLUDE
 
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_instructions.hpp"
 
 #include "../cell/Cell.hpp"
 #include "../debug/entry_types.hpp"
@@ -32,6 +33,25 @@ size_t assess_instructions_for_phenotypic_divergence(
   ) nopout.program[ idx ].NopOut();
 
   return dish2::run_until_phenotypic_divergence<Spec>( genome, nopout );
+
+}
+
+template< typename Spec >
+size_t assess_instructions_for_phenotypic_divergence(
+  const dish2::Genome<Spec>& genome,
+  const emp::vector<char>& inst_mask,
+  const dish2::Genome<Spec>& reference_genome
+) {
+
+  using sgpl_spec_t = typename Spec::sgpl_spec_t;
+  auto nopout = genome;
+  nopout.program = sgpl::nop_out_instructions<sgpl_spec_t>(
+    nopout.program, inst_mask
+  );
+
+  return dish2::run_until_phenotypic_divergence<Spec>(
+    reference_genome, nopout
+  );
 
 }
 
