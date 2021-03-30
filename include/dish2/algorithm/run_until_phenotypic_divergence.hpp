@@ -77,9 +77,9 @@ size_t run_until_phenotypic_divergence(
 
   netuit::internal::MeshIDCounter::Reset();
 
-  const emp::Random rng_bak = sgpl::tlrand.Get();
+  dish2::TemporaryThreadIdxOverride override{ 0 };
 
-  dish2::TemporaryThreadIdxOverride( 0 );
+  const emp::Random rng_bak = sgpl::tlrand.Get();
 
   auto world1 = dish2::ProcWorld<Spec>{}.MakeThreadWorld();
   dish2::seed_genomes_into<Spec>( {genome1}, world1 );
