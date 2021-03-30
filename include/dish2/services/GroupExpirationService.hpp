@@ -17,7 +17,7 @@ namespace dish2 {
 class GroupExpirationService {
 
   template<typename Cell>
-  static bool IsExpired( const Cell& cell, const size_t lev ) {
+  static size_t AmtExpired( const Cell& cell, const size_t lev ) {
 
     using spec_t = typename Cell::spec_t;
 
@@ -27,7 +27,7 @@ class GroupExpirationService {
 
     const size_t threshold_age = cfg.GROUP_EXPIRATION_DURATIONS()[ lev ];
 
-    return group_age > threshold_age;
+    return group_age - std::min( group_age, threshold_age );
 
   }
 
@@ -51,7 +51,9 @@ public:
     auto& rand = sgpl::tlrand.Get();
 
     for (size_t lev{}; lev < spec_t::NLEV; ++lev) {
-      if ( IsExpired<Cell>( cell, lev ) && rand.P( 0.05 ) ) {
+      const size_t expiration = AmtExpired<Cell>( cell, lev );
+      const double p_fragmentation = std::min( 0.1 * expiration, 1.0 );
+      if ( expiration && rand.P( p_fragmentation ) ) {
         cell.FragmentationRoutine();
         break;
       }
