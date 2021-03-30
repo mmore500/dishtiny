@@ -47,9 +47,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         using target_t = std::decay_t< decltype( \
           this->parent_t::template GetByIndex<N>() \
         ) >; \
-        const target_t clamped = uitsl::clamp_cast< std::decay_t< decltype( \
-          this->parent_t::template GetByIndex<N>() \
-        ) > >( val ); \
+        const target_t clamped = uitsl::clamp_cast< target_t >( val ); \
         this->parent_t::template GetByIndex<N>() += clamped; \
       } else { \
         emp_assert( false, N ); \
@@ -80,9 +78,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         using target_t = std::decay_t< decltype( \
           this->parent_t::template GetByIndex<N>() \
         ) >; \
-        const target_t clamped = uitsl::clamp_cast< std::decay_t< decltype( \
-          this->parent_t::template GetByIndex<N>() \
-        ) > >( val ); \
+        const target_t clamped = uitsl::clamp_cast< target_t >( val ); \
         this->parent_t::template GetByIndex<N>() *= clamped; \
       } else { \
         emp_assert( false, N ); \
@@ -113,9 +109,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
           using target_t = std::decay_t< decltype( \
             this->parent_t::template GetByIndex<N>() \
           ) >; \
-          const target_t clamped = uitsl::clamp_cast< std::decay_t< decltype( \
-            this->parent_t::template GetByIndex<N>() \
-          ) > >( val ); \
+          const target_t clamped = uitsl::clamp_cast< target_t >( val ); \
           this->parent_t::template GetByIndex<N>() = clamped; \
         } else { \
           emp_assert( false, N ); \
