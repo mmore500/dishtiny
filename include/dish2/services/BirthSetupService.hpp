@@ -85,7 +85,9 @@ struct BirthSetupService {
       } );
 
       // setup new genome
-      cell.DeathRoutine( dish2::CauseOfDeath::elimination );
+      if ( cell.genome.has_value() ) {
+        cell.DeathRoutine( dish2::CauseOfDeath::elimination );
+      }
       cell.genome = incoming_genome;
       cell.genome->ElapseGeneration( replev, epoch );
 
