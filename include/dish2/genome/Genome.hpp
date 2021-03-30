@@ -11,6 +11,7 @@
 #include "../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/polyfill/span.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/sloppy_copy.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_instruction_category.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
 #include "../configbyroot/root_mutation_configs.hpp"
@@ -106,7 +107,11 @@ public:
   , program( dish2::cfg.PROGRAM_START_SIZE() )
   , root_id( std::in_place )
   , stint_root_id( std::in_place ) {
+    using sgpl_spec_t = typename Spec::sgpl_spec_t;
     program.RotateGlobalAnchorToFront();
+    program = sgpl::nop_out_instruction_category<sgpl_spec_t>(
+      program, "apoptosis"
+    );
   }
 
   bool operator==(const Genome& other) const {

@@ -73,11 +73,18 @@ public:
       GetAddr( inst )
     ).find("NopState") != std::string::npos;
 
-    return std::set<std::string>{
+    const bool apoptosis_request = dish2::WritableState< DishSpec >::GetLeafTypeName(
+      GetAddr( inst )
+    ).find("ApoptosisRequest") != std::string::npos;
+
+    std::set<std::string> res{
       nop_target ? "calculation" : "actuator",
       nop_target ? "intrinsic" : "extrinsic",
       "op",
     };
+
+    if ( apoptosis_request ) res.insert( "apoptosis" );
+    return res;
 
   }
 
