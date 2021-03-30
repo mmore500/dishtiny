@@ -100,7 +100,7 @@ struct Spec_dnh2v {
   using service_manager_t = dish2::ServiceManager<
     dish2::DecayToBaselineService, // should run before cpu execution service
     dish2::RunningLogPurgeService, // should run before cpu execution service
-    dish2::WritableStateNoiseService,
+    dish2::ControllerMappedStateNoiseService,
 
     dish2::IntermittentExtrospectiveStateExchangeService<this_t>,
     dish2::IntermittentExtrospectiveStateRotateService,
