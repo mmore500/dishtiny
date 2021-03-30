@@ -27,8 +27,10 @@ struct CellUpdateService {
 
     auto& population = thread_world.population;
 
-    thread_local dish2::IndexShuffler shuffler;
-    shuffler.Resize( population.size() );
+    // this could be thread_local,
+    // but then we'd have to be careful about ensuring that holdover state
+    // doesn't affect phenotypic divergence tests
+    dish2::IndexShuffler shuffler( population.size() );
     shuffler.Shuffle();
 
     for ( const size_t i : shuffler ) {
