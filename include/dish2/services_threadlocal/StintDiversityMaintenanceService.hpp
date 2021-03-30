@@ -8,7 +8,6 @@
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 
-#include "../cell/cardinal_iterators/ApoptosisRequestWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
