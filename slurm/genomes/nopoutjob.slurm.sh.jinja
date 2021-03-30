@@ -214,7 +214,12 @@ echo "uploading any genome files..."
 for p in \
   outartifacts/*a=genome*morph=phenotype_equivalent_nopout* \
   outdata/*a=genome_statistics*morph=phenotype_equivalent_nopout* \
-  outdata/*a=nopout_divergence_updates* \
+  outartifacts/*a=genome*morph=battleship_phenotype_equivalent_nopout* \
+  outdata/*a=genome_statistics*morph=battleship_phenotype_equivalent_nopout* \
+  outdata/*a=battleship_nopout_divergence_updates* \
+  outartifacts/*a=genome*morph=jenga_phenotype_equivalent_nopout* \
+  outdata/*a=genome_statistics*morph=jenga_phenotype_equivalent_nopout* \
+  outdata/*a=jenga_nopout_divergence_updates* \
 ; do
   f="$(basename "${p}")"
   echo "uploading ${p} -> ${f}"

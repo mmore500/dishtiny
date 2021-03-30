@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_ALGORITHM_MAKE_PHENOTYPE_EQUIVALENT_NOPOUT_HPP_INCLUDE
-#define DISH2_ALGORITHM_MAKE_PHENOTYPE_EQUIVALENT_NOPOUT_HPP_INCLUDE
+#ifndef DISH2_ALGORITHM_MAKE_BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT_HPP_INCLUDE
+#define DISH2_ALGORITHM_MAKE_BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT_HPP_INCLUDE
 
 #include <algorithm>
 #include <fstream>
@@ -17,17 +17,17 @@
 #include "../debug/log_event.hpp"
 #include "../debug/LogScope.hpp"
 #include "../genome/Genome.hpp"
+#include "../record/make_filename/make_battleship_divergence_updates_filename.hpp"
 #include "../record/make_filename/make_data_path.hpp"
-#include "../record/make_filename/make_divergence_updates_filename.hpp"
 #include "../utility/pare_keyname_filename.hpp"
 
-#include "nop_out_phenotypically_neutral_instructions.hpp"
-#include "nop_out_phenotypically_neutral_modules.hpp"
+#include "battleship_nop_out_phenotypically_neutral_instructions.hpp"
+#include "battleship_nop_out_phenotypically_neutral_modules.hpp"
 
 namespace dish2 {
 
 template< typename Spec >
-dish2::Genome<Spec> make_phenotype_equivalent_nopout(
+dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
   dish2::Genome<Spec> genome, const std::string& criteria=""
 ) {
 
@@ -56,16 +56,18 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
     std::identity
   ) );
 
-  const dish2::LogScope guard1{ "noping out phenotypically neutral sites" };
+  const dish2::LogScope guard1{
+    "battleship noping out phenotypically neutral sites"
+  };
 
   {
     const auto [nopped_genome, divergence_updates]
-      = dish2::nop_out_phenotypically_neutral_modules< Spec >( genome );
+      = dish2::battleship_nop_out_phenotypically_neutral_modules< Spec >( genome );
 
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_divergence_updates_filename( criteria, 1, "module" ),
+      dish2::make_battleship_divergence_updates_filename( criteria, 1, "module" ),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -84,12 +86,12 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
   // at low cost
   {
     const auto [nopped_genome, divergence_updates]
-      = dish2::nop_out_phenotypically_neutral_instructions< Spec >(genome, 8);
+      = dish2::battleship_nop_out_phenotypically_neutral_instructions< Spec >(genome, 8);
 
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_divergence_updates_filename( criteria, 8, "inst" ),
+      dish2::make_battleship_divergence_updates_filename( criteria, 8, "inst" ),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -105,12 +107,12 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
   {
     const auto [nopped_genome, divergence_updates]
-      = dish2::nop_out_phenotypically_neutral_instructions< Spec >(genome, 4);
+      = dish2::battleship_nop_out_phenotypically_neutral_instructions< Spec >(genome, 4);
 
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_divergence_updates_filename( criteria, 4, "inst" ),
+      dish2::make_battleship_divergence_updates_filename( criteria, 4, "inst" ),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -126,12 +128,12 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
   {
     const auto [nopped_genome, divergence_updates]
-      = dish2::nop_out_phenotypically_neutral_instructions< Spec >(genome, 2);
+      = dish2::battleship_nop_out_phenotypically_neutral_instructions< Spec >(genome, 2);
 
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_divergence_updates_filename( criteria, 2, "inst" ),
+      dish2::make_battleship_divergence_updates_filename( criteria, 2, "inst" ),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -147,12 +149,12 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
   {
     const auto [nopped_genome, divergence_updates]
-      = dish2::nop_out_phenotypically_neutral_instructions< Spec >(genome, 1);
+      = dish2::battleship_nop_out_phenotypically_neutral_instructions< Spec >(genome, 1);
 
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_divergence_updates_filename( criteria, 1, "inst" ),
+      dish2::make_battleship_divergence_updates_filename( criteria, 1, "inst" ),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -176,4 +178,4 @@ dish2::Genome<Spec> make_phenotype_equivalent_nopout(
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_ALGORITHM_MAKE_PHENOTYPE_EQUIVALENT_NOPOUT_HPP_INCLUDE
+#endif // #ifndef DISH2_ALGORITHM_MAKE_BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT_HPP_INCLUDE

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_ALGORITHM_NOP_OUT_PHENOTYPICALLY_NEUTRAL_INSTRUCTIONS_HPP_INCLUDE
-#define DISH2_ALGORITHM_NOP_OUT_PHENOTYPICALLY_NEUTRAL_INSTRUCTIONS_HPP_INCLUDE
+#ifndef DISH2_ALGORITHM_BATTLESHIP_NOP_OUT_PHENOTYPICALLY_NEUTRAL_INSTRUCTIONS_HPP_INCLUDE
+#define DISH2_ALGORITHM_BATTLESHIP_NOP_OUT_PHENOTYPICALLY_NEUTRAL_INSTRUCTIONS_HPP_INCLUDE
 
 #include <algorithm>
 #include <iostream>
@@ -18,7 +18,7 @@
 namespace dish2 {
 
 template< typename Spec >
-auto nop_out_phenotypically_neutral_instructions(
+auto battleship_nop_out_phenotypically_neutral_instructions(
   dish2::Genome<Spec> genome, const size_t nop_length=1
 ) {
 
@@ -64,4 +64,4 @@ auto nop_out_phenotypically_neutral_instructions(
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_ALGORITHM_NOP_OUT_PHENOTYPICALLY_NEUTRAL_INSTRUCTIONS_HPP_INCLUDE
+#endif // #ifndef DISH2_ALGORITHM_BATTLESHIP_NOP_OUT_PHENOTYPICALLY_NEUTRAL_INSTRUCTIONS_HPP_INCLUDE

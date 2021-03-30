@@ -306,6 +306,9 @@ EMP_BUILD_CONFIG(
   VALUE(PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
     "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
   ),
+  VALUE(BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
+    "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
+  ),
   VALUE(JENGA_PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
     "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
   ),

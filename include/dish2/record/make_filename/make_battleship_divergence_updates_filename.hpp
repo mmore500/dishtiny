@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_DIVERGENCE_UPDATES_FILENAME_HPP_INCLUDE
-#define DISH2_RECORD_MAKE_FILENAME_MAKE_DIVERGENCE_UPDATES_FILENAME_HPP_INCLUDE
+#ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_BATTLESHIP_DIVERGENCE_UPDATES_FILENAME_HPP_INCLUDE
+#define DISH2_RECORD_MAKE_FILENAME_MAKE_BATTLESHIP_DIVERGENCE_UPDATES_FILENAME_HPP_INCLUDE
 
 #include <cstdlib>
 #include <string>
@@ -20,14 +20,14 @@
 
 namespace dish2 {
 
-std::string make_divergence_updates_filename(
+std::string make_battleship_divergence_updates_filename(
   const std::string& criteria,
   const size_t nopout_coarseness,
   const std::string& nopout_target
 ) {
 
   auto keyname_attributes = emp::keyname::unpack_t{
-    {"a", "nopout_divergence_updates"},
+    {"a", "battleship_nopout_divergence_updates"},
     {
       "num_evaluated_updates",
       emp::to_string(cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES())
@@ -72,4 +72,4 @@ std::string make_divergence_updates_filename(
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_DIVERGENCE_UPDATES_FILENAME_HPP_INCLUDE
+#endif // #ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_BATTLESHIP_DIVERGENCE_UPDATES_FILENAME_HPP_INCLUDE

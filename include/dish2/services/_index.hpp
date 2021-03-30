@@ -9,6 +9,7 @@
 #include "CollectiveHarvestingService.hpp"
 #include "CollectiveResourceDecayService.hpp"
 #include "ConduitFlushService.hpp"
+#include "ControllerMappedStateNoiseService.hpp"
 #include "CpuExecutionService.hpp"
 #include "DecayToBaselineService.hpp"
 #include "EpochAdvanceService.hpp"
@@ -43,6 +44,5 @@
 #include "SpawnSendingService.hpp"
 #include "StateInputJumpService.hpp"
 #include "StateOutputPutService.hpp"
-#include "ControllerMappedStateNoiseService.hpp"
 
 #endif // #ifndef DISH2_SERVICES__INDEX_HPP_INCLUDE
