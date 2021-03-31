@@ -108,10 +108,10 @@ using DrawerCollection = dish2::DrawerManager<
     Spec,
     dish2::PcaTrinaryRegulationArtist<Spec>
   >,
-  // dish2::GridDrawer<
-  //   Spec,
-  //   dish2::PhylogeneticRootArtist<Spec>
-  // >,
+  dish2::GridDrawer<
+    Spec,
+    dish2::PhylogeneticRootArtist<Spec>
+  >,
   // dish2::SeriesDrawer<
   //   Spec,
   //   dish2::QuorumBitsArtist<Spec>,
