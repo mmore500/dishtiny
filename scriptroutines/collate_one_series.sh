@@ -114,6 +114,10 @@ echo "------------"
   "${bucket}" "${endeavor}" "${stint}" \
   || echo "collate_mutating_competition_series.sh failed"
 
+"${script_dir}/collate_noncritical_nopout_series.sh" \
+  "${bucket}" "${endeavor}" "${stint}" \
+  || echo "collate_noncritical_nopout_series.sh failed"
+
 "${script_dir}/collate_noncritical_phenotypeequivalent_nopinterpolation_competition_series.sh" \
   "${bucket}" "${endeavor}" "${stint}" \
   || echo "collate_noncritical_phenotypeequivalent_nopinterpolation_competition_series.sh failed"
