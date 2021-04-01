@@ -9,7 +9,9 @@
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 
 #include "../config/cfg.hpp"
+#include "../introspection/get_fraction_live_cells.hpp"
 #include "../introspection/has_coalesced.hpp"
+#include "../introspection/is_extinct.hpp"
 #include "../world/ThreadWorld.hpp"
 
 namespace dish2 {
@@ -29,8 +31,33 @@ bool thread_should_contine(
   ) {
     emp_always_assert( !uitsl::is_multiprocess() );
     emp_always_assert( cfg.N_THREADS() == 1 );
-    std::cout << "coalescence detected at update " << update << std::endl;
-    std::cout << "aborting!";
+    std::cout << "coalescence detected at update " << update << '\n';
+    std::cout << "aborting!" << '\n';
+    return false;
+  } else if (
+    cfg.ABORT_IF_EXTINCT_FREQ()
+    && uitsl::shift_mod(update, cfg.ABORT_IF_EXTINCT_FREQ()) == 0
+    && dish2::is_extinct<Spec>( thread_world )
+  ) {
+    emp_always_assert( !uitsl::is_multiprocess() );
+    emp_always_assert( cfg.N_THREADS() == 1 );
+    std::cout << "extinction detected at update " << update << '\n';
+    std::cout << "aborting!" << '\n';
+    return false;
+  } else if (
+    cfg.ABORT_AT_LIVE_CELL_FRACTION()
+    && dish2::get_fraction_live_cells<Spec>( thread_world )
+      >= cfg.ABORT_AT_LIVE_CELL_FRACTION()
+  ) {
+    emp_always_assert( !uitsl::is_multiprocess() );
+    emp_always_assert( cfg.N_THREADS() == 1 );
+    std::cout
+      << "live cell fraction threshold "
+      << cfg.ABORT_AT_LIVE_CELL_FRACTION()
+      << " exceeded at update " << update
+      << " with value " << dish2::get_fraction_live_cells<Spec>( thread_world )
+      << '\n';
+    std::cout << "aborting!" << '\n';
     return false;
   } else if (
     // if we are going to dump data,

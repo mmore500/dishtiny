@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/BooleanColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -45,9 +43,10 @@ namespace internal::heir_request_artist {
 } // namespace internal::heir_request_artist
 
 template<
-  typename HeirRequestGetter=dish2::HeirRequestGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename HeirRequestGetter=dish2::HeirRequestGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class HeirRequestArtist
 : public internal::heir_request_artist::parent_t<

@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/QuorumBitsColorMap.hpp"
@@ -44,9 +42,10 @@ namespace internal::quorum_bits_artist {
 } // namespace internal::quorum_bits_artist
 
 template<
-  typename QuorumBitsGetter=dish2::QuorumBitsGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename QuorumBitsGetter=dish2::QuorumBitsGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class QuorumBitsArtist
 : public internal::quorum_bits_artist::parent_t<
@@ -68,8 +67,7 @@ public:
 
   static constexpr std::string_view GetName() { return "Quorum Bits"; }
 
-  template< typename Spec >
-  static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
+  static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>&) {
     return Spec::NLEV;
   }
 

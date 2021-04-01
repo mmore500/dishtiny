@@ -48,9 +48,9 @@ struct InterMessageLaunchingService {
 
           const auto& [tag, data] = message;
           const bool res = cpu.TryLaunchCore( tag, 1 );
+          ++message_counter;
           if (res) {
             cpu.GetFreshestCore().SetRegisters( data );
-            ++message_counter; // TODO fixme should increment outside if statement
           }
           return res;
 

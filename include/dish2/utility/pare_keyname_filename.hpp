@@ -168,11 +168,11 @@ std::string pare_keyname_filename(
   emp_assert( filename.size() <= internal::get_longlinked_filename_max(path) );
 
   std::cout << "paring filename " << original_filename
-    << " -> " << filename << std::endl;
+    << " -> " << filename << '\n';
 
   // create additional suffixed-file at path/ containing original filename
   const auto meta_path = dish2::make_longlinked_metadata_path(path / filename);
-  std::ofstream( meta_path ) << original_filename << std::endl;
+  std::ofstream( meta_path ) << original_filename << '\n';
 
   emp_assert( std::filesystem::exists( meta_path ) );
 

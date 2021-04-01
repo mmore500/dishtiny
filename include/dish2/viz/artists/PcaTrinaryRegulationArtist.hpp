@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderInvertColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/PcaTrinaryRegulationColorMap.hpp"
@@ -23,13 +21,14 @@ namespace dish2 {
 namespace internal::pca_trinary_regulation_artist {
 
   template<
+    typename Spec,
     typename CardiCoordGetter,
     typename IsAliveGetter,
     typename KinGroupIDGetter
   >
   using parent_t = dish2::Artist<
     dish2::CardinalFillRenderer<
-      dish2::PcaTrinaryRegulationColorMap,
+      dish2::PcaTrinaryRegulationColorMap<Spec>,
       CardiCoordGetter
     >,
     dish2::CellFillRenderer<
@@ -45,18 +44,21 @@ namespace internal::pca_trinary_regulation_artist {
 } // namespace internal::pca_trinary_regulation_artist
 
 template<
-  typename CardiCoordGetter=dish2::CardiCoordGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename CardiCoordGetter=dish2::CardiCoordGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class PcaTrinaryRegulationArtist
 : public internal::pca_trinary_regulation_artist::parent_t<
+  Spec,
   CardiCoordGetter,
   IsAliveGetter,
   KinGroupIDGetter
 > {
 
   using parent_t = internal::pca_trinary_regulation_artist::parent_t<
+    Spec,
     CardiCoordGetter,
     IsAliveGetter,
     KinGroupIDGetter

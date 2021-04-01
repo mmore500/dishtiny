@@ -65,6 +65,21 @@ Most simulation customizations will probably involve copying and modifying a ser
 A [whistle-stop tour](https://en.wikipedia.org/wiki/Whistle_stop_train_tour) of the repository!
 ::steam_locomotive::
 
+### `binder/`
+
+```{include} ../include/dish2/binder/README.md
+```
+
+### `configpacks/`
+
+```{include} ../include/dish2/configpacks/README.md
+```
+
+### `include/`
+
+```{include} ../include/README.md
+```
+
 ### `include/dish2/algorithm/`
 
 ```{include} ../include/dish2/algorithm/README.md
@@ -188,6 +203,11 @@ A [whistle-stop tour](https://en.wikipedia.org/wiki/Whistle_stop_train_tour) of 
 ### `script/`
 
 ```{include} ../script/README.md
+```
+
+### `scriptroutines/`
+
+```{include} ../scriptroutines/README.md
 ```
 
 ### `slurm/`

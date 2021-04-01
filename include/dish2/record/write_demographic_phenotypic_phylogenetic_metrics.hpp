@@ -14,6 +14,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../config/thread_idx.hpp"
 #include "../introspection/any_live_cells.hpp"
 #include "../introspection/count_birth_events.hpp"
 #include "../introspection/count_cardinals.hpp"
@@ -48,6 +49,7 @@
 #include "../introspection/get_fraction_cells_spawn_arrest.hpp"
 #include "../introspection/get_fraction_cells_spawn_request.hpp"
 #include "../introspection/get_fraction_fecund_resource_stockpile.hpp"
+#include "../introspection/get_fraction_live_cells.hpp"
 #include "../introspection/get_fraction_nulliparous.hpp"
 #include "../introspection/get_maximum_kin_group_size.hpp"
 #include "../introspection/get_mean_cell_age.hpp"
@@ -88,13 +90,11 @@ namespace dish2 {
 
 template< typename Spec >
 void write_demographic_phenotypic_phylogenetic_metrics(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
+  const dish2::ThreadWorld< Spec >& world
 ) {
 
   const thread_local std::string out_filename = dish2::pare_keyname_filename(
-    dish2::make_demographic_phenotypic_phylogenetic_metrics_filename(
-      thread_idx
-    ),
+    dish2::make_demographic_phenotypic_phylogenetic_metrics_filename(),
     dish2::make_data_path()
   );
 
@@ -109,26 +109,27 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   update = world.GetUpdate();
 
   thread_local std::once_flag once_flag;
-  std::call_once(once_flag, [thread_idx](){
+  std::call_once(once_flag, [](){
     if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
     if ( dish2::has_series() ) file.AddVal(cfg.SERIES(), "Series");
     if ( dish2::has_replicate() ) file.AddVal(cfg.REPLICATE(), "Replicate");
     file.AddVal(cfg.TREATMENT(), "Treatment");
     if ( cfg.TREATMENT().find('=') != std::string::npos ) {
       for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
-        file.AddVal( emp::to_string("Treatment ", k), v );
+        file.AddVal( v, emp::to_string("Treatment ", k) );
       }
     }
-    file.AddVal( "proc", emp::to_string( uitsl::get_proc_id() ) );
-    file.AddVal( "thread", emp::to_string( thread_idx ) );
+    file.AddVal( uitsl::get_proc_id(), "proc" );
+    file.AddVal( dish2::thread_idx, "thread" );
 
     file.AddVar(metric, "Metric");
     file.AddVar(value, "Value");
     file.AddVar(update, "Update");
     file.PrintHeaderKeys();
 
-    std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-      << " wrote demographic phenotypic phylogenetic metrics" << std::endl;
+    std::cout << "proc " << uitsl::get_proc_id()
+      << " thread " << dish2::thread_idx
+      << " wrote demographic phenotypic phylogenetic metrics" << '\n';
   });
 
   {
@@ -204,6 +205,12 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   {
     metric = "Number Live Cells";
     value = dish2::count_live_cells<Spec>( world );
+    file.Update();
+  }
+
+  {
+    metric = "Fraction Live Cells";
+    value = dish2::get_fraction_live_cells<Spec>( world );
     file.Update();
   }
 

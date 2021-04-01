@@ -34,7 +34,7 @@ public:
   LiveCellIterator(const LiveCellIterator &) = default;
 
   static LiveCellIterator make_begin(
-    const emp::vector<dish2::Cell<Spec>>& population
+    const std::vector<dish2::Cell<Spec>>& population
   ) {
     return ++dish2::LiveCellIterator<Spec>{
       std::prev( std::begin( population ) ),
@@ -44,7 +44,7 @@ public:
   }
 
   static LiveCellIterator make_end(
-    const emp::vector<dish2::Cell<Spec>>& population
+    const std::vector<dish2::Cell<Spec>>& population
   ) {
     return LiveCellIterator<Spec>{
       std::end(population),
@@ -59,9 +59,9 @@ public:
   using iterator_category = std::forward_iterator_tag;
   using difference_type = typename parent_t::difference_type;
 
-  const value_type& operator*() { return parent_t::operator*(); }
+  const value_type& operator*() const { return parent_t::operator*(); }
 
-  const value_type* operator->() { return &operator*(); }
+  const value_type* operator->() const { return &operator*(); }
 
   LiveCellIterator& operator++() {
 

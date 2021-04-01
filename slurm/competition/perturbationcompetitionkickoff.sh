@@ -8,6 +8,12 @@ echo "-------------------------------------------------"
 
 # fail on error
 set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
 
 if (( "$#" < 10 )); then
   echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [extrospective/introspective/writable] [exchange/rotate] [intermittent_p] [target_idx] [stint] [series...]"
@@ -75,6 +81,12 @@ echo "--------------------------------"
 
 # fail on error
 set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),\$0 }' L=\$1 \$0
+}
+trap 'printerr \$LINENO' ERR
 
 ################################################################################
 echo
@@ -148,11 +160,24 @@ echo "--------------------------------------"
 
 echo "num generated runscripts \$(ls *.slurm.sh | wc -l)"
 
+if test -v SLURM_STOKER_CONSOLIDATION_DIR; then
+
+echo "SLURM_STOKER_CONSOLIDATION_DIR \${SLURM_STOKER_CONSOLIDATION_DIR}"
+
+mkdir -p "\${SLURM_STOKER_CONSOLIDATION_DIR}"
+for target in *slurm.sh; do
+  cp "\${target}" "\${SLURM_STOKER_CONSOLIDATION_DIR}/\${RANDOM}_\${target}"
+done
+
+else
+
 # uses slurm stoker script, which zips all runscripts in the current directory
 # inside itself, then submits itself as a job to gradually feed runscripts onto
 # the queue
 
 dishtiny/script/slurm_stoker_containerized_kickoff.sh "${BUCKET}" "${CONTAINER_TAG}" "${REPO_SHA}" "intermittent-${STATE_TARGET}-state-${PERTURBATION}-competition~configpack%${CONFIGPACK}~series%${SERIES%% *}...~stint%${STINT}~intermittent_p%${INTERMITTENT_P}"
+
+fi
 
 ################################################################################
 echo

@@ -15,89 +15,213 @@ namespace dish2 {
 
 template<typename Spec>
 using ViewerCollection = dish2::ViewerManager<
-  dish2::GridViewer<dish2::ApoptosisRequestArtist<>, dish2::ApoptosisCategory>,
-  dish2::GridViewer<dish2::CellBirthArtist<>, dish2::ApoptosisCategory>,
-  dish2::GridViewer<dish2::EpochArtist<>, dish2::DemographicsCategory>,
-  dish2::SeriesViewer<
-    dish2::ExpressionByModuleArtist<>, dish2::GroupStructureCategory, 16
-  >,
-  dish2::GridViewer<dish2::HeirRequestArtist<>, dish2::SharingCategory>,
   dish2::GridViewer<
-    dish2::IncomingInterMessageCounterArtist<>, dish2::MessagingCategory
+    Spec,
+    dish2::ApoptosisRequestArtist<Spec>,
+    dish2::ApoptosisCategory
   >,
   dish2::GridViewer<
-    dish2::IncomingIntraMessageCounterArtist<>, dish2::MessagingCategory
-  >,
-  dish2::GridViewer<dish2::IsAliveArtist<>, dish2::DemographicsCategory>,
-  dish2::SeriesViewer<
-    dish2::PeripheralityLevArtist<>, dish2::GroupStructureCategory, Spec::NLEV
-  >,
-  dish2::SeriesViewer<
-    dish2::KinGroupAgeArtist<>, dish2::DemographicsCategory, Spec::NLEV
+    Spec,
+    dish2::CellBirthArtist<Spec>,
+    dish2::ApoptosisCategory
   >,
   dish2::GridViewer<
-    dish2::KinGroupIDArtist<>, dish2::GroupStructureCategory, true
+    Spec,
+    dish2::DistanceToGraphCenterArtist<Spec>,
+    dish2::ApoptosisCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::EpochArtist<Spec>,
+    dish2::DemographicsCategory
   >,
   dish2::SeriesViewer<
-    dish2::KinGroupIDLevArtist<>, dish2::GroupStructureCategory, Spec::NLEV
+    Spec,
+    dish2::ExpressionByModuleArtist<Spec>,
+    dish2::GroupStructureCategory,
+    16
   >,
   dish2::GridViewer<
-    dish2::KinGroupIDViewArtist<>, dish2::GroupStructureCategory
-  >,
-  dish2::GridViewer<dish2::KinMatchArtist<>, dish2::GroupStructureCategory>,
-  dish2::SeriesViewer<
-    dish2::LearnedQuorumBitsArtist<>, dish2::GroupStructureCategory, Spec::NLEV
+    Spec,
+    dish2::HeirRequestArtist<Spec>,
+    dish2::SharingCategory
   >,
   dish2::GridViewer<
-    dish2::NeighborKinGroupIDViewArtist<>, dish2::GroupStructureCategory
+    Spec,
+    dish2::IncomingInterMessageCounterArtist<Spec>,
+    dish2::MessagingCategory
   >,
   dish2::GridViewer<
-    dish2::NeighborPosArtist<>, dish2::GroupStructureCategory
+    Spec,
+    dish2::IncomingIntraMessageCounterArtist<Spec>,
+    dish2::MessagingCategory
   >,
   dish2::GridViewer<
-    dish2::NumBusyCoresArtist<>, dish2::GroupStructureCategory
-  >,
-  dish2::GridViewer<
-    dish2::NumModulesArtist<>, dish2::GroupStructureCategory
-  >,
-  dish2::GridViewer<
-    dish2::PcaBinaryExpressionArtist<>, dish2::GroupStructureCategory
-  >,
-  dish2::GridViewer<
-    dish2::PcaExpressionArtist<>, dish2::GroupStructureCategory
-  >,
-  dish2::GridViewer<
-    dish2::PcaRegulationArtist<>, dish2::GroupStructureCategory
-  >,
-  dish2::GridViewer<
-    dish2::PcaTrinaryRegulationArtist<>, dish2::GroupStructureCategory
-  >,
-  dish2::GridViewer<
-    dish2::PhylogeneticRootArtist<>, dish2::DemographicsCategory
+    Spec,
+    dish2::IsAliveArtist<Spec>,
+    dish2::DemographicsCategory
   >,
   dish2::SeriesViewer<
-    dish2::QuorumBitsArtist<>, dish2::GroupStructureCategory, Spec::NLEV
+    Spec,
+    dish2::PeripheralityLevArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
   >,
   dish2::SeriesViewer<
-    dish2::RegulationByModuleArtist<>, dish2::SharingCategory, 16
+    Spec,
+    dish2::KinGroupAgeArtist<Spec>,
+    dish2::DemographicsCategory,
+    Spec::NLEV
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::KinGroupIDArtist<Spec>,
+    dish2::GroupStructureCategory,
+    true
   >,
   dish2::SeriesViewer<
-    dish2::RegulationExposedByModuleArtist<>, dish2::SharingCategory, 16
+    Spec,
+    dish2::KinGroupIDLevArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
   >,
   dish2::GridViewer<
-    dish2::ResourceInputPeekArtist<>, dish2::SharingCategory
+    Spec,
+    dish2::KinGroupIDViewArtist<Spec>,
+    dish2::GroupStructureCategory
   >,
   dish2::GridViewer<
-    dish2::ResourceStockpileArtist<>, dish2::SharingCategory
+    Spec,
+    dish2::KinMatchArtist<Spec>,
+    dish2::GroupStructureCategory
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::LearnedQuorumBitArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::LearnedQuorumBitsArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
   >,
   dish2::GridViewer<
-    dish2::SpawnArrestArtist<>, dish2::SharingCategory
+    Spec,
+    dish2::MostRecentCauseOfDeathArtist<Spec>,
+    dish2::DemographicsCategory
   >,
   dish2::GridViewer<
-    dish2::SpawnRequestArtist<>, dish2::SharingCategory
+    Spec,
+    dish2::NeighborKinGroupIDViewArtist<Spec>,
+    dish2::GroupStructureCategory
   >,
   dish2::GridViewer<
-    dish2::TaxaArtist<>, dish2::SharingCategory
+    Spec,
+    dish2::NeighborPosArtist<Spec>,
+    dish2::GroupStructureCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::NumBusyCoresArtist<Spec>,
+    dish2::GroupStructureCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::NumModulesArtist<Spec>,
+    dish2::GroupStructureCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaBinaryExpressionArtist<Spec>,
+    dish2::GroupStructureCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaExpressionArtist<Spec>,
+    dish2::GroupStructureCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaRegulationArtist<Spec>,
+    dish2::GroupStructureCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaTrinaryRegulationArtist<Spec>,
+    dish2::GroupStructureCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PhylogeneticRootArtist<Spec>,
+    dish2::DemographicsCategory
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::QuorumBitArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::QuorumBitOwnArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::QuorumBitsArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::QuorumCapArtist<Spec>,
+    dish2::GroupStructureCategory,
+    Spec::NLEV
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::RegulationByModuleArtist<Spec>,
+    dish2::SharingCategory,
+    16
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::RegulationExposedByModuleArtist<Spec>,
+    dish2::SharingCategory,
+    16
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::ResourceInputPeekArtist<Spec>,
+    dish2::SharingCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::ResourceStockpileArtist<Spec>,
+    dish2::SharingCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::SpawnArrestArtist<Spec>,
+    dish2::SharingCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::SpawnedFromArtist<Spec>,
+    dish2::GroupStructureCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::SpawnRequestArtist<Spec>,
+    dish2::SharingCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::TaxaArtist<Spec>,
+    dish2::SharingCategory
   >
 >;
 

@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/QuorumBitsColorMap.hpp"
@@ -39,9 +37,9 @@ namespace internal::neighbor_pos_artist {
 } // namespace internal::neighbor_pos_artist
 
 template<
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>,
-  typename NeighborPosGetter
-    =dish2::NeighborPosGetter<dish2::Spec>
+  typename Spec,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>,
+  typename NeighborPosGetter=dish2::NeighborPosGetter<Spec>
 >
 class NeighborPosArtist
 : public internal::neighbor_pos_artist::parent_t<

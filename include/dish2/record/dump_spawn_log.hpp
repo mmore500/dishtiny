@@ -16,6 +16,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../config/thread_idx.hpp"
 #include "../utility/pare_keyname_filename.hpp"
 
 #include "make_filename/make_data_path.hpp"
@@ -24,20 +25,18 @@
 namespace dish2 {
 
 template< typename Spec >
-void dump_spawn_log(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
-) {
+void dump_spawn_log( const dish2::ThreadWorld< Spec >& world ) {
 
   const auto& population = world.population;
 
   const thread_local std::string out_filename = dish2::pare_keyname_filename(
-    dish2::make_spawn_log_filename( thread_idx ),
+    dish2::make_spawn_log_filename(),
     dish2::make_data_path()
   );
 
-  thread_local bxz::ofstream out_stream( dish2::make_data_path(
-    out_filename
-  ) );
+  thread_local bxz::ofstream out_stream(
+    dish2::make_data_path( out_filename ), bxz::lzma, 6
+  );
   emp::DataFile file( out_stream );
 
   if ( dish2::has_stint() ) file.AddVal(cfg.STINT(), "Stint");
@@ -46,11 +45,11 @@ void dump_spawn_log(
   file.AddVal(cfg.TREATMENT(), "Treatment");
   if ( cfg.TREATMENT().find('=') != std::string::npos ) {
     for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
-      file.AddVal( emp::to_string("Treatment ", k), v );
+      file.AddVal( v, emp::to_string("Treatment ", k) );
     }
   }
-  file.AddVal( "proc", emp::to_string( uitsl::get_proc_id() ) );
-  file.AddVal( "thread", emp::to_string( thread_idx ) );
+  file.AddVal( uitsl::get_proc_id(), "proc" );
+  file.AddVal( dish2::thread_idx, "thread" );
 
   dish2::SpawnEvent<Spec> event;
 
@@ -93,8 +92,9 @@ void dump_spawn_log(
     }
   );
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-    << " dumped spawn log" << std::endl;
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
+    << " dumped spawn log" << '\n';
 
 }
 

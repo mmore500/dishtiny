@@ -11,6 +11,7 @@
 
 #include "../cardinal_iterators/EpochWrapper.hpp"
 #include "../cardinal_iterators/IsAliveWrapper.hpp"
+#include "../cardinal_iterators/MostRecentCauseOfDeathWrapper.hpp"
 
 
 namespace dish2 {
@@ -67,6 +68,12 @@ void Cell<Spec>::DeathRoutine(
     begin<dish2::EpochWrapper<Spec>>(),
     end<dish2::EpochWrapper<Spec>>()
   ).size() == 1 ));
+
+  std::fill(
+    begin<dish2::MostRecentCauseOfDeathWrapper<Spec>>(),
+    end<dish2::MostRecentCauseOfDeathWrapper<Spec>>(),
+    static_cast<char>( cause_of_death )
+  );
 
 }
 

@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/TaxaBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/KinGroupIDGrayscaleFillColorMap.hpp"
@@ -40,9 +38,10 @@ namespace internal::taxa_artist {
 } // namespace internal::taxa_artist
 
 template<
-  typename GenomeGetter=dish2::GenomeGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename GenomeGetter=dish2::GenomeGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class TaxaArtist
 : public internal::taxa_artist::parent_t<

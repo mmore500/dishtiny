@@ -5,22 +5,22 @@
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../introspection/get_mean_program_length.hpp"
-#include "../../spec/Spec.hpp"
 #include "../../world/ThreadWorld.hpp"
 
 #include "../DataPill.hpp"
 
 namespace dish2 {
 
+template< typename Spec >
 class MeanProgramLengthPill {
 
-  static auto DoWork( const ThreadWorld<dish2::Spec>& world ) {
-    return dish2::get_mean_program_length<dish2::Spec>( world );
+  static auto DoWork( const ThreadWorld<Spec>& world ) {
+    return dish2::get_mean_program_length<Spec>( world );
   }
 
 public:
 
-  static emp::web::Div Make( const ThreadWorld<dish2::Spec>& world ) {
+  static emp::web::Div Make( const ThreadWorld<Spec>& world ) {
     return dish2::DataPill(
       "Mean Program Length",
       [&world](){ return emp::to_string( DoWork( world ) ); },

@@ -22,14 +22,12 @@
 namespace dish2 {
 
 template< typename Spec >
-void dump_population(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
-) {
+void dump_population( const dish2::ThreadWorld< Spec >& world ) {
 
   const auto& population = world.population;
 
   const std::string out_filename( dish2::pare_keyname_filename(
-    dish2::make_dump_population_filename( thread_idx ),
+    dish2::make_dump_population_filename(),
     dish2::make_artifact_path()
   ) );
 
@@ -45,8 +43,9 @@ void dump_population(
     )
   ) );
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-    << " dumped population" << std::endl;
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
+    << " dumped population" << '\n';
 
 }
 

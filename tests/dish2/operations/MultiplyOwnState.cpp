@@ -18,15 +18,17 @@
 #include "dish2/spec/Spec.hpp"
 #include "dish2/spec/StateMeshSpec.hpp"
 
+using Spec = dish2::Spec_default;
+
 using library_t = sgpl::OpLibrary<
-  dish2::MultiplyOwnState<dish2::Spec>,
-  dish2::WriteOwnStateIf<dish2::Spec>,
+  dish2::MultiplyOwnState<Spec>,
+  dish2::WriteOwnStateIf<Spec>,
   sgpl::Terminal
 >;
 
 using sgpl_spec_t = sgpl::Spec<
   library_t,
-  dish2::Peripheral<dish2::Spec>
+  dish2::Peripheral<Spec>
 >;
 
 using program_t = sgpl::Program< sgpl_spec_t >;
@@ -118,12 +120,12 @@ TEST_CASE("Test MultiplyOwnState") {
   cpu.InitializeAnchors( program );
 
   // peripheral
-  dish2::Peripheral<dish2::Spec> peripheral{
-    dish2::Peripheral<dish2::Spec>::make_dummy()
+  dish2::Peripheral<Spec> peripheral{
+    dish2::Peripheral<Spec>::make_dummy()
   };
   const auto& readable_state = peripheral.readable_state;
   const auto& writable_state = readable_state.template Get<
-    dish2::WritableState<dish2::Spec>
+    dish2::WritableState<Spec>
   >();
 
   REQUIRE( cpu.TryLaunchCore() );
@@ -139,14 +141,14 @@ TEST_CASE("Test MultiplyOwnState") {
     peripheral
   );
 
-  dish2::WriteOwnStateIf<dish2::Spec>::run(
+  dish2::WriteOwnStateIf<Spec>::run(
     cpu.GetActiveCore(),
     program[1],
     program,
     peripheral
   );
 
-  dish2::WriteOwnStateIf<dish2::Spec>::run(
+  dish2::WriteOwnStateIf<Spec>::run(
     cpu.GetActiveCore(),
     program[2],
     program,
@@ -176,7 +178,7 @@ TEST_CASE("Test MultiplyOwnState") {
   REQUIRE( writable_state.Get<1>() == 1.0f );
   REQUIRE( writable_state.Get<2>() == 0.0f );
 
-  dish2::MultiplyOwnState<dish2::Spec>::run(
+  dish2::MultiplyOwnState<Spec>::run(
     cpu.GetActiveCore(),
     program[4],
     program,
@@ -187,7 +189,7 @@ TEST_CASE("Test MultiplyOwnState") {
   REQUIRE( writable_state.Get<1>() == 1 );
   REQUIRE( writable_state.Get<2>() == 0 );
 
-  dish2::MultiplyOwnState<dish2::Spec>::run(
+  dish2::MultiplyOwnState<Spec>::run(
     cpu.GetActiveCore(),
     program[5],
     program,

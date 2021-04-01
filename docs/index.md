@@ -8,6 +8,7 @@ self
 installation
 usage
 data
+workflow
 development
 api/library_root
 contributing

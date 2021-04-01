@@ -4,17 +4,11 @@
 
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
 #include "../../../../../third-party/conduit/include/uitsl/meta/TypeName.hpp"
+#include "../../../../../third-party/Empirical/include/emp/base/assert.hpp"
 #include "../../../../../third-party/signalgp-lite/include/sgpl/utility/ByteEnumeration.hpp"
 
-#include "CellAge.hpp"
-#include "Epoch.hpp"
-#include "IncomingInterMessageCounter.hpp"
-#include "IncomingIntraMessageCounter.hpp"
-#include "IsAlive.hpp"
-#include "KinGroupAge.hpp"
-#include "KinGroupIDView.hpp"
-#include "ResourceStockpile.hpp"
-#include "SpawnCount.hpp"
+#include "interpreted_introspective_state/InterpretedIntrospectiveState.hpp"
+#include "raw_introspective_state/RawIntrospectiveState.hpp"
 
 namespace dish2 {
 
@@ -22,15 +16,8 @@ namespace internal {
 
 template< typename Spec >
 using introspective_state_parent_t = uitsl::PodInternalNode<
-  dish2::CellAge,
-  dish2::Epoch,
-  dish2::IncomingInterMessageCounter,
-  dish2::IncomingIntraMessageCounter,
-  dish2::IsAlive,
-  dish2::KinGroupAge<Spec>,
-  dish2::KinGroupIDView<Spec>,
-  dish2::ResourceStockpile,
-  dish2::SpawnCount
+  dish2::InterpretedIntrospectiveState<Spec>,
+  dish2::RawIntrospectiveState<Spec>
   >;
 
 } // namespace internal
@@ -61,6 +48,10 @@ struct IntrospectiveState : public internal::introspective_state_parent_t<Spec>{
         DISH2_INTROSPECTIVE_STATE_ASSIGN_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
 
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
+
     }
 
   }
@@ -85,6 +76,10 @@ struct IntrospectiveState : public internal::introspective_state_parent_t<Spec>{
       EMP_WRAP_EACH(
         DISH2_INTROSPECTIVE_STATE_SWAP_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
+
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
 
     }
 

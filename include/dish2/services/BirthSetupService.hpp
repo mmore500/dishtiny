@@ -85,11 +85,19 @@ struct BirthSetupService {
       } );
 
       // setup new genome
-      cell.DeathRoutine( dish2::CauseOfDeath::elimination );
+      if ( cell.genome.has_value() ) {
+        cell.DeathRoutine( dish2::CauseOfDeath::elimination );
+      }
       cell.genome = incoming_genome;
       cell.genome->ElapseGeneration( replev, epoch );
 
       cell.MakeAliveRoutine();
+
+      // record SpawnedFrom direction
+      cell.cardinals[cardinal_idx].peripheral.readable_state.template Get<
+        dish2::SpawnedFrom
+      >() = replev + 1;
+
     }
 
   }

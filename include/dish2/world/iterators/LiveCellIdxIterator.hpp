@@ -34,7 +34,7 @@ public:
   LiveCellIdxIterator(const LiveCellIdxIterator &) = default;
 
   static LiveCellIdxIterator make_begin(
-    const emp::vector<dish2::Cell<Spec>>& population
+    const std::vector<dish2::Cell<Spec>>& population
   ) {
     return ++dish2::LiveCellIdxIterator<Spec>{
       std::prev( std::begin( population ) ),
@@ -44,7 +44,7 @@ public:
   }
 
   static LiveCellIdxIterator make_end(
-    const emp::vector<dish2::Cell<Spec>>& population
+    const std::vector<dish2::Cell<Spec>>& population
   ) {
     return LiveCellIdxIterator<Spec>{
       std::end(population),

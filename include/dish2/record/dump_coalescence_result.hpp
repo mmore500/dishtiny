@@ -19,6 +19,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../config/thread_idx.hpp"
 #include "../introspection/any_live_cells.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_root_id_abundance.hpp"
@@ -39,12 +40,10 @@
 namespace dish2 {
 
 template< typename Spec >
-void dump_coalescence_result(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
-) {
+void dump_coalescence_result( const dish2::ThreadWorld< Spec >& world ) {
 
   const std::string out_filename = dish2::pare_keyname_filename(
-    dish2::make_coalescence_result_filename( thread_idx ),
+    dish2::make_coalescence_result_filename(),
     dish2::make_data_path()
   );
 
@@ -58,7 +57,7 @@ void dump_coalescence_result(
   file.AddVal( cfg.TREATMENT(), "Competition Treatment" );
   if ( cfg.TREATMENT().find('=') != std::string::npos ) {
     for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
-      file.AddVal( emp::to_string("Treatment ", k), v );
+      file.AddVal( v, emp::to_string("Treatment ", k) );
     }
   }
 
@@ -71,7 +70,7 @@ void dump_coalescence_result(
   if ( dish2::get_slurm_job_id() ) file.AddVal(
     *dish2::get_slurm_job_id(), "Competition Slurm Job ID"
   );
-  file.AddVal( thread_idx, "Competition Thread" );
+  file.AddVal( dish2::thread_idx, "Competition Thread" );
   file.AddVal( uitsl::get_proc_id(), "Competition Process" );
   file.AddVal( world.GetUpdate(), "Update" );
 
@@ -94,8 +93,6 @@ void dump_coalescence_result(
   file.AddVar(filename, "Genome Filename");
   file.AddVar(fitness_differential, "Fitness Differential");
   file.AddVar(root_id_count, "Count");
-
-  const auto root_ids = dish2::get_root_ids();
 
   // add columns for root id configuration
   for (
@@ -135,8 +132,9 @@ void dump_coalescence_result(
 
   }
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-    << " dumped coalescence result" << std::endl;
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
+    << " dumped coalescence result" << '\n';
 
 }
 

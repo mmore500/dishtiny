@@ -15,6 +15,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../config/thread_idx.hpp"
 #include "../introspection/count_kin_neighbors.hpp"
 #include "../introspection/count_live_cardinals.hpp"
 #include "../introspection/count_spawn_events.hpp"
@@ -30,11 +31,11 @@ namespace dish2 {
 
 template< typename Spec >
 void dump_kin_conflict_by_replev_statistics(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
+  const dish2::ThreadWorld< Spec >& world
 ) {
 
   const std::string out_filename = dish2::pare_keyname_filename(
-    dish2::make_kin_conflict_by_replev_statistics_filename( thread_idx ),
+    dish2::make_kin_conflict_by_replev_statistics_filename(),
     dish2::make_data_path()
   );
 
@@ -46,11 +47,11 @@ void dump_kin_conflict_by_replev_statistics(
   file.AddVal(cfg.TREATMENT(), "Treatment");
   if ( cfg.TREATMENT().find('=') != std::string::npos ) {
     for ( const auto& [k, v] : emp::keyname::unpack( cfg.TREATMENT() ) ) {
-      file.AddVal( emp::to_string("Treatment ", k), v );
+      file.AddVal( v, emp::to_string("Treatment ", k) );
     }
   }
-  file.AddVal( "proc", emp::to_string( uitsl::get_proc_id() ) );
-  file.AddVal( "thread", emp::to_string( thread_idx ) );
+  file.AddVal( uitsl::get_proc_id(), "proc" );
+  file.AddVal( dish2::thread_idx, "thread" );
 
   size_t replev;
   size_t kin_id_commonality_parent_eliminated;
@@ -138,8 +139,9 @@ void dump_kin_conflict_by_replev_statistics(
     }
   }
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-    << " dumped kin conflict by replev statistics" << std::endl;
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
+    << " dumped kin conflict by replev statistics" << '\n';
 
 }
 

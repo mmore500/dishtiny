@@ -5,11 +5,13 @@
 #include <fstream>
 #include <string>
 
-#include "../algorithm/make_phenotype_equivalent_nopout.hpp"
+#include "../algorithm/make_battleship_phenotype_equivalent_nopout.hpp"
+#include "../algorithm/make_jenga_phenotype_equivalent_nopout.hpp"
 #include "../introspection/count_live_cells.hpp"
-#include "../introspection/get_prevalent_coding_genotype_genome.hpp"
+#include "../introspection/get_lowest_root_prevalent_coding_genotype_genome.hpp"
 #include "../introspection/no_live_cells.hpp"
 
+#include "../config/thread_idx.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "dump_genome.hpp"
@@ -18,16 +20,15 @@
 
 namespace dish2 {
 
+// dumps most abundant genome from the lowest phylogenetic root
 template< typename Spec >
-bool dump_abundance_genome(
-  const dish2::ThreadWorld< Spec >& world, const size_t thread_idx
-) {
+bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
 
   // abort if no live cells
   if ( dish2::no_live_cells<Spec>(world) ) return false;
 
   const auto [genome, count]
-    = dish2::get_prevalent_coding_genotype_genome<Spec>( world );
+    = dish2::get_lowest_root_prevalent_coding_genotype_genome<Spec>( world );
 
   const double abundance{ count / static_cast<double>(
     world.GetSize()
@@ -40,20 +41,55 @@ bool dump_abundance_genome(
   dish2::dump_genome< Spec >(
     genome,
     dish2::make_dump_abundance_genome_filename(
-      thread_idx, count, abundance, prevalence, "wildtype"
+      count, abundance, prevalence, "wildtype"
     )
   );
 
   if (
-    cfg.PHENOTYPE_EQUIVALENT_NOPOUT() && thread_idx == 0 && uitsl::is_root()
+    (
+      cfg.PHENOTYPE_EQUIVALENT_NOPOUT()
+      || cfg.BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT()
+    )
+    && dish2::thread_idx == 0
+    && uitsl::is_root()
   ) {
-    std::cout << "recording phenotype equivalent nopout" << std::endl;
+    std::cout << "recording battleship phenotype equivalent nopout" << '\n';
     dish2::dump_genome< Spec >(
-      dish2::make_phenotype_equivalent_nopout< Spec >(
+      dish2::make_battleship_phenotype_equivalent_nopout< Spec >(
         genome, "abundance"
       ),
       dish2::make_dump_abundance_genome_filename(
-        thread_idx, count, abundance, prevalence,
+        count, abundance, prevalence,
+        "battleship_phenotype_equivalent_nopout"
+      )
+    );
+  }
+
+  if (
+    (
+      cfg.PHENOTYPE_EQUIVALENT_NOPOUT()
+      || cfg.JENGA_PHENOTYPE_EQUIVALENT_NOPOUT()
+    )
+    && dish2::thread_idx == 0
+    && uitsl::is_root()
+  ) {
+    std::cout << "recording jenga phenotype equivalent nopout" << '\n';
+
+    const auto res = dish2::make_jenga_phenotype_equivalent_nopout< Spec >(
+      genome, "abundance"
+    );
+
+    dish2::dump_genome< Spec >(
+      res,
+      dish2::make_dump_abundance_genome_filename(
+        count, abundance, prevalence,
+        "jenga_phenotype_equivalent_nopout"
+      )
+    );
+    dish2::dump_genome< Spec >(
+      res,
+      dish2::make_dump_abundance_genome_filename(
+        count, abundance, prevalence,
         "phenotype_equivalent_nopout"
       )
     );

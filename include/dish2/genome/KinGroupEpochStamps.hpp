@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <utility>
 
+#include "../../../third-party/cereal/include/cereal/cereal.hpp"
 #include "../../../third-party/cereal/include/cereal/types/array.hpp"
 #include "../../../third-party/Empirical/include/emp/base/array.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
@@ -37,6 +38,11 @@ struct KinGroupEpochStamps {
   }
 
   const buffer_t& GetBuffer() const { return data; }
+
+  template <class Archive>
+  void serialize( Archive & ar ) { ar(
+    CEREAL_NVP( data )
+  ); }
 
 };
 

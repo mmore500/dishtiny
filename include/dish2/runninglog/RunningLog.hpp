@@ -41,7 +41,13 @@ public:
 
   }
 
+  const Event& GetMostRecent() const {
+    emp_assert( events.size() );
+    return events.front();
+  }
+
   size_t GetSize() const { return events.size(); }
+  size_t IsEmpty() const { return GetSize() == 0; }
 
   auto begin() { return std::begin( events ); }
   auto begin() const { return std::begin( events ); }

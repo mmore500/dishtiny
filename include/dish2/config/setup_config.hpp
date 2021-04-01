@@ -16,13 +16,18 @@ namespace dish2 {
 
 void setup_config( emp::ArgManager& arg_manager ) {
 
+  while( arg_manager.CallbackArg("print_introspective_state_size_minus_one") );
+  while( arg_manager.CallbackArg("print_extrospective_state_size_minus_one") );
+  while( arg_manager.CallbackArg("print_readable_state_size_minus_one") );
+  while( arg_manager.CallbackArg("print_writable_state_size_minus_one") );
+
   // std::filesystem::exists is failing inside Docker container
   // so use stat as a backup for now
   // if ( std::filesystem::exists("dishtiny.cfg") ) {
   if ( dish2::path_exists("dishtiny.cfg") ) {
-    std::cout << "reading configuration from dishtiny.cfg" << std::endl;
+    std::cout << "reading configuration from dishtiny.cfg" << '\n';
     dish2::cfg.Read( "dishtiny.cfg" );
-  } else std::cout << "no configuration file found" << std::endl;
+  } else std::cout << "no configuration file found" << '\n';
 
   arg_manager.UseCallbacks();
 

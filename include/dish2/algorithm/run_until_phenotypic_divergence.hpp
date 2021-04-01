@@ -10,6 +10,8 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
+#include "../config/TemporaryThreadIdxOverride.hpp"
+#include "../config/thread_idx.hpp"
 #include "../debug/entry_types.hpp"
 #include "../debug/log_event.hpp"
 #include "../debug/LogScope.hpp"
@@ -28,6 +30,10 @@ size_t run_until_phenotypic_divergence(
 ) {
 
   for ( size_t upd{}; upd < cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES(); ++upd ) {
+
+    emp_assert(
+      dish2::compare_resource_stockpiles<Spec>( control, experiment )
+    );
 
     const emp::Random bak = sgpl::tlrand.Get();
 
@@ -75,15 +81,17 @@ size_t run_until_phenotypic_divergence(
 
   netuit::internal::MeshIDCounter::Reset();
 
+  dish2::TemporaryThreadIdxOverride override{ 0 };
+
   const emp::Random rng_bak = sgpl::tlrand.Get();
 
-  auto world1 = dish2::ProcWorld<Spec>{}.MakeThreadWorld(0);
+  auto world1 = dish2::ProcWorld<Spec>{}.MakeThreadWorld();
   dish2::seed_genomes_into<Spec>( {genome1}, world1 );
 
   // roll back rng state
   sgpl::tlrand.Get() = rng_bak;
 
-  auto world2 = dish2::ProcWorld<Spec>{}.MakeThreadWorld(0);
+  auto world2 = dish2::ProcWorld<Spec>{}.MakeThreadWorld();
   dish2::seed_genomes_into<Spec>( {genome2}, world2 );
 
   return run_until_phenotypic_divergence<Spec>( world1, world2 );

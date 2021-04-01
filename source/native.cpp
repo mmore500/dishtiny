@@ -9,6 +9,7 @@
 
 #include "dish2/config/make_arg_specs.hpp"
 #include "dish2/config/setup.hpp"
+#include "dish2/config/thread_idx.hpp"
 #include "dish2/debug/backtrace_enable.hpp"
 #include "dish2/record/global_records_finalize.hpp"
 #include "dish2/record/global_records_initialize.hpp"
@@ -18,11 +19,11 @@
 #include "dish2/spec/Spec.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
-using Spec = dish2::Spec;
+using Spec = DISH2_SPEC;
 
 int main(int argc, char* argv[]) {
 
-  dish2::setup( emp::ArgManager{ argc, argv, dish2::make_arg_specs() } );
+  dish2::setup( emp::ArgManager{ argc, argv, dish2::make_arg_specs<Spec>() } );
   if ( uitsl::is_root() ) dish2::print_spec<Spec>();
   dish2::global_records_initialize();
 
@@ -35,9 +36,10 @@ int main(int argc, char* argv[]) {
 
   // launch threads to run simulation
   for ( size_t thread{}; thread < dish2::cfg.N_THREADS(); ++thread ) team.Add(
-    [thread, &proc_world](){
-      dish2::setup_thread_local_random( thread );
-      dish2::thread_job<Spec>( thread, proc_world.MakeThreadWorld( thread ) );
+    [&proc_world, thread](){
+      dish2::thread_idx = thread;
+      dish2::setup_thread_local_random();
+      dish2::thread_job<Spec>( proc_world.MakeThreadWorld() );
     }
   );
 

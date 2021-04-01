@@ -10,7 +10,7 @@
 #include "dish2/genome/Genome.hpp"
 #include "dish2/spec/Spec.hpp"
 
-using Spec = dish2::Spec;
+using Spec = dish2::Spec_default;
 
 const uitsl::MpiGuard guard;
 

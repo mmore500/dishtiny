@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/PhylogeneticRootColorMap.hpp"
@@ -44,9 +42,10 @@ namespace internal::phylogenetic_root_artist {
 } // namespace internal::phylogenetic_root_artist
 
 template<
-  typename PhylogeneticRootGetter=dish2::PhylogeneticRootGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename PhylogeneticRootGetter=dish2::PhylogeneticRootGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class PhylogeneticRootArtist
 : public internal::phylogenetic_root_artist::parent_t<

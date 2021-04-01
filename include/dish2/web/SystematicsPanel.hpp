@@ -8,20 +8,19 @@
 #include "../../../third-party/Empirical/include/emp/web/Div.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Document.hpp"
 
-#include "../spec/Spec.hpp"
-
 #include "DataPillCollection.hpp"
 #include "DataPill.hpp"
 
 namespace dish2 {
 
+template< typename Spec >
 class SystematicsPanel {
 
   emp::web::Document button_dash{ "emp_systematics_dash" };
 
 public:
 
-  SystematicsPanel( const dish2::ThreadWorld< dish2::Spec >& world ) {
+  SystematicsPanel( const dish2::ThreadWorld< Spec >& world ) {
 
     button_dash.SetAttr(
       "class", "row"
@@ -32,7 +31,7 @@ public:
       [this, &world](auto ...x){(..., (
         button_dash << decltype(x)::Make( world )
       ) );},
-      dish2::DataPillCollection{}
+      dish2::DataPillCollection<Spec>{}
     );
 
   }

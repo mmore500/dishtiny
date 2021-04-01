@@ -1,0 +1,263 @@
+#!/usr/bin/env python3
+
+import boto3
+from collections import defaultdict
+from functools import reduce
+from iterpop import iterpop as ip
+import gzip
+import itertools
+import json
+from keyname import keyname as kn
+import numpy as np
+import os
+import pandas as pd
+import re
+import seaborn as sns
+import re
+import sys
+import tempfile
+from tqdm import tqdm
+from scipy import stats
+
+def multiloader( s3_url ):
+
+    s3 = boto3.client('s3')
+
+    bucket = re.search('s3://(.+?)/', s3_url).group(1)
+    object_name = re.search(f's3://{bucket}/(.+)', s3_url).group(1)
+
+    with tempfile.NamedTemporaryFile(mode='w+b') as temp:
+        print('temporary file', temp.name)
+
+        s3.download_fileobj(bucket, object_name, temp)
+
+        if kn.unpack( s3_url )['ext'] == '.json':
+            with open( temp.name, 'r') as f:
+                return json.load( f )
+
+        elif kn.unpack( s3_url )['ext'] == '.json.gz':
+            try:
+                with gzip.open( temp.name, 'rb') as f:
+                    return json.loads( f.read().decode('ascii') )
+            except Exception:
+                pass
+
+            try:
+                with gzip.open( temp.name, 'rb') as f:
+                    return json.loads( f.read().decode('utf-8') )
+            except Exception:
+                pass
+
+        raise ValueError
+
+def fit_control_t_distns(control_df):
+
+    na_rows = control_df['Fitness Differential'].isna()
+    assert all( control_df[ na_rows ]['Population Extinct'] )
+    control_df['Fitness Differential'].fillna(0, inplace=True,)
+
+    res = []
+    for series in control_df['Competition Series'].unique():
+
+        series_df = control_df[ control_df['Competition Series'] == series ]
+
+        # legacy data was mixed inside of the variant_df
+        wt_vs_wt_df = series_df.groupby('Competition Repro').filter(
+            lambda x: (x['genome variation'] == 'master').all()
+        ).groupby('Competition Repro').first().reset_index()
+
+        # fit a t distribution to the control data
+        # df is degrees of freedom
+        df, loc, scale = stats.t.fit( wt_vs_wt_df['Fitness Differential'] )
+
+
+        res.append({
+            'Series' : series,
+            'Fit Degrees of Freedom' : df,
+            'Fit Loc' : loc,
+            'Fit Scale' : scale,
+        })
+
+    return pd.DataFrame(res)
+
+def get_critical_sites(variant_df, control_fits_df):
+
+    # count competions where both strains went extinct simultaneously
+    # as 0 Fitness Differential
+    na_rows = variant_df['Fitness Differential'].isna()
+    assert all( variant_df[ na_rows ]['Population Extinct'] )
+    variant_df['Fitness Differential'].fillna(0, inplace=True,)
+
+    res = {}
+    for series in variant_df['Competition Series'].unique():
+
+        series_df = variant_df[ variant_df['Competition Series'] == series ]
+
+        wt_vs_variant_df = series_df[
+            series_df['genome variation'] != 'master'
+        ].reset_index()
+
+        h0_fit = ip.popsingleton( control_fits_df[
+            control_fits_df['Series'] == series
+        ].to_dict(
+            orient='records',
+        ) )
+
+        # calculate the probability of observing fitness differential result
+        # under control data distribution
+        if len(wt_vs_variant_df):
+            wt_vs_variant_df['p'] =  wt_vs_variant_df.apply(
+                lambda row: stats.t.cdf(
+                    row['Fitness Differential'],
+                    h0_fit['Fit Degrees of Freedom'],
+                    loc=h0_fit['Fit Loc'],
+                    scale=h0_fit['Fit Scale'],
+                ),
+                axis=1,
+            )
+        else:
+            # special case for an empty dataframe
+            # to prevent an exception
+            wt_vs_variant_df['p'] = []
+
+
+        p_thresh = 1.0 / 100
+        less_fit_variants = wt_vs_variant_df[
+            wt_vs_variant_df['p'] < p_thresh
+        ]
+
+        variation_attrs = [
+            kn.unpack( kn.promote( variation ), source_attr=False )
+            for variation in less_fit_variants['genome variation']
+        ]
+
+        assert all(
+            'Nop-' in ip.popsingleton( attrs.values() )
+            for attrs in variation_attrs
+        )
+
+        critical_idxs = [
+            int( re.search(
+                '^i(\d+)$', ip.popsingleton( attrs.keys() )
+            ).group(1) )
+            for attrs in variation_attrs
+        ]
+
+        res[ series ] = set(critical_idxs)
+
+    return res
+
+################################################################################
+print(                                                                         )
+print( 'running make_noncritical_nopout.py'                                    )
+print( '---------------------------------------------------------------------' )
+################################################################################
+
+try:
+    bucket = sys.argv[1]
+    endeavor, stint = map(int, sys.argv[2:])
+except:
+    print('bad arguments')
+    print('USAGE: [bucket] [endeavor] [stint]')
+    sys.exit(1)
+
+print(f'bucket {bucket}')
+print(f'endeavor {endeavor}')
+print(f'stint {stint}')
+
+s3 = boto3.resource('s3')
+my_bucket = s3.Bucket(bucket)
+
+################################################################################
+print(                                                                         )
+print( 'getting assets'                                                        )
+print( '---------------------------------------------------------------------' )
+################################################################################
+
+control_competitions, = my_bucket.objects.filter(
+    Prefix=f'endeavor={endeavor}/control-competitions/stage=2+what=collated/stint={stint}/'
+)
+
+control_df = pd.read_csv(f's3://{bucket}/{control_competitions.key}')
+
+variant_competitions, = my_bucket.objects.filter(
+    Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
+)
+
+variant_df = pd.read_csv(f's3://{bucket}/{variant_competitions.key}')
+
+################################################################################
+print(                                                                         )
+print( 'calculating critical sites'                                            )
+print( '---------------------------------------------------------------------' )
+################################################################################
+
+critical_sites_by_series = get_critical_sites(
+    variant_df, fit_control_t_distns( control_df )
+)
+
+for series, critical_sites in critical_sites_by_series.items():
+
+    ############################################################################
+    print(                                                                     )
+    print( f'series {series} downloading wildtype genome'                      )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    wt_genome_s3_url = f's3://{bucket}/endeavor={endeavor}/genomes/stage=0+what=generated/stint={stint}/series={series}/a=genome+criteria=abundance+morph=wildtype+proc=0+series={series}+stint={stint}+thread=0+variation=master+ext=.json.gz'
+
+    genome_data = multiloader( wt_genome_s3_url )
+
+    ############################################################################
+    print(                                                                     )
+    print( f'series {series} nopping noncritical sites'                        )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    program_length = len(genome_data["value0"]["program"])
+    print( f' {program_length} insts' )
+
+    print( f' {len(critical_sites)} critical sites' )
+
+    num_ops_before = sum(
+        'Nop-' not in inst['operation']
+        for inst in genome_data["value0"]["program"]
+    )
+    print( f' {num_ops_before} ops before' )
+
+    for idx, inst in enumerate( genome_data["value0"]["program"] ):
+        if idx not in critical_sites:
+            inst['operation'] = 'Nop-0'
+
+    num_ops_after = sum(
+        'Nop-' not in inst['operation']
+        for inst in genome_data["value0"]["program"]
+    )
+    print( f' {num_ops_after} ops after' )
+
+
+    ############################################################################
+    print(                                                                     )
+    print( f'series {series} uploading noncritical nopout'                     )
+    print( '-----------------------------------------------------------------' )
+    ############################################################################
+
+    out_path = f'endeavor={endeavor}/genomes/stage=3+what=tabulated/stint={stint}/series={series}/a=genome+criteria=abundance+morph=noncritical_nopout+proc=0+series={series}+stint={stint}+thread=0+variation=master+ext=.json.gz'
+
+    # have to work with filename or pandas compression doesn't work
+    with tempfile.NamedTemporaryFile() as temp:
+        print('temporary file', temp.name)
+
+        with gzip.open(temp.name, 'wt', encoding='ascii') as f:
+            json.dump(genome_data, f)
+
+        with open(temp.name, 'rb') as f:
+            client = boto3.client('s3', region_name='us-west-2')
+            client.upload_fileobj( f, bucket, out_path )
+
+
+################################################################################
+print(                                                                         )
+print( 'noncritical nopouts complete'                                          )
+print( '---------------------------------------------------------------------' )
+################################################################################

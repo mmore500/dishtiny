@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/NumBusyCoresColorMap.hpp"
@@ -45,10 +43,10 @@ namespace internal::num_busy_cores_artist {
 } // namespace internal::num_busy_cores_artist
 
 template<
-  typename NumBusyCoresGetter
-    =dish2::NumBusyCoresGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename NumBusyCoresGetter=dish2::NumBusyCoresGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class NumBusyCoresArtist
 : public internal::num_busy_cores_artist::parent_t<

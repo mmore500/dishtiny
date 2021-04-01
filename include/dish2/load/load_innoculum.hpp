@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <fstream>
 
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 #include "../../../third-party/Empirical/include/emp/base/assert.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
@@ -19,7 +20,7 @@ namespace dish2 {
 
 template< typename Spec >
 emp::vector<dish2::Genome<Spec>> load_innoculum(
-  const size_t thread_idx, const std::filesystem::path& path
+  const std::filesystem::path& path
 ) {
 
   const auto attrs = emp::keyname::unpack( path );
@@ -28,25 +29,20 @@ emp::vector<dish2::Genome<Spec>> load_innoculum(
 
   const auto& a = attrs.at("a");
 
-  if ( a == "genome" ) return {dish2::load_innoculum_genome<Spec>(
-    thread_idx, path
-  )}; else if (a == "population") return dish2::load_innoculum_population<Spec>(
-    thread_idx, path
-  ); else {
-    emp_always_assert(false, path, thread_idx, a);
+  if ( a == "genome" ) return { dish2::load_innoculum_genome<Spec>(path) };
+  else if ( a == "population" ) {
+    return dish2::load_innoculum_population<Spec>( path );
+  } else {
+    emp_always_assert(false, path, a, uitsl::get_proc_id(), dish2::thread_idx);
     __builtin_unreachable();
   }
 
 }
 
 template< typename Spec >
-emp::vector<dish2::Genome<Spec>> load_innoculum(
-  const size_t thread_idx, const size_t root_id
-) {
+emp::vector<dish2::Genome<Spec>> load_innoculum( const size_t root_id ) {
 
-  return dish2::load_innoculum<Spec>(
-    thread_idx, dish2::get_innoculum_filename( root_id )
-  );
+  return dish2::load_innoculum<Spec>( dish2::get_innoculum_filename(root_id) );
 
 }
 

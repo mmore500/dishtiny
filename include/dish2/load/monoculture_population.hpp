@@ -15,6 +15,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../algorithm/seed_genomes_into.hpp"
+#include "../config/thread_idx.hpp"
 #include "../genome/Genome.hpp"
 #include "../utility/autoload.hpp"
 #include "../world/ThreadWorld.hpp"
@@ -22,9 +23,7 @@
 namespace dish2 {
 
 template< typename Spec >
-void monoculture_population(
-  const size_t thread_idx, dish2::ThreadWorld<Spec>& world
-) {
+void monoculture_population( dish2::ThreadWorld<Spec>& world ) {
 
   const auto monoculture_paths = uitsl::keyname_directory_filter({
     {"a", "genome"},
@@ -40,13 +39,15 @@ void monoculture_population(
     dish2::autoload<dish2::Genome<Spec>>( monoculture_paths.front() )
   );
 
-  std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-    << " loaded monoculture from " << monoculture_paths.front() << std::endl;
+  std::cout  << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
+    << " loaded monoculture from " << monoculture_paths.front() << '\n';
 
   dish2::seed_genomes_into<Spec>( {monoculture}, world );
 
-  std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-    << " applied monoculture" << std::endl;
+  std::cout  << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
+    << " applied monoculture" << '\n';
 
 }
 

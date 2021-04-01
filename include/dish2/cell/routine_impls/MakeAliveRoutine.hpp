@@ -9,6 +9,7 @@
 #include "../cardinal_iterators/EpochWrapper.hpp"
 #include "../cardinal_iterators/IsAliveWrapper.hpp"
 #include "../cardinal_iterators/KinGroupAgeWrapper.hpp"
+#include "../cardinal_iterators/KinGroupIDAncestorViewWrapper.hpp"
 #include "../cardinal_iterators/KinGroupIDViewWrapper.hpp"
 #include "../../debug/LogScope.hpp"
 
@@ -57,6 +58,16 @@ void Cell<Spec>::MakeAliveRoutine() {
     ); }
   );
 
+  std::for_each(
+    begin<dish2::KinGroupIDAncestorViewWrapper<Spec>>(),
+    end<dish2::KinGroupIDAncestorViewWrapper<Spec>>(),
+    [this](auto& kgiv){ std::copy(
+      std::begin( genome->kin_group_id.ancestor_data ),
+      std::end( genome->kin_group_id.ancestor_data ),
+      std::begin( kgiv )
+    ); }
+  );
+
   // check kin group ID consistency
   emp_assert((
     std::set< typename dish2::KinGroupIDViewWrapper<Spec>::value_type >(
@@ -79,6 +90,16 @@ void Cell<Spec>::MakeAliveRoutine() {
     }
   );
 
+  // set up higher-level quorum bits
+  if constexpr ( Spec::SET_QUORUM_BITS_BY_KIN_GROUP ) {
+    for ( size_t lev = 1; lev < Spec::NLEV; ++lev ) {
+      const size_t which_bit = (
+        genome->kin_group_id.GetBuffer()[ lev - 1 ]
+        % dish2::QuorumMessage<Spec>::bitset_width
+      );
+      cell_quorum_state.UpdateOwnBit( lev , which_bit );
+    }
+  }
 
   // load program onto all CPUs
   for (auto& cardinal : cardinals) cardinal.LoadProgram(

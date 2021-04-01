@@ -19,7 +19,6 @@ namespace dish2 {
 
 template<typename Spec>
 void thread_step(
-  const size_t thread_idx,
   dish2::ThreadWorld<Spec>& thread_world,
   const uitsl::CoarseTimer& run_timer,
   uitsl::CoarseTimer& log_timer
@@ -27,14 +26,14 @@ void thread_step(
 
   if ( log_timer.IsComplete() ) {
     log_timer.Reset();
-    dish2::print_progress( thread_idx, thread_world, run_timer );
+    dish2::print_progress( thread_world, run_timer );
   }
 
   if (
     cfg.ROOT_ABUNDANCES_FREQ()
     && uitsl::shift_mod( thread_world.GetUpdate(), cfg.ROOT_ABUNDANCES_FREQ() )
       == 0
-  ) dish2::write_phylogenetic_root_abundances<Spec>( thread_world, thread_idx );
+  ) dish2::write_phylogenetic_root_abundances<Spec>( thread_world );
 
   // update the simulation
   thread_world.Update();

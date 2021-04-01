@@ -4,29 +4,38 @@ import boto3
 from io import StringIO
 import itertools
 from keyname import keyname as kn
+import multiprocessing as mp
 import os
 import pandas as pd
 import re
 import sys
 import tempfile
-from tqdm import tqdm
+from tqdm.contrib.concurrent import process_map
+from math import gcd
+from functools import reduce
+
+# adapted from https://stackoverflow.com/a/50830937
+def find_gcd(list_):
+    x = reduce(gcd, list_)
+    return x
 
 # adapted from https://stackoverflow.com/a/43091576
 def to_ranges(integers):
     integers = sorted(set(integers))
+    by = find_gcd( integers ) or 1
     for key, group in itertools.groupby(
         enumerate(integers),
-        lambda t: t[1] - t[0],
+        lambda t: (t[1] / by - t[0]),
     ):
         group = list(group)
-        yield group[0][1], group[-1][1]
+        yield group[0][1], group[-1][1], by
 
 def summarize_ranges(integers):
     return '_'.join(
-        f'{fromm}-{to}'
-        if fromm != to else
-        str(fromm)
-        for fromm, to in to_ranges(integers)
+        f'{from_}-{to}{f"%{by}" if by != 1 else ""}'
+        if from_ != to else
+        str(from_)
+        for from_, to, by in to_ranges(integers)
     )
 
 def summarize(values):
@@ -161,9 +170,14 @@ print( 'downloading and concatenating' )
 print( '-----------------------------' )
 ################################################################################
 
-df = pd.concat(tqdm(
-        (pd.read_csv(f's3://{bucket}/{match}') for match in matches),
-        total=len(matches),
+def getter(match):
+    return pd.read_csv(f's3://{bucket}/{match}')
+
+df = pd.concat(process_map(
+        getter,
+        matches,
+        chunksize=10,
+        max_workers=mp.cpu_count(),
 ))
 
 ################################################################################

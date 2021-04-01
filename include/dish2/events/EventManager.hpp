@@ -11,7 +11,7 @@ template<typename... EventSeries>
 struct EventManager {
 
   template<typename Cardinal, typename EventTags, size_t EventIdx>
-  static void Dispatch(Cardinal&, const EventTags&){}
+  static void Dispatch(const Cardinal&, const EventTags&){}
 
   constexpr static size_t GetNumEvents() { return 0; }
 
@@ -24,7 +24,7 @@ struct EventManager<FirstEventSeries, SubsequentEventSeries...> {
   constexpr inline static size_t series_idx = FirstEventSeries::series_idx;
 
   template<typename Cardinal, typename EventTags, size_t EventIdx=0>
-  static void Dispatch( Cardinal& cardinal, const EventTags& event_tags ) {
+  static void Dispatch(Cardinal& cardinal, const EventTags& event_tags) {
 
     // dispatch event
     if ( FirstEventSeries::template Test<Cardinal, series_idx>( cardinal ) ) {

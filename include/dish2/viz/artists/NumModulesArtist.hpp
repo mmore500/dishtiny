@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/NumBusyCoresColorMap.hpp"
@@ -45,10 +43,10 @@ namespace internal::num_modules_artist {
 } // namespace internal::num_modules_artist
 
 template<
-  typename NumModulesGetter
-    =dish2::NumModulesGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename NumModulesGetter=dish2::NumModulesGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class NumModulesArtist
 : public internal::num_modules_artist::parent_t<

@@ -9,23 +9,26 @@
 #include "dish2/config/cfg.hpp"
 #include "dish2/config/make_arg_specs.hpp"
 #include "dish2/config/setup.hpp"
+#include "dish2/config/thread_idx.hpp"
 #include "dish2/spec/print_spec.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/web/WebInterface.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
-using Spec = dish2::Spec;
+using Spec = DISH2_SPEC;
 
-thread_local dish2::WebInterface* interface;
+thread_local dish2::WebInterface<Spec>* interface;
 
 int main() {
 
+  dish2::thread_idx = 0;
+
   dish2::setup( emp::ArgManager{
-    emp::web::GetUrlParams(), dish2::make_arg_specs()
+    emp::web::GetUrlParams(), dish2::make_arg_specs<Spec>()
   } );
   dish2::print_spec<Spec>();
 
-  interface = new dish2::WebInterface;
+  interface = new dish2::WebInterface<Spec>;
 
   // set up web interface
   interface->Redraw();

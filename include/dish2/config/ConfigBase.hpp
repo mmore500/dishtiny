@@ -15,9 +15,9 @@ namespace dish2 {
 
 namespace internal {
 
-using nlev_float_t = emp::array<float, dish2::internal::NLEV>;
-using nreplev_float_t = emp::array<float, dish2::internal::NLEV + 1>;
-using nlev_size_t_t = emp::array<size_t, dish2::internal::NLEV>;
+using nlev_float_t = emp::array<float, DISH2_NLEV>;
+using nreplev_float_t = emp::array<float, DISH2_NLEV + 1>;
+using nlev_size_t_t = emp::array<size_t, DISH2_NLEV>;
 
 } // namespace internal
 
@@ -63,6 +63,11 @@ EMP_BUILD_CONFIG(
   VALUE(REPLICATE, std::string, "", "TODO"),
   VALUE(TREATMENT, std::string, "none", "TODO"),
   VALUE(
+    SEED_FILL_FRACTION, double, 1.0,
+    "If we are seeding the population, "
+    "what fraction of available slots should we fill?"
+  ),
+  VALUE(
     GENESIS, std::string, "generate",
     "generate, reconstitute, monoculture, or innoculate"
   ),
@@ -76,13 +81,13 @@ EMP_BUILD_CONFIG(
     UITSL_IF_WEB_ELSE(3600, 10000), "How many cells should be simulated?"
   ),
   VALUE(WEAK_SCALING, bool, false, "[NATIVE] Should number of total cells be multiplied by the total number of threads (num procs times threads per proc)?"),
-  VALUE(N_DIMS, size_t, 2,
+  VALUE(N_DIMS, size_t, DISH2_NLEV,
     "What dimensionality should the toroidal mesh have?"),
   VALUE(
     GROUP_EXPIRATION_DURATIONS,
     internal::nlev_size_t_t,
-    (internal::nlev_size_t_t{ 1024, 2048 }),
-    "After how many epochs should groups stop collecting resource?"
+    (internal::nlev_size_t_t{ 256, 1024 }),
+    "After how many /epochs/ should groups stop collecting resource?"
   ),
   VALUE(
     CELL_AGE_DURATION, size_t, 1024, "After how many epochs should cells die?"
@@ -105,47 +110,83 @@ EMP_BUILD_CONFIG(
     "How much resource should cells accrue per update?"
   ),
   VALUE(COLLECTIVE_HARVEST_RATE, internal::nlev_float_t,
+    #if DISH2_NLEV == 1
+    (internal::nlev_float_t{0.25}),
+    #elif DISH2_NLEV == 2
     (internal::nlev_float_t{0.25, 0.25}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "How much resource should cells accrue per update?"
   ),
   VALUE(OPTIMAL_QUORUM_COUNT, internal::nlev_size_t_t,
-    (internal::nlev_size_t_t{6, 24}),
+    #if DISH2_NLEV == 1
+    (internal::nlev_size_t_t{12}),
+    #elif DISH2_NLEV == 2
+    (internal::nlev_size_t_t{12, 12}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "What group size does collective harvest work most effectively at?"
   ),
 
   GROUP(QUORUM, "QUORUM"),
   VALUE(P_SET_QUORUM_BIT, internal::nlev_float_t,
+    #if DISH2_NLEV == 1
+    (internal::nlev_float_t{1.0}),
+    #elif DISH2_NLEV == 2
     (internal::nlev_float_t{1.0, 1.0}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "What fraction of cells should have a quorum bit set?"
   ),
 
   GROUP(QUORUM_CAPS, "QUORUM_CAPS"),
   VALUE(QUORUM_CAP, internal::nlev_size_t_t,
+    #if DISH2_NLEV == 1
+    (internal::nlev_size_t_t{12}),
+    #elif DISH2_NLEV == 2
     (internal::nlev_size_t_t{12, 36}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "At what quorum size should cell death be triggered?"
   ),
   VALUE(P_QUORUM_CAP_KILL, internal::nlev_float_t,
+    #if DISH2_NLEV == 1
+    (internal::nlev_float_t{0.0825}),
+    #elif DISH2_NLEV == 2
     (internal::nlev_float_t{0.0825, 0.0825}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "With what probability should quorum death be enforced?"
   ),
 
   GROUP(GENOME, "GENOME"),
-  VALUE(PROGRAM_START_SIZE, size_t, 100, "How big should initial programs be?"),
-  VALUE(PROGRAM_MAX_SIZE, size_t, 1000, "What size should programs be capped at?"),
+  VALUE(PROGRAM_START_SIZE, size_t, 128, "How big should initial programs be?"),
+  VALUE(PROGRAM_MAX_SIZE, size_t, 4096, "What size should programs be capped at?"),
   VALUE(MUTATION_RATE, internal::nreplev_float_t,
-    (internal::nreplev_float_t{0.1, 0.2, 0.5}),
+    #if DISH2_NLEV == 1
+    (internal::nreplev_float_t{0.1, 1.0}),
+    #elif DISH2_NLEV == 2
+    (internal::nreplev_float_t{0.1, 0.1, 1.0}),
+    #else
+    (internal::nlev_float_t{}),
+    #endif
     "For each replev, what fraction of cells should be mutated at all?"
   ),
   VALUE(POINT_MUTATION_RATE, float, 0.0002,
     "What fraction of bits should be scrambled?"
   ),
-  VALUE(SEQUENCE_DEFECT_RATE, float, 0.002,
+  VALUE(SEQUENCE_DEFECT_RATE, float, 0.001,
     "How often should sloppy copy defect occur?"
   ),
   VALUE(MINOR_SEQUENCE_MUTATION_BOUND, size_t, 8,
     "TODO"
   ),
-  VALUE(SEVERE_SEQUENCE_MUTATION_RATE, float, 0.05,
+  VALUE(SEVERE_SEQUENCE_MUTATION_RATE, float, 0.001,
     "TODO"
   ),
 
@@ -157,7 +198,7 @@ EMP_BUILD_CONFIG(
   VALUE(HARDWARE_EXECUTION_CYCLES, size_t, 16,
     "How many hardware cycles to run per round?"
   ),
-  VALUE(WRITABLE_STATE_BIT_DEFECT_RATE, float, 0.0005,
+  VALUE(CONTROLLER_MAPPED_STATE_DEFECT_RATE, float, 0.0005,
     "At what rate should bits should be flipped in writable memory?"
   ),
 
@@ -181,8 +222,23 @@ EMP_BUILD_CONFIG(
   VALUE(CPU_EXECUTION_SERVICE_FREQUENCY, size_t, 1,
     "Run service every ?? updates."
   ),
+  VALUE(GROUP_EXPIRATION_SERVICE_FREQUENCY, size_t, 64,
+    "Run service every ?? updates."
+  ),
   VALUE(RUNNING_LOG_PURGE_SERVICE_FREQUENCY, size_t, 64,
     "Run service every ?? updates."
+  ),
+  VALUE(DIVERSITY_MAINTENANCE_SERVICE_FREQUENCY, size_t, 8,
+    "Run service every ?? updates."
+  ),
+  VALUE(DIVERSITY_MAINTENANCE_PREVALENCE, double, 0.25,
+    "TODO"
+  ),
+  VALUE(STINT_DIVERSITY_MAINTENANCE_SERVICE_FREQUENCY, size_t, 0,
+    "Run service every ?? updates."
+  ),
+  VALUE(STINT_DIVERSITY_MAINTENANCE_PREVALENCE, double, 0.25,
+    "TODO"
   ),
   VALUE(DECAY_TO_BASELINE_SERVICE_FREQUENCY, size_t, 32,
     "Run service every ?? updates."
@@ -209,6 +265,9 @@ EMP_BUILD_CONFIG(
     "Run service every ?? updates."
   ),
   VALUE(STATE_OUTPUT_PUT_SERVICE_FREQUENCY, size_t, 8,
+    "Run service every ?? updates."
+  ),
+  VALUE(PUSH_SERVICE_FREQUENCY, size_t, 16,
     "Run service every ?? updates."
   ),
   VALUE(QUORUM_CAP_SERVICE_FREQUENCY, size_t, 16,
@@ -238,13 +297,19 @@ EMP_BUILD_CONFIG(
   VALUE(STATE_INPUT_JUMP_SERVICE_FREQUENCY, size_t, 8,
     "Run service every ?? updates."
   ),
-  VALUE(WRITABLE_STATE_NOISE_SERVICE_FREQUENCY, size_t, 8,
+  VALUE(CONTROLLER_MAPPED_STATE_NOISE_SERVICE_FREQUENCY, size_t, 8,
     "Run service every ?? updates."
   ),
 
 
   GROUP(DATA, "DATA"),
   VALUE(PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
+    "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
+  ),
+  VALUE(BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
+    "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
+  ),
+  VALUE(JENGA_PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
     "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
   ),
   VALUE(TEST_INTERROOT_PHENOTYPE_DIFFERENTIATION, bool, false,
@@ -255,6 +320,12 @@ EMP_BUILD_CONFIG(
   ),
   VALUE(DATA_DUMP, bool, false,
     "[NATIVE] Should we record data on the final state of the simulation?"
+  ),
+  VALUE(RUNNINGLOGS_DUMP, bool, false,
+    "[NATIVE] Should we dump running logs at the end of the simulation? Must also enalbe DATA_DUMP."
+  ),
+  VALUE(CENSUS_WRITE, bool, false,
+    "[NATIVE] Should we write the cell census at the end of the simulation? Must also enalbe DATA_DUMP."
   ),
   VALUE(ARTIFACTS_DUMP, bool, false,
     "[NATIVE] Should we record data on the final state of the simulation?"
@@ -267,6 +338,13 @@ EMP_BUILD_CONFIG(
   ),
   VALUE(ABORT_IF_COALESCENT_FREQ, size_t, 0,
     "[NATIVE] How many updates should elapse between checking for coalescence? If 0, never check for coalescence. Must be power of two."
+  ),
+  VALUE(ABORT_IF_EXTINCT_FREQ, size_t, 0,
+    "[NATIVE] How many updates should elapse between checking for coalescence? If 0, never check for coalescence. Must be power of two."
+  ),
+  VALUE(ABORT_AT_LIVE_CELL_FRACTION, double, 0.0,
+    "[NATIVE] Should we terminate once a live cell fraction is reached? "
+    "If 0, will not terminate."
   ),
   VALUE(REGULATION_VIZ_CLAMP, double, 10.0,
     "What bounds should we clamp regulation values into before running PCA visualization?"

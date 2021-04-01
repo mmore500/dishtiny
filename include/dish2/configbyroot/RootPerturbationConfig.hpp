@@ -92,11 +92,11 @@ struct RootPerturbationConfig {
   std::map<std::string, std::string> MakeSummary() const {
     return {
       {"Intermittent Extrospective State Exchange Probability",
-        emp::to_string(intermittent_introspective_state_exchange_probability)},
+        emp::to_string(intermittent_extrospective_state_exchange_probability)},
       {"Intermittent Extrospective State Rotate Probability",
-        emp::to_string(intermittent_introspective_state_rotate_probability)},
+        emp::to_string(intermittent_extrospective_state_rotate_probability)},
       {"Extrospective State Target Idx",
-        emp::to_string(introspective_state_target_idx)},
+        emp::to_string(extrospective_state_target_idx)},
       {"Intermittent Introspective State Exchange Probability",
         emp::to_string(intermittent_introspective_state_exchange_probability)},
       {"Intermittent Introspective State Rotate Probability",
@@ -109,13 +109,13 @@ struct RootPerturbationConfig {
         emp::to_string(intermittent_writable_state_rotate_probability)},
       {"Writable State Target Idx",
         emp::to_string(writable_state_target_idx)},
-      {"Inter Message Self-Send Fitler Mod",
+      {"Inter Message Self-Send Filter Mod",
         emp::to_string(inter_message_selfsend_filter_mod)},
-      {"Inter Message Self-Send Fitler Target",
+      {"Inter Message Self-Send Filter Target",
         emp::to_string(inter_message_selfsend_filter_target)},
-      {"Intra Message Self-Send Fitler Mod",
+      {"Intra Message Self-Send Filter Mod",
         emp::to_string(intra_message_selfsend_filter_mod)},
-      {"Intra Message Self-Send Fitler Target",
+      {"Intra Message Self-Send Filter Target",
         emp::to_string(intra_message_selfsend_filter_target)},
     };
   }

@@ -16,6 +16,7 @@
 #include "../events/EventManager.hpp"
 #include "../events/_index.hpp"
 #include "../genome/Genome.hpp"
+#include "../push/PushCellState.hpp"
 #include "../quorum/CellQuorumState.hpp"
 #include "../runninglog/RunningLogs.hpp"
 
@@ -45,6 +46,11 @@ struct Cell {
   using message_mesh_spec_t = typename Spec::message_mesh_spec_t;
   using message_node_t = netuit::MeshNode<message_mesh_spec_t>;
 
+  using push_mesh_spec_t = typename Spec::push_mesh_spec_t;
+  using push_node_t = netuit::MeshNode<push_mesh_spec_t>;
+
+  dish2::PushCellState cell_push_state;
+
   using quorum_mesh_spec_t = typename Spec::quorum_mesh_spec_t;
   using quorum_node_t = netuit::MeshNode<quorum_mesh_spec_t>;
 
@@ -61,12 +67,14 @@ struct Cell {
 
   // out of class implementations
   void DeathRoutine(const dish2::CauseOfDeath);
+  void FragmentationRoutine();
   void HeirPayoutRoutine();
   void MakeAliveRoutine();
 
   Cell(
     const genome_node_t& genome_node,
     const message_node_t& message_node,
+    const push_node_t& push_node,
     const quorum_node_t& quorum_node,
     const resource_node_t& resource_node,
     const state_node_t& state_node
@@ -76,10 +84,13 @@ struct Cell {
     emp_assert(( 1 == std::set<size_t>{
       genome_node.GetNumInputs(),
       message_node.GetNumInputs(),
+      push_node.GetNumInputs(),
+      quorum_node.GetNumInputs(),
       resource_node.GetNumInputs(),
       state_node.GetNumInputs(),
       genome_node.GetNumOutputs(),
       message_node.GetNumOutputs(),
+      push_node.GetNumOutputs(),
       quorum_node.GetNumOutputs(),
       resource_node.GetNumOutputs(),
       state_node.GetNumOutputs(),
@@ -113,6 +124,8 @@ struct Cell {
         genome_node.GetOutput(i),
         message_node.GetInput(i),
         message_node.GetOutput(i),
+        push_node.GetInput(i),
+        push_node.GetOutput(i),
         quorum_node.GetInput(i),
         quorum_node.GetOutput(i),
         resource_node.GetInput(i),

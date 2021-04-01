@@ -6,19 +6,19 @@
 
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 
+#include "../config/thread_idx.hpp"
 #include "../world/ThreadWorld.hpp"
 
 namespace dish2 {
 
 template< typename Spec >
 void print_progress(
-  const size_t thread_idx,
   const dish2::ThreadWorld<Spec>& thread_world,
   const uitsl::CoarseTimer& run_timer
 ) {
 
   std::cout << "proc " << uitsl::get_proc_id();
-  std::cout << " thread " << thread_idx;
+  std::cout << " thread " << dish2::thread_idx;
   std::cout << " @ update " << thread_world.GetUpdate();
 
   // if limited by updates, print percent updates progress
@@ -37,7 +37,7 @@ void print_progress(
     << " (" << 100.0 * run_timer.GetFractionComplete() << "%)";
   }
 
-  std::cout << std::endl;
+  std::cout << '\n';
 
 }
 

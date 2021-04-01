@@ -14,135 +14,136 @@ template<typename Spec>
 using DrawerCollection = dish2::DrawerManager<
   dish2::GridDrawer<
     Spec,
-    dish2::ApoptosisRequestArtist<>
+    dish2::ApoptosisRequestArtist<Spec>
   >,
   // dish2::GridDrawer<
   //   Spec,
-  //   dish2::CardinalOrderArtist<>
+  //   dish2::CardinalOrderArtist<Spec>
   // >,
   dish2::GridDrawer<
     Spec,
-    dish2::CellBirthArtist<>
+    dish2::CellBirthArtist<Spec>
   >,
   // dish2::GridDrawer<
   //   Spec,
-  //   dish2::EpochArtist<>
+  //   dish2::EpochArtist<Spec>
   // >,
   dish2::SeriesDrawer<
     Spec,
-    dish2::ExpressionByModuleArtist<>
+    dish2::ExpressionByModuleArtist<Spec>
   >,
   // dish2::GridDrawer<
   //   Spec,
-  //   dish2::HeirRequestArtist<>
+  //   dish2::HeirRequestArtist<Spec>
   // >
   dish2::GridDrawer<
     Spec,
-    dish2::IncomingInterMessageCounterArtist<>
+    dish2::IncomingInterMessageCounterArtist<Spec>
   >,
   dish2::GridDrawer<
     Spec,
-    dish2::IncomingIntraMessageCounterArtist<>
+    dish2::IncomingIntraMessageCounterArtist<Spec>
   >,
   // dish2::GridDrawer<
   //   Spec,
-  //   dish2::IsAliveArtist<>
+  //   dish2::IsAliveArtist<Spec>
   // >,
   // dish2::SeriesDrawer<
   //   Spec,
-  //   dish2::PeripheralityLevArtist<>
+  //   dish2::PeripheralityLevArtist<Spec>
   // >,
   dish2::SeriesDrawer<
     Spec,
-    dish2::KinGroupAgeArtist<>
+    dish2::KinGroupAgeArtist<Spec>
   >,
   dish2::GridDrawer<
     Spec,
-    dish2::KinGroupIDArtist<>
+    dish2::KinGroupIDArtist<Spec>
   >,
   // dish2::SeriesDrawer<
   //   Spec,
-  //   dish2::KinGroupIDLevArtist<>
+  //   dish2::KinGroupIDLevArtist<Spec>
   // >,
   // dish2::GridDrawer<
   //   Spec,
-  //   dish2::KinGroupIDViewArtist<>
+  //   dish2::KinGroupIDViewArtist<Spec>
   // >,
   // dish2::GridDrawer<
   //   Spec,
-  //   dish2::KinMatchArtist<>
+  //   dish2::KinMatchArtist<Spec>
   // >,
   // dish2::SeriesDrawer<
   //   Spec,
-  //   dish2::LearnedQuorumBitsArtist<>
+  //   dish2::LearnedQuorumBitsArtist<Spec>
   // >,
   // dish2::GridDrawer<
   //   Spec,
-  //   dish2::NeighborKinGroupIDViewArtist<>
+  //   dish2::NeighborKinGroupIDViewArtist<Spec>
   // >,
   // dish2::GridDrawer<
   //   Spec,
-  //   dish2::NeighborPosArtist<>
+  //   dish2::NeighborPosArtist<Spec>
   // >,
   dish2::GridDrawer<
     Spec,
-    dish2::NumBusyCoresArtist<>
+    dish2::NumBusyCoresArtist<Spec>
   >,
   // dish2::GridDrawer<
   //   Spec,
-  //   dish2::NumModulesArtist<>
+  //   dish2::NumModulesArtist<Spec>
   // >,
   dish2::GridDrawer<
     Spec,
-    dish2::PcaBinaryExpressionArtist<>
+    dish2::PcaBinaryExpressionArtist<Spec>
   >,
   dish2::GridDrawer<
     Spec,
-    dish2::PcaExpressionArtist<>
+    dish2::PcaExpressionArtist<Spec>
   >,
   dish2::GridDrawer<
     Spec,
-    dish2::PcaRegulationArtist<>
+    dish2::PcaRegulationArtist<Spec>
   >,
   dish2::GridDrawer<
     Spec,
-    dish2::PcaTrinaryRegulationArtist<>
+    dish2::PcaTrinaryRegulationArtist<Spec>
   >,
-  // dish2::GridDrawer<
-  //   Spec,
-  //   dish2::PhylogeneticRootArtist<>
-  // >,
+  dish2::GridDrawer<
+    Spec,
+    dish2::PhylogeneticRootArtist<Spec>
+  >,
   // dish2::SeriesDrawer<
   //   Spec,
-  //   dish2::QuorumBitsArtist<>,Spec::NLEV
+  //   dish2::QuorumBitsArtist<Spec>,
+  //   Spec::NLEV
   // >,
   dish2::SeriesDrawer<
     Spec,
-    dish2::RegulationByModuleArtist<>
+    dish2::RegulationByModuleArtist<Spec>
   >,
   dish2::SeriesDrawer<
     Spec,
-    dish2::RegulationExposedByModuleArtist<>
+    dish2::RegulationExposedByModuleArtist<Spec>
   >,
   dish2::GridDrawer<
     Spec,
-    dish2::ResourceInputPeekArtist<>
+    dish2::ResourceInputPeekArtist<Spec>
   >,
   dish2::GridDrawer<
     Spec,
-    dish2::ResourceStockpileArtist<>
+    dish2::ResourceStockpileArtist<Spec>
   >,
   dish2::GridDrawer<
     Spec,
-    dish2::SpawnArrestArtist<>
+    dish2::SpawnArrestArtist<Spec>
   >,
   dish2::GridDrawer<
     Spec,
-    dish2::SpawnRequestArtist<>
+    dish2::SpawnRequestArtist<Spec>
   >
   // dish2::GridDrawer<
   //   Spec,
-  //   dish2::TaxaArtist<>
+  //   dish2::TaxaArtist<Spec>
   // >
 >;
 

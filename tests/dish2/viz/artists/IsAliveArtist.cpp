@@ -7,6 +7,7 @@
 #include "Empirical/include/emp/web/Document.hpp"
 #include "Empirical/include/emp/web/NodeDomShim.hpp"
 
+#include "dish2/config/TemporaryThreadIdxOverride.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/viz/artists/IsAliveArtist.hpp"
 #include "dish2/viz/getters/IsAliveGetter.hpp"
@@ -14,6 +15,10 @@
 #include "dish2/viz/renderers/CellFillRenderer.hpp"
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
+
+using Spec = dish2::Spec_default;
+
+const dish2::TemporaryThreadIdxOverride override{ 0 };
 
 const emp::web::NodeDomShim shim;
 
@@ -24,7 +29,7 @@ TEST_CASE("Test IsAliveArtist") {
   emp::web::Canvas canvas(500, 500);
   emp_base << canvas;
 
-  auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
+  auto tw = dish2::ProcWorld<Spec>{}.MakeThreadWorld();
 
   dish2::IsAliveArtist<> artist{ tw };
 

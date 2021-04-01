@@ -10,12 +10,13 @@
 #include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 
 #include "../../configbyroot/root_mutation_configs.hpp"
+#include "../../config/thread_idx.hpp"
 
 namespace dish2 {
 
 template<typename Spec>
 void set_mutation_occurence_rate_multiplicand(
-  const std::filesystem::path& path, const size_t thread_idx
+  const std::filesystem::path& path
 ) {
 
   const auto attrs = emp::keyname::unpack( path );
@@ -26,11 +27,12 @@ void set_mutation_occurence_rate_multiplicand(
     const double mutation_occurence_rate_multiplicand
       = std::stod( attrs.at("set_mutation_occurence_rate_multiplicand") );
     std::cout
-      << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+      << "proc " << uitsl::get_proc_id()
+      << " thread " << dish2::thread_idx
       << " setting mutation_occurence_rate_multiplicand to "
       << mutation_occurence_rate_multiplicand
       << " for root id " << root_id << " from " << path
-      << std::endl;
+      << '\n';
 
     dish2::root_mutation_configs.Get(
       root_id

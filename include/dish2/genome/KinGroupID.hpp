@@ -20,6 +20,7 @@ struct KinGroupID {
 
   using buffer_t =  emp::array< size_t, Spec::NLEV >;
   buffer_t data;
+  buffer_t ancestor_data;
 
   KinGroupID() = default;
 
@@ -36,9 +37,16 @@ struct KinGroupID {
 
   void ApplyInheritance( const size_t rep_lev ) {
     emp_assert( rep_lev <= Spec::NLEV );
-    std::generate(
+
+    std::copy_n(
       std::begin( data ),
-      std::next( std::begin( data ), rep_lev ),
+      rep_lev,
+      std::begin( ancestor_data )
+    );
+
+    std::generate_n(
+      std::begin( data ),
+      rep_lev,
       [](){
         size_t res;
         sgpl::tlrand.Get().RandFill(
@@ -59,6 +67,15 @@ struct KinGroupID {
     );
   }
 
+  bool IsKinAncestor( const KinGroupID& other, const size_t lev ) const {
+    emp_assert( lev < Spec::NLEV );
+    return std::equal(
+      std::next( std::begin( ancestor_data ), lev ),
+      std::end( ancestor_data ),
+      std::next( std::begin( other.data ), lev )
+    );
+  }
+
   size_t CountCommonality( const KinGroupID& other ) const {
     const auto mismatch = std::mismatch(
       std::rbegin( data ), std::rend( data ),
@@ -74,7 +91,10 @@ struct KinGroupID {
   }
 
   template <class Archive>
-  void serialize( Archive & ar ) { ar( CEREAL_NVP( data ) ); }
+  void serialize( Archive & ar ) {
+    ar( CEREAL_NVP( data ) );
+    ar( CEREAL_NVP( ancestor_data ) );
+  }
 
   const buffer_t& GetBuffer() const { return data; }
 

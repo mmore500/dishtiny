@@ -12,13 +12,12 @@
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../configbyroot/root_perturbation_configs.hpp"
+#include "../../config/thread_idx.hpp"
 
 namespace dish2 {
 
 template<typename Spec>
-void set_extrospective_state_target_idx(
-  const std::filesystem::path& path, const size_t thread_idx
-) {
+void set_extrospective_state_target_idx( const std::filesystem::path& path ) {
 
   const auto attrs = emp::keyname::unpack( path );
 
@@ -33,10 +32,11 @@ void set_extrospective_state_target_idx(
       : idx_t{ uitsl::stoszt(attrs.at("set_extrospective_state_target_idx")) }
     ;
 
-    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    std::cout  << "proc " << uitsl::get_proc_id()
+      << " thread " << dish2::thread_idx
       << " setting extrospective_state_target_idx to \""
       << emp::to_string(extrospective_state_target_idx)
-      << "\" for root id " << root_id << " from " << path << std::endl;
+      << "\" for root id " << root_id << " from " << path << '\n';
 
     dish2::root_perturbation_configs.Get(
       root_id

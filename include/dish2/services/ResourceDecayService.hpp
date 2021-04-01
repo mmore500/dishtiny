@@ -2,10 +2,13 @@
 #ifndef DISH2_SERVICES_RESOURCEDECAYSERVICE_HPP_INCLUDE
 #define DISH2_SERVICES_RESOURCEDECAYSERVICE_HPP_INCLUDE
 
+#include <algorithm>
+#include <cmath>
 #include <set>
 #include <utility>
 
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
+#include "../../../third-party/Empirical/include/emp/base/assert.hpp"
 
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../config/cfg.hpp"
@@ -40,6 +43,8 @@ struct ResourceDecayService {
 
     const float decay_rate = dish2::cfg.RESOURCE_DECAY();
 
+    emp_assert( std::isfinite( decay_rate ), decay_rate );
+
     // update stockpiles to reflect harvested amount
     std::transform(
       cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
@@ -55,6 +60,12 @@ struct ResourceDecayService {
         cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
+
+    emp_assert( std::none_of(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      []( const auto val ){ return std::isnan( val ); }
+    ), decay_rate );
 
   }
 

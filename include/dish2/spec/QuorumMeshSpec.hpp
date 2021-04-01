@@ -35,8 +35,8 @@ using ImplSpec = uit::ImplSpec<
   dish2::QuorumMessage<Spec>,
   ImplSel,
   uit::DefaultSpoutWrapper,
-  2, // N
-  16 // B
+  1, // N
+  0 // B
 >;
 
 } // namespace internal_quorum_spec

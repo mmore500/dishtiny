@@ -3,6 +3,7 @@
 #define DISH2_SERVICES_COLLECTIVEHARVESTINGSERVICE_HPP_INCLUDE
 
 #include <algorithm>
+#include <cmath>
 #include <set>
 #include <utility>
 
@@ -20,31 +21,18 @@ class CollectiveHarvestingService {
   template<typename Cell>
   static float CalcHarvest( const Cell& cell, const size_t lev ) {
 
-    using spec_t = typename Cell::spec_t;
-
-    const size_t group_age
-      = cell.template begin<dish2::KinGroupAgeWrapper<spec_t>>()->GetBuffer(
-      )[ lev ];
-
-    const bool is_group_expired
-      = group_age > cfg.GROUP_EXPIRATION_DURATIONS()[ lev ];
-
-    if ( is_group_expired ) return 0.0f;
-
     const size_t optimum = cfg.OPTIMAL_QUORUM_COUNT()[lev];
     const size_t quorum_count = cell.cell_quorum_state.GetNumKnownQuorumBits(
       lev
     );
-    const size_t distance_from_optimum
-      = std::max(optimum, quorum_count) - std::min(optimum, quorum_count);
-    const float resource_penalty_rate
-      = 1.0f / cfg.OPTIMAL_QUORUM_COUNT()[lev];
-    const float resource_penalty
-      = distance_from_optimum * resource_penalty_rate;
-    return std::max(
-      cfg.COLLECTIVE_HARVEST_RATE()[lev] - resource_penalty,
-      0.0f
+    emp_assert( quorum_count );
+    const size_t effective_count = std::min(
+      optimum,
+      // subtract 1 from quorum count for self, being cautious about overflow
+      quorum_count - static_cast<bool>( quorum_count )
     );
+
+    return cfg.BASE_HARVEST_RATE() * effective_count;
   }
 
 public:
@@ -78,6 +66,8 @@ public:
       harvest += CalcHarvest<Cell>( cell, lev );
     }
 
+    emp_assert( std::isfinite( harvest ), harvest );
+
     // update stockpiles to reflect harvested amount
     std::transform(
       cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
@@ -93,6 +83,14 @@ public:
         cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
+
+    emp_assert( std::none_of(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      []( const auto val ){ return std::isnan( val ); }
+    ), harvest );
+
+
 
   }
 

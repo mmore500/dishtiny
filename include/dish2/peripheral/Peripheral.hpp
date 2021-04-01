@@ -14,7 +14,6 @@
 #include "../spec/MessageMeshSpec.hpp"
 #include "../spec/StateMeshSpec.hpp"
 
-#include "readable_state/introspective_state/IsAlive.hpp"
 #include "readable_state/ReadableState.hpp"
 
 namespace dish2 {

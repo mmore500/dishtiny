@@ -24,9 +24,11 @@ using timekeeper_t = uitsl::Timer<
 
 using bar_t = uitsl::ProgressBar<timekeeper_t>;
 
+using Spec = dish2::Spec_default;
+
 void fuzz_one() {
 
-  dish2::ProcWorld<dish2::Spec> proc_world;
+  dish2::ProcWorld<Spec> proc_world;
 
   uitsl::ThreadTeam team;
 

@@ -17,13 +17,11 @@
 #include "../../config/has_replicate.hpp"
 #include "../../config/has_series.hpp"
 #include "../../config/has_stint.hpp"
+#include "../../config/thread_idx.hpp"
 
 namespace dish2 {
 
-std::string make_dump_arbitrary_genome_filename(
-  const size_t thread_idx,
-  const std::string& morph
-) {
+std::string make_dump_arbitrary_genome_filename( const std::string& morph ) {
 
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "genome"},
@@ -32,7 +30,7 @@ std::string make_dump_arbitrary_genome_filename(
     {"variation", "master"},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"_source", EMP_STRINGIFY(DISHTINY_HASH_)},
-    {"thread", emp::to_string(thread_idx)},
+    {"thread", emp::to_string( dish2::thread_idx )},
     {"_treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".json.gz"}
   };

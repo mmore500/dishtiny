@@ -13,9 +13,7 @@
 namespace dish2 {
 
 template<typename Spec>
-void set_program_max_size_override(
-  const std::filesystem::path& path, const size_t thread_idx
-) {
+void set_program_max_size_override( const std::filesystem::path& path ) {
 
   const auto attrs = emp::keyname::unpack( path );
 
@@ -24,10 +22,11 @@ void set_program_max_size_override(
   if ( attrs.count("set_program_max_size_override") ) {
     const size_t program_max_size_override
       = uitsl::stoszt( attrs.at("set_program_max_size_override") );
-    std::cout  << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+    std::cout  << "proc " << uitsl::get_proc_id()
+      << " thread " << dish2::thread_idx
       << " setting program_max_size_override to "
       << program_max_size_override
-      << " for root id " << root_id << " from " << path << std::endl;
+      << " for root id " << root_id << " from " << path << '\n';
 
     dish2::root_mutation_configs.Get(
       root_id

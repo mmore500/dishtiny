@@ -9,16 +9,14 @@
 namespace dish2 {
 
 template< typename Spec >
-void load_world(
-  const size_t thread_idx, dish2::ThreadWorld<Spec>& thread_world
-) {
+void load_world( dish2::ThreadWorld<Spec>& thread_world ) {
 
   if ( cfg.GENESIS() == "innoculate" )
-    dish2::innoculate_population( 0, thread_world );
+    dish2::innoculate_population( thread_world );
   else if ( cfg.GENESIS() == "monoculture" )
-    dish2::monoculture_population( 0, thread_world );
+    dish2::monoculture_population( thread_world );
   else if ( cfg.GENESIS() == "reconstitute" )
-    dish2::reconstitute_population( 0, thread_world );
+    dish2::reconstitute_population( thread_world );
   else emp_always_assert( cfg.GENESIS() == "generate", cfg.GENESIS() );
 
 }

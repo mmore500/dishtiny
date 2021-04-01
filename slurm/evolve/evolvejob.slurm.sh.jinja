@@ -23,6 +23,12 @@ echo "--------------------------"
 
 # fail on error
 set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
 
 # specify display, start the Xvfb server, and save the process ID
 # adapted from https://wiki.hpcc.msu.edu/display/~colbrydi@msu.edu/2013/10
@@ -66,12 +72,21 @@ echo "--------------------------"
 
 # fail on error
 set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
 
 ################################################################################
 echo
 echo "Initialize and Log Config"
 echo "-------------------------"
 ################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
 
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
@@ -97,6 +112,9 @@ echo "Set Up Work Directory"
 echo "-------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
 mkdir work
 cd work
 
@@ -118,7 +136,7 @@ for ((proc=0;proc<N_PROCS;++proc)); do
 done
 {% endif %}
 
-make production -C ../dishtiny/
+bash -c "cd ../dishtiny && ./configpacks/{{ configpack }}/build_native.sh"
 cp ../dishtiny/rundishtiny .
 
 # compile and download concurrently!
@@ -150,6 +168,9 @@ echo "Run Simulation"
 echo "------------------"
 ################################################################################
 
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
 # note:
 # we have to cut off stdin, stdout, stderr on mpiexec
 # for compatibility with repro_runner.sh and prevent a funky
@@ -161,9 +182,10 @@ echo "------------------"
 
 # have to use login shell so module command loads correctly
 
-sshpass -p "${HOST_PASSWORD}" \
+if (( N_PROCS == 1 )); then bash -login /dev/stdin; else sshpass -p "${HOST_PASSWORD}" \
 ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   "${HOST_USERNAME}@$(hostname)" -X 'bash -login'\
+; fi \
 << MPIEXEC_HEREDOC_EOF
   [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
   module load --ignore-cache GCC/7.2.0-2.29 MPICH/3.2.1|| :
@@ -172,12 +194,11 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   export REPRO_ID="${REPRO_ID}"
   export DISPLAY="${DISPLAY}"
   export XVFB_PID="${XVFB_PID}"
-  export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_DIR}/dishtiny/"
+  export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_WORK_DIRECTORY}/dishtiny/"
   mpiexec.hydra --version
-  mpiexec.hydra -n "${N_PROCS}" \
-  singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" \
+  $( (( N_PROCS > 1 )) && echo mpiexec.hydra -n "${N_PROCS}" singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" ) \
     ./rundishtiny \
-    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series | int < 1000 else 600 if series | int < 10000 else 10800 }} -GENESIS "${GENESIS}" -ARTIFACTS_DUMP 1 -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} -DRAWINGS_WRITE {{ 1 if stint | int % 10 == 0 else 0 }} -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/evolvejob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
+    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series | int < 1000 else 600 if series | int < 10000 else 10800 }} -GENESIS "${GENESIS}" -ARTIFACTS_DUMP 1 -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} -DRAWINGS_WRITE {{ 1 if stint | int % 10 == 0 else 0 }} -RUNNINGLOGS_DUMP {{ 1 if stint | int % 10 == 0 else 0 }} -CENSUS_WRITE {{ 1 if stint | int % 10 == 0 else 0 }} -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/evolvejob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
 MPIEXEC_HEREDOC_EOF
@@ -187,6 +208,9 @@ echo
 echo "Upload Data"
 echo "--------------"
 ################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
 
 shopt -s nullglob
 
@@ -216,6 +240,24 @@ for p in outdata/*a={demographic_phenotypic_phylogenetic_metrics,kin_conflict_st
     aws s3 cp --quiet \
       "${p}" \
       "s3://{{ bucket }}/endeavor=${ENDEAVOR}/evolve/metrics/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+    && echo "  ${f} upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+  done & pids+=($!)
+
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
+
+done
+
+echo "uploading any asconfigured files..."
+for p in outmeta/*a=asconfigured*.csv*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
+  for retry in {1..20}; do
+    aws s3 cp --quiet \
+      "${p}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/evolve/config-records/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
@@ -346,6 +388,9 @@ echo "Submit Next Job"
 echo "---------------"
 ################################################################################
 
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
 # run jinja on template
 JOB_TEMPLATE="$(mktemp)"
 JOB_SCRIPT="$(mktemp)"
@@ -379,11 +424,14 @@ wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO-
 
 ################################################################################
 echo
-echo "Submit Nopout Job"
-echo "---------------"
+echo "Submit Folow-Up Jobs"
+echo "--------------------"
 ################################################################################
 
-# run nopout job every tenth stint
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# run follow up jobs every tenth stint
 if (( {{ stint }} % 10 == 0 )); then
 
 # run jinja on template
@@ -396,7 +444,7 @@ echo "JOB_SCRIPT ${JOB_SCRIPT}"
 for retry in {1..20}; do
   curl \
     -o "${JOB_TEMPLATE}" \
-    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/genomes/nopoutjob.slurm.sh.jinja" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/evolve/evolvefollowupsjob.slurm.sh.jinja" \
   && echo "  job template curl success" && break \
   || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
@@ -416,92 +464,6 @@ chmod +x "${JOB_SCRIPT}"
 # adapted from https://superuser.com/a/689340
 # and https://stackoverflow.com/a/4642975
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_sbatch.sh" | bash -s "${JOB_SCRIPT}"
-
-fi
-
-################################################################################
-echo
-echo "Submit Monoculture Job"
-echo "---------------"
-################################################################################
-
-# run monoculture job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
-
-# run jinja on template
-JOB_TEMPLATE="$(mktemp)"
-JOB_SCRIPT="$(mktemp)"
-
-echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
-echo "JOB_SCRIPT ${JOB_SCRIPT}"
-
-for retry in {1..20}; do
-  curl \
-    -o "${JOB_TEMPLATE}" \
-    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/monocultures/monoculturejob.slurm.sh.jinja" \
-  && echo "  job template curl success" && break \
-  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
-  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
-done
-
-j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
-bucket: {{ bucket }}
-configpack: {{ configpack }}
-container_tag: {{ container_tag }}
-repo_sha: {{ repo_sha }}
-series: {{ series }}
-stint: {{ stint | int }}
-J2_HEREDOC_EOF
-
-chmod +x "${JOB_SCRIPT}"
-
-# adapted from https://superuser.com/a/689340
-# and https://stackoverflow.com/a/4642975
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_sbatch.sh" | bash -s "${JOB_SCRIPT}"
-
-fi
-
-################################################################################
-echo
-echo "Submit Predecessor Battle Jobs"
-echo "-----------------------------------"
-################################################################################
-
-# run predecessor battle job every twentieth stint
-if (( {{ stint }} % 20 == 0 )); then
-
-for retry in {1..20}; do
-  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/predecessorbattlekickoff.sh" | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
-    && echo "  predecessor kickoff success" && break \
-    || (echo "retrying predecessor kickoff (${retry})" && sleep $((RANDOM % 10)))
-
-  if ((${retry}==20)); then echo "predecessor kickoff fail" && exit 123123; fi
-done
-
-fi
-
-################################################################################
-echo
-echo "Submit Control Competition Jobs"
-echo "-----------------------------------"
-################################################################################
-
-# run control competition job every twentieth stint
-if (( {{ stint }} % 10 == 0 )); then
-
-for retry in {1..20}; do
-  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
-  wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/controlcompetitionkickoff.sh" | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-    "${HOST_USERNAME}@$(hostname)" -X \
-    'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
-    && echo "  control kickoff success" && break \
-    || (echo "retrying control kickoff (${retry})" && sleep $((RANDOM % 10)))
-
-  if ((${retry}==20)); then echo "control kickoff fail" && exit 123123; fi
-done
 
 fi
 
@@ -510,6 +472,9 @@ echo
 echo "Running watch me evolve integration"
 echo "-----------------------------------"
 ################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
 
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/watch_me_evolve.py" && \
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/wme_evolvejob.py" && \
@@ -520,5 +485,8 @@ echo
 echo "Done! (SUCCESS)"
 echo "---------------"
 ################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
 
 REPRO_RUNNER_HEREDOC_EOF

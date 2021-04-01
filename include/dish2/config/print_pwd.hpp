@@ -13,14 +13,14 @@ namespace dish2 {
 
 void print_pwd() {
 
-  std::cout << "======================================" << std::endl;
-  std::cout << "|            Where am I?             |" << std::endl;
-  std::cout << "======================================" << std::endl;
+  std::cout << "======================================" << '\n';
+  std::cout << "|            Where am I?             |" << '\n';
+  std::cout << "======================================" << '\n';
 
-  std::cout << dish2::get_hostname() << std::endl;
-  std::cout << std::filesystem::current_path() << std::endl;
+  std::cout << dish2::get_hostname() << '\n';
+  std::cout << std::filesystem::current_path() << '\n';
 
-  std::cout << "======================================\n" << std::endl;
+  std::cout << "======================================\n" << '\n';
 
 }
 

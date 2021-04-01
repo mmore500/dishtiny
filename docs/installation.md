@@ -89,3 +89,8 @@ If your environment continues to be borked, try
 sudo apt-get purge -y docker singularity-container xvfb
 sudo apt-get install -y docker singularity-container xvfb
 ```
+
+### Cloud Shell Terminal Tricks
+
+If your terminal doesn't have a scrollbar, click the settings icon ::gear:: near the top left of the terminal window. Go to Terminal Preferences and click Show Scrollbar.
+You can also control the color theme and font size!

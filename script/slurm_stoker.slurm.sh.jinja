@@ -26,6 +26,13 @@ trap 'echo exiting slurm_stoker.slurm.sh' EXIT
 
 # fail on error
 set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
+
 
 # set up and jump into temporary work directory
 cd "$(mktemp -d)"
@@ -69,6 +76,9 @@ echo "Initialize and Log Config"
 echo "-------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
 
@@ -84,6 +94,9 @@ echo "Extract payload of slurm scripts"
 echo "--------------------------------"
 ################################################################################
 
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
 # adapted from https://unix.stackexchange.com/a/389007
 uudecode << "PAYLOAD_HEREDOC_CLOSE" | gunzip | tar -vxpf -
 {{ payload }}
@@ -96,6 +109,9 @@ echo
 echo "Submit jobs into available slots"
 echo "--------------------------------"
 ################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
 
 pwd
 echo "$(ls *.slurm.sh | wc -l) jobs to submit"
@@ -136,6 +152,9 @@ for JOB_SCRIPT in *.slurm.sh; do
     && rm -f "${JOB_SCRIPT}" \
     && echo "${JOB_SCRIPT} submitted"
 
+  # break out of loop after three hours job time
+  (( SECONDS > 10800 )) && break || :
+
 done &
 
 # not sure why, but the script was prematurely exiting at break statement above
@@ -144,10 +163,13 @@ wait
 
 ################################################################################
 echo
-echo "Zip *.slurm.sh files into payload"
 echo "and instantiate slurm stoker job template"
 echo "-------------------------------------"
 ################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
 
 # if there are remaining jobs
 if ls *.slurm.sh 1> /dev/null 2>&1; then
@@ -167,5 +189,7 @@ echo
 echo "Done! (SUCCESS)"
 echo "---------------"
 ################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
 
 REPRO_RUNNER_HEREDOC_EOF

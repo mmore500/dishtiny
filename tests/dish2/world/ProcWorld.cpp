@@ -7,8 +7,10 @@
 #include "dish2/spec/Spec.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
+using Spec = dish2::Spec_default;
+
 const uitsl::MpiGuard guard;
 
 TEST_CASE("Test ProcWorld") {
-  dish2::ProcWorld<dish2::Spec>{};
+  dish2::ProcWorld<Spec>{};
 }

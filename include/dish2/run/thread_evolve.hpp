@@ -11,6 +11,7 @@
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 
 #include "../config/cfg.hpp"
+#include "../config/thread_idx.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "thread_should_continue.hpp"
@@ -19,12 +20,11 @@
 namespace dish2 {
 
 template<typename Spec>
-void thread_evolve(
-  const size_t thread_idx, dish2::ThreadWorld<Spec>& thread_world
-) {
+void thread_evolve( dish2::ThreadWorld<Spec>& thread_world ) {
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
-    << " running " << thread_world.population.size() << " cells" << std::endl;
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
+    << " running " << thread_world.population.size() << " cells" << '\n';
 
   #ifndef __EMSCRIPTEN__
   // sync before starting job
@@ -39,12 +39,13 @@ void thread_evolve(
   uitsl::CoarseTimer log_timer{ dish2::cfg.LOG_FREQ() };
 
   while ( dish2::thread_should_contine<Spec>( thread_world, run_timer ) ) {
-    dish2::thread_step<Spec>( thread_idx, thread_world, run_timer, log_timer );
+    dish2::thread_step<Spec>( thread_world, run_timer, log_timer );
   }
 
-  std::cout << "proc " << uitsl::get_proc_id() << " thread " << thread_idx
+  std::cout << "proc " << uitsl::get_proc_id()
+    << " thread " << dish2::thread_idx
     << " simulation complete @ " << thread_world.GetUpdate() << " updates"
-    << std::endl;
+    << '\n';
 
 }
 

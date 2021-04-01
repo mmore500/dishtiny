@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/BooleanColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -45,9 +43,10 @@ namespace internal::apoptosis_request_artist {
 } // namespace internal::apoptosis_request_artist
 
 template<
-  typename ApoptosisRequestGetter=dish2::ApoptosisRequestGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename ApoptosisRequestGetter=dish2::ApoptosisRequestGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class ApoptosisRequestArtist
 : public internal::apoptosis_request_artist::parent_t<

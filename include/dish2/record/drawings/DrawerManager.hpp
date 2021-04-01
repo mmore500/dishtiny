@@ -12,6 +12,8 @@
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../../third-party/Empirical/include/emp/base/array.hpp"
 
+#include "../../config/thread_idx.hpp"
+
 namespace dish2 {
 
 template< typename... Drawers >
@@ -79,7 +81,11 @@ struct DrawerManager<FirstDrawer, SubsequentDrawers...> {
   {}
 
   void SaveToFile() {
-    std::thread worker( [this](){ first_drawer.SaveToFile(); } );
+    const auto parent_thread_idx = dish2::thread_idx;
+    std::thread worker( [this, parent_thread_idx](){
+      dish2::thread_idx = parent_thread_idx;
+      first_drawer.SaveToFile();
+    } );
     subsequent_drawers.SaveToFile();
     worker.join();
   }

@@ -162,6 +162,20 @@ wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO-
 
 ################################################################################
 echo
+echo "Testing for existing repro_runner.sh session"
+echo "--------------------------------------------"
+################################################################################
+if test -v REPRO_ID; then
+
+echo "REPRO_ID already set"
+echo "REPRO_ID ${REPRO_ID}"
+echo "(invoked from inside another repro_runner.sh session)"
+echo "skipping exit and error trap setup"
+
+else # if test -v REPRO_ID; then
+
+################################################################################
+echo
 echo "Generate REPRO_ID"
 echo "--------------------------------------"
 ################################################################################
@@ -171,7 +185,7 @@ export REPRO_YEAR="$(date +'%Y')"
 export REPRO_MONTH="$(date +'%m')"
 export REPRO_DAY="$(date +'%d')"
 export REPRO_HOUR="$(date +'%H')"
-export RERO_DIR="$(pwd)"
+export REPRO_DIR="$(pwd)"
 
 echo "REPRO_YEAR ${REPRO_YEAR}"
 echo "REPRO_MONTH ${REPRO_MONTH}"
@@ -336,6 +350,9 @@ function on_error() {
   echo "---------------------"
   echo
 
+  # adapted from https://unix.stackexchange.com/a/504829
+  awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$2 $0
+
   echo "sstat -j ${SLURM_JOB_ID}"
   sstat -j "${SLURM_JOB_ID}"
 
@@ -423,6 +440,8 @@ function on_error() {
 trap 'on_error $? $LINENO' ERR SIGINT
 trap on_exit EXIT
 
+fi # if test -v REPRO_ID; then
+
 ################################################################################
 echo
 echo "Setup Work Directory"
@@ -430,6 +449,7 @@ echo "--------------------------------------"
 ################################################################################
 rm -rf "${REPRO_ID}" && mkdir "${REPRO_ID}" && cd "${REPRO_ID}"
 export WORK_DIRECTORY="$(pwd)"
+export REPRO_WORK_DIRECTORY="${WORK_DIRECTORY}"
 echo "WORK_DIRECTORY ${WORK_DIRECTORY}"
 
 ################################################################################
@@ -479,8 +499,8 @@ if [ -n "${repo_sha}" ]; then
     bash -c " \
       test -d \"/opt/${arg_slug}\" \
       && git -C \"/opt/${arg_slug}\" rev-parse \
-      && git clone --recursive \"https://github.com/${arg_username}/${arg_slug}.git\" --reference-if-able \"/opt/${arg_slug}\" --jobs 16 \
-      && git -C \"${arg_slug}\" checkout \"${repo_sha}\" --recurse-submodules \
+      && git clone --recursive --quiet \"https://github.com/${arg_username}/${arg_slug}.git\" --reference-if-able \"/opt/${arg_slug}\" --jobs 16 \
+      && git -C \"${arg_slug}\" checkout --quiet \"${repo_sha}\" --recurse-submodules \
     " \
     && echo "  source setup success using cache" \
     && break \

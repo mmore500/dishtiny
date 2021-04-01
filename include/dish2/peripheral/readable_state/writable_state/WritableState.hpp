@@ -11,6 +11,7 @@
 #include "../../../../../third-party/conduit/include/uitsl/algorithm/clamp_cast.hpp"
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
 #include "../../../../../third-party/conduit/include/uitsl/datastructs/PodLeafNode.hpp"
+#include "../../../../../third-party/Empirical/include/emp/base/assert.hpp"
 #include "../../../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../../../third-party/signalgp-lite/include/sgpl/utility/ByteEnumeration.hpp"
 
@@ -46,10 +47,11 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         using target_t = std::decay_t< decltype( \
           this->parent_t::template GetByIndex<N>() \
         ) >; \
-        const target_t clamped = uitsl::clamp_cast< std::decay_t< decltype( \
-          this->parent_t::template GetByIndex<N>() \
-        ) > >( val ); \
+        const target_t clamped = uitsl::clamp_cast< target_t >( val ); \
         this->parent_t::template GetByIndex<N>() += clamped; \
+      } else { \
+        emp_assert( false, N ); \
+        __builtin_unreachable(); \
       } \
     break;
 
@@ -59,6 +61,10 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
     switch ( idx ) {
 
       EMP_WRAP_EACH( DISH2_ADD_TO_STATE_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION )
+
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
 
     }
 
@@ -72,10 +78,11 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         using target_t = std::decay_t< decltype( \
           this->parent_t::template GetByIndex<N>() \
         ) >; \
-        const target_t clamped = uitsl::clamp_cast< std::decay_t< decltype( \
-          this->parent_t::template GetByIndex<N>() \
-        ) > >( val ); \
+        const target_t clamped = uitsl::clamp_cast< target_t >( val ); \
         this->parent_t::template GetByIndex<N>() *= clamped; \
+      } else { \
+        emp_assert( false, N ); \
+        __builtin_unreachable(); \
       } \
     break;
 
@@ -85,6 +92,10 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
     switch ( idx ) {
 
       EMP_WRAP_EACH( DISH2_MULTIPLY_STATE_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION )
+
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
 
     }
 
@@ -98,10 +109,11 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
           using target_t = std::decay_t< decltype( \
             this->parent_t::template GetByIndex<N>() \
           ) >; \
-          const target_t clamped = uitsl::clamp_cast< std::decay_t< decltype( \
-            this->parent_t::template GetByIndex<N>() \
-          ) > >( val ); \
+          const target_t clamped = uitsl::clamp_cast< target_t >( val ); \
           this->parent_t::template GetByIndex<N>() = clamped; \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         } \
       break;
 
@@ -111,6 +123,10 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
     switch ( idx ) {
 
       EMP_WRAP_EACH( DISH2_WRITABLE_STATE_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION )
+
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
 
     }
 
@@ -123,6 +139,9 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         if constexpr ( N  < parent_size ) { \
           this->parent_t::template GetByIndex<N>() \
           = static_cast<parent_t>(other).template GetByIndex<N>(); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         } \
       break;
 
@@ -134,6 +153,10 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
       EMP_WRAP_EACH(
         DISH2_WRITABLE_STATE_ASSIGN_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
+
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
 
     }
 
@@ -148,6 +171,9 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
             this->parent_t::template GetByIndex<N>(), \
             static_cast<parent_t>(other).template GetByIndex<N>() \
           ); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         } \
       break;
 
@@ -159,6 +185,10 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
       EMP_WRAP_EACH(
         DISH2_WRITABLE_STATE_SWAP_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
+
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
 
     }
 
@@ -172,6 +202,9 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
           return uitsl::TypeName< \
             typename parent_t::template leaf_t<N> \
           >::Get(); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         }
 
     emp_assert( idx < parent_size );
@@ -183,9 +216,14 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         DISH2_WRITABLE_STATE_NAME_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
 
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
+
     }
 
-    return "bad idx";
+    emp_assert( false, idx );
+    __builtin_unreachable();
 
   }
 
@@ -195,6 +233,9 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
       case N: \
         if constexpr ( N  < parent_size ) { \
           return parent_t::template GetLeafIndex<N>(); \
+        } else { \
+          emp_assert( false, N ); \
+          __builtin_unreachable(); \
         }
 
     emp_assert( idx < parent_size );
@@ -206,9 +247,14 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         DISH2_WRITABLE_STATE_INDEX_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
       )
 
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
+
     }
 
-    return std::numeric_limits<size_t>::max();
+    emp_assert( false, idx );
+    __builtin_unreachable();
 
   }
 

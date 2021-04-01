@@ -37,6 +37,13 @@ class CellQuorumState {
 
 public:
 
+  void UpdateOwnBit( const size_t lev, const size_t new_bit ) {
+    ForgetBits( own_quorum_bits );
+    own_quorum_bits.ClearLev( lev );
+    own_quorum_bits.SetBit( lev, new_bit );
+    RefreshOwnBits();
+  }
+
   message_t GetBlacklistedBits() const {
     return fresh_blacklisted_bits | stale_blacklisted_bits;
   }
@@ -50,7 +57,7 @@ public:
   void RefreshOwnBits() { known_quorum_bits |= own_quorum_bits; }
 
   void ForgetBits( const message_t mask ) {
-    known_quorum_bits = uitsl::unset_mask( known_quorum_bits, mask );
+    known_quorum_bits.UnsetMask( mask );
   }
 
   void LearnBits( const message_t bits ) { known_quorum_bits |= bits; }
@@ -59,6 +66,14 @@ public:
 
   size_t GetNumKnownQuorumBits( const size_t lev ) const {
     return known_quorum_bits.GetNumBits( lev );
+  }
+
+  bool GetQuorumBit( const size_t lev, const size_t bit ) const {
+    return known_quorum_bits.GetBit( lev, bit );
+  }
+
+  bool GetOwnQuorumBit( const size_t lev, const size_t bit ) const {
+    return own_quorum_bits.GetBit( lev, bit );
   }
 
 

@@ -15,9 +15,9 @@ namespace dish2 {
 
 void print_assets() {
 
-  std::cout << "======================================" << std::endl;
-  std::cout << "|   What assets am I working with?    |" << std::endl;
-  std::cout << "======================================" << std::endl;
+  std::cout << "======================================" << '\n';
+  std::cout << "|   What assets am I working with?    |" << '\n';
+  std::cout << "======================================" << '\n';
 
   #ifndef __EMSCRIPTEN__
     // hash all files, excluding source directory
@@ -28,7 +28,7 @@ void print_assets() {
     uitsl::list_cwd();
   #endif // #ifndef __EMSCRIPTEN__
 
-  std::cout << "=======================================\n" << std::endl;
+  std::cout << "=======================================\n" << '\n';
 
 }
 

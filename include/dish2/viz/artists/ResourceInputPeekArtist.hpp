@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/ResourceInputPeekColorMap.hpp"
@@ -45,10 +43,10 @@ namespace internal::resource_input_peek_artist {
 } // namespace internal::resource_input_peek_artist
 
 template<
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>,
-  typename ResourceInputPeekGetter
-    =dish2::ResourceInputPeekGetter<dish2::Spec>
+  typename Spec,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>,
+  typename ResourceInputPeekGetter=dish2::ResourceInputPeekGetter<Spec>
 >
 class ResourceInputPeekArtist
 : public internal::resource_input_peek_artist::parent_t<

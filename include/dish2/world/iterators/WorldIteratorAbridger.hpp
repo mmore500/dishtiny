@@ -26,11 +26,11 @@ public:
   WorldIteratorAbridger(const CellIterator& cell_iterator)
   : CellIterator( cell_iterator ) { }
 
-  const value_type& operator*() {
+  const value_type& operator*() const {
     return *( CellIterator::operator*().template begin<CardinalIterator>() );
   }
 
-  const value_type* operator->() { return &operator*(); }
+  const value_type* operator->() const { return &operator*(); }
 
   WorldIteratorAbridger& operator++() {
     CellIterator::operator++();

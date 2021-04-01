@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/ResourceStockpileColorMap.hpp"
@@ -44,9 +42,10 @@ namespace internal::resource_stockpile_artist {
 } // namespace internal::resource_stockpile_artist
 
 template<
-  typename ResourceStockpileGetter=dish2::ResourceStockpileGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename ResourceStockpileGetter=dish2::ResourceStockpileGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class ResourceStockpileArtist
 : public internal::resource_stockpile_artist::parent_t<

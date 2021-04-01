@@ -11,11 +11,11 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/enumerate_module_ids.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
+#include "../algorithm/make_jenga_phenotype_equivalent_nopout.hpp"
 #include "../algorithm/make_phenotype_equivalent_nopout.hpp"
 #include "../debug/LogLevelGuard.hpp"
 #include "../introspection/get_prevalent_coding_genotype.hpp"
 #include "../prefab/ModalGuard.hpp"
-#include "../spec/Spec.hpp"
 
 #include "InstructionListDetailItem.hpp"
 #include "InstructionListEntryItem.hpp"
@@ -24,22 +24,23 @@
 
 namespace dish2 {
 
+template< typename Spec >
 class PrevalentGenotypePanel {
 
   emp::web::Document panel{ "dominant_viewer-body" };
 
   using instruction_list_detail_item_t
-    = dish2::InstructionListDetailItem< dish2::Spec >;
+    = dish2::InstructionListDetailItem< Spec >;
   using instruction_list_entry_item_t
-    = dish2::InstructionListEntryItem< dish2::Spec >;
+    = dish2::InstructionListEntryItem< Spec >;
   using instruction_list_nop_out_item_t = dish2::InstructionListNopOutItem;
   using instruction_list_refresh_item_t = dish2::InstructionListRefreshItem;
 
-  using program_t = typename dish2::Spec::program_t;
+  using program_t = typename Spec::program_t;
 
-  const dish2::ThreadWorld< dish2::Spec >& thread_world;
+  const dish2::ThreadWorld< Spec >& thread_world;
 
-  void Redraw( const dish2::Genome< dish2::Spec >& genome ) {
+  void Redraw( const dish2::Genome< Spec >& genome ) {
 
     const auto& program = genome.program;
 
@@ -58,7 +59,23 @@ class PrevalentGenotypePanel {
       const dish2::LogLevelGuard guard2{ 2 };
 
       Redraw(
-        dish2::make_phenotype_equivalent_nopout< dish2::Spec >(
+        dish2::make_phenotype_equivalent_nopout< Spec >(
+          genome, "prevalent"
+        )
+      );
+      // why is this necessary?
+      panel.SetAttr( "class", "list-group list-group-flush collapse show" );
+
+    } };
+
+    panel << (emp::web::Div) instruction_list_nop_out_item_t{ [this, genome](){
+
+      const dish2::ModalGuard guard{ "modal-log-readout" };
+
+      const dish2::LogLevelGuard guard2{ 2 };
+
+      Redraw(
+        dish2::make_jenga_phenotype_equivalent_nopout< Spec >(
           genome, "prevalent"
         )
       );
@@ -89,7 +106,7 @@ class PrevalentGenotypePanel {
 public:
 
   PrevalentGenotypePanel(
-    const dish2::ThreadWorld< dish2::Spec >& thread_world_
+    const dish2::ThreadWorld< Spec >& thread_world_
   ) : thread_world( thread_world_ ) {
 
     panel.SetAttr(
@@ -102,10 +119,10 @@ public:
 
   void Redraw() {
     const auto& [coding_genotype, count]
-      = dish2::get_prevalent_coding_genotype<dish2::Spec>( thread_world );
+      = dish2::get_prevalent_coding_genotype<Spec>( thread_world );
     const auto& [event_tags, program] = coding_genotype;
 
-    dish2::Genome< dish2::Spec > genome;
+    dish2::Genome< Spec > genome;
     genome.program = program;
     genome.event_tags = event_tags;
 

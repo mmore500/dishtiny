@@ -6,7 +6,6 @@
 #include <string_view>
 
 #include "../../introspection/get_maximum_module_count.hpp"
-#include "../../spec/Spec.hpp"
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -47,10 +46,10 @@ namespace internal::regulation_by_module_artist {
 } // namespace internal::regulation_by_module_artist
 
 template<
-  typename RegulationByModuleGetter
-    =dish2::RegulationByModuleGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename RegulationByModuleGetter=dish2::RegulationByModuleGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class RegulationByModuleArtist
 : public internal::regulation_by_module_artist::parent_t<
@@ -72,7 +71,6 @@ public:
 
   static constexpr std::string_view GetName() { return "Regulation by Module"; }
 
-  template< typename Spec >
   static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
     return std::min(
       32ul,

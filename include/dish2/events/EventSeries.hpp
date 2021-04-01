@@ -12,7 +12,7 @@ struct EventSeries {
   constexpr inline static size_t series_idx = SeriesSize;
 
   template< typename Cardinal, size_t SeriesIdx>
-  static bool Test( Cardinal& cardinal ) {
+  static bool Test( const Cardinal& cardinal ) {
     return Event::template Test<Cardinal, SeriesIdx>( cardinal );
   }
 

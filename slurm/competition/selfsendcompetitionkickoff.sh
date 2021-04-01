@@ -8,8 +8,14 @@ echo "-------------------------------------------------"
 
 # fail on error
 set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
 
-if (( "$#" < 10 )); then
+if (( "$#" < 8 )); then
   echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [inter/intra] [filter_mod] [stint] [series...]"
   exit 1
 fi
@@ -66,6 +72,12 @@ echo "--------------------------------"
 
 # fail on error
 set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),\$0 }' L=\$1 \$0
+}
+trap 'printerr \$LINENO' ERR
 
 ################################################################################
 echo
@@ -97,8 +109,7 @@ echo "Generate Tournament Runscripts"
 echo "------------------------------"
 ################################################################################
 
-# "" on end for empty string
-for FILTER_TARGET in {0..${FILTER_MOD}}; do
+for FILTER_TARGET in {0..$((FILTER_MOD - 1))}; do
   for JUST_ONE_SERIES in ${SERIES}; do
     for REPLICATE in 0; do
 
@@ -137,11 +148,24 @@ echo "--------------------------------------"
 
 echo "num generated runscripts \$(ls *.slurm.sh | wc -l)"
 
+if test -v SLURM_STOKER_CONSOLIDATION_DIR; then
+
+echo "SLURM_STOKER_CONSOLIDATION_DIR \${SLURM_STOKER_CONSOLIDATION_DIR}"
+
+mkdir -p "\${SLURM_STOKER_CONSOLIDATION_DIR}"
+for target in *slurm.sh; do
+  cp "\${target}" "\${SLURM_STOKER_CONSOLIDATION_DIR}/\${RANDOM}_\${target}"
+done
+
+else
+
 # uses slurm stoker script, which zips all runscripts in the current directory
 # inside itself, then submits itself as a job to gradually feed runscripts onto
 # the queue
 
 dishtiny/script/slurm_stoker_containerized_kickoff.sh "${BUCKET}" "${CONTAINER_TAG}" "${REPO_SHA}" "selfsend-${MESSAGING_TARGET}-competition~configpack%${CONFIGPACK}~series%${SERIES%% *}...~stint%${STINT}~filter_mod%${FILTER_MOD}"
+
+fi
 
 ################################################################################
 echo

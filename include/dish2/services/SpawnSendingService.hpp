@@ -3,6 +3,7 @@
 #define DISH2_SERVICES_SPAWNSENDINGSERVICE_HPP_INCLUDE
 
 #include <algorithm>
+#include <cmath>
 #include <numeric>
 #include <set>
 #include <utility>
@@ -47,6 +48,11 @@ struct SpawnSendingService {
         cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
+    emp_assert( std::none_of(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      []( const auto val ){ return std::isnan( val ); }
+    ) );
 
     // check spawn count consistency
     emp_assert((
@@ -59,6 +65,8 @@ struct SpawnSendingService {
     float available_resource{
       *cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>()
     };
+
+    emp_assert( std::isfinite( available_resource ), available_resource );
 
     if ( available_resource < 1 ) return;
 
@@ -129,6 +137,8 @@ struct SpawnSendingService {
 
     }
 
+    emp_assert(std::isfinite( available_resource ), available_resource);
+
     std::fill(
       cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
       cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
@@ -142,6 +152,11 @@ struct SpawnSendingService {
         cell.template end<dish2::ResourceStockpileWrapper<spec_t>>()
       ).size() == 1
     ));
+    emp_assert( std::none_of(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      []( const auto val ){ return std::isinf( val ); }
+    ) );
 
     // check spawn count consistency
     emp_assert((

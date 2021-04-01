@@ -4,8 +4,6 @@
 
 #include <string_view>
 
-#include "../../spec/Spec.hpp"
-
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/EpochColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -44,9 +42,10 @@ namespace internal::epoch_artist {
 } // namespace internal::epoch_artist
 
 template<
-  typename EpochGetter=dish2::EpochGetter<dish2::Spec>,
-  typename IsAliveGetter=dish2::IsAliveGetter<dish2::Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<dish2::Spec>
+  typename Spec,
+  typename EpochGetter=dish2::EpochGetter<Spec>,
+  typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
 class EpochArtist
 : public internal::epoch_artist::parent_t<

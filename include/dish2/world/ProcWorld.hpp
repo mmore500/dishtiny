@@ -19,6 +19,7 @@
 
 #include "../config/cfg.hpp"
 #include "../config/num_cells_global.hpp"
+#include "../config/thread_idx.hpp"
 
 #include "ThreadWorld.hpp"
 
@@ -97,6 +98,13 @@ struct ProcWorld {
     assignments.first
   };
 
+  using push_mesh_spec_t = typename Spec::push_mesh_spec_t;
+  netuit::Mesh<push_mesh_spec_t> push_mesh{
+    topology,
+    assignments.second,
+    assignments.first
+  };
+
   using quorum_mesh_spec_t = typename Spec::quorum_mesh_spec_t;
   netuit::Mesh<quorum_mesh_spec_t> quorum_mesh{
     topology,
@@ -118,15 +126,16 @@ struct ProcWorld {
     assignments.first
   };
 
-  ProcWorld() { if (use_metis) std::cout << "assign used metis" << std::endl; }
+  ProcWorld() { if (use_metis) std::cout << "assign used metis" << '\n'; }
 
-  dish2::ThreadWorld<Spec> MakeThreadWorld(const uitsl::thread_id_t thread_id) {
+  dish2::ThreadWorld<Spec> MakeThreadWorld() {
     return dish2::ThreadWorld<Spec>(
-      genome_mesh.GetSubmesh( thread_id ),
-      message_mesh.GetSubmesh( thread_id ),
-      quorum_mesh.GetSubmesh( thread_id ),
-      resource_mesh.GetSubmesh( thread_id ),
-      state_mesh.GetSubmesh( thread_id )
+      genome_mesh.GetSubmesh( dish2::thread_idx ),
+      message_mesh.GetSubmesh( dish2::thread_idx ),
+      push_mesh.GetSubmesh( dish2::thread_idx ),
+      quorum_mesh.GetSubmesh( dish2::thread_idx ),
+      resource_mesh.GetSubmesh( dish2::thread_idx ),
+      state_mesh.GetSubmesh( dish2::thread_idx )
     );
   }
 

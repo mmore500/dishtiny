@@ -10,7 +10,6 @@
 #include "../../../third-party/Empirical/include/emp/web/Document.hpp"
 #include "../../../third-party/Empirical/include/emp/web/js_utils.hpp"
 
-#include "../spec/Spec.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "DocumentHandles.hpp"
@@ -18,17 +17,18 @@
 
 namespace dish2 {
 
+template< typename Spec >
 class ViewerPanel {
 
   emp::web::DocuExtras view_selector{ "view_selector" };
 
-  dish2::ViewerCollection< dish2::Spec > viewer_collection;
+  dish2::ViewerCollection< Spec > viewer_collection;
 
 public:
 
   // adapted from https://stackoverflow.com/a/22561209
   template <typename... TupElem>
-  ViewerPanel(const dish2::ThreadWorld<dish2::Spec>& thread_world)
+  ViewerPanel(const dish2::ThreadWorld<Spec>& thread_world)
   : viewer_collection( thread_world ) {
 
     dish2::document_handles.at("grid_viewer")->SetAttr(

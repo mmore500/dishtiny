@@ -95,6 +95,10 @@ public:
             );
             break;
 
+          default:
+            emp_assert( false, dir );
+            __builtin_unreachable();
+
         } // dir switch
 
         // draw the polygon

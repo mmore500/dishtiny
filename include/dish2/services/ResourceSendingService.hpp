@@ -2,6 +2,7 @@
 #ifndef DISH2_SERVICES_RESOURCESENDINGSERVICE_HPP_INCLUDE
 #define DISH2_SERVICES_RESOURCESENDINGSERVICE_HPP_INCLUDE
 
+#include <algorithm>
 #include <cmath>
 #include <functional>
 #include <limits>
@@ -55,6 +56,12 @@ struct ResourceSendingService {
       cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
       [](const auto amt){ return std::isfinite(amt) && ( amt >= 0 ); }
     ) );
+    emp_assert( std::none_of(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      []( const auto val ){ return std::isnan( val ); }
+    ) );
+
 
     // initialize available amount to entire stockpile
     thread_local emp::vector<float> send_amounts;
@@ -179,7 +186,12 @@ struct ResourceSendingService {
     emp_assert( std::all_of(
       std::begin( send_amounts ),
       std::end( send_amounts ),
-      [](const auto val){ return std::isfinite(val) && ( val >= 0 ); }
+      [](const auto val){ return std::isfinite(val); }
+    ) );
+    emp_assert( std::all_of(
+      std::begin( send_amounts ),
+      std::end( send_amounts ),
+      [](const auto val){ return val >= 0.0f; }
     ) );
 
     // multiply each send amount by its fraction of sum send amount
@@ -220,7 +232,12 @@ struct ResourceSendingService {
     emp_assert( std::all_of(
       std::begin( send_amounts ),
       std::end( send_amounts ),
-      [](const auto val){ return std::isfinite(val) && ( val >= 0 ); }
+      [](const auto val){ return std::isfinite(val); }
+    ) );
+    emp_assert( std::all_of(
+      std::begin( send_amounts ),
+      std::end( send_amounts ),
+      [](const auto val){ return val >= 0.0f; }
     ) );
 
     // check that sum send amount doesn't exceed stockpiled amount
@@ -282,8 +299,19 @@ struct ResourceSendingService {
     emp_assert( std::all_of(
       cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
       cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
-      [](const auto amt){ return std::isfinite(amt) && ( amt >= 0 ); }
+      [](const auto amt){ return std::isfinite(amt); }
     ) );
+    emp_assert( std::all_of(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      [](const auto amt){ return amt >= 0.0f; }
+    ) );
+    emp_assert( std::none_of(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      []( const auto val ){ return std::isnan( val ); }
+    ) );
+
 
   }
 

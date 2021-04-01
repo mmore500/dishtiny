@@ -11,6 +11,7 @@
 #include "../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/polyfill/span.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/algorithm/sloppy_copy.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_instruction_category.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/program/Program.hpp"
 
 #include "../configbyroot/root_mutation_configs.hpp"
@@ -30,10 +31,10 @@ namespace dish2 {
 template<typename Spec>
 class Genome {
 
+  template<bool Scramble>
   void ApplyProgramSequenceMutation(
     const bool do_insertion, const bool do_deletion
   ) {
-    using inst_t = typename program_t::value_type;
 
     const bool is_severe = sgpl::tlrand.Get().P(
       dish2::cfg.SEVERE_SEQUENCE_MUTATION_RATE()
@@ -53,7 +54,7 @@ class Genome {
 
     // TODO perform the sloppy copy elsewhere for efficiency's sake?
     // do severe sequence mutation
-    auto [copy, num_muts] = sgpl::sloppy_copy<inst_t, 0>(
+    auto [copy, num_muts] = sgpl::sloppy_copy<program_t, Scramble, 0>(
       program,
       defect_rate,
       { -defect_bound * do_insertion, defect_bound * do_deletion },
@@ -106,14 +107,18 @@ public:
   , program( dish2::cfg.PROGRAM_START_SIZE() )
   , root_id( std::in_place )
   , stint_root_id( std::in_place ) {
+    using sgpl_spec_t = typename Spec::sgpl_spec_t;
     program.RotateGlobalAnchorToFront();
+    program = sgpl::nop_out_instruction_category<sgpl_spec_t>(
+      program, "apoptosis"
+    );
   }
 
   bool operator==(const Genome& other) const {
-    // ignore kin_group_epoch_stamps,
     return std::tuple{
       event_tags,
       generation_counter,
+      kin_group_epoch_stamps,
       kin_group_id,
       mutation_counter,
       program,
@@ -122,6 +127,7 @@ public:
     } == std::tuple{
       other.event_tags,
       other.generation_counter,
+      other.kin_group_epoch_stamps,
       other.kin_group_id,
       other.mutation_counter,
       other.program,
@@ -131,11 +137,11 @@ public:
   }
 
   bool operator<(const Genome& other) const {
-    // ignore kin_group_epoch_stamps,
     return std::tuple{
       event_tags,
       generation_counter,
       kin_group_id,
+      kin_group_epoch_stamps,
       mutation_counter,
       program,
       root_id,
@@ -144,6 +150,7 @@ public:
       other.event_tags,
       other.generation_counter,
       other.kin_group_id,
+      other.kin_group_epoch_stamps,
       other.mutation_counter,
       other.program,
       other.root_id,
@@ -177,20 +184,23 @@ public:
 
   void DoMutation() {
     mutation_counter.RecordMutationOccurrence();
-    ApplyProgramSequenceMutation(true, true);
+    ApplyProgramSequenceMutation<true>(true, true);
+    ApplyProgramSequenceMutation<false>(true, true);
     ApplyPointMutation();
     RectifyAfterMutation();
   }
 
   // for experiments that isolate insertion mutations
   void DoInsertionMutation() {
-    ApplyProgramSequenceMutation(true, false);
+    ApplyProgramSequenceMutation<true>(true, false);
+    ApplyProgramSequenceMutation<false>(true, false);
     RectifyAfterMutation();
   }
 
   // for experiments that isolate deletion mutations
   void DoDeletionMutation() {
-    ApplyProgramSequenceMutation(false, true);
+    ApplyProgramSequenceMutation<true>(false, true);
+    ApplyProgramSequenceMutation<false>(false, true);
     RectifyAfterMutation();
   }
 
@@ -201,6 +211,7 @@ public:
   }
 
   void SetupSeededGenotype() {
+    kin_group_epoch_stamps = dish2::KinGroupEpochStamps<Spec>{};
     kin_group_id = dish2::KinGroupID<Spec>{ std::in_place };
     stint_root_id = dish2::RootID{ std::in_place };
   }
@@ -211,6 +222,7 @@ public:
     CEREAL_NVP( generation_counter ),
     CEREAL_NVP( mutation_counter ),
     CEREAL_NVP( kin_group_id ),
+    CEREAL_NVP( kin_group_epoch_stamps ),
     CEREAL_NVP( program ),
     CEREAL_NVP( root_id ),
     CEREAL_NVP( stint_root_id )
