@@ -7,6 +7,8 @@
 #include <set>
 #include <utility>
 
+#include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
+#include "../../../third-party/conduit/include/uitsl/debug/err_audit.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
 #include "../cell/cardinal_iterators/ReceivedResourceFromWrapper.hpp"
@@ -50,6 +52,20 @@ struct ResourceReceivingService {
       ).size() == 1
     ));
 
+    // dead cells should refund received resources and then return
+    if ( !cell.IsAlive() ) {
+      uitsl::for_each(
+        cell.template begin<dish2::ResourceNodeInputWrapper<spec_t>>(),
+        cell.template end<dish2::ResourceNodeInputWrapper<spec_t>>(),
+        cell.template begin<dish2::ResourceNodeOutputWrapper<spec_t>>(),
+        [](auto& input, auto& output){ uitsl_err_audit(!
+          output.TryPut( input.JumpGet() )
+        ); }
+      );
+      return;
+    }
+
+
     // how much resource have we received across all cardinals?
     const float received_amount = std::accumulate(
       cell.template begin<dish2::ResourceNodeInputWrapper<spec_t>>(),
@@ -59,9 +75,6 @@ struct ResourceReceivingService {
     );
 
     emp_assert( std::isfinite( received_amount ), received_amount );
-
-    // dead cells receive resource but do not absorb it
-    if ( !cell.IsAlive() ) return;
 
     // how much do we already have?
     const float current_amount
