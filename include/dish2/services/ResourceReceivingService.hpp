@@ -55,7 +55,7 @@ struct ResourceReceivingService {
       cell.template begin<dish2::ResourceNodeInputWrapper<spec_t>>(),
       cell.template end<dish2::ResourceNodeInputWrapper<spec_t>>(),
       float{},
-      [](const auto& cumulative_sum, auto& addend){ return addend.JumpGet(); }
+      [](const float sum, auto& input){ return sum + input.JumpGet(); }
     );
 
     emp_assert( std::isfinite( received_amount ), received_amount );
