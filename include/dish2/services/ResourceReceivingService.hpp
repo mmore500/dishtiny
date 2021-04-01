@@ -75,6 +75,7 @@ struct ResourceReceivingService {
     );
 
     emp_assert( std::isfinite( received_amount ), received_amount );
+    emp_assert( received_amount >= 0.0f, received_amount );
 
     // how much do we already have?
     const float current_amount
@@ -82,11 +83,13 @@ struct ResourceReceivingService {
 
     emp_assert( std::isfinite( current_amount ), current_amount );
 
+    const float updated_amount = received_amount + current_amount;
+
     // update stockpiles
     std::fill(
       cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
       cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
-      received_amount + current_amount
+      updated_amount
     );
 
     // check resource stockpile consistency
