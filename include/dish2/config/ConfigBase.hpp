@@ -315,7 +315,7 @@ EMP_BUILD_CONFIG(
   VALUE(TEST_INTERROOT_PHENOTYPE_DIFFERENTIATION, bool, false,
     "[NATIVE] Should we test for phenotype differentiation between roots?"
   ),
-  VALUE(DRAWINGS_WRITE, bool, false,
+  VALUE(ALL_DRAWINGS_WRITE, bool, false,
     "[NATIVE] Should we generate and record drawings of the final state of the simulation? Must also enable DATA_DUMP."
   ),
   VALUE(DATA_DUMP, bool, false,
@@ -352,17 +352,18 @@ EMP_BUILD_CONFIG(
   VALUE(RUNNING_LOG_DURATION, size_t, 4,
     "How many purge epochs should we keep events in the running log?"
   ),
-  VALUE(DRAWING_FREQ, size_t, 0,
+  VALUE(SELECTED_DRAWINGS_FREQ, size_t, 0,
     "How often should we draw the current world?"
   ),
   VALUE(DRAWING_WIDTH, double, 2000.0,
-    "What should the width of the drawings be?"
+    "What should the width of the drawings be, in pixels?"
   ),
   VALUE(DRAWING_HEIGHT, double, 2000.0,
-    "What should the height of the drawings be?"
+    "What should the height of the drawings be, in pixels?"
   ),
-  VALUE(DRAWINGS, std::string, "",
-    "What drawings should be make?"
+  VALUE(SELECTED_DRAWINGS, std::string, "",
+    "What drawings should be drawn? "
+    "Provide slugified drawer names seperated by colons."
   ),
   // VALUE(UPDATES_PER_CHUNK, size_t, 64,
   //   "[NATIVE] "

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_RECORD_WRITE_DRAWINGS_HPP_INCLUDE
-#define DISH2_RECORD_WRITE_DRAWINGS_HPP_INCLUDE
+#ifndef DISH2_RECORD_WRITE_ALL_DRAWINGS_HPP_INCLUDE
+#define DISH2_RECORD_WRITE_ALL_DRAWINGS_HPP_INCLUDE
 
 #include <chrono>
 #include <future>
@@ -17,29 +17,17 @@
 namespace dish2 {
 
 template< typename Spec >
-void write_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
+void write_all_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
-  using polymorphic_drawers_t = typename dish2::DrawerCollection<Spec>::polymorphic_drawers_t;
-  
-  thread_local emp::vector<polymorphic_drawers_t> drawers;
-  
+  dish2::DrawerCollection<Spec> drawers( thread_world );
+
   // setup drawers as passed in args
-  thread_local std::once_flag make_drawers_once;
-  std::call_once(make_drawers_once, [&thread_world, &drawers](){
-    emp::vector<std::string> drawing_names;
-    emp::slice(cfg.DRAWINGS(), drawing_names, ':');
-
-    dish2::DrawerCollection<Spec> collection( thread_world );
-
-    drawers = collection.MakePolymorphicDrawers(drawing_names);
-  });
-
-  const auto parent_thread_idx = dish2::thread_idx;
+    const auto parent_thread_idx = dish2::thread_idx;
 
   // drawings occasionally hang, so add a time out
   std::packaged_task<void()> task( [&](){
     dish2::thread_idx = parent_thread_idx;
-    for (auto& drawer : drawers) drawer.SaveToFile();
+    drawers.SaveToFile();
   } );
 
   auto future = task.get_future();
@@ -53,7 +41,7 @@ void write_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
     worker.detach(); // we leave the thread still running
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " drawings write timed out" << '\n';
+      << " all drawings write timed out" << '\n';
   }
 
   thread_local std::once_flag once_flag;
@@ -61,11 +49,11 @@ void write_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
-      << " wrote drawings" << '\n';
+      << " wrote all drawings" << '\n';
   });
 
 }
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_RECORD_WRITE_DRAWINGS_HPP_INCLUDE
+#endif // #ifndef DISH2_RECORD_WRITE_ALL_DRAWINGS_HPP_INCLUDE

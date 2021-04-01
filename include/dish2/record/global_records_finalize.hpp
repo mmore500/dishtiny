@@ -97,7 +97,10 @@ void global_records_finalize() {
   UITSL_Barrier( MPI_COMM_WORLD );
 
   if ( uitsl::is_root() ) {
-    if ( dish2::cfg.DRAWINGS_WRITE() ) finalize_drawings();
+    if (
+      dish2::cfg.ALL_DRAWINGS_WRITE()
+      || dish2::cfg.SELECTED_DRAWINGS().size()
+    ) finalize_drawings();
     finalize_artifacts();
     finalize_data();
     finalize_zip();
