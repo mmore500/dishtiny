@@ -38,9 +38,8 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx_rtd_theme',
-    # TODO disabled due to excessive memory consumption on RTD
-    # 'breathe',
-    # 'exhale',
+    'breathe',
+    'exhale',
     'myst_parser',
 ]
 
