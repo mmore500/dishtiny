@@ -9,8 +9,8 @@
 #include <utility>
 #include <variant>
 
-#include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../../third-party/Empirical/include/emp/base/array.hpp"
+#include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../config/thread_idx.hpp"
 

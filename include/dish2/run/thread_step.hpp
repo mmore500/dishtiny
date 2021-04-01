@@ -9,8 +9,8 @@
 #include "../../../third-party/conduit/include/uitsl/parallel/ThreadIbarrierFactory.hpp"
 
 #include "../config/cfg.hpp"
-#include "../record/write_phylogenetic_root_abundances.hpp"
 #include "../record/write_drawings.hpp"
+#include "../record/write_phylogenetic_root_abundances.hpp"
 
 #include "print_progress.hpp"
 #include "setup_thread_local_random.hpp"
