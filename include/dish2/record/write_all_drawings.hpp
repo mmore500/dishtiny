@@ -22,7 +22,7 @@ void write_all_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
   dish2::DrawerCollection<Spec> drawers( thread_world );
 
   // setup drawers as passed in args
-    const auto parent_thread_idx = dish2::thread_idx;
+  const auto parent_thread_idx = dish2::thread_idx;
 
   // drawings occasionally hang, so add a time out
   std::packaged_task<void()> task( [&](){
