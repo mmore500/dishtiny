@@ -139,9 +139,9 @@ This repository's GitHub Actions integration zips up configpacks corresponding t
 
 The rationale behind fetching configuration assets from a url is to enable straightforward integration with the DISHTINY web viewer.
 
-## Follow-up Experiments Launch Every 10 Stints
+## Follow-up Experiments Launch Every Ten Stints
 
-Every 10 stints (including stint 0), the stint evolve job will launch a bevvy of follow-up jobs in addition to submitting its successor job.
+Every ten stints (including stint 0), the stint evolve job will launch a bevvy of follow-up jobs in addition to submitting its successor job.
 These jobs do things like grow the most abundant genotype in monoculture, perform phenotype-equivalent nopouts, and launch competitions to assess the number of distinct environmental states genomes are interacting with.
 
 ## Slurm Stoker
@@ -294,7 +294,7 @@ You can pull one up from its `SLURM_JOB_ID` via
 less /mnt/scratch/${USER}/slurmlogs/*<slurm job id>*
 ```
 
-::bangbang::
+::bangbang:: ::bangbang::
 You'll need to manually create the `/mnt/scratch/${USER}/slurmlogs/` folder before starting to run jobs.
 Otherwise, SLURM will quietly refuse to run any DISHTINY jobs for you.
 
@@ -309,7 +309,7 @@ If you want to resubmit a particular job, you can just
 sbatch /mnt/scratch/${USER}/slurmscripts/*<slurm job id>*
 ```
 
-::bangbang::
+::bangbang:: ::bangbang::
 The `slurmlogs/` and `slurmscripts/` might start to fill up your file count quota.
 You should Pushover notifications if your file count quota comes close to running out.
 Run `./script/purge_logs.sh` to clear out old logs and runscripts.
