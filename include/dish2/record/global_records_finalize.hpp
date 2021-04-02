@@ -34,7 +34,7 @@ void create_deduplicated_drawing_archive() {
   ) );
 
   const std::string zip_command( emp::to_string(
-    "XZ_OPT=-e9 tar -cJf ",
+    "tar -cJf ",
     dish2::make_zip_path( dish2::make_drawing_archive_filename() ),
     " outdrawings/"
   ) );
