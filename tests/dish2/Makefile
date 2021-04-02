@@ -3,6 +3,7 @@ TARGET_NAMES += config
 TARGET_NAMES += genome
 TARGET_NAMES += operations
 TARGET_NAMES += peripheral
+TARGET_NAMES += record
 TARGET_NAMES += runninglog
 TARGET_NAMES += services
 TARGET_NAMES += spec
