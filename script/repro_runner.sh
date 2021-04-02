@@ -350,6 +350,9 @@ function on_error() {
   echo "---------------------"
   echo
 
+  # don't exit on further failures
+  set +e
+
   # adapted from https://unix.stackexchange.com/a/504829
   awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$2 $0
 
