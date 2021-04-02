@@ -20,7 +20,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
-#include "../utility/animate_script.hpp"
+#include "../py/dump_animate_frames_script.hpp"
 #include "../utility/try_with_timeout.hpp"
 
 #include "make_filename/make_drawing_archive_filename.hpp"
@@ -110,7 +110,7 @@ void stitch_video() {
   std::cout << "stitch_video begin" << '\n';
   const std::string command = emp::to_string(
     "python3 ",
-    dish2::py::setup_script_animate(),
+    dish2::dump_animate_frames_script(),
     " ",
     dish2::cfg.VIDEO_FPS()
   );
