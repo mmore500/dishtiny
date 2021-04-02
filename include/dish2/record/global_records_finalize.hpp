@@ -19,12 +19,13 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
+#include "../utility/animate_script.hpp"
+
 #include "create_montage.hpp"
 #include "make_filename/make_drawing_archive_filename.hpp"
 #include "make_filename/make_drawing_path.hpp"
 #include "make_filename/make_montage_filename.hpp"
 #include "make_filename/make_zip_path.hpp"
-#include "../utility/animate_script.hpp"
 
 namespace dish2 {
 
