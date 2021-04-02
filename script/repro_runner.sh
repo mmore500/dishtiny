@@ -393,8 +393,9 @@ function on_error() {
   echo "cat /proc/net/dev" && cat /proc/net/dev
   # time curl -o /dev/null http://speedtest-blr1.digitalocean.com/10mb.test
 
-  # upload log files
-  on_exit
+  # upload log files, with weird hack to prevent premature exit
+  on_exit &
+  wait
 
   echo "Sending Pushover Notification"
   bash <(curl https://raw.githubusercontent.com/mmore500/pushover.sh/master/pushover.sh) \
