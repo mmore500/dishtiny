@@ -10,7 +10,6 @@
 #include "../../../third-party/conduit/include/uitsl/debug/err_verify.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/audited_routines.hpp"
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_filter.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_max.hpp"
@@ -77,9 +76,6 @@ void create_montage() {
 
   // montage is returning an error code of 1, so don't verify
   uitsl::err_discard( std::system(command.c_str()) );
-
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " created montage" << '\n';
 
 }
 

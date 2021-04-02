@@ -21,11 +21,11 @@
 
 #include "../utility/animate_script.hpp"
 
-#include "create_montage.hpp"
 #include "make_filename/make_drawing_archive_filename.hpp"
 #include "make_filename/make_drawing_path.hpp"
 #include "make_filename/make_montage_filename.hpp"
 #include "make_filename/make_zip_path.hpp"
+#include "try_create_montage.hpp"
 
 namespace dish2 {
 
@@ -50,7 +50,7 @@ void finalize_drawings() {
   std::cout << "finalize_drawings begin" << '\n';
   // cd doesn't propagate out of std::system call
   create_deduplicated_drawing_archive();
-  dish2::create_montage();
+  dish2::try_create_montage();
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
     "cd outdrawings && for f in *a=*; do"
