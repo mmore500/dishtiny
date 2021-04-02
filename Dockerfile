@@ -4,8 +4,11 @@ USER root
 
 COPY . /opt/dishtiny
 
+# checking out fails unless we deinit and then init
 RUN \
   git -C /opt/dishtiny remote --verbose \
+    && \
+  git -C /opt/dishtiny submodule deinit . \
     && \
   git -C /opt/dishtiny submodule update --init --recursive \
     && \
