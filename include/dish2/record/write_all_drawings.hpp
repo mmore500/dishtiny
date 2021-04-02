@@ -3,13 +3,12 @@
 #define DISH2_RECORD_WRITE_ALL_DRAWINGS_HPP_INCLUDE
 
 #include <chrono>
-#include <future>
-#include <mutex>
 #include <utility>
 
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
-#include "../config/thread_idx.hpp"
+#include "../utility/try_with_timeout.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "drawings/DrawerCollection.hpp"
@@ -21,36 +20,25 @@ void write_all_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
   dish2::DrawerCollection<Spec> drawers( thread_world );
 
-  // setup drawers as passed in args
-  const auto parent_thread_idx = dish2::thread_idx;
-
-  // drawings occasionally hang, so add a time out
-  std::packaged_task<void()> task( [&](){
-    dish2::thread_idx = parent_thread_idx;
-    drawers.SaveToFile();
-  } );
-
-  auto future = task.get_future();
-  std::thread worker( std::move(task) );
-
   using namespace std::chrono_literals;
-  if (future.wait_for( 5min ) != std::future_status::timeout) {
-    worker.join();
-    future.get(); // this will propagate exception if any
+
+  if (
+    dish2::try_with_timeout( [&](){ drawers.SaveToFile(); }, 5min )
+  ) {
+
+    thread_local std::once_flag once_flag;
+    std::call_once(once_flag, [](){
+      std::cout << "proc " << uitsl::get_proc_id()
+        << " thread " << dish2::thread_idx
+        << " wrote all drawings" << '\n';
+    });
+
   } else {
-    worker.detach(); // we leave the thread still running
+
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
       << " all drawings write timed out" << '\n';
   }
-
-  thread_local std::once_flag once_flag;
-  std::call_once(once_flag, [](){
-
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " wrote all drawings" << '\n';
-  });
 
 }
 
