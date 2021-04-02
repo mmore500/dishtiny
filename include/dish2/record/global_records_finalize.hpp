@@ -3,6 +3,7 @@
 #define DISH2_RECORD_GLOBAL_RECORDS_FINALIZE_HPP_INCLUDE
 
 #include <algorithm>
+#include <chrono>
 #include <cstdlib>
 #include <string>
 
@@ -20,6 +21,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../utility/animate_script.hpp"
+#include "../utility/try_with_timeout.hpp"
 
 #include "make_filename/make_drawing_archive_filename.hpp"
 #include "make_filename/make_drawing_path.hpp"
@@ -104,7 +106,8 @@ void finalize_zip() {
   std::cout << "finalize_zip complete" << '\n';
 }
 
-void output_video() {
+void stitch_video() {
+  std::cout << "stitch_video begin" << '\n';
   const std::string command = emp::to_string(
     "python3 ",
     dish2::py::setup_script_animate(),
@@ -114,12 +117,26 @@ void output_video() {
   uitsl::err_verify( std::system( command.c_str() ) );
 }
 
+void try_stitch_video() {
+
+  using namespace std::chrono_literals;
+
+  if ( dish2::try_with_timeout( stitch_video, 10min ) ) {
+    std::cout << "proc " << uitsl::get_proc_id()
+      << " stitch_video succeeded" << '\n';
+  } else {
+    std::cout << "proc " << uitsl::get_proc_id()
+      << " stitch_video timed out" << '\n';
+  }
+
+}
+
 void global_records_finalize() {
 
   UITSL_Barrier( MPI_COMM_WORLD );
 
   if ( uitsl::is_root() ) {
-    if ( dish2::cfg.OUTPUT_VIDEO() ) output_video();
+    if ( dish2::cfg.OUTPUT_VIDEO() ) try_stitch_video();
     if (
       dish2::cfg.ALL_DRAWINGS_WRITE()
       || dish2::cfg.SELECTED_DRAWINGS().size()
