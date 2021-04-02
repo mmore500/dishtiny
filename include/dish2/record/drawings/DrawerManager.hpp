@@ -110,7 +110,7 @@ struct DrawerManager<FirstDrawer, SubsequentDrawers...> {
           }
         );
 
-        std::cout << "created drawer for " << emp::slugify(name) << '\n';
+        std::cout << "created drawer for " << emp::slugify(name) << "\n";
 
         emp_always_assert(
           found != std::end( lookup ), emp::slugify(name)
