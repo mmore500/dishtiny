@@ -36,6 +36,7 @@ def summarize_ranges(integers):
         str(from_)
         for from_, to, by in to_ranges(integers)
     )
+
 def is_numeric(val):
     return isinstance(val, int) or (isinstance(val, float) and not isnan(val)) or (isinstance(val, str) and val.isdigit())
 
