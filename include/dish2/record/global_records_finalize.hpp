@@ -32,6 +32,7 @@ void create_deduplicated_drawing_archive() {
   uitsl::err_verify( std::system(
     "rdfind -makesymlinks true -makeresultsfile false outdrawings/"
   ) );
+  std::cout << "rdfind deduplication complete" << '\n';
 
   const std::string zip_command( emp::to_string(
     "tar -cJf ",
@@ -39,10 +40,12 @@ void create_deduplicated_drawing_archive() {
     " outdrawings/"
   ) );
   uitsl::err_verify( std::system( zip_command.c_str() ) );
+  std::cout << "drawing archive zip complete" << '\n';
 
 }
 
 void finalize_drawings() {
+  std::cout << "finalize_drawings begin" << '\n';
   // cd doesn't propagate out of std::system call
   create_deduplicated_drawing_archive();
   dish2::create_montage();
@@ -53,9 +56,11 @@ void finalize_drawings() {
     "  a proc replicate thread update stint series treatment variation ext"
     "; done"
   "'" ) );
+  std::cout << "finalize_drawings complete" << '\n';
 }
 
 void finalize_artifacts() {
+  std::cout << "finalize_artifacts begin" << '\n';
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
@@ -66,9 +71,11 @@ void finalize_artifacts() {
     "    $(echo \"$f\" | grep -o \"root_id%[[:digit:]]\\+\")"
     "; done"
   "'" ) );
+  std::cout << "finalize_artifacts complete" << '\n';
 }
 
 void finalize_data() {
+  std::cout << "finalize_data begin" << '\n';
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
@@ -79,9 +86,11 @@ void finalize_data() {
     "    $(echo \"$f\" | grep -o \"root_id:[[:digit:]]\\+\")"
     "; done"
   "'" ) );
+  std::cout << "finalize_artifacts complete" << '\n';
 }
 
 void finalize_zip() {
+  std::cout << "finalize_zip begin" << '\n';
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
@@ -90,6 +99,7 @@ void finalize_zip() {
     "    a proc replicate stint series thread treatment ext"
     "; done"
   "'" ) );
+  std::cout << "finalize_zip complete" << '\n';
 }
 
 void global_records_finalize() {
