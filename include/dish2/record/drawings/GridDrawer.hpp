@@ -26,7 +26,7 @@ class GridDrawer {
 
   Artist artist;
 
-  emp::web::Canvas canvas{ cfg.DRAWING_WIDTH(), cfg.DRAWING_HEIGHT() };
+  emp::web::Canvas canvas{ cfg.DRAWING_WIDTH_PX(), cfg.DRAWING_HEIGHT_PX() };
 
   std::reference_wrapper<const dish2::ThreadWorld<Spec>> thread_world;
 
