@@ -1,6 +1,6 @@
 #pragma once
-
-
+#ifndef DISH2_UTILITY_ANIMATE_SCRIPT_HPP_INCLUDE
+#define DISH2_UTILITY_ANIMATE_SCRIPT_HPP_INCLUDE
 #include <filesystem>
 #include <fstream>
 #include <string>
@@ -25,4 +25,4 @@ const std::string script_animate_frames{
     }
 }
 
-
+#endif // #ifndef DISH2_UTILITY_ANIMATE_SCRIPT_HPP_INCLUDE

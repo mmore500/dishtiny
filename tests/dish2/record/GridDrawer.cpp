@@ -3,10 +3,10 @@
 #include "Catch/single_include/catch2/catch.hpp"
 
 #include "dish2/record/drawings/GridDrawer.hpp"
-#include "dish2/world/ThreadWorld.hpp"
-#include "dish2/world/ProcWorld.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/viz/artists/DummyArtist.hpp"
+#include "dish2/world/ProcWorld.hpp"
+#include "dish2/world/ThreadWorld.hpp"
 
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 
