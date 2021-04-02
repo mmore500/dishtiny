@@ -3,6 +3,7 @@
 #define DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_WRITABLESTATE_HPP_INCLUDE
 
 #include <algorithm>
+#include <cassert>
 #include <cstring>
 #include <limits>
 #include <string>
@@ -41,6 +42,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
 
   void AddTo(const size_t idx, const float val) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_ADD_TO_STATE_CASE_PAYLOAD(N) \
     case N: \
       if constexpr ( N  < parent_size ) { \
@@ -50,7 +52,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         const target_t clamped = uitsl::clamp_cast< target_t >( val ); \
         this->parent_t::template GetByIndex<N>() += clamped; \
       } else { \
-        emp_assert( false, N ); \
+        assert( false && N ); \
         __builtin_unreachable(); \
       } \
     break;
@@ -72,6 +74,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
 
   void Multiply(const size_t idx, const float val) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_MULTIPLY_STATE_CASE_PAYLOAD(N) \
     case N: \
       if constexpr ( N  < parent_size ) { \
@@ -81,7 +84,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
         const target_t clamped = uitsl::clamp_cast< target_t >( val ); \
         this->parent_t::template GetByIndex<N>() *= clamped; \
       } else { \
-        emp_assert( false, N ); \
+        assert( false && N ); \
         __builtin_unreachable(); \
       } \
     break;
@@ -103,6 +106,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
 
   void Write(const size_t idx, const float val) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_WRITABLE_STATE_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_size ) { \
@@ -112,7 +116,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
           const target_t clamped = uitsl::clamp_cast< target_t >( val ); \
           this->parent_t::template GetByIndex<N>() = clamped; \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         } \
       break;
@@ -134,13 +138,14 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
 
   void Assign(const size_t idx, const WritableState& other) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_WRITABLE_STATE_ASSIGN_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_size ) { \
           this->parent_t::template GetByIndex<N>() \
           = static_cast<parent_t>(other).template GetByIndex<N>(); \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         } \
       break;
@@ -164,6 +169,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
 
   void Swap(const size_t idx, WritableState& other) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_WRITABLE_STATE_SWAP_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_size ) { \
@@ -172,7 +178,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
             static_cast<parent_t>(other).template GetByIndex<N>() \
           ); \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         } \
       break;
@@ -196,6 +202,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
 
   static std::string GetLeafTypeName( const size_t idx ) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_WRITABLE_STATE_NAME_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_size ) { \
@@ -203,7 +210,7 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
             typename parent_t::template leaf_t<N> \
           >::Get(); \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         }
 
@@ -229,12 +236,13 @@ struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
 
   static size_t GetLeafIndex( const size_t idx ) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_WRITABLE_STATE_INDEX_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_size ) { \
           return parent_t::template GetLeafIndex<N>(); \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         }
 

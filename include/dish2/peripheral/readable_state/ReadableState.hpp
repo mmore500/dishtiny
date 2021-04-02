@@ -2,6 +2,7 @@
 #ifndef DISH2_PERIPHERAL_READABLE_STATE_READABLESTATE_HPP_INCLUDE
 #define DISH2_PERIPHERAL_READABLE_STATE_READABLESTATE_HPP_INCLUDE
 
+#include <cassert>
 #include <cstring>
 #include <limits>
 
@@ -36,12 +37,13 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
   template<size_t Templateify=0>
   double Read(const size_t idx) const {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_READABLE_STATE_CASE_PAYLOAD(N) \
       case N: \
         if constexpr (N < parent_t::GetSize()){ \
           return this->template Get<N + Templateify>(); \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         } \
       break;
@@ -66,13 +68,14 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
 
   void Assign(const size_t idx, const ReadableState& other) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_READABLE_STATE_ASSIGN_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_size ) { \
           this->parent_t::template GetByIndex<N>() \
           = static_cast<parent_t>(other).template GetByIndex<N>(); \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         } \
       break;
@@ -96,6 +99,7 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
 
   void Swap(const size_t idx, ReadableState& other) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_READABLE_STATE_SWAP_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_size ) { \
@@ -104,7 +108,7 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
             static_cast<parent_t>(other).template GetByIndex<N>() \
           ); \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         } \
       break;
@@ -128,6 +132,7 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
 
   static std::string GetLeafTypeName( const size_t idx ) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_READABLE_STATE_NAME_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_t::GetSize() ) { \
@@ -135,7 +140,7 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
             typename parent_t::template leaf_t<N> \
           >::Get(); \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         }
 
@@ -161,12 +166,13 @@ struct ReadableState : public internal::readable_state_parent_t<Spec> {
 
   static size_t GetLeafIndex( const size_t idx ) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_READABLE_STATE_INDEX_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_t::GetSize() ) { \
           return parent_t::template GetLeafIndex<N>(); \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         }
 
