@@ -2,7 +2,7 @@ toml==0.10.1
 markdown2==2.3.9
 j2cli[yaml]==0.3.10
 osfclient==0.0.5
-keyname==0.3.0
+keyname==0.4.1
 exdown==0.7.0
 pandas==1.1.2
 seaborn==0.11.0
