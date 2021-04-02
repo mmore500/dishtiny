@@ -22,7 +22,7 @@ def get_hexsha():
 
     try:
         repo = git.Repo(
-            f'{os.getenv('REPRO_DIR')}/dishtiny/'
+            f'{os.getenv("REPRO_DIR")}/dishtiny/'
         )
         return repo.head.object.hexsha[:7]
     except Exception as e:
