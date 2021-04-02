@@ -391,7 +391,7 @@ function on_error() {
   echo "curl -I https://google.com" && curl -I https://google.com
   echo "ipcs" && ipcs
   echo "cat /proc/net/dev" && cat /proc/net/dev
-  time curl -o /dev/null http://speedtest-blr1.digitalocean.com/10mb.test
+  # time curl -o /dev/null http://speedtest-blr1.digitalocean.com/10mb.test
 
   # upload log files
   on_exit
