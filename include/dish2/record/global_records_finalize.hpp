@@ -24,6 +24,7 @@
 #include "make_filename/make_drawing_path.hpp"
 #include "make_filename/make_montage_filename.hpp"
 #include "make_filename/make_zip_path.hpp"
+#include "../utility/animate_script.hpp"
 
 namespace dish2 {
 
@@ -102,11 +103,22 @@ void finalize_zip() {
   std::cout << "finalize_zip complete" << '\n';
 }
 
+void output_video() {
+  const std::string command = emp::to_string(
+    "python3 ",
+    dish2::py::setup_script_animate(),
+    " ",
+    dish2::cfg.VIDEO_FPS()
+  );
+  uitsl::err_verify( std::system( command.c_str() ) );
+}
+
 void global_records_finalize() {
 
   UITSL_Barrier( MPI_COMM_WORLD );
 
   if ( uitsl::is_root() ) {
+    if ( dish2::cfg.OUTPUT_VIDEO() ) output_video();
     if (
       dish2::cfg.ALL_DRAWINGS_WRITE()
       || dish2::cfg.SELECTED_DRAWINGS().size()
