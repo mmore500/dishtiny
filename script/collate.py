@@ -2,6 +2,7 @@
 
 import boto3
 from io import StringIO
+from iterdub import iterdub as ib
 import itertools
 from keyname import keyname as kn
 import multiprocessing as mp
@@ -13,39 +14,6 @@ import tempfile
 from tqdm.contrib.concurrent import process_map
 from math import gcd
 from functools import reduce
-
-# adapted from https://stackoverflow.com/a/50830937
-def find_gcd(list_):
-    x = reduce(gcd, list_)
-    return x
-
-# adapted from https://stackoverflow.com/a/43091576
-def to_ranges(integers):
-    integers = sorted(set(integers))
-    by = find_gcd( integers ) or 1
-    for key, group in itertools.groupby(
-        enumerate(integers),
-        lambda t: (t[1] / by - t[0]),
-    ):
-        group = list(group)
-        yield group[0][1], group[-1][1], by
-
-def summarize_ranges(integers):
-    return '_'.join(
-        f'{from_}-{to}{f"%{by}" if by != 1 else ""}'
-        if from_ != to else
-        str(from_)
-        for from_, to, by in to_ranges(integers)
-    )
-
-def summarize(values):
-    vals=list(values)
-    if all(value.isdigit() for value in vals):
-        return summarize_ranges(map(int, vals))
-    elif len(set(vals)) < 3:
-        return '~'.join( sorted(set(vals)) )
-    else:
-        return f'num_unique%{len(set(vals))}'
 
 ################################################################################
 print(                      )
@@ -150,7 +118,7 @@ common_keys = set.intersection(*[
 
 out_filename = kn.pack({
     **{
-        key : summarize(
+        key : ib.dub(
             kn.unpack(match)[key]
             for match in matches
         )

@@ -66,6 +66,8 @@ idna==2.10
     #   yarl
 image-slicer==2.1.1
     # via -r requirements.in
+iterdub==0.1.0
+    # via -r requirements.in
 iterpop==0.3.4
     # via -r requirements.in
 j2cli[yaml]==0.3.10
