@@ -25,7 +25,7 @@ except:
 try:
     max_frames = int(sys.argv[2])
 except:
-    max_frames = 10
+    max_frames = 1500
 
 df = pd.DataFrame.from_dict([kn.unpack(filename) for filename in filenames])
 
