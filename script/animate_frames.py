@@ -38,7 +38,7 @@ def make_video( df, max_frames, frames_per_second, ):
         **out_attrs, **{ 'ext' : '.mp4', }
     })
     out_path = (
-        f'outvideo/{out_filename}'
+        f'outvideos/{out_filename}'
         if os.path.isdir('./outvideos/')
         else out_filename
     )
