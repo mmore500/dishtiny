@@ -355,10 +355,10 @@ EMP_BUILD_CONFIG(
   VALUE(SELECTED_DRAWINGS_FREQ, size_t, 0,
     "How often should we draw the current world?"
   ),
-  VALUE(DRAWING_WIDTH_PX, double, 2000.0,
+  VALUE(DRAWING_WIDTH_PX, double, 500.0,
     "What should the width of the drawings be, in pixels?"
   ),
-  VALUE(DRAWING_HEIGHT_PX, double, 2000.0,
+  VALUE(DRAWING_HEIGHT_PX, double, 500.0,
     "What should the height of the drawings be, in pixels?"
   ),
   VALUE(SELECTED_DRAWINGS, std::string, "",
@@ -368,7 +368,7 @@ EMP_BUILD_CONFIG(
   VALUE(OUTPUT_VIDEO, bool, false,
     "Should we stich the output images into a video? Only valid if DRAWING_FREQ is not 0."
   ),
-  VALUE(VIDEO_FPS, size_t, 15,
+  VALUE(VIDEO_FPS, size_t, 16,
     "How many frames per second should the video be?"
   ),
   // VALUE(UPDATES_PER_CHUNK, size_t, 64,
