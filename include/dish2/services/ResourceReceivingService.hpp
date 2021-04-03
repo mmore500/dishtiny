@@ -14,6 +14,7 @@
 #include "../cell/cardinal_iterators/ReceivedResourceFromWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceInputPeekWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceNodeInputWrapper.hpp"
+#include "../cell/cardinal_iterators/ResourceNodeOutputWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
