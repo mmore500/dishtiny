@@ -10,6 +10,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../config/thread_idx.hpp"
+#include "../utility/try_with_timeout.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "drawings/DrawerCollection.hpp"
@@ -32,38 +33,27 @@ void write_selected_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
   }();
 
-  const auto parent_thread_idx = dish2::thread_idx;
-
   // otherwise, packaged task gets its own thread_local drawers
   auto& target_drawers = drawers;
 
   // drawings occasionally hang, so add a time out
-  std::packaged_task<void()> task( [&](){
-    dish2::thread_idx = parent_thread_idx;
-    for (auto& drawer : target_drawers) drawer.SaveToFile();
-  } );
-
-  auto future = task.get_future();
-  std::thread worker( std::move(task) );
-
   using namespace std::chrono_literals;
-  if (future.wait_for( 5min ) != std::future_status::timeout) {
-    worker.join();
-    future.get(); // this will propagate exception if any
+  const bool success = dish2::try_with_timeout(
+    [&](){ for (auto& drawer : target_drawers) drawer.SaveToFile(); }, 5min
+  );
+
+  if ( success ) {
+    thread_local std::once_flag once_flag;
+    std::call_once(once_flag, [](){
+      std::cout << "proc " << uitsl::get_proc_id()
+        << " thread " << dish2::thread_idx
+        << " wrote selected drawings" << '\n';
+    });
   } else {
-    worker.detach(); // we leave the thread still running
     std::cout << "proc " << uitsl::get_proc_id()
       << " thread " << dish2::thread_idx
       << " selected drawings write timed out" << '\n';
   }
-
-  thread_local std::once_flag once_flag;
-  std::call_once(once_flag, [](){
-
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " wrote selected drawings" << '\n';
-  });
 
 }
 
