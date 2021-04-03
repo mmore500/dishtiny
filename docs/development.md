@@ -145,6 +145,16 @@ A [whistle-stop tour](https://en.wikipedia.org/wiki/Whistle_stop_train_tour) of 
 ```{include} ../include/dish2/prefab/README.md
 ```
 
+### `include/dish2/push/`
+
+```{include} ../include/dish2/push/README.md
+```
+
+### `include/dish2/py/`
+
+```{include} ../include/dish2/py/README.md
+```
+
 ### `include/dish2/quorum/`
 
 ```{include} ../include/dish2/quorum/README.md

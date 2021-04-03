@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <functional>
 #include <ratio>
 #include <string>
 
@@ -11,6 +12,7 @@
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
+#include "../../config/cfg.hpp"
 #include "../../utility/pare_keyname_filename.hpp"
 #include "../../world/ThreadWorld.hpp"
 
@@ -24,13 +26,14 @@ class GridDrawer {
 
   Artist artist;
 
-  emp::web::Canvas canvas{ 2000, 2000 };
+  emp::web::Canvas canvas{ cfg.DRAWING_WIDTH_PX(), cfg.DRAWING_HEIGHT_PX() };
 
-  const dish2::ThreadWorld<Spec>& thread_world;
+  std::reference_wrapper<const dish2::ThreadWorld<Spec>> thread_world;
 
   size_t series_idx;
 
 public:
+  using artist_t = Artist;
 
   GridDrawer(
     const dish2::ThreadWorld<Spec>& thread_world_,
@@ -42,11 +45,10 @@ public:
   { }
 
   void SaveToFile() {
-
     const std::string filename = dish2::make_drawing_filename(
       series_idx,
-      thread_world.GetUpdate(),
-      emp::slugify( Artist::GetName() )
+      thread_world.get().GetUpdate(),
+      emp::slugify( std::string{Artist::GetName()} )
     );
 
     const std::string out_filename = dish2::pare_keyname_filename(
@@ -56,9 +58,7 @@ public:
     artist.Draw( canvas );
 
     canvas.SavePNG( dish2::make_drawing_path( out_filename ) );
-
   }
-
 
 };
 

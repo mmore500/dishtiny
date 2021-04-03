@@ -7,10 +7,11 @@
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 
 #include "../config/cfg.hpp"
+#include "../record/write_all_drawings.hpp"
 #include "../record/write_cell_census.hpp"
 #include "../record/write_demographic_phenotypic_phylogenetic_metrics.hpp"
-#include "../record/write_drawings.hpp"
 #include "../record/write_phylogenetic_root_abundances.hpp"
+#include "../record/write_selected_drawings.hpp"
 #include "../world/ThreadWorld.hpp"
 
 namespace dish2 {
@@ -23,7 +24,15 @@ void thread_data_write( const dish2::ThreadWorld<Spec>& thread_world ) {
   dish2::write_demographic_phenotypic_phylogenetic_metrics<Spec>(thread_world);
   dish2::write_phylogenetic_root_abundances<Spec>( thread_world );
 
-  if ( dish2::cfg.DRAWINGS_WRITE() ) dish2::write_drawings<Spec>(thread_world);
+  if ( dish2::cfg.ALL_DRAWINGS_WRITE() ) {
+    dish2::write_all_drawings<Spec>(thread_world);
+  }
+  if (
+    !dish2::cfg.SELECTED_DRAWINGS().empty()
+    && cfg.SELECTED_DRAWINGS_FREQ() == 0
+  ) {
+    dish2::write_selected_drawings<Spec>(thread_world);
+  }
 
 }
 

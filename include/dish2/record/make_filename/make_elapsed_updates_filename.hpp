@@ -4,6 +4,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <unistd.h>
 
 #include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/base/macros.hpp"
@@ -18,6 +19,7 @@
 #include "../../config/has_series.hpp"
 #include "../../config/has_stint.hpp"
 #include "../../config/thread_idx.hpp"
+#include "../../utility/get_hostname.hpp"
 
 namespace dish2 {
 
@@ -27,6 +29,8 @@ std::string make_elapsed_updates_filename() {
     {"_source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"proc", emp::to_string( uitsl::get_proc_id() )},
     {"thread", emp::to_string( dish2::thread_idx )},
+    {"_hostname", dish2::get_hostname() },
+    {"_pid", emp::to_string( ::getpid() ) },
     {"_treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".txt"}
   };

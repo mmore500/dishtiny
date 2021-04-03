@@ -2,7 +2,7 @@
 #ifndef DISH2_VIZ_ARTISTS_TAXAARTIST_HPP_INCLUDE
 #define DISH2_VIZ_ARTISTS_TAXAARTIST_HPP_INCLUDE
 
-#include <string>
+#include <string_view>
 
 #include "../border_colormaps/TaxaBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -61,7 +61,7 @@ public:
   // inherit constructors
   using parent_t::parent_t;
 
-  static std::string GetName() { return "Taxa"; }
+  static constexpr std::string_view GetName() { return "Taxa"; }
 
 };
 

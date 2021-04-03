@@ -12,9 +12,12 @@ struct DummyArtist {
 
   template<typename... Args> explicit DummyArtist( Args&&... args ) {}
 
+  DummyArtist(const DummyArtist&) = default;
+  DummyArtist& operator=(const DummyArtist&) { return *this; }
+
   void Draw( const emp::web::Canvas& ) { }
 
-  static std::string GetName() { return "Dummy"; }
+  static constexpr std::string_view GetName() { return "Dummy"; }
 
 };
 

@@ -2,7 +2,7 @@
 #ifndef DISH2_VIZ_ARTISTS_QUORUMBITSARTIST_HPP_INCLUDE
 #define DISH2_VIZ_ARTISTS_QUORUMBITSARTIST_HPP_INCLUDE
 
-#include <string>
+#include <string_view>
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
@@ -65,7 +65,7 @@ public:
   // inherit constructors
   using parent_t::parent_t;
 
-  static std::string GetName() { return "Quorum Bits"; }
+  static constexpr std::string_view GetName() { return "Quorum Bits"; }
 
   static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>&) {
     return Spec::NLEV;

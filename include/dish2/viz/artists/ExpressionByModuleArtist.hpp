@@ -3,7 +3,7 @@
 #define DISH2_VIZ_ARTISTS_EXPRESSIONBYMODULEARTIST_HPP_INCLUDE
 
 #include <algorithm>
-#include <string>
+#include <string_view>
 
 #include "../../introspection/get_maximum_module_count.hpp"
 
@@ -69,7 +69,7 @@ public:
   // inherit constructors
   using parent_t::parent_t;
 
-  static std::string GetName() { return "Expression by Module"; }
+  static constexpr std::string_view GetName() { return "Expression by Module"; }
 
   static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>& thread_world) {
     return std::min(

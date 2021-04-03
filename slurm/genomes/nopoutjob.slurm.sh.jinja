@@ -277,9 +277,7 @@ echo "----------------------------------------------------------"
 timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
 wait # ignores exit code of time log step
 
-# adapted from https://superuser.com/a/689340
-# and https://stackoverflow.com/a/31687663
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/make_nopped_op_variants.py | python3 - "${WILDTYPE_GENOME}" "${PHENOTYPE_EQUIVALENT_GENOME}"
+"${REPRO_WORK_DIRECTORY}/dishtiny/script/make_nopped_op_variants.py" | python3 - "${WILDTYPE_GENOME}" "${PHENOTYPE_EQUIVALENT_GENOME}"
 
 ################################################################################
 echo

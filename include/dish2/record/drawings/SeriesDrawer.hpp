@@ -27,6 +27,8 @@ class SeriesDrawer {
 
 public:
 
+  using artist_t = Artist;
+
   SeriesDrawer(
     const dish2::ThreadWorld<Spec>& thread_world
   ) : drawers( Artist::GetSeriesLength( thread_world ) ) {

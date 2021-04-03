@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 
   dish2::global_records_finalize();
 
-  std::cout << "process " << uitsl::get_proc_id() << " complete" << std::endl;
+  std::cout << "process " << uitsl::get_proc_id() << " complete" << '\n';
 
   return 0;
 

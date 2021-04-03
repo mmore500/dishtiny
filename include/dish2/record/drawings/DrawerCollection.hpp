@@ -28,10 +28,10 @@ using DrawerCollection = dish2::DrawerManager<
   //   Spec,
   //   dish2::EpochArtist<Spec>
   // >,
-  dish2::SeriesDrawer<
-    Spec,
-    dish2::ExpressionByModuleArtist<Spec>
-  >,
+  // dish2::SeriesDrawer<
+  //   Spec,
+  //   dish2::ExpressionByModuleArtist<Spec>
+  // >,
   // dish2::GridDrawer<
   //   Spec,
   //   dish2::HeirRequestArtist<Spec>
@@ -117,14 +117,14 @@ using DrawerCollection = dish2::DrawerManager<
   //   dish2::QuorumBitsArtist<Spec>,
   //   Spec::NLEV
   // >,
-  dish2::SeriesDrawer<
-    Spec,
-    dish2::RegulationByModuleArtist<Spec>
-  >,
-  dish2::SeriesDrawer<
-    Spec,
-    dish2::RegulationExposedByModuleArtist<Spec>
-  >,
+  // dish2::SeriesDrawer<
+  //   Spec,
+  //   dish2::RegulationByModuleArtist<Spec>
+  // >,
+  // dish2::SeriesDrawer<
+  //   Spec,
+  //   dish2::RegulationExposedByModuleArtist<Spec>
+  // >,
   dish2::GridDrawer<
     Spec,
     dish2::ResourceInputPeekArtist<Spec>

@@ -2,6 +2,8 @@
 #ifndef DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_CONTROLLER_MAPPED_STATE_CONTROLLERMAPPEDSTATE_HPP_INCLUDE
 #define DISH2_PERIPHERAL_READABLE_STATE_WRITABLE_STATE_CONTROLLER_MAPPED_STATE_CONTROLLERMAPPEDSTATE_HPP_INCLUDE
 
+#include <cassert>
+
 #include "../../../../../../third-party/conduit/include/uitsl/algorithm/clamp_cast.hpp"
 #include "../../../../../../third-party/conduit/include/uitsl/datastructs/PodInternalNode.hpp"
 #include "../../../../../../third-party/signalgp-lite/include/sgpl/utility/ByteEnumeration.hpp"
@@ -45,6 +47,7 @@ struct ControllerMappedState
 
   void Assign(const size_t idx, const float val) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_CONTROLLER_MAPPED_STATE_ASSIGN_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_size ) { \
@@ -54,7 +57,7 @@ struct ControllerMappedState
           const target_t clamped = uitsl::clamp_cast< target_t >( val ); \
           this->parent_t::template GetByIndex<N>() = clamped; \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         } \
       break;
@@ -79,6 +82,7 @@ struct ControllerMappedState
 
   void Randomize( const size_t idx ) {
 
+    // can't use emp_assert due to obsucre macro error
     #define DISH2_CONTROLLER_MAPPED_STATE_RANDOMIZE_CASE_PAYLOAD(N) \
       case N: \
         if constexpr ( N  < parent_size ) { \
@@ -87,7 +91,7 @@ struct ControllerMappedState
             reinterpret_cast<unsigned char*>(&val), sizeof( val ) \
           ); \
         } else { \
-          emp_assert( false, N ); \
+          assert( false && N ); \
           __builtin_unreachable(); \
         } \
       break;

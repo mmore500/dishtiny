@@ -19,66 +19,8 @@ import tempfile
 from tqdm import tqdm
 from scipy import stats
 
-def multiloader( s3_url ):
-
-    s3 = boto3.client('s3')
-
-    bucket = re.search('s3://(.+?)/', s3_url).group(1)
-    object_name = re.search(f's3://{bucket}/(.+)', s3_url).group(1)
-
-    with tempfile.NamedTemporaryFile(mode='w+b') as temp:
-        print('temporary file', temp.name)
-
-        s3.download_fileobj(bucket, object_name, temp)
-
-        if kn.unpack( s3_url )['ext'] == '.json':
-            with open( temp.name, 'r') as f:
-                return json.load( f )
-
-        elif kn.unpack( s3_url )['ext'] == '.json.gz':
-            try:
-                with gzip.open( temp.name, 'rb') as f:
-                    return json.loads( f.read().decode('ascii') )
-            except Exception:
-                pass
-
-            try:
-                with gzip.open( temp.name, 'rb') as f:
-                    return json.loads( f.read().decode('utf-8') )
-            except Exception:
-                pass
-
-        raise ValueError
-
-def fit_control_t_distns(control_df):
-
-    na_rows = control_df['Fitness Differential'].isna()
-    assert all( control_df[ na_rows ]['Population Extinct'] )
-    control_df['Fitness Differential'].fillna(0, inplace=True,)
-
-    res = []
-    for series in control_df['Competition Series'].unique():
-
-        series_df = control_df[ control_df['Competition Series'] == series ]
-
-        # legacy data was mixed inside of the variant_df
-        wt_vs_wt_df = series_df.groupby('Competition Repro').filter(
-            lambda x: (x['genome variation'] == 'master').all()
-        ).groupby('Competition Repro').first().reset_index()
-
-        # fit a t distribution to the control data
-        # df is degrees of freedom
-        df, loc, scale = stats.t.fit( wt_vs_wt_df['Fitness Differential'] )
-
-
-        res.append({
-            'Series' : series,
-            'Fit Degrees of Freedom' : df,
-            'Fit Loc' : loc,
-            'Fit Scale' : scale,
-        })
-
-    return pd.DataFrame(res)
+from pyhelpers import fit_control_t_distns
+from pyhelpers import genome_s3_autoload
 
 def get_critical_sites(variant_df, control_fits_df):
 
@@ -206,7 +148,7 @@ for series, critical_sites in critical_sites_by_series.items():
 
     wt_genome_s3_url = f's3://{bucket}/endeavor={endeavor}/genomes/stage=0+what=generated/stint={stint}/series={series}/a=genome+criteria=abundance+morph=wildtype+proc=0+series={series}+stint={stint}+thread=0+variation=master+ext=.json.gz'
 
-    genome_data = multiloader( wt_genome_s3_url )
+    genome_data = genome_s3_autoload( wt_genome_s3_url )
 
     ############################################################################
     print(                                                                     )

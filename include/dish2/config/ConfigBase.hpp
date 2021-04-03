@@ -285,7 +285,7 @@ EMP_BUILD_CONFIG(
   VALUE(RESOURCE_INPUT_JUMP_SERVICE_FREQUENCY, size_t, 1,
     "Run service every ?? updates."
   ),
-  VALUE(RESOURCE_RECEIVING_SERVICE_FREQUENCY, size_t, 8,
+  VALUE(RESOURCE_RECEIVING_SERVICE_FREQUENCY, size_t, 4,
     "Run service every ?? updates."
   ),
   VALUE(RESOURCE_SENDING_SERVICE_FREQUENCY, size_t, 1,
@@ -315,7 +315,7 @@ EMP_BUILD_CONFIG(
   VALUE(TEST_INTERROOT_PHENOTYPE_DIFFERENTIATION, bool, false,
     "[NATIVE] Should we test for phenotype differentiation between roots?"
   ),
-  VALUE(DRAWINGS_WRITE, bool, false,
+  VALUE(ALL_DRAWINGS_WRITE, bool, false,
     "[NATIVE] Should we generate and record drawings of the final state of the simulation? Must also enable DATA_DUMP."
   ),
   VALUE(DATA_DUMP, bool, false,
@@ -351,6 +351,28 @@ EMP_BUILD_CONFIG(
   ),
   VALUE(RUNNING_LOG_DURATION, size_t, 4,
     "How many purge epochs should we keep events in the running log?"
+  ),
+  VALUE(SELECTED_DRAWINGS_FREQ, size_t, 0,
+    "How often should we draw the current world?"
+  ),
+  VALUE(DRAWING_WIDTH_PX, double, 500.0,
+    "What should the width of the drawings be, in pixels?"
+  ),
+  VALUE(DRAWING_HEIGHT_PX, double, 500.0,
+    "What should the height of the drawings be, in pixels?"
+  ),
+  VALUE(SELECTED_DRAWINGS, std::string, "",
+    "What drawings should be drawn? "
+    "Provide slugified drawer names seperated by colons."
+  ),
+  VALUE(ANIMATE_DRAWINGS, bool, false,
+    "Should we stich the output images into a video? Only valid if DRAWING_FREQ is not 0."
+  ),
+  VALUE(VIDEO_FPS, size_t, 16,
+    "How many frames per second should the video be?"
+  ),
+  VALUE(VIDEO_MAX_FRAMES, size_t, 960,
+    "At most how many frames should the video include?"
   ),
   // VALUE(UPDATES_PER_CHUNK, size_t, 64,
   //   "[NATIVE] "

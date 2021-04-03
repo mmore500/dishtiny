@@ -43,7 +43,9 @@ class SeriesViewer {
   };
 
   std::string MakeID( const std::string& descriptor ) const {
-    const std::string this_slug = emp::slugify( Artist::GetName() );
+    const std::string this_slug = emp::slugify( std::string{
+      Artist::GetName()
+    } );
     return emp::to_string( this_slug, "-", descriptor );
   }
 

@@ -2,7 +2,7 @@
 #ifndef DISH2_VIZ_ARTISTS_EPOCHARTIST_HPP_INCLUDE
 #define DISH2_VIZ_ARTISTS_EPOCHARTIST_HPP_INCLUDE
 
-#include <string>
+#include <string_view>
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/EpochColorMap.hpp"
@@ -65,7 +65,7 @@ public:
   // inherit constructors
   using parent_t::parent_t;
 
-  static std::string GetName() { return "Epoch"; }
+  static constexpr std::string_view GetName() { return "Epoch"; }
 
 };
 

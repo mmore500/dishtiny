@@ -3,6 +3,7 @@
 #define DISH2_RECORD_GLOBAL_RECORDS_FINALIZE_HPP_INCLUDE
 
 #include <algorithm>
+#include <chrono>
 #include <cstdlib>
 #include <string>
 
@@ -19,11 +20,14 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
-#include "create_montage.hpp"
+#include "../py/dump_animate_drawings_script.hpp"
+#include "../utility/try_with_timeout.hpp"
+
 #include "make_filename/make_drawing_archive_filename.hpp"
 #include "make_filename/make_drawing_path.hpp"
 #include "make_filename/make_montage_filename.hpp"
 #include "make_filename/make_zip_path.hpp"
+#include "try_create_montage.hpp"
 
 namespace dish2 {
 
@@ -32,20 +36,23 @@ void create_deduplicated_drawing_archive() {
   uitsl::err_verify( std::system(
     "rdfind -makesymlinks true -makeresultsfile false outdrawings/"
   ) );
+  std::cout << "rdfind deduplication complete" << '\n';
 
   const std::string zip_command( emp::to_string(
-    "XZ_OPT=-e9 tar -cJf ",
+    "tar -cJf ",
     dish2::make_zip_path( dish2::make_drawing_archive_filename() ),
     " outdrawings/"
   ) );
   uitsl::err_verify( std::system( zip_command.c_str() ) );
+  std::cout << "drawing archive zip complete" << '\n';
 
 }
 
 void finalize_drawings() {
+  std::cout << "finalize_drawings begin" << '\n';
   // cd doesn't propagate out of std::system call
   create_deduplicated_drawing_archive();
-  dish2::create_montage();
+  dish2::try_create_montage();
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
     "cd outdrawings && for f in *a=*; do"
@@ -53,9 +60,24 @@ void finalize_drawings() {
     "  a proc replicate thread update stint series treatment variation ext"
     "; done"
   "'" ) );
+  std::cout << "finalize_drawings complete" << '\n';
+}
+
+void finalize_videos() {
+  std::cout << "finalize_videos begin" << '\n';
+  // cd doesn't propagate out of std::system call
+  uitsl::err_verify( std::system( "bash -c '"
+    "shopt -s nullglob; "
+    "cd outvideos && for f in *a=*; do"
+    "  keyname stash --move \"${f}\""
+    "  a proc replicate thread update stint series treatment variation ext"
+    "; done"
+  "'" ) );
+  std::cout << "finalize_videos complete" << '\n';
 }
 
 void finalize_artifacts() {
+  std::cout << "finalize_artifacts begin" << '\n';
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
@@ -66,9 +88,11 @@ void finalize_artifacts() {
     "    $(echo \"$f\" | grep -o \"root_id%[[:digit:]]\\+\")"
     "; done"
   "'" ) );
+  std::cout << "finalize_artifacts complete" << '\n';
 }
 
 void finalize_data() {
+  std::cout << "finalize_data begin" << '\n';
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
@@ -79,9 +103,11 @@ void finalize_data() {
     "    $(echo \"$f\" | grep -o \"root_id:[[:digit:]]\\+\")"
     "; done"
   "'" ) );
+  std::cout << "finalize_artifacts complete" << '\n';
 }
 
-void finalize_zip() {
+void finalize_zips() {
+  std::cout << "finalize_zips begin" << '\n';
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
@@ -90,6 +116,34 @@ void finalize_zip() {
     "    a proc replicate stint series thread treatment ext"
     "; done"
   "'" ) );
+  std::cout << "finalize_zips complete" << '\n';
+}
+
+void animate_drawings() {
+  std::cout << "animate_drawings begin" << '\n';
+  const std::string command = emp::to_string(
+    "ls outdrawings/*.png | python3 ",
+    dish2::dump_animate_drawings_script(),
+    " ",
+    dish2::cfg.VIDEO_FPS(),
+    " ",
+    dish2::cfg.VIDEO_MAX_FRAMES()
+  );
+  uitsl::err_verify( std::system( command.c_str() ) );
+}
+
+void try_animate_drawings() {
+
+  using namespace std::chrono_literals;
+
+  if ( dish2::try_with_timeout( animate_drawings, 10min ) ) {
+    std::cout << "proc " << uitsl::get_proc_id()
+      << " animate_drawings succeeded" << '\n';
+  } else {
+    std::cout << "proc " << uitsl::get_proc_id()
+      << " animate_drawings timed out" << '\n';
+  }
+
 }
 
 void global_records_finalize() {
@@ -97,10 +151,15 @@ void global_records_finalize() {
   UITSL_Barrier( MPI_COMM_WORLD );
 
   if ( uitsl::is_root() ) {
-    if ( dish2::cfg.DRAWINGS_WRITE() ) finalize_drawings();
+    if ( dish2::cfg.ANIMATE_DRAWINGS() ) try_animate_drawings();
+    if (
+      dish2::cfg.ALL_DRAWINGS_WRITE()
+      || dish2::cfg.SELECTED_DRAWINGS().size()
+    ) finalize_drawings();
     finalize_artifacts();
     finalize_data();
-    finalize_zip();
+    finalize_videos();
+    finalize_zips();
 
     #ifndef __EMSCRIPTEN__
       // hash all files, excluding source directory

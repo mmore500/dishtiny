@@ -350,6 +350,9 @@ function on_error() {
   echo "---------------------"
   echo
 
+  # don't exit on further failures
+  set +e
+
   # adapted from https://unix.stackexchange.com/a/504829
   awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$2 $0
 
@@ -388,10 +391,11 @@ function on_error() {
   echo "curl -I https://google.com" && curl -I https://google.com
   echo "ipcs" && ipcs
   echo "cat /proc/net/dev" && cat /proc/net/dev
-  time curl -o /dev/null http://speedtest-blr1.digitalocean.com/10mb.test
+  # time curl -o /dev/null http://speedtest-blr1.digitalocean.com/10mb.test
 
-  # upload log files
-  on_exit
+  # upload log files, with weird hack to prevent premature exit
+  on_exit &
+  wait
 
   echo "Sending Pushover Notification"
   bash <(curl https://raw.githubusercontent.com/mmore500/pushover.sh/master/pushover.sh) \

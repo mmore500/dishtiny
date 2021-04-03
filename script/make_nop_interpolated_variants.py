@@ -9,6 +9,8 @@ import numpy as np
 import random
 import sys
 
+from pyhelpers import genome_local_autoload
+
 random.seed(1)
 
 try:
@@ -22,29 +24,8 @@ except:
 assert 'ext' in kn.unpack( less_ops )
 assert 'ext' in kn.unpack( more_ops )
 
-def multiloader(target):
-    if kn.unpack( target )['ext'] == '.json':
-        with open( target, 'r') as f:
-            return json.load( f )
-
-    elif kn.unpack( target )['ext'] == '.json.gz':
-        try:
-            with gzip.open( target, 'rb') as f:
-                return json.loads( f.read().decode('ascii') )
-        except Exception:
-            pass
-
-        try:
-            with gzip.open( target, 'rb') as f:
-                return json.loads( f.read().decode('utf-8') )
-        except Exception:
-            pass
-
-    raise ValueError
-
-
-less_ops_data = multiloader( less_ops )
-more_ops_data = multiloader( more_ops )
+less_ops_data = genome_local_autoload( less_ops )
+more_ops_data = genome_local_autoload( more_ops )
 
 less_ops_num_insts = len( less_ops_data['value0']['program'] )
 more_ops_num_insts = len( more_ops_data['value0']['program'] )
