@@ -24,6 +24,7 @@ def make_video( df, max_frames, frames_per_second, ):
         for column in df.columns
         if column not in { '_', 'ext', 'index', }
     }
+
     out_filename = kn.pack({
         **out_attrs, **{ 'ext' : '.mp4', }
     })

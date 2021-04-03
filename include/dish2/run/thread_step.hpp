@@ -10,7 +10,7 @@
 
 #include "../config/cfg.hpp"
 #include "../record/write_phylogenetic_root_abundances.hpp"
-#include "../record/write_selected_drawings.hpp"
+#include "../record/write_selected_frames.hpp"
 
 #include "print_progress.hpp"
 #include "setup_thread_local_random.hpp"
@@ -44,7 +44,7 @@ void thread_step(
       thread_world.GetUpdate(), dish2::cfg.SELECTED_DRAWINGS_FREQ()
     ) == 0
     && dish2::cfg.SELECTED_DRAWINGS().size()
-  ) dish2::write_selected_drawings<Spec>( thread_world );
+  ) dish2::write_selected_frames<Spec>( thread_world );
 
   #ifndef __EMSCRIPTEN__
   // initialized first time thru the function,

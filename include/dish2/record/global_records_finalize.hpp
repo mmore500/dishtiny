@@ -20,7 +20,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
-#include "../py/dump_animate_drawings_script.hpp"
+#include "../py/dump_animate_frames_script.hpp"
 #include "../utility/try_with_timeout.hpp"
 
 #include "make_filename/make_drawing_archive_filename.hpp"
@@ -119,11 +119,11 @@ void finalize_zips() {
   std::cout << "finalize_zips complete" << '\n';
 }
 
-void animate_drawings() {
-  std::cout << "animate_drawings begin" << '\n';
+void animate_frames() {
+  std::cout << "animate_frames begin" << '\n';
   const std::string command = emp::to_string(
     "ls outdrawings/*.png | python3 ",
-    dish2::dump_animate_drawings_script(),
+    dish2::dump_animate_frames_script(),
     " ",
     dish2::cfg.VIDEO_FPS(),
     " ",
@@ -132,16 +132,16 @@ void animate_drawings() {
   uitsl::err_verify( std::system( command.c_str() ) );
 }
 
-void try_animate_drawings() {
+void try_animate_frames() {
 
   using namespace std::chrono_literals;
 
-  if ( dish2::try_with_timeout( animate_drawings, 10min ) ) {
+  if ( dish2::try_with_timeout( animate_frames, 10min ) ) {
     std::cout << "proc " << uitsl::get_proc_id()
-      << " animate_drawings succeeded" << '\n';
+      << " animate_frames succeeded" << '\n';
   } else {
     std::cout << "proc " << uitsl::get_proc_id()
-      << " animate_drawings timed out" << '\n';
+      << " animate_frames timed out" << '\n';
   }
 
 }
@@ -151,7 +151,7 @@ void global_records_finalize() {
   UITSL_Barrier( MPI_COMM_WORLD );
 
   if ( uitsl::is_root() ) {
-    if ( dish2::cfg.ANIMATE_DRAWINGS() ) try_animate_drawings();
+    if ( dish2::cfg.ANIMATE_FRAMES() ) try_animate_frames();
     if (
       dish2::cfg.ALL_DRAWINGS_WRITE()
       || dish2::cfg.SELECTED_DRAWINGS().size()

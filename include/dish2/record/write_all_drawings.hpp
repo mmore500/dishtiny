@@ -23,7 +23,7 @@ void write_all_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
   using namespace std::chrono_literals;
 
   if (
-    dish2::try_with_timeout( [&](){ drawers.SaveToFile(); }, 5min )
+    dish2::try_with_timeout( [&](){ drawers.SaveToFileAsDrawing(); }, 5min )
   ) {
 
     thread_local std::once_flag once_flag;

@@ -14,10 +14,10 @@
 namespace dish2 {
 
 
-std::filesystem::path dump_animate_drawings_script() {
+std::filesystem::path dump_animate_frames_script() {
 
   const std::string script_text = dish2::strip_pyinclude_artifacts(
-    #include "../../../script/animate_drawings.py"
+    #include "../../../script/animate_frames.py"
   );
 
 

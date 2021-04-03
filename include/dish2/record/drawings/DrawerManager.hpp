@@ -33,10 +33,18 @@ public:
     : impl( tag, std::forward<Args>( args )... )
     { }
 
-    void SaveToFile() {
+    void SaveToFileAsDrawing() {
         // call Draw on the variant impl
         std::visit(
-            [&](auto& drawer){ drawer.SaveToFile(); },
+            [&](auto& drawer){ drawer.SaveToFileAsDrawing(); },
+            impl
+        );
+    }
+
+    void SaveToFileAsFrame() {
+        // call Draw on the variant impl
+        std::visit(
+            [&](auto& drawer){ drawer.SaveToFileAsFrame(); },
             impl
         );
     }
@@ -47,7 +55,9 @@ template<typename... SubsequentDrawers> struct DrawerManager {
 
   template<typename... Args> DrawerManager( Args&&... args ) {}
 
-  void SaveToFile() {}
+  void SaveToFileAsDrawing() {}
+
+  void SaveToFileAsFrame() {}
 
 };
 
@@ -80,13 +90,13 @@ struct DrawerManager<FirstDrawer, SubsequentDrawers...> {
     }
   {}
 
-  void SaveToFile() {
+  void SaveToFileAsDrawing() {
     const auto parent_thread_idx = dish2::thread_idx;
     std::thread worker( [this, parent_thread_idx](){
       dish2::thread_idx = parent_thread_idx;
-      first_drawer.SaveToFile();
+      first_drawer.SaveToFileAsDrawing();
     } );
-    subsequent_drawers.SaveToFile();
+    subsequent_drawers.SaveToFileAsDrawing();
     worker.join();
   }
 

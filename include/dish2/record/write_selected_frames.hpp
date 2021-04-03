@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_RECORD_WRITE_SELECTED_DRAWINGS_HPP_INCLUDE
-#define DISH2_RECORD_WRITE_SELECTED_DRAWINGS_HPP_INCLUDE
+#ifndef DISH2_RECORD_WRITE_SELECTED_FRAMES_HPP_INCLUDE
+#define DISH2_RECORD_WRITE_SELECTED_FRAMES_HPP_INCLUDE
 
 #include <chrono>
 #include <future>
@@ -18,7 +18,7 @@
 namespace dish2 {
 
 template< typename Spec >
-void write_selected_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
+void write_selected_frames( const dish2::ThreadWorld< Spec >& thread_world ) {
 
   using polymorphic_drawers_t = typename dish2::DrawerCollection<Spec>::polymorphic_drawers_t;
 
@@ -39,7 +39,7 @@ void write_selected_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
   // drawings occasionally hang, so add a time out
   using namespace std::chrono_literals;
   const bool success = dish2::try_with_timeout(
-    [&](){ for (auto& drawer : target_drawers) drawer.SaveToFileAsDrawing(); },
+    [&](){ for (auto& drawer : target_drawers) drawer.SaveToFileAsFrame(); },
     5min
   );
 
@@ -60,4 +60,4 @@ void write_selected_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_RECORD_WRITE_SELECTED_DRAWINGS_HPP_INCLUDE
+#endif // #ifndef DISH2_RECORD_WRITE_SELECTED_FRAMES_HPP_INCLUDE

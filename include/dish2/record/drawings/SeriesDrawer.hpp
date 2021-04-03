@@ -39,11 +39,19 @@ public:
 
   }
 
-  void SaveToFile() {
+  void SaveToFileAsDrawing() {
     // only save series for main thread on root process
     // in order to reduce computational intensity
     if ( dish2::thread_idx == 0 && uitsl::is_root() ) {
-      for ( auto& drawer : drawers ) drawer->SaveToFile();
+      for ( auto& drawer : drawers ) drawer->SaveToFileAsDrawing();
+    }
+  }
+
+  void SaveToFileAsFrame() {
+    // only save series for main thread on root process
+    // in order to reduce computational intensity
+    if ( dish2::thread_idx == 0 && uitsl::is_root() ) {
+      for ( auto& drawer : drawers ) drawer->SaveToFileAsFrame();
     }
   }
 

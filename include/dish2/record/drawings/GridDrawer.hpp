@@ -18,6 +18,7 @@
 
 #include "../make_filename/make_drawing_filename.hpp"
 #include "../make_filename/make_drawing_path.hpp"
+#include "../make_filename/make_frame_path.hpp"
 
 namespace dish2 {
 
@@ -44,7 +45,7 @@ public:
   , series_idx( series_idx_ )
   { }
 
-  void SaveToFile() {
+  void SaveToFileAsDrawing() {
     const std::string filename = dish2::make_drawing_filename(
       series_idx,
       thread_world.get().GetUpdate(),
@@ -58,6 +59,22 @@ public:
     artist.Draw( canvas );
 
     canvas.SavePNG( dish2::make_drawing_path( out_filename ) );
+  }
+
+  void SaveToFileAsFrame() {
+    const std::string filename = dish2::make_drawing_filename(
+      series_idx,
+      thread_world.get().GetUpdate(),
+      emp::slugify( std::string{Artist::GetName()} )
+    );
+
+    const std::string out_filename = dish2::pare_keyname_filename(
+      filename, dish2::make_frame_path()
+    );
+
+    artist.Draw( canvas );
+
+    canvas.SavePNG( dish2::make_frame_path( out_filename ) );
   }
 
 };

@@ -15,8 +15,8 @@ namespace dish2 {
 
 void global_records_initialize() {
 
-  const emp::array<std::string, 6> paths{
-    "./outartifacts", "./outdata", "./outdrawings",
+  const emp::array<std::string, 7> paths{
+    "./outartifacts", "./outdata", "./outdrawings", "./outframes",
     "./outmeta", "./outvideos", "./outzips"
   };
   if ( uitsl::is_root() ) for ( const auto& path : paths ) {
