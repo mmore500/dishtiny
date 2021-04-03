@@ -90,7 +90,7 @@ image-slicer==2.1.1
     # via -r requirements.in
 imagesize==1.2.0
     # via sphinx
-iterdub==0.1.0
+iterdub==0.1.2
     # via -r requirements.in
 iterpop==0.3.4
     # via -r requirements.in
@@ -139,6 +139,7 @@ networkx==2.5
 numpy==1.19.5
     # via
     #   -r requirements.in
+    #   iterdub
     #   matplotlib
     #   opencv-python
     #   pandas

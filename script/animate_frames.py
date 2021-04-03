@@ -84,10 +84,8 @@ df = pd.DataFrame.from_records(
         for line in sys.stdin
         for image_filename in line.split()
     ],
-).astype(
-    # prevent unwanted reformatting when generating output file names
-    str
 )
+
 print( 'num image files', len(df) )
 
 if len(df) == 0:
