@@ -71,6 +71,8 @@ COPY container/ccache.conf /etc/ccache.conf
 ENV CCACHE_CONFIGPATH=/etc/ccache.conf
 
 RUN \
+  pip3 install --upgrade pip==21.0.1 \
+    && \
   pip3 install --timeout 60 --retries 100 -r /opt/dishtiny/docs/requirements.txt \
     && \
   pip3 install --timeout 60 --retries 100 -r /opt/dishtiny/third-party/requirements.txt \
