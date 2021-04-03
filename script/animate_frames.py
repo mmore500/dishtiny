@@ -22,15 +22,18 @@ try:
 except:
     fps = 15
 
+try:
+    max_frames = int(sys.argv[2])
+except:
+    max_frames = 10
+
 df = pd.DataFrame.from_dict([kn.unpack(filename) for filename in filenames])
 
 df['update'] = pd.to_numeric(df['update'], errors='coerce')
 df.sort_values(by=['update'], inplace=True)
 
-updates = [int(upd) for upd in df['update'].unique()]
-
 for treat in df['a'].unique():
-    images = df[df['a'] == treat]
+    images = df[df['a'] == treat][-max_frames:]
 
     frames = []
 
