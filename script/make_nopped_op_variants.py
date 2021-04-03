@@ -7,6 +7,8 @@ import sys
 
 from keyname import keyname as kn
 
+from pyhelpers import genome_local_autoload
+
 try:
     __, applyto, basedon = sys.argv
 except:
@@ -17,29 +19,8 @@ except:
 assert 'ext' in kn.unpack( applyto )
 assert 'ext' in kn.unpack( basedon )
 
-def multiloader(target):
-    if kn.unpack( target )['ext'] == '.json':
-        with open( target, 'r') as f:
-            return json.load( f )
-
-    elif kn.unpack( target )['ext'] == '.json.gz':
-        try:
-            with gzip.open( target, 'rb') as f:
-                return json.loads( f.read().decode('ascii') )
-        except Exception:
-            pass
-
-        try:
-            with gzip.open( target, 'rb') as f:
-                return json.loads( f.read().decode('utf-8') )
-        except Exception:
-            pass
-
-    raise ValueError
-
-
-applytodata = multiloader( applyto )
-basedondata = multiloader( basedon )
+applytodata = genome_local_autoload( applyto )
+basedondata = genome_local_autoload( basedon )
 
 assert (
     len( applytodata['value0']['program'] )
