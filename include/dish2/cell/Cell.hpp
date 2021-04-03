@@ -10,6 +10,7 @@
 #include "../../../third-party/conduit/include/netuit/mesh/MeshNode.hpp"
 #include "../../../third-party/Empirical/include/emp/base/optional.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+#include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "../config/cfg.hpp"
 #include "../enum/CauseOfDeath.hpp"
@@ -23,6 +24,7 @@
 #include "Cardinal.hpp"
 
 #include "cardinal_iterators/IdentityWrapper.hpp"
+#include "cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "cardinal_iterators/NeighborKinGroupIDViewWrapper.hpp"
 
 namespace dish2 {
@@ -137,6 +139,15 @@ struct Cell {
     }
 
     MakeAliveRoutine();
+
+    // setup start resource
+    std::fill(
+      this->template begin< dish2::ResourceStockpileWrapper<Spec> >(),
+      this->template end< dish2::ResourceStockpileWrapper<Spec> >(),
+      sgpl::tlrand.Get().GetDouble(
+        dish2::cfg.MIN_START_RESOURCE(), dish2::cfg.MAX_START_RESOURCE()
+      )
+    );
 
   }
 

@@ -95,7 +95,10 @@ EMP_BUILD_CONFIG(
 
 
   GROUP(RESOURCE, "RESOURCE"),
-  VALUE(START_RESOURCE, float, 0.8,
+  VALUE(MIN_START_RESOURCE, float, 0.8,
+    "How much resource should a cell start with?"
+  ),
+  VALUE(MAX_START_RESOURCE, float, 0.9,
     "How much resource should a cell start with?"
   ),
   VALUE(RESOURCE_DECAY, float, 0.995,
