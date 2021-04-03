@@ -73,10 +73,12 @@ COPY container/policy.xml /etc/ImageMagick-6/policy.xml
 COPY container/ccache.conf /etc/ccache.conf
 ENV CCACHE_CONFIGPATH=/etc/ccache.conf
 
+# need --ignore-installed for docutils
+# see https://stackoverflow.com/a/53807588
 RUN \
-  pip3 install --timeout 60 --retries 100 --upgrade pip==21.0.1 \
+  python3 -m pip install --timeout 60 --retries 100 --upgrade pip==21.0.1 \
     && \
-  pip3 install --timeout 60 --retries 100 -r /opt/dishtiny/third-party/requirements.txt \
+  python3 -m pip install --timeout 60 --retries 100 --ignore-installed -r /opt/dishtiny/third-party/requirements.txt \
     && \
   echo "installed python requirements"
 
