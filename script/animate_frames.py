@@ -50,7 +50,7 @@ for treat in df['a'].unique():
 
     for column in images.columns:
         if column not in {'_', 'ext'}:
-            attrs[column] = ib.dub(df[column])
+            attrs[column] = ib.dub(images[column])
 
     filename = kn.pack(attrs)
 
