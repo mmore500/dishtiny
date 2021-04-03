@@ -20,7 +20,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
-#include "../py/dump_animate_frames_script.hpp"
+#include "../py/dump_animate_drawings_script.hpp"
 #include "../utility/try_with_timeout.hpp"
 
 #include "make_filename/make_drawing_archive_filename.hpp"
@@ -93,8 +93,8 @@ void finalize_data() {
   std::cout << "finalize_artifacts complete" << '\n';
 }
 
-void finalize_zip() {
-  std::cout << "finalize_zip begin" << '\n';
+void finalize_zips() {
+  std::cout << "finalize_zips begin" << '\n';
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
@@ -103,14 +103,14 @@ void finalize_zip() {
     "    a proc replicate stint series thread treatment ext"
     "; done"
   "'" ) );
-  std::cout << "finalize_zip complete" << '\n';
+  std::cout << "finalize_zips complete" << '\n';
 }
 
-void stitch_video() {
-  std::cout << "stitch_video begin" << '\n';
+void animate_drawings() {
+  std::cout << "animate_drawings begin" << '\n';
   const std::string command = emp::to_string(
     "ls outdrawings/*.png | python3 ",
-    dish2::dump_animate_frames_script(),
+    dish2::dump_animate_drawings_script(),
     " ",
     dish2::cfg.VIDEO_FPS(),
     " ",
@@ -119,16 +119,16 @@ void stitch_video() {
   uitsl::err_verify( std::system( command.c_str() ) );
 }
 
-void try_stitch_video() {
+void try_animate_drawings() {
 
   using namespace std::chrono_literals;
 
-  if ( dish2::try_with_timeout( stitch_video, 10min ) ) {
+  if ( dish2::try_with_timeout( animate_drawings, 10min ) ) {
     std::cout << "proc " << uitsl::get_proc_id()
-      << " stitch_video succeeded" << '\n';
+      << " animate_drawings succeeded" << '\n';
   } else {
     std::cout << "proc " << uitsl::get_proc_id()
-      << " stitch_video timed out" << '\n';
+      << " animate_drawings timed out" << '\n';
   }
 
 }
@@ -138,14 +138,14 @@ void global_records_finalize() {
   UITSL_Barrier( MPI_COMM_WORLD );
 
   if ( uitsl::is_root() ) {
-    if ( dish2::cfg.OUTPUT_VIDEO() ) try_stitch_video();
+    if ( dish2::cfg.ANIMATE_DRAWINGS() ) try_animate_drawings();
     if (
       dish2::cfg.ALL_DRAWINGS_WRITE()
       || dish2::cfg.SELECTED_DRAWINGS().size()
     ) finalize_drawings();
     finalize_artifacts();
     finalize_data();
-    finalize_zip();
+    finalize_zips();
 
     #ifndef __EMSCRIPTEN__
       // hash all files, excluding source directory

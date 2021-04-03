@@ -17,7 +17,7 @@ void global_records_initialize() {
 
   const emp::array<std::string, 6> paths{
     "./outartifacts", "./outdata", "./outdrawings",
-    "./outmeta", "./outvideo", "./outzips"
+    "./outmeta", "./outvideos", "./outzips"
   };
   if ( uitsl::is_root() ) for ( const auto& path : paths ) {
     dish2::mkdir_exists_ok( path );

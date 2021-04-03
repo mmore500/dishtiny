@@ -365,7 +365,7 @@ EMP_BUILD_CONFIG(
     "What drawings should be drawn? "
     "Provide slugified drawer names seperated by colons."
   ),
-  VALUE(OUTPUT_VIDEO, bool, false,
+  VALUE(ANIMATE_DRAWINGS, bool, false,
     "Should we stich the output images into a video? Only valid if DRAWING_FREQ is not 0."
   ),
   VALUE(VIDEO_FPS, size_t, 16,
