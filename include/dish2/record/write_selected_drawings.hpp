@@ -34,10 +34,13 @@ void write_selected_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
   const auto parent_thread_idx = dish2::thread_idx;
 
+  // otherwise, packaged task gets its own thread_local drawers
+  auto& target_drawers = drawers;
+
   // drawings occasionally hang, so add a time out
   std::packaged_task<void()> task( [&](){
     dish2::thread_idx = parent_thread_idx;
-    for (auto& drawer : drawers) drawer.SaveToFile();
+    for (auto& drawer : target_drawers) drawer.SaveToFile();
   } );
 
   auto future = task.get_future();
