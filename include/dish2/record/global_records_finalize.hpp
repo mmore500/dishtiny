@@ -63,6 +63,19 @@ void finalize_drawings() {
   std::cout << "finalize_drawings complete" << '\n';
 }
 
+void finalize_videos() {
+  std::cout << "finalize_videos begin" << '\n';
+  // cd doesn't propagate out of std::system call
+  uitsl::err_verify( std::system( "bash -c '"
+    "shopt -s nullglob; "
+    "cd outvideos && for f in *a=*; do"
+    "  keyname stash --move \"${f}\""
+    "  a proc replicate thread update stint series treatment variation ext"
+    "; done"
+  "'" ) );
+  std::cout << "finalize_videos complete" << '\n';
+}
+
 void finalize_artifacts() {
   std::cout << "finalize_artifacts begin" << '\n';
   // cd doesn't propagate out of std::system call
@@ -145,6 +158,7 @@ void global_records_finalize() {
     ) finalize_drawings();
     finalize_artifacts();
     finalize_data();
+    finalize_videos();
     finalize_zips();
 
     #ifndef __EMSCRIPTEN__
