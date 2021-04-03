@@ -8,9 +8,11 @@
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/identity.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+#include "../../../third-party/Empirical/include/emp/math/random_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
 #include "../cell/cardinal_iterators/GenomeNodeInputWrapper.hpp"
+#include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 #include "../peripheral/readable_state/ReadableState.hpp"
@@ -43,11 +45,26 @@ struct BirthSetupService {
       }
     }
 
+    emp::Shuffle( sgpl::tlrand.Get(), fresh_input_idxs );
+
+    // if current cell has >=1 resource, remove resource before accepting births
+    float resource_stockpile = *cell.template begin<
+      dish2::ResourceStockpileWrapper<spec_t>
+    >();
+    while ( resource_stockpile >= 1.0f && fresh_input_idxs.size() ) {
+      resource_stockpile -= 1.0f;
+      fresh_input_idxs.pop_back();
+    }
+
+    std::fill(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      resource_stockpile
+    );
+
     if ( fresh_input_idxs.size() ) {
 
-      const size_t cardinal_idx = fresh_input_idxs[
-        sgpl::tlrand.Get().GetUInt( fresh_input_idxs.size() )
-      ];
+      const size_t cardinal_idx = fresh_input_idxs.back();
       const auto& peripheral = cell.cardinals[ cardinal_idx ].peripheral;
       const size_t epoch = peripheral.readable_state.template Get<
         dish2::Epoch
