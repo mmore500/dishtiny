@@ -10,7 +10,7 @@ import pandas as pd
 import sys
 from tqdm import tqdm
 
-def make_video( df, max_frames, frames_per_second ):
+def make_video( df, max_frames, frames_per_second, ):
 
     if max_frames and max_frames is not None:
         df = df[-max_frames:]
@@ -82,12 +82,15 @@ if len(df) == 0:
 df['update'] = pd.to_numeric( df['update'], errors='coerce', )
 df.sort_values( by=['update'], inplace=True, )
 
-for viz_title, subset_df in df.groupby('a'):
+for (a, thread, proc), subset_df in df.groupby(['a', 'thread', 'proc',]):
+    print( 'a', a, )
+    print( 'thread', thread, )
+    print( 'proc', proc, )
     if len( subset_df ) > 2:
-        print('stitching', len( subset_df ), 'frames for', viz_title)
-        make_video( subset_df.reset_index(), max_frames, frames_per_second )
+        print('stitching', len( subset_df ), 'frames for', a, )
+        make_video( subset_df.reset_index(), max_frames, frames_per_second, )
     else:
-        print('passing on', viz_title, ', only', len( subset_df ), 'frames')
+        print('passing on', a, ', only', len( subset_df ), 'frames', )
 
 # this allows us to #include the script in C++
 ")python3"
