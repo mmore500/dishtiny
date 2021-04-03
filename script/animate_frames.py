@@ -78,11 +78,14 @@ except:
 print( 'frames_per_second', frames_per_second )
 print( 'max_frames', max_frames )
 
-df = pd.DataFrame.from_dict([
-    kn.unpack(image_filename)
-    for line in sys.stdin
-    for image_filename in line.split()
-])
+df = pd.DataFrame.from_dict(
+    [
+        kn.unpack(image_filename)
+        for line in sys.stdin
+        for image_filename in line.split()
+    ],
+    dtype=str,
+)
 print( 'num image files', len(df) )
 
 if len(df) == 0:
