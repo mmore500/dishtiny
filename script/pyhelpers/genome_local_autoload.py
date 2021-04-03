@@ -1,6 +1,6 @@
 import gzip
 import json
-import keyname as kn
+from keyname import keyname as kn
 
 def genome_local_autoload(target):
     if kn.unpack( target )['ext'] == '.json':
