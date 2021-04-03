@@ -25,6 +25,15 @@ def make_video( df, max_frames, frames_per_second, ):
         if column not in { '_', 'ext', 'index', }
     }
 
+    for k, v in out_attrs:
+        if any( c in k or c in v for c in {'=', '+'} ):
+            print('illegal character in out attr')
+            print('key', k)
+            print('value', v)
+            print('source files')
+            for filename in df['_']:
+                print( filename )
+
     out_filename = kn.pack({
         **out_attrs, **{ 'ext' : '.mp4', }
     })
