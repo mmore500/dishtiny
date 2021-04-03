@@ -109,7 +109,7 @@ void finalize_zip() {
 void stitch_video() {
   std::cout << "stitch_video begin" << '\n';
   const std::string command = emp::to_string(
-    "python3 ",
+    "ls outdrawings/*.png | python3 ",
     dish2::dump_animate_frames_script(),
     " ",
     dish2::cfg.VIDEO_FPS(),
