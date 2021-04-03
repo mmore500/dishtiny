@@ -232,17 +232,18 @@ void write_demographic_phenotypic_phylogenetic_metrics(
     file.Update();
   }
 
-  {
-    metric = "Population Compression Ratio";
-    value = dish2::get_population_compression_ratio<Spec>( world );
-    file.Update();
-  }
-
-  {
-    metric = "Mean Genome Compression Ratio";
-    value = dish2::get_mean_genome_compression_ratio<Spec>( world );
-    file.Update();
-  }
+  // disabled because they seem to be very slow on the hpcc
+  // {
+  //   metric = "Population Compression Ratio";
+  //   value = dish2::get_population_compression_ratio<Spec>( world );
+  //   file.Update();
+  // }
+  //
+  // {
+  //   metric = "Mean Genome Compression Ratio";
+  //   value = dish2::get_mean_genome_compression_ratio<Spec>( world );
+  //   file.Update();
+  // }
 
   {
     metric = "Mean Program Module Count";
