@@ -25,7 +25,7 @@ except:
 try:
     max_frames = int(sys.argv[2])
 except:
-    max_frames = 1500
+    max_frames = None
 
 df = pd.DataFrame.from_dict([kn.unpack(filename) for filename in filenames])
 
@@ -33,7 +33,10 @@ df['update'] = pd.to_numeric(df['update'], errors='coerce')
 df.sort_values(by=['update'], inplace=True)
 
 for treat in df['a'].unique():
-    images = df[df['a'] == treat][-max_frames:]
+    images = df[df['a'] == treat]
+
+    if max_frames is not None:
+        images = images[-max_frames:]
 
     frames = []
 
