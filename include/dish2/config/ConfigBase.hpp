@@ -371,6 +371,9 @@ EMP_BUILD_CONFIG(
   VALUE(VIDEO_FPS, size_t, 16,
     "How many frames per second should the video be?"
   ),
+  VALUE(VIDEO_MAX_FRAMES, size_t, 960,
+    "At most how many frames should the video include?"
+  ),
   // VALUE(UPDATES_PER_CHUNK, size_t, 64,
   //   "[NATIVE] "
   //   "How many updates should we save in each dimension per dataset chunk? Total number will be this parameter squared."

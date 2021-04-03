@@ -112,7 +112,9 @@ void stitch_video() {
     "python3 ",
     dish2::dump_animate_frames_script(),
     " ",
-    dish2::cfg.VIDEO_FPS()
+    dish2::cfg.VIDEO_FPS(),
+    " ",
+    dish2::cfg.VIDEO_MAX_FRAMES()
   );
   uitsl::err_verify( std::system( command.c_str() ) );
 }
