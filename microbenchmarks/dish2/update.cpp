@@ -9,6 +9,7 @@
 #include "Empirical/include/emp/tools/string_utils.hpp"
 
 #include "dish2/config/cfg.hpp"
+#include "dish2/config/TemporaryThreadIdxOverride.hpp"
 #include "dish2/debug/backtrace_enable.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/world/ProcWorld.hpp"
@@ -21,6 +22,8 @@ std::atomic<size_t> flag{false};
 
 template<size_t NUM_CELLS>
 static void DoBench(benchmark::State& state) {
+
+  const dish2::TemporaryThreadIdxOverride override( state.thread_index );
 
   if (state.thread_index == 0) {
     dish2::cfg.Set("N_CELLS", emp::to_string(NUM_CELLS));
