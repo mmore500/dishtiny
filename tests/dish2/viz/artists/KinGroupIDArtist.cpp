@@ -8,6 +8,7 @@
 #include "Empirical/include/emp/web/NodeDomShim.hpp"
 #include "signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
+#include "dish2/config/TemporaryConfigOverride.hpp"
 #include "dish2/config/TemporaryThreadIdxOverride.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/viz/artists/KinGroupIDArtist.hpp"
@@ -19,6 +20,7 @@
 
 using Spec = dish2::Spec_default;
 
+const dish2::TemporaryConfigOverride config_override( "N_CELLS", 100 );
 const dish2::TemporaryThreadIdxOverride override{ 0 };
 
 const emp::web::NodeDomShim shim;

@@ -7,6 +7,7 @@
 #include "Empirical/include/emp/web/Document.hpp"
 #include "Empirical/include/emp/web/NodeDomShim.hpp"
 
+#include "dish2/config/TemporaryConfigOverride.hpp"
 #include "dish2/config/TemporaryThreadIdxOverride.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/viz/artists/QuorumBitsArtist.hpp"
@@ -18,6 +19,7 @@
 
 using Spec = dish2::Spec_default;
 
+const dish2::TemporaryConfigOverride config_override( "N_CELLS", 100 );
 const dish2::TemporaryThreadIdxOverride override{ 0 };
 
 const emp::web::NodeDomShim shim;
