@@ -1,24 +1,24 @@
 #pragma once
-#ifndef DISH2_RECORD_CREATE_MONTAGE_HPP_INCLUDE
-#define DISH2_RECORD_CREATE_MONTAGE_HPP_INCLUDE
+#ifndef DISH2_RECORD_FINALIZE_CREATE_MONTAGE_HPP_INCLUDE
+#define DISH2_RECORD_FINALIZE_CREATE_MONTAGE_HPP_INCLUDE
 
 #include <algorithm>
 #include <cstdlib>
 #include <string>
 
-#include "../../../third-party/conduit/include/uitsl/debug/err_discard.hpp"
-#include "../../../third-party/conduit/include/uitsl/debug/err_verify.hpp"
-#include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
-#include "../../../third-party/conduit/include/uitsl/mpi/audited_routines.hpp"
-#include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
-#include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_filter.hpp"
-#include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_max.hpp"
-#include "../../../third-party/Empirical/include/emp/base/macros.hpp"
-#include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
-#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../../third-party/conduit/include/uitsl/debug/err_discard.hpp"
+#include "../../../../third-party/conduit/include/uitsl/debug/err_verify.hpp"
+#include "../../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
+#include "../../../../third-party/conduit/include/uitsl/mpi/audited_routines.hpp"
+#include "../../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
+#include "../../../../third-party/conduit/include/uitsl/utility/keyname_directory_filter.hpp"
+#include "../../../../third-party/conduit/include/uitsl/utility/keyname_directory_max.hpp"
+#include "../../../../third-party/Empirical/include/emp/base/macros.hpp"
+#include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
-#include "make_filename/make_drawing_path.hpp"
-#include "make_filename/make_montage_filename.hpp"
+#include "../make_filename/make_drawing_path.hpp"
+#include "../make_filename/make_montage_filename.hpp"
 
 namespace dish2 {
 
@@ -81,4 +81,4 @@ void create_montage() {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_RECORD_CREATE_MONTAGE_HPP_INCLUDE
+#endif // #ifndef DISH2_RECORD_FINALIZE_CREATE_MONTAGE_HPP_INCLUDE

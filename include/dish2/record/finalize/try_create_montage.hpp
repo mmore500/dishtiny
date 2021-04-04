@@ -1,12 +1,12 @@
 #pragma once
-#ifndef DISH2_RECORD_TRY_CREATE_MONTAGE_HPP_INCLUDE
-#define DISH2_RECORD_TRY_CREATE_MONTAGE_HPP_INCLUDE
+#ifndef DISH2_RECORD_FINALIZE_TRY_CREATE_MONTAGE_HPP_INCLUDE
+#define DISH2_RECORD_FINALIZE_TRY_CREATE_MONTAGE_HPP_INCLUDE
 
 #include <chrono>
 
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
+#include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 
-#include "../utility/try_with_timeout.hpp"
+#include "../../utility/try_with_timeout.hpp"
 
 #include "create_montage.hpp"
 
@@ -27,4 +27,4 @@ void try_create_montage() {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_RECORD_TRY_CREATE_MONTAGE_HPP_INCLUDE
+#endif // #ifndef DISH2_RECORD_FINALIZE_TRY_CREATE_MONTAGE_HPP_INCLUDE
