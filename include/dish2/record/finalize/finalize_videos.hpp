@@ -16,7 +16,7 @@ void finalize_videos() {
     "shopt -s nullglob; "
     "cd outvideos && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
-    "  a proc replicate thread update stint series treatment variation ext"
+    "  a proc idx replicate thread update stint series treatment variation ext"
     "; done"
   "'" ) );
   std::cout << "finalize_videos complete" << '\n';

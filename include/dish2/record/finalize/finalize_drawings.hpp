@@ -21,7 +21,7 @@ void finalize_drawings() {
     "shopt -s nullglob; "
     "cd outdrawings && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
-    "  a proc replicate thread update stint series treatment variation ext"
+    "  a proc idx replicate thread update stint series treatment variation ext"
     "; done"
   "'" ) );
   std::cout << "finalize_drawings complete" << '\n';
