@@ -9,6 +9,7 @@
 #include "Empirical/include/emp/math/Random.hpp"
 
 #include "dish2/config/cfg.hpp"
+#include "dish2/config/thread_idx.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
@@ -34,7 +35,8 @@ void fuzz_one() {
 
   for (size_t tid{}; tid < dish2::cfg.N_THREADS(); ++tid) {
     team.Add( [&proc_world, tid](){
-      auto thread_world = proc_world.MakeThreadWorld(tid);
+      dish2::thread_idx = tid;
+      auto thread_world = proc_world.MakeThreadWorld();
       for ( [[maybe_unused]] auto _ : timekeeper_t{ std::chrono::seconds{ 30 } }
       ) thread_world.Update();
     } );
