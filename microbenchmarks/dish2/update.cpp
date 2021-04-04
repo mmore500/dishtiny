@@ -38,7 +38,7 @@ static void DoBench(benchmark::State& state) {
   } else while (flag == false);
 
   // Perform setup here
-  auto tw = proc_world->MakeThreadWorld(state.thread_index);
+  auto tw = proc_world->MakeThreadWorld();
 
   // benchmark goes here
   for (auto _ : state) tw.Update();
