@@ -24,8 +24,8 @@
 #include "Cardinal.hpp"
 
 #include "cardinal_iterators/IdentityWrapper.hpp"
-#include "cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "cardinal_iterators/NeighborKinGroupIDViewWrapper.hpp"
+#include "cardinal_iterators/ResourceStockpileWrapper.hpp"
 
 namespace dish2 {
 

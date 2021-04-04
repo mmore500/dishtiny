@@ -2,7 +2,6 @@
 #ifndef DISH2_PY_STRIP_PYINCLUDE_ARTIFACTS_HPP_INCLUDE
 #define DISH2_PY_STRIP_PYINCLUDE_ARTIFACTS_HPP_INCLUDE
 
-#include <filesystem>
 #include <fstream>
 #include <string>
 

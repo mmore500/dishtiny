@@ -2,7 +2,6 @@
 #ifndef DISH2_PY_DUMP_ANIMATE_FRAMES_SCRIPT_HPP_INCLUDE
 #define DISH2_PY_DUMP_ANIMATE_FRAMES_SCRIPT_HPP_INCLUDE
 
-#include <filesystem>
 #include <fstream>
 #include <string>
 
@@ -19,7 +18,6 @@ std::filesystem::path dump_animate_frames_script() {
   const std::string script_text = dish2::strip_pyinclude_artifacts(
     #include "../../../script/animate_frames.py"
   );
-
 
   const auto path = uitsl::make_temp_filepath();
   std::ofstream ofs(path);
