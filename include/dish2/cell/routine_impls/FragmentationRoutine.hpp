@@ -24,7 +24,7 @@ void Cell<Spec>::FragmentationRoutine() {
 
   emp_assert( genome.has_value() );
 
-  auto prev_genome = genome;
+  const auto prev_genome = genome;
 
   DeathRoutine( dish2::CauseOfDeath::fragmentation );
 
