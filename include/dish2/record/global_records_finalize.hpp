@@ -122,7 +122,7 @@ void finalize_zips() {
 void animate_frames() {
   std::cout << "animate_frames begin" << '\n';
   const std::string command = emp::to_string(
-    "ls outdrawings/*.png | python3 ",
+    "ls outframes/*.png | python3 ",
     dish2::dump_animate_frames_script(),
     " ",
     dish2::cfg.VIDEO_FPS(),
