@@ -2,6 +2,7 @@
 
 #include "Catch/single_include/catch2/catch.hpp"
 
+#include "dish2/config/thread_idx.hpp"
 #include "dish2/record/drawings/GridDrawer.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/viz/artists/DummyArtist.hpp"
@@ -12,14 +13,18 @@
 
 const uitsl::MpiGuard guard;
 
+using Spec = dish2::Spec_default;
+
 using grid_drawer_t = dish2::GridDrawer<
-  dish2::Spec,
+  Spec,
   dish2::DummyArtist
 >;
 
 TEST_CASE("Test copy ctor") {
 
-  auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
+  dish2::thread_idx = 0;
+
+  auto tw = dish2::ProcWorld<Spec>{}.MakeThreadWorld();
 
   grid_drawer_t drawer(tw, 0);
 
@@ -29,7 +34,9 @@ TEST_CASE("Test copy ctor") {
 
 TEST_CASE("Test copy assignment operator") {
 
-  auto tw = dish2::ProcWorld<dish2::Spec>{}.MakeThreadWorld(0);
+  dish2::thread_idx = 0;
+
+  auto tw = dish2::ProcWorld<Spec>{}.MakeThreadWorld();
 
   grid_drawer_t drawer(tw, 0);
 
