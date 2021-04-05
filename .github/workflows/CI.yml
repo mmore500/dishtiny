@@ -147,6 +147,7 @@ jobs:
       # /usr/bin/git config user.name mmore500
       # fatal: not in a git directory
       - run: git init
+      - run: git commit --allow-empty -m "Initial commit"
       - run: make -C /opt/dishtiny/ web
       - run: make -C /opt/dishtiny/ badges
       - run: git clone https://github.com/mmore500/dishtiny.git -b web-archive deploy/
