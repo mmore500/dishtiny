@@ -35,6 +35,12 @@ EMP_BUILD_CONFIG(
   VALUE(RUN_SECONDS, double, 0,
     "[NATIVE] How many seconds should we run the experiment for?"
   ),
+  VALUE(MAIN_TIMEOUT_SECONDS, double, 13500,
+    "[NATIVE] After how many seconds should we time out and fail with an error?"
+  ),
+  VALUE(END_SNAPSHOT_TIMEOUT_SECONDS, double, 1200,
+    "[NATIVE] After how many seconds should the end snapshot timeout?"
+  ),
   VALUE(LOG_FREQ, double, 20,
     "[NATIVE] How many seconds should pass between logging progress?"
   ),

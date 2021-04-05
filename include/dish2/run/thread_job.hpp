@@ -3,6 +3,7 @@
 #define DISH2_RUN_THREAD_JOB_HPP_INCLUDE
 
 #include <fstream>
+#include <iostream>
 
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 
@@ -18,6 +19,7 @@
 #include "thread_data_dump.hpp"
 #include "thread_data_write.hpp"
 #include "thread_evolve.hpp"
+#include "thread_try_end_snapshot.hpp"
 
 namespace dish2 {
 
@@ -27,6 +29,10 @@ void thread_job( dish2::ThreadWorld<Spec> thread_world ) {
   dish2::load_world<Spec>( thread_world );
 
   if ( cfg.RUN() ) dish2::thread_evolve<Spec>( thread_world );
+
+  if ( cfg.TEST_INTERROOT_PHENOTYPE_DIFFERENTIATION() ) {
+    dish2::dump_interroot_phenotype_differentiation( thread_world );
+  }
 
   // write elapsed updates to file (for easier benchmark post-processing)
   if (cfg.BENCHMARKING_DUMP() ) std::ofstream(
@@ -44,29 +50,7 @@ void thread_job( dish2::ThreadWorld<Spec> thread_world ) {
     dish2::dump_coalescence_result<Spec>( thread_world );
   }
 
-  if ( cfg.DATA_DUMP() ) {
-    dish2::thread_data_dump<Spec>( thread_world );
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " data dump complete" << '\n';
-
-    dish2::thread_data_write<Spec>( thread_world );
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " write 0" << '\n';
-    thread_world.Update();
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " update step" << '\n';
-    dish2::thread_data_write<Spec>( thread_world );
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " write 1" << '\n';
-  }
-
-  if ( cfg.TEST_INTERROOT_PHENOTYPE_DIFFERENTIATION() ) {
-    dish2::dump_interroot_phenotype_differentiation( thread_world );
-  }
+  dish2::thread_try_end_snapshot<Spec>( thread_world );
 
   std::cout << "proc " << uitsl::get_proc_id()
     << " thread " << dish2::thread_idx
