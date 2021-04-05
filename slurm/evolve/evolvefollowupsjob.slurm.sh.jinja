@@ -145,20 +145,11 @@ wait # ignores exit code of time log step
 if (( {{ stint }} % 10 == 0 )); then
 
 # run jinja on template
-JOB_TEMPLATE="$(mktemp)"
+JOB_TEMPLATE="${REPRO_WORK_DIRECTORY}/dishtiny/slurm/genomes/nopoutjob.slurm.sh.jinja"
 JOB_SCRIPT="$(mktemp)"
 
 echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
 echo "JOB_SCRIPT ${JOB_SCRIPT}"
-
-for retry in {1..20}; do
-  curl \
-    -o "${JOB_TEMPLATE}" \
-    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/genomes/nopoutjob.slurm.sh.jinja" \
-  && echo "  job template curl success" && break \
-  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
-  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
-done
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 bucket: {{ bucket }}
@@ -167,13 +158,12 @@ container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
 series: {{ series }}
 stint: {{ stint | int }}
+target_genome_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={{ stint }}+thread=0+variation=master+ext=.json.gz"
 J2_HEREDOC_EOF
 
 chmod +x "${JOB_SCRIPT}"
 
-# adapted from https://superuser.com/a/689340
-# and https://stackoverflow.com/a/4642975
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_sbatch.sh" | bash -s "${JOB_SCRIPT}"
+"${REPRO_WORK_DIRECTORY}/dishtiny/script/host_sbatch.sh" "${JOB_SCRIPT}"
 
 fi
 

@@ -3,6 +3,8 @@
 #define DISH2_ALGORITHM_EXHAUSTIVE_JENGA_NOP_OUT_PHENOTYPICALLY_NEUTRAL_INSTRUCTIONS_HPP_INCLUDE
 
 #include <algorithm>
+#include <chrono>
+#include <cstdlib>
 #include <iostream>
 #include <tuple>
 
@@ -14,6 +16,9 @@
 
 #include "../debug/LogScope.hpp"
 #include "../genome/Genome.hpp"
+#include "../record/dump_in_progress_jenga_nopout_genome.hpp"
+#include "../record/finalize/finalize_artifacts.hpp"
+#include "../utility/static_coarse_timer.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "assess_instructions_for_phenotypic_divergence.hpp"
@@ -130,6 +135,26 @@ auto exhaustive_jenga_nop_out_phenotypically_neutral_instructions(
     std::cout << sgpl::count_op_instructions( genome.program );
     std::cout << " op instructions remain in phenotype equivalent nopout";
     std::cout << '\n';
+
+    if (
+      dish2::static_coarse_timer.GetElapsed()
+      >= std::chrono::duration<double>(
+        dish2::cfg.JENGA_NOP_OUT_SAVE_PROGRESS_AND_QUIT_SECONDS()
+      )
+    ) {
+
+      std::cout << "jenga nopout timeout, saving progress and quitting" << '\n';
+      std::cout << sgpl::count_op_instructions( genome.program );
+      std::cout << " op instructions remain in phenotype equivalent nopout";
+      std::cout << '\n';
+
+      dish2::dump_in_progress_jenga_nopout_genome<Spec>( genome );
+      dish2::finalize_artifacts();
+
+      std::cout << "in progress genome dump complete" << '\n';
+
+      std::exit( 0 );
+    }
 
   };
 

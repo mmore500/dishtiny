@@ -1,7 +1,7 @@
 #!/bin/bash -login
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
-#SBATCH --job-name a=nopout+series={{ series }}+stint={{ stint }}
+#SBATCH --job-name a=nopout+series={{ series }}+stint={{ stint }}+target_genome_url={{ target_genome_url }}
 #SBATCH --account=devolab
 #SBATCH --output="/mnt/scratch/%u/slurmlogs/a=nopout+job=%j+series={{ series }}+stint={{ stint }}+ext.log"
 #SBATCH --mem=24G
@@ -105,6 +105,7 @@ echo "bucket {{ bucket }}"
 echo "configpack {{ configpack }}"
 echo "container_tag {{ container_tag }}"
 echo "repo_sha {{ repo_sha }}"
+echo "target_genome_url {{ target_genome_url }}"
 
 ################################################################################
 echo
@@ -123,12 +124,11 @@ echo "WORK_DIRECTORY ${WORK_DIRECTORY}"
 
 echo "downloading genome from target stint and series..."
 
-f="a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={{ stint }}+thread=0+variation=master+ext=.json.gz"
 echo "downloading ${f}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
-    "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
-    "${f}" \
+    "{{ target_genome_url }}" \
+    "$(basename "{{ target_genome_url }}")" \
     && echo "  ${f} download success" && break \
     || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
@@ -200,6 +200,71 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
 MPIEXEC_HEREDOC_EOF
+
+################################################################################
+echo
+echo "Handling in-progress nopout"
+echo "-------------------------------------------------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# test for in-progress dump
+if ls outartifacts/*a=in_progress_jenga_nopout* 2>&1 >/dev/null; then
+
+# upload in-progress genome
+s3_dir="s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}"
+
+for p in outartifacts/*a=in_progress_jenga_nopout*.json.gz*; do
+
+f="$(basename "${p}")"
+echo "uploading ${p} -> ${f}"
+
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "${p}" \
+    "${s3_dir}/${f}" \
+  && echo "  $f upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+done
+
+done
+
+# run jinja on template
+JOB_TEMPLATE="${REPRO_WORK_DIRECTORY}/dishtiny/slurm/genomes/nopoutjob.slurm.sh.jinja"
+JOB_SCRIPT="$(mktemp)"
+
+echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
+echo "JOB_SCRIPT ${JOB_SCRIPT}"
+
+target_genome_url="${s3_dir}/$(basename outartifacts/*a=in_progress_jenga_nopout*.json.gz)"
+echo "target_genome_url ${target_genome_url}"
+
+j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+bucket: {{ bucket }}
+configpack: {{ configpack }}
+container_tag: {{ container_tag }}
+repo_sha: {{ repo_sha }}
+series: {{ series }}
+stint: {{ stint | int }}
+target_genome_url: "${target_genome_url}"
+J2_HEREDOC_EOF
+
+chmod +x "${JOB_SCRIPT}"
+
+"${REPRO_WORK_DIRECTORY}/dishtiny/script/host_sbatch.sh" "${JOB_SCRIPT}"
+
+echo "in-progress nopout continuation complete, exiting"
+
+exit 0
+
+else
+
+echo "no in-progress nopout detected, continuing"
+
+fi
 
 ################################################################################
 echo

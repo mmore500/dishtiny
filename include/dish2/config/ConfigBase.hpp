@@ -321,6 +321,10 @@ EMP_BUILD_CONFIG(
   VALUE(JENGA_PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
     "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
   ),
+  VALUE(JENGA_NOP_OUT_SAVE_PROGRESS_AND_QUIT_SECONDS, size_t, 10800,
+    "[NATIVE] After how many seconds should we save nop-out progress and quit?"
+  ),
+
   VALUE(TEST_INTERROOT_PHENOTYPE_DIFFERENTIATION, bool, false,
     "[NATIVE] Should we test for phenotype differentiation between roots?"
   ),

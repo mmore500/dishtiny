@@ -46,10 +46,7 @@ bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
   );
 
   if (
-    (
-      cfg.PHENOTYPE_EQUIVALENT_NOPOUT()
-      || cfg.BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT()
-    )
+    cfg.BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT()
     && dish2::thread_idx == 0
     && uitsl::is_root()
   ) {
