@@ -358,7 +358,8 @@ function on_error() {
 
   for target in $(find . -name '*a=log+*'); do
     echo "uploading ${target}"
-    curl --upload-file "${target}" "https://transfersh.com/$(basename "${target}")"
+    curl --upload-file "${target}" "https://transfer.sh"
+    echo
   done
 
   echo "sstat -j ${SLURM_JOB_ID}"
