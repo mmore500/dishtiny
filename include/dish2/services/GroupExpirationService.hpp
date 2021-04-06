@@ -50,12 +50,14 @@ public:
 
     auto& rand = sgpl::tlrand.Get();
 
-    for (size_t lev{}; lev < spec_t::NLEV; ++lev) {
+    // only expire based on outermost level
+    //for (size_t lev{}; lev < spec_t::NLEV; ++lev)
+    const size_t lev = spec_t::NLEV - 1; {
       const size_t expiration = AmtExpired<Cell>( cell, lev );
       const double p_fragmentation = std::min( 0.1 * expiration, 1.0 );
       if ( expiration && rand.P( p_fragmentation ) ) {
         cell.FragmentationRoutine();
-        break;
+        // break;
       }
     }
 
