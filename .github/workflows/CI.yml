@@ -1,10 +1,10 @@
 name: CI
 on:
   push:
-    branches: [ master, dev ]
-  pull_request:
-    branches:
-      - '**'
+    branches: [ master, dev, throwaway ]
+  # pull_request:
+    # branches:
+    #   - '**'
   schedule:
     - cron: '0 0 * * 0'
 jobs:
