@@ -73,7 +73,7 @@ struct ResourceReceivingService {
       cell.template end<dish2::ResourceNodeInputWrapper<spec_t>>(),
       float{},
       [](const float sum, auto& input){ return sum + input.JumpGet(); }
-    );
+    ) * dish2::cfg.RESOURCE_DECAY() * dish2::cfg.RESOURCE_DECAY();
 
     emp_assert( std::isfinite( received_amount ), received_amount );
     emp_assert( received_amount >= 0.0f, received_amount );
