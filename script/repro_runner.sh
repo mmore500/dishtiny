@@ -374,7 +374,7 @@ function on_error() {
   echo "pwd" && pwd
   echo "ls" && ls
   echo "du -h .  --max-depth 1" && du -h . --max-depth 1
-  echo "tree --du -h out*" && tree --du -h out* || :
+  echo "tree --du -h out*" && tree --du -h . || :
 
   # memory info
   echo "cat /proc/meminfo" && cat /proc/meminfo
