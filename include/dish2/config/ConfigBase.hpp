@@ -113,6 +113,9 @@ EMP_BUILD_CONFIG(
   VALUE(APOP_RECOVERY_FRAC, float, 0.8,
     "What fraction of REP_THRESH is recovered to heirs after apoptosis?"
   ),
+  VALUE(SPAWN_DEFENSE_COST, float, 1.1,
+    "What is the cost of repelling an incoming spawn?"
+  ),
 
   GROUP(HARVEST, "HARVEST"),
   VALUE(BASE_HARVEST_RATE, float, 0.02,

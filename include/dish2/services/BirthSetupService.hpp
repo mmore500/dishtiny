@@ -51,8 +51,11 @@ struct BirthSetupService {
     float resource_stockpile = *cell.template begin<
       dish2::ResourceStockpileWrapper<spec_t>
     >();
-    while ( resource_stockpile >= 1.0f && fresh_input_idxs.size() ) {
-      resource_stockpile -= 1.0f;
+    while (
+      resource_stockpile >= dish2::cfg.SPAWN_DEFENSE_COST()
+      && fresh_input_idxs.size()
+    ) {
+      resource_stockpile -= dish2::cfg.SPAWN_DEFENSE_COST();
       fresh_input_idxs.pop_back();
     }
 
