@@ -3,6 +3,7 @@
 #define DISH2_RECORD_MAKE_FILENAME_MAKE_ELAPSED_UPDATES_FILENAME_HPP_INCLUDE
 
 #include <cstdlib>
+#include <ctime>
 #include <string>
 #include <unistd.h>
 
@@ -24,6 +25,8 @@
 namespace dish2 {
 
 std::string make_elapsed_updates_filename() {
+  std::srand( std::time(nullptr) );
+
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "elapsed_updates"},
     {"_source", EMP_STRINGIFY(DISHTINY_HASH_)},
@@ -32,6 +35,7 @@ std::string make_elapsed_updates_filename() {
     {"_hostname", dish2::get_hostname() },
     {"_pid", emp::to_string( ::getpid() ) },
     {"_treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
+    {"_unique", emp::to_string( std::rand() ) },
     {"ext", ".txt"}
   };
 
