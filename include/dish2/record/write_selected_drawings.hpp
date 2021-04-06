@@ -21,6 +21,8 @@ namespace dish2 {
 template< typename Spec >
 void write_selected_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
+  dish2::log_msg( "writing selected drawings" );
+
   using polymorphic_drawers_t = typename dish2::DrawerCollection<Spec>::polymorphic_drawers_t;
 
   thread_local emp::vector<polymorphic_drawers_t> drawers = [&thread_world](){

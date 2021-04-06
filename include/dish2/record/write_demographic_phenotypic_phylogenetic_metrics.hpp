@@ -94,6 +94,8 @@ void write_demographic_phenotypic_phylogenetic_metrics(
   const dish2::ThreadWorld< Spec >& world
 ) {
 
+  dish2::log_msg( "writing demographic phenotypic phylogenetic metrics" );
+
   const thread_local std::string out_filename = dish2::pare_keyname_filename(
     dish2::make_demographic_phenotypic_phylogenetic_metrics_filename(),
     dish2::make_data_path()
@@ -128,8 +130,9 @@ void write_demographic_phenotypic_phylogenetic_metrics(
     file.AddVar(update, "Update");
     file.PrintHeaderKeys();
 
-    dish2::log_msg( "wrote demographic phenotypic phylogenetic metrics" );
   });
+
+
 
   {
     metric = "Number Cells";
@@ -621,6 +624,8 @@ void write_demographic_phenotypic_phylogenetic_metrics(
         / static_cast<double>( num_live_cardinal_updates );
     file.Update();
   }
+
+  dish2::log_msg( "wrote demographic phenotypic phylogenetic metrics" );
 
 }
 
