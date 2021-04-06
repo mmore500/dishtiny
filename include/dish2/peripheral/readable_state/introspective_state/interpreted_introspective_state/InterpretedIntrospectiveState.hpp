@@ -22,8 +22,6 @@
 #include "ParentFragmented.hpp"
 #include "PhylogeneticRootMatch.hpp"
 #include "RicherThanNeighbor.hpp"
-#include "StockpileDepleted.hpp"
-#include "StockpileFecund.hpp"
 
 namespace dish2 {
 
@@ -46,9 +44,7 @@ using interpreted_introspective_state_parent_t = uitsl::PodInternalNode<
   dish2::OptimumQuorumExceeded<Spec>,
   dish2::ParentFragmented,
   dish2::PhylogeneticRootMatch,
-  dish2::RicherThanNeighbor,
-  dish2::StockpileDepleted,
-  dish2::StockpileFecund
+  dish2::RicherThanNeighbor
   >;
 
 } // namespace internal

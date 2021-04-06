@@ -94,9 +94,7 @@ struct Spec_prq49 {
     dish2::EventSeries< dish2::PhylogeneticRootMismatchEvent >,
     dish2::EventSeries< dish2::PoorerThanNeighborEvent >,
     dish2::EventSeries< dish2::ReceivedResourceFromEvent >,
-    dish2::EventSeries< dish2::RicherThanNeighborEvent >,
-    dish2::EventSeries< dish2::StockpileDepletedEvent >,
-    dish2::EventSeries< dish2::StockpileFecundEvent >
+    dish2::EventSeries< dish2::RicherThanNeighborEvent >
   >;
 
   constexpr inline static size_t NUM_EVENTS = event_manager_t::GetNumEvents();
