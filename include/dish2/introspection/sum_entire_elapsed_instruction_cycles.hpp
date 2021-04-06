@@ -8,6 +8,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 
 #include "../cell/cardinal_iterators/EntireElapsedInstructionCyclesWrapper.hpp"
@@ -25,7 +26,7 @@ size_t sum_entire_elapsed_instruction_cycles(
   const auto& population = world.population;
 
   using iterator_t = dish2::WorldIteratorValueAdapter<
-    typename std::vector< dish2::Cell< Spec > >::const_iterator,
+    typename emp::vector< dish2::Cell< Spec > >::const_iterator,
     dish2::EntireElapsedInstructionCyclesWrapper<Spec>
   >;
 

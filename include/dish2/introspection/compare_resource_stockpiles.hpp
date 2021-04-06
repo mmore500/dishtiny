@@ -7,6 +7,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
@@ -26,7 +27,7 @@ bool compare_resource_stockpiles(
   const auto& population2 = world2.population;
 
   using iterator_t = dish2::WorldIteratorAbridger<
-    typename std::vector< dish2::Cell< Spec > >::const_iterator,
+    typename emp::vector< dish2::Cell< Spec > >::const_iterator,
     dish2::ResourceStockpileWrapper<Spec>
   >;
 

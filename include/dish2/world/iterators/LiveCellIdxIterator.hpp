@@ -2,6 +2,7 @@
 #ifndef DISH2_WORLD_ITERATORS_LIVECELLIDXITERATOR_HPP_INCLUDE
 #define DISH2_WORLD_ITERATORS_LIVECELLIDXITERATOR_HPP_INCLUDE
 
+#include <algorithm>
 #include <iterator>
 
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
@@ -12,10 +13,10 @@ namespace dish2 {
 
 template<typename Spec>
 class LiveCellIdxIterator
-: protected std::vector<dish2::Cell<Spec>>::const_iterator {
+: protected emp::vector<dish2::Cell<Spec>>::const_iterator {
 
   using parent_t
-    = typename std::vector<dish2::Cell<Spec>>::const_iterator;
+    = typename emp::vector<dish2::Cell<Spec>>::const_iterator;
 
   parent_t begin;
   parent_t end;
@@ -34,17 +35,20 @@ public:
   LiveCellIdxIterator(const LiveCellIdxIterator &) = default;
 
   static LiveCellIdxIterator make_begin(
-    const std::vector<dish2::Cell<Spec>>& population
+    const emp::vector<dish2::Cell<Spec>>& population
   ) {
-    return ++dish2::LiveCellIdxIterator<Spec>{
-      std::prev( std::begin( population ) ),
+    return dish2::LiveCellIdxIterator<Spec>{
+      std::find_if(
+        std::begin( population ), std::end( population ),
+        []( const auto& cell ){ return cell.IsAlive(); }
+      ),
       std::begin( population ),
       std::end( population )
     };
   }
 
   static LiveCellIdxIterator make_end(
-    const std::vector<dish2::Cell<Spec>>& population
+    const emp::vector<dish2::Cell<Spec>>& population
   ) {
     return LiveCellIdxIterator<Spec>{
       std::end(population),
