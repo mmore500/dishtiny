@@ -16,6 +16,7 @@
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../utility/pare_keyname_filename.hpp"
 
 #include "cell_census/write_cell_age.hpp"
@@ -69,9 +70,7 @@ void write_cell_census( const dish2::ThreadWorld< Spec >& world ) {
     file.AddVar(update, "Update");
     file.PrintHeaderKeys();
 
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " wrote cell census" << '\n';
+    dish2::log_msg( "wrote cell census" );
   });
 
 

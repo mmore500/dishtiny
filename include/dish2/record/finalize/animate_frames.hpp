@@ -10,12 +10,13 @@
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../config/cfg.hpp"
+#include "../../debug/log_msg.hpp"
 #include "../../py/dump_animate_frames_script.hpp"
 
 namespace dish2 {
 
 void animate_frames() {
-  std::cout << "animate_frames begin" << '\n';
+  dish2::log_msg( "animate_frames begin" );
   const std::string command = emp::to_string(
     "ls outframes/*.png | python3 ",
     dish2::dump_animate_frames_script(),

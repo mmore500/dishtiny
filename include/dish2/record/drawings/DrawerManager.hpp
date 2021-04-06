@@ -11,7 +11,7 @@
 #include "../../../../third-party/Empirical/include/emp/base/array.hpp"
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
-#include "../../config/thread_idx.hpp"
+#include "../../debug/log_msg.hpp"
 
 #include "PolymorphicDrawer.hpp"
 
@@ -87,7 +87,7 @@ struct DrawerManager<FirstDrawer, SubsequentDrawers...> {
           }
         );
 
-        std::cout << "created drawer for " << emp::slugify(name) << "\n";
+        dish2::log_msg( "created drawer for ", emp::slugify(name) );
 
         emp_always_assert(
           found != std::end( lookup ), emp::slugify(name)

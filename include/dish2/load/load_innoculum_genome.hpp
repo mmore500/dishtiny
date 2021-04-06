@@ -9,13 +9,12 @@
 #include "../../../third-party/cereal/include/cereal/archives/binary.hpp"
 #include "../../../third-party/cereal/include/cereal/archives/json.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 
-#include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../genome/Genome.hpp"
 #include "../utility/autoload.hpp"
 
@@ -62,10 +61,7 @@ dish2::Genome<Spec> load_innoculum_genome(const std::filesystem::path& path) {
   dish2::set_intra_message_selfsend_filter_mod<Spec>( path );
   dish2::set_intra_message_selfsend_filter_target<Spec>( path );
 
-
-  std::cout  << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " loaded innoculum genome " << root_id << " from " << path << '\n';
+  dish2::log_msg( "loaded innoculum genome ", root_id, " from ", path );
 
   return innoculum;
 

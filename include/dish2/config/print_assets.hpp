@@ -9,15 +9,17 @@
 #include "../../../third-party/conduit/include/uitsl/debug/list_cwd.hpp"
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 
+#include "../debug/log_tee.hpp"
+
 #include "cfg.hpp"
 
 namespace dish2 {
 
 void print_assets() {
 
-  std::cout << "======================================" << '\n';
-  std::cout << "|   What assets am I working with?    |" << '\n';
-  std::cout << "======================================" << '\n';
+  dish2::log_tee << "======================================" << '\n';
+  dish2::log_tee << "|   What assets am I working with?    |" << '\n';
+  dish2::log_tee << "======================================" << '\n';
 
   #ifndef __EMSCRIPTEN__
     // hash all files, excluding source directory
@@ -28,7 +30,7 @@ void print_assets() {
     uitsl::list_cwd();
   #endif // #ifndef __EMSCRIPTEN__
 
-  std::cout << "=======================================\n" << '\n';
+  dish2::log_tee << "=======================================\n" << '\n';
 
 }
 

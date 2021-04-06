@@ -5,11 +5,10 @@
 #include <utility>
 
 #include "../../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
-#include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 
-#include "../../config/thread_idx.hpp"
+#include "../../debug/log_msg.hpp"
 #include "../../genome/Genome.hpp"
 
 namespace dish2 {
@@ -26,11 +25,10 @@ void apply_point_mutate_on_load(
 
   if ( attrs.count("point_mutate_on_load") ) {
     const size_t num_muts = uitsl::stoszt( attrs.at("point_mutate_on_load") );
-    if ( should_announce ) std::cout
-      << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " applying " << num_muts << " point mutations "
-      << "to genome " << attrs.at("root_id") << " from " << path << '\n';
+    if ( should_announce ) dish2::log_msg(
+      "applying ", num_muts, " point mutations to genome ", attrs.at("root_id"),
+      " from ", path
+    );
 
     for (size_t i{}; i < num_muts; ++i) innoculum.DoPointMutation();
   }

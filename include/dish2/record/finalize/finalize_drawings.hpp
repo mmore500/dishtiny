@@ -3,9 +3,10 @@
 #define DISH2_RECORD_FINALIZE_FINALIZE_DRAWINGS_HPP_INCLUDE
 
 #include <cstdlib>
-#include <iostream>
 
 #include "../../../../third-party/conduit/include/uitsl/debug/err_verify.hpp"
+
+#include "../../debug/log_msg.hpp"
 
 #include "create_deduplicated_drawing_archive.hpp"
 #include "try_create_montage.hpp"
@@ -13,7 +14,7 @@
 namespace dish2 {
 
 void finalize_drawings() {
-  std::cout << "finalize_drawings begin" << '\n';
+  dish2::log_msg( "finalize_drawings begin" );
   // cd doesn't propagate out of std::system call
   create_deduplicated_drawing_archive();
   dish2::try_create_montage();
@@ -24,7 +25,7 @@ void finalize_drawings() {
     "  a proc idx replicate thread update stint series treatment variation ext"
     "; done"
   "'" ) );
-  std::cout << "finalize_drawings complete" << '\n';
+  dish2::log_msg( "finalize_drawings complete" );
 }
 
 } // namespace dish2

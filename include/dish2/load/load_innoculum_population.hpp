@@ -9,7 +9,6 @@
 #include "../../../third-party/cereal/include/cereal/archives/binary.hpp"
 #include "../../../third-party/cereal/include/cereal/archives/json.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
@@ -18,6 +17,7 @@
 
 #include "../configbyroot/root_mutation_configs.hpp"
 #include "../configbyroot/root_perturbation_configs.hpp"
+#include "../debug/log_msg.hpp"
 #include "../genome/Genome.hpp"
 #include "../utility/autoload.hpp"
 
@@ -71,11 +71,10 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
   dish2::set_intra_message_selfsend_filter_mod<Spec>( path );
   dish2::set_intra_message_selfsend_filter_target<Spec>( path );
 
-  std::cout  << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " loaded innoculum population " << root_id
-    << " with " << innoculum.size() << " genomes "
-    << " from " << path << '\n';
+  dish2::log_msg(
+    "loaded innoculum population ", root_id,
+    " with ", innoculum.size(), " genomes from ", path
+  );
 
   return innoculum;
 

@@ -4,11 +4,11 @@
 
 #include <utility>
 
-#include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 
 #include "../../configbyroot/root_mutation_configs.hpp"
+#include "../../debug/log_msg.hpp"
 
 namespace dish2 {
 
@@ -22,11 +22,10 @@ void set_program_max_size_override( const std::filesystem::path& path ) {
   if ( attrs.count("set_program_max_size_override") ) {
     const size_t program_max_size_override
       = uitsl::stoszt( attrs.at("set_program_max_size_override") );
-    std::cout  << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " setting program_max_size_override to "
-      << program_max_size_override
-      << " for root id " << root_id << " from " << path << '\n';
+    dish2::log_msg(
+      "setting program_max_size_override to ", program_max_size_override,
+      " for root id ", root_id, " from ", path
+    );
 
     dish2::root_mutation_configs.Get(
       root_id

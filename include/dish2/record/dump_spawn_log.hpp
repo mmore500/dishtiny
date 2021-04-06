@@ -17,6 +17,7 @@
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../utility/pare_keyname_filename.hpp"
 
 #include "make_filename/make_data_path.hpp"
@@ -92,9 +93,7 @@ void dump_spawn_log( const dish2::ThreadWorld< Spec >& world ) {
     }
   );
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " dumped spawn log" << '\n';
+  dish2::log_msg( "dumped spawn log" );
 
 }
 

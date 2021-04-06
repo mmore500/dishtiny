@@ -6,6 +6,7 @@
 
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 
+#include "../debug/log_tee.hpp"
 #include "../peripheral/readable_state/introspective_state/IntrospectiveState.hpp"
 #include "../peripheral/readable_state/ReadableState.hpp"
 #include "../peripheral/readable_state/writable_state/WritableState.hpp"
@@ -16,24 +17,24 @@ namespace dish2 {
 template<typename Spec>
 void print_spec() {
 
-  std::cout << "==============================" << '\n';
-  std::cout << "|     How am I compiled?     |" << '\n';
-  std::cout << "==============================" << '\n';
-  std::cout << "SOURCE DIRECTORY "
+  dish2::log_tee << "==============================" << '\n';
+  dish2::log_tee << "|     How am I compiled?     |" << '\n';
+  dish2::log_tee << "==============================" << '\n';
+  dish2::log_tee << "SOURCE DIRECTORY "
     << EMP_STRINGIFY(DISHTINY_SOURCE_DIR_) << '\n';
-  std::cout << "SOURCE HASH " << EMP_STRINGIFY(DISHTINY_HASH_) << '\n';
-  std::cout << "DISH2_SPEC " << EMP_STRINGIFY(DISH2_SPEC) << '\n';
-  std::cout << "------------------------------" << '\n';
+  dish2::log_tee << "SOURCE HASH " << EMP_STRINGIFY(DISHTINY_HASH_) << '\n';
+  dish2::log_tee << "DISH2_SPEC " << EMP_STRINGIFY(DISH2_SPEC) << '\n';
+  dish2::log_tee << "------------------------------" << '\n';
 
   constexpr size_t introspective_size
     = dish2::IntrospectiveState<Spec>::parent_size;
   constexpr size_t readable_size = dish2::ReadableState<Spec>::parent_size;
   constexpr size_t writable_size = dish2::WritableState<Spec>::parent_size;
-  std::cout << "IntrospectiveState size: " << introspective_size << '\n';
-  std::cout << "ReadableState size: " << readable_size << '\n';
-  std::cout << "WritableState size: " << writable_size << '\n';
+  dish2::log_tee << "IntrospectiveState size: " << introspective_size << '\n';
+  dish2::log_tee << "ReadableState size: " << readable_size << '\n';
+  dish2::log_tee << "WritableState size: " << writable_size << '\n';
 
-  std::cout << "==============================\n" << '\n';
+  dish2::log_tee << "==============================\n" << '\n';
 
 }
 

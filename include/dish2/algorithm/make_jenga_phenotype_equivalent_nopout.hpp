@@ -16,6 +16,7 @@
 #include "../config/TemporaryConfigOverride.hpp"
 #include "../debug/entry_types.hpp"
 #include "../debug/log_event.hpp"
+#include "../debug/log_msg.hpp"
 #include "../debug/LogScope.hpp"
 #include "../genome/Genome.hpp"
 #include "../record/make_filename/make_data_path.hpp"
@@ -85,14 +86,16 @@ dish2::Genome<Spec> make_jenga_phenotype_equivalent_nopout(
     );
     const auto out_path = dish2::make_data_path( out_filename );
 
-    std::cout << sgpl::count_op_instructions( genome.program );
-    std::cout << " op instructions remain in phenotype equivalent nopout";
-    std::cout << '\n';
+    dish2::log_msg(
+      sgpl::count_op_instructions( genome.program ),
+      " op instructions remain in phenotype equivalent nopout"
+    );
 
-    std::cout << "dumping " << divergence_updates.size()
-      << " divergence updates for instwise neutral nopout w/ coarseness "
-      << coarseness << " to "
-      << out_path << '\n';
+    dish2::log_msg(
+      "dumping ", divergence_updates.size(),
+      " divergence updates for instwise neutral nopout w/ coarseness ",
+      coarseness, " to ", out_path
+    );
 
     std::ofstream os( out_path, std::ios_base::app );
     for (const auto& upd : divergence_updates) os << upd << '\n';
@@ -114,21 +117,24 @@ dish2::Genome<Spec> make_jenga_phenotype_equivalent_nopout(
     );
     const auto out_path = dish2::make_data_path( out_filename );
 
-    std::cout << sgpl::count_op_instructions( genome.program );
-    std::cout << " op instructions remain in phenotype equivalent nopout";
-    std::cout << '\n';
-
-    std::cout << "dumping " << divergence_updates.size()
-      << " divergence updates for instwise neutral nopout w/ coarseness 1 to "
-      << out_path << '\n';
+    dish2::log_msg(
+      sgpl::count_op_instructions( genome.program ),
+      " op instructions remain in phenotype equivalent nopout"
+    );
+    dish2::log_msg(
+      "dumping ", divergence_updates.size(),
+      " divergence updates for instwise neutral nopout w/ coarseness 1 to ",
+      out_path
+    );
 
     std::ofstream os( out_path, std::ios_base::app );
     for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
-  std::cout << sgpl::count_op_instructions( genome.program );
-  std::cout << " op instructions remain in phenotype equivalent nopout";
-  std::cout << '\n';
+  dish2::log_msg(
+    sgpl::count_op_instructions( genome.program ),
+    " op instructions remain in phenotype equivalent nopout"
+  );
 
   return genome;
 

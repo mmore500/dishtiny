@@ -7,20 +7,21 @@
 
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 
+#include "../debug/log_tee.hpp"
 #include "../utility/get_hostname.hpp"
 
 namespace dish2 {
 
 void print_pwd() {
 
-  std::cout << "======================================" << '\n';
-  std::cout << "|            Where am I?             |" << '\n';
-  std::cout << "======================================" << '\n';
+  dish2::log_tee << "======================================" << '\n';
+  dish2::log_tee << "|            Where am I?             |" << '\n';
+  dish2::log_tee << "======================================" << '\n';
 
-  std::cout << dish2::get_hostname() << '\n';
-  std::cout << std::filesystem::current_path() << '\n';
+  dish2::log_tee << dish2::get_hostname() << '\n';
+  dish2::log_tee << std::filesystem::current_path() << '\n';
 
-  std::cout << "======================================\n" << '\n';
+  dish2::log_tee << "======================================\n" << '\n';
 
 }
 

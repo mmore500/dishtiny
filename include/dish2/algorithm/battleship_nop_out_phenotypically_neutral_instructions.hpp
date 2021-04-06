@@ -9,7 +9,10 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_instructions.hpp"
 
+#include "../debug/log_msg.hpp"
 #include "../debug/LogScope.hpp"
+#include "../debug/log_tee.hpp"
+#include "../debug/make_log_entry_boilerplate.hpp"
 #include "../genome/Genome.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -23,9 +26,10 @@ auto battleship_nop_out_phenotypically_neutral_instructions(
 ) {
 
   const dish2::LogScope guard{ "evaluating instruction-by-instruction" };
-  std::cout
-    << "evaluating " << genome.program.size() << " instructions "
-    << nop_length << " at a time" << '\n';
+  dish2::log_msg(
+    "evaluating ", genome.program.size(), " instructions ",
+    nop_length, " at a time"
+  );
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
 
@@ -45,15 +49,19 @@ auto battleship_nop_out_phenotypically_neutral_instructions(
         genome, idx, nop_length
       );
 
+    dish2::log_tee << dish2::make_log_entry_boilerplate();
     for (size_t i{}; i < nop_length; ++i) if ( idx + i < should_nop.size() ) {
       should_nop[idx + i] = (res == cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES());
       divergence_updates[idx + i] = res;
-      if (i == 0) std::cout << (should_nop[idx + i] ? "x" : "o") << std::flush;
+      if (i == 0) {
+        dish2::log_tee << (should_nop[idx + i] ? "x" : "o");
+        dish2::log_tee << std::flush;
+      }
     }
 
   }
 
-  std::cout << " done" << '\n';
+  dish2::log_tee << " done" << '\n' << '\n';
 
   genome.program
     = sgpl::nop_out_instructions< sgpl_spec_t >( genome.program, should_nop );

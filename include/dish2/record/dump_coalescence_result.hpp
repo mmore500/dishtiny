@@ -20,6 +20,7 @@
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../introspection/any_live_cells.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_root_id_abundance.hpp"
@@ -132,9 +133,7 @@ void dump_coalescence_result( const dish2::ThreadWorld< Spec >& world ) {
 
   }
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " dumped coalescence result" << '\n';
+  dish2::log_msg( "dumped coalescence result" );
 
 }
 

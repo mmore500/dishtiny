@@ -16,6 +16,7 @@
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../introspection/count_kin_neighbors.hpp"
 #include "../introspection/count_live_cardinals.hpp"
 #include "../introspection/count_spawn_events.hpp"
@@ -139,9 +140,7 @@ void dump_kin_conflict_by_replev_statistics(
     }
   }
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " dumped kin conflict by replev statistics" << '\n';
+  dish2::log_msg("dumped kin conflict by replev statistics");
 
 }
 

@@ -6,23 +6,25 @@
 
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 
+#include "../debug/log_tee.hpp"
+
 #include "cfg.hpp"
 
 namespace dish2 {
 
 void print_config() {
 
-  std::cout << "==============================" << '\n';
-  std::cout << "|    How am I configured?    |" << '\n';
-  std::cout << "==============================" << '\n';
-  std::cout << "SOURCE DIRECTORY "
+  dish2::log_tee << "==============================" << '\n';
+  dish2::log_tee << "|    How am I configured?    |" << '\n';
+  dish2::log_tee << "==============================" << '\n';
+  dish2::log_tee << "SOURCE DIRECTORY "
     << EMP_STRINGIFY(DISHTINY_SOURCE_DIR_) << '\n';
-  std::cout << "SOURCE HASH " << EMP_STRINGIFY(DISHTINY_HASH_) << '\n';
-  std::cout << "------------------------------" << '\n';
+  dish2::log_tee << "SOURCE HASH " << EMP_STRINGIFY(DISHTINY_HASH_) << '\n';
+  dish2::log_tee << "------------------------------" << '\n';
 
-  dish2::cfg.Write( std::cout );
+  dish2::cfg.Write( dish2::log_tee );
 
-  std::cout << "==============================\n" << '\n';
+  dish2::log_tee << "==============================\n" << '\n';
 
   // todo print directory contents (with hashes?)
 

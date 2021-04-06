@@ -15,6 +15,7 @@
 #include "../config/calc_rng_preseed.hpp"
 #include "../config/cfg.hpp"
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../utility/sha256_reduce.hpp"
 
 namespace dish2 {
@@ -23,9 +24,7 @@ void setup_thread_local_random() {
 
   const uint32_t preseed = dish2::calc_rng_preseed();
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " using rng preseed " << preseed << '\n';
+  dish2::log_msg( "using rng preseed ", preseed );
 
   const uint32_t hash = dish2::sha256_reduce( emp::vector< uint32_t >{
     preseed,
@@ -33,9 +32,7 @@ void setup_thread_local_random() {
     uitsl::safe_cast<uint32_t>( uitsl::get_proc_id() )
   } );
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " calculated hash " << hash << '\n';
+  dish2::log_msg( "calculated hash ", hash );
 
   // seed >= 1 so that rng is seeded deterministically
   const auto seed_addend = hash % ( std::numeric_limits<int32_t>::max() - 1 );
@@ -43,9 +40,7 @@ void setup_thread_local_random() {
 
   sgpl::tlrand.Initialize( seed );
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " applied rng seed " << seed << '\n';
+  dish2::log_msg( "applied rng seed ", seed );
 
 }
 

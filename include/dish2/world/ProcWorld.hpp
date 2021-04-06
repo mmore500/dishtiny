@@ -20,6 +20,7 @@
 #include "../config/cfg.hpp"
 #include "../config/num_cells_global.hpp"
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 
 #include "ThreadWorld.hpp"
 
@@ -126,7 +127,7 @@ struct ProcWorld {
     assignments.first
   };
 
-  ProcWorld() { if (use_metis) std::cout << "assign used metis" << '\n'; }
+  ProcWorld() { if (use_metis) dish2::log_msg( "assign used metis" ); }
 
   dish2::ThreadWorld<Spec> MakeThreadWorld() {
     return dish2::ThreadWorld<Spec>(

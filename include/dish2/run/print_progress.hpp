@@ -7,6 +7,7 @@
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../world/ThreadWorld.hpp"
 
 namespace dish2 {
@@ -17,27 +18,23 @@ void print_progress(
   const uitsl::CoarseTimer& run_timer
 ) {
 
-  std::cout << "proc " << uitsl::get_proc_id();
-  std::cout << " thread " << dish2::thread_idx;
-  std::cout << " @ update " << thread_world.GetUpdate();
+  const size_t update = thread_world.GetUpdate();
 
-  // if limited by updates, print percent updates progress
   if ( dish2::cfg.RUN_UPDATES() ) {
-    std::cout << " of " << dish2::cfg.RUN_UPDATES()
-      << " ("
-      << 100.0 * thread_world.GetUpdate() / dish2::cfg.RUN_UPDATES()
-      << "%)";
-  }
+    dish2::log_msg(
+      "update ", update, " of ", dish2::cfg.RUN_UPDATES(),
+      " (", 100.0 * update / dish2::cfg.RUN_UPDATES(), "%)"
+    );
+  } else dish2::log_msg( "update ", update );
 
-  std::cout << " + second " << run_timer.GetElapsed().count();
 
-  // if limited by time, print percent time progress
   if ( dish2::cfg.RUN_SECONDS() ) {
-    std::cout << " of " << dish2::cfg.RUN_SECONDS()
-    << " (" << 100.0 * run_timer.GetFractionComplete() << "%)";
-  }
-
-  std::cout << '\n';
+    dish2::log_msg(
+      "second ", run_timer.GetElapsed().count(),
+      " of ", dish2::cfg.RUN_SECONDS(),
+      " (", 100.0 * run_timer.GetFractionComplete(), "%)"
+    );
+  } else dish2::log_msg( "second ", run_timer.GetElapsed().count() );
 
 }
 

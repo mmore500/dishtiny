@@ -9,6 +9,7 @@
 
 #include "../config/cfg.hpp"
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../load/load_world.hpp"
 #include "../record/dump_coalescence_result.hpp"
 #include "../record/dump_interroot_phenotype_differentiation.hpp"
@@ -41,9 +42,7 @@ void thread_job( dish2::ThreadWorld<Spec> thread_world ) {
 
   if ( cfg.ARTIFACTS_DUMP() ) {
     dish2::thread_artifacts_dump<Spec>( thread_world );
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " artifacts dump complete" << '\n';
+    dish2::log_msg( "artifacts dump complete" );
   }
 
   if (dish2::cfg.GENESIS() == "innoculate") {
@@ -52,9 +51,7 @@ void thread_job( dish2::ThreadWorld<Spec> thread_world ) {
 
   dish2::thread_try_end_snapshot<Spec>( thread_world );
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " thread job complete" << '\n';
+  dish2::log_msg( "thread job complete" );
 
 }
 

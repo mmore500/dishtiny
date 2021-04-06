@@ -8,6 +8,7 @@
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
+#include "../debug/log_msg.hpp"
 #include "../utility/try_with_timeout.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -27,17 +28,12 @@ void write_all_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
   ) {
 
     thread_local std::once_flag once_flag;
-    std::call_once(once_flag, [](){
-      std::cout << "proc " << uitsl::get_proc_id()
-        << " thread " << dish2::thread_idx
-        << " wrote all drawings" << '\n';
-    });
+    std::call_once(once_flag, [](){ dish2::log_msg( "wrote all drawings" ); });
 
   } else {
 
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " all drawings write timed out" << '\n';
+    dish2::log_msg( "all drawings write timed out" );
+
   }
 
 }

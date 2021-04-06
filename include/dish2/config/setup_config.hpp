@@ -8,6 +8,7 @@
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/Empirical/include/emp/config/ArgManager.hpp"
 
+#include "../debug/log_msg.hpp"
 #include "../utility/path_exists.hpp"
 
 #include "cfg.hpp"
@@ -25,9 +26,9 @@ void setup_config( emp::ArgManager& arg_manager ) {
   // so use stat as a backup for now
   // if ( std::filesystem::exists("dishtiny.cfg") ) {
   if ( dish2::path_exists("dishtiny.cfg") ) {
-    std::cout << "reading configuration from dishtiny.cfg" << '\n';
+    dish2::log_msg( "reading configuration from dishtiny.cfg" );
     dish2::cfg.Read( "dishtiny.cfg" );
-  } else std::cout << "no configuration file found" << '\n';
+  } else dish2::log_msg( "no configuration file found" );
 
   arg_manager.UseCallbacks();
 

@@ -3,14 +3,15 @@
 #define DISH2_RECORD_FINALIZE_FINALIZE_VIDEOS_HPP_INCLUDE
 
 #include <cstdlib>
-#include <iostream>
 
 #include "../../../../third-party/conduit/include/uitsl/debug/err_verify.hpp"
+
+#include "../../debug/log_msg.hpp"
 
 namespace dish2 {
 
 void finalize_videos() {
-  std::cout << "finalize_videos begin" << '\n';
+  dish2::log_msg( "finalize_videos begin" );
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
@@ -19,7 +20,7 @@ void finalize_videos() {
     "  a proc idx replicate thread update stint series treatment variation ext"
     "; done"
   "'" ) );
-  std::cout << "finalize_videos complete" << '\n';
+  dish2::log_msg( "finalize_videos complete" );
 }
 
 } // namespace dish2

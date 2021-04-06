@@ -17,6 +17,7 @@
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../introspection/get_root_id_abundance.hpp"
 #include "../introspection/get_root_id_prevalence.hpp"
 #include "../introspection/get_unique_root_ids.hpp"
@@ -79,9 +80,7 @@ void write_phylogenetic_root_abundances(
 
     file.PrintHeaderKeys();
 
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " wrote phylogenetic root abundances" << '\n';
+    dish2::log_msg( "wrote phylogenetic root abundances" );
   });
 
   for ( const auto& root_id_ : dish2::get_unique_root_ids<Spec>(world) ) {

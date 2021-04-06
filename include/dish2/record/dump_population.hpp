@@ -10,6 +10,7 @@
 #include "../../../third-party/cereal/include/cereal/types/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
+#include "../debug/log_msg.hpp"
 #include "../genome/Genome.hpp"
 #include "../utility/pare_keyname_filename.hpp"
 #include "../world/iterators/GenotypeConstWrapper.hpp"
@@ -43,9 +44,7 @@ void dump_population( const dish2::ThreadWorld< Spec >& world ) {
     )
   ) );
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " dumped population" << '\n';
+  dish2::log_msg( "dumped population" );
 
 }
 

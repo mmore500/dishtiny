@@ -5,13 +5,13 @@
 #include <optional>
 #include <utility>
 
-#include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../../third-party/Empirical/include/emp/base/optional.hpp"
 #include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../../configbyroot/root_perturbation_configs.hpp"
+#include "../../debug/log_msg.hpp"
 
 namespace dish2 {
 
@@ -31,11 +31,10 @@ void set_writable_state_target_idx( const std::filesystem::path& path ) {
       : idx_t{ uitsl::stoszt(attrs.at("set_writable_state_target_idx")) }
     ;
 
-    std::cout  << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " setting writable_state_target_idx to \""
-      << emp::to_string(writable_state_target_idx)
-      << "\" for root id " << root_id << " from " << path << '\n';
+    dish2::log_msg(
+      "setting writable_state_target_idx to \"", writable_state_target_idx,
+      "\" for root id ", root_id, " from ", path
+    );
 
     dish2::root_perturbation_configs.Get(
       root_id

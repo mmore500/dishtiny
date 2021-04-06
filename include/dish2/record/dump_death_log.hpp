@@ -7,7 +7,6 @@
 
 #include "../../../third-party/bxzstr/include/bxzstr.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
@@ -16,7 +15,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
-#include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../utility/pare_keyname_filename.hpp"
 
 #include "make_filename/make_data_path.hpp"
@@ -81,9 +80,7 @@ void dump_death_log( const dish2::ThreadWorld< Spec >& world ) {
     }
   );
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " dumped death log" << '\n';
+  dish2::log_msg( "dumped death log" );
 
 }
 

@@ -13,6 +13,7 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../debug/log_msg.hpp"
 #include "../introspection/count_kin_neighbors.hpp"
 #include "../introspection/count_live_cardinals.hpp"
 #include "../introspection/count_spawn_events.hpp"
@@ -122,9 +123,7 @@ void dump_kin_conflict_statistics( const dish2::ThreadWorld< Spec >& world ) {
     file.Update();
   }
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " dumped kin conflict statistics" << '\n';
+  dish2::log_msg( "dumped kin conflict statistics" );
 
 }
 

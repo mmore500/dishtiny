@@ -15,6 +15,7 @@
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../introspection/any_live_cells.hpp"
 #include "../introspection/count_birth_events.hpp"
 #include "../introspection/count_cardinals.hpp"
@@ -127,9 +128,7 @@ void write_demographic_phenotypic_phylogenetic_metrics(
     file.AddVar(update, "Update");
     file.PrintHeaderKeys();
 
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " wrote demographic phenotypic phylogenetic metrics" << '\n';
+    dish2::log_msg( "wrote demographic phenotypic phylogenetic metrics" );
   });
 
   {

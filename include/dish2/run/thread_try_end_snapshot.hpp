@@ -5,10 +5,9 @@
 #include <chrono>
 #include <iostream>
 
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
-
 #include "../config/cfg.hpp"
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../utility/try_with_timeout.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -20,9 +19,7 @@ template<typename Spec>
 void thread_try_end_snapshot( dish2::ThreadWorld<Spec>& thread_world ) {
 
   if ( !cfg.DATA_DUMP() ) {
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " skipping end snapshot" << '\n';
+    dish2::log_msg( "skipping end snapshot" );
     return;
   }
 
@@ -33,15 +30,8 @@ void thread_try_end_snapshot( dish2::ThreadWorld<Spec>& thread_world ) {
     )
   );
 
-  if ( res ) {
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " end snapshot success" << '\n';
-  } else {
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " end snapshot timed out" << '\n';
-  }
+  if ( res ) dish2::log_msg( "end snapshot success" );
+  else dish2::log_msg( "end snapshot timed out" );
 
 }
 

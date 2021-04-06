@@ -14,6 +14,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_instructions.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
+#include "../debug/log_msg.hpp"
 #include "../debug/LogScope.hpp"
 #include "../genome/Genome.hpp"
 #include "../record/dump_in_progress_jenga_nopout_genome.hpp"
@@ -37,9 +38,11 @@ auto exhaustive_try_jenga_nop_out_phenotypically_neutral_instructions(
   emp_assert( genome.program.size() == reference_genome.program.size() );
 
   const dish2::LogScope guard{ "evaluating instruction-by-instruction" };
-  std::cout << "exhaustively evaluating "
-    << sgpl::count_op_instructions<sgpl_spec_t>( genome.program )
-    << " op instructions " << '\n';
+  dish2::log_msg(
+    "exhaustively evaluating ",
+    sgpl::count_op_instructions<sgpl_spec_t>( genome.program ),
+    " op instructions "
+  );
 
   const size_t num_sites = sgpl::count_op_instructions<sgpl_spec_t>(
     genome.program
@@ -84,7 +87,9 @@ auto exhaustive_try_jenga_nop_out_phenotypically_neutral_instructions(
 
   }
 
-  std::cout << " done with success_flag " << success_flag << '\n';
+  dish2::log_msg(
+    " exhaustive evaluation done with success_flag ", success_flag
+  );
 
   const auto successful_mask_it = std::find_if(
     std::begin( neutral_masks ),
@@ -132,9 +137,10 @@ auto exhaustive_jenga_nop_out_phenotypically_neutral_instructions(
       genome = *neutral_nopped_genome;
     } else break;
 
-    std::cout << sgpl::count_op_instructions( genome.program );
-    std::cout << " op instructions remain in phenotype equivalent nopout";
-    std::cout << '\n';
+    dish2::log_msg(
+      sgpl::count_op_instructions( genome.program ),
+      " op instructions remain in phenotype equivalent nopout"
+    );
 
     if (
       dish2::static_coarse_timer.GetElapsed()
@@ -143,15 +149,12 @@ auto exhaustive_jenga_nop_out_phenotypically_neutral_instructions(
       )
     ) {
 
-      std::cout << "jenga nopout timeout, saving progress and quitting" << '\n';
-      std::cout << sgpl::count_op_instructions( genome.program );
-      std::cout << " op instructions remain in phenotype equivalent nopout";
-      std::cout << '\n';
+      dish2::log_msg("jenga nopout timeout, saving progress and quitting");
 
       dish2::dump_in_progress_jenga_nopout_genome<Spec>( genome );
       dish2::finalize_artifacts();
 
-      std::cout << "in progress genome dump complete" << '\n';
+      dish2::log_msg("in progress genome dump complete");
 
       std::exit( 0 );
     }

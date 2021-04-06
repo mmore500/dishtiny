@@ -7,10 +7,12 @@
 
 #include "../../../../third-party/conduit/include/uitsl/debug/err_verify.hpp"
 
+#include "../../debug/log_msg.hpp"
+
 namespace dish2 {
 
 void finalize_artifacts() {
-  std::cout << "finalize_artifacts begin" << '\n';
+  dish2::log_msg( "finalize_artifacts begin" );
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
@@ -21,7 +23,7 @@ void finalize_artifacts() {
     "    $(echo \"$f\" | grep -o \"root_id%[[:digit:]]\\+\")"
     "; done"
   "'" ) );
-  std::cout << "finalize_artifacts complete" << '\n';
+  dish2::log_msg( "finalize_artifacts complete" );
 }
 
 } // namespace dish2

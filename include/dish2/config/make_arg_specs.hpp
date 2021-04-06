@@ -10,10 +10,10 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/config/ArgManager.hpp"
 
+#include "../debug/log_msg.hpp"
 #include "../peripheral/readable_state/introspective_state/IntrospectiveState.hpp"
 #include "../peripheral/readable_state/ReadableState.hpp"
 #include "../peripheral/readable_state/writable_state/WritableState.hpp"
-
 
 #include "cfg.hpp"
 
@@ -32,8 +32,7 @@ auto make_arg_specs() {
       [](const emp::optional<emp::vector<std::string>>& args){ if ( args ) {
         for ( const auto& asset_url : *args ) {
           const auto filename = uitsl::autoinstall( asset_url );
-          std::cout << "autoinstalling " << asset_url
-            << " to " << filename << '\n';
+          dish2::log_msg( "autoinstalling ", asset_url, " to ", filename );
         }
       } }, // callback
       false, // gobble_flags

@@ -5,12 +5,11 @@
 #include <string>
 #include <utility>
 
-#include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 
 #include "../../configbyroot/root_mutation_configs.hpp"
-#include "../../config/thread_idx.hpp"
+#include "../../debug/log_msg.hpp"
 
 namespace dish2 {
 
@@ -26,13 +25,11 @@ void set_mutation_occurence_rate_multiplicand(
   if ( attrs.count("set_mutation_occurence_rate_multiplicand") ) {
     const double mutation_occurence_rate_multiplicand
       = std::stod( attrs.at("set_mutation_occurence_rate_multiplicand") );
-    std::cout
-      << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " setting mutation_occurence_rate_multiplicand to "
-      << mutation_occurence_rate_multiplicand
-      << " for root id " << root_id << " from " << path
-      << '\n';
+    dish2::log_msg(
+      "setting mutation_occurence_rate_multiplicand to ",
+      mutation_occurence_rate_multiplicand,
+      " for root id ", root_id, " from ", path
+    );
 
     dish2::root_mutation_configs.Get(
       root_id

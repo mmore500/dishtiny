@@ -3,14 +3,15 @@
 #define DISH2_RECORD_FINALIZE_FINALIZE_ZIPS_HPP_INCLUDE
 
 #include <cstdlib>
-#include <iostream>
 
 #include "../../../../third-party/conduit/include/uitsl/debug/err_verify.hpp"
+
+#include "../../debug/log_msg.hpp"
 
 namespace dish2 {
 
 void finalize_zips() {
-  std::cout << "finalize_zips begin" << '\n';
+  dish2::log_msg( "finalize_zips begin" );
   // cd doesn't propagate out of std::system call
   uitsl::err_verify( std::system( "bash -c '"
     "shopt -s nullglob; "
@@ -19,7 +20,7 @@ void finalize_zips() {
     "    a proc replicate stint series thread treatment ext"
     "; done"
   "'" ) );
-  std::cout << "finalize_zips complete" << '\n';
+  dish2::log_msg( "finalize_zips complete" );
 }
 
 } // namespace dish2

@@ -9,6 +9,8 @@
 #include "../../../../third-party/conduit/include/uitsl/debug/err_verify.hpp"
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
+#include "../../debug/log_msg.hpp"
+
 #include "../make_filename/make_drawing_archive_filename.hpp"
 #include "../make_filename/make_zip_path.hpp"
 
@@ -19,7 +21,7 @@ void create_deduplicated_drawing_archive() {
   uitsl::err_verify( std::system(
     "rdfind -makesymlinks true -makeresultsfile false outdrawings/"
   ) );
-  std::cout << "rdfind deduplication complete" << '\n';
+  dish2::log_msg( "rdfind deduplication complete" );
 
   const std::string zip_command( emp::to_string(
     "tar -cJf ",
@@ -27,7 +29,7 @@ void create_deduplicated_drawing_archive() {
     " outdrawings/"
   ) );
   uitsl::err_verify( std::system( zip_command.c_str() ) );
-  std::cout << "drawing archive zip complete" << '\n';
+  dish2::log_msg( "drawing archive zip complete" );
 
 }
 

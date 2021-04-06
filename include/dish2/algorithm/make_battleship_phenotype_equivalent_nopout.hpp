@@ -15,6 +15,7 @@
 #include "../config/TemporaryConfigOverride.hpp"
 #include "../debug/entry_types.hpp"
 #include "../debug/log_event.hpp"
+#include "../debug/log_msg.hpp"
 #include "../debug/LogScope.hpp"
 #include "../genome/Genome.hpp"
 #include "../record/make_filename/make_battleship_divergence_updates_filename.hpp"
@@ -67,14 +68,16 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_battleship_divergence_updates_filename( criteria, 1, "module" ),
+      dish2::make_battleship_divergence_updates_filename(criteria, 1, "module"),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
 
-    std::cout << "dumping " << divergence_updates.size()
-      << " divergence updates for modulewise neutral nopout w/ coarseness 1 to "
-      << out_path  << '\n';
+    dish2::log_msg(
+      "dumping ", divergence_updates.size(),
+      " divergence updates for modulewise neutral nopout w/ coarseness 1 to ",
+      out_path
+    );
 
     std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
@@ -96,9 +99,11 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
     );
     const auto out_path = dish2::make_data_path( out_filename );
 
-    std::cout << "dumping " << divergence_updates.size()
-      << " divergence updates for instwise neutral nopout w/ coarseness 8 to "
-      << out_path << '\n';
+    dish2::log_msg(
+      "dumping ", divergence_updates.size(),
+      " divergence updates for instwise neutral nopout w/ coarseness 8 to ",
+      out_path
+    );
 
     std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
@@ -116,9 +121,11 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
     );
     const auto out_path = dish2::make_data_path( out_filename );
 
-    std::cout << "dumping " << divergence_updates.size()
-      << " divergence updates for instwise neutral nopout w/ coarseness 4 to "
-      << out_path << '\n';
+    dish2::log_msg(
+      "dumping ", divergence_updates.size(),
+      " divergence updates for instwise neutral nopout w/ coarseness 4 to ",
+      out_path
+    );
 
     std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
@@ -136,9 +143,11 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
     );
     const auto out_path = dish2::make_data_path( out_filename );
 
-    std::cout << "dumping " << divergence_updates.size()
-      << " divergence updates for instwise neutral nopout w/ coarseness 2 to "
-      << out_path << '\n';
+    dish2::log_msg(
+      "dumping ", divergence_updates.size(),
+      " divergence updates for instwise neutral nopout w/ coarseness 2 to ",
+      out_path
+    );
 
     std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
@@ -156,17 +165,20 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
     );
     const auto out_path = dish2::make_data_path( out_filename );
 
-    std::cout << "dumping " << divergence_updates.size()
-      << " divergence updates for instwise neutral nopout w/ coarseness 1 to "
-      << out_path << '\n';
+    dish2::log_msg(
+      "dumping ", divergence_updates.size(),
+      " divergence updates for instwise neutral nopout w/ coarseness 1 to ",
+      out_path
+    );
 
     std::ofstream os( out_path );
     for (const auto& upd : divergence_updates) os << upd << '\n';
   }
 
-  std::cout << sgpl::count_instructions( genome.program, "op" );
-  std::cout << " op instructions remain in phenotype equivalent nopout";
-  std::cout << '\n';
+  dish2::log_msg(
+    sgpl::count_instructions( genome.program, "op" ),
+    " op instructions remain in phenotype equivalent nopout"
+  );
 
   return genome;
 

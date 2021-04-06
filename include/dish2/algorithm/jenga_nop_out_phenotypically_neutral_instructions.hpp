@@ -11,6 +11,7 @@
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_op_instructions.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_instructions.hpp"
 
+#include "../debug/log_msg.hpp"
 #include "../debug/LogScope.hpp"
 #include "../genome/Genome.hpp"
 #include "../utility/make_targeted_mask.hpp"
@@ -33,9 +34,10 @@ auto try_jenga_nop_out_phenotypically_neutral_instructions(
   emp_assert( genome.program.size() == reference_genome.program.size() );
 
   const dish2::LogScope guard{ "evaluating instruction-by-instruction" };
-  std::cout << "evaluating "
-    << sgpl::count_op_instructions<sgpl_spec_t>( genome.program )
-    << " op instructions " << nop_length << " at a time" << '\n';
+  dish2::log_msg(
+    "evaluating ", sgpl::count_op_instructions<sgpl_spec_t>( genome.program ),
+    " op instructions ", nop_length, " at a time"
+  );
 
   constexpr size_t num_tries = 4;
 
@@ -74,7 +76,7 @@ auto try_jenga_nop_out_phenotypically_neutral_instructions(
 
   }
 
-  std::cout << " done with success flag " << success_flag << '\n';
+  dish2::log_msg("evaluation done with success flag ", success_flag);
 
   const auto successful_mask_it = std::find_if(
     std::begin( neutral_masks ),

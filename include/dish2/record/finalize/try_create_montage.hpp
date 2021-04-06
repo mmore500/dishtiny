@@ -6,6 +6,7 @@
 
 #include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 
+#include "../../debug/log_msg.hpp"
 #include "../../utility/try_with_timeout.hpp"
 
 #include "create_montage.hpp"
@@ -14,13 +15,13 @@ namespace dish2 {
 
 void try_create_montage() {
 
+  dish2::log_msg( "trying create_montage with 5 minute timeout" );
+
   using namespace std::chrono_literals;
   if ( dish2::try_with_timeout( dish2::create_montage, 5min ) ) {
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " created montage" << '\n';
+    dish2::log_msg( "created montage" );
   } else {
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " montage creation timed out" << '\n';
+    dish2::log_msg( "montage creation timed out" );
   }
 
 }

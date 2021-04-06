@@ -10,6 +10,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../utility/try_with_timeout.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -46,14 +47,10 @@ void write_selected_frames( const dish2::ThreadWorld< Spec >& thread_world ) {
   if ( success ) {
     thread_local std::once_flag once_flag;
     std::call_once(once_flag, [](){
-      std::cout << "proc " << uitsl::get_proc_id()
-        << " thread " << dish2::thread_idx
-        << " wrote selected drawings" << '\n';
+      dish2::log_msg( "wrote selected drawings" );
     });
   } else {
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " selected drawings write timed out" << '\n';
+    dish2::log_msg( "selected drawings write timed out" );
   }
 
 }

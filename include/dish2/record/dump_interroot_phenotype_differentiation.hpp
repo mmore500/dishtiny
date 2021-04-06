@@ -8,7 +8,6 @@
 #include <utility>
 
 #include "../../../third-party/conduit/include/uitsl/meta/function_cast.hpp"
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_key_union.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
@@ -22,7 +21,6 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
-#include "../config/thread_idx.hpp"
 #include "../introspection/any_live_cells.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_root_id_abundance.hpp"
@@ -137,9 +135,7 @@ void dump_interroot_phenotype_differentiation(
 
   }
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " dumped interroot_phenotype_differentiation result" << '\n';
+  dish2::log_msg( "dumped interroot_phenotype_differentiation result" );
 
 }
 

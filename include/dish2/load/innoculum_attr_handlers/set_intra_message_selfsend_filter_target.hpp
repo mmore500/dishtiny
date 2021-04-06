@@ -5,11 +5,11 @@
 #include <utility>
 
 #include "../../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
-#include "../../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 
 #include "../../configbyroot/root_perturbation_configs.hpp"
+#include "../../debug/log_msg.hpp"
 
 namespace dish2 {
 
@@ -26,11 +26,11 @@ void set_intra_message_selfsend_filter_target(
     const size_t intra_message_selfsend_filter_target = uitsl::stoszt(
       attrs.at("set_intra_message_selfsend_filter_target")
     );
-    std::cout  << "proc " << uitsl::get_proc_id()
-      << " thread " << dish2::thread_idx
-      << " setting intra_message_selfsend_filter_target to "
-      << intra_message_selfsend_filter_target
-      << " for root id " << root_id << " from " << path << '\n';
+    dish2::log_msg(
+      "setting intra_message_selfsend_filter_target to ",
+      intra_message_selfsend_filter_target,
+      " for root id ", root_id, " from ", path
+    );
     dish2::root_perturbation_configs.Get(
       root_id
     ).intra_message_selfsend_filter_target

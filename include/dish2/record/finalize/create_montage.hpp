@@ -17,6 +17,8 @@
 #include "../../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
+#include "../../debug/log_msg.hpp"
+
 #include "../make_filename/make_drawing_path.hpp"
 #include "../make_filename/make_montage_filename.hpp"
 
@@ -28,9 +30,10 @@ void create_montage() {
     {{"proc", "0"}, {"thread", "0"}, {"ext", ".png"}},
     "outdrawings/"
   ).empty() ) {
-    std::cout << "proc " << uitsl::get_proc_id()
-      << " no drawings to create montage, skipping" << '\n';
-      return;
+    dish2::log_msg(
+      "proc ", uitsl::get_proc_id()," no drawings to create montage, skipping"
+    );
+    return;
   }
 
   const size_t last_update = uitsl::keyname_directory_max(

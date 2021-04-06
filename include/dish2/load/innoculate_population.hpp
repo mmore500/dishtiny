@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <set>
 
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/conduit/include/uitsl/utility/keyname_directory_filter.hpp"
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
@@ -15,7 +14,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../algorithm/seed_genomes_into.hpp"
-#include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../genome/Genome.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -76,10 +75,7 @@ void innoculate_population( dish2::ThreadWorld<Spec>& world ) {
 
   dish2::seed_genomes_into<Spec>( innoculum_buckets, world );
 
-  std::cout << "proc " << uitsl::get_proc_id()
-    << " thread " << dish2::thread_idx
-    << " loaded " << innoculum_buckets.size() << " innoculum buckets "
-    << '\n';
+  dish2::log_msg( "loaded ", innoculum_buckets.size(), " innoculum buckets" );
 
 }
 

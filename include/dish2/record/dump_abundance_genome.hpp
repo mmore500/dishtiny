@@ -11,7 +11,7 @@
 #include "../introspection/get_lowest_root_prevalent_coding_genotype_genome.hpp"
 #include "../introspection/no_live_cells.hpp"
 
-#include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "dump_genome.hpp"
@@ -50,7 +50,7 @@ bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
     && dish2::thread_idx == 0
     && uitsl::is_root()
   ) {
-    std::cout << "recording battleship phenotype equivalent nopout" << '\n';
+    dish2::log_msg( "recording battleship phenotype equivalent nopout" );
     dish2::dump_genome< Spec >(
       dish2::make_battleship_phenotype_equivalent_nopout< Spec >(
         genome, "abundance"
@@ -70,7 +70,7 @@ bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
     && dish2::thread_idx == 0
     && uitsl::is_root()
   ) {
-    std::cout << "recording jenga phenotype equivalent nopout" << '\n';
+    dish2::log_msg( "recording jenga phenotype equivalent nopout" );
 
     const auto res = dish2::make_jenga_phenotype_equivalent_nopout< Spec >(
       genome, "abundance"
