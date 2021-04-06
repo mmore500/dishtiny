@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <string>
 
+#include <sys/stat.h>
+
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
