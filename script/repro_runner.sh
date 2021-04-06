@@ -356,6 +356,11 @@ function on_error() {
   # adapted from https://unix.stackexchange.com/a/504829
   awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$2 $0
 
+  for target in $(find . -name '*a=log+*'); do
+    echo "uploading ${target}"
+    curl --upload-file "${target}" "https://transfersh.com/$(basename "${target}")"
+  done
+
   echo "sstat -j ${SLURM_JOB_ID}"
   sstat -j "${SLURM_JOB_ID}"
 
