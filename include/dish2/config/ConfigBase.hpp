@@ -115,7 +115,7 @@ EMP_BUILD_CONFIG(
   ),
 
   GROUP(HARVEST, "HARVEST"),
-  VALUE(BASE_HARVEST_RATE, float, 0.01,
+  VALUE(BASE_HARVEST_RATE, float, 0.02,
     "How much resource should cells accrue per update?"
   ),
   VALUE(COLLECTIVE_HARVEST_RATE, internal::nlev_float_t,
@@ -216,7 +216,7 @@ EMP_BUILD_CONFIG(
   VALUE(APOPTOSIS_SERVICE_FREQUENCY, size_t, 16,
     "Run service every ?? updates."
   ),
-  VALUE(BIRTH_SETUP_SERVICE_FREQUENCY, size_t, 8,
+  VALUE(BIRTH_SETUP_SERVICE_FREQUENCY, size_t, 16,
     "Run service every ?? updates."
   ),
   VALUE(CELL_AGE_SERVICE_FREQUENCY, size_t, 1,
@@ -300,7 +300,7 @@ EMP_BUILD_CONFIG(
   VALUE(RESOURCE_SENDING_SERVICE_FREQUENCY, size_t, 1,
     "Run service every ?? updates."
   ),
-  VALUE(SPAWN_SENDING_SERVICE_FREQUENCY, size_t, 8,
+  VALUE(SPAWN_SENDING_SERVICE_FREQUENCY, size_t, 16,
     "Run service every ?? updates."
   ),
   VALUE(STATE_INPUT_JUMP_SERVICE_FREQUENCY, size_t, 8,
