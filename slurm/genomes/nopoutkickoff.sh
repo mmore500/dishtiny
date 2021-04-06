@@ -100,6 +100,7 @@ container_tag: "${CONTAINER_TAG}"
 repo_sha: "${REPO_SHA}"
 series: "\${just_one_series}"
 stint: "${STINT}"
+target_genome_url: "s3://${BUCKET}/endeavor=\$(( just_one_series / 1000 ))/genomes/stage=0+what=generated/stint=${STINT}/series=\${just_one_series}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${just_one_series}+stint=${STINT}+thread=0+variation=master+ext=.json.gz"
 J2_HEREDOC_EOF
 
   # adapted from https://superuser.com/a/689340
