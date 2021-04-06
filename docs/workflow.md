@@ -6,10 +6,11 @@ They should be entirely compatible with other HPCC users, though, and mostly com
 
 You probably want to [check when this page was last updated](https://github.com/mmore500/dishtiny/commits/master/docs/workflow.md).
 
-::hammer_and_wrench:: ::construction_worker_woman::
+```{note} ::hammer_and_wrench:: ::construction_worker_woman::
 If anything is unclear or out of date, please open [an issue](https://github.com/mmore500/dishtiny/issues/new) or [a pull request](https://github.com/mmore500/dishtiny/compare) so we can fix it!
 Also, if you have project-specific questions or any thing else you'd like to chat about you can always feel free to [get in touch directly](mailto:m.more500@gmail.com).
 I'd love to hear from you!
+```
 
 ## Experimental Evolution
 
@@ -42,7 +43,7 @@ To get one or several series started, run
 ./slurm/evolve/evolvekickoff.sh [run without params to get a help message]
 ```
 
-Code within a is strictly version-pinned, meaning that the repository can be freely updated without impacting existing jobs.
+Code within a stint is strictly version-pinned, meaning that the repository can be freely updated without impacting existing jobs.
 
 ## Series are Grouped into Endeavors
 
@@ -50,7 +51,7 @@ Chunks of 1,000 series ID's constitute an "endeavor."
 For example, series 11000-11999 all fall into endeavor 11.
 Series 10009 falls into endeavor 10 and series 12000 falls into endeavor 12.
 Later scripts will collate data from series within the same endeavor.
-(If you want data from your series to remain separate, choose series ID's that fall into different endeavors.)
+(If you want data from your series to remain separate, choose series IDs that fall into different endeavors.)
 
 Endeavors 0-9 are special and reserved for debugging.
 Series within endeavor 0 run extremely shortened stints (1 minute).
@@ -134,7 +135,7 @@ For example, the stint evolution SLURM script versus the monoculture SLURM scrip
 Configpacks also specify how to build the DISHTINY executable (allowing for compile-time configuration).
 Ideally, a configpack might also specify which follow-up jobs to run or what process count to run simulations with, but this hasn't been implemented.
 
-Configpacks are stored in an unarchived (i.e., folders' n' files) format inside of the `configpacks/` directory.
+Configpacks are stored in an unarchived (i.e., folders n' files) format inside of the `configpacks/` directory.
 This repository's GitHub Actions integration zips up configpacks corresponding to every commit and pushes them over to <https://github.com/mmore500/dishtiny-assets> where they can be curled from a programatically-generable url.
 
 The rationale behind fetching configuration assets from a url is to enable straightforward integration with the DISHTINY web viewer.
@@ -294,9 +295,10 @@ You can pull one up from its `SLURM_JOB_ID` via
 less /mnt/scratch/${USER}/slurmlogs/*<slurm job id>*
 ```
 
-::bangbang:: ::bangbang::
+```{warning} ::bangbang:: ::bangbang::
 You'll need to manually create the `/mnt/scratch/${USER}/slurmlogs/` folder before starting to run jobs.
 Otherwise, SLURM will quietly refuse to run any DISHTINY jobs for you.
+```
 
 If you want to look at a job's run script, they're all saved into `/mnt/scratch/${USER}/slurmscripts/`.
 You can pull one up from its `SLURM_JOB_ID` via
@@ -309,10 +311,11 @@ If you want to resubmit a particular job, you can just
 sbatch /mnt/scratch/${USER}/slurmscripts/*<slurm job id>*
 ```
 
-::bangbang:: ::bangbang::
+```{warning} ::bangbang:: ::bangbang::
 The `slurmlogs/` and `slurmscripts/` might start to fill up your file count quota.
 You should Pushover notifications if your file count quota comes close to running out.
 Run `./script/purge_logs.sh` to clear out old logs and runscripts.
+```
 
 If you're in need of log files from an older job, job log files are compressed and uploaded to your AWS S3 bucket inside of the `repro/` prefix.
 
