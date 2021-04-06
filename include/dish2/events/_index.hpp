@@ -26,5 +26,7 @@
 #include "PoorerThanNeighborEvent.hpp"
 #include "ReceivedResourceFromEvent.hpp"
 #include "RicherThanNeighborEvent.hpp"
+#include "StockpileDepletedEvent.hpp"
+#include "StockpileFecundEvent.hpp"
 
 #endif // #ifndef DISH2_EVENTS__INDEX_HPP_INCLUDE

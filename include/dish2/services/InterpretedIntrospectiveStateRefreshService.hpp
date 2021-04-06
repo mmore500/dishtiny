@@ -44,6 +44,8 @@
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../cell/cardinal_iterators/RicherThanNeighborWrapper.hpp"
 #include "../cell/cardinal_iterators/SpawnedFromWrapper.hpp"
+#include "../cell/cardinal_iterators/StockpileDepletedWrapper.hpp"
+#include "../cell/cardinal_iterators/StockpileFecundWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
 
@@ -319,6 +321,32 @@ class InterpretedIntrospectiveStateRefreshService {
       cell.template begin<dish2::RicherThanNeighborWrapper<spec_t>>(),
       []( const float my_resource, const float neighbor_resource ){
         return my_resource > neighbor_resource;
+      }
+    );
+  }
+
+  template< typename Cell >
+  static void RefreshStockpileDepleted( Cell& cell ) {
+    using spec_t = typename Cell::spec_t;
+    std::transform(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template begin<dish2::StockpileDepletedWrapper<spec_t>>(),
+      []( const float stockpile ){
+        return stockpile < 2 * dish2::cfg.BASE_HARVEST_RATE();
+      }
+    );
+  }
+
+  template< typename Cell >
+  static void RefreshStockpileFecund( Cell& cell ) {
+    using spec_t = typename Cell::spec_t;
+    std::transform(
+      cell.template begin<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template end<dish2::ResourceStockpileWrapper<spec_t>>(),
+      cell.template begin<dish2::StockpileFecundWrapper<spec_t>>(),
+      []( const float stockpile ){
+        return stockpile >= 1.0;
       }
     );
   }
