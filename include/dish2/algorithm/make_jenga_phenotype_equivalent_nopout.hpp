@@ -96,7 +96,6 @@ dish2::Genome<Spec> make_jenga_phenotype_equivalent_nopout(
 
     std::ofstream os( out_path, std::ios_base::app );
     for (const auto& upd : divergence_updates) os << upd << '\n';
-    os << std::flush;
   }
 
   // final nop out should be one by one
@@ -125,7 +124,6 @@ dish2::Genome<Spec> make_jenga_phenotype_equivalent_nopout(
 
     std::ofstream os( out_path, std::ios_base::app );
     for (const auto& upd : divergence_updates) os << upd << '\n';
-    os << std::flush;
   }
 
   std::cout << sgpl::count_op_instructions( genome.program );
