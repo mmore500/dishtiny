@@ -9,11 +9,11 @@
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
 
+const uitsl::MpiGuard guard;
+
 using Spec = dish2::Spec_default;
 
 const dish2::TemporaryThreadIdxOverride override{ 0 };
-
-const uitsl::MpiGuard guard;
 
 TEST_CASE("Test ThreadWorld") {
 
