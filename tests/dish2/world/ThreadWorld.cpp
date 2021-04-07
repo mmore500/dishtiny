@@ -4,12 +4,12 @@
 #include "conduit/include/uitsl/debug/MultiprocessReporter.hpp"
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 
+const uitsl::MpiGuard guard;
+
 #include "dish2/config/TemporaryThreadIdxOverride.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
-
-const uitsl::MpiGuard guard;
 
 using Spec = dish2::Spec_default;
 
