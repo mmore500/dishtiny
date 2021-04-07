@@ -4,7 +4,6 @@
 
 #include <algorithm>
 #include <fstream>
-#include <functional>
 #include <iostream>
 #include <utility>
 
@@ -27,9 +26,8 @@ class LogTee : public std::ostream
 
     virtual int overflow( const int c ) {
       std::for_each(
-        std::begin( bufs ),
-        std::end( bufs ),
-        std::bind2nd( std::mem_fun(&std::streambuf::sputc), c )
+        std::begin( bufs ), std::end( bufs ),
+        [c]( auto& buf ){ buf->sputc( c ); }
       );
       return c;
     }
