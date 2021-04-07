@@ -239,7 +239,7 @@ JOB_SCRIPT="$(mktemp)"
 echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
 echo "JOB_SCRIPT ${JOB_SCRIPT}"
 
-target_genome_url="${s3_dir}/$(basename outartifacts/*a=in_progress_jenga_nopout*.json.gz)"
+target_genome_url="${s3_dir}/$(basename outartifacts/*a=genome*morph=in_progress_jenga_nopout*.json.gz)"
 echo "target_genome_url ${target_genome_url}"
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
