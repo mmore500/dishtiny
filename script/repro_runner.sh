@@ -356,6 +356,12 @@ function on_error() {
   # adapted from https://unix.stackexchange.com/a/504829
   awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$2 $0
 
+  for target in $(find . -name '*a=log+*'); do
+    echo "uploading ${target}"
+    curl --upload-file "${target}" "https://transfer.sh"
+    echo
+  done
+
   echo "sstat -j ${SLURM_JOB_ID}"
   sstat -j "${SLURM_JOB_ID}"
 
@@ -374,7 +380,7 @@ function on_error() {
   echo "pwd" && pwd
   echo "ls" && ls
   echo "du -h .  --max-depth 1" && du -h . --max-depth 1
-  echo "tree --du -h out*" && tree --du -h out* || :
+  echo "tree --du -h out*" && tree --du -h . || :
 
   # memory info
   echo "cat /proc/meminfo" && cat /proc/meminfo
@@ -468,7 +474,7 @@ if [[ "${container_tag}" != *"@sha256:"* ]]; then
   container_tag="${container_tag}@sha256:$(\
     until singularity exec "docker://${arg_username}/${arg_slug}:${container_tag}" \
       bash -c 'echo ${SINGULARITY_NAME}' \
-    || (( retry++ >=5 )); do sleep 10; done \
+    || (( retry++ >=5 )); do sleep $(( retry * retry * 60 )); done \
   )"
 fi
 echo "container_tag with sha256 ${container_tag}"
@@ -485,7 +491,7 @@ container_file="$(mktemp)"
 retry=0
 time until singularity pull --force "${container_file}" "docker://${arg_username}/${arg_slug}@${container_tag#*@}"; do
   (( retry++ >= 5 )) && echo "too many singularity pull retries" && exit 1
-  echo "failed singularity pull ${retry}, trying agian" && sleep 10
+  echo "failed singularity pull ${retry}, trying agian" && sleep $(( retry * retry * 60 ))
 done
 
 # setup output folder

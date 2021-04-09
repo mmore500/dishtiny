@@ -33,6 +33,8 @@ namespace dish2 {
 template< typename Spec >
 void write_cell_census( const dish2::ThreadWorld< Spec >& world ) {
 
+  dish2::log_msg( "writing cell census" );
+
   const thread_local std::string out_filename = dish2::pare_keyname_filename(
     dish2::make_cell_census_filename(),
     dish2::make_data_path()
@@ -70,16 +72,28 @@ void write_cell_census( const dish2::ThreadWorld< Spec >& world ) {
     file.AddVar(update, "Update");
     file.PrintHeaderKeys();
 
-    dish2::log_msg( "wrote cell census" );
   });
 
 
   dish2::write_cell_age<Spec>( world, file, metric, value, cell_idx );
+  dish2::log_msg( "write_cell_age complete" );
+
   dish2::write_kin_group_age<Spec>( world, file, metric, value, cell_idx );
+  dish2::log_msg( "write_kin_group_age complete" );
+
   dish2::write_kin_group_id<Spec>( world, file, metric, value, cell_idx );
+  dish2::log_msg( "write_kin_group_id complete" );
+
   dish2::write_peripheral_count<Spec>( world, file, metric, value, cell_idx );
+  dish2::log_msg( "write_peripheral_count complete" );
+
   dish2::write_resource_stockpile<Spec>( world, file, metric, value, cell_idx );
+  dish2::log_msg( "write_resource_stockpile complete" );
+
   dish2::write_spawn_count<Spec>( world, file, metric, value, cell_idx );
+  dish2::log_msg( "write_spawn_count complete" );
+
+  dish2::log_msg( "wrote cell census" );
 
 }
 

@@ -4,6 +4,8 @@
 #include "conduit/include/uitsl/debug/MultiprocessReporter.hpp"
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 
+const uitsl::MpiGuard guard;
+
 #include "dish2/config/TemporaryThreadIdxOverride.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/world/ProcWorld.hpp"
@@ -12,8 +14,6 @@
 using Spec = dish2::Spec_default;
 
 const dish2::TemporaryThreadIdxOverride override{ 0 };
-
-const uitsl::MpiGuard guard;
 
 TEST_CASE("Test ThreadWorld") {
 

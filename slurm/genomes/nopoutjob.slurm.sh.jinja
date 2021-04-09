@@ -211,12 +211,12 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # test for in-progress dump
-if ls outartifacts/*a=in_progress_jenga_nopout* 2>&1 >/dev/null; then
+if ls outartifacts/*a=genome*morph=in_progress_jenga_nopout* 2>&1 >/dev/null; then
 
 # upload in-progress genome
 s3_dir="s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}"
 
-for p in outartifacts/*a=in_progress_jenga_nopout*.json.gz*; do
+for p in outartifacts/*a=genome*morph=in_progress_jenga_nopout*; do
 
 f="$(basename "${p}")"
 echo "uploading ${p} -> ${f}"
@@ -239,7 +239,7 @@ JOB_SCRIPT="$(mktemp)"
 echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
 echo "JOB_SCRIPT ${JOB_SCRIPT}"
 
-target_genome_url="${s3_dir}/$(basename outartifacts/*a=in_progress_jenga_nopout*.json.gz)"
+target_genome_url="${s3_dir}/$(basename outartifacts/*a=genome*morph=in_progress_jenga_nopout*.json.gz)"
 echo "target_genome_url ${target_genome_url}"
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF

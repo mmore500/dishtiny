@@ -12,6 +12,11 @@ Also, if you have project-specific questions or any thing else you'd like to cha
 I'd love to hear from you!
 ```
 
+::bangbang:: ::bangbang::
+In order to prevent the docs from getting out of date, many example command snippets below are annotated with `[run without params to get a help message]` instead of actual arguments.
+For example, something like `./script/examplescript.sh [run without params to get a help message]`.
+In order to see what actual arguments you need to provide, just run the script without providing any arguments (like `./script/examplescript.sh`) and it will print a message explaining what arguments it needs.
+
 ## Experimental Evolution
 
 The core of DISHTINY's workflow is the evolutionary chain, a sequence of three hour simulations that evolve a particular population.
@@ -22,7 +27,7 @@ The core of DISHTINY's workflow is the evolutionary chain, a sequence of three h
         |
          |           submits            submits            submits
 series  <   stint 0 ---------> stint 1 ---------> stint 2 ---------> ...
-         |   (3hrs)             (3hrs)            (3hrs)
+         |   (3hrs)             (3hrs)             (3hrs)
         |
          --
 ```
@@ -43,7 +48,12 @@ To get one or several series started, run
 ./slurm/evolve/evolvekickoff.sh [run without params to get a help message]
 ```
 
-Code within a stint is strictly version-pinned, meaning that the repository can be freely updated without impacting existing jobs.
+Code used within a series is strictly version-pinned, meaning that the repository can be freely updated without impacting existing jobs.
+
+## Follow-up Experiments Launch Every Ten Stints
+
+Every ten stints (including stint 0), the stint evolve job will launch a bevvy of follow-up jobs in addition to submitting its successor job.
+These jobs do things like grow the most abundant genotype in monoculture, perform phenotype-equivalent nopouts, and launch competitions to assess the number of distinct environmental states genomes are interacting with.
 
 ## Series are Grouped into Endeavors
 
@@ -59,10 +69,15 @@ Series within endeavors 1-9 also run somewhat shortened stints (10 minutes).
 
 ## Data and Artifacts Live in S3 Buckets
 
-The term data refers to statistics describing simulation state.
-The term artifact refers to serialized simulation objects, like a genome or a population.
+In order for to continue experiments between different SLURM jobs, we need to transmit information between the jobs.
+Some information (like software version pin, current stint number, series ID, etc.) is passed directly from through [Jinja templating](https://jinja.palletsprojects.com/en/2.11.x/) of the job scripts.
+That is, a parent job specifies these fields to instantiate a child job's runscript template.
+Other information (like the set of genomes constituting a population, individual genomes used for follow-up experiments) is saved to file by the parent job and then read from file by the child job.
+We also need to save certain statistics (such as the amount of resource sharing, the results of a fitness competition) to file in order to interpret experimental outcomes later.
 
 Artifacts and data from experiments are uploaded to Amazon's S3 ("Simple Storage Service") cloud.
+The term artifact refers to serialized simulation objects, like a genome or a population.
+The term data refers to statistics describing simulation state.
 Buckets are the coarsest container for data storage available through S3.
 They organize the Amazon S3 namespace at the highest level and allow access, retention, and other policies to be mapped to the set of objects they contain.
 You can think of a bucket kind of like a root-level directory.
@@ -115,6 +130,14 @@ DISHTINY's Dockerfile defines a recipe for building a container hosting all of D
 Built containers are [hosted on DockerHub](https://hub.docker.com/r/mmore500/dishtiny).
 [Singularity](https://sylabs.io/singularity/) allows us to run these containers on the HPCC.
 
+You can take the container for a whirl with an interactive shell session with this command,
+```bash
+singularity shell docker://mmore500/dishtiny:latest
+```
+Here, `docker://` specifies that we should get the image from DockerHub and `latest` is a tag specifying the particular build of the container we should use.
+This might take a few minutes to download and set up the first time you run it.
+Caching should enable future runs with the same container image to boot up almost instantaneously, though.
+
 Almost all of DISHTINY's runtime scripts start off by booting up a containerized environment and then jumping in there to do the rest of their work.
 Some resources are so tightly coupled to the host environment, though, that they can't really be used from inside the container --- like `sbatch`, `squeue`, `mpiexec` or even `singularity` to boot up a nested script call.
 The scripts get around this by `ssh`'ing out of the container back into the host to do this kind of business.
@@ -123,7 +146,12 @@ You don't really need to worry about this, except you'll need to shove your HPCC
 You'll also have to specify a tag to pull the DISHTINY container at when you launch any scripts.
 If you're not sure which to use, you can always specify the tag `latest`.
 (This tag isn't strictly ideal because it gets regularly reassigned to the latest available container image.
-Ideally you'll use a tag associated with a specific container image that won't get reassigned.)
+Ideally you'll use a tag associated with a specific container image that won't get reassigned, something like `sha-8e9493f`.)
+
+::bangbang:: ::bangbang::
+DockerHub imposes rate limits on queries to their container repository.
+You'll want to register a paid account ($7 a month circa 2021) if you plan to run thousands of container sessions.
+You can shove your DockerHub credentials inside of `~/.secrets.sh`.
 
 ## Configpacks
 
@@ -139,11 +167,6 @@ Configpacks are stored in an unarchived (i.e., folders n' files) format inside o
 This repository's GitHub Actions integration zips up configpacks corresponding to every commit and pushes them over to <https://github.com/mmore500/dishtiny-assets> where they can be curled from a programatically-generable url.
 
 The rationale behind fetching configuration assets from a url is to enable straightforward integration with the DISHTINY web viewer.
-
-## Follow-up Experiments Launch Every Ten Stints
-
-Every ten stints (including stint 0), the stint evolve job will launch a bevvy of follow-up jobs in addition to submitting its successor job.
-These jobs do things like grow the most abundant genotype in monoculture, perform phenotype-equivalent nopouts, and launch competitions to assess the number of distinct environmental states genomes are interacting with.
 
 ## Slurm Stoker
 
@@ -199,8 +222,13 @@ These `slurm_stoker` jobs contain a count of remaining scripts in their SLURM jo
 
 ## Series Competition
 
+Fitness competitions fill a toroidal grid with equal counts of two genomes.
+Then, we can assess the fitness of these genomes relative to one another by tracking their abundance in the toroidal grid over time.
+We can use this assay to compare fitness of strains from different series, allowing us to assess how genome attributes that may differ between series (such as phenotype complexity, fitness complexity, etc.) correlate with fitness.
+In order to gain statistical power, rather than a one-off competion between just two series we want to perform a systematic tournament of competitions between pairs of series.
+
 Although most follow-up jobs are launched automatically by the evolve stint job, not all can be.
-Competitions between series to assess relative fitness can only be scheduled once all series have reached a particular stint.
+Competitions between series can only be scheduled once all series have reached a particular stint.
 Because individual series don't have an easy way of assessing whether they're the last series to reach a particular stint without race conditions, you have to launch this job manually if you want this data.
 
 ```bash
@@ -209,7 +237,7 @@ Because individual series don't have an easy way of assessing whether they're th
 
 ## Noncritical Nopout
 
-Critical sites refer to sites in a genome that appreciably harm fitness when individually nopped out.
+Critical sites are instructions in a genetic program that appreciably harm fitness when individually nopped out.
 Noncritical sites are the exact opposite --- sites that, taken alone, don't appreciably harm fitness when individually nopped out.
 
 Noncritical nopout refers to a genome morph where all noncritical sites have been nopped out.

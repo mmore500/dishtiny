@@ -49,7 +49,7 @@ void thread_job( dish2::ThreadWorld<Spec> thread_world ) {
     dish2::dump_coalescence_result<Spec>( thread_world );
   }
 
-  dish2::thread_try_end_snapshot<Spec>( thread_world );
+  dish2::thread_end_snapshot<Spec>( thread_world );
 
   dish2::log_msg( "thread job complete" );
 

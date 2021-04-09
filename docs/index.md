@@ -10,6 +10,7 @@ usage
 data
 workflow
 development
+glossary
 api/library_root
 contributing
 code_of_conduct

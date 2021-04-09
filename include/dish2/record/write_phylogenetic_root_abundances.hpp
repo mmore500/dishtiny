@@ -33,6 +33,8 @@ void write_phylogenetic_root_abundances(
   const dish2::ThreadWorld< Spec >& world
 ) {
 
+  dish2::log_msg( "writing phylogenetic root abundances" );
+
   const thread_local std::string out_filename = dish2::pare_keyname_filename(
     dish2::make_phylogenetic_root_abundances_filename(),
     dish2::make_data_path()
@@ -80,7 +82,6 @@ void write_phylogenetic_root_abundances(
 
     file.PrintHeaderKeys();
 
-    dish2::log_msg( "wrote phylogenetic root abundances" );
   });
 
   for ( const auto& root_id_ : dish2::get_unique_root_ids<Spec>(world) ) {
@@ -90,6 +91,8 @@ void write_phylogenetic_root_abundances(
     prevalence = dish2::get_root_id_prevalence<Spec>( root_id, world );
     file.Update();
   }
+
+  dish2::log_msg( "wrote phylogenetic root abundances" );
 
 }
 

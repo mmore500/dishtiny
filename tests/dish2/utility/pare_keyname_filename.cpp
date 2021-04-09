@@ -6,9 +6,12 @@
 
 #include "Catch/single_include/catch2/catch.hpp"
 #include "conduit/include/uitsl/debug/compare_streams.hpp"
+#include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 #include "conduit/include/uitsl/polyfill/filesystem.hpp"
 
 #include "dish2/utility/pare_keyname_filename.hpp"
+
+const uitsl::MpiGuard guard;
 
 TEST_CASE("Test short filename") {
 

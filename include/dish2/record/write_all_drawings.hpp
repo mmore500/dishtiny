@@ -19,6 +19,8 @@ namespace dish2 {
 template< typename Spec >
 void write_all_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
+  dish2::log_msg( "writing all drawings" );
+
   dish2::DrawerCollection<Spec> drawers( thread_world );
 
   using namespace std::chrono_literals;
