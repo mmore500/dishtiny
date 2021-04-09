@@ -4,6 +4,10 @@
 
 An output that a cell's genetic program can control to interact with the environment.
 
+## Artifact
+
+Serialized simulation objects, like a genome or a population.
+
 ## Cardinal
 
 The virtual CPU and hardware a cell uses to manage environmental and agent-agent interactions with respect to a particular neighboring cell.
@@ -19,7 +23,7 @@ Contains a genome, which is run in parallel on each virtual CPU within the cell.
 ## Configuration
 
 Refers to settings that may be adjusted run-time (as opposed to compile-time).
-Can be controlled by command-line flag, URL query parameters, or configuration file (.cfg).
+Can be controlled by command-line flag, URL query parameters, or configuration file (`.cfg`).
 
 ## Configpack
 
