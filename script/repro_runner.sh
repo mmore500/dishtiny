@@ -474,7 +474,7 @@ if [[ "${container_tag}" != *"@sha256:"* ]]; then
   container_tag="${container_tag}@sha256:$(\
     until singularity exec "docker://${arg_username}/${arg_slug}:${container_tag}" \
       bash -c 'echo ${SINGULARITY_NAME}' \
-    || (( retry++ >=5 )); do sleep 10; done \
+    || (( retry++ >=5 )); do sleep $(( retry * retry * 60 )); done \
   )"
 fi
 echo "container_tag with sha256 ${container_tag}"
@@ -491,7 +491,7 @@ container_file="$(mktemp)"
 retry=0
 time until singularity pull --force "${container_file}" "docker://${arg_username}/${arg_slug}@${container_tag#*@}"; do
   (( retry++ >= 5 )) && echo "too many singularity pull retries" && exit 1
-  echo "failed singularity pull ${retry}, trying agian" && sleep 10
+  echo "failed singularity pull ${retry}, trying agian" && sleep $(( retry * retry * 60 ))
 done
 
 # setup output folder
