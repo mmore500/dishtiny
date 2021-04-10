@@ -317,7 +317,11 @@ echo "-------------------------------------------------------------------------"
 # and may not have it if this is a nop-out continuation
 # working with an in_progress_jenga_nopout morph
 
+
 f="a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={{ stint }}+thread=0+variation=master+ext=.json.gz"
+
+rm -f "${f}"
+
 echo "downloading ${f}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
