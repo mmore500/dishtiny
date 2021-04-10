@@ -307,6 +307,35 @@ done
 
 unset pids
 
+################################################################################
+echo
+echo "Download Wildtype Genome"
+echo "-------------------------------------------------------------------------"
+################################################################################
+
+# we need it to dispatch fitness complexity competitions
+# and may not have it if this is a nop-out continuation
+# working with an in_progress_jenga_nopout morph
+
+f="a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={{ stint }}+thread=0+variation=master+ext=.json.gz"
+echo "downloading ${f}"
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+    "${f}" \
+    && echo "  ${f} download success" && break \
+    || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
+done & pids+=($!)
+
+# wait on all forked upload jobs
+for pid in "${pids[@]}"; do
+  # if child process fails, we fail
+  wait "${pid}"
+done
+
+unset pids
+
 #===============================================================================
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #===============================================================================
