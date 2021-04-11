@@ -5,7 +5,10 @@
 #include <future>
 #include <mutex>
 
+#include <pthread.h>
+
 #include "../config/thread_idx.hpp"
+#include "../debug/log_msg.hpp"
 
 namespace dish2 {
 
@@ -27,7 +30,18 @@ bool try_with_timeout( T&& task, const Duration& duration ) {
     future.get(); // this will propagate exceptions, if any
     return true;
   } else {
-    worker.detach(); // we leave the thread still running
+
+    dish2::log_msg(
+      "try_with_timeout exceeded, "
+      "detaching and cancelling worker thread"
+    );
+    const auto handle = worker.native_handle();
+    worker.detach();
+    dish2::log_msg( "worker thread detached" );
+    pthread_cancel( handle );
+    dish2::log_msg( "worker thread canceled" );
+    dish2::log_msg( "try_with_timeout complete" );
+
     return false;
   }
 
