@@ -5,8 +5,7 @@
 #include <chrono>
 #include <utility>
 
-#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
-#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
+#include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 
 #include "../debug/log_msg.hpp"
 #include "../utility/try_with_timeout.hpp"
@@ -19,23 +18,24 @@ namespace dish2 {
 template< typename Spec >
 void write_all_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
 
-  dish2::log_msg( "writing all drawings" );
+  const uitsl::Timer timer;
+  dish2::log_msg(
+    "beginning write_all_drawings: ", timer.GetElapsed().count(), "s"
+  );
 
   dish2::DrawerCollection<Spec> drawers( thread_world );
 
-  using namespace std::chrono_literals;
+  dish2::log_msg( "constructed drawers: ", timer.GetElapsed().count(), "s" );
 
-  if (
-    dish2::try_with_timeout( [&](){ drawers.SaveToFileAsDrawing(); }, 5min )
-  ) {
+  drawers.SaveToFileAsDrawing();
 
-    dish2::log_msg( "wrote all drawings" );
+  dish2::log_msg(
+    "completed SaveToFileAsDrawing(): ", timer.GetElapsed().count(), "s"
+  );
 
-  } else {
-
-    dish2::log_msg( "all drawings write timed out" );
-
-  }
+  dish2::log_msg(
+    "completed write_all_drawings: ", timer.GetElapsed().count(), "s"
+  );
 
 }
 

@@ -7,7 +7,7 @@
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 
 #include "../config/cfg.hpp"
-#include "../record/write_all_drawings.hpp"
+#include "../record/try_write_all_drawings.hpp"
 #include "../record/write_cell_census.hpp"
 #include "../record/write_demographic_phenotypic_phylogenetic_metrics.hpp"
 #include "../record/write_phylogenetic_root_abundances.hpp"
@@ -25,7 +25,7 @@ void thread_data_write( const dish2::ThreadWorld<Spec>& thread_world ) {
   dish2::write_phylogenetic_root_abundances<Spec>( thread_world );
 
   if ( dish2::cfg.ALL_DRAWINGS_WRITE() ) {
-    dish2::write_all_drawings<Spec>(thread_world);
+    dish2::try_write_all_drawings<Spec>( thread_world );
   }
   if (
     !dish2::cfg.SELECTED_DRAWINGS().empty()
