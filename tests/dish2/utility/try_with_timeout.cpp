@@ -5,8 +5,8 @@
 #include <thread>
 
 #include "Catch/single_include/catch2/catch.hpp"
-#include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 #include "conduit/include/uitsl/countdown/Timer.hpp"
+#include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 
 const uitsl::MpiGuard guard;
 
