@@ -12,10 +12,8 @@ namespace dish2 {
 template<typename T, typename Duration>
 bool try_with_timeout( T&& task, const Duration& duration ) {
 
-  // setup drawers as passed in args
   const auto parent_thread_idx = dish2::thread_idx;
 
-  // drawings occasionally hang, so add a time out
   std::packaged_task<void()> packaged_task( [&](){
     dish2::thread_idx = parent_thread_idx;
     task();
