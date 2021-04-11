@@ -29,8 +29,7 @@ void write_all_drawings( const dish2::ThreadWorld< Spec >& thread_world ) {
     dish2::try_with_timeout( [&](){ drawers.SaveToFileAsDrawing(); }, 5min )
   ) {
 
-    thread_local std::once_flag once_flag;
-    std::call_once(once_flag, [](){ dish2::log_msg( "wrote all drawings" ); });
+    dish2::log_msg( "wrote all drawings" );
 
   } else {
 
