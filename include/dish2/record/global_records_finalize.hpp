@@ -10,6 +10,7 @@
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 
 #include "finalize/finalize_artifacts.hpp"
+#include "finalize/finalize_benchmarks.hpp"
 #include "finalize/finalize_data.hpp"
 #include "finalize/finalize_drawings.hpp"
 #include "finalize/finalize_videos.hpp"
@@ -30,6 +31,7 @@ void global_records_finalize() {
       || dish2::cfg.SELECTED_DRAWINGS().size()
     ) finalize_drawings();
     finalize_artifacts();
+    finalize_benchmarks();
     finalize_data();
     finalize_videos();
     finalize_zips();

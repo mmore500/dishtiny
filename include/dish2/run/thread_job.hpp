@@ -2,7 +2,6 @@
 #ifndef DISH2_RUN_THREAD_JOB_HPP_INCLUDE
 #define DISH2_RUN_THREAD_JOB_HPP_INCLUDE
 
-#include <fstream>
 #include <iostream>
 
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
@@ -13,10 +12,10 @@
 #include "../load/load_world.hpp"
 #include "../record/dump_coalescence_result.hpp"
 #include "../record/dump_interroot_phenotype_differentiation.hpp"
-#include "../record/make_filename/make_elapsed_updates_filename.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "thread_artifacts_dump.hpp"
+#include "thread_benchmarks_dump.hpp"
 #include "thread_data_dump.hpp"
 #include "thread_data_write.hpp"
 #include "thread_evolve.hpp"
@@ -36,9 +35,11 @@ void thread_job( dish2::ThreadWorld<Spec> thread_world ) {
   }
 
   // write elapsed updates to file (for easier benchmark post-processing)
-  if (cfg.BENCHMARKING_DUMP() ) std::ofstream(
-    dish2::make_elapsed_updates_filename()
-  ) << thread_world.GetUpdate() << '\n';
+  if (cfg.BENCHMARKING_DUMP() ) {
+    dish2::thread_benchmarks_dump<Spec>( thread_world );
+    dish2::log_msg( "benchmarks dump complete" );
+
+  }
 
   if ( cfg.ARTIFACTS_DUMP() ) {
     dish2::thread_artifacts_dump<Spec>( thread_world );
