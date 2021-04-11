@@ -4,6 +4,7 @@
 
 #include <fstream>
 
+#include "../record/dump_benchmark_results.hpp"
 #include "../record/make_filename/make_benchmark_path.hpp"
 #include "../record/make_filename/make_elapsed_updates_filename.hpp"
 #include "../utility/pare_keyname_filename.hpp"
@@ -22,6 +23,10 @@ void thread_benchmarks_dump( const dish2::ThreadWorld<Spec>& thread_world ) {
   std::ofstream(
     dish2::make_benchmark_path( elapsed_updates_filename )
   ) << thread_world.GetUpdate() << '\n';
+
+
+
+  dish2::dump_benchmark_results<Spec>( thread_world );
 
 }
 
