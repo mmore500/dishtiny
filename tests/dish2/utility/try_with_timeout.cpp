@@ -35,3 +35,37 @@ TEST_CASE("try_with_timeout hangs") {
   REQUIRE( timer.GetElapsed() < 10s );
 
 }
+
+TEST_CASE("nested try_with_timeout completes") {
+
+  using namespace std::chrono_literals;
+
+  REQUIRE(
+    dish2::try_with_timeout(
+      [](){ REQUIRE( dish2::try_with_timeout(
+        [](){ std::this_thread::sleep_for(1s); },
+        3s
+      ) ); },
+    3s )
+  );
+
+}
+
+TEST_CASE("nested try_with_timeout hangs") {
+
+  using namespace std::chrono_literals;
+
+  uitsl::Timer timer;
+
+  REQUIRE(
+    dish2::try_with_timeout(
+      [](){ REQUIRE( !dish2::try_with_timeout(
+        [](){ std::this_thread::sleep_for(1min); },
+        3s
+      ) ); },
+    10s )
+  );
+
+  REQUIRE( timer.GetElapsed() < 10s );
+
+}
