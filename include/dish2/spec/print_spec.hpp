@@ -34,6 +34,14 @@ void print_spec() {
   dish2::log_tee << "ReadableState size: " << readable_size << '\n';
   dish2::log_tee << "WritableState size: " << writable_size << '\n';
 
+  constexpr size_t introspective_bytes
+    = sizeof( dish2::IntrospectiveState<Spec> );
+  constexpr size_t readable_bytes = sizeof( dish2::ReadableState<Spec> );
+  constexpr size_t writable_bytes = sizeof( dish2::WritableState<Spec> );
+  dish2::log_tee << "IntrospectiveState bytes: " << introspective_bytes << '\n';
+  dish2::log_tee << "ReadableState bytes: " << readable_bytes << '\n';
+  dish2::log_tee << "WritableState bytes: " << writable_bytes << '\n';
+
   dish2::log_tee << "==============================\n" << '\n';
 
 }
