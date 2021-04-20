@@ -149,6 +149,38 @@ df = pd.concat(process_map(
 ))
 
 ################################################################################
+print(                                        )
+print( 'deleting stale collated data, if any' )
+print( '------------------------------------' )
+################################################################################
+
+pattern = re.compile(
+    '.*/' # anything leading up to final /
+    '[^\/]*' # anything EXCEPT /
+    f'a={kn.unpack(out_path)["a"]}\+' # title of collation output
+    '[^\/]*' # anything EXCEPT /
+    '$' # end of line
+)
+
+matches = [
+    key['Key']
+    for page in client.get_paginator('list_objects').paginate(
+        Bucket=bucket,
+        Prefix=out_prefix,
+    )
+    for key in page['Contents']
+    if pattern.match(key['Key'])
+]
+
+for match in matches:
+    print(f'deleting stale collated data, {match}')
+    client.delete_object(
+        Bucket=bucket,
+        Key=match,
+    )
+
+
+################################################################################
 print(                         )
 print( 'dumping and uploading' )
 print( '---------------------' )
