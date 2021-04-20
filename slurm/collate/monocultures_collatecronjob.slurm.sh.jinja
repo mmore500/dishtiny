@@ -136,11 +136,11 @@ echo "Do Collation"
 echo "---------------------------------------------------"
 ################################################################################
 
-python3 dishtiny/script/collate.py "s3://{{ bucket }}/endeavor={{ endeavor }}/monocultures/metrics/stage=1+what=generated/stint=${stint}/" 'series=[0-9]+/a=demographic_phenotypic_phylogenetic_metrics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+python3 dishtiny/postprocessing/collate.py "s3://{{ bucket }}/endeavor={{ endeavor }}/monocultures/metrics/stage=1+what=generated/stint=${stint}/" 'series=[0-9]+/a=demographic_phenotypic_phylogenetic_metrics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
 
-python3 dishtiny/script/collate.py "s3://{{ bucket }}/endeavor={{ endeavor }}/monocultures/metrics/stage=1+what=generated/stint=${stint}/" 'series=[0-9]+/a=kin_conflict_statistics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+python3 dishtiny/postprocessing/collate.py "s3://{{ bucket }}/endeavor={{ endeavor }}/monocultures/metrics/stage=1+what=generated/stint=${stint}/" 'series=[0-9]+/a=kin_conflict_statistics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
 
-python3 dishtiny/script/collate.py "s3://{{ bucket }}/endeavor={{ endeavor }}/monocultures/metrics/stage=1+what=generated/stint=${stint}/" 'series=[0-9]+/a=kin_conflict_by_replev_statistics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+python3 dishtiny/postprocessing/collate.py "s3://{{ bucket }}/endeavor={{ endeavor }}/monocultures/metrics/stage=1+what=generated/stint=${stint}/" 'series=[0-9]+/a=kin_conflict_by_replev_statistics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
 
 
 ################################################################################

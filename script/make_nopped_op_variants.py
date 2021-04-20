@@ -7,7 +7,7 @@ import sys
 
 from keyname import keyname as kn
 
-from pyhelpers import genome_local_autoload
+from dishpylib.pyloaders import genome_local_autoload
 
 try:
     __, applyto, basedon = sys.argv

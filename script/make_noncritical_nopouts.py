@@ -19,8 +19,8 @@ import tempfile
 from tqdm import tqdm
 from scipy import stats
 
-from pyhelpers import fit_control_t_distns
-from pyhelpers import genome_s3_autoload
+from dishpylib.pyhelpers import get_control_t_distns
+from dishpylib.pyloaders import genome_s3_autoload
 
 def get_critical_sites(variant_df, control_fits_df):
 
@@ -116,13 +116,7 @@ print( 'getting assets'                                                        )
 print( '---------------------------------------------------------------------' )
 ################################################################################
 
-control_competitions, = my_bucket.objects.filter(
-    Prefix=f'endeavor={endeavor}/control-competitions/stage=2+what=collated/stint={stint}/'
-)
-
-control_df = pd.read_csv(f's3://{bucket}/{control_competitions.key}')
-
-variant_competitions, = my_bucket.objects.filter(
+variant_competitions, = bucket_handle.objects.filter(
     Prefix=f'endeavor={endeavor}/variant-competitions/stage=3+what=collated/stint={stint}/'
 )
 
@@ -135,7 +129,7 @@ print( '---------------------------------------------------------------------' )
 ################################################################################
 
 critical_sites_by_series = get_critical_sites(
-    variant_df, fit_control_t_distns( control_df )
+    variant_df, get_control_t_distns( bucket, endeavor, stint )
 )
 
 for series, critical_sites in critical_sites_by_series.items():

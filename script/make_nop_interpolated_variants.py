@@ -9,7 +9,7 @@ import numpy as np
 import random
 import sys
 
-from pyhelpers import genome_local_autoload
+from dishpylib.pyloaders import genome_local_autoload
 
 random.seed(1)
 
