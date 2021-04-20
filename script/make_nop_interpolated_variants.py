@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""Generate num_interpolation_steps genome variants, progressively nopping more_ops_genome until it matches less_ops_genome.
+
+The instructions nopped are independently drawn each interpolation step.
+Output genomes are written to the current working directory with programatically-generated filenames.
+
+Usage:
+    ./make_nop_interpolated_variants.py [less_ops_genome] [more_ops_genome] [num_interpolation_steps]
+"""
 
 import copy
 import gzip
@@ -17,8 +25,7 @@ try:
     __, less_ops, more_ops, num_interpolation_steps = sys.argv
     num_interpolation_steps = int( num_interpolation_steps )
 except:
-    print('bad arguments')
-    print('USAGE: [less_ops] [more_ops] [num_interpolation_steps]')
+    print( __doc__ )
     sys.exit(1)
 
 assert 'ext' in kn.unpack( less_ops )

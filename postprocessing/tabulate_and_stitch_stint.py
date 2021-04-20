@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""Combines all available collated data on s3 for a single stint.
+
+Collated data is tabulated (reformatted and processed) and stitched into a single dataframe.
+Uploads output to a programatically-generated s3 url.
+
+Usage:
+    ./tabulate_and_stitch_stint.py [bucket] [endeavor] [stint]
+"""
 
 import boto3
 from functools import reduce
@@ -48,8 +56,7 @@ try:
     bucket = sys.argv[1]
     endeavor, stint = map(int, sys.argv[2:])
 except:
-    print('bad arguments')
-    print('USAGE: [bucket] [endeavor] [stint]')
+    print(__doc__)
     sys.exit(1)
 
 print(f'bucket {bucket}')

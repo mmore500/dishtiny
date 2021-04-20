@@ -1,5 +1,16 @@
 R"python3(" # this allows us to #include the script in C++
 
+__doc__ = """Stitches frame images into a video file.
+
+Frames with distinct 'a=', 'thread=', and 'proc=' keyname attributes are stitched into distinct videos.
+Video output is saved into the current working directory with a programatically-generated filename.
+
+Usage:
+    ./animate_frames.py [frames_per_second] [max_frames or 0]
+
+    Frame filenames are read from stdin.
+"""
+
 import cv2
 from functools import reduce
 from iterdub import iterdub as ib
@@ -70,9 +81,7 @@ print( '---------------------------------------------------------------------' )
 try:
     frames_per_second, max_frames = map(int, sys.argv[1:])
 except:
-    print('bad arguments')
-    print('USAGE: [frames_per_second] [max_frames or 0]')
-    print('USAGE: pass filenames via stdin')
+    print( __doc__ )
     sys.exit(1)
 
 print( 'frames_per_second', frames_per_second )

@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""Generates tournament parings between series competitors.
+
+Each series participates in degree competitions.
+Competition pairings are printed to stdout.
+
+Usage:
+    ./layout_interstrain_tournament.py [seed] [degree] [series]...
+"""
 
 import sys
 
@@ -7,8 +15,7 @@ import networkx as nx
 try:
     seed, degree, *series = map(int, sys.argv[1:])
 except:
-    print('bad arguments')
-    print('USAGE: [seed] [degree] [series...]')
+    print( __doc__ )
     sys.exit(1)
 
 n = len(series)

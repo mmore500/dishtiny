@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+"""Collates data files from prefix_url on s3 matching regex.
+
+Uploads collated output to a programatically-generated s3 url.
+
+Usage:
+    ./collate.py [prefix_url] [regex]
+"""
 
 import boto3
 from io import StringIO
@@ -24,8 +31,7 @@ print( '------------------' )
 try:
     prefix_url, regex = sys.argv[1:]
 except:
-    print('bad arguments')
-    print('USAGE: [prefix_url] [regex]')
+    print(__doc__)
     sys.exit(1)
 
 bucket = re.search('s3://(.+?)/', prefix_url).group(1)

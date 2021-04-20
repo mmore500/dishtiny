@@ -1,5 +1,15 @@
 R"python3(" # this allows us to #include the script in C++
 
+__doc__ = """Combines data from several csv files.
+
+All input files must be from the same directory.
+Output data is written to a csv in the directory input files were read from.
+The output filename is programatically generated.
+
+Usage:
+    ./concat_csvs.py [target_files]...
+"""
+
 from iterdub import iterdub as ib
 from iterpop import iterpop as ip
 from keyname import keyname as kn

@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""Generate a genome morph where all noncritical sites are nopped out.
+
+Requires control and morph competition experiment data.
+Output genome is uploaded to s3 at a programatically-generated url.
+
+Usage:
+    ./make_noncritical_nopouts.py [bucket] [endeavor] [stint]
+"""
 
 import boto3
 from collections import defaultdict
@@ -99,8 +107,7 @@ try:
     bucket = sys.argv[1]
     endeavor, stint = map(int, sys.argv[2:])
 except:
-    print('bad arguments')
-    print('USAGE: [bucket] [endeavor] [stint]')
+    print( __doc__ )
     sys.exit(1)
 
 print(f'bucket {bucket}')
