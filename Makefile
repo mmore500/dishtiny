@@ -40,7 +40,7 @@ endif
 CFLAGS_nat := -O3 $(CFLAGS_march_native) -flto -DNDEBUG $(CFLAGS_all) $(OMP_FLAG)
 CFLAGS_nat_production := $(CFLAGS_nat) -g -fdebug-prefix-map=$(PWD)=.
 CFLAGS_nat_ndata = $(CFLAGS_nat) -DNDATA
-CFLAGS_nat_debug := -g -DEMP_TRACK_MEM $(OMP_FLAG) $(CFLAGS_all)
+CFLAGS_nat_debug := -g -DEMP_TRACK_MEM -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG $(OMP_FLAG) $(CFLAGS_all)
 CFLAGS_nat_sanitize := -fsanitize=address -fsanitize=undefined $(CFLAGS_nat_debug)
 CFLAGS_nat_profile := -pg -DNDEBUG $(OMP_FLAG) $(CFLAGS_all)
 
@@ -49,7 +49,7 @@ CXX_web := emcc
 OFLAGS_web_all := $(CXXFLAGS) -Wno-mismatched-tags -Wno-empty-body -s USE_ZLIB=1 -s USE_LIBLZMA=1 -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s TOTAL_MEMORY=671088640 --js-library $(EMP_DIR)/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback', '_empDoCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0 -I/usr/lib/x86_64-linux-gnu/openmpi/include/
 OFLAGS_web_pthread := -s USE_PTHREADS=1 -s PROXY_TO_PTHREAD=1
 OFLAGS_web := -O3 -DNDEBUG
-OFLAGS_web_debug := -g4 -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPPORT=1 -s ASSERTIONS=2 -s SAFE_HEAP=1 -s STACK_OVERFLOW_CHECK=2
+OFLAGS_web_debug := -g4 -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPPORT=1 -s ASSERTIONS=2 -s SAFE_HEAP=1 -s STACK_OVERFLOW_CHECK=2 -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG
 
 CFLAGS_web := $(CFLAGS_all) $(OFLAGS_web) $(OFLAGS_web_all)
 CFLAGS_web_pthread := $(CFLAGS_all) $(OFLAGS_web) $(OFLAGS_web_pthread) $(OFLAGS_web_all)
