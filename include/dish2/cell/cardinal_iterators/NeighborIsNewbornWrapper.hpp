@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_NEIGHBORISNEWBORNWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_NEIGHBORISNEWBORNWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../peripheral/readable_state/ReadableState.hpp"
@@ -56,13 +58,25 @@ public:
     return res;
   }
 
-  NeighborIsNewbornWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  NeighborIsNewbornWrapper operator+(const RHS rhs) {
     NeighborIsNewbornWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  NeighborIsNewbornWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  NeighborIsNewbornWrapper operator-(const RHS rhs) {
     NeighborIsNewbornWrapper res{ *this };
     res -= rhs;
     return res;

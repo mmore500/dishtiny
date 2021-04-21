@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_READABLESTATEWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_READABLESTATEWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../peripheral/readable_state/ReadableState.hpp"
@@ -54,13 +56,25 @@ public:
     return res;
   }
 
-  ReadableStateWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  ReadableStateWrapper operator+(const RHS rhs) {
     ReadableStateWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  ReadableStateWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  ReadableStateWrapper operator-(const RHS rhs) {
     ReadableStateWrapper res{ *this };
     res -= rhs;
     return res;

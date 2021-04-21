@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_INTRAMESSAGENODEWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_INTRAMESSAGENODEWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../Cardinal.hpp"
@@ -50,13 +52,25 @@ public:
     return res;
   }
 
-  IntraMessageNodeWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  IntraMessageNodeWrapper operator+(const RHS rhs) {
     IntraMessageNodeWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  IntraMessageNodeWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  IntraMessageNodeWrapper operator-(const RHS rhs) {
     IntraMessageNodeWrapper res{ *this };
     res -= rhs;
     return res;

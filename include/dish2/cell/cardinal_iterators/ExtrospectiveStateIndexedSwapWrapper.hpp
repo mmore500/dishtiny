@@ -3,6 +3,7 @@
 #define DISH2_CELL_CARDINAL_ITERATORS_EXTROSPECTIVESTATEINDEXEDSWAPWRAPPER_HPP_INCLUDE
 
 #include <limits>
+#include <type_traits>
 
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
@@ -72,13 +73,25 @@ public:
     return res;
   }
 
-  ExtrospectiveStateIndexedSwapWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  ExtrospectiveStateIndexedSwapWrapper operator+(const RHS rhs) {
     ExtrospectiveStateIndexedSwapWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  ExtrospectiveStateIndexedSwapWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  ExtrospectiveStateIndexedSwapWrapper operator-(const RHS rhs) {
     ExtrospectiveStateIndexedSwapWrapper res{ *this };
     res -= rhs;
     return res;

@@ -2,6 +2,8 @@
 #ifndef DISH2_WORLD_ITERATORS_ELAPSEDMUTATIONOCCURENCESCONSTWRAPPER_HPP_INCLUDE
 #define DISH2_WORLD_ITERATORS_ELAPSEDMUTATIONOCCURENCESCONSTWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../cell/Cell.hpp"
@@ -51,13 +53,25 @@ public:
     return res;
   }
 
-  ElapsedMutationOccurencesConstWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  ElapsedMutationOccurencesConstWrapper operator+(const RHS rhs) {
     ElapsedMutationOccurencesConstWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  ElapsedMutationOccurencesConstWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  ElapsedMutationOccurencesConstWrapper operator-(const RHS rhs) {
     ElapsedMutationOccurencesConstWrapper res{ *this };
     res -= rhs;
     return res;

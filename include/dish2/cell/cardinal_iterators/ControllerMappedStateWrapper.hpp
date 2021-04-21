@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_CONTROLLERMAPPEDSTATEWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_CONTROLLERMAPPEDSTATEWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../peripheral/readable_state/ReadableState.hpp"

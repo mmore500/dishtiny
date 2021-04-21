@@ -2,6 +2,8 @@
 #ifndef DISH2_WORLD_ITERATORS_CODINGGENOTYPECONSTWRAPPER_HPP_INCLUDE
 #define DISH2_WORLD_ITERATORS_CODINGGENOTYPECONSTWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../cell/Cell.hpp"
@@ -56,13 +58,25 @@ public:
     return res;
   }
 
-  CodingGenotypeConstWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  CodingGenotypeConstWrapper operator+(const RHS rhs) {
     CodingGenotypeConstWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  CodingGenotypeConstWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  CodingGenotypeConstWrapper operator-(const RHS rhs) {
     CodingGenotypeConstWrapper res{ *this };
     res -= rhs;
     return res;

@@ -2,6 +2,8 @@
 #ifndef DISH2_WORLD_ITERATORS_ROOTIDVALWRAPPER_HPP_INCLUDE
 #define DISH2_WORLD_ITERATORS_ROOTIDVALWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../cell/Cell.hpp"
@@ -52,13 +54,25 @@ public:
     return res;
   }
 
-  RootIDValWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  RootIDValWrapper operator+(const RHS rhs) {
     RootIDValWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  RootIDValWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  RootIDValWrapper operator-(const RHS rhs) {
     RootIDValWrapper res{ *this };
     res -= rhs;
     return res;

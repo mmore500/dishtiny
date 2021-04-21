@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_PUSHNODEINPUTWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_PUSHNODEINPUTWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../Cardinal.hpp"
@@ -52,13 +54,25 @@ public:
     return res;
   }
 
-  PushNodeInputWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  PushNodeInputWrapper operator+(const RHS rhs) {
     PushNodeInputWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  PushNodeInputWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  PushNodeInputWrapper operator-(const RHS rhs) {
     PushNodeInputWrapper res{ *this };
     res -= rhs;
     return res;

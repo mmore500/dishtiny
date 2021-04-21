@@ -3,6 +3,7 @@
 #define DISH2_CELL_CARDINAL_ITERATORS_WRITABLESTATEINDEXEDSWAPWRAPPER_HPP_INCLUDE
 
 #include <limits>
+#include <type_traits>
 
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
@@ -71,13 +72,25 @@ public:
     return res;
   }
 
-  WritableStateIndexedSwapWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  WritableStateIndexedSwapWrapper operator+(const RHS rhs) {
     WritableStateIndexedSwapWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  WritableStateIndexedSwapWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  WritableStateIndexedSwapWrapper operator-(const RHS rhs) {
     WritableStateIndexedSwapWrapper res{ *this };
     res -= rhs;
     return res;

@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_NEIGHBORKINGROUPWILLEXPIREWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_NEIGHBORKINGROUPWILLEXPIREWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../peripheral/readable_state/ReadableState.hpp"
@@ -56,13 +58,25 @@ public:
     return res;
   }
 
-  NeighborKinGroupWillExpireWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  NeighborKinGroupWillExpireWrapper operator+(const RHS rhs) {
     NeighborKinGroupWillExpireWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  NeighborKinGroupWillExpireWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+NeighborKinGroupWillExpireWrapper operator-(const RHS rhs) {
     NeighborKinGroupWillExpireWrapper res{ *this };
     res -= rhs;
     return res;

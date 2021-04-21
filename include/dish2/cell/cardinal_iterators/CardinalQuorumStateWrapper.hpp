@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_CARDINALQUORUMSTATEWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_CARDINALQUORUMSTATEWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../../quorum/CardinalQuorumState.hpp"
@@ -53,13 +55,25 @@ public:
     return *this - 1;
   }
 
-  CardinalQuorumStateWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  CardinalQuorumStateWrapper operator+(const RHS rhs) {
     CardinalQuorumStateWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  CardinalQuorumStateWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  CardinalQuorumStateWrapper operator-(const RHS rhs) {
     CardinalQuorumStateWrapper res{ *this };
     res -= rhs;
     return res;

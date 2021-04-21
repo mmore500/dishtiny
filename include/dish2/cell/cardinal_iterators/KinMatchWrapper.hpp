@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_KINMATCHWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_KINMATCHWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/array.hpp"
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
@@ -57,13 +59,25 @@ public:
     return res;
   }
 
-  KinMatchWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  KinMatchWrapper operator+(const RHS rhs) {
     KinMatchWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  KinMatchWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  KinMatchWrapper operator-(const RHS rhs) {
     KinMatchWrapper res{ *this };
     res -= rhs;
     return res;

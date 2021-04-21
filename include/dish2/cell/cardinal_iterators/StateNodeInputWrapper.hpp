@@ -2,6 +2,8 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_STATENODEINPUTWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_STATENODEINPUTWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
+
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
 
 #include "../Cardinal.hpp"
@@ -52,13 +54,25 @@ public:
     return res;
   }
 
-  StateNodeInputWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  StateNodeInputWrapper operator+(const RHS rhs) {
     StateNodeInputWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  StateNodeInputWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  StateNodeInputWrapper operator-(const RHS rhs) {
     StateNodeInputWrapper res{ *this };
     res -= rhs;
     return res;

@@ -2,6 +2,7 @@
 #ifndef DISH2_CELL_CARDINAL_ITERATORS_NEIGHBORRESOURCESTOCKPILEWRAPPER_HPP_INCLUDE
 #define DISH2_CELL_CARDINAL_ITERATORS_NEIGHBORRESOURCESTOCKPILEWRAPPER_HPP_INCLUDE
 
+#include <type_traits>
 #include <utility>
 
 #include "../../../../third-party/Empirical/include/emp/base/vector.hpp"
@@ -60,13 +61,25 @@ public:
     return res;
   }
 
-  NeighborResourceStockpileWrapper operator+(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  NeighborResourceStockpileWrapper operator+(const RHS rhs) {
     NeighborResourceStockpileWrapper res{ *this };
     res += rhs;
     return res;
   }
 
-  NeighborResourceStockpileWrapper operator-(const size_t rhs) {
+  template<
+    typename RHS,
+    typename = typename std::enable_if<
+      std::is_arithmetic<RHS>::value, RHS
+    >::type
+  >
+  NeighborResourceStockpileWrapper operator-(const RHS rhs) {
     NeighborResourceStockpileWrapper res{ *this };
     res -= rhs;
     return res;
