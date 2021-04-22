@@ -101,11 +101,11 @@ public:
 
   bool operator==(const LogIteratorAdapter& other) const {
     return std::tuple{
-      log_iterator,
-      cell_iterator
+      cell_iterator,
+      log_iterator
     } == std::tuple{
-      other.log_iterator,
-      other.cell_iterator
+      other.cell_iterator,
+      other.log_iterator
     };
   }
 
