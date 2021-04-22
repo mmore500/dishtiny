@@ -90,6 +90,10 @@ public:
   LiveCellIterator& operator--() {
 
     // might not quite be right, but should work in practice
+    // in the case of extinction, this will yield the begin() iterator
+    // which might not be alive
+    // (alternative idea would be to set ourselves
+    // to be an end iterator if no alive cells are available)
     do {
       parent_t::operator--();
     } while (
@@ -97,9 +101,7 @@ public:
       && !parent_t::operator*().IsAlive()
     );
 
-    emp_assert(
-      *this != std::prev( begin ) || parent_t::operator*().IsAlive()
-    );
+    emp_assert( *this == begin || parent_t::operator*().IsAlive() );
 
     return *this;
   }
