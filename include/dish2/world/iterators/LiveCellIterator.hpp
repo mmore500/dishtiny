@@ -93,7 +93,7 @@ public:
     do {
       parent_t::operator--();
     } while (
-      *this != std::prev( begin )
+      *this != begin
       && !parent_t::operator*().IsAlive()
     );
 
