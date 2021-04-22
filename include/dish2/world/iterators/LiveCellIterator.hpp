@@ -94,6 +94,8 @@ public:
     // which might not be alive
     // (alternative idea would be to set ourselves
     // to be an end iterator if no alive cells are available)
+    // (another alternative idea would be to raise an exception if no live
+    // cells are available)
     do {
       parent_t::operator--();
     } while (
