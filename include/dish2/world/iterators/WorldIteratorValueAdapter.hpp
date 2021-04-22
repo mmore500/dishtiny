@@ -81,11 +81,11 @@ public:
 
   bool operator==(const WorldIteratorValueAdapter& other) const {
     return std::tuple{
-      cardinal_iterator,
-      cell_iterator
+      cell_iterator,
+      cardinal_iterator
     } == std::tuple{
-      other.cardinal_iterator,
-      other.cell_iterator
+      other.cell_iterator,
+      other.cardinal_iterator
     };
   }
 
