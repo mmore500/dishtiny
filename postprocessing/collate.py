@@ -174,7 +174,7 @@ matches = [
         Bucket=bucket,
         Prefix=out_prefix,
     )
-    for key in page['Contents']
+    for key in page.get('Contents', [])
     if pattern.match(key['Key'])
 ]
 
