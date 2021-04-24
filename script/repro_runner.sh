@@ -389,6 +389,8 @@ function on_error() {
 
   # disk info
   echo "lsblk" && lsblk
+  echo "df -h" && df -h
+  echo "df -i" && df -i
   # echo "ioping -c /tmp" && ioping -c /tmp
   # echo "ioping -c ." && ioping -c .
   # echo "ioping -c ~" && ioping -c ~
