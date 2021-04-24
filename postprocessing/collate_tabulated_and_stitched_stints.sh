@@ -46,5 +46,5 @@ echo "do collation"
 echo "------------"
 ################################################################################
 
-python3 postprocessing/collate.py "s3://${bucket}/endeavor=${endeavor}/stage=4+what=tabulated_and_stitched/" 'a=series_profiles\+stint=[0-9]+\+ext=\.csv.xz' \
+python3 postprocessing/collate.py "s3://${bucket}/endeavor=${endeavor}/stage=6+what=tabulated_and_stitched/" 'a=series_profiles\+stint=[0-9]+\+ext=\.csv.xz' \
 || echo "tabulated_and_stitched collation across stints failed"
