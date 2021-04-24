@@ -358,7 +358,12 @@ function on_error() {
 
   for target in $(find . -name '*a=log+*'); do
     echo "uploading ${target}"
-    curl --upload-file "${target}" "https://transfer.sh"
+    proc="$(echo "${target}" | keyname extract proc)"
+    echo "proc ${proc}"
+    thread="$(echo "${target}" | keyname extract thread)"
+    echo "thread ${thread}"
+    # renaming excludes characters that cause url headaches
+    curl --upload-file "${target}" "https://transfer.sh/a=log+job=${SLURM_JOB_ID}+proc=${proc}+thread=${thread}+ext=.txt"
     echo
   done
 
