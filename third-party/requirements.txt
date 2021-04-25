@@ -297,8 +297,9 @@ tqdm==4.50.2
     # via
     #   -r requirements.in
     #   osfclient
-traitlets==5.0.5
+traitlets==5.0.3
     # via
+    #   -r requirements.in
     #   jupyter-core
     #   nbconvert
     #   nbformat
