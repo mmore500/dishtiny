@@ -45,9 +45,12 @@ def tabulate_either_perturbation_fitness(
         wt_vs_perturbed_df = idx_perturbed_df
 
         # ensure that perturbation idxs are unique
-        assert len(idx_perturbed_df) == len(
+        # one each for exchange and rotate
+        num_rows = len(idx_perturbed_df)
+        num_idxs = len(
             idx_perturbed_df[f'{target_state} State Target Idx'].unique()
         )
+        assert num_rows == 2 * num_idxs, f'{num_rows} {num_idxs}'
 
         # calculate the probability of observing fitness differential result
         # under control data distribution
