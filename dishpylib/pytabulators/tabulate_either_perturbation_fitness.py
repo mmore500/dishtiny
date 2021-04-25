@@ -9,10 +9,14 @@ def tabulate_either_perturbation_fitness(
 ):
 
     exchange_df[ 'Perturbation' ] = 'Exchange'
-    exchange_df[ 'Perturbation P' ] = f'Intermittent {target_state} State Exchange Probability'
+    exchange_df[ 'Perturbation P' ] = exchange_df[
+        f'Intermittent {target_state} State Exchange Probability'
+    ]
 
     rotate_df[ 'Perturbation' ] = 'Rotate'
-    rotate_df[ 'Perturbation P' ] = f'Intermittent {target_state} State Rotate Probability'
+    rotate_df[ 'Perturbation P' ] = rotate_df[
+        f'Intermittent {target_state} State Rotate Probability'
+    ]
 
     perturbation_df = pd.concat([ exchange_df, rotate_df ])
 
