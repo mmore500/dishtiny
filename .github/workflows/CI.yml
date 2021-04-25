@@ -124,6 +124,17 @@ jobs:
       - uses: docker-practice/actions-setup-docker@v1
       - run: docker run -e "OSF_USERNAME=${{ secrets.OSF_USERNAME }}" -e "OSF_PASSWORD=${{ secrets.OSF_PASSWORD }}" -e CONTEXT=actions "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/microbenchmarks && make"
 
+  binder:
+    name: Notebooks
+    runs-on: ubuntu-16.04
+    needs:
+      - docker-build
+    steps:
+      # Adapted from https://askubuntu.com/a/524368
+      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
+      - uses: docker-practice/actions-setup-docker@v1
+      - run: docker run -e "OSF_USERNAME=${{ secrets.OSF_USERNAME }}" -e "OSF_PASSWORD=${{ secrets.OSF_PASSWORD }}" -e CONTEXT=actions "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /opt/dishtiny/binder/execute_notebooks.sh
+
   deploy-pages:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-16.04
@@ -135,6 +146,7 @@ jobs:
       - coverage
       - fuzzing
       - microbenchmarks
+      - binder
     container:
       image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
       env:
@@ -169,6 +181,7 @@ jobs:
       - coverage
       - fuzzing
       - microbenchmarks
+      - binder
     steps:
       - uses: actions/checkout@v2
         with:
