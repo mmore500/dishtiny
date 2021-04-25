@@ -62,7 +62,9 @@ coverxygen==1.5.0
 cycler==0.10.0
     # via matplotlib
 decorator==4.4.2
-    # via networkx
+    # via
+    #   networkx
+    #   traitlets
 defusedxml==0.7.1
     # via nbconvert
 docutils==0.15.2
@@ -257,6 +259,7 @@ six==1.15.0
     #   osfclient
     #   patsy
     #   python-dateutil
+    #   traitlets
     #   tweepy
 smmap==3.0.5
     # via gitdb
@@ -297,7 +300,7 @@ tqdm==4.50.2
     # via
     #   -r requirements.in
     #   osfclient
-traitlets==5.0.3
+traitlets==4.3.3
     # via
     #   -r requirements.in
     #   jupyter-core
