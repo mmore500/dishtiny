@@ -12,7 +12,14 @@ def tee_plot(plotter, *args, **kwargs):
     matplotlib.rcParams['pdf.fonttype'] = 42
     matplotlib.rcParams['ps.fonttype'] = 42
 
-    res = plotter(*args, **kwargs)
+    res = plotter(
+        *args,
+        **{
+            k : v
+            for k, v in kwargs.items()
+            if k != 'outattrs'
+        }
+    )
 
     out_filename = kn.pack({
         **{
@@ -20,6 +27,7 @@ def tee_plot(plotter, *args, **kwargs):
             for k, v in kwargs.items()
             if isinstance(v, str)
         },
+        **kwargs.get('outattrs', {}),
         **{
             'viz' : slugify(plotter.__name__),
             'ext' : '.pdf',
