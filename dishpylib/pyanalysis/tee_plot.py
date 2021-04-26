@@ -21,7 +21,7 @@ def tee_plot(plotter, *args, **kwargs):
         }
     )
 
-    out_filename = kn.pack({
+    out_filenamer = lambda ext: kn.pack({
         **{
             slugify(k) : slugify(v)
             for k, v in kwargs.items()
@@ -30,7 +30,7 @@ def tee_plot(plotter, *args, **kwargs):
         **kwargs.get('outattrs', {}),
         **{
             'viz' : slugify(plotter.__name__),
-            'ext' : '.pdf',
+            'ext' : ext,
         },
     })
 
@@ -42,13 +42,21 @@ def tee_plot(plotter, *args, **kwargs):
         exist_ok=True,
     )
 
-    out_path = f'{out_folder}/{out_filename}'
+    out_path = f'outplots/{out_filenamer(".pdf")}'
     print(out_path)
-
     plt.savefig(
-        f'outplots/{out_filename}',
+        out_path,
         bbox_inches='tight',
         transparent=True,
+    )
+
+    out_path = f'outplots/{out_filenamer(".png")}'
+    print(out_path)
+    plt.savefig(
+        out_path,
+        bbox_inches='tight',
+        transparent=True,
+        dpi=300,
     )
 
     return res
