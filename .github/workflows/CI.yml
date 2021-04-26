@@ -135,6 +135,17 @@ jobs:
       - uses: docker-practice/actions-setup-docker@v1
       - run: docker run -e "OSF_USERNAME=${{ secrets.OSF_USERNAME }}" -e "OSF_PASSWORD=${{ secrets.OSF_PASSWORD }}" -e CONTEXT=actions "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /opt/dishtiny/binder/execute_notebooks.sh
 
+      - run: git init
+      - uses: fregante/setup-git-user@v1
+      - run: git commit --allow-empty -m "Initial commit"
+      - run: mkdir -p deploy
+      - run: cp -r /opt/dishtiny/binder/ deploy/
+      - uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: binder # The branch the action should deploy to.
+          folder: deploy # The folder the action should deploy.
+          clean: true # Automatically remove deleted files from the deploy branch
+
   deploy-pages:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-16.04
