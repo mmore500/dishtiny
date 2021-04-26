@@ -93,12 +93,12 @@ A morph in which all instructions that are not critical sites are nopped out.
 Consists of a genetic program and an array of tags to identify events.
 Also contains bookkeeping information about elapsed mutations and elapsed updates.
 
-# Inter Messages
+## Inter Messages
 
 Messages that are transmitted between cells.
 These messages contain a tag used to induce computation in the target virtual CPU and may also contain additional data.
 
-# Intra Messages
+## Intra Messages
 
 Messages that are transmitted between cardinals within a cell.
 These messages contain a tag used to induce computation in the target virtual CPU and may also contain additional data.
