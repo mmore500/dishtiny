@@ -21,6 +21,8 @@ a.out
 a.out.js
 rundishtiny
 
+**/.ipynb_checkpoints/
+
 docs/_build
 docs/api
 docs/doxyoutput
