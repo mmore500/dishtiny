@@ -1,0 +1,46 @@
+[submodule "third-party/Catch"]
+  path = third-party/Catch
+  url = https://github.com/philsquared/Catch.git
+[submodule "third-party/Empirical"]
+  path = third-party/Empirical
+  url = https://github.com/devosoft/Empirical.git
+  branch = master
+[submodule "third-party/force-cover"]
+  path = third-party/force-cover
+  url = https://github.com/emilydolson/force-cover.git
+[submodule "third-party/emsdk"]
+  path = third-party/emsdk
+  url = https://github.com/emscripten-core/emsdk.git
+[submodule "third-party/conduit"]
+  path = third-party/conduit
+  url = https://github.com/mmore500/conduit
+[submodule "third-party/cereal"]
+  path = third-party/cereal
+  url = https://github.com/mmore500/cereal
+[submodule "third-party/signalgp-lite"]
+  path = third-party/signalgp-lite
+  url = https://github.com/mmore500/signalgp-lite
+[submodule "third-party/header-only-pca"]
+  path = third-party/header-only-pca
+  url = https://github.com/rodsan0/header-only-pca.git
+[submodule "third-party/bats-core"]
+  path = third-party/bats-core
+  url = https://github.com/bats-core/bats-core
+[submodule "third-party/PicoSHA2"]
+  path = third-party/PicoSHA2
+  url = https://github.com/okdshin/PicoSHA2
+[submodule "third-party/backward-cpp"]
+  path = third-party/backward-cpp
+  url = https://github.com/bombela/backward-cpp
+[submodule "third-party/magic_enum"]
+  path = third-party/magic_enum
+  url = https://github.com/Neargye/magic_enum
+[submodule "third-party/header-only-gzstream"]
+  path = third-party/header-only-gzstream
+  url = https://github.com/mmore500/header-only-gzstream.git
+[submodule "third-party/bxzstr"]
+  path = third-party/bxzstr
+  url = https://github.com/mmore500/bxzstr.git
+[submodule "third-party/lazy-iterators"]
+  path = third-party/lazy-iterators
+  url = https://github.com/mmore500/lazy-iterators

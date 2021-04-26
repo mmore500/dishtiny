@@ -1,0 +1,294 @@
+#!/bin/bash -login
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time=4:00:00
+#SBATCH --job-name a=competition+output_url={{ output_url }}+first_competitor_url={{ first_competitor_url }}+second_competitor_url={{ second_competitor_url }}
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/scratch/%u/slurmlogs/a=competition+job=%j+ext.log"
+#SBATCH --mem=8G
+#SBATCH --ntasks 1
+#SBATCH --cpus-per-task 1
+#SBATCH --mail-type=FAIL
+# No --mail-user, the default value is the submitting user
+#SBATCH --exclude=csn-002,amr-250
+# Send interrupt when within 5 minutes of end time.
+#SBATCH --signal=SIGINT@300
+# Job may be requeued after node failure.
+#SBATCH --requeue
+
+################################################################################
+echo
+echo "running competitionjob.slurm.sh"
+echo "-------------------------------"
+################################################################################
+
+# fail on error
+set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
+
+# specify display, start the Xvfb server, and save the process ID
+# adapted from https://wiki.hpcc.msu.edu/display/~colbrydi@msu.edu/2013/10
+export DISPLAY=":${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X11-unix/X${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X${SLURM_JOB_ID-1}-lock"
+Xvfb "${DISPLAY}" -auth /dev/null/ &
+export XVFB_PID=$!
+
+# set up and jump into temporary work directory
+cd "$(mktemp -d)"
+
+# curl repro_runner.sh script into to a temporary file
+REPRO_RUNNER="$(mktemp)"
+for retry in {1..20}; do
+  curl \
+    -o "${REPRO_RUNNER}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh" \
+  && echo "  repro_runner curl success" && break \
+  || (echo "retrying repro_runner curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "repro_runner curl fail" && exit 123123; fi
+done
+chmod +x "${REPRO_RUNNER}"
+
+################################################################################
+echo
+echo "Run Job with repro_runner.sh"
+echo "--------------------------------"
+################################################################################
+
+"${REPRO_RUNNER}" \
+  -p "{{ bucket }}" -u mmore500 -s dishtiny \
+  --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
+  << 'REPRO_RUNNER_HEREDOC_EOF'
+
+# fail on error
+set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
+
+################################################################################
+echo
+echo "running competitionjob.slurm.sh"
+echo "-------------------------------"
+################################################################################
+
+################################################################################
+echo
+echo "Initialize and Log Config"
+echo "-------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# load secrets into environment variables, if available
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
+
+ENDEAVOR="{{ endeavor }}"
+export DISHTINY_ENDEAVOR="{{ endeavor }}"
+N_PROCS=1
+N_THREADS=1
+
+echo "ENDEAVOR ${ENDEAVOR}"
+echo "N_PROCS ${N_PROCS}"
+echo "N_THREADS ${N_THREADS}"
+echo "series {{ series | default('-1') }}"
+echo "stint {{ stint | default('-1') }}"
+echo "replicate {{ replicate }}"
+echo "first_competitor_url {{ first_competitor_url }}"
+echo "first_competitor_attrs {{ first_competitor_attrs | default('') }}"
+echo "second_competitor_url {{ second_competitor_url }}"
+echo "second_competitor_attrs {{ second_competitor_attrs | default('') }}"
+echo "bucket {{ bucket }}"
+echo "configpack {{ configpack }}"
+echo "container_tag {{ container_tag }}"
+echo "repo_sha {{ repo_sha }}"
+
+################################################################################
+echo
+echo "Set Up Work Directory"
+echo "-------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+mkdir work
+cd work
+
+echo "downloading competitors..."
+
+echo "downloading {{ first_competitor_url }}"
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "{{ first_competitor_url }}" \
+    "{{ first_competitor_attrs | default('') }}root_id=0+$(basename {{ first_competitor_url }})" \
+    && echo "  {{ first_competitor_url }} download success" && break \
+    || (echo "retrying {{ first_competitor_url }} download (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "{{ first_competitor_url }} download fail" && exit 123123; fi
+done & pids+=($!)
+
+echo "downloading {{ second_competitor_url }}"
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "{{ second_competitor_url }}" \
+    "{{ second_competitor_attrs | default('') }}root_id=1+$(basename {{ second_competitor_url }})" \
+    && echo "  {{ second_competitor_url }} download success" && break \
+    || (echo "retrying {{ second_competitor_url }} download (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "{{ second_competitor_url }} download fail" && exit 123123; fi
+done & pids+=($!)
+
+bash -c "cd ../dishtiny && ./configpacks/{{ configpack }}/build_native.sh"
+cp ../dishtiny/rundishtiny .
+
+# compile and download concurrently!
+for pid in "${pids[@]}"; do
+  # if child process fails, we fail
+  wait "${pid}"
+done
+
+unset pids
+
+# double check that all downloads are complete
+wait
+
+ls
+
+# an attempt to address intermittent failure where downloaded files aren't found
+# when running the executable
+sshpass -p "${HOST_PASSWORD}" \
+  scp -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+    * "${HOST_USERNAME}@$(hostname):$(pwd)" \
+&& echo "  local asset copy success" || echo "  local asset copy fail"
+
+ls
+
+
+################################################################################
+echo
+echo "Run Simulation"
+echo "------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# note:
+# we have to cut off stdin, stdout, stderr on mpiexec
+# for compatibility with repro_runner.sh and prevent a funky
+# tee: read error: Resource temporarily unavailable
+# ssh accomplishes this right now, but otherwise something else would be needed
+
+# use ssh to access host then launch mpi jobs there (e.g., "hybrid approach")
+# see https://sylabs.io/guides/3.3/user-guide/mpi.html
+
+# have to use login shell so module command loads correctly
+
+# put stint and series in "'s with preceeding space so that we can
+# pass -1 without it being recognized as a flag
+
+if (( N_PROCS == 1 )); then bash -login /dev/stdin; else sshpass -p "${HOST_PASSWORD}" \
+ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+  "${HOST_USERNAME}@$(hostname)" -X 'bash -login'\
+; fi \
+<< MPIEXEC_HEREDOC_EOF
+  [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
+  module load --ignore-cache GCC/7.2.0-2.29 MPICH/3.2.1|| :
+  module list || :
+  echo "modules loaded..."
+  export DISHTINY_ENDEAVOR="{{ endeavor }}"
+  export REPRO_ID="${REPRO_ID}"
+  export DISPLAY="${DISPLAY}"
+  export XVFB_PID="${XVFB_PID}"
+  export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_WORK_DIRECTORY}/dishtiny/"
+  mpiexec.hydra --version
+  $( (( N_PROCS > 1 )) && echo mpiexec.hydra -n "${N_PROCS}" singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" ) \
+    ./rundishtiny \
+    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if endeavor | int < 1 else 600 if endeavor | int < 100 else 3600 }} -GENESIS "innoculate" -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 {{ '' if ( enable_mutation | default(False) ) else '-MUTATION_RATE "0 0 0"' }} -STINT " {{ stint | default('-1') }}" -SERIES " {{ series | default('-1') }}" --REPLICATE "{{ replicate }}" -ABORT_IF_COALESCENT_FREQ 64 -THROW_ON_EXTINCTION 0 -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/competitionjob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
+  && echo "simulation exit success" \
+  || ( echo "simulation error code $?" && exit 1 )
+MPIEXEC_HEREDOC_EOF
+
+################################################################################
+echo
+echo "Upload Data"
+echo "--------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+echo "uploading coalescence_result files..."
+for p in outdata/*a=coalescence_result*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
+  for retry in {1..20}; do
+    aws s3 cp --quiet \
+      "${p}" \
+      "{{ output_url }}" \
+    && echo "  ${f} upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+  done & pids+=($!)
+
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
+
+done
+
+echo "uploading asconfigured files..."
+for p in outmeta/*a=asconfigured*.csv*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
+  for retry in {1..20}; do
+    aws s3 cp --quiet \
+      "${p}" \
+      "{{ output_url }}" \
+    && echo "  ${f} upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+  done & pids+=($!)
+
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
+
+done
+
+# wait on all forked upload jobs
+for pid in "${pids[@]}"; do
+  # if child process fails, we fail
+  wait "${pid}"
+done
+
+unset pids
+
+################################################################################
+echo
+echo "Running watch me evolve integration"
+echo "-----------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/watch_me_evolve.py" && \
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/wme_competitionjob.py" && \
+python3 wme_competitionjob.py "{{ series | default('-1') }}" "{{ replicate }}" "{{ first_competitor_url }}" "{{ second_competitor_url }}" || :
+
+################################################################################
+echo
+echo "Done! (SUCCESS)"
+echo "---------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+REPRO_RUNNER_HEREDOC_EOF

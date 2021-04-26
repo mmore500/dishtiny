@@ -1,0 +1,2 @@
+Contains `dish2::Cell` class, which represents a slot for individual cell-like digital organism (it may either be in an occupied/alive or an unoccupied/dead state), and `dish2::Cardinal` class, which contains a `signalgp-lite` cpu instance that manages interaction with the environment and one of a `dish2::Cell`'s neighbors.
+Each `dish2::Cardinal` contains various `conduit` `uit::Inlet`/`uit::Outlet`s that link it to `dish2::Cardinal`'s in other cells as well as `uit::Inlet`/`uit::Outlet`'s that link it to `dish2::Cardinal`'s in the same cell.

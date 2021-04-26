@@ -1,0 +1,179 @@
+#!/bin/bash -login
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time=4:00:00
+#SBATCH --job-name a=evolve_collatecron+stint={{ stint }}
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/scratch/%u/slurmlogs/a=evolve_collatecron+job=%j+stint={{ stint }}+ext.log"
+#SBATCH --mem=4G
+#SBATCH --ntasks 1
+#SBATCH --cpus-per-task 1
+#SBATCH --mail-type=FAIL
+# No --mail-user, the default value is the submitting user
+#SBATCH --begin=now+4hour
+#SBATCH --exclude=csn-002,amr-250
+# Send interrupt when within 5 minutes of end time.
+#SBATCH --signal=SIGINT@300
+# Job may be requeued after node failure.
+#SBATCH --requeue
+
+################################################################################
+echo
+echo "running evolve_collatecronjob.slurm.sh"
+echo "-----------------------------------------"
+################################################################################
+
+# fail on error
+set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
+
+# specify display, start the Xvfb server, and save the process ID
+# adapted from https://wiki.hpcc.msu.edu/display/~colbrydi@msu.edu/2013/10
+export DISPLAY=":${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X11-unix/X${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X${SLURM_JOB_ID-1}-lock"
+Xvfb "${DISPLAY}" -auth /dev/null/ &
+export XVFB_PID=$!
+
+# set up and jump into temporary work directory
+cd "$(mktemp -d)"
+
+# curl repro_runner.sh script into to a temporary file
+REPRO_RUNNER="$(mktemp)"
+for retry in {1..20}; do
+  curl \
+    -o "${REPRO_RUNNER}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh" \
+  && echo "  repro_runner curl success" && break \
+  || (echo "retrying repro_runner curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "repro_runner curl fail" && exit 123123; fi
+done
+chmod +x "${REPRO_RUNNER}"
+
+################################################################################
+echo
+echo "Run Job with repro_runner.sh"
+echo "----------------------------"
+################################################################################
+
+"${REPRO_RUNNER}" \
+  -p "{{ bucket }}" -u mmore500 -s dishtiny \
+  --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
+  << 'REPRO_RUNNER_HEREDOC_EOF'
+
+# fail on error
+set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
+
+################################################################################
+echo
+echo "running evolve_collatecronjob.slurm.sh"
+echo "----------------------------"
+################################################################################
+
+################################################################################
+echo
+echo "Initialize and Log Config"
+echo "-------------------------"
+################################################################################
+
+# load secrets into environment variables, if available
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
+
+stint="{{ stint }}"
+
+echo "endeavor {{ endeavor }}"
+echo "series {{ series }}"
+echo "stint ${stint}"
+echo "container_tag {{ container_tag }}"
+echo "repo_sha {{ repo_sha }}"
+
+################################################################################
+echo
+echo "Collate Data for Next Ready Stints"
+echo "----------------------------------"
+################################################################################
+
+while true; do
+
+################################################################################
+echo
+echo "Check if Target Stint is Ready"
+echo "------------------------------"
+################################################################################
+
+stint_ready=true
+for series in {{ series }}; do
+
+  aws s3api head-object --bucket "{{ bucket }}" --key "endeavor={{ endeavor }}/genomes/stage=0+what=generated/stint=${stint}/series=${series}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=${series}+stint=${stint}+thread=0+variation=master+ext=.json.gz" \
+    && echo "series ${series} complete" && continue
+
+  echo "series ${series} incomplete"
+  stint_ready=false
+  break
+
+done
+
+if "${stint_ready}"; then
+  echo "target stint ${stint} is ready"
+else
+  echo "target stint ${stint} is not ready, aborting"
+  break
+fi
+
+################################################################################
+echo
+echo "Do Collation"
+echo "---------------------------------------------------"
+################################################################################
+
+python3 dishtiny/postprocessing/collate.py "s3://{{ bucket }}/endeavor={{ endeavor }}/evolve/metrics/stage=0+what=generated/stint=${stint}/" 'series=[0-9]+/a=demographic_phenotypic_phylogenetic_metrics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+
+python3 dishtiny/postprocessing/collate.py "s3://{{ bucket }}/endeavor={{ endeavor }}/evolve/metrics/stage=0+what=generated/stint=${stint}/" 'series=[0-9]+/a=kin_conflict_statistics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+
+python3 dishtiny/postprocessing/collate.py "s3://{{ bucket }}/endeavor={{ endeavor }}/evolve/metrics/stage=0+what=generated/stint=${stint}/" 'series=[0-9]+/a=kin_conflict_by_replev_statistics\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+ext=\.csv'
+
+
+################################################################################
+echo
+echo "Increment Stint then Rinse and Repeat"
+echo "-------------------------------------"
+################################################################################
+
+stint=$((stint+1))
+
+done
+
+################################################################################
+echo
+echo "Submit Follow-up Job"
+echo "--------------------"
+################################################################################
+
+for retry in {1..20}; do
+  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
+  cat dishtiny/slurm/collate/collatecronkickoff.sh | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+    "${HOST_USERNAME}@$(hostname)" -X \
+    "cat | bash -login /dev/stdin evolve {{ container_tag }} {{ repo_sha }} ${stint} {{ series }}" \
+    && echo "  continuation success" && break \
+    || (echo "retrying continuation (${retry})" && sleep $((RANDOM % 10)))
+
+  if ((${retry}==20)); then echo "continuation fail" && exit 123123; fi
+done
+
+################################################################################
+echo
+echo "Done! (SUCCESS)"
+echo "---------------"
+################################################################################
+
+REPRO_RUNNER_HEREDOC_EOF

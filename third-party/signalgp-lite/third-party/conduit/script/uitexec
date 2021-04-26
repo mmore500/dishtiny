@@ -1,0 +1,33 @@
+#!/bin/bash
+
+trap "rm -f *.ranklog master.log" EXIT
+
+function separate {
+  printf '%50s\n' | tr ' ' -
+}
+
+function title {
+  separate
+  echo $1
+  separate
+}
+
+UIT_MPIEXEC=${UIT_MPIEXEC:-mpiexec}
+
+
+if [[ -t 1 ]]
+then
+  # show output interactively if running in terminal
+  (echo $$; true | $UIT_MPIEXEC "$@"; echo done) > master.log &
+  multitail -q 1 '*.ranklog'
+  kill %1
+
+  title "master.log"
+  cat "master.log"
+else
+  # if non-interactive wait for job to finish then cat output
+  title "master.log"
+  $UIT_MPIEXEC "$@"
+fi
+
+for f in *.ranklog; do title $f; cat $f; done

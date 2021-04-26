@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+  },
+  "devDependencies": {
+    "express": "4.16.3",
+    "puppeteer": "1.9.0"
+  },
+  "main": "index.js",
+  "name": "signalgp-lite",
+  "scripts": {
+    "test": "make test"
+  },
+  "version": "0.1.0"
+}

@@ -1,0 +1,47 @@
+language: cpp
+compiler: clang++
+python: 
+  - '3.5'
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update -qq
+  - sudo apt-get install g++-8 libstdc++-8-dev
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 90
+install:
+  - pip install --user codecov
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-xenial-7
+    packages:
+      - clang-7
+      - libclang-7-dev
+script: 
+  - make force_cover_coverage
+  - ./force_cover examples/example.cc -- > testing/observed_example.cc
+  - diff testing/observed_example.cc testing/expected_outputs/example.cc
+  - ./force_cover examples/header_file_with_templates.hpp -- -language c++ -std=c++14 > testing/header_file_with_templates.hpp || true
+  - diff testing/header_file_with_templates.hpp testing/expected_outputs/header_file_with_templates.hpp
+  - clang++ testing/observed_example.cc -fprofile-instr-generate -fcoverage-mapping -o testing/observed_example
+  - cd testing && ./observed_example
+  - llvm-profdata merge default.profraw -o default.profdata
+  - llvm-cov show observed_example -instr-profile=default.profdata > example_coverage.txt
+  - cd ..
+  - coverage run -a fix_coverage.py testing/example_coverage.txt
+  - diff testing/example_coverage.txt testing/expected_outputs/example_coverage.txt
+  - rm testing/example_coverage.txt
+  - cp examples/coverage_report_with_macros.txt testing
+  - coverage run -a fix_coverage.py testing/coverage_report_with_macros.txt
+  - diff testing/coverage_report_with_macros.txt testing/expected_outputs/coverage_report_with_macros.txt
+  - rm testing/coverage_report_with_macros.txt testing/expected_outputs/coverage_report_with_macros.txt examples/coverage_report_with_macros.txt
+  - cp examples/coverage_report_with_templates.txt testing
+  - coverage run -a fix_coverage.py testing/coverage_report_with_templates.txt
+  - diff testing/coverage_report_with_templates.txt testing/expected_outputs/coverage_report_with_templates.txt
+  - rm testing/coverage_report_with_templates.txt testing/expected_outputs/coverage_report_with_templates.txt examples/coverage_report_with_templates.txt
+  - bash testing/test_usage.sh
+after_success:
+  - codecov
+  - llvm-profdata merge default.profraw -o default.profdata
+  - llvm-cov show ./force_cover -instr-profile=default.profdata > coverage.txt
+  - bash <(curl -s https://codecov.io/bash)

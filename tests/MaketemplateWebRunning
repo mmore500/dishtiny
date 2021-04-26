@@ -1,0 +1,63 @@
+SHELL := /bin/bash
+
+DISH_CXX ?= emcc
+
+FLAGS = -std=c++17 -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -g -pipe -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -I/usr/lib/x86_64-linux-gnu/openmpi/include/ -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" --js-library $(TO_ROOT)/third-party/Empirical/include/emp/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback']" -s DISABLE_EXCEPTION_CATCHING=1 -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0
+
+default: test
+
+test-%: %.cpp $(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp
+	source "$(TO_ROOT)/third-party/emsdk/emsdk_env.sh"; \
+	$(DISH_CXX) $(FLAGS) $< -o $@.js
+	# execute test
+	node $@.js
+
+cov-%: %.cpp $(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp
+	#echo "running $@.js"
+	# execute test
+	./$@.js
+	llvm-profdata merge default.profraw -o default.profdata
+	llvm-cov show ./$@.js -instr-profile=default.profdata > coverage_$@.txt
+	python $(TO_ROOT)/third-party/force-cover/fix_coverage.py coverage_$@.txt
+
+# Test in debug mode withjs pointer tracker
+test:: $(addprefix test-, $(TARGET_NAMES))
+	rm -rf test*.js
+
+# Test optimized version without debug features
+opt: FLAGS := -std=c++17 -pipe -DNDEBUG -O3 -ffast-math -flto -march=native -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/  -I/usr/lib/x86_64-linux-gnu/openmpi/include/
+opt: $(addprefix test-, $(TARGET_NAMES))
+	rm -rf test*.js
+
+# Test in debug mode with pointer tracking
+fulldebug: FLAGS := -std=c++17 -pipe -g -Wall -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/  -I/usr/lib/x86_64-linux-gnu/openmpi/include/ -pedantic -DEMP_TRACK_MEM -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -ftemplate-backtrace-limit=0 # -Wmisleading-indentation
+fulldebug: $(addprefix test-, $(TARGET_NAMES))
+	rm -rf test*.js
+
+cranky: FLAGS := -std=c++17 -pipe -g -Wall -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/  -I/usr/lib/x86_64-linux-gnu/openmpi/include/ -pedantic -DEMP_TRACK_MEM -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -Wconversion -Weffc++
+cranky: $(addprefix test-, $(TARGET_NAMES))
+	rm -rf test*.js
+
+$(TO_ROOT)/coverage_include:
+	./$(TO_ROOT)/tests/convert_for_tests.sh
+
+$(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp:
+	git submodule init
+	git submodule update
+
+coverage: FLAGS := -std=c++17 -g -Wall -Wno-unused-function -I$(TO_ROOT)/coverage_include/ -I$(TO_ROOT)/third-party/  -I/usr/lib/x86_64-linux-gnu/openmpi/include/ -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -ftemplate-backtrace-limit=0 -fprofile-instr-generate -fcoverage-mapping -fno-inline -fno-elide-constructors -O0
+coverage: $(TO_ROOT)/coverage_include $(addprefix cov-, $(TARGET_NAMES))
+
+clean:
+	rm -f *.js
+	rm -f *.wasm
+	rm -f *.wasm.map
+	rm -f *.wast
+	rm -f *.png
+	rm -f *.o
+	rm -f *.gcda
+	rm -f *.gcno
+	rm -f *.info
+	rm -f *.gcov
+	rm -f ./Coverage*
+	rm -rf ./temp

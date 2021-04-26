@@ -1,0 +1,6 @@
+include $(TO_ROOT)/microbenchmarks/MaketemplateRunning
+
+bench-%: %.cpp
+	$(UIT_MPICXX) $(FLAGS) $< -lbenchmark -lmetis -lpthread -o $@.out
+	# execute bench
+	$(UIT_MPIEXEC) --bind-to none -n 1 ./$@.out --benchmark_counters_tabular=true --benchmark_format=json --benchmark_out="impl=$*+procs=1+ext=.json" | $(TO_ROOT)/microbenchmarks/script/headtail.sh

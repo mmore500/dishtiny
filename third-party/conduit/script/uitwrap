@@ -1,0 +1,14 @@
+#!/bin/bash
+
+logfile="$$.ranklog"
+
+if [[ -t 1 ]]
+then
+  echo "$$, RANK $PMI_RANK $OMPI_COMM_WORLD_RANK" > $logfile
+  "$@" >> $logfile
+  echo "$$ COMPLETE" >> $logfile
+else
+  echo "$$, RANK $PMI_RANK $OMPI_COMM_WORLD_RANK" | tee $logfile
+  "$@" | tee -a $logfile
+  echo "$$ COMPLETE" | tee -a $logfile
+fi

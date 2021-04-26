@@ -1,0 +1,1209 @@
+/home/emily/repos/Empirical_MoreTests/coverage_source/base/assert.h:
+    1|       |/**
+    2|       | *  @note This file is part of Empirical, https://github.com/devosoft/Empirical
+    3|       | *  @copyright Copyright (C) Michigan State University, MIT Software license; see doc/LICENSE.md
+    4|       | *  @date 2016-2017
+    5|       | *
+    6|       | *  @file assert.h
+    7|       | *  @brief A more dynamic replacement for standard library asserts.
+    8|       | *  @note Status: RELEASE
+    9|       | *
+   10|       | *  A replacement for the system-level assert.h, called "emp_assert"
+   11|       | *  Added functionality:
+   12|       | *   - If compiled with Emscripten, will provide pop-up alerts in a web browser.
+   13|       | *   - emp_assert can take additional arguments.  If the assert is triggered, those extra
+   14|       | *     arguments will be evaluated and printed.
+   15|       | *   - if NDEBUG -or- EMP_NDEBUG is defined, the expression in emp_assert() is not evaluated.
+   16|       | *   - if EMP_TDEBUG is defined, emp_assert() goes into test mode and records failures, but
+   17|       | *     does not abort.  (useful for unit tests of asserts)
+   18|       | *
+   19|       | *  Example:
+   20|       | *
+   21|       | *     int a = 6;
+   22|       | *     emp_assert(a==5, a);
+   23|       | *
+   24|       | *  When compiled in debug mode (i.e. without the -DNDEBUG flag), this will trigger an assertion
+   25|       | *  error and print the value of a.
+   26|       | * 
+   27|       | * 
+   28|       | *  @todo: Add emp_assert_warning() for non-terminating assert.  Should be able to disable with 
+   29|       | *         a command-line option (-DEMP_NO_WARNINGS)
+   30|       | */
+   31|       |
+   32|       |#ifndef EMP_ASSERT_H
+   33|       |#define EMP_ASSERT_H
+   34|       |
+   35|       |#include <iostream>
+   36|       |#include <string>
+   37|       |#include <sstream>
+   38|       |
+   39|       |#include "macros.h"
+   40|       |
+   41|       |/// @cond DEFINES
+   42|       |
+   43|       |/// If we are in emscripten, make sure to include the header.
+   44|       |#ifdef EMSCRIPTEN
+   45|       |#include <emscripten.h>
+   46|       |#endif
+   47|       |
+   48|       |/// NDEBUG and TDEBUG should trigger their EMP equivilents.
+   49|       |#ifdef NDEBUG
+   50|       |#define EMP_NDEBUG
+   51|       |#endif
+   52|       |
+   53|       |#ifdef TDEBUG
+   54|       |#define EMP_TDEBUG
+   55|       |#endif
+   56|       |
+   57|       |
+   58|       |/// Helper macros used throughout...
+   59|       |#define emp_assert_TO_PAIR(X) EMP_STRINGIFY(X) , X
+   60|       |
+   61|       |/// Turn off all asserts in EMP_NDEBUG
+   62|       |#ifdef EMP_NDEBUG
+   63|       |namespace emp {
+   64|       |  constexpr bool assert_on = false;
+   65|       |}
+   66|       |
+   67|       |// GROUP 1:   --- Debug OFF ---
+   68|       |
+   69|       |/// Ideally, this assert should use the expression (to prevent compiler error), but should not
+   70|       |/// generate any assembly code.  For now, just make it blank (other options commented out)
+   71|       |#define emp_assert(...)
+   72|       |// #define emp_assert(EXPR) ((void) sizeof(EXPR) )
+   73|       |// #define emp_assert(EXPR, ...) { constexpr bool __emp_assert_tmp = false && (EXPR); (void) __emp_assert_tmp; }
+   74|       |
+   75|       |// Asserts to check only when in Emscripten should also be disabled.
+   76|       |#define emp_emscripten_assert(...)
+   77|       |
+   78|       |
+   79|       |// GROUP 2:   --- Unit Testing ON ---
+   80|       |#elif defined(EMP_TDEBUG)           // EMP_NDEBUG not set, but EMP_TDEBUG is!
+   81|       |
+   82|       |namespace emp {
+   83|       |  constexpr bool assert_on = true;
+   84|       |  struct AssertFailInfo {
+   85|       |    std::string filename;
+   86|       |    int line_num;
+   87|       |    std::string error;
+   88|       |  };
+   89|       |  AssertFailInfo assert_fail_info;
+   90|       |  bool assert_last_fail = false;
+   91|       |
+   92|       |  template <typename... EXTRA>
+   93|      0|  bool assert_trigger(std::string filename, size_t line, std::string expr) {
+   94|      0|    emp::assert_fail_info.filename = __FILE__;
+   95|      0|    emp::assert_fail_info.line_num = __LINE__;
+   96|      0|    emp::assert_fail_info.error = expr;
+   97|      0|    emp::assert_last_fail = true;
+   98|      0|
+   99|      0|    return true;
+  100|      0|  }
+  101|       |
+  102|      0|  void assert_clear() { emp::assert_last_fail = false; }
+  103|       |}
+  104|       |
+  105|       |// Unit Testing ON
+  106|       |
+  107|       |#define emp_assert(...)                                                                       \
+  108|      4|  do {                                                                                        \
+  109|      4|    !(EMP_GET_ARG_1(__VA_ARGS__, ~)) &&                                                       \
+  110|      4|    emp::assert_trigger(__FILE__, __LINE__, EMP_STRINGIFY( EMP_GET_ARG_1(__VA_ARGS__, ~) ));  \
+  111|      4|  } while(0)
+  112|       |
+  113|       |// Unit-testing asserts to check only when in Emscripten should depend on if we are in Emscripten
+  114|       |#ifdef EMSCRIPTEN
+  115|       |#define emp_emscripten_assert(...) emp_assert(__VA_ARGS__)
+  116|       |#else
+  117|       |#define emp_emscripten_assert(...)
+  118|       |#endif
+  119|       |
+  120|       |
+  121|       |// GROUP 3:   --- Emscripten debug ON ---
+  122|       |#elif EMSCRIPTEN  // Neither EMP_NDEBUG nor EMP_TDEBUG set, but compiling with Emscripten
+  123|       |
+  124|       |namespace emp {
+  125|       |  constexpr bool assert_on = true;
+  126|       |  static int TripAssert() {
+  127|       |    static int trip_count = 0;
+  128|       |    return ++trip_count;
+  129|       |  }
+  130|       |
+  131|       |  /// Base case for assert_print...
+  132|       |  void assert_print(std::stringstream &) { ; }
+  133|       |
+  134|       |  /// Print out information about the next variable and recurse...
+  135|       |  template <typename T, typename... EXTRA>
+  136|       |  void assert_print(std::stringstream & ss, std::string name, T && val, EXTRA &&... extra) {
+  137|       |    ss << name << ": [" << val << "]" << std::endl;
+  138|       |    assert_print(ss, std::forward<EXTRA>(extra)...);
+  139|       |  }
+  140|       |
+  141|       |  template <typename IGNORE, typename... EXTRA>
+  142|       |  bool assert_trigger(std::string filename, size_t line, std::string expr, IGNORE, EXTRA &&... extra) {
+  143|       |    std::stringstream ss;
+  144|       |    ss << "Assert Error (In " << filename << " line " << line << "): " << expr << '\n';
+  145|       |    assert_print(ss, std::forward<EXTRA>(extra)...);
+  146|       |    if (emp::TripAssert() <= 3) {
+  147|       |      EM_ASM_ARGS({ msg = Pointer_stringify($0); alert(msg); }, ss.str().c_str());
+  148|       |    }
+  149|       |
+  150|       |    // Print the current state of the stack.
+  151|       |    EM_ASM( console.log('Callstack:\n' + stackTrace()); );
+  152|       |    return true;
+  153|       |  }
+  154|       |}
+  155|       |
+  156|       |// Debug; Emscripten ON
+  157|       |
+  158|       |#define emp_assert(...)                                                                       \
+  159|       |  do {                                                                                        \
+  160|       |    !(EMP_GET_ARG_1(__VA_ARGS__, ~)) &&                                                       \
+  161|       |    emp::assert_trigger(__FILE__, __LINE__, EMP_WRAP_ARGS(emp_assert_TO_PAIR, __VA_ARGS__) ); \
+  162|       |  } while(0)
+  163|       |
+  164|       |// Emscripten asserts should be on since we are in Emscripten
+  165|       |#define emp_emscripten_assert(...) emp_assert(__VA_ARGS__)
+  166|       |
+  167|       |
+  168|       |// GROUP 3:   --- Debug ON, but Emscripten OFF ---
+  169|       |#else
+  170|       |
+  171|       |namespace emp {
+  172|       |  constexpr bool assert_on = true;
+  173|       |
+  174|       |  /// Base case for assert_print...
+  175|       |  void assert_print() { ; }
+  176|       |
+  177|       |  /// Print out information about the next variable and recurse...
+  178|      0|  /*_FORCE_COVER_START_*/template <typename T, typename... EXTRA>
+  179|      0|  void assert_print(std::string name, T && val, EXTRA &&... extra) {
+  180|      0|    std::cerr << name << ": [" << val << "]" << std::endl;
+  181|      0|    assert_print(std::forward<EXTRA>(extra)...);
+  182|       |  }/*_FORCE_COVER_END_*/
+  183|       |
+  184|      0|  /*_FORCE_COVER_START_*/template <typename IGNORE, typename... EXTRA>
+  185|      0|  bool assert_trigger(std::string filename, size_t line, std::string expr, IGNORE, EXTRA &&... extra) {
+  186|      0|    std::cerr << "Assert Error (In " << filename << " line " << line
+  187|      0|              <<  "): " << expr << std::endl;
+  188|      0|    assert_print(std::forward<EXTRA>(extra)...);
+  189|      0|    return true;
+  190|       |  }/*_FORCE_COVER_END_*/
+  191|       |}
+  192|       |
+  193|       |/// @endcond
+  194|       |
+  195|       |// Debug; Not Emscripten
+  196|       |
+  197|       |/// Require a specified condition to be true.  If it is false, immediately halt execution.
+  198|       |/// Note: If NDEBUG is defined, emp_assert() will not do anything.
+  199|       |#define emp_assert(...)                                                                          \
+  200|       |  do {                                                                                           \
+  201|       |    !(EMP_GET_ARG_1(__VA_ARGS__, ~)) &&                                                          \
+  202|       |    emp::assert_trigger(__FILE__, __LINE__, EMP_WRAP_ARGS(emp_assert_TO_PAIR, __VA_ARGS__) ) &&  \
+  203|       |    (abort(), false);                                                                            \
+  204|       |  } while(0)
+  205|       |
+  206|       |// Emscripten-only asserts should be disabled since we are not in Emscripten
+  207|       |/// Require a specified condition to be true if this program was compiled to Javascript with Emscripten.
+  208|       |/// Note: If NDEBUG is defined, emp_emscripten_assert() will not do anything.
+  209|       |#define emp_emscripten_assert(...) emp_assert(__VA_ARGS__)
+  210|       |
+  211|       |/// @cond DEFINES
+  212|       |
+  213|       |#endif // NDEBUG
+  214|       |
+  215|       |
+  216|       |#endif // Include guard
+  217|       |
+  218|       |/// @endcond
+  219|       |
+
+/home/emily/repos/Empirical_MoreTests/coverage_source/base/macros.h:
+    1|       |/**
+    2|       | *  @note This file is part of Empirical, https://github.com/devosoft/Empirical
+    3|       | *  @copyright Copyright (C) Michigan State University, MIT Software license; see doc/LICENSE.md
+    4|       | *  @date 2016-2018
+    5|       | *
+    6|       | *  @file macros.h
+    7|       | *  @brief Generally useful macros that can perform cools tricks.
+    8|       | *  @note Status: RELEASE
+    9|       | *
+   10|       | *
+   11|       | *  Generally useful macros that can perform cools tricks.  As with all macros, use only
+   12|       | *  after careful exclusion of alternative approaches.
+   13|       | *
+   14|       | *  The Macros to highlighted here are:
+   15|       | *
+   16|       | *  ===== String Handling and Printing =====
+   17|       | *  EMP_PRINT_RESULT(A) will print to std::cout both the string that was passed into the
+   18|       | *       macro and what that string evaluates to.
+   19|       | *
+   20|       | *  EMP_STRINGIFY(...) converts all arguments into a single string (including commas).
+   21|       | *  EMP_STRINGIFY_EACH(...) converts each argument into a string (leaving commas).
+   22|       | *
+   23|       | *  ===== Managing variadic arguments =====
+   24|       | *  EMP_COUNT_ARGS(...) returns the number of arguments in the __VA_ARGS__
+   25|       | *  EMP_GET_ARG(N, ...) return the Nth arg that follows
+   26|       | *  EMP_POP_ARGS(N, ...) remove the first N args, return the rest.
+   27|       | *  EMP_PACK_ARGS(...) Group args together in parens so they are treated like one argument.
+   28|       | *  EMP_DUPLICATE_ARGS(N, ...) makes N collated copies of all args to follow.
+   29|       | *  EMP_CROP_ARGS_TO(N, ...) reduces N args (must have at least that many)
+   30|       | *  EMP_FORCE_ARGS_TO(N, P, ...) Crops or pads (with p) args to be exactly N long.
+   31|       | *  EMP_ROTATE_ARGS(...) Moves the first argument to the end of the arg list.
+   32|       | *  EMP_SELECT_ARGS(PATTERN, ...) Uses the (repeating) patter to select arguments to keep.
+   33|       | *    Pattern is an argument pack consisting of i (include) or x (exclude).
+   34|       | *  EMP_GET_ODD_ARGS(...) will return all arguments at odd positions (1,3,5,7, etc.)
+   35|       | *  EMP_GET_EVEN_ARGS(...) will return all arguments at odd positions (2,4,6,8, etc.)
+   36|       | *  EMP_REVERSE_ARGS(...) Reverse the order of arguments passed in.
+   37|       | *
+   38|       | *  ===== Argument Manipulation and Formatting =====
+   39|       | *  EMP_MERGE(...) merge all arguments (after conversion) into a single unit.
+   40|       | *  EMP_WRAP_EACH(W, ...) will run macro W on each of the other args and concatinate them.
+   41|       | *  EMP_LAYOUT(W, P, ...) Similar to EMP_WRAP_EACH, but puts a P between each arg pair.
+   42|       | *  EMP_WRAP_ARGS(W, ...) Similar to EMP_WRAP_EACH, but puts a COMMA between each arg pair.
+   43|       | *  EMP_WRAP_ARG_PAIRS(W, ...) Similar to EMP_WRAP_ARGS, but passes pairs of args into W.
+   44|       | *
+   45|       | *  ===== Macro Building =====
+   46|       | *  EMP_ASSEMBLE_MACRO takes in a prefix and set of arguments and appends the size of the
+   47|       | *  number of arguments to the prefix, and passes in all of the arguments.
+   48|       | *
+   49|       | *  EMP_ASSEMBLE_MACRO_1ARG assumes the first argument after the prefix should not count
+   50|       | *  toward the size, but passed in anyway. (*_?ARG  works for more arguments up to 10).
+   51|       | *
+   52|       | *  EMP_FAKE_ARG or EMP_FAKE_2ARG behave as a single argument.  If, in manipulating them
+   53|       | *  You make them become EMP_CONVERT_ARG_EMP_FAKE_ARG(A) or EMP_CONVERT_ARG_EMP_FAKE_2ARG(A)
+   54|       | *  (i.e., prepend with EMP_CONVERT and provide an argument) it will trigger a conversion.
+   55|       | *  If you prepend anything else similarly, it wil NOT trigger a conversion.
+   56|       | *
+   57|       | *  This is especially useful with _2ARG since anything unconverted will be a single
+   58|       | *  argument, while anything converted will be two, allowing us to shift arguments
+   59|       | *  to perform conditional behaviors.
+   60|       | *
+   61|       | *
+   62|       | *  @todo We need to standardize how we handle macros that covert inputs to comma-separated
+   63|       | *    results vs those that merge them together.  One option is to have comma-separated the
+   64|       | *    default and then have an EMP_REMOVE_COMMAS (or somesuch)
+   65|       | *
+   66|       | *  @todo EMP_TYPES_TO_ARGS (not yet listed above) is poorly named.  Maybe EMP_DECLARE_ARGS?
+   67|       | *
+   68|       | *  @todo It would be useful to have EMP_WRAP_WITH_ID which passes in the position ID as the
+   69|       | *    second argument.  This would allow us to, for example, streamline EMP_TYPES_TO_ARGS.
+   70|       | *
+   71|       | *  @todo A more generic EMP_WRAP macro that is specified on the fly.  For example:
+   72|       | *      EMP_WRAP(W,2,4,A,B,a,b,c,d,e,f,g,h,i,j,k,l)
+   73|       | *    would assume six args in each wrap, A, B, and the rest broken into groups of four. I.e.:
+   74|       | *      W(A,B,a,b,c,d), W(A,B,e,f,g,h), W(A,B,i,j,k,l)
+   75|       | */
+   76|       |
+   77|       |#ifndef EMP_MACROS_H
+   78|       |#define EMP_MACROS_H
+   79|       |
+   80|       |#include "macro_math.h"
+   81|       |
+   82|       |/// The below values allow you to have EMP_FAKE_ARG or EMP_FAKE_2ARG as a single argument.
+   83|       |/// If you prepend it with EMP_CONVERT it will trigger a conversion.  If you prepend anything
+   84|       |/// else similarly, it wil NOT triggera a conversion (and stay a single argument)
+   85|       |#define EMP_CONVERT_ARG_EMP_FAKE_ARG(A) A
+   86|       |#define EMP_CONVERT_ARG_EMP_FAKE_2ARG(A) ~, A
+   87|       |
+   88|       |
+   89|       |/// EMP_STRINGIFY takes any input, processes macros, and puts the result in quotes.converts all
+   90|       |/// arguments into a single string (including commas).
+   91|      0|#define EMP_STRINGIFY(...) EMP_STRINGIFY_IMPL(__VA_ARGS__)
+   92|       |/// @cond MACROS
+   93|      0|#define EMP_STRINGIFY_IMPL(...) #__VA_ARGS__
+   94|       |/// @endcond
+   95|       |
+   96|       |/// @cond MACROS
+   97|       |#define EMP_PRINT_RESULT_IMPL(STREAM, LHS, RHS) STREAM << "[[" << LHS << "]] = [[" << RHS << "]]" << std::endl
+   98|       |#define EMP_PRINT_RESULT_TO(STREAM, A) EMP_PRINT_RESULT_IMPL(STREAM, #A, A)
+   99|       |/// @endcond
+  100|       |/// Print to std::cout both the string that was passed into the macro and what that string
+  101|       |/// evaluates to.
+  102|       |#define EMP_PRINT_RESULT(A) EMP_PRINT_RESULT_IMPL(std::cout, #A, A)
+  103|       |
+  104|       |/// @cond MACROS
+  105|       |#define EMP_POP_ARGS_IMPL_1(A,...) __VA_ARGS__
+  106|       |#define EMP_POP_ARGS_IMPL_2(A,B,...) __VA_ARGS__
+  107|       |#define EMP_POP_ARGS_IMPL_4(A,B,C,D,...) __VA_ARGS__
+  108|       |#define EMP_POP_ARGS_IMPL_8(A,B,C,D,E,F,G,H,...) __VA_ARGS__
+  109|       |#define EMP_POP_ARGS_IMPL_16(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,...) __VA_ARGS__
+  110|       |#define EMP_POP_ARGS_IMPL_32(...)  EMP_POP_ARGS_16(EMP_POP_ARGS_16(__VA_ARGS__) )
+  111|       |#define EMP_POP_ARGS_IMPL_64(...)  EMP_POP_ARGS_32(EMP_POP_ARGS_32(__VA_ARGS__) )
+  112|       |#define EMP_POP_ARGS_IMPL_128(...) EMP_POP_ARGS_64(EMP_POP_ARGS_64(__VA_ARGS__) )
+  113|       |#define EMP_POP_ARGS_IMPL_256(...) EMP_POP_ARGS_128(EMP_POP_ARGS_128(__VA_ARGS__) )
+  114|       |#define EMP_POP_ARGS_IMPL_512(...) EMP_POP_ARGS_256(EMP_POP_ARGS_256(__VA_ARGS__) )
+  115|       |
+  116|       |#define EMP_POP_ARGS_0(...) __VA_ARGS__
+  117|       |#define EMP_POP_ARGS_1(...) EMP_POP_ARGS_IMPL_1(__VA_ARGS__)
+  118|       |#define EMP_POP_ARGS_2(...) EMP_POP_ARGS_IMPL_2(__VA_ARGS__)
+  119|       |#define EMP_POP_ARGS_4(...) EMP_POP_ARGS_IMPL_4(__VA_ARGS__)
+  120|       |#define EMP_POP_ARGS_8(...) EMP_POP_ARGS_IMPL_8(__VA_ARGS__)
+  121|       |#define EMP_POP_ARGS_16(...) EMP_POP_ARGS_IMPL_16(__VA_ARGS__)
+  122|       |#define EMP_POP_ARGS_32(...) EMP_POP_ARGS_IMPL_32(__VA_ARGS__)
+  123|       |#define EMP_POP_ARGS_64(...) EMP_POP_ARGS_IMPL_64(__VA_ARGS__)
+  124|       |#define EMP_POP_ARGS_128(...) EMP_POP_ARGS_IMPL_128(__VA_ARGS__)
+  125|       |#define EMP_POP_ARGS_256(...) EMP_POP_ARGS_IMPL_256(__VA_ARGS__)
+  126|       |#define EMP_POP_ARGS_512(...) EMP_POP_ARGS_IMPL_512(__VA_ARGS__)
+  127|       |/// @endcond
+  128|       |
+  129|       |#define EMP_POP_ARG(...) EMP_POP_ARGS_IMPL_1(__VA_ARGS__)
+  130|       |/// remove the first N args, return the rest.
+  131|       |#define EMP_POP_ARGS(N, ...) EMP_EVAL( EMP_POP_ARGS_SUM EMP_EMPTY() (EMP_EVAL(EMP_DEC_TO_SUM(N)),__VA_ARGS__) )
+  132|       |#define EMP_POP_ARGS_SUM(S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,...) EMP_POP_ARGS_##S0( EMP_POP_ARGS_##S1( EMP_POP_ARGS_##S2( EMP_POP_ARGS_##S3( EMP_POP_ARGS_##S4( EMP_POP_ARGS_##S5( EMP_POP_ARGS_##S6( EMP_POP_ARGS_##S7( EMP_POP_ARGS_##S8( EMP_POP_ARGS_##S9( __VA_ARGS__ ))))))))))
+  133|       |
+  134|       |/// Return the Nth arg that follows
+  135|       |#define EMP_GET_ARG(N, ...) EMP_GET_ARG_1( EMP_POP_ARGS( EMP_DEC(N), __VA_ARGS__ ) )
+  136|       |/// @cond MACROS
+  137|      3|#define EMP_GET_ARG_1(...) EMP_GET_ARG_1_IMPL(__VA_ARGS__)
+  138|      5|#define EMP_GET_ARG_1_IMPL(A, ...) A
+  139|       |#define EMP_GET_ARG_2(...) EMP_GET_ARG_2_IMPL(__VA_ARGS__)
+  140|       |#define EMP_GET_ARG_2_IMPL(A, B, ...) B
+  141|       |/// @endcond
+  142|       |
+  143|       |/// returns the number of arguments in the __VA_ARGS__
+  144|       |#define EMP_COUNT_ARGS(...) EMP_GET_ARG(1023, __VA_ARGS__, 1022, 1021, 1020, 1019, 1018, 1017, 1016, 1015, 1014, 1013, 1012, 1011, 1010, 1009, 1008, 1007, 1006, 1005, 1004, 1003, 1002, 1001, 1000, 999, 998, 997, 996, 995, 994, 993, 992, 991, 990, 989, 988, 987, 986, 985, 984, 983, 982, 981, 980, 979, 978, 977, 976, 975, 974, 973, 972, 971, 970, 969, 968, 967, 966, 965, 964, 963, 962, 961, 960, 959, 958, 957, 956, 955, 954, 953, 952, 951, 950, 949, 948, 947, 946, 945, 944, 943, 942, 941, 940, 939, 938, 937, 936, 935, 934, 933, 932, 931, 930, 929, 928, 927, 926, 925, 924, 923, 922, 921, 920, 919, 918, 917, 916, 915, 914, 913, 912, 911, 910, 909, 908, 907, 906, 905, 904, 903, 902, 901, 900, 899, 898, 897, 896, 895, 894, 893, 892, 891, 890, 889, 888, 887, 886, 885, 884, 883, 882, 881, 880, 879, 878, 877, 876, 875, 874, 873, 872, 871, 870, 869, 868, 867, 866, 865, 864, 863, 862, 861, 860, 859, 858, 857, 856, 855, 854, 853, 852, 851, 850, 849, 848, 847, 846, 845, 844, 843, 842, 841, 840, 839, 838, 837, 836, 835, 834, 833, 832, 831, 830, 829, 828, 827, 826, 825, 824, 823, 822, 821, 820, 819, 818, 817, 816, 815, 814, 813, 812, 811, 810, 809, 808, 807, 806, 805, 804, 803, 802, 801, 800, 799, 798, 797, 796, 795, 794, 793, 792, 791, 790, 789, 788, 787, 786, 785, 784, 783, 782, 781, 780, 779, 778, 777, 776, 775, 774, 773, 772, 771, 770, 769, 768, 767, 766, 765, 764, 763, 762, 761, 760, 759, 758, 757, 756, 755, 754, 753, 752, 751, 750, 749, 748, 747, 746, 745, 744, 743, 742, 741, 740, 739, 738, 737, 736, 735, 734, 733, 732, 731, 730, 729, 728, 727, 726, 725, 724, 723, 722, 721, 720, 719, 718, 717, 716, 715, 714, 713, 712, 711, 710, 709, 708, 707, 706, 705, 704, 703, 702, 701, 700, 699, 698, 697, 696, 695, 694, 693, 692, 691, 690, 689, 688, 687, 686, 685, 684, 683, 682, 681, 680, 679, 678, 677, 676, 675, 674, 673, 672, 671, 670, 669, 668, 667, 666, 665, 664, 663, 662, 661, 660, 659, 658, 657, 656, 655, 654, 653, 652, 651, 650, 649, 648, 647, 646, 645, 644, 643, 642, 641, 640, 639, 638, 637, 636, 635, 634, 633, 632, 631, 630, 629, 628, 627, 626, 625, 624, 623, 622, 621, 620, 619, 618, 617, 616, 615, 614, 613, 612, 611, 610, 609, 608, 607, 606, 605, 604, 603, 602, 601, 600, 599, 598, 597, 596, 595, 594, 593, 592, 591, 590, 589, 588, 587, 586, 585, 584, 583, 582, 581, 580, 579, 578, 577, 576, 575, 574, 573, 572, 571, 570, 569, 568, 567, 566, 565, 564, 563, 562, 561, 560, 559, 558, 557, 556, 555, 554, 553, 552, 551, 550, 549, 548, 547, 546, 545, 544, 543, 542, 541, 540, 539, 538, 537, 536, 535, 534, 533, 532, 531, 530, 529, 528, 527, 526, 525, 524, 523, 522, 521, 520, 519, 518, 517, 516, 515, 514, 513, 512, 511, 510, 509, 508, 507, 506, 505, 504, 503, 502, 501, 500, 499, 498, 497, 496, 495, 494, 493, 492, 491, 490, 489, 488, 487, 486, 485, 484, 483, 482, 481, 480, 479, 478, 477, 476, 475, 474, 473, 472, 471, 470, 469, 468, 467, 466, 465, 464, 463, 462, 461, 460, 459, 458, 457, 456, 455, 454, 453, 452, 451, 450, 449, 448, 447, 446, 445, 444, 443, 442, 441, 440, 439, 438, 437, 436, 435, 434, 433, 432, 431, 430, 429, 428, 427, 426, 425, 424, 423, 422, 421, 420, 419, 418, 417, 416, 415, 414, 413, 412, 411, 410, 409, 408, 407, 406, 405, 404, 403, 402, 401, 400, 399, 398, 397, 396, 395, 394, 393, 392, 391, 390, 389, 388, 387, 386, 385, 384, 383, 382, 381, 380, 379, 378, 377, 376, 375, 374, 373, 372, 371, 370, 369, 368, 367, 366, 365, 364, 363, 362, 361, 360, 359, 358, 357, 356, 355, 354, 353, 352, 351, 350, 349, 348, 347, 346, 345, 344, 343, 342, 341, 340, 339, 338, 337, 336, 335, 334, 333, 332, 331, 330, 329, 328, 327, 326, 325, 324, 323, 322, 321, 320, 319, 318, 317, 316, 315, 314, 313, 312, 311, 310, 309, 308, 307, 306, 305, 304, 303, 302, 301, 300, 299, 298, 297, 296, 295, 294, 293, 292, 291, 290, 289, 288, 287, 286, 285, 284, 283, 282, 281, 280, 279, 278, 277, 276, 275, 274, 273, 272, 271, 270, 269, 268, 267, 266, 265, 264, 263, 262, 261, 260, 259, 258, 257, 256, 255, 254, 253, 252, 251, 250, 249, 248, 247, 246, 245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231, 230, 229, 228, 227, 226, 225, 224, 223, 222, 221, 220, 219, 218, 217, 216, 215, 214, 213, 212, 211, 210, 209, 208, 207, 206, 205, 204, 203, 202, 201, 200, 199, 198, 197, 196, 195, 194, 193, 192, 191, 190, 189, 188, 187, 186, 185, 184, 183, 182, 181, 180, 179, 178, 177, 176, 175, 174, 173, 172, 171, 170, 169, 168, 167, 166, 165, 164, 163, 162, 161, 160, 159, 158, 157, 156, 155, 154, 153, 152, 151, 150, 149, 148, 147, 146, 145, 144, 143, 142, 141, 140, 139, 138, 137, 136, 135, 134, 133, 132, 131, 130, 129, 128, 127, 126, 125, 124, 123, 122, 121, 120, 119, 118, 117, 116, 115, 114, 113, 112, 111, 110, 109, 108, 107, 106, 105, 104, 103, 102, 101, 100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
+  145|       |
+  146|       |/// @cond MACROS
+  147|       |#define EMP_dup_bin_0(...)
+  148|       |#define EMP_dup_bin_1(...) , __VA_ARGS__
+  149|       |#define EMP_dup_bin_2(...) , __VA_ARGS__, __VA_ARGS__
+  150|       |#define EMP_dup_bin_4(...) , __VA_ARGS__, __VA_ARGS__, __VA_ARGS__, __VA_ARGS__
+  151|       |#define EMP_dup_bin_8(...)   EMP_dup_bin_4(__VA_ARGS__)EMP_dup_bin_4(__VA_ARGS__)
+  152|       |#define EMP_dup_bin_16(...)  EMP_dup_bin_8(__VA_ARGS__)EMP_dup_bin_8(__VA_ARGS__)
+  153|       |#define EMP_dup_bin_32(...)  EMP_dup_bin_16(__VA_ARGS__)EMP_dup_bin_16(__VA_ARGS__)
+  154|       |#define EMP_dup_bin_64(...)  EMP_dup_bin_32(__VA_ARGS__)EMP_dup_bin_32(__VA_ARGS__)
+  155|       |#define EMP_dup_bin_128(...) EMP_dup_bin_64(__VA_ARGS__)EMP_dup_bin_64(__VA_ARGS__)
+  156|       |#define EMP_dup_bin_256(...) EMP_dup_bin_128(__VA_ARGS__)EMP_dup_bin_128(__VA_ARGS__)
+  157|       |#define EMP_dup_bin_512(...) EMP_dup_bin_256(__VA_ARGS__)EMP_dup_bin_256(__VA_ARGS__)
+  158|       |/// @endcond
+  159|       |
+  160|       |/// makes N collated copies of all args to follow.
+  161|       |#define EMP_DUPLICATE_ARGS(N, ...) EMP_DUPLICATE_ARGS_SUM EMP_EMPTY() (EMP_EVAL(EMP_DEC_TO_SUM(N)),__VA_ARGS__)
+  162|       |#define EMP_DUPLICATE_ARGS_SUM(S0,S1,S2,S3,S4,S5,S6,S7,S8,S9,...) EMP_POP_ARG(~ EMP_dup_bin_##S0(__VA_ARGS__)EMP_dup_bin_##S1(__VA_ARGS__)EMP_dup_bin_##S2(__VA_ARGS__)EMP_dup_bin_##S3(__VA_ARGS__)EMP_dup_bin_##S4(__VA_ARGS__)EMP_dup_bin_##S5(__VA_ARGS__)EMP_dup_bin_##S6(__VA_ARGS__)EMP_dup_bin_##S7(__VA_ARGS__)EMP_dup_bin_##S8(__VA_ARGS__)EMP_dup_bin_##S9(__VA_ARGS__))
+  163|       |
+  164|       |
+  165|       |// Some PARAMETER PACK manipulatation (for macros, sets of args in parens to they are treated
+  166|       |// as if they were a single argument.
+  167|       |
+  168|       |#define EMP_ECHO_ARGS(...) __VA_ARGS__
+  169|       |/// Group args together in parens so they are treated like one argument.
+  170|       |#define EMP_PACK_ARGS(...) (__VA_ARGS__)
+  171|       |#define EMP_UNPACK_ARGS(A) EMP_ECHO_ARGS A
+  172|       |
+  173|       |#define EMP_PACK_POP(PACK) (EMP_POP_ARG PACK)
+  174|       |#define EMP_PACK_TOP(PACK) EMP_GET_ARG_1 PACK
+  175|       |#define EMP_PACK_PUSH(NEW, PACK) (NEW,EMP_UNPACK_ARGS(PACK))
+  176|       |#define EMP_PACK_PUSH_REAR(NEW, PACK) (EMP_UNPACK_ARGS(PACK),NEW)
+  177|       |#define EMP_PACK_SIZE(PACK) EMP_COUNT_ARGS PACK
+  178|       |
+  179|       |// Macros to work on multiple packs at once.
+  180|       |#define EMP_PACKS_POP_ALL(...) EMP_WRAP_ARGS(EMP_PACK_POP, __VA_ARGS__)
+  181|       |#define EMP_PACKS_TOP_ALL(...) EMP_WRAP_ARGS(EMP_PACK_TOP, __VA_ARGS__)
+  182|       |#define EMP_PACKS_PUSH_ALL(NEW, ...) EMP_WRAP_ARGS_1ARG(EMP_PACK_PUSH, NEW, __VA_ARGS__)
+  183|       |#define EMP_PACKS_PUSH_REAR_ALL(NEW, ...) EMP_WRAP_ARGS_1ARG(EMP_PACK_PUSH_REAR, NEW, __VA_ARGS__)
+  184|       |#define EMP_PACKS_SIZE_ALL(...) EMP_WRAP_ARGS(EMP_PACK_SIZE, __VA_ARGS__)
+  185|       |
+  186|       |/// Group the arguments that follow into packs of size S.
+  187|       |#define EMP_ARGS_TO_PACKS(S, ...) \
+  188|       |  EMP_ARGS_TO_PACKS_impl(S, EMP_DIV(EMP_COUNT_ARGS(__VA_ARGS__), S), __VA_ARGS__)
+  189|       |
+  190|       |/// @cond MACROS
+  191|       |// S = Size of each pack
+  192|       |// N = Number of packs
+  193|       |// P = Pack representatio of number of packs
+  194|       |#define EMP_ARGS_TO_PACKS_impl(S, N, ...) EMP_ARGS_TO_PACKS_implB(S, EMP_DEC_TO_PACK(N), __VA_ARGS)
+  195|       |#define EMP_ARGS_TO_PACKS_implB(S, P, ...) @CAO
+  196|       |
+  197|       |#define EMP_ARGS_TO_PACKS_1(S, ...) , (EMP_CROP_ARGS_TO(S, __VA_ARGS__))
+  198|       |#define EMP_ARGS_TO_PACKS_2(S, ...)                                     \
+  199|       |  EMP_ARGS_TO_PACKS_1(S,__VA_ARGS__)EMP_ARGS_TO_PACKS_1(S,EMP_POP(N, __VA_ARGS__))
+  200|       |#define EMP_ARGS_TO_PACKS_4(S, ...)                                     \
+  201|       |  EMP_ARGS_TO_PACKS_2(S,__VA_ARGS__)EMP_ARGS_TO_PACKS_2(S,EMP_POP(EMP_MULT(N,2),__VA_ARGS__))
+  202|       |#define EMP_ARGS_TO_PACKS_8(S, ...)                                     \
+  203|       |  EMP_ARGS_TO_PACKS_4(S,__VA_ARGS__)EMP_ARGS_TO_PACKS_4(S,EMP_POP(EMP_MULT(N,4),__VA_ARGS__))
+  204|       |#define EMP_ARGS_TO_PACKS_16(S, ...)                                    \
+  205|       |  EMP_ARGS_TO_PACKS_8(S,__VA_ARGS__)EMP_ARGS_TO_PACKS_8(S,EMP_POP(EMP_MULT(N,8),__VA_ARGS__))
+  206|       |#define EMP_ARGS_TO_PACKS_32(S, ...)                                    \
+  207|       |  EMP_ARGS_TO_PACKS_16(S,__VA_ARGS__)EMP_ARGS_TO_PACKS_16(S,EMP_POP(EMP_MULT(N,16),__VA_ARGS__))
+  208|       |#define EMP_ARGS_TO_PACKS_64(S, ...)                                    \
+  209|       |  EMP_ARGS_TO_PACKS_32(S,__VA_ARGS__)EMP_ARGS_TO_PACKS_32(S,EMP_POP(EMP_MULT(N,32),__VA_ARGS__))
+  210|       |#define EMP_ARGS_TO_PACKS_128(S, ...)                                   \
+  211|       |  EMP_ARGS_TO_PACKS_64(S,__VA_ARGS__)EMP_ARGS_TO_PACKS_64(S,EMP_POP(EMP_MULT(N,64),__VA_ARGS__))
+  212|       |#define EMP_ARGS_TO_PACKS_256(S, ...)                                   \
+  213|       |  EMP_ARGS_TO_PACKS_128(S,__VA_ARGS__)EMP_ARGS_TO_PACKS_128(S,EMP_POP(EMP_MULT(N,128),__VA_ARGS__))
+  214|       |#define EMP_ARGS_TO_PACKS_512(S, ...)                                   \
+  215|       |  EMP_ARGS_TO_PACKS_256(S,__VA_ARGS__)EMP_ARGS_TO_PACKS_256(S,EMP_POP(EMP_MULT(N,256),__VA_ARGS__))
+  216|       |/// @endcond
+  217|       |
+  218|       |/// EMP_CALL_BY_PACKS is used to build other macros.  It will call a series of versions of C
+  219|       |/// based on binary representations so that all args are called, passing F in as the first
+  220|       |/// parameter.  For example, if C = ABC_ and 13 arguments are passed in, it will call ABC_8,
+  221|       |/// ABC_4 and ABC_1 on appropriate subsets (prepending F as the first argument of each call)
+  222|       |///
+  223|       |/// C is the CALL needed to be made on each element of the parameter pack
+  224|       |/// F is a FIXED parameter (potentially a pack) sent to all calls.
+  225|       |#define EMP_CALL_BY_PACKS(C, F, ...)                                     \
+  226|       |  EMP_CALL_BY_PACKS_impl(C, F, EMP_DEC_TO_PACK(EMP_COUNT_ARGS(__VA_ARGS__)), __VA_ARGS__, ~)
+  227|       |
+  228|       |/// @cond MACROS
+  229|       |
+  230|       |// Internal helpers...
+  231|       |// P is the pack of call counts the still need to be done
+  232|       |// A is the number of arguments in P.
+  233|       |// N is the NEXT call count needed to be done.
+  234|       |#define EMP_CALL_BY_PACKS_impl(C, F, P, ...) \
+  235|       |  EMP_CALL_BY_PACKS_implB(C, F, EMP_PACK_SIZE(P), EMP_PACK_PUSH_REAR(~, P), __VA_ARGS__)
+  236|       |#define EMP_CALL_BY_PACKS_implB(C, F, A, P, ...) EMP_CALL_BY_PACKS_implC(C, F, A, P, __VA_ARGS__)
+  237|       |#define EMP_CALL_BY_PACKS_implC(C, F, A, P, ...) \
+  238|       |  EMP_CALL_BY_PACKS_implD(C, EMP_PACK_TOP(P), F, A, EMP_PACK_POP(P), __VA_ARGS__)
+  239|       |#define EMP_CALL_BY_PACKS_implD(C, N, F, A, P, ...) EMP_CALL_BY_PACKS_impl##A(C,N,F,P,__VA_ARGS__)
+  240|       |
+  241|       |#define EMP_CALL_BY_PACKS_impl1(C, N, F, P, ...)        \
+  242|       |  EMP_CALL_BY_PACKS_do_call(C, N, F, __VA_ARGS__)
+  243|       |
+  244|       |#define EMP_CALL_BY_PACKS_impl2(C, N, F, P, ...) EMP_CALL_BY_PACKS_impl2B(C, N, F, P, __VA_ARGS__)
+  245|       |#define EMP_CALL_BY_PACKS_impl2B(C, N, F, P, ...)                       \
+  246|       |  EMP_CALL_BY_PACKS_do_call(C, N, F, __VA_ARGS__)                       \
+  247|       |  EMP_CALL_BY_PACKS_impl1(C, EMP_PACK_TOP(P), F, EMP_PACK_POP(P), EMP_POP_ARGS_ ## N(__VA_ARGS__) )
+  248|       |
+  249|       |#define EMP_CALL_BY_PACKS_impl3(C, N, F, P, ...) EMP_CALL_BY_PACKS_impl3B(C, N, F, P, __VA_ARGS__)
+  250|       |#define EMP_CALL_BY_PACKS_impl3B(C, N, F, P, ...)                       \
+  251|       |  EMP_CALL_BY_PACKS_do_call(C, N, F, __VA_ARGS__)                       \
+  252|       |  EMP_CALL_BY_PACKS_impl2(C, EMP_PACK_TOP(P), F, EMP_PACK_POP(P), EMP_POP_ARGS_ ## N(__VA_ARGS__) )
+  253|       |
+  254|       |#define EMP_CALL_BY_PACKS_impl4(C, N, F, P, ...) EMP_CALL_BY_PACKS_impl4B(C, N, F, P, __VA_ARGS__)
+  255|       |#define EMP_CALL_BY_PACKS_impl4B(C, N, F, P, ...)                       \
+  256|       |  EMP_CALL_BY_PACKS_do_call(C, N, F, __VA_ARGS__)                       \
+  257|       |  EMP_CALL_BY_PACKS_impl3(C, EMP_PACK_TOP(P), F, EMP_PACK_POP(P), EMP_POP_ARGS_ ## N(__VA_ARGS__) )
+  258|       |
+  259|       |#define EMP_CALL_BY_PACKS_impl5(C, N, F, P, ...) EMP_CALL_BY_PACKS_impl5B(C, N, F, P, __VA_ARGS__)
+  260|       |#define EMP_CALL_BY_PACKS_impl5B(C, N, F, P, ...)                       \
+  261|       |  EMP_CALL_BY_PACKS_do_call(C, N, F, __VA_ARGS__)                       \
+  262|       |  EMP_CALL_BY_PACKS_impl4(C, EMP_PACK_TOP(P), F, EMP_PACK_POP(P), EMP_POP_ARGS_ ## N(__VA_ARGS__) )
+  263|       |
+  264|       |#define EMP_CALL_BY_PACKS_impl6(C, N, F, P, ...) EMP_CALL_BY_PACKS_impl6B(C, N, F, P, __VA_ARGS__)
+  265|       |#define EMP_CALL_BY_PACKS_impl6B(C, N, F, P, ...)                       \
+  266|       |  EMP_CALL_BY_PACKS_do_call(C, N, F, __VA_ARGS__)                       \
+  267|       |  EMP_CALL_BY_PACKS_impl5(C, EMP_PACK_TOP(P), F, EMP_PACK_POP(P), EMP_POP_ARGS_ ## N(__VA_ARGS__) )
+  268|       |
+  269|       |#define EMP_CALL_BY_PACKS_impl7(C, N, F, P, ...) EMP_CALL_BY_PACKS_impl7B(C, N, F, P, __VA_ARGS__)
+  270|       |#define EMP_CALL_BY_PACKS_impl7B(C, N, F, P, ...)                       \
+  271|       |  EMP_CALL_BY_PACKS_do_call(C, N, F, __VA_ARGS__)                       \
+  272|       |  EMP_CALL_BY_PACKS_impl6(C, EMP_PACK_TOP(P), F, EMP_PACK_POP(P), EMP_POP_ARGS_ ## N(__VA_ARGS__) )
+  273|       |
+  274|       |#define EMP_CALL_BY_PACKS_impl8(C, N, F, P, ...) EMP_CALL_BY_PACKS_impl8B(C, N, F, P, __VA_ARGS__)
+  275|       |#define EMP_CALL_BY_PACKS_impl8B(C, N, F, P, ...)                       \
+  276|       |  EMP_CALL_BY_PACKS_do_call(C, N, F, __VA_ARGS__)                       \
+  277|       |  EMP_CALL_BY_PACKS_impl7(C, EMP_PACK_TOP(P), F, EMP_PACK_POP(P), EMP_POP_ARGS_ ## N(__VA_ARGS__) )
+  278|       |
+  279|       |#define EMP_CALL_BY_PACKS_impl9(C, N, F, P, ...) EMP_CALL_BY_PACKS_impl9B(C, N, F, P, __VA_ARGS__)
+  280|       |#define EMP_CALL_BY_PACKS_impl9B(C, N, F, P, ...)                       \
+  281|       |  EMP_CALL_BY_PACKS_do_call(C, N, F, __VA_ARGS__)                       \
+  282|       |  EMP_CALL_BY_PACKS_impl8(C, EMP_PACK_TOP(P), F, EMP_PACK_POP(P), EMP_POP_ARGS_ ## N(__VA_ARGS__) )
+  283|       |
+  284|       |#define EMP_CALL_BY_PACKS_impl10(C, N, F, P, ...) EMP_CALL_BY_PACKS_impl10B(C, N, F, P, __VA_ARGS__)
+  285|       |#define EMP_CALL_BY_PACKS_impl10B(C, N, F, P, ...)                      \
+  286|       |  EMP_CALL_BY_PACKS_do_call(C, N, F, __VA_ARGS__)                       \
+  287|       |  EMP_CALL_BY_PACKS_impl9(C, EMP_PACK_TOP(P), F, EMP_PACK_POP(P), EMP_POP_ARGS_ ## N(__VA_ARGS__) )
+  288|       |
+  289|       |#define EMP_CALL_BY_PACKS_do_call(C, V, F, ...) C ## V(F, __VA_ARGS__)
+  290|       |
+  291|       |/// @endcond
+  292|       |
+  293|       |/// EMP_WRAP_EACH, wraps each argument in the specified macro wrapper.
+  294|       |#define EMP_WRAP_EACH(W, ...) EMP_CALL_BY_PACKS(EMP_WRAP_EACH_, W, __VA_ARGS__)
+  295|       |/// @cond MACROS
+  296|       |#define EMP_WRAP_EACH_1(W, A, ...) W(A)
+  297|       |#define EMP_WRAP_EACH_2(W, A,B,...) EMP_WRAP_EACH_1(W, A, ~) EMP_WRAP_EACH_1(W, B, ~)
+  298|       |#define EMP_WRAP_EACH_4(W, A,B,...) EMP_WRAP_EACH_2(W, A, B, ~) EMP_WRAP_EACH_2(W, __VA_ARGS__)
+  299|       |#define EMP_WRAP_EACH_8(W, ...)                                         \
+  300|       |  EMP_WRAP_EACH_4(W, __VA_ARGS__)                                       \
+  301|       |  EMP_EVAL1( EMP_WRAP_EACH_4 EMP_EMPTY() (W, EMP_POP_ARGS_4(__VA_ARGS__)) )
+  302|       |#define EMP_WRAP_EACH_16(W, ...) \
+  303|       |  EMP_WRAP_EACH_8(W, __VA_ARGS__) \
+  304|       |  EMP_EVAL2( EMP_WRAP_EACH_8 EMP_EMPTY() (W, EMP_POP_ARGS_8(__VA_ARGS__)) )
+  305|       |#define EMP_WRAP_EACH_32(W, ...) \
+  306|       |  EMP_WRAP_EACH_16(W, __VA_ARGS__) \
+  307|       |  EMP_EVAL3( EMP_WRAP_EACH_16 EMP_EMPTY() (W, EMP_POP_ARGS_16(__VA_ARGS__)) )
+  308|       |#define EMP_WRAP_EACH_64(W, ...) \
+  309|       |  EMP_WRAP_EACH_32(W, __VA_ARGS__) \
+  310|       |  EMP_EVAL4( EMP_WRAP_EACH_32 EMP_EMPTY() (W, EMP_POP_ARGS_32(__VA_ARGS__)) )
+  311|       |#define EMP_WRAP_EACH_128(W, ...) \
+  312|       |  EMP_WRAP_EACH_64(W, __VA_ARGS__) \
+  313|       |  EMP_EVAL5( EMP_WRAP_EACH_64 EMP_EMPTY() (W, EMP_POP_ARGS_64(__VA_ARGS__)) )
+  314|       |#define EMP_WRAP_EACH_256(W, ...) \
+  315|       |  EMP_WRAP_EACH_128(W, __VA_ARGS__) \
+  316|       |  EMP_EVAL6( EMP_WRAP_EACH_128 EMP_EMPTY() (W, EMP_POP_ARGS_128(__VA_ARGS__)) )
+  317|       |#define EMP_WRAP_EACH_512(W, ...) \
+  318|       |  EMP_WRAP_EACH_256(W, __VA_ARGS__) \
+  319|       |  EMP_EVAL7( EMP_WRAP_EACH_256 EMP_EMPTY() (W, EMP_POP_ARGS_256(__VA_ARGS__)) )
+  320|       |/// @endcond
+  321|       |
+  322|       |/// EMP_WRAP_EACH_1ARG, wraps each argument in the specified macro wrapper, with added first arg.
+  323|       |#define EMP_WRAP_EACH_1ARG(W, ARG, ...) EMP_CALL_BY_PACKS(EMP_WRAP_EACH_1ARG_, (W, ARG), __VA_ARGS__)
+  324|       |/// @cond MACROS
+  325|       |#define EMP_WRAP_EACH_1ARG_1(P, A, ...) EMP_GET_ARG_1 P (EMP_GET_ARG_2 P, A)
+  326|       |#define EMP_WRAP_EACH_1ARG_2(P, A,B,...) EMP_WRAP_EACH_1ARG_1(P, A, ~)         \
+  327|       |                                              EMP_WRAP_EACH_1ARG_1(P, B, ~)
+  328|       |#define EMP_WRAP_EACH_1ARG_4(P, A,B,...) EMP_WRAP_EACH_1ARG_2(P, A, B, ~)      \
+  329|       |                                              EMP_WRAP_EACH_1ARG_2(P, __VA_ARGS__)
+  330|       |#define EMP_WRAP_EACH_1ARG_8(P, ...)                                                \
+  331|       |  EMP_WRAP_EACH_1ARG_4(P, __VA_ARGS__)                                              \
+  332|       |  EMP_EVAL1( EMP_WRAP_EACH_1ARG_4 EMP_EMPTY() (P, EMP_POP_ARGS_4(__VA_ARGS__)) )
+  333|       |#define EMP_WRAP_EACH_1ARG_16(P, ...)                                               \
+  334|       |  EMP_WRAP_EACH_1ARG_8(P, __VA_ARGS__)                                              \
+  335|       |  EMP_EVAL2( EMP_WRAP_EACH_1ARG_8 EMP_EMPTY() (P, EMP_POP_ARGS_8(__VA_ARGS__)) )
+  336|       |#define EMP_WRAP_EACH_1ARG_32(P, ...)                                               \
+  337|       |  EMP_WRAP_EACH_1ARG_16(P, __VA_ARGS__)                                             \
+  338|       |  EMP_EVAL3( EMP_WRAP_EACH_1ARG_16 EMP_EMPTY() (P, EMP_POP_ARGS_16(__VA_ARGS__)) )
+  339|       |#define EMP_WRAP_EACH_1ARG_64(P, ...)                                               \
+  340|       |  EMP_WRAP_EACH_1ARG_32(P, __VA_ARGS__)                                             \
+  341|       |  EMP_EVAL4( EMP_WRAP_EACH_1ARG_32 EMP_EMPTY() (P, EMP_POP_ARGS_32(__VA_ARGS__)) )
+  342|       |#define EMP_WRAP_EACH_1ARG_128(P, ...)                                              \
+  343|       |  EMP_WRAP_EACH_1ARG_64(P, __VA_ARGS__)                                             \
+  344|       |  EMP_EVAL5( EMP_WRAP_EACH_1ARG_64 EMP_EMPTY() (P, EMP_POP_ARGS_64(__VA_ARGS__)) )
+  345|       |#define EMP_WRAP_EACH_1ARG_256(P, ...)                                              \
+  346|       |  EMP_WRAP_EACH_1ARG_128(P, __VA_ARGS__)                                            \
+  347|       |  EMP_EVAL6( EMP_WRAP_EACH_1ARG_128 EMP_EMPTY() (P, EMP_POP_ARGS_128(__VA_ARGS__)) )
+  348|       |#define EMP_WRAP_EACH_1ARG_512(P, ...)                                              \
+  349|       |  EMP_WRAP_EACH_1ARG_256(P, __VA_ARGS__)                                            \
+  350|       |  EMP_EVAL7( EMP_WRAP_EACH_1ARG_256 EMP_EMPTY() (P, EMP_POP_ARGS_256(__VA_ARGS__)) )
+  351|       |/// @endcond
+  352|       |
+  353|       |/// imilar to EMP_WRAP_EACH, but puts a COMMA between each arg pair.
+  354|       |#define EMP_WRAP_ARGS(W, ...) EMP_POP_ARGS_1( ~ EMP_CALL_BY_PACKS(EMP_WRAP_ARGS_, W, __VA_ARGS__) )
+  355|       |/// @cond MACROS
+  356|       |#define EMP_WRAP_ARGS_1(W, A, ...) , W(A)
+  357|       |#define EMP_WRAP_ARGS_2(W, A,B,...) EMP_WRAP_ARGS_1(W, A, ~) EMP_WRAP_ARGS_1(W, B, ~)
+  358|       |#define EMP_WRAP_ARGS_4(W, A,B,...) EMP_WRAP_ARGS_2(W, A, B, ~) EMP_WRAP_ARGS_2(W, __VA_ARGS__)
+  359|       |#define EMP_WRAP_ARGS_8(W, ...)                                         \
+  360|       |  EMP_WRAP_ARGS_4(W, __VA_ARGS__)                                       \
+  361|       |  EMP_EVAL1( EMP_WRAP_ARGS_4 EMP_EMPTY() (W, EMP_POP_ARGS_4(__VA_ARGS__)) )
+  362|       |#define EMP_WRAP_ARGS_16(W, ...) \
+  363|       |  EMP_WRAP_ARGS_8(W, __VA_ARGS__) \
+  364|       |  EMP_EVAL2( EMP_WRAP_ARGS_8 EMP_EMPTY() (W, EMP_POP_ARGS_8(__VA_ARGS__)) )
+  365|       |#define EMP_WRAP_ARGS_32(W, ...) \
+  366|       |  EMP_WRAP_ARGS_16(W, __VA_ARGS__) \
+  367|       |  EMP_EVAL3( EMP_WRAP_ARGS_16 EMP_EMPTY() (W, EMP_POP_ARGS_16(__VA_ARGS__)) )
+  368|       |#define EMP_WRAP_ARGS_64(W, ...) \
+  369|       |  EMP_WRAP_ARGS_32(W, __VA_ARGS__) \
+  370|       |  EMP_EVAL4( EMP_WRAP_ARGS_32 EMP_EMPTY() (W, EMP_POP_ARGS_32(__VA_ARGS__)) )
+  371|       |#define EMP_WRAP_ARGS_128(W, ...) \
+  372|       |  EMP_WRAP_ARGS_64(W, __VA_ARGS__) \
+  373|       |  EMP_EVAL5( EMP_WRAP_ARGS_64 EMP_EMPTY() (W, EMP_POP_ARGS_64(__VA_ARGS__)) )
+  374|       |#define EMP_WRAP_ARGS_256(W, ...) \
+  375|       |  EMP_WRAP_ARGS_128(W, __VA_ARGS__) \
+  376|       |  EMP_EVAL6( EMP_WRAP_ARGS_128 EMP_EMPTY() (W, EMP_POP_ARGS_128(__VA_ARGS__)) )
+  377|       |#define EMP_WRAP_ARGS_512(W, ...) \
+  378|       |  EMP_WRAP_ARGS_256(W, __VA_ARGS__) \
+  379|       |  EMP_EVAL7( EMP_WRAP_ARGS_256 EMP_EMPTY() (W, EMP_POP_ARGS_256(__VA_ARGS__)) )
+  380|       |/// @endcond
+  381|       |
+  382|       |#define EMP_WRAP_ARGS_1ARG(W, ARG, ...) \
+  383|       |  EMP_POP_ARGS_1( ~ EMP_CALL_BY_PACKS(EMP_WRAP_ARGS_1ARG_, (W, ARG), __VA_ARGS__) )
+  384|       |/// @cond MACROS
+  385|       |#define EMP_WRAP_ARGS_1ARG_1(P, A, ...) , EMP_GET_ARG_1 P (EMP_GET_ARG_2 P, A)
+  386|       |#define EMP_WRAP_ARGS_1ARG_2(P, A,B,...) EMP_WRAP_ARGS_1ARG_1(P, A, ~) EMP_WRAP_ARGS_1ARG_1(P, B, ~)
+  387|       |#define EMP_WRAP_ARGS_1ARG_4(P, A,B,...) EMP_WRAP_ARGS_1ARG_2(P, A, B, ~) EMP_WRAP_ARGS_1ARG_2(P, __VA_ARGS__)
+  388|       |#define EMP_WRAP_ARGS_1ARG_8(P, ...)                                         \
+  389|       |  EMP_WRAP_ARGS_1ARG_4(P, __VA_ARGS__)                                       \
+  390|       |  EMP_EVAL1( EMP_WRAP_ARGS_1ARG_4 EMP_EMPTY() (P, EMP_POP_ARGS_4(__VA_ARGS__)) )
+  391|       |#define EMP_WRAP_ARGS_1ARG_16(P, ...) \
+  392|       |  EMP_WRAP_ARGS_1ARG_8(P, __VA_ARGS__) \
+  393|       |  EMP_EVAL2( EMP_WRAP_ARGS_1ARG_8 EMP_EMPTY() (P, EMP_POP_ARGS_8(__VA_ARGS__)) )
+  394|       |#define EMP_WRAP_ARGS_1ARG_32(P, ...) \
+  395|       |  EMP_WRAP_ARGS_1ARG_16(P, __VA_ARGS__) \
+  396|       |  EMP_EVAL3( EMP_WRAP_ARGS_1ARG_16 EMP_EMPTY() (P, EMP_POP_ARGS_16(__VA_ARGS__)) )
+  397|       |#define EMP_WRAP_ARGS_1ARG_64(P, ...) \
+  398|       |  EMP_WRAP_ARGS_1ARG_32(P, __VA_ARGS__) \
+  399|       |  EMP_EVAL4( EMP_WRAP_ARGS_1ARG_32 EMP_EMPTY() (P, EMP_POP_ARGS_32(__VA_ARGS__)) )
+  400|       |#define EMP_WRAP_ARGS_1ARG_128(P, ...) \
+  401|       |  EMP_WRAP_ARGS_1ARG_64(P, __VA_ARGS__) \
+  402|       |  EMP_EVAL5( EMP_WRAP_ARGS_1ARG_64 EMP_EMPTY() (P, EMP_POP_ARGS_64(__VA_ARGS__)) )
+  403|       |#define EMP_WRAP_ARGS_1ARG_256(P, ...) \
+  404|       |  EMP_WRAP_ARGS_1ARG_128(P, __VA_ARGS__) \
+  405|       |  EMP_EVAL6( EMP_WRAP_ARGS_1ARG_128 EMP_EMPTY() (P, EMP_POP_ARGS_128(__VA_ARGS__)) )
+  406|       |#define EMP_WRAP_ARGS_1ARG_512(P, ...) \
+  407|       |  EMP_WRAP_ARGS_1ARG_256(P, __VA_ARGS__) \
+  408|       |  EMP_EVAL7( EMP_WRAP_ARGS_1ARG_256 EMP_EMPTY() (P, EMP_POP_ARGS_256(__VA_ARGS__)) )
+  409|       |/// @endcond
+  410|       |
+  411|       |/// Replace all of the commas in an argument set with something else (including nothing)
+  412|       |/// @cond MACROS
+  413|       |#define EMP_REMOVE_COMMAS(...) EMP_REPLACE_COMMAS(,__VA_ARGS__)
+  414|       |/// @endcond
+  415|       |#define EMP_REPLACE_COMMAS(X, ...) EMP_GET_ARG_1(__VA_ARGS__) EMP_CALL_BY_PACKS(EMP_REPLACE_COMMAS_, X, EMP_POP_ARGS_1(__VA_ARGS__) )
+  416|       |
+  417|       |/// @cond MACROS
+  418|       |#define EMP_REPLACE_COMMAS_1(X, A, ...) X A
+  419|       |#define EMP_REPLACE_COMMAS_2(X, A,B, ...) X A X B
+  420|       |#define EMP_REPLACE_COMMAS_4(X, A,B,C,D, ...) X A X B X C X D
+  421|       |#define EMP_REPLACE_COMMAS_8(X, A,B,C,D,E,F,G,H, ...) X A X B X C X D X E X F X G X H
+  422|       |#define EMP_REPLACE_COMMAS_16(X, ...) \
+  423|       |  EMP_REPLACE_COMMAS_8(__VA_ARGS__) X EMP_REPLACE_COMMAS( EMP_POP_ARGS_8(__VA_ARGS__) )
+  424|       |#define EMP_REPLACE_COMMAS_32(X, ...) \
+  425|       |  EMP_REPLACE_COMMAS_16(__VA_ARGS__) X EMP_REPLACE_COMMAS( EMP_POP_ARGS_16(__VA_ARGS__) )
+  426|       |#define EMP_REPLACE_COMMAS_64(X, ...) \
+  427|       |  EMP_REPLACE_COMMAS_32(__VA_ARGS__) X EMP_REPLACE_COMMAS( EMP_POP_ARGS_32(__VA_ARGS__) )
+  428|       |#define EMP_REPLACE_COMMAS_128(X, ...) \
+  429|       |  EMP_REPLACE_COMMAS_64(__VA_ARGS__) X EMP_REPLACE_COMMAS( EMP_POP_ARGS_64(__VA_ARGS__) )
+  430|       |#define EMP_REPLACE_COMMAS_256(X, ...) \
+  431|       |  EMP_REPLACE_COMMAS_128(__VA_ARGS__) X EMP_REPLACE_COMMAS( EMP_POP_ARGS_128(__VA_ARGS__) )
+  432|       |#define EMP_REPLACE_COMMAS_512(X, ...) \
+  433|       |  EMP_REPLACE_COMMAS_256(__VA_ARGS__) X EMP_REPLACE_COMMAS( EMP_POP_ARGS_256(__VA_ARGS__) )
+  434|       |/// @endcond
+  435|       |
+  436|       |/// Keep only the first N args (assumes at least N args exist!)
+  437|       |#define EMP_CROP_ARGS_TO(N, ...) EMP_POP_ARG(~ EMP_CALL_BY_PACKS_impl(EMP_CROP_ARGS_TO_, ~, EMP_DEC_TO_PACK(N), __VA_ARGS__, ~))
+  438|       |/// @cond MACROS
+  439|       |#define EMP_CROP_ARGS_TO_1(W, A, ...) , A
+  440|       |#define EMP_CROP_ARGS_TO_2(W, A,B,...) , A , B
+  441|       |#define EMP_CROP_ARGS_TO_4(W, A,B,...) EMP_CROP_ARGS_TO_2(W, A,B,~) EMP_CROP_ARGS_TO_2(W,__VA_ARGS__)
+  442|       |#define EMP_CROP_ARGS_TO_8(W, ...) EMP_CROP_ARGS_TO_4(W, __VA_ARGS__) EMP_EVAL1( EMP_CROP_ARGS_TO_4 EMP_EMPTY() (W, EMP_POP_ARGS_4(__VA_ARGS__)) )
+  443|       |#define EMP_CROP_ARGS_TO_16(W, ...) EMP_CROP_ARGS_TO_8(W, __VA_ARGS__) EMP_EVAL2( EMP_CROP_ARGS_TO_8 EMP_EMPTY() (W, EMP_POP_ARGS_8(__VA_ARGS__)) )
+  444|       |#define EMP_CROP_ARGS_TO_32(W, ...) EMP_CROP_ARGS_TO_16(W, __VA_ARGS__) EMP_EVAL3( EMP_CROP_ARGS_TO_16 EMP_EMPTY() (W, EMP_POP_ARGS_16(__VA_ARGS__)) )
+  445|       |#define EMP_CROP_ARGS_TO_64(W, ...) EMP_CROP_ARGS_TO_32(W, __VA_ARGS__) EMP_EVAL4( EMP_CROP_ARGS_TO_32 EMP_EMPTY() (W, EMP_POP_ARGS_32(__VA_ARGS__)) )
+  446|       |#define EMP_CROP_ARGS_TO_128(W, ...) EMP_CROP_ARGS_TO_64(W, __VA_ARGS__) EMP_EVAL5( EMP_CROP_ARGS_TO_64 EMP_EMPTY() (W, EMP_POP_ARGS_64(__VA_ARGS__)) )
+  447|       |#define EMP_CROP_ARGS_TO_256(W, ...) EMP_CROP_ARGS_TO_128(W, __VA_ARGS__) EMP_EVAL6( EMP_CROP_ARGS_TO_128 EMP_EMPTY() (W, EMP_POP_ARGS_128(__VA_ARGS__)) )
+  448|       |#define EMP_CROP_ARGS_TO_512(W, ...) EMP_CROP_ARGS_TO_256(W, __VA_ARGS__) EMP_EVAL7( EMP_CROP_ARGS_TO_256 EMP_EMPTY() (W, EMP_POP_ARGS_256(__VA_ARGS__)) )
+  449|       |/// @endcond
+  450|       |
+  451|       |/// Force arguments to a specific number.  If less, pad them; if more crop them.
+  452|       |#define EMP_FORCE_ARGS_TO(N, PAD, ...) EMP_CROP_ARGS_TO(N, __VA_ARGS__, EMP_DUPLICATE_ARGS(N, PAD))
+  453|       |
+  454|       |#define EMP_ROTATE_ARGS(A, ...) __VA_ARGS__, A
+  455|       |#define EMP_RUN_JOIN(A, B) A B
+  456|       |
+  457|       |#define EMP_PERMUTE(...) EMP_ASSEMBLE_MACRO(EMP_PERMUTE_, __VA_ARGS__)
+  458|       |/// @cond MACROS
+  459|       |#define EMP_PERMUTE_1(A1) (A1)
+  460|       |#define EMP_PERMUTE_2(A1,A2) (A1,A2),(A2,A1)
+  461|       |#define EMP_PERMUTE_3(A1,A2,A3) (A1,A2,A3),(A2,A1,A3),(A1,A3,A2),(A2,A3,A1),(A3,A1,A2),(A3,A2,A1)
+  462|       |#define EMP_PERMUTE_4(A1,A2,A3,A4) EMP_PACKS_PUSH_ALL(A1, EMP_PERMUTE_3(A2,A3,A4)), \
+  463|       |                                   EMP_PACKS_PUSH_ALL(A2, EMP_PERMUTE_3(A1,A3,A4)), \
+  464|       |                                   EMP_PACKS_PUSH_ALL(A3, EMP_PERMUTE_3(A1,A2,A4)), \
+  465|       |                                   EMP_PACKS_PUSH_ALL(A4, EMP_PERMUTE_3(A1,A2,A3))
+  466|       |#define EMP_PERMUTE_5(A1,A2,A3,A4,A5) EMP_PACKS_PUSH_ALL(A1, EMP_PERMUTE_4(A2,A3,A4,A5)), \
+  467|       |                                      EMP_PACKS_PUSH_ALL(A2, EMP_PERMUTE_4(A1,A3,A4,A5)), \
+  468|       |                                      EMP_PACKS_PUSH_ALL(A3, EMP_PERMUTE_4(A1,A2,A4,A5)), \
+  469|       |                                      EMP_PACKS_PUSH_ALL(A4, EMP_PERMUTE_4(A1,A2,A3,A5)), \
+  470|       |                                      EMP_PACKS_PUSH_ALL(A5, EMP_PERMUTE_4(A1,A2,A3,A4))
+  471|       |///@endcond
+  472|       |
+  473|       |/// A generic technique to trim the arguments we have.  In parens, list i or x for each
+  474|       |/// position and whether it should be included or excluded.  For example
+  475|       |///
+  476|       |/// EMP_SELECT_ARGS( (i,x,x,i,i), 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 )
+  477|       |///
+  478|       |/// ... would return:
+  479|       |///
+  480|       |/// 1,4,5,6,9,10,11,14,15
+  481|       |
+  482|       |#define EMP_SELECT_i(A, ...) , A
+  483|       |#define EMP_SELECT_x(A, ...)
+  484|       |
+  485|       |#define EMP_SELECT_do_arg(P, A) EMP_IMERGE_2(EMP_SELECT_, EMP_RUN_JOIN(EMP_GET_ARG_1, P))(A,~)
+  486|       |
+  487|       |#define EMP_SELECT_ARGS(PATTERN, ...) EMP_POP_ARG( ~ EMP_ASSEMBLE_MACRO_1ARG(EMP_SELECT_ARGS_, PATTERN, __VA_ARGS__) )
+  488|       |
+  489|       |/// @cond MACROS
+  490|       |#define EMP_SELECT_ARGS_1(P, A) EMP_SELECT_do_arg(P, A)
+  491|       |#define EMP_SELECT_ARGS_2(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_1( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  492|       |#define EMP_SELECT_ARGS_3(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_2( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  493|       |#define EMP_SELECT_ARGS_4(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_3( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  494|       |#define EMP_SELECT_ARGS_5(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_4( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  495|       |#define EMP_SELECT_ARGS_6(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_5( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  496|       |#define EMP_SELECT_ARGS_7(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_6( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  497|       |#define EMP_SELECT_ARGS_8(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_7( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  498|       |#define EMP_SELECT_ARGS_9(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_8( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  499|       |#define EMP_SELECT_ARGS_10(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_9( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  500|       |#define EMP_SELECT_ARGS_11(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_10( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  501|       |#define EMP_SELECT_ARGS_12(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_11( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  502|       |#define EMP_SELECT_ARGS_13(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_12( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  503|       |#define EMP_SELECT_ARGS_14(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_13( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  504|       |#define EMP_SELECT_ARGS_15(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_14( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  505|       |#define EMP_SELECT_ARGS_16(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_15( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  506|       |#define EMP_SELECT_ARGS_17(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_16( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  507|       |#define EMP_SELECT_ARGS_18(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_17( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  508|       |#define EMP_SELECT_ARGS_19(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_18( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  509|       |#define EMP_SELECT_ARGS_20(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_19( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  510|       |#define EMP_SELECT_ARGS_21(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_20( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  511|       |#define EMP_SELECT_ARGS_22(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_21( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  512|       |#define EMP_SELECT_ARGS_23(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_22( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  513|       |#define EMP_SELECT_ARGS_24(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_23( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  514|       |#define EMP_SELECT_ARGS_25(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_24( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  515|       |#define EMP_SELECT_ARGS_26(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_25( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  516|       |#define EMP_SELECT_ARGS_27(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_26( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  517|       |#define EMP_SELECT_ARGS_28(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_27( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  518|       |#define EMP_SELECT_ARGS_29(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_28( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  519|       |#define EMP_SELECT_ARGS_30(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_29( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  520|       |#define EMP_SELECT_ARGS_31(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_30( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  521|       |#define EMP_SELECT_ARGS_32(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_31( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  522|       |#define EMP_SELECT_ARGS_33(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_32( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  523|       |#define EMP_SELECT_ARGS_34(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_33( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  524|       |#define EMP_SELECT_ARGS_35(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_34( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  525|       |#define EMP_SELECT_ARGS_36(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_35( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  526|       |#define EMP_SELECT_ARGS_37(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_36( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  527|       |#define EMP_SELECT_ARGS_38(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_37( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  528|       |#define EMP_SELECT_ARGS_39(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_38( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  529|       |#define EMP_SELECT_ARGS_40(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_39( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  530|       |#define EMP_SELECT_ARGS_41(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_40( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  531|       |#define EMP_SELECT_ARGS_42(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_41( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  532|       |#define EMP_SELECT_ARGS_43(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_42( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  533|       |#define EMP_SELECT_ARGS_44(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_43( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  534|       |#define EMP_SELECT_ARGS_45(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_44( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  535|       |#define EMP_SELECT_ARGS_46(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_45( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  536|       |#define EMP_SELECT_ARGS_47(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_46( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  537|       |#define EMP_SELECT_ARGS_48(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_47( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  538|       |#define EMP_SELECT_ARGS_49(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_48( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  539|       |#define EMP_SELECT_ARGS_50(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_49( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  540|       |#define EMP_SELECT_ARGS_51(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_50( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  541|       |#define EMP_SELECT_ARGS_52(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_51( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  542|       |#define EMP_SELECT_ARGS_53(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_52( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  543|       |#define EMP_SELECT_ARGS_54(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_53( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  544|       |#define EMP_SELECT_ARGS_55(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_54( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  545|       |#define EMP_SELECT_ARGS_56(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_55( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  546|       |#define EMP_SELECT_ARGS_57(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_56( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  547|       |#define EMP_SELECT_ARGS_58(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_57( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  548|       |#define EMP_SELECT_ARGS_59(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_58( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  549|       |#define EMP_SELECT_ARGS_60(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_59( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  550|       |#define EMP_SELECT_ARGS_61(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_60( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  551|       |#define EMP_SELECT_ARGS_62(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_61( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  552|       |#define EMP_SELECT_ARGS_63(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_62( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  553|       |#define EMP_SELECT_ARGS_64(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_63( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  554|       |#define EMP_SELECT_ARGS_65(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_64( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  555|       |#define EMP_SELECT_ARGS_66(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_65( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  556|       |#define EMP_SELECT_ARGS_67(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_66( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  557|       |#define EMP_SELECT_ARGS_68(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_67( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  558|       |#define EMP_SELECT_ARGS_69(P, A, ...) EMP_SELECT_do_arg(P, A)EMP_SELECT_ARGS_68( (EMP_ROTATE_ARGS P), __VA_ARGS__ )
+  559|       |/// @endcond
+  560|       |
+  561|       |/// Get all even numbered args
+  562|       |#define EMP_GET_EVEN_ARGS(...) EMP_SELECT_ARGS((x,i), __VA_ARGS__)
+  563|       |/// Get all odd numbered args
+  564|       |#define EMP_GET_ODD_ARGS(...) EMP_SELECT_ARGS((i,x), __VA_ARGS__)
+  565|       |
+  566|       |
+  567|       |/// Enable an arbitrary number of arguments (well, up to 10) to be merged BEFORE being processed!
+  568|       |#define EMP_MERGE(...) EMP_ASSEMBLE_MACRO(EMP_MERGE_, __VA_ARGS__)
+  569|       |
+  570|       |/// Enable an arbitrary number of arguments (well, up to 10) to be INDIRECTLY merged, that is,
+  571|       |/// AFTER being processed!
+  572|       |#define EMP_IMERGE(...) EMP_ASSEMBLE_MACRO(EMP_IMERGE_, __VA_ARGS__)
+  573|       |
+  574|       |/// @cond MACROS
+  575|       |#define EMP_MERGE_1(A1) A1
+  576|       |#define EMP_MERGE_2(A1,A2) A1 ## A2
+  577|       |#define EMP_MERGE_3(A1,A2,A3) A1 ## A2 ## A3
+  578|       |#define EMP_MERGE_4(A1,A2,A3,A4) A1 ## A2 ## A3 ## A4
+  579|       |#define EMP_MERGE_5(A1,A2,A3,A4,A5) A1 ## A2 ## A3 ## A4 ## A5
+  580|       |#define EMP_MERGE_6(A1,A2,A3,A4,A5,A6) A1 ## A2 ## A3 ## A4 ## A5 ## A6
+  581|       |#define EMP_MERGE_7(A1,A2,A3,A4,A5,A6,A7) A1 ## A2 ## A3 ## A4 ## A5 ## A6 ## A7
+  582|       |#define EMP_MERGE_8(A1,A2,A3,A4,A5,A6,A7,A8) A1 ## A2 ## A3 ## A4 ## A5 ## A6 ## A7 ## A8
+  583|       |#define EMP_MERGE_9(A1,A2,A3,A4,A5,A6,A7,A8,A9) A1 ## A2 ## A3 ## A4 ## A5 ## A6 ## A7 ## A8 ## A9
+  584|       |#define EMP_MERGE_10(A1,A2,A3,A4,A5,A6,A7,A8,A9,A10) A1 ## A2 ## A3 ## A4 ## A5 ## A6 ## A7 ## A8 ## A9 ## A10
+  585|       |
+  586|       |// Indirect merges to give a chance for arg evaluation...
+  587|       |
+  588|       |#define EMP_IMERGE_1(A1) EMP_MERGE_1(A1)
+  589|       |#define EMP_IMERGE_2(A1,A2) EMP_MERGE_2(A1, A2)
+  590|       |#define EMP_IMERGE_3(A1,A2,A3) EMP_MERGE_3(A1, A2, A3)
+  591|       |#define EMP_IMERGE_4(A1,A2,A3,A4) EMP_MERGE_4(A1, A2, A3, A4)
+  592|       |#define EMP_IMERGE_5(A1,A2,A3,A4,A5) EMP_MERGE_5(A1, A2, A3, A4, A5)
+  593|       |#define EMP_IMERGE_6(A1,A2,A3,A4,A5,A6) EMP_MERGE_6(A1, A2, A3, A4, A5, A6)
+  594|       |#define EMP_IMERGE_7(A1,A2,A3,A4,A5,A6,A7) EMP_MERGE_7(A1, A2, A3, A4, A5, A6, A7)
+  595|       |#define EMP_IMERGE_8(A1,A2,A3,A4,A5,A6,A7,A8) EMP_MERGE_8(A1, A2, A3, A4, A5, A6, A7, A8)
+  596|       |#define EMP_IMERGE_9(A1,A2,A3,A4,A5,A6,A7,A8,A9) EMP_MERGE_9(A1, A2, A3, A4, A5, A6, A7, A8, A9)
+  597|       |#define EMP_IMERGE_10(A1,A2,A3,A4,A5,A6,A7,A8,A9,A10) EMP_MERGE_10(A1, A2, A3, A4, A5, A6, A7, A8, A9, A10)
+  598|       |
+  599|       |/// @endcond
+  600|       |
+  601|       |// EMP_WRAP_EACH takes a wrapper macro and a variable set of arguments,
+  602|       |// then applied to wrapper macro to each argument in order.
+  603|       |//#define EMP_WRAP_EACH(W, ...) EMP_ASSEMBLE_MACRO_2ARG(EMP_LAYOUT_, W, , __VA_ARGS__)
+  604|       |
+  605|       |/// Similar to EMP_WRAP_EACH, but puts a P between each arg pair.
+  606|       |/// EMP_LAYOUT takes a wrapper macro and padding information, wraps each argument in the macro
+  607|       |/// and then spaces them out with the padding.
+  608|       |/// W = Wrapper macro name, P = Padding between results
+  609|       |#define EMP_LAYOUT(W, P, ...) EMP_ASSEMBLE_MACRO_2ARG(EMP_LAYOUT_, W, P, __VA_ARGS__)
+  610|       |/// @cond MACROS
+  611|       |#define EMP_LAYOUT_0(W, P)
+  612|       |#define EMP_LAYOUT_1(W, P, A) W(A)
+  613|       |#define EMP_LAYOUT_2(W, P, A, ...) W(A) P EMP_LAYOUT_1(W, P, __VA_ARGS__)
+  614|       |#define EMP_LAYOUT_3(W, P, A, ...) W(A) P EMP_LAYOUT_2(W, P, __VA_ARGS__)
+  615|       |#define EMP_LAYOUT_4(W, P, A, ...) W(A) P EMP_LAYOUT_3(W, P, __VA_ARGS__)
+  616|       |#define EMP_LAYOUT_5(W, P, A, ...) W(A) P EMP_LAYOUT_4(W, P, __VA_ARGS__)
+  617|       |#define EMP_LAYOUT_6(W, P, A, ...) W(A) P EMP_LAYOUT_5(W, P, __VA_ARGS__)
+  618|       |#define EMP_LAYOUT_7(W, P, A, ...) W(A) P EMP_LAYOUT_6(W, P, __VA_ARGS__)
+  619|       |#define EMP_LAYOUT_8(W, P, A, ...) W(A) P EMP_LAYOUT_7(W, P, __VA_ARGS__)
+  620|       |#define EMP_LAYOUT_9(W, P, A, ...) W(A) P EMP_LAYOUT_8(W, P, __VA_ARGS__)
+  621|       |#define EMP_LAYOUT_10(W, P, A, ...) W(A) P EMP_LAYOUT_9(W, P, __VA_ARGS__)
+  622|       |#define EMP_LAYOUT_11(W, P, A, ...) W(A) P EMP_LAYOUT_10(W, P, __VA_ARGS__)
+  623|       |#define EMP_LAYOUT_12(W, P, A, ...) W(A) P EMP_LAYOUT_11(W, P, __VA_ARGS__)
+  624|       |#define EMP_LAYOUT_13(W, P, A, ...) W(A) P EMP_LAYOUT_12(W, P, __VA_ARGS__)
+  625|       |#define EMP_LAYOUT_14(W, P, A, ...) W(A) P EMP_LAYOUT_13(W, P, __VA_ARGS__)
+  626|       |#define EMP_LAYOUT_15(W, P, A, ...) W(A) P EMP_LAYOUT_14(W, P, __VA_ARGS__)
+  627|       |#define EMP_LAYOUT_16(W, P, A, ...) W(A) P EMP_LAYOUT_15(W, P, __VA_ARGS__)
+  628|       |#define EMP_LAYOUT_17(W, P, A, ...) W(A) P EMP_LAYOUT_16(W, P, __VA_ARGS__)
+  629|       |#define EMP_LAYOUT_18(W, P, A, ...) W(A) P EMP_LAYOUT_17(W, P, __VA_ARGS__)
+  630|       |#define EMP_LAYOUT_19(W, P, A, ...) W(A) P EMP_LAYOUT_18(W, P, __VA_ARGS__)
+  631|       |#define EMP_LAYOUT_20(W, P, A, ...) W(A) P EMP_LAYOUT_19(W, P, __VA_ARGS__)
+  632|       |#define EMP_LAYOUT_21(W, P, A, ...) W(A) P EMP_LAYOUT_20(W, P, __VA_ARGS__)
+  633|       |#define EMP_LAYOUT_22(W, P, A, ...) W(A) P EMP_LAYOUT_21(W, P, __VA_ARGS__)
+  634|       |#define EMP_LAYOUT_23(W, P, A, ...) W(A) P EMP_LAYOUT_22(W, P, __VA_ARGS__)
+  635|       |#define EMP_LAYOUT_24(W, P, A, ...) W(A) P EMP_LAYOUT_23(W, P, __VA_ARGS__)
+  636|       |#define EMP_LAYOUT_25(W, P, A, ...) W(A) P EMP_LAYOUT_24(W, P, __VA_ARGS__)
+  637|       |#define EMP_LAYOUT_26(W, P, A, ...) W(A) P EMP_LAYOUT_25(W, P, __VA_ARGS__)
+  638|       |#define EMP_LAYOUT_27(W, P, A, ...) W(A) P EMP_LAYOUT_26(W, P, __VA_ARGS__)
+  639|       |#define EMP_LAYOUT_28(W, P, A, ...) W(A) P EMP_LAYOUT_27(W, P, __VA_ARGS__)
+  640|       |#define EMP_LAYOUT_29(W, P, A, ...) W(A) P EMP_LAYOUT_28(W, P, __VA_ARGS__)
+  641|       |#define EMP_LAYOUT_30(W, P, A, ...) W(A) P EMP_LAYOUT_29(W, P, __VA_ARGS__)
+  642|       |#define EMP_LAYOUT_31(W, P, A, ...) W(A) P EMP_LAYOUT_30(W, P, __VA_ARGS__)
+  643|       |#define EMP_LAYOUT_32(W, P, A, ...) W(A) P EMP_LAYOUT_31(W, P, __VA_ARGS__)
+  644|       |#define EMP_LAYOUT_33(W, P, A, ...) W(A) P EMP_LAYOUT_32(W, P, __VA_ARGS__)
+  645|       |#define EMP_LAYOUT_34(W, P, A, ...) W(A) P EMP_LAYOUT_33(W, P, __VA_ARGS__)
+  646|       |#define EMP_LAYOUT_35(W, P, A, ...) W(A) P EMP_LAYOUT_34(W, P, __VA_ARGS__)
+  647|       |#define EMP_LAYOUT_36(W, P, A, ...) W(A) P EMP_LAYOUT_35(W, P, __VA_ARGS__)
+  648|       |#define EMP_LAYOUT_37(W, P, A, ...) W(A) P EMP_LAYOUT_36(W, P, __VA_ARGS__)
+  649|       |#define EMP_LAYOUT_38(W, P, A, ...) W(A) P EMP_LAYOUT_37(W, P, __VA_ARGS__)
+  650|       |#define EMP_LAYOUT_39(W, P, A, ...) W(A) P EMP_LAYOUT_38(W, P, __VA_ARGS__)
+  651|       |#define EMP_LAYOUT_40(W, P, A, ...) W(A) P EMP_LAYOUT_39(W, P, __VA_ARGS__)
+  652|       |#define EMP_LAYOUT_41(W, P, A, ...) W(A) P EMP_LAYOUT_40(W, P, __VA_ARGS__)
+  653|       |#define EMP_LAYOUT_42(W, P, A, ...) W(A) P EMP_LAYOUT_41(W, P, __VA_ARGS__)
+  654|       |#define EMP_LAYOUT_43(W, P, A, ...) W(A) P EMP_LAYOUT_42(W, P, __VA_ARGS__)
+  655|       |#define EMP_LAYOUT_44(W, P, A, ...) W(A) P EMP_LAYOUT_43(W, P, __VA_ARGS__)
+  656|       |#define EMP_LAYOUT_45(W, P, A, ...) W(A) P EMP_LAYOUT_44(W, P, __VA_ARGS__)
+  657|       |#define EMP_LAYOUT_46(W, P, A, ...) W(A) P EMP_LAYOUT_45(W, P, __VA_ARGS__)
+  658|       |#define EMP_LAYOUT_47(W, P, A, ...) W(A) P EMP_LAYOUT_46(W, P, __VA_ARGS__)
+  659|       |#define EMP_LAYOUT_48(W, P, A, ...) W(A) P EMP_LAYOUT_47(W, P, __VA_ARGS__)
+  660|       |#define EMP_LAYOUT_49(W, P, A, ...) W(A) P EMP_LAYOUT_48(W, P, __VA_ARGS__)
+  661|       |#define EMP_LAYOUT_50(W, P, A, ...) W(A) P EMP_LAYOUT_49(W, P, __VA_ARGS__)
+  662|       |#define EMP_LAYOUT_51(W, P, A, ...) W(A) P EMP_LAYOUT_50(W, P, __VA_ARGS__)
+  663|       |#define EMP_LAYOUT_52(W, P, A, ...) W(A) P EMP_LAYOUT_51(W, P, __VA_ARGS__)
+  664|       |#define EMP_LAYOUT_53(W, P, A, ...) W(A) P EMP_LAYOUT_52(W, P, __VA_ARGS__)
+  665|       |#define EMP_LAYOUT_54(W, P, A, ...) W(A) P EMP_LAYOUT_53(W, P, __VA_ARGS__)
+  666|       |#define EMP_LAYOUT_55(W, P, A, ...) W(A) P EMP_LAYOUT_54(W, P, __VA_ARGS__)
+  667|       |#define EMP_LAYOUT_56(W, P, A, ...) W(A) P EMP_LAYOUT_55(W, P, __VA_ARGS__)
+  668|       |#define EMP_LAYOUT_57(W, P, A, ...) W(A) P EMP_LAYOUT_56(W, P, __VA_ARGS__)
+  669|       |#define EMP_LAYOUT_58(W, P, A, ...) W(A) P EMP_LAYOUT_57(W, P, __VA_ARGS__)
+  670|       |#define EMP_LAYOUT_59(W, P, A, ...) W(A) P EMP_LAYOUT_58(W, P, __VA_ARGS__)
+  671|       |#define EMP_LAYOUT_60(W, P, A, ...) W(A) P EMP_LAYOUT_59(W, P, __VA_ARGS__)
+  672|       |#define EMP_LAYOUT_61(W, P, A, ...) W(A) P EMP_LAYOUT_60(W, P, __VA_ARGS__)
+  673|       |#define EMP_LAYOUT_62(W, P, A, ...) W(A) P EMP_LAYOUT_61(W, P, __VA_ARGS__)
+  674|       |#define EMP_LAYOUT_63(W, P, A, ...) W(A) P EMP_LAYOUT_62(W, P, __VA_ARGS__)
+  675|       |/// @endcond
+  676|       |
+  677|       |// Wrap C different arguments.
+  678|       |#define EMP_WRAP_ARGSET(W, C, ...) EMP_ASSEMBLE_MACRO_2ARG(EMP_WRAP_ARGS_, W, C, __VA_ARGS__)
+  679|       |/// @cond MACROS
+  680|       |#define EMP_WRAP_ARGSET_0(W, C, ...)
+  681|       |#define EMP_WRAP_ARGSET_1(W, C, ...) W( EMP_CROP_ARGS_TO(C, __VA_ARGS__) ), \
+  682|       |                                                                                                     EMP_MERGE_2( EMP_WRAP_ARGSET_, EMP_SUB_1_ ## C ) (W, C, EMP_CROP_OFF(C, __VA_ARGS__) )
+  683|       |#define EMP_WRAP_ARGSET_2(W, C, ...) W(A), EMP_WRAP_ARGSET_1(W, C, __VA_ARGS__)
+  684|       |#define EMP_WRAP_ARGSET_3(W, C, ...) W(A), EMP_WRAP_ARGSET_2(W, C, __VA_ARGS__)
+  685|       |/// @endcond
+  686|       |
+  687|       |/// Individually stringifies each variable passed to it and returns them
+  688|       |/// with commas in between.
+  689|       |#define EMP_STRINGIFY_EACH(...) EMP_WRAP_ARGS(EMP_STRINGIFY, __VA_ARGS__)
+  690|       |
+  691|       |/// Similar to EMP_WRAP_ARGS, but passes pairs of args into W.
+  692|       |#define EMP_WRAP_ARG_PAIRS(W, ...) EMP_ASSEMBLE_MACRO_1ARG(EMP_WRAP_ARG_PAIRS_, W, __VA_ARGS__)
+  693|       |/// @cond MACROS
+  694|       |#define EMP_WRAP_ARG_PAIRS_2(W, A1, A2) W(A1, A2)
+  695|       |#define EMP_WRAP_ARG_PAIRS_4(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_2(W, __VA_ARGS__)
+  696|       |#define EMP_WRAP_ARG_PAIRS_6(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_4(W, __VA_ARGS__)
+  697|       |#define EMP_WRAP_ARG_PAIRS_8(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_6(W, __VA_ARGS__)
+  698|       |#define EMP_WRAP_ARG_PAIRS_10(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_8(W, __VA_ARGS__)
+  699|       |#define EMP_WRAP_ARG_PAIRS_12(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_10(W, __VA_ARGS__)
+  700|       |#define EMP_WRAP_ARG_PAIRS_14(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_12(W, __VA_ARGS__)
+  701|       |#define EMP_WRAP_ARG_PAIRS_16(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_14(W, __VA_ARGS__)
+  702|       |#define EMP_WRAP_ARG_PAIRS_18(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_16(W, __VA_ARGS__)
+  703|       |#define EMP_WRAP_ARG_PAIRS_20(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_18(W, __VA_ARGS__)
+  704|       |#define EMP_WRAP_ARG_PAIRS_22(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_20(W, __VA_ARGS__)
+  705|       |#define EMP_WRAP_ARG_PAIRS_24(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_22(W, __VA_ARGS__)
+  706|       |#define EMP_WRAP_ARG_PAIRS_26(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_24(W, __VA_ARGS__)
+  707|       |#define EMP_WRAP_ARG_PAIRS_28(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_26(W, __VA_ARGS__)
+  708|       |#define EMP_WRAP_ARG_PAIRS_30(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_28(W, __VA_ARGS__)
+  709|       |#define EMP_WRAP_ARG_PAIRS_32(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_30(W, __VA_ARGS__)
+  710|       |#define EMP_WRAP_ARG_PAIRS_34(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_32(W, __VA_ARGS__)
+  711|       |#define EMP_WRAP_ARG_PAIRS_36(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_34(W, __VA_ARGS__)
+  712|       |#define EMP_WRAP_ARG_PAIRS_38(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_36(W, __VA_ARGS__)
+  713|       |#define EMP_WRAP_ARG_PAIRS_40(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_38(W, __VA_ARGS__)
+  714|       |#define EMP_WRAP_ARG_PAIRS_42(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_40(W, __VA_ARGS__)
+  715|       |#define EMP_WRAP_ARG_PAIRS_44(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_42(W, __VA_ARGS__)
+  716|       |#define EMP_WRAP_ARG_PAIRS_46(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_44(W, __VA_ARGS__)
+  717|       |#define EMP_WRAP_ARG_PAIRS_48(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_46(W, __VA_ARGS__)
+  718|       |#define EMP_WRAP_ARG_PAIRS_50(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_48(W, __VA_ARGS__)
+  719|       |#define EMP_WRAP_ARG_PAIRS_52(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_50(W, __VA_ARGS__)
+  720|       |#define EMP_WRAP_ARG_PAIRS_54(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_52(W, __VA_ARGS__)
+  721|       |#define EMP_WRAP_ARG_PAIRS_56(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_54(W, __VA_ARGS__)
+  722|       |#define EMP_WRAP_ARG_PAIRS_58(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_56(W, __VA_ARGS__)
+  723|       |#define EMP_WRAP_ARG_PAIRS_60(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_58(W, __VA_ARGS__)
+  724|       |#define EMP_WRAP_ARG_PAIRS_62(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_60(W, __VA_ARGS__)
+  725|       |#define EMP_WRAP_ARG_PAIRS_64(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_62(W, __VA_ARGS__)
+  726|       |#define EMP_WRAP_ARG_PAIRS_66(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_64(W, __VA_ARGS__)
+  727|       |#define EMP_WRAP_ARG_PAIRS_68(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_66(W, __VA_ARGS__)
+  728|       |#define EMP_WRAP_ARG_PAIRS_70(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_68(W, __VA_ARGS__)
+  729|       |#define EMP_WRAP_ARG_PAIRS_72(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_70(W, __VA_ARGS__)
+  730|       |#define EMP_WRAP_ARG_PAIRS_74(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_72(W, __VA_ARGS__)
+  731|       |#define EMP_WRAP_ARG_PAIRS_76(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_74(W, __VA_ARGS__)
+  732|       |#define EMP_WRAP_ARG_PAIRS_78(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_76(W, __VA_ARGS__)
+  733|       |#define EMP_WRAP_ARG_PAIRS_80(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_78(W, __VA_ARGS__)
+  734|       |#define EMP_WRAP_ARG_PAIRS_82(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_80(W, __VA_ARGS__)
+  735|       |#define EMP_WRAP_ARG_PAIRS_84(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_82(W, __VA_ARGS__)
+  736|       |#define EMP_WRAP_ARG_PAIRS_86(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_84(W, __VA_ARGS__)
+  737|       |#define EMP_WRAP_ARG_PAIRS_88(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_86(W, __VA_ARGS__)
+  738|       |#define EMP_WRAP_ARG_PAIRS_90(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_88(W, __VA_ARGS__)
+  739|       |#define EMP_WRAP_ARG_PAIRS_92(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_90(W, __VA_ARGS__)
+  740|       |#define EMP_WRAP_ARG_PAIRS_94(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_92(W, __VA_ARGS__)
+  741|       |#define EMP_WRAP_ARG_PAIRS_96(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_94(W, __VA_ARGS__)
+  742|       |#define EMP_WRAP_ARG_PAIRS_98(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_96(W, __VA_ARGS__)
+  743|       |#define EMP_WRAP_ARG_PAIRS_100(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_98(W, __VA_ARGS__)
+  744|       |#define EMP_WRAP_ARG_PAIRS_102(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_100(W, __VA_ARGS__)
+  745|       |#define EMP_WRAP_ARG_PAIRS_104(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_102(W, __VA_ARGS__)
+  746|       |#define EMP_WRAP_ARG_PAIRS_106(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_104(W, __VA_ARGS__)
+  747|       |#define EMP_WRAP_ARG_PAIRS_108(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_106(W, __VA_ARGS__)
+  748|       |#define EMP_WRAP_ARG_PAIRS_110(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_108(W, __VA_ARGS__)
+  749|       |#define EMP_WRAP_ARG_PAIRS_112(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_110(W, __VA_ARGS__)
+  750|       |#define EMP_WRAP_ARG_PAIRS_114(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_112(W, __VA_ARGS__)
+  751|       |#define EMP_WRAP_ARG_PAIRS_116(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_114(W, __VA_ARGS__)
+  752|       |#define EMP_WRAP_ARG_PAIRS_118(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_116(W, __VA_ARGS__)
+  753|       |#define EMP_WRAP_ARG_PAIRS_120(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_118(W, __VA_ARGS__)
+  754|       |#define EMP_WRAP_ARG_PAIRS_122(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_120(W, __VA_ARGS__)
+  755|       |#define EMP_WRAP_ARG_PAIRS_124(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_122(W, __VA_ARGS__)
+  756|       |#define EMP_WRAP_ARG_PAIRS_126(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_124(W, __VA_ARGS__)
+  757|       |#define EMP_WRAP_ARG_PAIRS_128(W, A1, A2, ...) W(A1, A2), EMP_WRAP_ARG_PAIRS_126(W, __VA_ARGS__)
+  758|       |/// @endcond
+  759|       |
+  760|       |#define EMP_WRAP_ARG_TRIPLES(W, ...) EMP_ASSEMBLE_MACRO_1ARG(EMP_WRAP_ARG_TRIPLES_, W, __VA_ARGS__)
+  761|       |/// @cond MACROS
+  762|       |#define EMP_WRAP_ARG_TRIPLES_3(W, A,B,C) W(A, B, C)
+  763|       |#define EMP_WRAP_ARG_TRIPLES_6(W, A,B,C, ...) W(A,B,C), EMP_WRAP_ARG_TRIPLES_3(W, __VA_ARGS__)
+  764|       |#define EMP_WRAP_ARG_TRIPLES_9(W, A,B,C, ...) W(A,B,C), EMP_WRAP_ARG_TRIPLES_6(W, __VA_ARGS__)
+  765|       |#define EMP_WRAP_ARG_TRIPLES_12(W, A,B,C, ...) W(A,B,C), EMP_WRAP_ARG_TRIPLES_9(W, __VA_ARGS__)
+  766|       |/// @endcond
+  767|       |
+  768|       |/// Reverse the order of arguments passed in.
+  769|       |#define EMP_REVERSE_ARGS(...) EMP_ASSEMBLE_MACRO(EMP_REVERSE_ARGS_, __VA_ARGS__)
+  770|       |/// @cond MACROS
+  771|       |#define EMP_REVERSE_ARGS_1(A) A
+  772|       |#define EMP_REVERSE_ARGS_2(A, ...) EMP_REVERSE_ARGS_1(__VA_ARGS__), A
+  773|       |#define EMP_REVERSE_ARGS_3(A, ...) EMP_REVERSE_ARGS_2(__VA_ARGS__), A
+  774|       |#define EMP_REVERSE_ARGS_4(A, ...) EMP_REVERSE_ARGS_3(__VA_ARGS__), A
+  775|       |#define EMP_REVERSE_ARGS_5(A, ...) EMP_REVERSE_ARGS_4(__VA_ARGS__), A
+  776|       |#define EMP_REVERSE_ARGS_6(A, ...) EMP_REVERSE_ARGS_5(__VA_ARGS__), A
+  777|       |#define EMP_REVERSE_ARGS_7(A, ...) EMP_REVERSE_ARGS_6(__VA_ARGS__), A
+  778|       |#define EMP_REVERSE_ARGS_8(A, ...) EMP_REVERSE_ARGS_7(__VA_ARGS__), A
+  779|       |#define EMP_REVERSE_ARGS_9(A, ...) EMP_REVERSE_ARGS_8(__VA_ARGS__), A
+  780|       |#define EMP_REVERSE_ARGS_10(A, ...) EMP_REVERSE_ARGS_9(__VA_ARGS__), A
+  781|       |#define EMP_REVERSE_ARGS_11(A, ...) EMP_REVERSE_ARGS_10(__VA_ARGS__), A
+  782|       |#define EMP_REVERSE_ARGS_12(A, ...) EMP_REVERSE_ARGS_11(__VA_ARGS__), A
+  783|       |#define EMP_REVERSE_ARGS_13(A, ...) EMP_REVERSE_ARGS_12(__VA_ARGS__), A
+  784|       |#define EMP_REVERSE_ARGS_14(A, ...) EMP_REVERSE_ARGS_13(__VA_ARGS__), A
+  785|       |#define EMP_REVERSE_ARGS_15(A, ...) EMP_REVERSE_ARGS_14(__VA_ARGS__), A
+  786|       |#define EMP_REVERSE_ARGS_16(A, ...) EMP_REVERSE_ARGS_15(__VA_ARGS__), A
+  787|       |#define EMP_REVERSE_ARGS_17(A, ...) EMP_REVERSE_ARGS_16(__VA_ARGS__), A
+  788|       |#define EMP_REVERSE_ARGS_18(A, ...) EMP_REVERSE_ARGS_17(__VA_ARGS__), A
+  789|       |#define EMP_REVERSE_ARGS_19(A, ...) EMP_REVERSE_ARGS_18(__VA_ARGS__), A
+  790|       |#define EMP_REVERSE_ARGS_20(A, ...) EMP_REVERSE_ARGS_19(__VA_ARGS__), A
+  791|       |#define EMP_REVERSE_ARGS_21(A, ...) EMP_REVERSE_ARGS_20(__VA_ARGS__), A
+  792|       |#define EMP_REVERSE_ARGS_22(A, ...) EMP_REVERSE_ARGS_21(__VA_ARGS__), A
+  793|       |#define EMP_REVERSE_ARGS_23(A, ...) EMP_REVERSE_ARGS_22(__VA_ARGS__), A
+  794|       |#define EMP_REVERSE_ARGS_24(A, ...) EMP_REVERSE_ARGS_23(__VA_ARGS__), A
+  795|       |#define EMP_REVERSE_ARGS_25(A, ...) EMP_REVERSE_ARGS_24(__VA_ARGS__), A
+  796|       |#define EMP_REVERSE_ARGS_26(A, ...) EMP_REVERSE_ARGS_25(__VA_ARGS__), A
+  797|       |#define EMP_REVERSE_ARGS_27(A, ...) EMP_REVERSE_ARGS_26(__VA_ARGS__), A
+  798|       |#define EMP_REVERSE_ARGS_28(A, ...) EMP_REVERSE_ARGS_27(__VA_ARGS__), A
+  799|       |#define EMP_REVERSE_ARGS_29(A, ...) EMP_REVERSE_ARGS_28(__VA_ARGS__), A
+  800|       |#define EMP_REVERSE_ARGS_30(A, ...) EMP_REVERSE_ARGS_29(__VA_ARGS__), A
+  801|       |#define EMP_REVERSE_ARGS_31(A, ...) EMP_REVERSE_ARGS_30(__VA_ARGS__), A
+  802|       |#define EMP_REVERSE_ARGS_32(A, ...) EMP_REVERSE_ARGS_31(__VA_ARGS__), A
+  803|       |#define EMP_REVERSE_ARGS_33(A, ...) EMP_REVERSE_ARGS_32(__VA_ARGS__), A
+  804|       |#define EMP_REVERSE_ARGS_34(A, ...) EMP_REVERSE_ARGS_33(__VA_ARGS__), A
+  805|       |#define EMP_REVERSE_ARGS_35(A, ...) EMP_REVERSE_ARGS_34(__VA_ARGS__), A
+  806|       |#define EMP_REVERSE_ARGS_36(A, ...) EMP_REVERSE_ARGS_35(__VA_ARGS__), A
+  807|       |#define EMP_REVERSE_ARGS_37(A, ...) EMP_REVERSE_ARGS_36(__VA_ARGS__), A
+  808|       |#define EMP_REVERSE_ARGS_38(A, ...) EMP_REVERSE_ARGS_37(__VA_ARGS__), A
+  809|       |#define EMP_REVERSE_ARGS_39(A, ...) EMP_REVERSE_ARGS_38(__VA_ARGS__), A
+  810|       |#define EMP_REVERSE_ARGS_40(A, ...) EMP_REVERSE_ARGS_39(__VA_ARGS__), A
+  811|       |#define EMP_REVERSE_ARGS_41(A, ...) EMP_REVERSE_ARGS_40(__VA_ARGS__), A
+  812|       |#define EMP_REVERSE_ARGS_42(A, ...) EMP_REVERSE_ARGS_41(__VA_ARGS__), A
+  813|       |#define EMP_REVERSE_ARGS_43(A, ...) EMP_REVERSE_ARGS_42(__VA_ARGS__), A
+  814|       |#define EMP_REVERSE_ARGS_44(A, ...) EMP_REVERSE_ARGS_43(__VA_ARGS__), A
+  815|       |#define EMP_REVERSE_ARGS_45(A, ...) EMP_REVERSE_ARGS_44(__VA_ARGS__), A
+  816|       |#define EMP_REVERSE_ARGS_46(A, ...) EMP_REVERSE_ARGS_45(__VA_ARGS__), A
+  817|       |#define EMP_REVERSE_ARGS_47(A, ...) EMP_REVERSE_ARGS_46(__VA_ARGS__), A
+  818|       |#define EMP_REVERSE_ARGS_48(A, ...) EMP_REVERSE_ARGS_47(__VA_ARGS__), A
+  819|       |#define EMP_REVERSE_ARGS_49(A, ...) EMP_REVERSE_ARGS_48(__VA_ARGS__), A
+  820|       |#define EMP_REVERSE_ARGS_50(A, ...) EMP_REVERSE_ARGS_49(__VA_ARGS__), A
+  821|       |#define EMP_REVERSE_ARGS_51(A, ...) EMP_REVERSE_ARGS_50(__VA_ARGS__), A
+  822|       |#define EMP_REVERSE_ARGS_52(A, ...) EMP_REVERSE_ARGS_51(__VA_ARGS__), A
+  823|       |#define EMP_REVERSE_ARGS_53(A, ...) EMP_REVERSE_ARGS_52(__VA_ARGS__), A
+  824|       |#define EMP_REVERSE_ARGS_54(A, ...) EMP_REVERSE_ARGS_53(__VA_ARGS__), A
+  825|       |#define EMP_REVERSE_ARGS_55(A, ...) EMP_REVERSE_ARGS_54(__VA_ARGS__), A
+  826|       |#define EMP_REVERSE_ARGS_56(A, ...) EMP_REVERSE_ARGS_55(__VA_ARGS__), A
+  827|       |#define EMP_REVERSE_ARGS_57(A, ...) EMP_REVERSE_ARGS_56(__VA_ARGS__), A
+  828|       |#define EMP_REVERSE_ARGS_58(A, ...) EMP_REVERSE_ARGS_57(__VA_ARGS__), A
+  829|       |#define EMP_REVERSE_ARGS_59(A, ...) EMP_REVERSE_ARGS_58(__VA_ARGS__), A
+  830|       |#define EMP_REVERSE_ARGS_60(A, ...) EMP_REVERSE_ARGS_59(__VA_ARGS__), A
+  831|       |#define EMP_REVERSE_ARGS_61(A, ...) EMP_REVERSE_ARGS_60(__VA_ARGS__), A
+  832|       |#define EMP_REVERSE_ARGS_62(A, ...) EMP_REVERSE_ARGS_61(__VA_ARGS__), A
+  833|       |#define EMP_REVERSE_ARGS_63(A, ...) EMP_REVERSE_ARGS_62(__VA_ARGS__), A
+  834|       |#define EMP_REVERSE_ARGS_64(A, ...) EMP_REVERSE_ARGS_63(__VA_ARGS__), A
+  835|       |/// @endcond
+  836|       |
+  837|       |#define EMP_TYPES_TO_ARGS(...) EMP_ASSEMBLE_MACRO(EMP_TYPES_TO_ARGS_, EMP_REVERSE_ARGS(__VA_ARGS__))
+  838|       |/// @cond MACROS
+  839|       |#define EMP_TYPES_TO_ARGS_1(A) A arg1
+  840|       |#define EMP_TYPES_TO_ARGS_2(A, ...) EMP_TYPES_TO_ARGS_1(__VA_ARGS__), A arg2
+  841|       |#define EMP_TYPES_TO_ARGS_3(A, ...) EMP_TYPES_TO_ARGS_2(__VA_ARGS__), A arg3
+  842|       |#define EMP_TYPES_TO_ARGS_4(A, ...) EMP_TYPES_TO_ARGS_3(__VA_ARGS__), A arg4
+  843|       |#define EMP_TYPES_TO_ARGS_5(A, ...) EMP_TYPES_TO_ARGS_4(__VA_ARGS__), A arg5
+  844|       |#define EMP_TYPES_TO_ARGS_6(A, ...) EMP_TYPES_TO_ARGS_5(__VA_ARGS__), A arg6
+  845|       |#define EMP_TYPES_TO_ARGS_7(A, ...) EMP_TYPES_TO_ARGS_6(__VA_ARGS__), A arg7
+  846|       |#define EMP_TYPES_TO_ARGS_8(A, ...) EMP_TYPES_TO_ARGS_7(__VA_ARGS__), A arg8
+  847|       |#define EMP_TYPES_TO_ARGS_9(A, ...) EMP_TYPES_TO_ARGS_8(__VA_ARGS__), A arg9
+  848|       |#define EMP_TYPES_TO_ARGS_10(A, ...) EMP_TYPES_TO_ARGS_9(__VA_ARGS__), A arg10
+  849|       |#define EMP_TYPES_TO_ARGS_11(A, ...) EMP_TYPES_TO_ARGS_10(__VA_ARGS__), A arg11
+  850|       |#define EMP_TYPES_TO_ARGS_12(A, ...) EMP_TYPES_TO_ARGS_11(__VA_ARGS__), A arg12
+  851|       |#define EMP_TYPES_TO_ARGS_13(A, ...) EMP_TYPES_TO_ARGS_12(__VA_ARGS__), A arg13
+  852|       |#define EMP_TYPES_TO_ARGS_14(A, ...) EMP_TYPES_TO_ARGS_13(__VA_ARGS__), A arg14
+  853|       |#define EMP_TYPES_TO_ARGS_15(A, ...) EMP_TYPES_TO_ARGS_14(__VA_ARGS__), A arg15
+  854|       |#define EMP_TYPES_TO_ARGS_16(A, ...) EMP_TYPES_TO_ARGS_15(__VA_ARGS__), A arg16
+  855|       |#define EMP_TYPES_TO_ARGS_17(A, ...) EMP_TYPES_TO_ARGS_16(__VA_ARGS__), A arg17
+  856|       |#define EMP_TYPES_TO_ARGS_18(A, ...) EMP_TYPES_TO_ARGS_17(__VA_ARGS__), A arg18
+  857|       |#define EMP_TYPES_TO_ARGS_19(A, ...) EMP_TYPES_TO_ARGS_18(__VA_ARGS__), A arg19
+  858|       |#define EMP_TYPES_TO_ARGS_20(A, ...) EMP_TYPES_TO_ARGS_19(__VA_ARGS__), A arg20
+  859|       |#define EMP_TYPES_TO_ARGS_21(A, ...) EMP_TYPES_TO_ARGS_20(__VA_ARGS__), A arg21
+  860|       |#define EMP_TYPES_TO_ARGS_22(A, ...) EMP_TYPES_TO_ARGS_21(__VA_ARGS__), A arg22
+  861|       |#define EMP_TYPES_TO_ARGS_23(A, ...) EMP_TYPES_TO_ARGS_22(__VA_ARGS__), A arg23
+  862|       |#define EMP_TYPES_TO_ARGS_24(A, ...) EMP_TYPES_TO_ARGS_23(__VA_ARGS__), A arg24
+  863|       |#define EMP_TYPES_TO_ARGS_25(A, ...) EMP_TYPES_TO_ARGS_24(__VA_ARGS__), A arg25
+  864|       |#define EMP_TYPES_TO_ARGS_26(A, ...) EMP_TYPES_TO_ARGS_25(__VA_ARGS__), A arg26
+  865|       |#define EMP_TYPES_TO_ARGS_27(A, ...) EMP_TYPES_TO_ARGS_26(__VA_ARGS__), A arg27
+  866|       |#define EMP_TYPES_TO_ARGS_28(A, ...) EMP_TYPES_TO_ARGS_27(__VA_ARGS__), A arg28
+  867|       |#define EMP_TYPES_TO_ARGS_29(A, ...) EMP_TYPES_TO_ARGS_28(__VA_ARGS__), A arg29
+  868|       |#define EMP_TYPES_TO_ARGS_30(A, ...) EMP_TYPES_TO_ARGS_29(__VA_ARGS__), A arg30
+  869|       |#define EMP_TYPES_TO_ARGS_31(A, ...) EMP_TYPES_TO_ARGS_30(__VA_ARGS__), A arg31
+  870|       |#define EMP_TYPES_TO_ARGS_32(A, ...) EMP_TYPES_TO_ARGS_31(__VA_ARGS__), A arg32
+  871|       |#define EMP_TYPES_TO_ARGS_33(A, ...) EMP_TYPES_TO_ARGS_32(__VA_ARGS__), A arg33
+  872|       |#define EMP_TYPES_TO_ARGS_34(A, ...) EMP_TYPES_TO_ARGS_33(__VA_ARGS__), A arg34
+  873|       |#define EMP_TYPES_TO_ARGS_35(A, ...) EMP_TYPES_TO_ARGS_34(__VA_ARGS__), A arg35
+  874|       |#define EMP_TYPES_TO_ARGS_36(A, ...) EMP_TYPES_TO_ARGS_35(__VA_ARGS__), A arg36
+  875|       |#define EMP_TYPES_TO_ARGS_37(A, ...) EMP_TYPES_TO_ARGS_36(__VA_ARGS__), A arg37
+  876|       |#define EMP_TYPES_TO_ARGS_38(A, ...) EMP_TYPES_TO_ARGS_37(__VA_ARGS__), A arg38
+  877|       |#define EMP_TYPES_TO_ARGS_39(A, ...) EMP_TYPES_TO_ARGS_38(__VA_ARGS__), A arg39
+  878|       |#define EMP_TYPES_TO_ARGS_40(A, ...) EMP_TYPES_TO_ARGS_39(__VA_ARGS__), A arg40
+  879|       |#define EMP_TYPES_TO_ARGS_41(A, ...) EMP_TYPES_TO_ARGS_40(__VA_ARGS__), A arg41
+  880|       |#define EMP_TYPES_TO_ARGS_42(A, ...) EMP_TYPES_TO_ARGS_41(__VA_ARGS__), A arg42
+  881|       |#define EMP_TYPES_TO_ARGS_43(A, ...) EMP_TYPES_TO_ARGS_42(__VA_ARGS__), A arg43
+  882|       |#define EMP_TYPES_TO_ARGS_44(A, ...) EMP_TYPES_TO_ARGS_43(__VA_ARGS__), A arg44
+  883|       |#define EMP_TYPES_TO_ARGS_45(A, ...) EMP_TYPES_TO_ARGS_44(__VA_ARGS__), A arg45
+  884|       |#define EMP_TYPES_TO_ARGS_46(A, ...) EMP_TYPES_TO_ARGS_45(__VA_ARGS__), A arg46
+  885|       |#define EMP_TYPES_TO_ARGS_47(A, ...) EMP_TYPES_TO_ARGS_46(__VA_ARGS__), A arg47
+  886|       |#define EMP_TYPES_TO_ARGS_48(A, ...) EMP_TYPES_TO_ARGS_47(__VA_ARGS__), A arg48
+  887|       |#define EMP_TYPES_TO_ARGS_49(A, ...) EMP_TYPES_TO_ARGS_48(__VA_ARGS__), A arg49
+  888|       |#define EMP_TYPES_TO_ARGS_50(A, ...) EMP_TYPES_TO_ARGS_49(__VA_ARGS__), A arg50
+  889|       |#define EMP_TYPES_TO_ARGS_51(A, ...) EMP_TYPES_TO_ARGS_50(__VA_ARGS__), A arg51
+  890|       |#define EMP_TYPES_TO_ARGS_52(A, ...) EMP_TYPES_TO_ARGS_51(__VA_ARGS__), A arg52
+  891|       |#define EMP_TYPES_TO_ARGS_53(A, ...) EMP_TYPES_TO_ARGS_52(__VA_ARGS__), A arg53
+  892|       |#define EMP_TYPES_TO_ARGS_54(A, ...) EMP_TYPES_TO_ARGS_53(__VA_ARGS__), A arg54
+  893|       |#define EMP_TYPES_TO_ARGS_55(A, ...) EMP_TYPES_TO_ARGS_54(__VA_ARGS__), A arg55
+  894|       |#define EMP_TYPES_TO_ARGS_56(A, ...) EMP_TYPES_TO_ARGS_55(__VA_ARGS__), A arg56
+  895|       |#define EMP_TYPES_TO_ARGS_57(A, ...) EMP_TYPES_TO_ARGS_56(__VA_ARGS__), A arg57
+  896|       |#define EMP_TYPES_TO_ARGS_58(A, ...) EMP_TYPES_TO_ARGS_57(__VA_ARGS__), A arg58
+  897|       |#define EMP_TYPES_TO_ARGS_59(A, ...) EMP_TYPES_TO_ARGS_58(__VA_ARGS__), A arg59
+  898|       |#define EMP_TYPES_TO_ARGS_60(A, ...) EMP_TYPES_TO_ARGS_59(__VA_ARGS__), A arg60
+  899|       |#define EMP_TYPES_TO_ARGS_61(A, ...) EMP_TYPES_TO_ARGS_60(__VA_ARGS__), A arg61
+  900|       |#define EMP_TYPES_TO_ARGS_62(A, ...) EMP_TYPES_TO_ARGS_61(__VA_ARGS__), A arg62
+  901|       |#define EMP_TYPES_TO_ARGS_63(A, ...) EMP_TYPES_TO_ARGS_62(__VA_ARGS__), A arg63
+  902|       |/// @endcond
+  903|       |
+  904|       |/// EMP_ASSEMBLE_MACRO takes in a prefix and set of arguments and appends the size of the
+  905|       |/// number of arguments to the prefix, and passes in all of the arguments.
+  906|       |/// Setup a generic method of calling a specific version of a macro based on argument count.
+  907|       |/// If some of the args need to be passed to each version, specify number in macro call.
+  908|       |#define EMP_ASSEMBLE_MACRO(BASE, ...)                                   \
+  909|       |  EMP_ASSEMBLE_IMPL(BASE, EMP_COUNT_ARGS(__VA_ARGS__), __VA_ARGS__)
+  910|       |
+  911|       |///  EMP_ASSEMBLE_MACRO_1ARG assumes the first argument after the prefix should not count
+  912|       |///  toward the size, but passed in anyway. (*_?ARG  works for more arguments up to 10).
+  913|       |#define EMP_ASSEMBLE_MACRO_1ARG(BASE, A, ...)                           \
+  914|       |  EMP_ASSEMBLE_IMPL(BASE, EMP_COUNT_ARGS(__VA_ARGS__), A, __VA_ARGS__)
+  915|       |
+  916|       |/// @cond MACROS
+  917|       |#define EMP_ASSEMBLE_MACRO_2ARG(BASE, A, B, ...)                         \
+  918|       |  EMP_ASSEMBLE_IMPL(BASE, EMP_COUNT_ARGS(__VA_ARGS__), A, B, __VA_ARGS__)
+  919|       |
+  920|       |#define EMP_ASSEMBLE_MACRO_3ARG(BASE, A, B, C, ...)                      \
+  921|       |  EMP_ASSEMBLE_IMPL(BASE, EMP_COUNT_ARGS(__VA_ARGS__), A, B, C, __VA_ARGS__)
+  922|       |
+  923|       |#define EMP_ASSEMBLE_MACRO_4ARG(BASE, A, B, C, D, ...)                   \
+  924|       |  EMP_ASSEMBLE_IMPL(BASE, EMP_COUNT_ARGS(__VA_ARGS__), A, B, C, D, __VA_ARGS__)
+  925|       |
+  926|       |#define EMP_ASSEMBLE_MACRO_5ARG(BASE, A, B, C, D, E, ...)                \
+  927|       |  EMP_ASSEMBLE_IMPL(BASE, EMP_COUNT_ARGS(__VA_ARGS__), A, B, C, D, E, __VA_ARGS__)
+  928|       |
+  929|       |#define EMP_ASSEMBLE_MACRO_6ARG(BASE, A, B, C, D, E, F, ...)             \
+  930|       |  EMP_ASSEMBLE_IMPL(BASE, EMP_COUNT_ARGS(__VA_ARGS__), A, B, C, D, E, F, __VA_ARGS__)
+  931|       |
+  932|       |#define EMP_ASSEMBLE_MACRO_7ARG(BASE, A, B, C, D, E, F, G, ...)          \
+  933|       |  EMP_ASSEMBLE_IMPL(BASE, EMP_COUNT_ARGS(__VA_ARGS__), A, B, C, D, E, F, G, __VA_ARGS__)
+  934|       |
+  935|       |#define EMP_ASSEMBLE_MACRO_8ARG(BASE, A, B, C, D, E, F, G, H, ...)       \
+  936|       |  EMP_ASSEMBLE_IMPL(BASE, EMP_COUNT_ARGS(__VA_ARGS__), A, B, C, D, E, F, G, H, __VA_ARGS__)
+  937|       |
+  938|       |#define EMP_ASSEMBLE_IMPL(BASE, ARG_COUNT, ...) EMP_ASSEMBLE_MERGE(BASE, ARG_COUNT) (__VA_ARGS__)
+  939|       |#define EMP_ASSEMBLE_MERGE(A, B) A ## B
+  940|       |/// @endcond
+  941|       |
+  942|       |#endif
+  943|       |
+
+/home/emily/repos/Empirical_MoreTests/tests/test_assert.cc:
+    1|       |//  This file is part of Empirical, https://github.com/devosoft/Empirical
+    2|       |//  Copyright (C) Michigan State University, 2016-2017.
+    3|       |//  Released under the MIT Software license; see doc/LICENSE
+    4|       |//
+    5|       |//  Tests for files in the base/ folder.
+    6|       |
+    7|       |
+    8|       |#define CATCH_CONFIG_MAIN
+    9|       |#undef NDEBUG
+   10|       |#define TDEBUG 1
+   11|       |
+   12|       |#include "base/assert.h"
+   13|       |#include "../third-party/Catch/single_include/catch.hpp"
+   14|       |
+   15|       |TEST_CASE("Test assert", "[tools]")
+   16|      1|{
+   17|      1|  // Asserts are tricky to test.  Here are a bunch that should PASS.
+   18|      1|  emp_assert(true);
+   19|      1|  REQUIRE(emp::assert_last_fail == 0);
+   20|      1|
+   21|      1|  emp_assert(100);
+   22|      1|  REQUIRE(emp::assert_last_fail == 0);
+   23|      1|
+   24|      1|  emp_assert(23 < 24);
+   25|      1|  REQUIRE(emp::assert_last_fail == 0);
+   26|      1|
+   27|      1|  emp_assert((14 < 13)?0:1);
+   28|      1|  REQUIRE(emp::assert_last_fail == 0);
+   29|      1|
+   30|      1|
+   31|      1|  // Now here are some that should FAIL
+   32|      1|/*  emp_assert(false);
+   33|      1|  EMP_TEST_VALUE(emp::assert_last_fail, "1");
+   34|      1|  EMP_TEST_VALUE(emp::assert_fail_info.filename, "assert.cc");
+   35|      1|  EMP_TEST_VALUE(emp::assert_fail_info.line_num, "31");
+   36|      1|  EMP_TEST_VALUE(emp::assert_fail_info.error, "false");
+   37|      1|*/
+   38|      1|  // if (emp::assert_fail_info.filename != "assert.cc") std::cerr << "Failed case 6!" << std::endl;
+   39|      1|  // if (emp::assert_fail_info.line_num != __LINE__ - 3) std::cerr << "Failed case 7!" << std::endl;
+   40|      1|  // if (emp::assert_fail_info.error != "false") std::cerr << "Failed case 8!" << std::endl;
+   41|      1|}
+

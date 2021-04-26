@@ -1,0 +1,19 @@
+/home/travis/build/emilydolson/force-cover/testing/observed_example.cc:
+    1|       |template <typename T>
+    2|       |class A {
+    3|       |  T b;
+    4|       |
+    5|       |  void E() {/*_FORCE_COVER_START_*/
+    6|      0|    b++;
+    7|       |  }/*_FORCE_COVER_END_*/
+    8|       |};
+    9|       |
+   10|       |template <typename T>
+   11|       |void C(T d) {/*_FORCE_COVER_START_*/
+   12|      0|  d += 5;
+   13|       |}/*_FORCE_COVER_END_*/
+   14|       |
+   15|      1|int main() {
+   16|      1|  int a = 0;
+   17|      1|}
+

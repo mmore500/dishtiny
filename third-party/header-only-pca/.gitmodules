@@ -1,0 +1,13 @@
+[submodule "third-party/Catch"]
+	path = third-party/Catch
+	url = https://github.com/philsquared/Catch.git
+	branch = v2.x
+[submodule "third-party/force-cover"]
+	path = third-party/force-cover
+	url = https://github.com/emilydolson/force-cover.git
+[submodule "third-party/emsdk"]
+	path = third-party/emsdk
+	url = https://github.com/emscripten-core/emsdk.git
+[submodule "third-party/linalg"]
+	path = third-party/linalg
+	url = https://github.com/rodsan0/linalg.git

@@ -1,0 +1,195 @@
+#!/bin/bash -login
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time=4:00:00
+#SBATCH --job-name a=slurm_stoker+num_jobs={{ num_jobs }}+paylen={{ payload|length }}+title={{ title }}
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/scratch/%u/slurmlogs/a=slurm_stoker+job=%j+ext.log"
+#SBATCH --mem=4G
+#SBATCH --ntasks 1
+#SBATCH --cpus-per-task 1
+#SBATCH --mail-type=FAIL
+# No --mail-user, the default value is the submitting user
+#SBATCH --exclude=csn-002,amr-250
+# Send interrupt when within 5 minutes of end time.
+#SBATCH --signal=SIGINT@300
+# Job may be requeued after node failure.
+#SBATCH --requeue
+
+################################################################################
+echo
+echo "running slurm_stoker.slurm.sh"
+echo "-----------------------------"
+################################################################################
+
+# print message on exit (for debugging)
+trap 'echo exiting slurm_stoker.slurm.sh' EXIT
+
+# fail on error
+set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
+
+
+# set up and jump into temporary work directory
+cd "$(mktemp -d)"
+pwd
+
+# curl repro_runner.sh script into to a temporary file
+REPRO_RUNNER="$(mktemp)"
+for retry in {1..20}; do
+  curl \
+    -o "${REPRO_RUNNER}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh" \
+  && echo "  repro_runner curl success" && break \
+  || (echo "retrying repro_runner curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "repro_runner curl fail" && exit 123123; fi
+done
+chmod +x "${REPRO_RUNNER}"
+
+################################################################################
+echo
+echo "Run Job with repro_runner.sh"
+echo "--------------------------------"
+################################################################################
+
+"${REPRO_RUNNER}" \
+  -p "{{ bucket }}" -u mmore500 -s dishtiny \
+  --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
+  << 'REPRO_RUNNER_HEREDOC_EOF'
+
+# fail on error
+set -e
+
+################################################################################
+echo
+echo "running slurm_stoker.slurm.sh"
+echo "-----------------------------"
+################################################################################
+
+################################################################################
+echo
+echo "Initialize and Log Config"
+echo "-------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# load secrets into environment variables, if available
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
+
+echo "container_tag {{ container_tag }}"
+echo "repo_sha {{ repo_sha }}"
+echo "num_jobs {{ num_jobs }}"
+echo "payload length {{ payload|length }}"
+echo "title {{ title }}"
+
+################################################################################
+echo
+echo "Extract payload of slurm scripts"
+echo "--------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# adapted from https://unix.stackexchange.com/a/389007
+uudecode << "PAYLOAD_HEREDOC_CLOSE" | gunzip | tar -vxpf -
+{{ payload }}
+PAYLOAD_HEREDOC_CLOSE
+
+ls
+
+################################################################################
+echo
+echo "Submit jobs into available slots"
+echo "--------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+pwd
+echo "$(ls *.slurm.sh | wc -l) jobs to submit"
+
+host_squeue_url="https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_squeue.sh"
+echo "host_squeue_url ${host_squeue_url}"
+host_squeue_script="$(mktemp)"
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "${host_squeue_url}" > "${host_squeue_script}"
+chmod +x "${host_squeue_script}"
+
+host_sbatch_url="https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_sbatch.sh"
+echo "host_sbatch_url ${host_sbatch_url}"
+host_sbatch_script="$(mktemp)"
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "${host_sbatch_url}" > "${host_sbatch_script}"
+chmod +x "${host_sbatch_script}"
+
+for JOB_SCRIPT in *.slurm.sh; do
+
+  echo "JOB_SCRIPT $(( COUNTER++ )) ${JOB_SCRIPT}"
+
+  # this will count one too many slots occupied, but that is okay
+  OCCUPIED_SLOTS=$( \
+    "${host_squeue_script}" -u "\$(whoami)" | wc -l \
+  )
+  AVAILABLE_SLOTS=600
+  if (( OCCUPIED_SLOTS > AVAILABLE_SLOTS )); then
+    echo "OCCUPIED_SLOTS ${OCCUPIED_SLOTS}"
+    echo "all ${AVAILABLE_SLOTS} AVAILABLE_SLOTS occupied"
+    echo "breaking out of job submission loop"
+    echo "$(ls *.slurm.sh | wc -l) jobs left to submit"
+    echo "most recent exit status $?"
+    break
+  fi
+
+  echo "OCCUPIED_SLOTS ${OCCUPIED_SLOTS}"
+
+  "${host_sbatch_script}" "${JOB_SCRIPT}" \
+    && rm -f "${JOB_SCRIPT}" \
+    && echo "${JOB_SCRIPT} submitted"
+
+  # break out of loop after three hours job time
+  (( SECONDS > 10800 )) && break || :
+
+done &
+
+# not sure why, but the script was prematurely exiting at break statement above
+# forking the for loop and waiting on it seems to fix the issue
+wait
+
+################################################################################
+echo
+echo "and instantiate slurm stoker job template"
+echo "-------------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+
+# if there are remaining jobs
+if ls *.slurm.sh 1> /dev/null 2>&1; then
+  echo "$(ls *.slurm.sh | wc -l) jobs remain"
+else
+  echo "no remaining jobs, exiting SUCCESS"
+  exit 0
+fi
+
+host_kickoff_url="https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh"
+echo "host_kickoff_url ${host_kickoff_url}"
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "${host_kickoff_url}" \
+| bash -s "{{ bucket }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ title }}"
+
+################################################################################
+echo
+echo "Done! (SUCCESS)"
+echo "---------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed"
+
+REPRO_RUNNER_HEREDOC_EOF

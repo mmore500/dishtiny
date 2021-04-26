@@ -1,0 +1,6 @@
+codecov:
+  token: 358075b0-4263-46c8-bd98-04ea18aed06a
+
+ignore:
+  - "include/uitsl/routine_functors.hpp"
+  - "include/uitsl/audited_routines.hpp"

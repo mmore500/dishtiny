@@ -1,0 +1,60 @@
+DISH_MPICXX ?= mpicxx.mpich
+DISH_MPIEXEC ?= mpiexec.mpich
+
+FLAGS = -std=c++17 -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -g -pipe -pthread -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/
+
+default: test
+
+test-%: %.cpp $(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp
+	$(DISH_MPICXX) $(FLAGS) $< -lmetis -lz -lcurl -lsfml-graphics -o $@.out
+	# execute test
+	$(DISH_MPIEXEC) -n 1 ./$@.out
+
+cov-%: %.cpp $(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp
+	sed "s/g++/mpicxx.openmpi/g" "/usr/bin/h5c++" > "h5c++" && chmod +x "h5c++"
+	export OMPI_CXX=clang++; ./h5c++ $(FLAGS) $< -lmetis -lz -lcurl -lsfml-graphics -o $@.out
+	#echo "running $@.out"
+	# execute test
+	$(DISH_MPIEXEC) -n 1 ./$@.out
+	llvm-profdata merge default.profraw -o default.profdata
+	llvm-cov show ./$@.out -instr-profile=default.profdata > coverage_$@.txt
+	python $(TO_ROOT)/third-party/force-cover/fix_coverage.py coverage_$@.txt
+	rm "h5c++"
+
+# Test in debug mode without pointer tracker
+test: $(addprefix test-, $(TARGET_NAMES))
+	rm -rf test*.out
+
+# Test optimized version without debug features
+opt: FLAGS := -std=c++17 -pipe -pthread -DNDEBUG -O3 -ffast-math -flto -march=native -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/
+opt: $(addprefix test-, $(TARGET_NAMES))
+	rm -rf test*.out
+
+# Test in debug mode with pointer tracking
+fulldebug: FLAGS := -std=c++17 -pipe -pthread -g -Wall -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -pedantic -DEMP_TRACK_MEM -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -ftemplate-backtrace-limit=0 # -Wmisleading-indentation
+fulldebug: $(addprefix test-, $(TARGET_NAMES))
+	rm -rf test*.out
+
+cranky: FLAGS := -std=c++17 -pipe -pthread -g -Wall -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -pedantic -DEMP_TRACK_MEM -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -Wconversion -Weffc++
+cranky: $(addprefix test-, $(TARGET_NAMES))
+	rm -rf test*.out
+
+$(TO_ROOT)/coverage_include:
+	./$(TO_ROOT)/tests/convert_for_tests.sh
+
+$(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp:
+	git submodule init
+	git submodule update
+
+coverage: FLAGS := -std=c++17 -pthread -g -Wall -Wno-unused-function -I$(TO_ROOT)/coverage_include/ -I$(TO_ROOT)/third-party/ -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -ftemplate-backtrace-limit=0 -fprofile-instr-generate -fcoverage-mapping -fno-inline -fno-elide-constructors -O0
+coverage: $(TO_ROOT)/coverage_include $(addprefix cov-, $(TARGET_NAMES))
+
+clean:
+	rm -f *.out
+	rm -f *.o
+	rm -f *.gcda
+	rm -f *.gcno
+	rm -f *.info
+	rm -f *.gcov
+	rm -f ./Coverage*
+	rm -rf ./temp

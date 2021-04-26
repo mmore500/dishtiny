@@ -1,0 +1,13 @@
+language: cpp
+compiler: clang++
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-trusty-5.0
+    packages:
+      - clang-5.0
+      - libclang-5.0-dev
+      
+script: 
+  - make
+  - ./force_cover examples/example.cc --

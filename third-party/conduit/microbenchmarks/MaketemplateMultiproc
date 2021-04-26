@@ -1,0 +1,13 @@
+include $(TO_ROOT)/microbenchmarks/MaketemplateRunning
+
+bench-%: %.cpp
+	$(UIT_MPICXX) $(FLAGS) $< -lbenchmark -lmetis -lpthread -o $@.out
+	# execute bench
+	let i=1; \
+	test -z "$$SLURM_NTASKS" && SLURM_NTASKS=$$(nproc); \
+	while :; do \
+		let n=$$((2**$$i)); \
+		test $$n -gt $$SLURM_NTASKS && break; \
+		$(UIT_MPIEXEC) --bind-to none $$($(UIT_MPIEXEC) --version | grep -q "OpenRTE" && echo "--oversubscribe") -n $$n ./$@.out --benchmark_counters_tabular=true --benchmark_format=json --benchmark_out="impl=$*+procs=$$n+ext=.json" | $(TO_ROOT)/microbenchmarks/script/headtail.sh; \
+		let i++; \
+	done

@@ -1,0 +1,23 @@
+include $(TO_ROOT)/tests/MaketemplateRunning
+
+test-%: %.cpp
+	echo "UIT_MPICXX" $(UIT_MPICXX)
+	echo "UIT_MPIEXEC" $(UIT_MPIEXEC)
+	$(UIT_MPICXX) $(FLAGS) $< -lbenchmark -lmetis -lpthread -lstdc++fs -lz -o $@.out
+	# execute test
+	for n in $$(seq 2 8); do \
+		$(UIT_MPIEXEC) -n 1 ./$@.out --num_threads $$n || exit 1; \
+	done
+
+cov-%: %.cpp
+	export OMPI_CXX=clang++ && $(UIT_MPICXX) $(FLAGS) $< -lbenchmark -lmetis -lpthread -lstdc++fs -lz -o $@.out
+	# execute test
+	echo "UIT_MPICXX" $(UIT_MPICXX)
+	echo "UIT_MPIEXEC" $(UIT_MPIEXEC)
+	# see https://clang.llvm.org/docs/UsersManual.html#profiling-with-instrumentation
+	for n in $$(seq 2 3); do \
+		$(UIT_MPIEXEC) -n 1 ./$@.out --num_threads $$n || exit 1; \
+	done
+	llvm-profdata merge *.profraw -o default.profdata
+	llvm-cov show ./$@.out -instr-profile=default.profdata > coverage_$@.txt
+	python $(TO_ROOT)/third-party/force-cover/fix_coverage.py coverage_$@.txt
