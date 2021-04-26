@@ -30,7 +30,7 @@ echo "--------------------------------------"
 shopt -s nullglob
 
 for notebook in "${script_dir}/"*.ipynb; do
-  jupyter nbconvert --clear-output --inplace "${notebook}"
+  jupyter nbconvert  --ClearOutputPreprocessor.enabled=True --clear-output --inplace "${notebook}"
 done
 
 shopt -u nullglob
