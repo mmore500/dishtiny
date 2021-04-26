@@ -176,7 +176,7 @@ jobs:
       - run: git init
       - uses: fregante/setup-git-user@v1
       - run: git commit --allow-empty -m "Initial commit"
-      - run: make -C /opt/dishtiny/ web
+      - run: make -C /opt/dishtiny/ web-deploy
       - run: make -C /opt/dishtiny/ badges
       - run: git clone https://github.com/mmore500/dishtiny.git -b web-archive deploy/
       - run: cp -r /opt/dishtiny/web/ deploy/master/
