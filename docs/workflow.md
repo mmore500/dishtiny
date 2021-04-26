@@ -297,7 +297,7 @@ source ~/.secrets.sh
 
 Existing data analysis uses Python scripting inside of Jupyter notebooks.
 Existing notebooks are stored inside of the `binder/` directory.
-You can boot them up in your web browser without any local install by visiting the project's [BinderHub page](https://mybinder.org/v2/gh/mmore500/dishtiny/HEAD?filepath=binder).
+You can boot them up in your web browser without any local install by visiting the project's [BinderHub page](https://mybinder.org/v2/gh/mmore500/dishtiny/binder?filepath=binder).
 
 You can host your Jupyter notebooks locally, too, if you prefer.
 If you `source ~/.secrets.sh` before launching `jupyter notebook` locally, [pandas](https://pandas.pydata.org/) will automagically be able to open load files directly from S3 URI's.

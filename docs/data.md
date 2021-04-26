@@ -79,7 +79,7 @@ If you have interesting ideas of hypotheses to test or further experiments to ru
 ### Hassle-free Pre-wrangled Data via Web GUI ::cowboy::
 
 We host a pre-configured Jupyter notebook for each of our consolidated datasets on <https://mybinder.org>.
-You can jump into them [here](https://mybinder.org/v2/gh/mmore500/dishtiny/HEAD?filepath=binder%2Findex.ipynb).
+You can jump into them [here](https://mybinder.org/v2/gh/mmore500/dishtiny/binder?filepath=binder%2Findex.ipynb).
 
 Right now, the binder environment is stocked with a few Python data analysis and visualization tools.
 Binder also has other scripting languages like R and Julia on tap, though!
