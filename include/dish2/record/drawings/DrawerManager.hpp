@@ -58,13 +58,8 @@ struct DrawerManager<FirstDrawer, SubsequentDrawers...> {
   {}
 
   void SaveToFileAsDrawing() {
-    const auto parent_thread_idx = dish2::thread_idx;
-    std::thread worker( [this, parent_thread_idx](){
-      dish2::thread_idx = parent_thread_idx;
-      first_drawer.SaveToFileAsDrawing();
-    } );
+    first_drawer.SaveToFileAsDrawing();
     subsequent_drawers.SaveToFileAsDrawing();
-    worker.join();
   }
 
   emp::vector<polymorphic_drawers_t>
