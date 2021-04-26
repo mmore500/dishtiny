@@ -38,7 +38,7 @@ echo "-------------------------"
 shopt -s nullglob
 
 for script in "${script_dir}/"*/clear_outplots.sh; do
-  "./${script}"
+  "${script}"
 done
 
 shopt -u nullglob

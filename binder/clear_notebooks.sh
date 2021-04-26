@@ -44,7 +44,7 @@ echo "-------------------------"
 shopt -s nullglob
 
 for script in "${script_dir}/"*/clear_notebooks.sh; do
-  "./${script}"
+  "${script}"
 done
 
 shopt -u nullglob
