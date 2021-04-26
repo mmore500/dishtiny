@@ -115,7 +115,7 @@ print(f'endeavor {endeavor}')
 print(f'stint {stint}')
 
 s3 = boto3.resource('s3')
-my_bucket = s3.Bucket(bucket)
+bucket_handle = s3.Bucket(bucket)
 
 ################################################################################
 print(                                                                         )

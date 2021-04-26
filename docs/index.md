@@ -11,6 +11,7 @@ data
 workflow
 development
 glossary
+publications
 api/library_root
 contributing
 code_of_conduct
