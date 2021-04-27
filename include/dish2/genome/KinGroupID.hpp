@@ -18,7 +18,7 @@ namespace dish2 {
 template<typename Spec>
 struct KinGroupID {
 
-  using buffer_t =  emp::array< size_t, Spec::NLEV >;
+  using buffer_t =  emp::array< uint64_t, Spec::NLEV >;
   buffer_t data;
   buffer_t ancestor_data;
 
@@ -48,7 +48,7 @@ struct KinGroupID {
       std::begin( data ),
       rep_lev,
       [](){
-        size_t res;
+        uint64_t res;
         sgpl::tlrand.Get().RandFill(
           reinterpret_cast<unsigned char*>( &res ),
           sizeof( res )
