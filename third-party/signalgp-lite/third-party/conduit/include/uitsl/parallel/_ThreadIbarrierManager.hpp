@@ -51,7 +51,11 @@ public:
     // race condition where multiple latches are appended is okay
     if (latches.empty()) latches.emplace_back(expected);
 
-    auto& position = thread_positions.GetWithDefault(std::begin(latches));
+    emp_assert(latches.size());
+
+    auto& position = thread_positions.HasEntry()
+      ? thread_positions.Get()
+      : thread_positions.GetWithDefault( std::begin(latches) );
     emp_assert(thread_positions.GetSize() <= expected);
 
     emp_assert(position != std::end(latches));

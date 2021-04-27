@@ -30,6 +30,16 @@ public:
     return map.at(thread_id);
   }
 
+  T& Get() {
+    const uitsl::thread_id_t thread_id{ uitsl::get_thread_id() };
+    return map.at(thread_id);
+  }
+
+  bool HasEntry() const {
+    const uitsl::thread_id_t thread_id{ uitsl::get_thread_id() };
+    return map.count(thread_id);
+  }
+
   size_t GetSize() const { return map.size(); }
 
   std::string ToString() {
