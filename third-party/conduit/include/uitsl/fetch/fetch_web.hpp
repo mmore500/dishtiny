@@ -25,7 +25,7 @@ inline std::filesystem::path fetch_web( const std::string& url ) {
   MAIN_THREAD_EM_ASM({
 
     // use cors proxy to allow cross-origin access in browser
-    var url = "https://cors-anywhere.herokuapp.com/" + UTF8ToString($0);
+    var url = "https://cors.bridged.cc/" + UTF8ToString($0);
     var bodypath = UTF8ToString($1);
     var headerpath = UTF8ToString($2);
 
