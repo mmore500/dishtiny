@@ -51,6 +51,11 @@ WINDOWS = False
 if os.name == 'nt' or (os.getenv('SYSTEMROOT') is not None and 'windows' in os.getenv('SYSTEMROOT').lower()) or (os.getenv('COMSPEC') is not None and 'windows' in os.getenv('COMSPEC').lower()):
   WINDOWS = True
 
+
+def errlog(msg):
+  print(msg, file=sys.stderr)
+
+
 MINGW = False
 MSYS = False
 if os.getenv('MSYSTEM'):
@@ -62,14 +67,14 @@ if os.getenv('MSYSTEM'):
     MINGW = True
   if os.getenv('MSYSTEM') != 'MSYS' and os.getenv('MSYSTEM') != 'MINGW64':
     # https://stackoverflow.com/questions/37460073/msys-vs-mingw-internal-environment-variables
-    print('Warning: MSYSTEM environment variable is present, and is set to "' + os.getenv('MSYSTEM') + '". This shell has not been tested with emsdk and may not work.')
+    errlog('Warning: MSYSTEM environment variable is present, and is set to "' + os.getenv('MSYSTEM') + '". This shell has not been tested with emsdk and may not work.')
 
 MACOS = False
 if platform.mac_ver()[0] != '':
   MACOS = True
 
 LINUX = False
-if not MACOS and (platform.system() == 'Linux' or os.name == 'posix'):
+if not MACOS and (platform.system() == 'Linux'):
   LINUX = True
 
 UNIX = (MACOS or LINUX)
@@ -107,8 +112,8 @@ elif machine.startswith('aarch64') or machine.lower().startswith('arm64'):
 elif platform.machine().startswith('arm'):
   ARCH = 'arm'
 else:
-  print("Warning: unknown machine architecture " + machine)
-  print()
+  errlog("Warning: unknown machine architecture " + machine)
+  errlog()
 
 # Don't saturate all cores to not steal the whole system, but be aggressive.
 CPU_CORES = int(os.environ.get('EMSDK_NUM_CORES', max(multiprocessing.cpu_count() - 1, 1)))
@@ -316,8 +321,8 @@ def win_set_environment_variable_direct(key, value, system=True):
     # 'Access is denied.'
     if e.args[0] == 5:
       exit_with_error('Error! Failed to set the environment variable \'' + key + '\'! Setting environment variables permanently requires administrator access. Please rerun this command with administrative privileges. This can be done for example by holding down the Ctrl and Shift keys while opening a command prompt in start menu.')
-    print('Failed to write environment variable ' + key + ':', file=sys.stderr)
-    print(str(e), file=sys.stderr)
+    errlog('Failed to write environment variable ' + key + ':')
+    errlog(str(e))
     win32api.RegCloseKey(folder)
     os.environ['PATH'] = prev_path
     return None
@@ -353,8 +358,8 @@ def win_get_environment_variable(key, system=True):
   except Exception as e:
     if e.args[0] != 2:
       # 'The system cannot find the file specified.'
-      print('Failed to read environment variable ' + key + ':', file=sys.stderr)
-      print(str(e), file=sys.stderr)
+      errlog('Failed to read environment variable ' + key + ':')
+      errlog(str(e))
     try:
       win32api.RegCloseKey(folder)
     except Exception:
@@ -405,16 +410,16 @@ def win_set_environment_variable(key, value, system=True):
     # Escape % signs so that we don't expand references to environment variables.
     value = value.replace('%', '^%')
     if len(value) >= 1024:
-      exit_with_error('ERROR! The new environment variable ' + key + ' is more than 1024 characters long! A value this long cannot be set via command line: please add the environment variable specified above to system environment manually via Control Panel.', file=sys.stderr)
+      exit_with_error('ERROR! The new environment variable ' + key + ' is more than 1024 characters long! A value this long cannot be set via command line: please add the environment variable specified above to system environment manually via Control Panel.')
     cmd = ['SETX', key, value]
     debug_print(str(cmd))
     retcode = subprocess.call(cmd, stdout=subprocess.PIPE)
     if retcode != 0:
-      print('ERROR! Failed to set environment variable ' + key + '=' + value + '. You may need to set it manually.', file=sys.stderr)
+      errlog('ERROR! Failed to set environment variable ' + key + '=' + value + '. You may need to set it manually.')
   except Exception as e:
-    print('ERROR! Failed to set environment variable ' + key + '=' + value + ':', file=sys.stderr)
-    print(str(e), file=sys.stderr)
-    print('You may need to set it manually.', file=sys.stderr)
+    errlog('ERROR! Failed to set environment variable ' + key + '=' + value + ':')
+    errlog(str(e))
+    errlog('You may need to set it manually.')
 
 
 def win_delete_environment_variable(key, system=True):
@@ -512,7 +517,7 @@ def fix_potentially_long_windows_pathname(pathname):
     return pathname
   # Test if emsdk calls fix_potentially_long_windows_pathname() with long relative paths (which is problematic)
   if not os.path.isabs(pathname) and len(pathname) > 200:
-    print('Warning: Seeing a relative path "' + pathname + '" which is dangerously long for being referenced as a short Windows path name. Refactor emsdk to be able to handle this!')
+    errlog('Warning: Seeing a relative path "' + pathname + '" which is dangerously long for being referenced as a short Windows path name. Refactor emsdk to be able to handle this!')
   if pathname.startswith('\\\\?\\'):
     return pathname
   pathname = os.path.normpath(pathname.replace('/', '\\'))
@@ -701,9 +706,9 @@ def download_file(url, dstpath, download_even_if_exists=False, filename_prefix='
         print(']')
         sys.stdout.flush()
   except Exception as e:
-    print("Error: Downloading URL '" + url + "': " + str(e))
+    errlog("Error: Downloading URL '" + url + "': " + str(e))
     if "SSL: CERTIFICATE_VERIFY_FAILED" in str(e) or "urlopen error unknown url type: https" in str(e):
-      print("Warning: Possibly SSL/TLS issue. Update or install Python SSL root certificates (2048-bit or greater) supplied in Python folder or https://pypi.org/project/certifi/ and try again.")
+      errlog("Warning: Possibly SSL/TLS issue. Update or install Python SSL root certificates (2048-bit or greater) supplied in Python folder or https://pypi.org/project/certifi/ and try again.")
     rmfile(file_name)
     return None
   except KeyboardInterrupt:
@@ -967,13 +972,13 @@ def make_build(build_root, build_type, build_target_platform='x64'):
     print('Running build: ' + str(make))
     ret = subprocess.check_call(make, cwd=build_root, env=build_env(generator_to_use))
     if ret != 0:
-      print('Build failed with exit code ' + ret + '!', file=sys.stderr)
-      print('Working directory: ' + build_root, file=sys.stderr)
+      errlog('Build failed with exit code ' + ret + '!')
+      errlog('Working directory: ' + build_root)
       return False
   except Exception as e:
-    print('Build failed due to exception!', file=sys.stderr)
-    print('Working directory: ' + build_root, file=sys.stderr)
-    print(str(e), file=sys.stderr)
+    errlog('Build failed due to exception!')
+    errlog('Working directory: ' + build_root)
+    errlog(str(e))
     return False
 
   return True
@@ -1004,25 +1009,25 @@ def cmake_configure(generator, build_root, src_root, build_type, extra_cmake_arg
     open(os.path.join(build_root, 'recmake.' + ('bat' if WINDOWS else 'sh')), 'w').write(' '.join(map(quote_parens, cmdline)))
     ret = subprocess.check_call(cmdline, cwd=build_root, env=build_env(CMAKE_GENERATOR))
     if ret != 0:
-      print('CMake invocation failed with exit code ' + ret + '!', file=sys.stderr)
-      print('Working directory: ' + build_root, file=sys.stderr)
+      errlog('CMake invocation failed with exit code ' + ret + '!')
+      errlog('Working directory: ' + build_root)
       return False
   except OSError as e:
     if e.errno == errno.ENOENT:
-      print(str(e), file=sys.stderr)
-      print('Could not run CMake, perhaps it has not been installed?', file=sys.stderr)
+      errlog(str(e))
+      errlog('Could not run CMake, perhaps it has not been installed?')
       if WINDOWS:
-        print('Installing this package requires CMake. Get it from http://www.cmake.org/', file=sys.stderr)
+        errlog('Installing this package requires CMake. Get it from http://www.cmake.org/')
       elif LINUX:
-        print('Installing this package requires CMake. Get it via your system package manager (e.g. sudo apt-get install cmake), or from http://www.cmake.org/', file=sys.stderr)
+        errlog('Installing this package requires CMake. Get it via your system package manager (e.g. sudo apt-get install cmake), or from http://www.cmake.org/')
       elif MACOS:
-        print('Installing this package requires CMake. Get it via a macOS package manager (Homebrew: "brew install cmake", or MacPorts: "sudo port install cmake"), or from http://www.cmake.org/', file=sys.stderr)
+        errlog('Installing this package requires CMake. Get it via a macOS package manager (Homebrew: "brew install cmake", or MacPorts: "sudo port install cmake"), or from http://www.cmake.org/')
       return False
     raise
   except Exception as e:
-    print('CMake invocation failed due to exception!', file=sys.stderr)
-    print('Working directory: ' + build_root, file=sys.stderr)
-    print(str(e), file=sys.stderr)
+    errlog('CMake invocation failed due to exception!')
+    errlog('Working directory: ' + build_root)
+    errlog(str(e))
     return False
 
   return True
@@ -1447,7 +1452,7 @@ def generate_dot_emscripten(active_tools):
     node_fallback = which('nodejs')
     if not node_fallback:
       node_fallback = 'node'
-    activated_config['NODE_JS'] = "'%s'" % node_fallback
+    activated_config['NODE_JS'] = node_fallback
 
   for name, value in activated_config.items():
     cfg += name + " = '" + value + "'\n"
@@ -1755,18 +1760,13 @@ class Tool(object):
           return False
     return True
 
-  def win_activate_env_vars(self, permanently_activate):
+  def win_activate_env_vars(self, system):
     if WINDOWS:
       envs = self.activated_environment()
       for env in envs:
         key, value = parse_key_value(env)
 
-        if permanently_activate:
-          # If there is an env var for the LOCAL USER with same name, it will
-          # hide the system var, so must remove that first.
-          win_delete_environment_variable(key, False)
-
-        win_set_environment_variable(key, value, permanently_activate)
+        win_set_environment_variable(key, value, system)
 
   # If this tool can be installed on this system, this function returns True.
   # Otherwise, this function returns a string that describes the reason why this
@@ -2112,8 +2112,8 @@ def is_emsdk_sourced_from_github():
 
 def update_emsdk():
   if is_emsdk_sourced_from_github():
-    print('You seem to have bootstrapped Emscripten SDK by cloning from GitHub. In this case, use "git pull" instead of "emsdk update" to update emsdk. (Not doing that automatically in case you have local changes)', file=sys.stderr)
-    print('Alternatively, use "emsdk update-tags" to refresh the latest list of tags from the different Git repositories.', file=sys.stderr)
+    errlog('You seem to have bootstrapped Emscripten SDK by cloning from GitHub. In this case, use "git pull" instead of "emsdk update" to update emsdk. (Not doing that automatically in case you have local changes)')
+    errlog('Alternatively, use "emsdk update-tags" to refresh the latest list of tags from the different Git repositories.')
     sys.exit(1)
   if not download_and_unzip(emsdk_zip_download_url, emsdk_path(), download_even_if_exists=True, clobber=False):
     sys.exit(1)
@@ -2174,18 +2174,21 @@ def load_llvm_precompiled_tags_64bit():
 
 
 def exit_with_error(msg):
-  sys.stdout.write(str(msg) + '\n')
+  errlog(str(msg))
   sys.exit(1)
 
 
 # Load the json info for emscripten-releases.
 def load_releases_info():
-  try:
-    text = open(sdk_path('emscripten-releases-tags.txt'), 'r').read()
-    return json.loads(text)
-  except Exception as e:
-    print('Error parsing emscripten-releases-tags.txt!')
-    exit_with_error(str(e))
+  if not hasattr(load_releases_info, 'cached_info'):
+    try:
+      text = open(sdk_path('emscripten-releases-tags.txt'), 'r').read()
+      load_releases_info.cached_info = json.loads(text)
+    except Exception as e:
+      print('Error parsing emscripten-releases-tags.txt!')
+      exit_with_error(str(e))
+
+  return load_releases_info.cached_info
 
 
 # Get a list of tags for emscripten-releases.
@@ -2348,7 +2351,7 @@ def remove_nonexisting_tools(tool_list, log_errors=True):
     tool = tool_list[i]
     if not tool.is_installed():
       if log_errors:
-        print("Warning: The SDK/tool '" + str(tool) + "' cannot be activated since it is not installed! Skipping this tool...")
+        errlog("Warning: The SDK/tool '" + str(tool) + "' cannot be activated since it is not installed! Skipping this tool...")
       tool_list.pop(i)
       continue
     i += 1
@@ -2395,56 +2398,6 @@ def run_emcc(tools_to_activate):
         return
 
 
-# Copy over any emscripten cache contents that were pregenerated. This avoids
-# the user needing to immediately build libc etc. on first run.
-# This only applies to legacy SDK versions.  Anything built after
-# https://github.com/WebAssembly/waterfall/pull/644 already has the libraries
-# in the correct location.
-# TODO(sbc): Remove this code.
-def copy_pregenerated_cache(tools_to_activate):
-  tools_with_cache = [t for t in tools_to_activate if hasattr(t, 'pregenerated_cache')]
-  if not tools_with_cache:
-    debug_print('Not copying pregenerated libaries (none found)')
-    return
-
-  em_cache_dir = None
-
-  # First look through all the tools to find the EMSCRIPTEN_ROOT
-  for tool in tools_to_activate:
-    config = tool.activated_config()
-    if 'EMSCRIPTEN_ROOT' in config:
-      em_cache_dir = os.path.join(config['EMSCRIPTEN_ROOT'], 'cache')
-      break
-  else:
-    debug_print('Not copying pregenerated libaries (no EMSCRIPTEN_ROOT found)')
-    return
-
-  # Generating .emscripten will cause emcc to clear the cache on first run (emcc
-  # sees that the file has changed, since we write it here in the emsdk, and it
-  # never saw it before; so it clears the cache as it assumes a new config file
-  # means system libraries may need rebuilding). To avoid emcc's clearing wiping
-  # out the pregenerated cache contents we want to copy in, run emcc here, then
-  # copy the cache contents.
-  run_emcc(tools_to_activate)
-
-  # If we found an EMSCRIPTEN_ROOT look for any tools that include
-  # "pregenerated_cache" and copy those items into the cache.
-  for tool in tools_with_cache:
-    for cache_dir in tool.pregenerated_cache:
-      # Finish the install of an emscripten-releases build.
-      install_path = to_native_path(sdk_path(tool.expand_vars(tool.install_path)))
-      in_cache = os.path.join(install_path, 'lib', cache_dir)
-      if not os.path.exists(in_cache):
-        continue
-      out_cache = os.path.join(em_cache_dir, cache_dir)
-      if not os.path.exists(out_cache):
-        os.makedirs(out_cache)
-      for filename in os.listdir(in_cache):
-        debug_print('Copying %s to cache: %s' % (filename, out_cache))
-        shutil.copy2(os.path.join(in_cache, filename),
-                     os.path.join(out_cache, filename))
-
-
 def write_set_env_script(env_string):
   assert(WINDOWS)
   open(EMSDK_SET_ENV, 'w').write(env_string)
@@ -2453,7 +2406,7 @@ def write_set_env_script(env_string):
 # Reconfigure .emscripten to choose the currently activated toolset, set PATH
 # and other environment variables.
 # Returns the full list of deduced tools that are now active.
-def set_active_tools(tools_to_activate, permanently_activate):
+def set_active_tools(tools_to_activate, permanently_activate, system):
   tools_to_activate = process_tool_list(tools_to_activate, log_errors=True)
 
   if tools_to_activate:
@@ -2462,8 +2415,6 @@ def set_active_tools(tools_to_activate, permanently_activate):
     print('')
 
   generate_dot_emscripten(tools_to_activate)
-
-  copy_pregenerated_cache(tools_to_activate)
 
   # Construct a .bat script that will be invoked to set env. vars and PATH
   # We only do this on windows since emsdk.bat is able to modify the
@@ -2477,13 +2428,13 @@ def set_active_tools(tools_to_activate, permanently_activate):
   if WINDOWS and permanently_activate:
     # Individual env. vars
     for tool in tools_to_activate:
-      tool.win_activate_env_vars(permanently_activate=True)
+      tool.win_activate_env_vars(system=system)
 
     # PATH variable
-    newpath, added_items = adjusted_path(tools_to_activate, system_path_only=True)
+    newpath, added_items = adjusted_path(tools_to_activate, system=system)
     # Are there any actual changes?
     if newpath != os.environ['PATH']:
-      win_set_environment_variable('PATH', newpath, system=True)
+      win_set_environment_variable('PATH', newpath, system=system)
 
   return tools_to_activate
 
@@ -2529,17 +2480,12 @@ def to_msys_path(p):
 
 # Looks at the current PATH and adds and removes entries so that the PATH reflects
 # the set of given active tools.
-def adjusted_path(tools_to_activate, log_additions=False, system_path_only=False):
+def adjusted_path(tools_to_activate, system=False):
   # These directories should be added to PATH
   path_add = get_required_path(tools_to_activate)
   # These already exist.
   if WINDOWS and not MSYS:
-    existing_path = win_get_environment_variable('PATH', system=True)
-    if not system_path_only:
-      current_user_path = win_get_environment_variable('PATH', system=False)
-      if current_user_path:
-        existing_path += ENVPATH_SEPARATOR + current_user_path
-    existing_path = existing_path.split(ENVPATH_SEPARATOR)
+    existing_path = win_get_environment_variable('PATH', system=system).split(ENVPATH_SEPARATOR)
   else:
     existing_path = os.environ['PATH'].split(ENVPATH_SEPARATOR)
   emsdk_root_path = to_unix_path(emsdk_path())
@@ -2563,10 +2509,6 @@ def adjusted_path(tools_to_activate, log_additions=False, system_path_only=False
   return (separator.join(whole_path), new_emsdk_tools)
 
 
-def log_stderr(msg):
-  sys.stderr.write(str(msg) + '\n')
-
-
 def construct_env(tools_to_activate):
   env_string = ''
   newpath, added_path = adjusted_path(tools_to_activate)
@@ -2585,10 +2527,10 @@ def construct_env(tools_to_activate):
       assert False
 
     if added_path:
-      log_stderr('Adding directories to PATH:')
+      errlog('Adding directories to PATH:')
       for item in added_path:
-        log_stderr('PATH += ' + item)
-      log_stderr('')
+        errlog('PATH += ' + item)
+      errlog('')
 
   # A core variable EMSDK points to the root of Emscripten SDK directory.
   env_vars = [('EMSDK', to_unix_path(emsdk_path()))]
@@ -2611,7 +2553,7 @@ def construct_env(tools_to_activate):
       env_vars += [(key, value)]
 
   if env_vars:
-    log_stderr('Setting environment variables:')
+    errlog('Setting environment variables:')
     for key, value in env_vars:
       if POWERSHELL:
         env_string += '$env:' + key + '="' + value + '"\n'
@@ -2623,23 +2565,87 @@ def construct_env(tools_to_activate):
         env_string += 'export ' + key + '="' + value + '";\n'
       else:
         assert False
-      log_stderr(key + ' = ' + value)
+      if 'EMSDK_PYTHON' in env_vars:
+        # When using our bundled python we never want the user's
+        # PYTHONHOME or PYTHONPATH
+        # See https://github.com/emscripten-core/emsdk/issues/598
+        if POWERSHELL:
+          env_string += 'Remove-Item env:PYTHONHOME\n'
+          env_string += 'Remove-Item env:PYTHONPATH\n'
+        elif CMD:
+          env_string += 'set PYTHONHOME=\n'
+          env_string += 'set PYTHONPATH=\n'
+        elif CSH:
+          env_string += 'unsetenv PYTHONHOME\n'
+          env_string += 'unsetenv PYTHONPATH\n'
+        elif BASH:
+          env_string += 'unset PYTHONHOME\n'
+          env_string += 'unset PYTHONPATH\n'
+        else:
+          assert False
+
+      errlog(key + ' = ' + value)
   return env_string
 
 
 def error_on_missing_tool(name):
   if name.endswith('-64bit') and not is_os_64bit():
-    print("Error: '%s' is only provided for 64-bit OSes." % name)
+    errlog("Error: '%s' is only provided for 64-bit OSes." % name)
   else:
-    print("Error: No tool or SDK found by name '%s'." % name)
+    errlog("Error: No tool or SDK found by name '%s'." % name)
   return 1
+
+
+def exit_with_fastcomp_error():
+    exit_with_error('The fastcomp backend is not getting new builds or releases. Please use the upstream llvm backend or use an older version than 2.0.0 (such as 1.40.1).')
+
+
+def expand_sdk_name(name):
+  if name in ('latest-fastcomp', 'latest-releases-fastcomp', 'tot-fastcomp', 'sdk-nightly-latest'):
+    exit_with_fastcomp_error()
+  if name in ('latest', 'sdk-latest', 'latest-64bit', 'sdk-latest-64bit'):
+    # This is effectly the default SDK
+    return str(find_latest_releases_sdk('upstream'))
+  elif name in ('latest-upstream', 'latest-clang-upstream', 'latest-releases-upstream'):
+    return str(find_latest_releases_sdk('upstream'))
+  elif name in ('tot', 'sdk-tot'):
+    return str(find_tot_sdk('upstream'))
+  elif name == 'tot-upstream':
+    return str(find_tot_sdk('upstream'))
+  else:
+    # check if it's a release handled by an emscripten-releases version,
+    # and if so use that by using the right hash. we support a few notations,
+    #   x.y.z[-(upstream|fastcomp_])
+    #   sdk-x.y.z[-(upstream|fastcomp_])-64bit
+    # TODO: support short notation for old builds too?
+    backend = None
+    fullname = name
+    if '-upstream' in fullname:
+      fullname = name.replace('-upstream', '')
+      backend = 'upstream'
+    elif '-fastcomp' in fullname:
+      fullname = fullname.replace('-fastcomp', '')
+      backend = 'fastcomp'
+    fullname = fullname.replace('sdk-', '').replace('-64bit', '').replace('tag-', '')
+    if backend == 'fastcomp' and version_key(fullname) >= (2, 0, 0):
+      exit_with_fastcomp_error()
+    releases_info = load_releases_info()['releases']
+    release_hash = get_release_hash(fullname, releases_info)
+    if release_hash:
+      if backend is None:
+        if version_key(fullname) >= (1, 39, 0):
+          backend = 'upstream'
+        else:
+          backend = 'fastcomp'
+      return 'sdk-releases-%s-%s-64bit' % (backend, release_hash)
+  return name
 
 
 def main():
   global BUILD_FOR_TESTING, ENABLE_LLVM_ASSERTIONS, TTY_OUTPUT
 
   if len(sys.argv) <= 1:
-    print("Missing command; Type 'emsdk help' to get a list of commands.")
+    errlog("Missing command; Type 'emsdk help' to get a list of commands.")
     return 1
   if sys.argv[1] in ('help', '--help', '-h'):
     print(' emsdk: Available commands:')
@@ -2721,15 +2727,21 @@ def main():
 
     if WINDOWS:
       print('''
-   emsdk activate [--global] [--build=type] [--vs2017/--vs2019] <tool/sdk>
+   emsdk activate [--permanent] [--system] [--build=type] [--vs2017/--vs2019] <tool/sdk>
 
                                 - Activates the given tool or SDK in the
-                                  environment of the current shell. If the
-                                  --global option is passed, the registration
-                                  is done globally to all users in the system
-                                  environment.  If a custom compiler version was
-                                  used to override the compiler to use, pass
-                                  the same --vs2017/--vs2019 parameter
+                                  environment of the current shell.
+
+                                - If the `--permanent` option is passed, then the environment
+                                  variables are set permanently for the current user.
+
+                                - If the `--system` option is passed, the registration
+                                  is done for all users of the system.
+                                  This needs admin privileges
+                                  (uses Machine environment variables).
+
+                                - If a custom compiler version was used to override
+                                  the compiler to use, pass the same --vs2017/--vs2019 parameter
                                   here to choose which version to activate.
 
    emcmdprompt.bat              - Spawns a new command prompt window with the
@@ -2759,11 +2771,18 @@ def main():
 
   arg_old = extract_bool_arg('--old')
   arg_uses = extract_bool_arg('--uses')
+  arg_permanent = extract_bool_arg('--permanent')
   arg_global = extract_bool_arg('--global')
+  arg_system = extract_bool_arg('--system')
+  if arg_global:
+    print('--global is deprecated. Use `--system` to set the environment variables for all users')
+    arg_system = True
+  if arg_system:
+    arg_permanent = True
   if extract_bool_arg('--embedded'):
-    print('embedded mode is now the only mode available', file=sys.stderr)
+    errlog('embedded mode is now the only mode available')
   if extract_bool_arg('--no-embedded'):
-    print('embedded mode is now the only mode available', file=sys.stderr)
+    errlog('embedded mode is now the only mode available')
     return 1
 
   arg_notty = extract_bool_arg('--notty')
@@ -2788,7 +2807,7 @@ def main():
         CMAKE_GENERATOR = build_generator.group(1)
         sys.argv[i] = ''
       else:
-        print("Cannot parse CMake generator string: " + sys.argv[i] + ". Try wrapping generator string with quotes", file=sys.stderr)
+        errlog("Cannot parse CMake generator string: " + sys.argv[i] + ". Try wrapping generator string with quotes")
         return 1
     elif sys.argv[i].startswith('--build='):
       build_type = re.match(r'^--build=(.+)$', sys.argv[i])
@@ -2801,54 +2820,17 @@ def main():
           CMAKE_BUILD_TYPE_OVERRIDE = build_types[build_type_index]
           sys.argv[i] = ''
         except:
-          print('Unknown CMake build type "' + build_type + '" specified! Please specify one of ' + str(build_types), file=sys.stderr)
+          errlog('Unknown CMake build type "' + build_type + '" specified! Please specify one of ' + str(build_types))
           return 1
       else:
-        print("Invalid command line parameter " + sys.argv[i] + ' specified!', file=sys.stderr)
+        errlog("Invalid command line parameter " + sys.argv[i] + ' specified!')
         return 1
   sys.argv = [x for x in sys.argv if not len(x) == 0]
-
-  releases_info = load_releases_info()['releases']
 
   # Replace meta-packages with the real package names.
   if cmd in ('update', 'install', 'activate'):
     for i in range(2, len(sys.argv)):
-      arg = sys.argv[i]
-      if arg in ('latest', 'sdk-latest', 'latest-64bit', 'sdk-latest-64bit'):
-        # This is effectly the default SDK
-        sys.argv[i] = str(find_latest_releases_sdk('upstream'))
-      elif arg in ('latest-fastcomp', 'latest-releases-fastcomp'):
-        sys.argv[i] = str(find_latest_releases_sdk('fastcomp'))
-      elif arg in ('latest-upstream', 'latest-clang-upstream', 'latest-releases-upstream'):
-        sys.argv[i] = str(find_latest_releases_sdk('upstream'))
-      elif arg in ('tot', 'sdk-tot'):
-        sys.argv[i] = str(find_tot_sdk('upstream'))
-      elif arg == 'tot-upstream':
-        sys.argv[i] = str(find_tot_sdk('upstream'))
-      elif arg in ('tot-fastcomp', 'sdk-nightly-latest'):
-        sys.argv[i] = str(find_tot_sdk('fastcomp'))
-      else:
-        # check if it's a release handled by an emscripten-releases version,
-        # and if so use that by using the right hash. we support a few notations,
-        #   x.y.z[-(upstream|fastcomp_])
-        #   sdk-x.y.z[-(upstream|fastcomp_])-64bit
-        # TODO: support short notation for old builds too?
-        backend = None
-        if '-upstream' in arg:
-          arg = arg.replace('-upstream', '')
-          backend = 'upstream'
-        elif '-fastcomp' in arg:
-          arg = arg.replace('-fastcomp', '')
-          backend = 'fastcomp'
-        arg = arg.replace('sdk-', '').replace('-64bit', '').replace('tag-', '')
-        release_hash = get_release_hash(arg, releases_info)
-        if release_hash:
-          if backend is None:
-            if version_key(arg) >= (1, 39, 0):
-              backend = 'upstream'
-            else:
-              backend = 'fastcomp'
-          sys.argv[i] = 'sdk-releases-%s-%s-64bit' % (backend, release_hash)
+      sys.argv[i] = expand_sdk_name(sys.argv[i])
 
   if cmd == 'list':
     print('')
@@ -2879,6 +2861,7 @@ def main():
       key=lambda x: [int(v) if v.isdigit() else -1 for v in x.split('.')],
       reverse=True,
     )
+    releases_info = load_releases_info()['releases']
     for ver in releases_versions:
       print('         %s    %s' % (ver, installed_sdk_text('sdk-releases-upstream-%s-64bit' % get_release_hash(ver, releases_info))))
     print()
@@ -2957,7 +2940,7 @@ def main():
     print('Items marked with * are activated for the current user.')
     if has_partially_active_tools[0]:
       env_cmd = 'emsdk_env.bat' if WINDOWS else 'source ./emsdk_env.sh'
-      print('Items marked with (*) are selected for use, but your current shell environment is not configured to use them. Type "' + env_cmd + '" to set up your current shell to use them' + (', or call "emsdk activate --global <name_of_sdk>" to permanently activate them.' if WINDOWS else '.'))
+      print('Items marked with (*) are selected for use, but your current shell environment is not configured to use them. Type "' + env_cmd + '" to set up your current shell to use them' + (', or call "emsdk activate --permanent <name_of_sdk>" to permanently activate them.' if WINDOWS else '.'))
     if not arg_old:
       print('')
       print("To access the historical archived versions, type 'emsdk list --old'")
@@ -2991,8 +2974,8 @@ def main():
     fetch_emscripten_tags()
     return 0
   elif cmd == 'activate':
-    if arg_global:
-      print('Registering active Emscripten environment globally for all users.')
+    if arg_permanent:
+      print('Registering active Emscripten environment permanently')
       print('')
 
     tools_to_activate = currently_active_tools()
@@ -3005,14 +2988,14 @@ def main():
         return error_on_missing_tool(arg)
       tools_to_activate += [tool]
     if not tools_to_activate:
-      print('No tools/SDKs specified to activate! Usage:\n   emsdk activate tool/sdk1 [tool/sdk2] [...]')
+      errlog('No tools/SDKs specified to activate! Usage:\n   emsdk activate tool/sdk1 [tool/sdk2] [...]')
       return 1
-    active_tools = set_active_tools(tools_to_activate, permanently_activate=arg_global)
+    active_tools = set_active_tools(tools_to_activate, permanently_activate=arg_permanent, system=arg_system)
     if not active_tools:
-      print('No tools/SDKs found to activate! Usage:\n   emsdk activate tool/sdk1 [tool/sdk2] [...]')
+      errlog('No tools/SDKs found to activate! Usage:\n   emsdk activate tool/sdk1 [tool/sdk2] [...]')
       return 1
-    if WINDOWS and not arg_global:
-      print('The changes made to environment variables only apply to the currently running shell instance. Use the \'emsdk_env.bat\' to re-enter this environment later, or if you\'d like to permanently register this environment globally to all users in Windows Registry, rerun this command with the option --global.')
+    if WINDOWS and not arg_permanent:
+      errlog('The changes made to environment variables only apply to the currently running shell instance. Use the \'emsdk_env.bat\' to re-enter this environment later, or if you\'d like to permanently register this environment permanently, rerun this command with the option --permanent.')
     return 0
   elif cmd == 'install':
     # Process args
@@ -3024,7 +3007,7 @@ def main():
           CPU_CORES = int(multicore.group(1))
           sys.argv[i] = ''
         else:
-          print("Invalid command line parameter " + sys.argv[i] + ' specified!', file=sys.stderr)
+          errlog("Invalid command line parameter " + sys.argv[i] + ' specified!')
           return 1
       elif sys.argv[i] == '--shallow':
         global GIT_CLONE_SHALLOW
@@ -3041,7 +3024,7 @@ def main():
         sys.argv[i] = ''
     sys.argv = [x for x in sys.argv if not len(x) == 0]
     if len(sys.argv) <= 2:
-      print("Missing parameter. Type 'emsdk install <tool name>' to install a tool or an SDK. Type 'emsdk list' to obtain a list of available tools. Type 'emsdk install latest' to automatically install the newest version of the SDK.")
+      errlog("Missing parameter. Type 'emsdk install <tool name>' to install a tool or an SDK. Type 'emsdk list' to obtain a list of available tools. Type 'emsdk install latest' to automatically install the newest version of the SDK.")
       return 1
     for t in sys.argv[2:]:
       tool = find_tool(t)
@@ -3055,16 +3038,16 @@ def main():
     return 0
   elif cmd == 'uninstall':
     if len(sys.argv) <= 2:
-      print("Syntax error. Call 'emsdk uninstall <tool name>'. Call 'emsdk list' to obtain a list of available tools.")
+      errlog("Syntax error. Call 'emsdk uninstall <tool name>'. Call 'emsdk list' to obtain a list of available tools.")
       return 1
     tool = find_tool(sys.argv[2])
     if tool is None:
-      print("Error: Tool by name '" + sys.argv[2] + "' was not found.")
+      errlog("Error: Tool by name '" + sys.argv[2] + "' was not found.")
       return 1
     tool.uninstall()
     return 0
 
-  print("Unknown command '" + cmd + "' given! Type 'emsdk help' to get a list of commands.")
+  errlog("Unknown command '" + cmd + "' given! Type 'emsdk help' to get a list of commands.")
   return 1
 
 
