@@ -100,7 +100,8 @@
     "install_path": "upstream",
     "activated_path": "%installation_dir%/emscripten",
     "activated_cfg": "LLVM_ROOT='%installation_dir%/bin';BINARYEN_ROOT='%installation_dir%';EMSCRIPTEN_ROOT='%installation_dir%/emscripten'",
-    "emscripten_releases_hash": "%releases-tag%"
+    "emscripten_releases_hash": "%releases-tag%",
+    "pregenerated_cache": ["asmjs", "wasm", "wasm-obj", "wasm-bc"]
   },
   {
     "id": "releases",
@@ -114,7 +115,8 @@
     "install_path": "fastcomp",
     "activated_path": "%installation_dir%/emscripten",
     "activated_cfg": "LLVM_ROOT='%installation_dir%/fastcomp/bin';BINARYEN_ROOT='%installation_dir%';EMSCRIPTEN_ROOT='%installation_dir%/emscripten';EMSCRIPTEN_NATIVE_OPTIMIZER='%installation_dir%/bin/optimizer%.exe%'",
-    "emscripten_releases_hash": "%releases-tag%"
+    "emscripten_releases_hash": "%releases-tag%",
+    "pregenerated_cache": ["asmjs", "wasm", "wasm-obj", "wasm-bc"]
   },
 
   {
@@ -288,10 +290,10 @@
   },
   {
     "id": "python",
-    "version": "3.7.4-2",
+    "version": "3.7.4",
     "bitness": 64,
     "arch": "x86_64",
-    "macos_url": "python-3.7.4-2-macos.tar.gz",
+    "macos_url": "python-3.7.4-macos.tar.gz",
     "activated_path": "%installation_dir%/bin",
     "activated_cfg": "PYTHON='%installation_dir%/bin/python3'",
     "activated_env": "EMSDK_PYTHON=%installation_dir%/bin/python3"
@@ -395,11 +397,13 @@
     "append_bitness": false,
     "url": "https://github.com/emscripten-core/emscripten.git",
     "git_branch": "master",
-    "activated_cfg": "EMSCRIPTEN_ROOT='%installation_dir%'",
+    "activated_cfg": "EMSCRIPTEN_ROOT='%installation_dir%';EMSCRIPTEN_NATIVE_OPTIMIZER='%installation_dir%%generator_prefix%_32bit_optimizer/%cmake_build_type_on_win%optimizer%.exe%'",
     "activated_path": "%installation_dir%",
-    "activated_env": "EMSCRIPTEN=%installation_dir%",
+    "activated_env": "EMSCRIPTEN=%installation_dir%;EMSCRIPTEN_NATIVE_OPTIMIZER=%installation_dir%%generator_prefix%_32bit_optimizer/%cmake_build_type_on_win%optimizer%.exe%",
     "cmake_build_type": "Release",
-    "custom_install_script": "emscripten_npm_install"
+    "custom_install_script": "emscripten_post_install",
+    "custom_is_installed_script": "is_optimizer_installed",
+    "custom_uninstall_script": "uninstall_optimizer"
   },
   {
     "id": "emscripten",
@@ -408,11 +412,13 @@
     "append_bitness": false,
     "url": "https://github.com/emscripten-core/emscripten.git",
     "git_branch": "master",
-    "activated_cfg": "EMSCRIPTEN_ROOT='%installation_dir%'",
+    "activated_cfg": "EMSCRIPTEN_ROOT='%installation_dir%';EMSCRIPTEN_NATIVE_OPTIMIZER='%installation_dir%%generator_prefix%_64bit_optimizer/%cmake_build_type_on_win%optimizer%.exe%'",
     "activated_path": "%installation_dir%",
-    "activated_env": "EMSCRIPTEN=%installation_dir%",
+    "activated_env": "EMSCRIPTEN=%installation_dir%;EMSCRIPTEN_NATIVE_OPTIMIZER=%installation_dir%%generator_prefix%_64bit_optimizer/%cmake_build_type_on_win%optimizer%.exe%",
     "cmake_build_type": "Release",
-    "custom_install_script": "emscripten_npm_install"
+    "custom_install_script": "emscripten_post_install",
+    "custom_is_installed_script": "is_optimizer_installed",
+    "custom_uninstall_script": "uninstall_optimizer"
   },
   {
     "id": "binaryen",
@@ -473,13 +479,13 @@
   {
     "version": "upstream-master",
     "bitness": 64,
-    "uses": ["llvm-git-master-64bit", "node-12.18.1-64bit", "python-3.7.4-pywin32-64bit", "emscripten-master-64bit", "binaryen-master-64bit"],
+    "uses": ["llvm-git-master-64bit", "node-12.18.1-64bit", "python-3.7.4-64bit", "emscripten-master-64bit", "binaryen-master-64bit"],
     "os": "win"
   },
   {
     "version": "upstream-master",
     "bitness": 64,
-    "uses": ["llvm-git-master-64bit", "node-12.18.1-64bit", "python-3.7.4-2-64bit", "emscripten-master-64bit", "binaryen-master-64bit"],
+    "uses": ["llvm-git-master-64bit", "node-12.18.1-64bit", "python-3.7.4-64bit", "emscripten-master-64bit", "binaryen-master-64bit"],
     "os": "macos"
   },
   {
@@ -503,13 +509,13 @@
   {
     "version": "fastcomp-master",
     "bitness": 64,
-    "uses": ["fastcomp-clang-master-64bit", "node-12.18.1-64bit", "python-3.7.4-pywin32-64bit", "java-8.152-64bit", "emscripten-master-64bit", "binaryen-master-64bit"],
+    "uses": ["fastcomp-clang-master-64bit", "node-12.18.1-64bit", "python-3.7.4-64bit", "java-8.152-64bit", "emscripten-master-64bit", "binaryen-master-64bit"],
     "os": "win"
   },
   {
     "version": "fastcomp-master",
     "bitness": 64,
-    "uses": ["fastcomp-clang-master-64bit", "node-12.18.1-64bit", "python-3.7.4-2-64bit", "emscripten-master-64bit", "binaryen-master-64bit"],
+    "uses": ["fastcomp-clang-master-64bit", "node-12.18.1-64bit", "python-3.7.4-64bit", "emscripten-master-64bit", "binaryen-master-64bit"],
     "os": "macos"
   },
   {
@@ -570,7 +576,7 @@
   {
     "version": "releases-upstream-%releases-tag%",
     "bitness": 64,
-    "uses": ["node-12.18.1-64bit", "python-3.7.4-2-64bit", "releases-upstream-%releases-tag%-64bit"],
+    "uses": ["node-12.18.1-64bit", "python-3.7.4-64bit", "releases-upstream-%releases-tag%-64bit"],
     "os": "macos",
     "custom_install_script": "emscripten_npm_install"
   },
@@ -591,7 +597,7 @@
   {
     "version": "releases-fastcomp-%releases-tag%",
     "bitness": 64,
-    "uses": ["node-12.18.1-64bit", "python-3.7.4-2-64bit", "releases-fastcomp-%releases-tag%-64bit"],
+    "uses": ["node-12.18.1-64bit", "python-3.7.4-64bit", "releases-fastcomp-%releases-tag%-64bit"],
     "os": "macos",
     "custom_install_script": "emscripten_npm_install"
   },
@@ -641,7 +647,7 @@
   {
     "version": "fastcomp-%precompiled_tag32%",
     "bitness": 32,
-    "uses": ["fastcomp-clang-e%precompiled_tag32%-32bit", "node-8.9.1-32bit", "python-3.7.4-2-64bit", "emscripten-%precompiled_tag32%"],
+    "uses": ["fastcomp-clang-e%precompiled_tag32%-32bit", "node-8.9.1-32bit", "python-3.7.4-64bit", "emscripten-%precompiled_tag32%"],
     "os": "macos",
     "version_filter": [
       ["%precompiled_tag32%", ">", "1.37.22"]
@@ -650,7 +656,7 @@
   {
     "version": "fastcomp-%precompiled_tag64%",
     "bitness": 64,
-    "uses": ["fastcomp-clang-e%precompiled_tag64%-64bit", "node-8.9.1-64bit", "python-3.7.4-2-64bit", "emscripten-%precompiled_tag64%"],
+    "uses": ["fastcomp-clang-e%precompiled_tag64%-64bit", "node-8.9.1-64bit", "python-3.7.4-64bit", "emscripten-%precompiled_tag64%"],
     "os": "macos",
     "version_filter": [
       ["%precompiled_tag64%", ">", "1.37.22"]

@@ -1,28 +1,21 @@
-# A Makefile to build, test, tag and publish the Emscripten SDK Docker container.
+#!/usr/bin/env make
 
 # Emscripten version to build: Should match the version that has been already released.
-# i.e.:  1.39.18
+# i.e.:  1.38.45, 1.38.45-upstream
 version =
 alias =
-
-image_name ?= emscripten/emsdk
 
 .TEST:
 ifndef version
 	$(error argument 'version' is not set. Please call `make version=SOME_VERSION ...`)
 endif
 
-build: Dockerfile .TEST
-	cd .. && docker build --network host --build-arg=EMSCRIPTEN_VERSION=${version} -t ${image_name}:${version} -f docker/$< .
-
-test: test_dockerimage.sh .TEST
-	# test as non-root
-	docker run --rm -u `id -u`:`id -g` -w /emsdk/docker --net=host ${image_name}:${version} \
-		bash $<
+build: .TEST
+	docker build --network host --build-arg=EMSCRIPTEN_VERSION=${version} --tag emscripten/emsdk:${version} .
 
 push: .TEST
-	docker push ${image_name}:${version}
+	docker push emscripten/emsdk:${version}
 ifdef alias
-	docker tag ${image_name}:${version} ${image_name}:${alias}
-	docker push ${image_name}:${alias}
+	docker tag emscripten/emsdk:${version} emscripten/emsdk:${alias}
+	docker push emscripten/emsdk:${alias}
 endif

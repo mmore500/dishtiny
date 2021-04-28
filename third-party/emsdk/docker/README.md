@@ -1,6 +1,6 @@
 # Dockerfile for EMSDK
 
-This Dockerfile builds a self-contained version of Emscripten SDK that enables Emscripten to be used without any
+This Dockerfile builds a self-contained version of emsdk that enables emscripten to be used without any
 other installation on the host system.
 
 It is published at https://hub.docker.com/u/emscripten/emsdk
@@ -23,7 +23,7 @@ EOF
 # compile with docker image
 docker run \
   --rm \
-  -v $(pwd):/src \
+  -v $(pwd):$(pwd) \
   -u $(id -u):$(id -g) \
   emscripten/emsdk \
   emcc helloworld.cpp -o helloworld.js
@@ -51,7 +51,7 @@ This image requires to specify following build arguments:
 
 | arg | description |
 | --- | --- |
-| `EMSCRIPTEN_VERSION` | One of released version of Emscripten. For example `1.39.17`<br/> Minimal supported version is **1.39.0**|
+| `EMSCRIPTEN_VERSION` | One of released version of Emscripten. For example `1.38.45`<br/> Can be used with `-upstream` variant like: `1.38.45-upstream`<br /> Minimal supported version is **1.38.40**|
 
 **Building**
 
@@ -60,14 +60,13 @@ This step will build Dockerfile as given tag on local machine
 # using docker
 docker build \
     --network host \
-    --build-arg=EMSCRIPTEN_VERSION=1.39.17 \
-    -t emscripten/emsdk:1.39.17 \
-    -f docker/Dockerfile \
+    --build-arg=EMSCRIPTEN_VERSION=1.38.43-upstream \
+    --tag emscripten/emsdk:1.38.43-upstream \
     .
 ```
 ```bash
 # using predefined make target
-make version=1.39.17 build test
+make version=1.38.43-upstream build
 ```
 
 **Tagging**
@@ -80,23 +79,34 @@ This step will take local image and push to default docker registry. You need to
 
 ```bash
 # using docker
-docker push emscripten/emsdk:1.39.17
+docker push emscripten/emsdk:1.38.43-upstream
 ```
 ```bash
 # using predefined make target
-make version=1.39.17 push
+make version=1.38.43-upstream push
 ```
 
-In case of pushing the most recent version, this version should be also tagged as `latest` and pushed.
+In case of pushing the most recent version, this version should be also tagged as `latest` or `latest-upstream` and pushed.
 ```bash
 # using docker cli
-docker tag emscripten/emsdk:1.39.17 emscripten/emsdk:latest
+
+# in case of fastcomp variant (default backend)
+docker tag emscripten/emsdk:1.38.43 emscripten/emsdk:latest
 docker push emscripten/emsdk:latest
 
-```bash
-# using make
-make version=1.39.17 alias=latest push
+# in case of upstream variant
+docker tag emscripten/emsdk:1.38.43-upstream emscripten/emsdk:latest-upstream
+docker push emscripten/emsdk:latest-upstream
+
 ```
+
+```bash
+# using predefined make target
+
+make version=1.38.43-upstream alias=latest-upstream push
+
+```
+
 
 ### Extending
 
@@ -107,19 +117,20 @@ If your project uses packages that this image doesn't provide you might want to:
 1. create own Dockerfile that holds:
     ```dockerfile
     # Point at any base image that you find suitable to extend.
-    FROM emscripten/emsdk:1.39.17
+    FROM emscripten/emsdk:1.38.25
 
     # Install required tools that are useful for your project i.e. ninja-build
     RUN apt update && apt install -y ninja-build
-    ```
 
+    ```
 2. build it
-    ```bash
+    ```shell
     docker build -t extended_emscripten .
     ```
 
 3. test
-    ```bash
+    ```shell
     docker run --rm extended_emscripten ninja --version
-    # 1.10.0
+    # Python 2.7.16
     ```
+

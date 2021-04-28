@@ -34,9 +34,8 @@ jobs:
       - checkout
       - run:
           name: Install debian packages
-          command: apt-get update -q && apt-get install -q -y cmake build-essential openjdk-8-jre-headless ksh zsh
+          command: apt-get update -q && apt-get install -q -y cmake build-essential openjdk-8-jre-headless
       - run: scripts/test.sh
-      - run: scripts/test_source_env.sh
       - run:
           name: test.py
           command: |
@@ -87,16 +86,6 @@ jobs:
           command: |
             source emsdk_env.sh
             python scripts/test.py
-      - run:
-          name: --permanent test
-          shell: powershell.exe
-          command: |
-            try {
-              scripts/test_permanent.ps1
-            } catch {
-              Write-Host "`n Error Message: [$($_.Exception.Message)"] -ForegroundColor Red
-              Write-Host "`n Line Number: "$_.InvocationInfo.ScriptLineNumber -ForegroundColor Red
-            }
 
   build-docker-image:
     executor: bionic
@@ -106,13 +95,9 @@ jobs:
           name: install docker
           command: apt-get update -q && apt-get install -q -y docker.io
       - setup_remote_docker
-      # Build and test the tip-of-tree build of EMSDK
       - run:
           name: build
-          command: make -C ./docker version=tot build
-      - run:
-          name: test
-          command: make -C ./docker version=tot test
+          command: docker build --network host ./docker
 
   publish-docker-image:
     executor: bionic
@@ -124,35 +109,16 @@ jobs:
       - setup_remote_docker
       - run:
           name: build
-          command: make -C ./docker version=${CIRCLE_TAG} build
+          command: docker build --network host --build-arg EMSCRIPTEN_VERSION=${CIRCLE_TAG} --tag emscripten/emsdk:${CIRCLE_TAG} ./docker
       - run:
-          name: test
-          command: make -C ./docker version=${CIRCLE_TAG} test
+          name: tag image
+          command: docker tag emscripten/emsdk:${CIRCLE_TAG} emscripten/emsdk:latest
       - run:
           name: push image
           command: |
             docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-            make -C ./docker version=${CIRCLE_TAG} alias=latest push
-
-  test-bazel:
-    executor: bionic
-    steps:
-      - checkout
-      - run: apt-get install -q -y curl gnupg
-      - run: curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg
-      - run: mv bazel.gpg /etc/apt/trusted.gpg.d/
-      - run: echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
-      - run:
-          name: install pip
-          command: |
-            apt-get update -q
-            apt-get install -q -y python3-pip
-      - run: pip3 install absl-py
-      - run:
-          name: install bazel
-          command: |
-            apt-get install -q -y bazel
-      - run: scripts/test_bazel.sh
+            docker push emscripten/emsdk:${CIRCLE_TAG}
+            docker push emscripten/emsdk:latest
 
 workflows:
   flake8:
@@ -176,6 +142,3 @@ workflows:
               ignore: /.*/
             tags:
               only: /.*/
-  test-bazel:
-    jobs:
-      - test-bazel
