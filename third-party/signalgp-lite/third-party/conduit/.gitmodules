@@ -1,6 +1,3 @@
-[submodule "third-party/Catch"]
-  path = third-party/Catch
-  url = https://github.com/philsquared/Catch.git
 [submodule "third-party/Empirical"]
   path = third-party/Empirical
   url = https://github.com/devosoft/Empirical
@@ -25,6 +22,3 @@
 [submodule "third-party/SPSCQueue"]
   path = third-party/SPSCQueue
   url = https://github.com/rigtorp/SPSCQueue
-[submodule "third-party/cereal"]
-  path = third-party/cereal
-  url = https://github.com/mmore500/cereal

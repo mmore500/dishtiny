@@ -1,13 +1,8 @@
 #!/bin/bash
 
-# Get the emsdk repo
-git clone https://github.com/emscripten-core/emsdk.git
-
-# Enter that directory
+git clone --recursive https://github.com/emscripten-core/emsdk
 cd emsdk
-
-# Fetch the latest version of the emsdk (not needed the first time you clone)
-git pull
+git reset --hard e88a3c5bbfef172a5b947768204ef734e2fb6e04
 
 # Download and install pinned SDK tools.
 ./emsdk install 1.38.48
