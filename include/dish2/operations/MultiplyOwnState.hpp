@@ -17,7 +17,7 @@ template< typename DishSpec >
 class MultiplyOwnState {
 
   template<typename SgplSpec>
-  static size_t GetAddr( const sgpl::Instruction<SgplSpec>& inst ) {
+  static size_t GetAddr( const sgpl::Instruction<SgplSpec>& inst ) noexcept {
     constexpr size_t num_addrs = dish2::WritableState< DishSpec >::GetSize();
     const size_t addr = inst.tag.GetUInt(0) % num_addrs;
     return addr;
@@ -31,7 +31,7 @@ public:
     const sgpl::Instruction<SgplSpec>& inst,
     const sgpl::Program<SgplSpec>&,
     typename SgplSpec::peripheral_t& peripheral
-  ) {
+  ) noexcept {
 
     peripheral.readable_state.template Get<
       dish2::WritableState< DishSpec >
