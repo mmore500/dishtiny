@@ -19,7 +19,7 @@ struct EventTags {
 
   using tag_t = typename Spec::tag_t;
 
-  using tags_t = emp::array< tag_t , Spec::NUM_EVENTS >;
+  using tags_t = std::array< tag_t , Spec::NUM_EVENTS >;
   tags_t tags;
 
   constexpr inline static size_t tag_bytes
