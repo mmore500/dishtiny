@@ -24,7 +24,7 @@ struct Anchor {
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t&
-  ) { ; }
+  ) noexcept { ; }
 
   static std::string name() { return "Local Anchor"; }
 

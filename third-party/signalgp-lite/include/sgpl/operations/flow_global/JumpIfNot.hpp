@@ -24,7 +24,7 @@ struct JumpIfNot {
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t&
-  ) {
+  ) noexcept {
     if ( !core.registers[ inst.args[0] ] ) {
       core.JumpToGlobalAnchorMatch( inst.tag );
       if ( !core.registers[ inst.args[1] ] ) core.ResetRegisters();

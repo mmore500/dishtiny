@@ -23,7 +23,7 @@ struct ForkIf {
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>& program,
     typename Spec::peripheral_t&
-  ) {
+  ) noexcept {
     if ( core.registers[ inst.args[0] ] ) core.RequestFork( inst.tag );
   }
 

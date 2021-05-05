@@ -25,7 +25,7 @@ struct RegulatorDecay {
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t&
-  ) {
+  ) noexcept {
 
     for ( const auto uid : core.GetLocalJumpTable().MatchRaw(inst.tag) ) {
       core.GetLocalJumpTable().DecayRegulator(

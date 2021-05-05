@@ -17,7 +17,9 @@ namespace sgpl {
 class Terminal {
 
   template<typename Spec>
-  static double map_between_plusminus_one( const typename Spec::tag_t& tag ) {
+  static double map_between_plusminus_one(
+    const typename Spec::tag_t& tag
+  ) noexcept {
 
     constexpr double max = 1.0;
     constexpr double min = -1.0;
@@ -28,9 +30,11 @@ class Terminal {
   }
 
   template<typename Spec>
-  static bool is_odd(const typename Spec::tag_t& tag) { return tag.Get(0); }
+  static bool is_odd(const typename Spec::tag_t& tag) noexcept {
+    return tag.Get(0);
+  }
 
-  static double map_up( const double plusminus_unit_val ) {
+  static double map_up( const double plusminus_unit_val ) noexcept {
     emp_assert( plusminus_unit_val != 0 );
 
     return 1.0 / (
@@ -40,7 +44,7 @@ class Terminal {
   }
 
   template<typename Spec>
-  static float map_tag( const typename Spec::tag_t& tag ) {
+  static float map_tag( const typename Spec::tag_t& tag ) noexcept {
     return is_odd<Spec>( tag )
       ? map_up( map_between_plusminus_one<Spec>(tag) )
       : map_between_plusminus_one<Spec>( tag )

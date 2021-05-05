@@ -24,7 +24,7 @@ struct BitwiseNot {
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t&
-  ) {
+  ) noexcept {
     const size_t a = inst.args[0], b = inst.args[1];
 
     std::transform(

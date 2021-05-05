@@ -23,7 +23,7 @@ struct RandomFill {
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t&
-  ) {
+  ) noexcept {
 
     auto& target = core.registers[ inst.args[0] ];
 

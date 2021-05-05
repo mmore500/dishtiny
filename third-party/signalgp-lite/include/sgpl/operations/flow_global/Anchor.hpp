@@ -24,7 +24,7 @@ struct Anchor {
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>& program,
     typename Spec::peripheral_t& peripheral
-  ) {
+  ) noexcept {
     if ( core.HasLocalAnchors() ) core.Terminate();
     else core.LoadLocalAnchors( program );
   }

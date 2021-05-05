@@ -18,7 +18,7 @@ namespace sgpl {
 class RandomBool {
 
   template<typename Spec>
-  static double map_to_unit( const typename Spec::tag_t& tag ) {
+  static double map_to_unit( const typename Spec::tag_t& tag ) noexcept {
 
     constexpr double max_double = Spec::tag_t::MaxDouble();
 
@@ -34,7 +34,7 @@ public:
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t&
-  ) {
+  ) noexcept {
 
     const double p = map_to_unit<Spec>( inst.tag );
 

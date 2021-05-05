@@ -17,7 +17,7 @@ template< typename DishSpec >
 class ReadNeighborState {
 
   template<typename SgplSpec>
-  static size_t GetAddr( const sgpl::Instruction<SgplSpec>& inst ) {
+  static size_t GetAddr( const sgpl::Instruction<SgplSpec>& inst ) noexcept {
     constexpr size_t num_addrs = dish2::ReadableState< DishSpec >::GetSize();
     const size_t addr = inst.tag.GetUInt(0) % num_addrs;
     return addr;
@@ -31,7 +31,7 @@ public:
     const sgpl::Instruction<SgplSpec>& inst,
     const sgpl::Program<SgplSpec>&,
     typename SgplSpec::peripheral_t& peripheral
-  ) {
+  ) noexcept {
 
     using as_const = const decltype(peripheral.state_node_input)&;
 

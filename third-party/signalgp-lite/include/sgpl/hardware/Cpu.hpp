@@ -37,7 +37,7 @@ class Cpu {
 
   using tag_t = typename Spec::tag_t;
 
-  void RefreshCoreGlobalJumpTablePtrs() {
+  void RefreshCoreGlobalJumpTablePtrs() noexcept {
     for (size_t i{}; i < data.scheduler.GetCapacity(); ++i) {
       data.scheduler.GetBuffer()[i].SetGlobalJumpTables(
         data.global_jump_tables
@@ -48,10 +48,12 @@ class Cpu {
 public:
 
   /// Default constructor.
-  Cpu() { RefreshCoreGlobalJumpTablePtrs(); }
+  Cpu() noexcept { RefreshCoreGlobalJumpTablePtrs(); }
 
   /// Copy constructor.
-  Cpu(const Cpu& other) : data(other.data) { RefreshCoreGlobalJumpTablePtrs(); }
+  Cpu(const Cpu& other) noexcept : data(other.data) {
+    RefreshCoreGlobalJumpTablePtrs();
+  }
 
   /// Move constructor.
   Cpu(Cpu&& other) noexcept : data( std::move(other.data) ) {
@@ -59,7 +61,7 @@ public:
   }
 
   /// Copy assignment operator.
-  Cpu& operator=(const Cpu& other) { return *this = Cpu(other); }
+  Cpu& operator=(const Cpu& other) noexcept { return *this = Cpu(other); }
 
   /// Move assignment operator.
   Cpu& operator=(Cpu&& other) noexcept {
@@ -67,39 +69,39 @@ public:
     return *this;
   }
 
-  void ActivateNextCore() {
+  void ActivateNextCore() noexcept {
     emp_assert( GetNumBusyCores() );
     ++data.active_core_idx %= GetNumBusyCores();
   }
 
-  bool TryActivateNextCore() {
+  bool TryActivateNextCore() noexcept {
     if ( HasActiveCore() ) { ActivateNextCore(); return true; }
     else { emp_assert( data.active_core_idx == 0 ); return false; }
   }
 
-  void ActivatePrevCore() {
+  void ActivatePrevCore() noexcept {
     emp_assert( GetNumBusyCores() );
     data.active_core_idx += GetNumBusyCores() - 1;
     data.active_core_idx %= GetNumBusyCores();
   }
 
-  bool TryActivatePrevCore() {
+  bool TryActivatePrevCore() noexcept {
     if ( HasActiveCore() ) { ActivatePrevCore(); return true; }
     else { emp_assert( data.active_core_idx == 0 ); return false; }
   }
 
   __attribute__ ((hot))
-  core_t& GetActiveCore() {
+  core_t& GetActiveCore() noexcept {
     emp_assert( HasActiveCore() );
     return data.scheduler.Get( data.active_core_idx );
   };
 
-  core_t& GetFreshestCore() {
+  core_t& GetFreshestCore() noexcept {
     emp_assert( HasActiveCore() );
     return data.scheduler.GetHead();
   };
 
-  void KillActiveCore() {
+  void KillActiveCore() noexcept {
     emp_assert( HasActiveCore() );
     for ( const auto& req : GetActiveCore().fork_requests ) {
       if ( !TryLaunchCore(req) ) break;
@@ -108,66 +110,66 @@ public:
     TryActivatePrevCore();
   }
 
-  void KillStaleCore() {
+  void KillStaleCore() noexcept {
     emp_assert( !HasFreeCore() );
     data.scheduler.ReleaseTail();
     // no need to activate prev core, killed core is idx 0
   }
 
-  void DoLaunchCore() {
+  void DoLaunchCore() noexcept {
     emp_assert( HasFreeCore() );
     auto& acquired = data.scheduler.Acquire();
     acquired.Reset();
   }
 
-  bool TryLaunchCore() {
+  bool TryLaunchCore() noexcept {
     if ( ! HasFreeCore() ) return false;
     else { DoLaunchCore(); return true; }
   }
 
-  void ForceLaunchCore() {
+  void ForceLaunchCore() noexcept {
     if ( ! HasFreeCore() ) KillStaleCore();
     DoLaunchCore();
   }
 
-  void DoLaunchCore( const tag_t& tag, const size_t jt_idx=0 ) {
+  void DoLaunchCore( const tag_t& tag, const size_t jt_idx=0 ) noexcept {
     emp_assert( HasFreeCore() );
     auto& acquired = data.scheduler.Acquire();
     acquired.Reset();
     acquired.JumpToGlobalAnchorMatch( tag, jt_idx );
   }
 
-  bool TryLaunchCore( const tag_t& tag, const size_t jt_idx=0 ) {
+  bool TryLaunchCore( const tag_t& tag, const size_t jt_idx=0 ) noexcept {
     if ( ! HasFreeCore() ) return false;
     else { DoLaunchCore( tag, jt_idx ); return true; }
   }
 
-  void ForceLaunchCore( const tag_t& tag, const size_t jt_idx=0 ) {
+  void ForceLaunchCore( const tag_t& tag, const size_t jt_idx=0 ) noexcept {
     if ( ! HasFreeCore() ) KillStaleCore();
     DoLaunchCore( tag, jt_idx );
   }
 
-  size_t GetNumBusyCores() const { return data.scheduler.GetSize(); }
+  size_t GetNumBusyCores() const noexcept { return data.scheduler.GetSize(); }
 
-  size_t GetNumFreeCores() const {
+  size_t GetNumFreeCores() const noexcept {
     return data.scheduler.GetAvailableCapacity();
   }
 
-  size_t GetMaxCores() const { return data.scheduler.GetCapacity(); }
+  size_t GetMaxCores() const noexcept { return data.scheduler.GetCapacity(); }
 
   __attribute__ ((hot))
-  bool HasActiveCore() const { return GetNumBusyCores(); }
+  bool HasActiveCore() const noexcept { return GetNumBusyCores(); }
 
   __attribute__ ((hot))
-  bool HasFreeCore() const { return GetNumFreeCores(); }
+  bool HasFreeCore() const noexcept { return GetNumFreeCores(); }
 
-  void Reset() {
+  void Reset() noexcept {
     data.scheduler.Reset();
     data.active_core_idx = {};
     for ( auto& table : data.global_jump_tables ) table.Clear();
   }
 
-  void InitializeAnchors(const sgpl::Program<Spec>& program) {
+  void InitializeAnchors(const sgpl::Program<Spec>& program) noexcept {
     Reset();
     for( size_t i{}; i < data.global_jump_tables.size() ; ++i ) {
       data.global_jump_tables[i].InitializeGlobalAnchors(
@@ -177,21 +179,25 @@ public:
     }
   }
 
-  const core_t& GetCore( const size_t idx ) const {
+  const core_t& GetCore( const size_t idx ) const noexcept {
     return data.scheduler.Get( idx );
   }
 
-  const global_jump_table_t& GetGlobalJumpTable( const size_t idx=0 ) const {
+  const global_jump_table_t& GetGlobalJumpTable( const size_t idx=0 )
+    const noexcept
+  {
     return data.global_jump_tables[ idx ];
   }
 
-  void DecayGlobalRegulators() {
+  void DecayGlobalRegulators() noexcept {
     for ( auto& gjt : data.global_jump_tables ) gjt.DecayRegulators();
   }
 
-  void AdvanceCycleClock(const size_t amt) { data.lifetime_cycle_clock += amt; }
+  void AdvanceCycleClock(const size_t amt) noexcept {
+    data.lifetime_cycle_clock += amt;
+   }
 
-  size_t GetCyclesSinceConstruction() const {
+  size_t GetCyclesSinceConstruction() const noexcept {
     return data.lifetime_cycle_clock;
   }
 

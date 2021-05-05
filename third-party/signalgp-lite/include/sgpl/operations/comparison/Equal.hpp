@@ -22,7 +22,7 @@ struct Equal {
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t&
-  ) {
+  ) noexcept {
     const size_t a = inst.args[0], b = inst.args[1], c = inst.args[2];
     core.registers[a] = core.registers[b] == core.registers[c];
   }

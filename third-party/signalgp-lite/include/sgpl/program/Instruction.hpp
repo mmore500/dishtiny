@@ -56,9 +56,9 @@ struct Instruction {
     if ( !library_t::IsAnchorOpCode( op_code ) ) NopOut();
   }
 
-  bool IsNop() const { return library_t::IsNopOpCode( op_code ); }
+  bool IsNop() const noexcept { return library_t::IsNopOpCode( op_code ); }
 
-  bool IsOp() const { return !IsNop(); }
+  bool IsOp() const noexcept { return !IsNop(); }
 
   bool operator==(const Instruction& other) const {
     return (
@@ -76,7 +76,7 @@ struct Instruction {
 
   std::string GetOpName() const { return library_t::GetOpName(op_code); }
 
-  const tag_t& GetTag() const { return tag; }
+  const tag_t& GetTag() const noexcept { return tag; }
 
   auto GetDescriptors() const {
     return library_t::template GetOpDescriptors< Instruction >(op_code, *this);

@@ -26,7 +26,7 @@ void fuzz_one() {
   cpu.InitializeAnchors( program );
 
   for ( [[maybe_unused]] auto j : timekeeper_t{ std::chrono::seconds{ 1 } }) {
-    while ( cpu.TryLaunchCore( emp::BitSet<32>(rng) ) ) ;
+    while ( cpu.TryLaunchCore( emp::BitSet<64>(rng) ) ) ;
     sgpl::execute_cpu<spec_t>( std::kilo::num, cpu, program );
   }
 

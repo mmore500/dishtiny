@@ -18,7 +18,9 @@ namespace sgpl {
 class RandomDraw {
 
   template<typename Spec>
-  static double map_between_plusminus_one( const typename Spec::tag_t& tag ) {
+  static double map_between_plusminus_one(
+    const typename Spec::tag_t& tag
+  ) noexcept {
 
     constexpr double max = 1.0;
     constexpr double min = -1.0;
@@ -29,7 +31,9 @@ class RandomDraw {
   }
 
   template<typename Spec>
-  static bool is_odd(const typename Spec::tag_t& tag) { return tag.Get(0); }
+  static bool is_odd(const typename Spec::tag_t& tag) noexcept {
+    return tag.Get(0);
+  }
 
   static double map_up( const double plusminus_unit_val ) {
     emp_assert( plusminus_unit_val != 0 );
@@ -41,7 +45,7 @@ class RandomDraw {
   }
 
   template<typename Spec>
-  static float map_draw() {
+  static float map_draw() noexcept {
     const typename Spec::tag_t tag( sgpl::tlrand.Get() );
     return is_odd<Spec>( tag )
       ? map_up( map_between_plusminus_one<Spec>(tag) )
@@ -57,7 +61,7 @@ public:
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t&
-  ) {
+  ) noexcept {
     core.registers[ inst.args[0] ] = map_draw<Spec>();
   }
 

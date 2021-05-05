@@ -26,7 +26,7 @@ class PodInternalNode : public std::tuple<First, Rest...> {
      * Metaprogramming utility.
      */
     template<size_t RemainingSteps, size_t ChildIndex=0>
-    static constexpr auto GetLeafType() {
+    static constexpr auto GetLeafType() noexcept {
 
       emp_assert( false , "GetLeafType should not be run" );
 
@@ -41,7 +41,7 @@ class PodInternalNode : public std::tuple<First, Rest...> {
     }
 
     template<size_t RemainingSteps, size_t ChildIndex=0>
-    static constexpr size_t GetLeafIndex() {
+    static constexpr size_t GetLeafIndex() noexcept {
 
       using Child = typename std::tuple_element<ChildIndex, parent_t>::type;
       constexpr size_t ChildSteps = Child::GetSize();
@@ -67,16 +67,16 @@ public:
    * Get index into leaf node.
    */
   template<size_t Index>
-  static constexpr size_t GetLeafIndex() {
+  static constexpr size_t GetLeafIndex() noexcept {
     return Workaround::template GetLeafIndex< Index >();
   }
 
-  static constexpr bool IsLeaf() { return false; }
+  static constexpr bool IsLeaf() noexcept { return false; }
 
   /*
    * Get number of descendant leaf nodes.
    */
-  static constexpr size_t GetSize() {
+  static constexpr size_t GetSize() noexcept {
     if constexpr ( sizeof...(Rest) > 0 ) {
       return First::GetSize() + PodInternalNode<Rest...>::GetSize();
     } else return First::GetSize();
@@ -86,7 +86,7 @@ public:
    * Get leaf by index.
    */
   template<size_t RemainingSteps, size_t ChildIndex=0>
-  constexpr auto& GetByIndex() {
+  constexpr auto& GetByIndex() noexcept {
 
     using Child = typename std::tuple_element<ChildIndex, parent_t>::type;
     constexpr size_t ChildSteps = Child::GetSize();
@@ -102,7 +102,7 @@ public:
    * Get leaf by index.
    */
   template<size_t RemainingSteps, size_t ChildIndex=0>
-  constexpr auto& Get() {
+  constexpr auto& Get() noexcept {
 
     using Child = typename std::tuple_element<ChildIndex, parent_t>::type;
     constexpr size_t ChildSteps = Child::GetSize();
@@ -117,7 +117,7 @@ public:
    * Get leaf by index.
    */
   template<size_t RemainingSteps, size_t ChildIndex=0>
-  constexpr const auto& Get() const {
+  constexpr const auto& Get() const noexcept {
     return const_cast<this_t *>(this)->Get<RemainingSteps, ChildIndex>();
   }
 
@@ -126,7 +126,7 @@ public:
    * Is the Query type contained in the subtree?
    */
   template<typename Query>
-  static constexpr bool HasType() {
+  static constexpr bool HasType() noexcept {
     if constexpr ( sizeof...(Rest) > 0 ) {
       return (
         std::is_same<First, Query>() // is this node the Query?
@@ -145,7 +145,7 @@ public:
    * Returns first leaf of Query type.
    */
   template<typename Query, size_t SearchIndex=0>
-  constexpr Query& Get() {
+  constexpr Query& Get() noexcept {
 
     using Child = typename std::tuple_element<SearchIndex, parent_t>::type;
 
@@ -166,14 +166,14 @@ public:
    * Returns first leaf with Query type.
    */
   template<typename Query, size_t SearchIndex=0>
-  constexpr const Query& Get() const {
+  constexpr const Query& Get() const noexcept {
     return const_cast<this_t *>(this)->Get<Query, SearchIndex>();
   }
 
   /*
    * Set all child nodes to value-initialized state.
    */
-  void Reset() {
+  void Reset() noexcept {
     // adapted from https://stackoverflow.com/a/45498003
     std::apply(
       [](auto& ...x){ (..., [](auto& v){ v.Reset(); }(x)); },

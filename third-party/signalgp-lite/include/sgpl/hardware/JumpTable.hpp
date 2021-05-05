@@ -19,45 +19,55 @@ struct JumpTable {
   using program_t = sgpl::Program<Spec>;
   using uid_t = size_t;
 
-  inline auto MatchRaw( const tag_t & query ) {
+  inline auto MatchRaw( const tag_t & query ) noexcept {
     return match_bin.MatchRaw(query);
   }
 
-  inline auto MatchRegulated( const tag_t & query ) {
+  inline auto MatchRegulated( const tag_t & query ) noexcept {
     return match_bin.MatchRegulated(query);
   }
 
-  inline void SetRegulator( const uid_t uid, const float set ) {
+  inline void SetRegulator( const uid_t uid, const float set ) noexcept {
     match_bin.SetRegulator(uid, set);
   }
 
-  inline void AdjRegulator( const uid_t uid, const float set ) {
+  inline void AdjRegulator( const uid_t uid, const float set ) noexcept {
     match_bin.AdjRegulator(uid, set);
   }
 
-  inline void DecayRegulator( const uid_t uid, const float amt ) {
+  inline void DecayRegulator( const uid_t uid, const float amt ) noexcept {
     match_bin.DecayRegulator(uid, amt);
   }
 
-  inline float ViewRegulator(const uid_t uid) const {
+  inline float ViewRegulator(const uid_t uid) const noexcept {
     return match_bin.ViewRegulator(uid);
   }
 
-  inline void DecayRegulators() { match_bin.DecayRegulators(); }
+  inline void DecayRegulators() noexcept { match_bin.DecayRegulators(); }
 
-  inline uid_t GetUid(const tag_t tag) const { return match_bin.GetUid(tag); }
+  inline uid_t GetUid(const tag_t tag) const noexcept {
+    return match_bin.GetUid(tag);
+  }
 
-  inline uid_t GetUid(const size_t pos) const { return match_bin.GetUid(pos); }
+  inline uid_t GetUid(const size_t pos) const noexcept {
+    return match_bin.GetUid(pos);
+  }
 
-  inline auto GetVal(const uid_t uid) const { return match_bin.GetVal( uid ); }
+  inline auto GetVal(const uid_t uid) const noexcept {
+    return match_bin.GetVal( uid );
+  }
 
-  inline bool HasVal(const size_t pos) const { return match_bin.HasVal( pos ); }
+  inline bool HasVal(const size_t pos) const noexcept {
+    return match_bin.HasVal( pos );
+  }
 
-  inline void Clear() { match_bin.Clear(); }
+  inline void Clear() noexcept { match_bin.Clear(); }
 
-  inline size_t GetSize() const { return match_bin.GetSize(); }
+  inline size_t GetSize() const noexcept { return match_bin.GetSize(); }
 
-  void InitializeLocalAnchors(const program_t& prog, const size_t start_pos) {
+  void InitializeLocalAnchors(
+    const program_t& prog, const size_t start_pos
+  ) noexcept {
     Clear();
     if ( prog.empty() ) return;
     const size_t prog_len{ prog.size() };
@@ -78,7 +88,7 @@ struct JumpTable {
 
   void InitializeGlobalAnchors(
     const sgpl::Program<Spec>& program, const size_t inclusion_mod=1
-  ) {
+  ) noexcept {
     Clear();
     for (size_t pos{}; pos < program.size(); ++pos) {
       const auto& instruction = program[pos];

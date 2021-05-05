@@ -23,7 +23,7 @@ struct BcstIntraMessageIf {
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t& peripheral
-  ) {
+  ) noexcept {
 
     if ( !core.registers[ inst.args[0] ] ) return;
 

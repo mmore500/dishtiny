@@ -25,7 +25,7 @@ struct RegulatorSet {
     const sgpl::Instruction<Spec>& inst,
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t&
-  ) {
+  ) noexcept {
 
     auto& jump_table = core.GetGlobalJumpTable( JUMP_TABLE_IDX );
     for ( const auto uid : jump_table.MatchRaw(inst.tag) ) {
