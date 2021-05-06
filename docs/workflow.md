@@ -6,10 +6,11 @@ They should be entirely compatible with other HPCC users, though, and mostly com
 
 You probably want to [check when this page was last updated](https://github.com/mmore500/dishtiny/commits/master/docs/workflow.md).
 
-::hammer_and_wrench:: ::construction_worker_woman::
+```{note} ::hammer_and_wrench:: ::construction_worker_woman::
 If anything is unclear or out of date, please open [an issue](https://github.com/mmore500/dishtiny/issues/new) or [a pull request](https://github.com/mmore500/dishtiny/compare) so we can fix it!
 Also, if you have project-specific questions or any thing else you'd like to chat about you can always feel free to [get in touch directly](mailto:m.more500@gmail.com).
 I'd love to hear from you!
+```
 
 ::bangbang:: ::bangbang::
 In order to prevent the docs from getting out of date, many example command snippets below are annotated with `[run without params to get a help message]` instead of actual arguments.
@@ -52,7 +53,13 @@ Code used within a series is strictly version-pinned, meaning that the repositor
 ## Follow-up Experiments Launch Every Ten Stints
 
 Every ten stints (including stint 0), the stint evolve job will launch a bevvy of follow-up jobs in addition to submitting its successor job.
-These jobs do things like grow the most abundant genotype in monoculture, perform phenotype-equivalent nopouts, and launch competitions to assess the number of distinct environmental states genomes are interacting with.
+These jobs do things like
+* grow the most abundant genotype in monoculture without mutations,
+  * (useful to assess a genotype's phenotypic characteristics in an isolated, controlled environment)
+* perform phenotype-equivalent nopouts, and
+  * (nopping instructions that don't affect the phenotype reduces the number of op instructions to analyze in further experiments and gives us a sense how many instructions actually affect phenotype),
+  * launch competitions to assess the number of distinct environmental states genomes are interacting with to increase their fitness and how many distinct messages genomes are passing to increase their fitness.
+  * (allows us to quantify aspects of an organism's complexity)
 
 ## Series are Grouped into Endeavors
 
@@ -60,7 +67,7 @@ Chunks of 1,000 series ID's constitute an "endeavor."
 For example, series 11000-11999 all fall into endeavor 11.
 Series 10009 falls into endeavor 10 and series 12000 falls into endeavor 12.
 Later scripts will collate data from series within the same endeavor.
-(If you want data from your series to remain separate, choose series ID's that fall into different endeavors.)
+(If you want data from your series to remain separate, choose series IDs that fall into different endeavors.)
 
 Endeavors 0-9 are special and reserved for debugging.
 Series within endeavor 0 run extremely shortened stints (1 minute).
@@ -93,15 +100,29 @@ The easiest way to provide credentials is by throwing a file called `.secrets.sh
 The scripts will check for this file and source it if it's available.
 Here's what I've got in my `~/.secrets.sh` file.
 ```bash
+# open science framework, a nifty free data depository
+# https://osf.io/
 export OSF_USERNAME=my_secret
 export OSF_PASSWORD=my_secret
+# optional, used to send push notifications in addition to failmail
+# https://pushover.net/
 export PUSHOVER_APP_TOKEN=my_secret
 export PUSHOVER_USER_TOKEN=my_secret
+# used to ssh into host from inside container
+# i.e., your cluster login credentials
 export HOST_USERNAME=my_secret
 export HOST_PASSWORD=my_secret
+# used for S3, a high-performance data depository
+# https://aws.amazon.com/
 export AWS_ACCESS_KEY_ID=my_secret
 export AWS_SECRET_ACCESS_KEY=my_secret
 export AWS_DEFAULT_REGION=my_secret
+# optional, used to prevent DockerHub throttling
+# https://hub.docker.com
+export SINGULARITY_DOCKER_USERNAME=mmore500
+export SINGULARITY_DOCKER_PASSWORD=Docker2\!rekcod
+# optional, used for twitterbot
+# https://twitter.com/TheySeeMeEvolvn
 export TWITTER_API_KEY=my_secret
 export TWITTER_API_SECRET_KEY=my_secret
 export TWITTER_BEARER_TOKEN=my_secret
@@ -118,7 +139,7 @@ Storing data and artifacts in S3 buckets has several benefits:
 
 The major downside, of course, is that S3 costs money to use.
 Although we're storing many, many files they're mostly pretty small.
-I pay less than $20 a month at my current usage level.
+I pay less than $50 a month at my current usage level, running 40 evolutionary series in parallel around the clock  .
 
 If you're interested in working with DISHTINY but you are concerned about the cost of S3 service, get in touch and I'll set you up.
 
@@ -139,7 +160,7 @@ Caching should enable future runs with the same container image to boot up almos
 
 Almost all of DISHTINY's runtime scripts start off by booting up a containerized environment and then jumping in there to do the rest of their work.
 Some resources are so tightly coupled to the host environment, though, that they can't really be used from inside the container --- like `sbatch`, `squeue`, `mpiexec` or even `singularity` to boot up a nested script call.
-The scripts get around this by `ssh`'ing out of the container back into the host to do this kind of business.
+The scripts get around this by `ssh`'ing out of the container back into the host to perform such business.
 
 You don't really need to worry about this, except you'll need to shove your HPCC username and password into your `~/.secrets.sh` file.
 You'll also have to specify a tag to pull the DISHTINY container at when you launch any scripts.
@@ -147,10 +168,12 @@ If you're not sure which to use, you can always specify the tag `latest`.
 (This tag isn't strictly ideal because it gets regularly reassigned to the latest available container image.
 Ideally you'll use a tag associated with a specific container image that won't get reassigned, something like `sha-8e9493f`.)
 
+```{warning}
 ::bangbang:: ::bangbang::
 DockerHub imposes rate limits on queries to their container repository.
 You'll want to register a paid account ($7 a month circa 2021) if you plan to run thousands of container sessions.
 You can shove your DockerHub credentials inside of `~/.secrets.sh`.
+```
 
 ## Configpacks
 
@@ -162,7 +185,7 @@ For example, the stint evolution SLURM script versus the monoculture SLURM scrip
 Configpacks also specify how to build the DISHTINY executable (allowing for compile-time configuration).
 Ideally, a configpack might also specify which follow-up jobs to run or what process count to run simulations with, but this hasn't been implemented.
 
-Configpacks are stored in an unarchived (i.e., folders' n' files) format inside of the `configpacks/` directory.
+Configpacks are stored in an unarchived (i.e., folders n' files) format inside of the `configpacks/` directory.
 This repository's GitHub Actions integration zips up configpacks corresponding to every commit and pushes them over to <https://github.com/mmore500/dishtiny-assets> where they can be curled from a programatically-generable url.
 
 The rationale behind fetching configuration assets from a url is to enable straightforward integration with the DISHTINY web viewer.
@@ -273,6 +296,12 @@ to generate these interpolated genomes and launch competitions that assess their
 ## Collating A Stint Across Series
 
 Once all data for a particular stint has been generated, we need to stitch it together.
+Joining many small data files into one big data file makes it much easier to analyze, particularly when we want to make comparisons across stints or across series.
+
+The collation scripts are designed so that data can be repeatedly collated on an ongoing, as-available basis.
+You might also choose to collage data all at once, after all data has been generated.
+(This would yield an equivalent result.)
+
 We can collate all available individual datasets across series as follows,
 ```bash
 source ~/.secrets.sh
@@ -322,9 +351,10 @@ You can pull one up from its `SLURM_JOB_ID` via
 less /mnt/scratch/${USER}/slurmlogs/*<slurm job id>*
 ```
 
-::bangbang:: ::bangbang::
+```{warning} ::bangbang:: ::bangbang::
 You'll need to manually create the `/mnt/scratch/${USER}/slurmlogs/` folder before starting to run jobs.
 Otherwise, SLURM will quietly refuse to run any DISHTINY jobs for you.
+```
 
 If you want to look at a job's run script, they're all saved into `/mnt/scratch/${USER}/slurmscripts/`.
 You can pull one up from its `SLURM_JOB_ID` via
@@ -337,10 +367,11 @@ If you want to resubmit a particular job, you can just
 sbatch /mnt/scratch/${USER}/slurmscripts/*<slurm job id>*
 ```
 
-::bangbang:: ::bangbang::
+```{warning} ::bangbang:: ::bangbang::
 The `slurmlogs/` and `slurmscripts/` might start to fill up your file count quota.
 You should Pushover notifications if your file count quota comes close to running out.
 Run `./script/purge_logs.sh` to clear out old logs and runscripts.
+```
 
 If you're in need of log files from an older job, job log files are compressed and uploaded to your AWS S3 bucket inside of the `repro/` prefix.
 
