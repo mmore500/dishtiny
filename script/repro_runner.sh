@@ -509,7 +509,7 @@ echo "repo_sha before asset get ${repo_sha}"
 
 if [ -n "${repo_sha}" ]; then
 
-  time bash <(curl https://raw.githubusercontent.com/mmore500/dishtiny/master/gitget.sh) \
+  time bash <(curl https://raw.githubusercontent.com/mmore500/dishtiny/master/script/gitget.sh) \
     "https://github.com/${arg_username}/${arg_slug}.git" \
     "${arg_slug}" \
     "${repo_sha}"
