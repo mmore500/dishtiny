@@ -71,8 +71,9 @@ A genome's reproductive success.
 A test used to compare the relative fitness of two strains.
 The two-dimensional toroidal grid is seeded with equal copy counts of two strains, intermixed.
 The simulation is run with mutation disabled for a fixed amount of time.
-At the end of a fitness competition,
+Then, relative abundances of the two strains is measured.
 Replicate measurements allow for statistical detection of fitness differences between the strains.
+A strain that is significantly more abundant than its competitor is determined to be more fit.
 
 ## Fitness Complexity
 
@@ -130,7 +131,13 @@ A virtual CPU instruction that, when executed, performs no action.
 ## Nopout
 
 Replacing an instruction in a program with a Nop instruction.
-This Nop instruction is configured so that it advances the random number generator engine identically to the original instruction.
+
+This is the conceptual equivalent of a ["knockout"](https://en.wikipedia.org/wiki/Gene_knockout) in biological experiments.
+Such manipulations can be used to assess functionality of the targeted gene by comparing organisms with and without the original gene.
+
+We replace the original instruction with a nop instead of deleting it to avoid introducing unintended side effects with execution timing.
+This Nop instruction is configured so that it advances the random number generator engine identically to the original instruction, again reducing the possibility of unintended side effects.
+
 
 ## Op Instruction
 
