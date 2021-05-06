@@ -508,22 +508,12 @@ done
 echo "repo_sha before asset get ${repo_sha}"
 
 if [ -n "${repo_sha}" ]; then
-  echo "setting up pinned project source at revision ${repo_sha}..."
-  time for retry in {1..20}; do
 
-    rm -rf "${arg_slug}" \
-    && mkdir "${arg_slug}" \
-    && git -C "${arg_slug}" init \
-    && git -C "${arg_slug}" remote add origin "https://github.com/${arg_username}/${arg_slug}.git" \
-    && git -C "${arg_slug}" fetch --quiet --depth 1 origin "${repo_sha}" \
-    && git -C "${arg_slug}" checkout FETCH_HEAD \
-    && git -C "${arg_slug}" submodule update --quiet --init --recursive --depth 1 --jobs 16 \
-    && echo "  source setup success" \
-    && break \
-    || (echo "source setup failure (${retry})" && sleep $((RANDOM % 10)))
+  time bash <(curl https://raw.githubusercontent.com/mmore500/dishtiny/master/gitget.sh) \
+    "https://github.com/${arg_username}/${arg_slug}.git" \
+    "${arg_slug}" \
+    "${repo_sha}"
 
-    if ((${retry}==20)); then echo "source setup fail" && exit 123123; fi
-  done
 else
   echo "setting up latest project source..."
   time for retry in {1..20}; do
