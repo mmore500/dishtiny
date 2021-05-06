@@ -515,7 +515,7 @@ if [ -n "${repo_sha}" ]; then
     --retry 5 \
     --retry-delay 0 \
     --retry-max-time 40 \
-    https://raw.githubusercontent.com/mmore500/dishtiny/master/script/gitget.sh \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/${repo_sha}/script/gitget.sh" \
   ) \
     "https://github.com/${arg_username}/${arg_slug}.git" \
     "${arg_slug}" \
