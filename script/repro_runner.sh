@@ -509,14 +509,11 @@ echo "repo_sha before asset get ${repo_sha}"
 
 if [ -n "${repo_sha}" ]; then
 
-  time bash <(curl \
-    --connect-timeout 5 \
-    --max-time 10 \
-    --retry 5 \
-    --retry-delay 0 \
-    --retry-max-time 40 \
+  time wget \
+    --retry-connrefused --waitretry=1 --read-timeout=20 \
+    --timeout=15 -t 10 -qO- \
     "https://raw.githubusercontent.com/mmore500/dishtiny/${repo_sha}/script/gitget.sh" \
-  ) \
+  | bash -s \
     "https://github.com/${arg_username}/${arg_slug}.git" \
     "${arg_slug}" \
     "${repo_sha}"
