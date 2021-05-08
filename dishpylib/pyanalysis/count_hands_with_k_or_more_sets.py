@@ -14,15 +14,11 @@ def count_hands_with_k_or_more_sets(
         return 0
 
     if set_size == 1:
-        return (
-            math.comb(num_sets, k)
-            * math.comb(deck_size - num_sets, hand_free)
-        ) + count_hands_with_k_or_more_sets(
-            deck_size=deck_size,
-            hand_size=hand_size,
-            num_sets=num_sets,
-            set_size=set_size,
-            k=k+1,
+        return sum(
+            math.comb(num_sets, k_)
+            * math.comb(deck_size - num_sets, hand_size - k_)
+            for k_ in range(k, num_sets + 1)
+            if hand_size >= k_
         )
 
     return (
