@@ -49,8 +49,19 @@ jobs:
       - uses: docker-practice/actions-setup-docker@v1
       - run: docker run "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny && ./ci/test_trailing_whitespace.sh && ./ci/test_tabs.sh && ./ci/test_missing_newlines.sh && make docs && ./ci/test_headerguards.sh && ./ci/test_alphabetize_includes.sh && python3 ci/test_readme_snippets.py"
 
-  unit:
-    name: Unit Tests
+  py-unit:
+    name: Python Unit Tests
+    runs-on: ubuntu-16.04
+    needs:
+      - docker-build
+    steps:
+      # Adapted from https://askubuntu.com/a/524368
+      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
+      - uses: docker-practice/actions-setup-docker@v1
+      - run: docker run -e "DISH_MPICXX=$DISH_MPICXX" -e "OMPI_CXX=$OMPI_CXX" --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "/opt/dishtiny/dishpylib/test/run_tests.sh"
+
+  cpp-unit:
+    name: C++ Unit Tests
     runs-on: ubuntu-16.04
     needs:
       - docker-build
@@ -156,7 +167,8 @@ jobs:
     if: github.ref == 'refs/heads/master'
     needs:
       - docs
-      - unit
+      - py-unit
+      - cpp-unit
       - source
       - coverage
       - fuzzing
@@ -191,7 +203,8 @@ jobs:
     runs-on: ubuntu-16.04
     needs:
       - docs
-      - unit
+      - py-unit
+      - cpp-unit
       - source
       - coverage
       - fuzzing
