@@ -70,9 +70,13 @@ RUN \
 
 # install python3.8
 RUN \
-  add-apt-repository ppa:deadsnakes/ppa \
+  add-apt-repository -y ppa:deadsnakes/ppa \
     && \
-  apt install python3.8 \
+  apt-get install -y python3.8 \
+    && \
+  apt-get clean \
+    && \
+  rm -rf /var/lib/apt/lists/* \
     && \
   echo "installed python3.8"
 
