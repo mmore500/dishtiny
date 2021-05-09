@@ -68,6 +68,14 @@ RUN \
     && \
   echo "installed apt packages"
 
+# install python3.8
+RUN \
+  add-apt-repository ppa:deadsnakes/ppa \
+    && \
+  apt install python3.8 \
+    && \
+  echo "installed python3.8"
+
 COPY container/policy.xml /etc/ImageMagick-6/policy.xml
 
 COPY container/ccache.conf /etc/ccache.conf
