@@ -179,6 +179,8 @@ nbformat==5.1.3
     # via nbconvert
 networkx==2.5
     # via -r requirements.in
+nose==1.3.7
+    # via -r requirements.in
 numpy==1.19.5
     # via
     #   -r requirements.in
