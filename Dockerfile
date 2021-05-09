@@ -90,7 +90,11 @@ ENV CCACHE_CONFIGPATH=/etc/ccache.conf
 RUN \
   python3 -m pip install --no-cache-dir --timeout 60 --retries 100 --upgrade pip==21.0.1 \
     && \
+  python3.8 -m pip install --no-cache-dir --timeout 60 --retries 100 --upgrade pip==21.0.1 \
+    && \
   python3 -m pip install --no-cache-dir --timeout 60 --retries 100 --ignore-installed -r /opt/dishtiny/third-party/requirements.txt \
+    && \
+  python3.8 -m pip install --no-cache-dir --timeout 60 --retries 100 --ignore-installed -r /opt/dishtiny/third-party/requirements.txt \
     && \
   echo "installed python requirements"
 
