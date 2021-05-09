@@ -1,4 +1,5 @@
 import boto3
+import botocore
 import functools
 import pandas as pd
 
@@ -7,7 +8,13 @@ from .fit_control_t_distns import fit_control_t_distns
 @functools.lru_cache
 def get_control_t_distns( bucket, endeavor, stint ):
 
-    s3_handle = boto3.resource('s3')
+    s3_handle = boto3.resource(
+        's3',
+        region_name="us-east-2",
+        config=botocore.config.Config(
+            signature_version=botocore.UNSIGNED,
+        ),
+    )
     bucket_handle = s3_handle.Bucket(bucket)
 
     control_competitions, = bucket_handle.objects.filter(
