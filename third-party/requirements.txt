@@ -143,7 +143,9 @@ jupyter_client==6.1.12
     #   -r requirements.in
     #   ipykernel
 keyname==0.4.1
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   teeplot
 kiwisolver==1.3.1
     # via matplotlib
 lxml==4.6.3
@@ -161,6 +163,7 @@ matplotlib==3.3.2
     # via
     #   -r requirements.in
     #   seaborn
+    #   teeplot
 mdit-py-plugins==0.2.6
     # via
     #   markdown-it-py
@@ -247,7 +250,9 @@ python-dateutil==2.8.1
     #   matplotlib
     #   pandas
 python-slugify==4.0.1
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   teeplot
 pytz==2021.1
     # via
     #   babel
@@ -322,6 +327,8 @@ sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.4
     # via sphinx
 statsmodels==0.12.2
+    # via -r requirements.in
+teeplot==0.0.1
     # via -r requirements.in
 testpath==0.4.4
     # via nbconvert
