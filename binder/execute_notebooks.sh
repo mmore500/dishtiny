@@ -30,7 +30,10 @@ echo "--------------------------------------"
 shopt -s nullglob
 
 for notebook in "${script_dir}/"*.ipynb; do
-  jupyter nbconvert --to notebook --execute  --inplace "${notebook}"
+  jupyter nbconvert \
+    --to notebook --execute --inplace \
+    --ExecutePreprocessor.timeout=600 \
+    "${notebook}"
 done
 
 shopt -u nullglob
