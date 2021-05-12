@@ -31,6 +31,7 @@ from dishpylib.pyassemblers import \
     assemble_mutant_phenotype_differentiation, \
     assemble_mutating_competitions, \
     assemble_noncritical_nopout_fitness_competitions, \
+    assemble_noncritical_phenotypeequivalent_nopinterpolation_competitions, \
     assemble_phenotype_neutral_nopout_fitness_competitions, \
     assemble_phenotype_neutral_nopout_phenotype_differentiation, \
     assemble_phenotype_neutral_nopouts, \
@@ -88,6 +89,7 @@ assemblers = [
 ] + [
     assemble_mutant_competitions,
     assemble_noncritical_nopout_fitness_competitions,
+    assemble_noncritical_phenotypeequivalent_nopinterpolation_competitions,
     assemble_phenotype_neutral_nopout_fitness_competitions,
     assemble_deletion_mutant_competitions,
     assemble_insertion_mutant_competitions,
