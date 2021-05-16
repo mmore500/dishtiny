@@ -39,6 +39,7 @@ def estimate_interpolation_complexity(
         'most_credible_set_size' : math.nan,
         'interpolation_complexity' : math.nan,
         'credible_interval_upper_bound_idx' : math.nan,
+        'Series' : series,
     }
 
     if res['none_nopped_is_less_fit'] or not res['all_nopped_is_less_fit']:

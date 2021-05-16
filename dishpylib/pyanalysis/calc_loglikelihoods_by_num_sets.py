@@ -60,9 +60,7 @@ def _calc_loglikelihood_of_observations(
             num_sets=num_sets,
             num_sites=num_sites,
             set_size=set_size,
-            was_significantly_divergent=(
-                row['Is Less Fit'] or row['Is More Fit']
-            ),
+            was_significantly_divergent=not row['Is Neutral'],
         )
 
         if res:

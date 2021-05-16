@@ -12,6 +12,7 @@ from io import StringIO
 from iterdub import iterdub as ib
 import itertools
 from keyname import keyname as kn
+import math
 import multiprocessing as mp
 import os
 import pandas as pd
@@ -19,7 +20,6 @@ import re
 import sys
 import tempfile
 from tqdm.contrib.concurrent import process_map
-from math import gcd
 from functools import reduce
 
 ################################################################################
@@ -145,7 +145,16 @@ print( '-----------------------------' )
 ################################################################################
 
 def getter(match):
-    return pd.read_csv(f's3://{bucket}/{match}')
+    res = pd.read_csv(f's3://{bucket}/{match}')
+
+    num_nans = res.isna().sum().sum()
+    num_cells = math.prod(map(len, res.axes))
+    if num_nans * 2 > num_cells:
+        print(f'WARNING: {match} is more than half nans')
+
+    # print(match, len(res.index))
+
+    return res
 
 df = pd.concat(process_map(
         getter,
@@ -153,6 +162,9 @@ df = pd.concat(process_map(
         chunksize=10,
         max_workers=mp.cpu_count(),
 ))
+
+print(f'concatenated dataframe has {len(df.index)} rows')
+print(f'concatenated dataframe has {len(df.columns)} columns')
 
 ################################################################################
 print(                                        )

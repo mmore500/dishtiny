@@ -43,7 +43,7 @@ s3_handle = boto3.resource('s3')
 bucket_handle = s3_handle.Bucket(bucket)
 
 data_url, = bucket_handle.objects.filter(
-    Prefix=f'endeavor={endeavor}/stage=7+what=collated/',
+    Prefix=f'endeavor={endeavor}/series-profiles/stage=7+what=collated/',
 )
 
 df = pd.read_csv(
@@ -56,11 +56,29 @@ print( 'elaborating data'                                                      )
 print( '---------------------------------------------------------------------' )
 ################################################################################
 
-df['Fitness Complexity'] = df['Estimated True Advantageous Sites']
+df['Bucket'] = bucket
 
 ################################################################################
 
-mutation_str = ip.pophomogeneous( df['MUTATION_RATE'] )
+df['Fitness Complexity'] = df['Estimated True Advantageous Sites']
+
+for target in [
+    'Number Unique Module Expression Profiles',
+    'Number Unique Module Regulation Profiles',
+    'Num Instructions Executed per Live Cardinal-update',
+    'Mean Resource Received Per Cell',
+    'Resource Receiving Cell Fraction',
+    'Fraction Deaths apoptosis',
+    'Fraction Deaths elimination',
+    'Nulliparous Fraction',
+    'Mean Kin Group Size Level 0',
+    'Mean Kin Group Size Level 1',
+]:
+    df[target] = df[target + ' (monoculture mean)']
+
+################################################################################
+
+mutation_str = ip.pophomogeneous( df['MUTATION_RATE'].dropna() )
 mutation_items = mutation_str.split()
 assert mutation_items[0] == '[' and mutation_items[-1] == ']'
 
@@ -217,7 +235,7 @@ out_filename = kn.pack(
     kn.unpack(data_url.key),
 )
 
-out_prefix = f'endeavor={endeavor}/stage=8+what=elaborated/'
+out_prefix = f'endeavor={endeavor}/series-profiles/stage=8+what=elaborated/'
 out_path = out_prefix + out_filename
 
 print(f'upload path will be s3://{bucket}/{out_path}')

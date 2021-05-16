@@ -52,4 +52,4 @@ echo "-----------------"
 
 "${script_dir}/collate_one_stint_across_series.sh" "${bucket}" "${endeavor}" "${stint}"
 
-"${script_dir}/tabulate_and_stitch_stint.py" "${bucket}" "${endeavor}" "${stint}"
+"${script_dir}/tabulate_and_stitch_stint_series_profiles.py" "${bucket}" "${endeavor}" "${stint}"
