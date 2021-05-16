@@ -62,9 +62,23 @@ df['Bucket'] = bucket
 
 df['Fitness Complexity'] = df['Estimated True Advantageous Sites']
 
+for target in [
+    'Number Unique Module Expression Profiles',
+    'Number Unique Module Regulation Profiles',
+    'Num Instructions Executed per Live Cardinal-update',
+    'Mean Resource Received Per Cell',
+    'Resource Receiving Cell Fraction',
+    'Fraction Deaths apoptosis',
+    'Fraction Deaths elimination',
+    'Nulliparous Fraction',
+    'Mean Kin Group Size Level 0',
+    'Mean Kin Group Size Level 1',
+]:
+    df[target] = df[target + ' (monoculture mean)']
+
 ################################################################################
 
-mutation_str = ip.pophomogeneous( df['MUTATION_RATE'] )
+mutation_str = ip.pophomogeneous( df['MUTATION_RATE'].dropna() )
 mutation_items = mutation_str.split()
 assert mutation_items[0] == '[' and mutation_items[-1] == ']'
 

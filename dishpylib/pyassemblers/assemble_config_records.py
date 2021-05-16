@@ -11,7 +11,7 @@ from dishpylib.pytabulators import \
 
 @try_except_missing_data_decorator_factory('config records')
 @announce_job_decorator_factory('config records')
-@only_every_nth_stint_decorator_factory(10)
+@only_every_nth_stint_decorator_factory(1)
 def assemble_config_records( *, bucket, endeavor, stint ):
 
     s3_handle = boto3.resource('s3')

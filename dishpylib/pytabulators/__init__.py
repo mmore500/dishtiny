@@ -1,4 +1,6 @@
 from .reshape_dpp import reshape_dpp
+from .reshape_dpp_threadfirst import reshape_dpp_threadfirst
+from .reshape_dpp_threadmean import reshape_dpp_threadmean
 from .reshape_kin_conflict import reshape_kin_conflict
 from .reshape_kin_conflict_by_replev import reshape_kin_conflict_by_replev
 from .tabulate_predecessor_fitness import tabulate_predecessor_fitness

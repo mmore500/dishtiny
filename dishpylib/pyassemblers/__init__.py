@@ -3,11 +3,19 @@ from .assemble_deletion_mutant_competitions \
     import assemble_deletion_mutant_competitions
 from .assemble_deletion_mutant_phenotype_differentiation \
     import assemble_deletion_mutant_phenotype_differentiation
+from .assemble_evolve_dpp_metrics_threadfirst \
+    import assemble_evolve_dpp_metrics_threadfirst
+from .assemble_evolve_dpp_metrics_threadmean \
+    import assemble_evolve_dpp_metrics_threadmean
+from .assemble_evolve_dpp_metrics import assemble_evolve_dpp_metrics
 from .assemble_insertion_mutant_competitions \
     import assemble_insertion_mutant_competitions
 from .assemble_insertion_mutant_phenotype_differentiation \
     import assemble_insertion_mutant_phenotype_differentiation
-from .assemble_monoculture_dpp_metrics import assemble_monoculture_dpp_metrics
+from .assemble_monoculture_dpp_metrics_threadfirst \
+    import assemble_monoculture_dpp_metrics_threadfirst
+from .assemble_monoculture_dpp_metrics_threadmean \
+    import assemble_monoculture_dpp_metrics_threadmean
 from .assemble_monoculture_kin_conflict_by_replev_statistics \
     import assemble_monoculture_kin_conflict_by_replev_statistics
 from .assemble_monoculture_kin_conflict_statistics \
