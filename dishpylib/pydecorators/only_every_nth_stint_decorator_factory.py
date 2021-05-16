@@ -9,7 +9,7 @@ def only_every_nth_stint_decorator_factory( n ):
             if kwargs['stint'] % n == 0:
                 return func(*args, **kwargs)
             else:
-                pass
+                print(f'only available every {n}th stint, passing')
 
         return only_every_nth_stint_wrapper
 
