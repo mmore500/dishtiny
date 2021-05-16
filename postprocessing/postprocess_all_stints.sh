@@ -2,7 +2,7 @@
 
 ################################################################################
 echo
-echo "running postprocess_all_stints_all_series_profiles.sh"
+echo "running postprocess_all_stints.sh"
 echo "-----------------------------------------------------"
 ################################################################################
 
@@ -54,6 +54,12 @@ for stint in ${stints}; do
   "${script_dir}/postprocess_one_stint.sh" "${bucket}" "${endeavor}" "${stint}"
 done
 
-"${script_dir}/collate_tabulated_and_stitched_stints.sh" "${bucket}" "${endeavor}"
+# series profiles
+"${script_dir}/collate_series_profiles_across_stints.sh" "${bucket}" "${endeavor}"
 
 "${script_dir}/elaborate_all_stints_all_series_profiles.py" "${bucket}" "${endeavor}"
+
+# thread profiles
+"${script_dir}/collate_thread_profiles_across_stints.sh" "${bucket}" "${endeavor}"
+
+"${script_dir}/elaborate_all_stints_all_thread_profiles.py" "${bucket}" "${endeavor}"

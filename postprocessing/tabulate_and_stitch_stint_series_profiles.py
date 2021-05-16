@@ -5,7 +5,7 @@ Collated data is tabulated (reformatted and processed) and stitched into a singl
 Uploads output to a programatically-generated s3 url.
 
 Usage:
-    ./tabulate_and_stitch_stint.py [bucket] [endeavor] [stint]
+    ./tabulate_and_stitch_stint_series_profiles.py [bucket] [endeavor] [stint]
 """
 
 import boto3
@@ -22,9 +22,12 @@ from dishpylib.pyassemblers import \
     assemble_config_records, \
     assemble_deletion_mutant_competitions, \
     assemble_deletion_mutant_phenotype_differentiation, \
+    assemble_evolve_dpp_metrics_threadfirst, \
+    assemble_evolve_dpp_metrics_threadmean, \
     assemble_insertion_mutant_competitions, \
     assemble_insertion_mutant_phenotype_differentiation, \
-    assemble_monoculture_dpp_metrics, \
+    assemble_monoculture_dpp_metrics_threadfirst, \
+    assemble_monoculture_dpp_metrics_threadmean, \
     assemble_monoculture_kin_conflict_by_replev_statistics, \
     assemble_monoculture_kin_conflict_statistics, \
     assemble_mutant_competitions, \
@@ -49,7 +52,7 @@ from dishpylib.pyassemblers import \
 
 ################################################################################
 print(                                                                         )
-print( 'running tabulate_and_stitch_stint.py'                                  )
+print( 'running tabulate_and_stitch_stint_series_profiles.py'                  )
 print( '---------------------------------------------------------------------' )
 ################################################################################
 
@@ -108,7 +111,10 @@ assemblers = [
     assemble_phenotype_neutral_nopouts,
     assemble_monoculture_kin_conflict_statistics,
     assemble_monoculture_kin_conflict_by_replev_statistics,
-    assemble_monoculture_dpp_metrics,
+    assemble_monoculture_dpp_metrics_threadfirst,
+    assemble_evolve_dpp_metrics_threadfirst,
+    assemble_monoculture_dpp_metrics_threadmean,
+    assemble_evolve_dpp_metrics_threadmean,
 ]
 
 
@@ -127,12 +133,14 @@ for assembler in assemblers:
         dataframes.append( res_df )
         sources += res_sources
 
-
 ################################################################################
 print(                                                                         )
 print( 'stitching data'                                                        )
 print( '---------------------------------------------------------------------' )
 ################################################################################
+
+print(f'{len(dataframes)} dataframes to merge')
+print(f'dataframes have {[len(df.index) for df in dataframes]} rows')
 
 df_stitched = reduce(
     lambda left, right: pd.merge(
@@ -143,6 +151,8 @@ df_stitched = reduce(
     ),
     dataframes,
 )
+
+print(f'merged dataframe has {len(df_stitched.index)} rows')
 
 ################################################################################
 print(                                                                         )
@@ -171,7 +181,7 @@ out_filename = kn.pack({
 })
 
 
-out_prefix = f'endeavor={endeavor}/stage=6+what=tabulated_and_stitched/stint={stint}/'
+out_prefix = f'endeavor={endeavor}/series-profiles/stage=6+what=tabulated_and_stitched/stint={stint}/'
 out_path = out_prefix + out_filename
 
 print(f'upload path will be s3://{bucket}/{out_path}')

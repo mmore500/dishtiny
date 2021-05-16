@@ -43,7 +43,7 @@ s3_handle = boto3.resource('s3')
 bucket_handle = s3_handle.Bucket(bucket)
 
 data_url, = bucket_handle.objects.filter(
-    Prefix=f'endeavor={endeavor}/stage=7+what=collated/',
+    Prefix=f'endeavor={endeavor}/series-profiles/stage=7+what=collated/',
 )
 
 df = pd.read_csv(
@@ -217,7 +217,7 @@ out_filename = kn.pack(
     kn.unpack(data_url.key),
 )
 
-out_prefix = f'endeavor={endeavor}/stage=8+what=elaborated/'
+out_prefix = f'endeavor={endeavor}/series-profiles/stage=8+what=elaborated/'
 out_path = out_prefix + out_filename
 
 print(f'upload path will be s3://{bucket}/{out_path}')
