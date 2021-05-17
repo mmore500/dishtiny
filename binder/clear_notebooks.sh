@@ -30,7 +30,13 @@ echo "--------------------------------------"
 shopt -s nullglob
 
 for notebook in "${script_dir}/"*.ipynb; do
-  jupyter nbconvert  --ClearOutputPreprocessor.enabled=True --clear-output --inplace "${notebook}"
+  jupyter nbconvert \
+    --ClearOutputPreprocessor.enabled=True \
+    --clear-output \
+    --inplace \
+    "${notebook}"
+  # strip trailing whitespace
+  sed -i 's/\s*\\n"/\\n"/g' "${notebook}"
 done
 
 shopt -u nullglob
