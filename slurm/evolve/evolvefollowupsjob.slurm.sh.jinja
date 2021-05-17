@@ -105,6 +105,7 @@ echo "stint {{ stint }}"
 echo "configpack {{ configpack }}"
 echo "container_tag {{ container_tag }}"
 echo "repo_sha {{ repo_sha }}"
+echo "followup_freq {{ followup_freq | default('10') }}"
 
 ################################################################################
 echo
@@ -142,7 +143,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run nopout job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 # run jinja on template
 JOB_TEMPLATE="${REPRO_WORK_DIRECTORY}/dishtiny/slurm/genomes/nopoutjob.slurm.sh.jinja"
@@ -165,7 +166,7 @@ chmod +x "${JOB_SCRIPT}"
 
 "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_sbatch.sh" "${JOB_SCRIPT}"
 
-fi
+fi # if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 ################################################################################
 echo
@@ -177,7 +178,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run monoculture job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 # run jinja on template
 JOB_TEMPLATE="$(mktemp)"
@@ -210,7 +211,7 @@ chmod +x "${JOB_SCRIPT}"
 # and https://stackoverflow.com/a/4642975
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_sbatch.sh" | bash -s "${JOB_SCRIPT}"
 
-fi
+fi # if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 ################################################################################
 echo
@@ -236,7 +237,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run predecessor battle job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
@@ -249,7 +250,7 @@ for retry in {1..20}; do
   if ((${retry}==20)); then echo "predecessor kickoff fail" && exit 123123; fi
 done
 
-fi
+fi # if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 ################################################################################
 echo
@@ -261,7 +262,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run control competition job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
@@ -274,7 +275,7 @@ for retry in {1..20}; do
   if ((${retry}==20)); then echo "control kickoff fail" && exit 123123; fi
 done
 
-fi
+fi # if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 ################################################################################
 echo
@@ -286,7 +287,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run doubling time job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
@@ -301,7 +302,7 @@ for retry in {1..20}; do
   fi
 done
 
-fi
+fi # if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 ################################################################################
 echo
@@ -313,7 +314,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run mutating competition job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
@@ -328,7 +329,7 @@ for retry in {1..20}; do
   fi
 done
 
-fi
+fi # if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 ################################################################################
 echo
@@ -340,7 +341,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run mutating competition job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
@@ -355,7 +356,7 @@ for retry in {1..20}; do
   fi
 done
 
-fi
+fi # if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 ################################################################################
 echo
@@ -367,7 +368,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run mutating phenotype-differentiation job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
@@ -382,7 +383,7 @@ for retry in {1..20}; do
   fi
 done
 
-fi
+fi # if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 ################################################################################
 echo
@@ -394,7 +395,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run mutating competition job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 for perturbation_target in extrospective introspective writable; do
 for perturbation_method in exchange rotate; do
@@ -418,7 +419,7 @@ done
 done
 done
 
-fi
+fi # if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 ################################################################################
 echo
@@ -430,7 +431,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run mutating competition job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 for selfsend_target in inter intra; do
 
@@ -451,7 +452,7 @@ done
 
 done
 
-fi
+fi # if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 ################################################################################
 echo
@@ -475,7 +476,7 @@ else
 
 echo "no follow up jobs to submit"
 
-fi
+fi # if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 cd -
 
