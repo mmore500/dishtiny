@@ -38,7 +38,8 @@ for notebook in "${script_dir}/"*.ipynb; do
   # remove empty cells
   nb-clean clean  --remove-empty-cells "${notebook}"
   # strip trailing whitespace
-  sed -i 's/\s*\\n"/\\n"/g' "${notebook}"
+  sed -i 's/\s*\\n",$/\\n",/g' "${notebook}"
+  sed -i 's/\s*"$/"/g' "${notebook}"
 done
 
 shopt -u nullglob
