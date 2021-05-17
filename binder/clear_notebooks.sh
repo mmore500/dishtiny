@@ -35,6 +35,8 @@ for notebook in "${script_dir}/"*.ipynb; do
     --clear-output \
     --inplace \
     "${notebook}"
+  # remove empty cells
+  nb-clean clean  --remove-empty-cells "${notebook}"
   # strip trailing whitespace
   sed -i 's/\s*\\n"/\\n"/g' "${notebook}"
 done
