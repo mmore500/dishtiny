@@ -251,6 +251,7 @@ repo_sha: {{ repo_sha }}
 series: {{ series }}
 stint: {{ stint | int }}
 target_genome_url: "${target_genome_url}"
+followup_freq: {{ followup_freq | default('10') }}
 J2_HEREDOC_EOF
 
 chmod +x "${JOB_SCRIPT}"
