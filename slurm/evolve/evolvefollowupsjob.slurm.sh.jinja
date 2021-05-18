@@ -160,6 +160,7 @@ repo_sha: {{ repo_sha }}
 series: {{ series }}
 stint: {{ stint | int }}
 target_genome_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/a=genome+criteria=abundance+morph=wildtype+proc=0+series={{ series }}+stint={{ stint }}+thread=0+variation=master+ext=.json.gz"
+followup_freq: {{ followup_freq | default('10') }}"
 J2_HEREDOC_EOF
 
 chmod +x "${JOB_SCRIPT}"

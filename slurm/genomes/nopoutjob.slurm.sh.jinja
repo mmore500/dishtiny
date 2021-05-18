@@ -106,6 +106,7 @@ echo "configpack {{ configpack }}"
 echo "container_tag {{ container_tag }}"
 echo "repo_sha {{ repo_sha }}"
 echo "target_genome_url {{ target_genome_url }}"
+echo "followup_freq {{ followup_freq | default('10') }}"
 
 ################################################################################
 echo
@@ -344,7 +345,7 @@ unset pids
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #===============================================================================
 # dispatch fitness complexity competitions only every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 echo
 echo "Dispatching Fitness Complexity Competitions"
 echo "==========================================="
@@ -542,7 +543,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run phenotype-neutral-nopout competition job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
@@ -569,7 +570,7 @@ timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM
 wait # ignores exit code of time log step
 
 # run phenotype-neutral-nopout phenotype-differentiation job every tenth stint
-if (( {{ stint }} % 10 == 0 )); then
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
 
 for retry in {1..20}; do
   # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
