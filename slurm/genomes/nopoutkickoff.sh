@@ -15,8 +15,8 @@ printerr() {
 }
 trap 'printerr $LINENO' ERR
 
-if (( "$#" < 6 )); then
-  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [stint] [series...]"
+if (( "$#" < 7 )); then
+  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [followup_freq] [stint] [series...]"
   exit 1
 fi
 
@@ -34,6 +34,10 @@ shift
 
 REPO_SHA="${1}"
 echo "REPO_SHA ${REPO_SHA}"
+shift
+
+FOLLOWUP_FREQ="${1}"
+echo "FOLLOWUP_FREQ ${FOLLOWUP_FREQ}"
 shift
 
 STINT="${1}"
@@ -81,6 +85,7 @@ echo "BUCKET ${BUCKET}"
 echo "CONFIGPACK ${CONFIGPACK}"
 echo "CONTAINER_TAG ${CONTAINER_TAG}"
 echo "REPO_SHA ${REPO_SHA}"
+echo "FOLLOWUP_FREQ ${FOLLOWUP_FREQ}"
 echo "STINT ${STINT}"
 echo "SERIES ${SERIES}"
 
@@ -101,6 +106,7 @@ repo_sha: "${REPO_SHA}"
 series: "\${just_one_series}"
 stint: "${STINT}"
 target_genome_url: "s3://${BUCKET}/endeavor=\$(( just_one_series / 1000 ))/genomes/stage=0+what=generated/stint=${STINT}/series=\${just_one_series}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${just_one_series}+stint=${STINT}+thread=0+variation=master+ext=.json.gz"
+followup_freq: "${FOLLOWUP_FREQ}"
 J2_HEREDOC_EOF
 
   # adapted from https://superuser.com/a/689340
