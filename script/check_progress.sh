@@ -45,16 +45,18 @@ echo "mean workjob elapsed secs ${mean_workjob_elapsed_secs}"
 echo
 
 queued_workjobs="$(
-  squeue -u "$(whoami)" --format "%j %t" \
+  squeue -u "$(whoami)" --format "%j %T %R" \
   | grep -v "a=slurm_stoker+" \
-  | grep -v R \
+  | grep -v "RUNNING" \
+  | grep -v "JobHeldUser" \
   | wc -l \
 )"
 echo "queued workjobs ${queued_workjobs}"
 
 slurmstoked_workjobs="$( \
-  squeue -u "$(whoami)" --format %j \
+  squeue -u "$(whoami)" --format "%j %R" \
   | grep "a=slurm_stoker+" \
+  | grep -v "JobHeldUser" \
   | grep -Po 'num_jobs=\K[0-9]+?(?=\+)' \
   | paste -sd+ - \
   | bc \
