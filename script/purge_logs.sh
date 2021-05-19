@@ -15,7 +15,7 @@ num_days="${1}"
 echo "num_days ${num_days}"
 shift
 
-find /mnt/home/$(whoami)/slurmlogs -mtime "+${num_days}" delete
-find /mnt/home/$(whoami)/slurmscripts -mtime "+${num_days}" delete
-find /mnt/scratch/$(whoami)/slurmlogs -mtime "+${num_days}" delete
-find /mnt/scratch/$(whoami)/slurmscripts -mtime "+${num_days}" delete
+find /mnt/home/$(whoami)/slurmlogs -mtime "+${num_days}" -delete
+find /mnt/home/$(whoami)/slurmscripts -mtime "+${num_days}" -delete
+find /mnt/scratch/$(whoami)/slurmlogs -mtime "+${num_days}" -delete
+find /mnt/scratch/$(whoami)/slurmscripts -mtime "+${num_days}" -delete
