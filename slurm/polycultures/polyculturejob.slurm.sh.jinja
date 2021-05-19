@@ -122,7 +122,7 @@ f="a=population+proc=0+series={{ series }}+stint={{ stint }}+thread=0+variation=
 echo "downloading ${f}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
-    "s3://{{ bucket }}/endeavor=${ENDEAVOR}/popultions/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+    "s3://{{ bucket }}/endeavor=${ENDEAVOR}/populations/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     "${f}" \
     && echo "  ${f} download success" && break \
     || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
