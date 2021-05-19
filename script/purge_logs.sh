@@ -15,7 +15,7 @@ num_days="${1}"
 echo "num_days ${num_days}"
 shift
 
-find /mnt/home/$(whoami)/slurmlogs -mtime "+5${num_days}" -exec rm {} \;
+find /mnt/home/$(whoami)/slurmlogs -mtime "+${num_days}" -exec rm {} \;
 find /mnt/home/$(whoami)/slurmscripts -mtime "+${num_days}" -exec rm {} \;
-find /mnt/scratch/$(whoami)/slurmlogs -mtime "+5${num_days}" -exec rm {} \;
+find /mnt/scratch/$(whoami)/slurmlogs -mtime "+${num_days}" -exec rm {} \;
 find /mnt/scratch/$(whoami)/slurmscripts -mtime "+${num_days}" -exec rm {} \;
