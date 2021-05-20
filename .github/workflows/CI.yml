@@ -115,10 +115,10 @@ jobs:
         OMPI_CXX: ${{ matrix.cxx }}
     steps:
         - run: |
-          set -x
-          cd /opt/dishtiny/tests/source
-          make
-          make ${{ matrix.mode }}
+            set -x
+            cd /opt/dishtiny/tests/source
+            make
+            make ${{ matrix.mode }}
 
   coverage:
     name: Coverage
