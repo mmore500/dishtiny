@@ -43,22 +43,35 @@ jobs:
     runs-on: ubuntu-16.04
     needs:
       - docker-build
+    container:
+      image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
+      # github actions requires root to access mounted volumes
+      options: --user root
     steps:
-      # Adapted from https://askubuntu.com/a/524368
-      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
-      - uses: docker-practice/actions-setup-docker@v1
-      - run: docker run "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny && ./ci/test_trailing_whitespace.sh && ./ci/test_tabs.sh && ./ci/test_missing_newlines.sh && make docs && ./ci/test_headerguards.sh && ./ci/test_alphabetize_includes.sh && python3 ci/test_readme_snippets.py"
+      - run: |
+          cd /opt/dishtiny
+          ./ci/test_trailing_whitespace.sh
+          ./ci/test_tabs.sh
+          ./ci/test_missing_newlines.sh
+          make docs
+          ./ci/test_headerguards.sh
+          ./ci/test_alphabetize_includes.sh
+          python3 ci/test_readme_snippets.py
 
   py-unit:
     name: Python Unit Tests
     runs-on: ubuntu-16.04
     needs:
       - docker-build
+    container:
+      image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
+      # github actions requires root to access mounted volumes
+      options: --user root --cap-add=SYS_ADMIN
+      env:
+        DISH_MPICXX: mpicxx.openmpi
+        OMPI_CXX: clang++
     steps:
-      # Adapted from https://askubuntu.com/a/524368
-      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
-      - uses: docker-practice/actions-setup-docker@v1
-      - run: docker run -e "DISH_MPICXX=$DISH_MPICXX" -e "OMPI_CXX=$OMPI_CXX" --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "/opt/dishtiny/dishpylib/test/run_tests.sh"
+      - run: /opt/dishtiny/dishpylib/test/run_tests.sh
 
   cpp-unit:
     name: C++ Unit Tests
@@ -70,14 +83,18 @@ jobs:
         cxx: [clang++, g++]
         mode: [ "", opt]
       fail-fast: false
-    env:
-      DISH_MPICXX: mpicxx.openmpi
-      OMPI_CXX: ${{ matrix.cxx }}
+    container:
+      image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
+      # github actions requires root to access mounted volumes
+      options: --user root --cap-add=SYS_ADMIN
+      env:
+        DISH_MPICXX: mpicxx.openmpi
+        OMPI_CXX: ${{ matrix.cxx }}
     steps:
-      # Adapted from https://askubuntu.com/a/524368
-      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
-      - uses: docker-practice/actions-setup-docker@v1
-      - run: docker run -e "DISH_MPICXX=$DISH_MPICXX" -e "OMPI_CXX=$OMPI_CXX" --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "set -x && cd /opt/dishtiny/tests/dish2 && make ${{ matrix.mode }}"
+      - run: |
+          set -x
+          cd /opt/dishtiny/tests/dish2
+          make ${{ matrix.mode }}
 
   source:
     name: Source
@@ -89,51 +106,72 @@ jobs:
         cxx: [clang++, g++]
         mode: [ "", opt]
       fail-fast: false
-    env:
-      DISH_MPICXX: mpicxx.openmpi
-      OMPI_CXX: ${{ matrix.cxx }}
+    container:
+      image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
+      # github actions requires root to access mounted volumes
+      options: --user root --cap-add=SYS_ADMIN
+      env:
+        DISH_MPICXX: mpicxx.openmpi
+        OMPI_CXX: ${{ matrix.cxx }}
     steps:
-      # Adapted from https://askubuntu.com/a/524368
-      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
-      - uses: docker-practice/actions-setup-docker@v1
-      - run: docker run -e "DISH_MPICXX=$DISH_MPICXX" -e "OMPI_CXX=$OMPI_CXX" --cap-add=SYS_ADMIN -i "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "set -x && cd /opt/dishtiny/tests/source && make && make ${{ matrix.mode }}"
+        - run: |
+          set -x
+          cd /opt/dishtiny/tests/source
+          make
+          make ${{ matrix.mode }}
 
   coverage:
     name: Coverage
     runs-on: ubuntu-16.04
     needs:
       - docker-build
-    env:
-      DISH_MPICXX: mpicxx.openmpi
-      OMPI_CXX: clang++
+    container:
+      image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
+      # github actions requires root to access mounted volumes
+      options: --user root --cap-add=SYS_ADMIN
+      env:
+        DISH_MPICXX: mpicxx.openmpi
+        OMPI_CXX: clang++
     steps:
-      # Adapted from https://askubuntu.com/a/524368
-      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
-      - uses: docker-practice/actions-setup-docker@v1
-      - run: export ci_env=`bash <(curl -s https://codecov.io/env)`
-      - run: docker run $ci_env -e DISH_MPICXX -e OMPI_CXX "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/tests/dish2 && make coverage && bash <(curl -s https://codecov.io/bash)"
+      - run: |
+          export ci_env=`bash <(curl -s https://codecov.io/env)`
+          cd /opt/dishtiny/tests/dish2 && make coverage
+          bash <(curl -s https://codecov.io/bash)
 
   fuzzing:
     name: Fuzzing
     runs-on: ubuntu-16.04
     needs:
       - docker-build
+    container:
+      image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
+      # github actions requires root to access mounted volumes
+      options: --user root --cap-add=SYS_ADMIN --cap-add=SYS_PTRACE --security-opt seccomp=unconfined
     steps:
-      # Adapted from https://askubuntu.com/a/524368
-      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
-      - uses: docker-practice/actions-setup-docker@v1
-      - run: docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/fuzzing && make && make opt"
+      - run: |
+          cd /opt/dishtiny/fuzzing
+          make
+          make opt
 
   microbenchmarks:
     name: Microbenchmarks
     runs-on: ubuntu-16.04
     needs:
       - docker-build
+    container:
+      image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
+      # github actions requires root to access mounted volumes
+      options: --user root --cap-add=SYS_ADMIN
+      env:
+        CONTEXT: actions
+        DISH_MPICXX: mpicxx.openmpi
+        OMPI_CXX: clang++
+        OSF_USERNAME: ${{ secrets.OSF_USERNAME }}
+        OSF_PASSWORD: ${{ secrets.OSF_PASSWORD }}
     steps:
-      # Adapted from https://askubuntu.com/a/524368
-      - run: echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo -h 127.0.0.1 tee -a /etc/hosts
-      - uses: docker-practice/actions-setup-docker@v1
-      - run: docker run -e "OSF_USERNAME=${{ secrets.OSF_USERNAME }}" -e "OSF_PASSWORD=${{ secrets.OSF_PASSWORD }}" -e CONTEXT=actions "mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}" /bin/bash -c "cd /opt/dishtiny/microbenchmarks && make"
+      - run: |
+          cd /opt/dishtiny/microbenchmarks
+          make
 
   binder:
     name: Notebooks
