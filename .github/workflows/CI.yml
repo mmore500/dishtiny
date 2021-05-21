@@ -133,10 +133,12 @@ jobs:
         DISH_MPICXX: mpicxx.openmpi
         OMPI_CXX: clang++
     steps:
-      - run: |
-          cd /opt/dishtiny/tests/dish2 && make coverage
-          bash <(curl -s https://codecov.io/bash)
-
+      - run: "cd /opt/dishtiny/tests/dish2 && make coverage"
+      - uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: trues
+          verbose: true
+          directory: /opt/dishtiny
   fuzzing:
     name: Fuzzing
     runs-on: ubuntu-16.04
