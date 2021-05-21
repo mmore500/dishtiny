@@ -136,7 +136,7 @@ jobs:
       - run: "cd /opt/dishtiny/tests/dish2 && make coverage"
       - uses: codecov/codecov-action@v1
         with:
-          fail_ci_if_error: trues
+          fail_ci_if_error: true
           verbose: true
           directory: /opt/dishtiny
   fuzzing:
