@@ -134,7 +134,6 @@ jobs:
         OMPI_CXX: clang++
     steps:
       - run: |
-          export ci_env=`bash <(curl -s https://codecov.io/env)`
           cd /opt/dishtiny/tests/dish2 && make coverage
           bash <(curl -s https://codecov.io/bash)
 
