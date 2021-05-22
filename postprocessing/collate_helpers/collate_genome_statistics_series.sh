@@ -50,10 +50,6 @@ echo "do collation"
 echo "------------"
 ################################################################################
 
-if (( stint % 10 == 0 )); then
-  python3 "${script_dir}/../../postprocessing/collate.py" "s3://${bucket}/endeavor=${endeavor}/genomes/stage=0~1+what=generated/stint=${stint}/" 'series=[0-9]+/a=genome_statistics\+criteria=.*\+morph=.*\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+variation=master\+ext=\.csv' \
-    || echo "genome statistics collation across series failed"
-else
-  python3 "${script_dir}/../../postprocessing/collate.py" "s3://${bucket}/endeavor=${endeavor}/genomes/stage=0+what=generated/stint=${stint}/" 'series=[0-9]+/a=genome_statistics\+criteria=.*\+morph=.*\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+variation=master\+ext=\.csv' \
-    || echo "genome statistics collation across series failed"
-fi
+python3 "${script_dir}/../../postprocessing/collate.py" "s3://${bucket}/endeavor=${endeavor}/genomes/stage=0~1+what=generated/stint=${stint}/" 'series=[0-9]+/a=genome_statistics\+criteria=.*\+morph=.*\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+variation=master\+ext=\.csv' \
+  || python3 "${script_dir}/../../postprocessing/collate.py" "s3://${bucket}/endeavor=${endeavor}/genomes/stage=0+what=generated/stint=${stint}/" 'series=[0-9]+/a=genome_statistics\+criteria=.*\+morph=.*\+proc=[0-9]+\+series=[0-9]+\+stint=[0-9]+\+thread=[0-9]+\+variation=master\+ext=\.csv' \
+  || echo "genome statistics collation across series failed"
