@@ -66,6 +66,10 @@ echo "------------"
   "${bucket}" "${endeavor}" "${stint}" \
   || echo "collate_genome_statistics_series.sh failed"
 
+"${script_dir}/collate_helpers/collate_monoculture_runninglogs_series.sh" \
+  "${bucket}" "${endeavor}" "${stint}" \
+  || echo "collate_monoculture_runninglogs_series.sh failed"
+
 "${script_dir}/collate_helpers/collate_monoculture_statistics_series.sh" \
   "${bucket}" "${endeavor}" "${stint}" \
   || echo "collate_monoculture_statistics_series.sh failed"
