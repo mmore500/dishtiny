@@ -128,7 +128,7 @@ df['Fitness Complexity Delta Sign'] = df['Fitness Complexity Delta'] > 0
 ################################################################################
 
 df['Phenotype Complexity Delta'] = -df.sort_values('Stint').groupby('Series')[
-    'Phenotype Complexity'
+    'Phenotype Complexity',
 ].diff(periods=-1)
 df['Phenotype Complexity Delta %'] = (
     df['Phenotype Complexity Delta'] / df['Phenotype Complexity']
