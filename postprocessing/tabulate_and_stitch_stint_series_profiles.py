@@ -97,7 +97,6 @@ assemblers = [
     assemble_deletion_mutant_competitions,
     assemble_insertion_mutant_competitions,
     assemble_mutating_competitions,
-    assemble_mutant_competitions,
     assemble_point_mutant_competitions,
     assemble_wildtype_doubling_time,
     assemble_phenotype_neutral_nopout_phenotype_differentiation,
