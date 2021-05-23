@@ -8,6 +8,8 @@ from dishpylib.pydecorators import \
 from dishpylib.pyhelpers import get_control_t_distns
 from dishpylib.pytabulators import tabulate_fitness_complexity
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory('variant competitions')
 @announce_job_decorator_factory('variant competitions')
 @only_every_nth_stint_decorator_factory(10)
@@ -31,5 +33,7 @@ def assemble_variant_competitions( *, bucket, endeavor, stint ):
     res_sources = [
         variant_competitions.key,
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

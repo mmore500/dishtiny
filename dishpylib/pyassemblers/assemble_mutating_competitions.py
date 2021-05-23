@@ -8,6 +8,8 @@ from dishpylib.pydecorators import \
 from dishpylib.pyhelpers import get_control_t_distns
 from dishpylib.pytabulators import tabulate_mutant_fitness
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory('mutating competitions')
 @announce_job_decorator_factory('mutating competitions')
 @only_every_nth_stint_decorator_factory(10)
@@ -29,8 +31,11 @@ def assemble_mutating_competitions( *, bucket, endeavor, stint ):
         get_control_t_distns( bucket, endeavor, stint ),
         'Mutating ',
     )
+    if 'Stint' not in res_df.columns: res_df['Stint'] = stint
     res_sources = [
         mutant_competitions.key,
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

@@ -8,6 +8,8 @@ from dishpylib.pydecorators import \
 from dishpylib.pyhelpers import get_control_t_distns
 from dishpylib.pytabulators import tabulate_phenotype_equivalent_nopout_fitness
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory(
     'noncritical nopout fitness competitions'
 )
@@ -37,5 +39,7 @@ def assemble_noncritical_nopout_fitness_competitions(
     res_sources = [
         noncritical_nopout_competitions.key,
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

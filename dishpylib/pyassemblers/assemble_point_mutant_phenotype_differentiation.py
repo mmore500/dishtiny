@@ -7,6 +7,8 @@ from dishpylib.pydecorators import \
     try_except_missing_data_decorator_factory
 from dishpylib.pytabulators import tabulate_mutant_phenotype_differentiation
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory(
     'point mutant phenotype-differentiation'
 )
@@ -33,5 +35,7 @@ def assemble_point_mutant_phenotype_differentiation(*, bucket, endeavor, stint):
     res_sources = [
         mutant_phenotype_differentiation.key,
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

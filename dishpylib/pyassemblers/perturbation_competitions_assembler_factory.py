@@ -7,6 +7,8 @@ from dishpylib.pydecorators import try_except_missing_data_decorator_factory
 from dishpylib.pyhelpers import get_control_t_distns
 from dishpylib.pytabulators import tabulate_perturbation_fitness
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 def perturbation_competitions_assembler_factory(
         target_state, perturbation_type
     ):
@@ -39,9 +41,12 @@ def perturbation_competitions_assembler_factory(
             target_state,
             perturbation_type,
         )
+        if 'Stint' not in res_df.columns: res_df['Stint'] = stint
         res_sources = [
             perturbation_competitions.key,
         ]
+
+        validate_assembled_dataframe( res_df, endeavor, stint )
 
         return res_df, res_sources
 

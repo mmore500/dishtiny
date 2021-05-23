@@ -7,6 +7,8 @@ from dishpylib.pydecorators import \
     try_except_missing_data_decorator_factory
 from dishpylib.pytabulators import filter_for_phenotype_neutral_nopout
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory('phenotype neutral nopouts')
 @announce_job_decorator_factory('phenotype neutral nopouts')
 @only_every_nth_stint_decorator_factory(10)
@@ -27,5 +29,7 @@ def assemble_phenotype_neutral_nopouts( *, bucket, endeavor, stint ):
     res_sources = [
         genome_statistics.key,
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

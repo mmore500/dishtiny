@@ -8,6 +8,8 @@ from dishpylib.pydecorators import \
 from dishpylib.pytabulators import \
     tabulate_phenotype_neutral_nopout_phenotype_differentiation
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory(
     'phenotype neutral nopout phenotype-differentiation'
 )
@@ -34,8 +36,11 @@ def assemble_phenotype_neutral_nopout_phenotype_differentiation(
     res_df = tabulate_phenotype_neutral_nopout_phenotype_differentiation(
         phenotype_neutral_nopout_phenotype_differentiation_df,
     )
+    if 'Stint' not in res_df.columns: res_df['Stint'] = stint
     res_sources = [
         phenotype_neutral_nopout_phenotype_differentiation.key,
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources
