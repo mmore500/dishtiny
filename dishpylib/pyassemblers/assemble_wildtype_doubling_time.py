@@ -7,8 +7,8 @@ from dishpylib.pydecorators import \
     try_except_missing_data_decorator_factory
 from dishpylib.pytabulators import tabulate_wildtype_doubling_time
 
-@try_except_missing_data_decorator_factory('strain competitions')
-@announce_job_decorator_factory('strain competitions')
+@try_except_missing_data_decorator_factory('wildtype doubling time')
+@announce_job_decorator_factory('wildtype doubling time')
 @only_every_nth_stint_decorator_factory(10)
 def assemble_wildtype_doubling_time( *, bucket, endeavor, stint ):
 
