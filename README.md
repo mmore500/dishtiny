@@ -2,7 +2,7 @@
 # dishtiny
 
 [![version](https://img.shields.io/endpoint?url=https%3A%2F%2Fmmore500.github.io%2Fdishtiny%2Fmaster%2Fversion-badge.json)](https://github.com/mmore500/dishtiny/releases)
-[![](https://img.shields.io/travis/mmore500/dishtiny.svg)](https://travis-ci.com/mmore500/dishtiny)
+[![continuous integration](https://github.com/mmore500/dishtiny/workflows/CI/badge.svg)](https://github.com/mmore500/dishtiny/actions?query=workflow%3ACI)
 [![Documentation Status](https://readthedocs.org/projects/dishtiny/badge/?version=latest)](https://dishtiny.readthedocs.io/en/latest/?badge=latest)
 [![documentation coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fmmore500.github.io%2Fdishtiny%2Fmaster%2Fdocumentation-coverage-badge.json)](https://dishtiny.readthedocs.io/en/latest/)
 [![code coverage status](https://codecov.io/gh/mmore500/dishtiny/branch/master/graph/badge.svg)](https://codecov.io/gh/mmore500/dishtiny)
