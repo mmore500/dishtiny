@@ -1,5 +1,6 @@
 from iterpop import iterpop as ip
 import itertools as it
+from keyname import keyname as kn
 import math
 import numpy as np
 
@@ -55,10 +56,11 @@ def estimate_interpolation_complexity(
 
         cur = estimate_credible_interval(likelihoods)
 
-        res[f'a=most_credible_likelihood+set_size={set_size}'] \
-            = cur['most_credible_likelihood']
-        res[f'a=most_credible_idx+set_size={set_size}'] \
-            = cur['most_credible_idx']
+        for k, v in cur.items():
+            res[ kn.pack({
+                'a': k,
+                'set_size' : str(set_size),
+            }) ] = v
 
         if math.isnan(res['most_credible_likelihood']) \
             or cur['most_credible_likelihood'] \
