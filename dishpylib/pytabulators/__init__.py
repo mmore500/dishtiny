@@ -1,5 +1,6 @@
 from .filter_for_phenotype_neutral_nopout \
     import filter_for_phenotype_neutral_nopout
+from .reshape_birth_log import reshape_birth_log
 from .reshape_dpp import reshape_dpp
 from .reshape_dpp_threadfirst import reshape_dpp_threadfirst
 from .reshape_dpp_threadmean import reshape_dpp_threadmean

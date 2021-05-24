@@ -8,10 +8,14 @@ from .assemble_evolve_dpp_metrics_threadfirst \
 from .assemble_evolve_dpp_metrics_threadmean \
     import assemble_evolve_dpp_metrics_threadmean
 from .assemble_evolve_dpp_metrics import assemble_evolve_dpp_metrics
+from .assemble_evolve_kin_conflict_statistics \
+    import assemble_evolve_kin_conflict_statistics
 from .assemble_insertion_mutant_competitions \
     import assemble_insertion_mutant_competitions
 from .assemble_insertion_mutant_phenotype_differentiation \
     import assemble_insertion_mutant_phenotype_differentiation
+from .assemble_monoculture_birth_log_statistics \
+    import assemble_monoculture_birth_log_statistics
 from .assemble_monoculture_dpp_metrics_threadfirst \
     import assemble_monoculture_dpp_metrics_threadfirst
 from .assemble_monoculture_dpp_metrics_threadmean \

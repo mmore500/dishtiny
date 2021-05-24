@@ -25,8 +25,10 @@ from dishpylib.pyassemblers import \
     assemble_deletion_mutant_phenotype_differentiation, \
     assemble_evolve_dpp_metrics_threadfirst, \
     assemble_evolve_dpp_metrics_threadmean, \
+    assemble_evolve_kin_conflict_statistics, \
     assemble_insertion_mutant_competitions, \
     assemble_insertion_mutant_phenotype_differentiation, \
+    assemble_monoculture_birth_log_statistics, \
     assemble_monoculture_dpp_metrics_threadfirst, \
     assemble_monoculture_dpp_metrics_threadmean, \
     assemble_monoculture_kin_conflict_by_replev_statistics, \
@@ -115,6 +117,8 @@ assemblers = [
     assemble_evolve_dpp_metrics_threadfirst,
     assemble_monoculture_dpp_metrics_threadmean,
     assemble_evolve_dpp_metrics_threadmean,
+    assemble_evolve_kin_conflict_statistics,
+    assemble_monoculture_birth_log_statistics,
 ]
 
 
