@@ -16,6 +16,12 @@ def tabulate_predecessor_battle_fitness(predecessor_df):
         name='Mean Fitness Differential Against Predecessor Population',
     )
 
+    median_differential = predecessor_df.groupby(
+        ['Series'],
+    )['Fitness Differential'].mean().reset_index(
+        name='Median Fitness Differential Against Predecessor Population',
+    )
+
     frac_won = predecessor_df.groupby(
         ['Series'],
     )['Fitness Differential'].apply(
@@ -46,6 +52,7 @@ def tabulate_predecessor_battle_fitness(predecessor_df):
         ),
         [
             mean_differential,
+            median_differential,
             frac_won,
             null_p,
         ],
