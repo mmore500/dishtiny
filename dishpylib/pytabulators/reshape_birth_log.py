@@ -3,19 +3,28 @@ from keyname import keyname as kn
 import pandas as pd
 
 def _extract_occurence_column(df, target, statistic):
-    res = df.value_counts(
-        [
+    res = pd.concat([
+        subset.value_counts(
+            [
+                'Series',
+                'Stint',
+                target,
+            ],
+            normalize=(statistic == 'Frequency'),
+        ).reset_index(
+            name=statistic,
+        ).pivot(
+            index=[
+                'Stint',
+                'Series',
+            ],
+            columns=target,
+        ).reset_index()
+        for __, subset in df.groupby([
             'Series',
             'Stint',
-            target,
-        ],
-        normalize=(statistic == 'Frequency'),
-    ).reset_index(
-        name=statistic,
-    ).pivot(
-        index=['Stint', 'Series'],
-        columns=target,
-    ).reset_index()
+        ])
+    ])
     # collapse hierarchically-nested columns into keyname-packed strings
     res.columns = res.columns.map(
         lambda x: kn.pack({
@@ -24,7 +33,7 @@ def _extract_occurence_column(df, target, statistic):
             'What' : 'birth',
         }) if x[1] != "" else x[0]
     )
-    return res
+    return res.fillna(0) # zero-observation outcomes show up as na
 
 
 def reshape_birth_log(df):
