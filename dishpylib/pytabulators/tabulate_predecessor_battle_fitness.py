@@ -18,7 +18,7 @@ def tabulate_predecessor_battle_fitness(predecessor_df, specifier=''):
 
     median_differential = predecessor_df.groupby(
         ['Series'],
-    )['Fitness Differential'].mean().reset_index(
+    )['Fitness Differential'].median().reset_index(
         name=f'Median Fitness Differential Against {specifier}Predecessor Population',
     )
 
