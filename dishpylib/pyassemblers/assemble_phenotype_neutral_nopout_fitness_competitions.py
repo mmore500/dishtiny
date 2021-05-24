@@ -6,6 +6,8 @@ from dishpylib.pydecorators import \
     only_every_nth_stint_decorator_factory, \
     try_except_missing_data_decorator_factory
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory(
     'phenotype neutral nopout fitness competitions'
 )
@@ -34,5 +36,7 @@ def assemble_phenotype_neutral_nopout_fitness_competitions(
     res_sources = [
         config_records.key,
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

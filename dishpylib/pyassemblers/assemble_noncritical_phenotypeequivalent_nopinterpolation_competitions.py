@@ -8,6 +8,8 @@ from dishpylib.pydecorators import \
 from dishpylib.pyhelpers import get_control_t_distns
 from dishpylib.pytabulators import tabulate_interpolation_complexity
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory(
     'noncritical-phenotypeneutral nopinterpolation competitions'
 )
@@ -34,8 +36,11 @@ def assemble_noncritical_phenotypeequivalent_nopinterpolation_competitions(
         interpolation_competitions_df,
         get_control_t_distns(bucket, endeavor, stint),
     )
+    if 'Stint' not in res_df.columns: res_df['Stint'] = stint
     res_sources = [
         interpolation_competitions.key
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

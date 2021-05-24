@@ -87,6 +87,14 @@ df_stitched = reduce(
 
 print(f'merged dataframe has {len(df_stitched.index)} rows')
 
+# there should only be one entry for each series/stint/thread/proc
+assert len(res_df.groupby([
+    'Series',
+    'Stint',
+    'thread',
+    'proc',
+])) == len(res_df)
+
 ################################################################################
 print(                                                                         )
 print( 'calculating upload path'                                               )

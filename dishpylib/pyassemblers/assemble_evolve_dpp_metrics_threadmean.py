@@ -7,6 +7,8 @@ from dishpylib.pydecorators import \
     try_except_missing_data_decorator_factory
 from dishpylib.pytabulators import reshape_dpp_threadmean
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory('evolve dpp metrics threadmean')
 @announce_job_decorator_factory('evolve dpp metrics threadmean')
 @only_every_nth_stint_decorator_factory(1)
@@ -41,5 +43,7 @@ def assemble_evolve_dpp_metrics_threadmean( *, bucket, endeavor, stint ):
     res_sources = [
         evolve_dpp_metrics.key,
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

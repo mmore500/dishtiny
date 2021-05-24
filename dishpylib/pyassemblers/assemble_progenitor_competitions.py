@@ -7,6 +7,8 @@ from dishpylib.pydecorators import \
     try_except_missing_data_decorator_factory
 from dishpylib.pytabulators import tabulate_progenitor_fitness
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory('progenitor competitions')
 @announce_job_decorator_factory('progenitor competitions')
 @only_every_nth_stint_decorator_factory(10)
@@ -25,5 +27,7 @@ def assemble_progenitor_competitions( *, bucket, endeavor, stint ):
     res_sources = [
         progenitor_competitions.key,
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

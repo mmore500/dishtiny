@@ -7,8 +7,10 @@ from dishpylib.pydecorators import \
     try_except_missing_data_decorator_factory
 from dishpylib.pytabulators import tabulate_wildtype_doubling_time
 
-@try_except_missing_data_decorator_factory('strain competitions')
-@announce_job_decorator_factory('strain competitions')
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
+@try_except_missing_data_decorator_factory('wildtype doubling time')
+@announce_job_decorator_factory('wildtype doubling time')
 @only_every_nth_stint_decorator_factory(10)
 def assemble_wildtype_doubling_time( *, bucket, endeavor, stint ):
 
@@ -24,8 +26,11 @@ def assemble_wildtype_doubling_time( *, bucket, endeavor, stint ):
     )
 
     res_df = tabulate_wildtype_doubling_time( wildtype_doubling_time_df )
+    if 'Stint' not in res_df.columns: res_df['Stint'] = stint
     res_sources = [
         wildtype_doubling_time.key,
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

@@ -57,6 +57,27 @@ print( '---------------------------------------------------------------------' )
 ################################################################################
 
 df['Bucket'] = bucket
+df['Endeavor'] = endeavor
+
+################################################################################
+
+df['Elapsed Generations'] = sum(
+    df[col]
+    for col in df.columns
+    if 'Elapsed Generations Level ' in col
+)
+
+################################################################################
+
+df['Elapsed Generations Delta'] = -df.sort_values('Stint').groupby([
+    'Series',
+    'proc',
+    'thread',
+])[
+    'Elapsed Generations',
+].diff(periods=-1)
+
+df['Generations Per Update'] = df['Elapsed Generations Delta'] / df['Update']
 
 ################################################################################
 print(                                                                         )

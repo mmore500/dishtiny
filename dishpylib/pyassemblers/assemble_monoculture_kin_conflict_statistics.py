@@ -7,6 +7,8 @@ from dishpylib.pydecorators import \
     try_except_missing_data_decorator_factory
 from dishpylib.pytabulators import reshape_kin_conflict
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory(
     'monoculture kin conflict statistics'
 )
@@ -29,5 +31,20 @@ def assemble_monoculture_kin_conflict_statistics( *, bucket, endeavor, stint ):
     res_sources = [
         monoculture_kin_conflict_statistics.key,
     ]
+
+    # add suffix to prevent clash with monoculture dpp metrics
+    res_df.rename(
+        lambda col: \
+            col if col in {
+                'Series',
+                'Stint',
+            } \
+            else f'{col} (monoculture)' \
+        ,
+        inplace=True,
+        axis='columns',
+    )
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

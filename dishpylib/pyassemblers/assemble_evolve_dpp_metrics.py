@@ -7,6 +7,8 @@ from dishpylib.pydecorators import \
     try_except_missing_data_decorator_factory
 from dishpylib.pytabulators import reshape_dpp
 
+from ._validate_assembled_dataframe import validate_assembled_dataframe
+
 @try_except_missing_data_decorator_factory('evolve dpp metrics')
 @announce_job_decorator_factory('evolve dpp metrics')
 @only_every_nth_stint_decorator_factory(1)
@@ -42,5 +44,7 @@ def assemble_evolve_dpp_metrics( *, bucket, endeavor, stint ):
     res_sources = [
         evolve_dpp_metrics.key,
     ]
+
+    validate_assembled_dataframe( res_df, endeavor, stint )
 
     return res_df, res_sources

@@ -12,6 +12,7 @@ import boto3
 from functools import reduce
 from iterdub import iterdub as ib
 from iterpop import iterpop as ip
+import itertools as it
 from keyname import keyname as kn
 import os
 import pandas as pd
@@ -24,8 +25,10 @@ from dishpylib.pyassemblers import \
     assemble_deletion_mutant_phenotype_differentiation, \
     assemble_evolve_dpp_metrics_threadfirst, \
     assemble_evolve_dpp_metrics_threadmean, \
+    assemble_evolve_kin_conflict_statistics, \
     assemble_insertion_mutant_competitions, \
     assemble_insertion_mutant_phenotype_differentiation, \
+    assemble_monoculture_birth_log_statistics, \
     assemble_monoculture_dpp_metrics_threadfirst, \
     assemble_monoculture_dpp_metrics_threadmean, \
     assemble_monoculture_kin_conflict_by_replev_statistics, \
@@ -97,7 +100,6 @@ assemblers = [
     assemble_deletion_mutant_competitions,
     assemble_insertion_mutant_competitions,
     assemble_mutating_competitions,
-    assemble_mutant_competitions,
     assemble_point_mutant_competitions,
     assemble_wildtype_doubling_time,
     assemble_phenotype_neutral_nopout_phenotype_differentiation,
@@ -115,6 +117,8 @@ assemblers = [
     assemble_evolve_dpp_metrics_threadfirst,
     assemble_monoculture_dpp_metrics_threadmean,
     assemble_evolve_dpp_metrics_threadmean,
+    assemble_evolve_kin_conflict_statistics,
+    assemble_monoculture_birth_log_statistics,
 ]
 
 
@@ -142,17 +146,74 @@ print( '---------------------------------------------------------------------' )
 print(f'{len(dataframes)} dataframes to merge')
 print(f'dataframes have {[len(df.index) for df in dataframes]} rows')
 
-df_stitched = reduce(
-    lambda left, right: pd.merge(
+def merge_pair(left, right):
+
+    common_columns = list(left.columns & right.columns)
+
+    # cross-fill nans if the other df has a value
+    for col in common_columns:
+        for cur, other in it.permutations([left, right]):
+            for idx, row in cur[ cur[col].isnull() ].iterrows():
+                other_indexer = (
+                    (other['Stint'] == row['Stint'])
+                    & (other['Series'] == row['Series'])
+                )
+                if other_indexer.any():
+                    cur.at[idx,col] = ip.popsingleton(other[other_indexer][col])
+
+    # verify data
+    apply_comparable_indexing = lambda df: df.set_index(
+        ['Series', 'Stint'],
+        drop=False,
+        verify_integrity=True,
+    )
+    reindexed_left = apply_comparable_indexing(left)
+    reindexed_right = apply_comparable_indexing(right)
+    common_indexes = reindexed_left.index.intersection(reindexed_right.index)
+    comparable_left = reindexed_left.loc[ common_indexes ]
+    comparable_right = reindexed_right.loc[ common_indexes ]
+    for col in common_columns:
+        # .equals() considers nans in same location equal
+        assert comparable_left[col].equals( comparable_right[col] ), {
+            'col' : col,
+            'comparable_left' : comparable_left,
+            'comparable_left[col]' : comparable_left[col],
+            'comparable_right' : comparable_right,
+            'comparable_right[col]' : comparable_right[col],
+        }
+
+    # do the merge
+    res = pd.merge(
         left,
         right,
-        on=list(left.columns & right.columns),
+        on=common_columns,
         how='outer',
-    ),
+        validate='one_to_one',
+    )
+
+    # verify further
+    assert len(res.groupby([
+        'Series',
+        'Stint',
+    ])) == len(res), right
+
+    return res
+
+df_stitched = reduce(
+    merge_pair,
     dataframes,
 )
 
 print(f'merged dataframe has {len(df_stitched.index)} rows')
+
+# there should only be one entry for each series/stint
+assert len(df_stitched.groupby([
+    'Series',
+    'Stint',
+])) == len(df_stitched)
+assert ip.pophomogeneous(df_stitched['Stint']) == stint
+assert ip.pophomogeneous(df_stitched['Series'] // 1000) == endeavor
+
 
 ################################################################################
 print(                                                                         )
