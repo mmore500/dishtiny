@@ -39,7 +39,7 @@ emp::vector< std::filesystem::path > keyname_directory_filter(
           return (
             attr == val
             || val == "*"
-            || (use_regex && std::regex_search( attr, std::regex( val ) ))
+            || (use_regex && std::regex_match( attr, std::regex( val ) ))
           );
         }
       );
