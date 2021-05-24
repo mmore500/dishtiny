@@ -28,6 +28,7 @@ from dishpylib.pyassemblers import \
     assemble_evolve_kin_conflict_statistics, \
     assemble_insertion_mutant_competitions, \
     assemble_insertion_mutant_phenotype_differentiation, \
+    assemble_lowestroot_immediatepredecessor_battles, \
     assemble_monoculture_birth_log_statistics, \
     assemble_monoculture_dpp_metrics_threadfirst, \
     assemble_monoculture_dpp_metrics_threadmean, \
@@ -119,6 +120,7 @@ assemblers = [
     assemble_evolve_dpp_metrics_threadmean,
     assemble_evolve_kin_conflict_statistics,
     assemble_monoculture_birth_log_statistics,
+    assemble_lowestroot_immediatepredecessor_battles,
 ]
 
 
