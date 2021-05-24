@@ -21,6 +21,7 @@
 #include "../genome/Genome.hpp"
 #include "../utility/autoload.hpp"
 
+#include "apply_population_filters.hpp"
 #include "innoculum_attr_handlers/_index.hpp"
 
 namespace dish2 {
@@ -35,9 +36,10 @@ emp::vector<dish2::Genome<Spec>> load_innoculum_population(
   // all innoculums must specify root id
   emp_always_assert(attrs.count("root_id"), path);
 
-  using population_t = emp::vector<dish2::Genome<Spec>>;
-  population_t innoculum(
-    dish2::autoload<population_t>( path )
+  using population_t = emp::vector< dish2::Genome<Spec> >;
+  population_t innoculum = dish2::apply_population_filters<Spec>(
+    dish2::autoload< population_t >( path ),
+    path
   );
 
   const size_t root_id = uitsl::stoszt( attrs.at("root_id") );
