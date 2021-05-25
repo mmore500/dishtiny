@@ -14,6 +14,8 @@ from .assemble_insertion_mutant_competitions \
     import assemble_insertion_mutant_competitions
 from .assemble_insertion_mutant_phenotype_differentiation \
     import assemble_insertion_mutant_phenotype_differentiation
+from .assemble_lowestroot_immediatepredecessor_battles \
+    import assemble_lowestroot_immediatepredecessor_battles
 from .assemble_monoculture_birth_log_statistics \
     import assemble_monoculture_birth_log_statistics
 from .assemble_monoculture_dpp_metrics_threadfirst \

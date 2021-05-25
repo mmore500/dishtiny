@@ -2,7 +2,7 @@ from functools import reduce
 import pandas as pd
 from scipy import stats
 
-def tabulate_predecessor_battle_fitness(predecessor_df):
+def tabulate_predecessor_battle_fitness(predecessor_df, specifier=''):
 
     # root id 0 is the control competitors (i.e., the predecessors)
     predecessor_df = predecessor_df[
@@ -13,13 +13,13 @@ def tabulate_predecessor_battle_fitness(predecessor_df):
     mean_differential = predecessor_df.groupby(
         ['Series'],
     )['Fitness Differential'].mean().reset_index(
-        name='Mean Fitness Differential Against Predecessor Population',
+        name=f'Mean Fitness Differential Against {specifier}Predecessor Population',
     )
 
     median_differential = predecessor_df.groupby(
         ['Series'],
-    )['Fitness Differential'].mean().reset_index(
-        name='Median Fitness Differential Against Predecessor Population',
+    )['Fitness Differential'].median().reset_index(
+        name=f'Median Fitness Differential Against {specifier}Predecessor Population',
     )
 
     frac_won = predecessor_df.groupby(
@@ -28,7 +28,7 @@ def tabulate_predecessor_battle_fitness(predecessor_df):
         lambda just_one_series:
             (just_one_series > 0).sum() / len(just_one_series),
     ).reset_index(
-        name='Fraction Predecessor Battles Won',
+        name=f'Fraction {specifier}Predecessor Battles Won',
     )
 
     null_p = predecessor_df.groupby(
@@ -41,7 +41,7 @@ def tabulate_predecessor_battle_fitness(predecessor_df):
             alternative='two-sided',
         ),
     ).reset_index(
-        name='Predecessor Battle Null p-value',
+        name=f'{specifier}Predecessor Battle Null p-value',
     )
 
     return reduce(
