@@ -2,20 +2,26 @@
 #ifndef DISH2_CONFIG_MAKE_ARG_SPECS_HPP_INCLUDE
 #define DISH2_CONFIG_MAKE_ARG_SPECS_HPP_INCLUDE
 
+#include <algorithm>
 #include <cstdlib>
+#include <set>
 #include <string>
 
+#include "../../../third-party/conduit/include/uitsl/algorithm/transform_if.hpp"
 #include "../../../third-party/conduit/include/uitsl/fetch/autoinstall.hpp"
 #include "../../../third-party/Empirical/include/emp/base/optional.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/config/ArgManager.hpp"
 
+#include "../algorithm/get_lowest_root.hpp"
 #include "../debug/log_msg.hpp"
+#include "../load/reconstitute_population_load.hpp"
 #include "../peripheral/readable_state/introspective_state/IntrospectiveState.hpp"
 #include "../peripheral/readable_state/ReadableState.hpp"
 #include "../peripheral/readable_state/writable_state/WritableState.hpp"
 
 #include "cfg.hpp"
+#include "TemporaryThreadIdxOverride.hpp"
 
 namespace dish2 {
 
@@ -86,6 +92,32 @@ auto make_arg_specs() {
       [](const auto& args){ if ( args ) {
         static_assert( dish2::WritableState<Spec>::parent_size );
         std::cout << dish2::WritableState<Spec>::parent_size - 1 << '\n';
+        std::exit(0);
+      } }, // callback
+      false, // gobble_flags
+      false // flatten
+    )},
+    {"print_reconstituted_lowestroot_numstintroots", emp::ArgSpec(
+      0, // quota
+      "Should we reconstitute a population, " // description
+      "print the number of unique stint phylogenetic roots, and exit?",
+      {}, // aliases
+      [](const auto& args){ if ( args ) {
+        const dish2::TemporaryThreadIdxOverride guard(0);
+        const auto [src, pop] = dish2::reconstitute_population_load<Spec>();
+        const size_t lowest_root = dish2::get_lowest_root( pop );
+        std::set<size_t> lowestroot_stintrootids;
+        uitsl::transform_if(
+          std::begin( pop ), std::end( pop ),
+          std::inserter(
+            lowestroot_stintrootids, std::begin(lowestroot_stintrootids)
+          ),
+          [](const auto& genome){ return genome.stint_root_id.GetID(); },
+          [lowest_root](const auto& genome){
+            return genome.root_id.GetID() == lowest_root;
+          }
+        );
+        std::cout << lowestroot_stintrootids.size() << '\n';
         std::exit(0);
       } }, // callback
       false, // gobble_flags

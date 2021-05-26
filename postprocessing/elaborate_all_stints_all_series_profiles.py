@@ -221,6 +221,82 @@ df['Cell Interface Complexity'] = (
 )
 
 ################################################################################
+
+valid_rows = (
+    df['Parent-Eliminated Kin ID Commonality=0+Statistic=Frequency+What=birth (monoculture)'].notna()
+    | df['Parent-Eliminated Kin ID Commonality=1+Statistic=Frequency+What=birth (monoculture)'].notna()
+    | df['Parent-Eliminated Kin ID Commonality=2+Statistic=Frequency+What=birth (monoculture)'].notna()
+)
+
+df[
+    'Parent-Eliminated Kin ID Commonality=0+Statistic=Frequency+What=birth (monoculture)'
+][ valid_rows ].fillna(
+    0,
+    inplace=True,
+)
+df[
+    'Parent-Eliminated Kin ID Commonality=1+Statistic=Frequency+What=birth (monoculture)'
+][ valid_rows ].fillna(
+    0,
+    inplace=True,
+)
+df[
+    'Parent-Eliminated Kin ID Commonality=2+Statistic=Frequency+What=birth (monoculture)'
+][ valid_rows ].fillna(
+    0,
+    inplace=True,
+)
+
+################################################################################
+
+df['Fraction Neighbors Exactly Kin Level 1 (monoculture mean)'] = (
+    df['Fraction Neighbors Kin Level 1 (monoculture mean)']
+    - df['Fraction Neighbors Kin Level 0 (monoculture mean)']
+)
+
+df['Parent-Eliminated Kin ID Commonality>=1+Statistic=Frequency+What=birth (monoculture)'] = (
+    1
+    - df['Parent-Eliminated Kin ID Commonality=0+Statistic=Frequency+What=birth (monoculture)']
+)
+
+df['Birth Conflict Ratio for Kin Commonality At Least 1'] = (
+    df['Parent-Eliminated Kin ID Commonality>=1+Statistic=Frequency+What=birth (monoculture)']
+    / df['Fraction Neighbors Kin Level 1 (monoculture mean)']
+)
+
+df['Birth Conflict Ratio for Kin Commonality Exactly 1'] = (
+    df['Parent-Eliminated Kin ID Commonality=1+Statistic=Frequency+What=birth (monoculture)']
+    / df['Fraction Neighbors Exactly Kin Level 1 (monoculture mean)']
+)
+
+df['Birth Conflict Ratio for Kin Commonality Exactly 2'] = (
+    df['Parent-Eliminated Kin ID Commonality=2+Statistic=Frequency+What=birth (monoculture)']
+    / df['Fraction Neighbors Kin Level 0 (monoculture mean)']
+)
+
+################################################################################
+
+df['Stint Decade'] = df['Stint'] // 10
+
+################################################################################
+
+df['Critical Fitness Complexity'] = df['Fitness Complexity']
+df['Interpolated Fitness Complexity'] = df['a=most_credible_idx+set_size=1']
+df['Composite Fitness Complexity'] \
+    = df['Critical Fitness Complexity'] + df['Interpolated Fitness Complexity']
+
+################################################################################
+
+df['More Fit than Predecessor'] \
+    = df['Predecessor Battle Outcome'] == 'more fit than predecessor'
+df['Less Fit than Predecessor'] \
+    = df['Predecessor Battle Outcome'] == 'less fit than predecessor'
+df['Predecessor Fitness Differentiation'] \
+    = df['More Fit than Predecessor'] | df['More Fit than Predecessor']
+df['Predecessor Fitness Neutrality'] \
+    = ~df['Predecessor Fitness Differentiation']
+
+################################################################################
 print(                                                                         )
 print( 'calculating upload path'                                               )
 print( '---------------------------------------------------------------------' )

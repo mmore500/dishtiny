@@ -8,6 +8,8 @@
 #include "../../../third-party/Empirical/include/emp/base/always_assert.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
+#include "../algorithm/get_lowest_root.hpp"
+
 namespace dish2 {
 
 template< typename Spec >
@@ -24,12 +26,7 @@ emp::vector< dish2::Genome<Spec> > apply_population_filters(
       attrs.at("filter_lowest_root"), filename
     );
 
-    const size_t lowest_root = std::min_element(
-      std::begin( population ), std::end( population ),
-      []( const auto& left_genome, const auto& right_genome ){
-        return left_genome.root_id.GetID() < right_genome.root_id.GetID();
-      }
-    )->root_id.GetID();
+    const size_t lowest_root = dish2::get_lowest_root( population );
     const size_t num_erased = std::erase_if(
       population,
       [lowest_root]( const auto& genome ){

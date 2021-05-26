@@ -4,8 +4,10 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <string>
 
 #include "../../../third-party/conduit/include/uitsl/polyfill/filesystem.hpp"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/config/ArgManager.hpp"
 
 #include "../debug/log_msg.hpp"
@@ -17,10 +19,13 @@ namespace dish2 {
 
 void setup_config( emp::ArgManager& arg_manager ) {
 
-  while( arg_manager.CallbackArg("print_introspective_state_size_minus_one") );
-  while( arg_manager.CallbackArg("print_extrospective_state_size_minus_one") );
-  while( arg_manager.CallbackArg("print_readable_state_size_minus_one") );
-  while( arg_manager.CallbackArg("print_writable_state_size_minus_one") );
+  for (const auto& arg : emp::vector<std::string>{
+    "print_introspective_state_size_minus_one",
+    "print_extrospective_state_size_minus_one",
+    "print_readable_state_size_minus_one",
+    "print_writable_state_size_minus_one",
+    "print_reconstituted_lowestroot_numstintroots"
+  } ) while( arg_manager.CallbackArg(arg) );
 
   // std::filesystem::exists is failing inside Docker container
   // so use stat as a backup for now
