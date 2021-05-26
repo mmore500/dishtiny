@@ -16,8 +16,9 @@
 
 namespace uitsl {
 
+template<typename C=emp::vector<std::pair<std::string, std::string>>>
 emp::vector< std::filesystem::path > keyname_directory_filter(
-  const emp::vector<std::pair<std::string, std::string>>& keyvals,
+  const C& keyvals,
   const std::filesystem::path& target=".",
   const bool use_regex=false
 ) {
