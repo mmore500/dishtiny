@@ -99,7 +99,7 @@ df['Elapsed Generations'] = sum(
 )
 df['Selection Pressure'] = (
     df['Expected Mutations'] - df['Elapsed Mutations']
-) / df['Elapsed Generations']
+) / df['Expected Mutations']
 
 ################################################################################
 
