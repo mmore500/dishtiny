@@ -2,6 +2,7 @@
 # dishtiny
 
 [![version](https://img.shields.io/endpoint?url=https%3A%2F%2Fmmore500.github.io%2Fdishtiny%2Fmaster%2Fversion-badge.json)](https://github.com/mmore500/dishtiny/releases)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2541bcefe83e4a0dbfca40ca7e6930ed)](https://www.codacy.com/gh/mmore500/dishtiny/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mmore500/dishtiny&amp;utm_campaign=Badge_Grade)
 [![continuous integration](https://github.com/mmore500/dishtiny/workflows/CI/badge.svg)](https://github.com/mmore500/dishtiny/actions?query=workflow%3ACI)
 [![Documentation Status](https://readthedocs.org/projects/dishtiny/badge/?version=latest)](https://dishtiny.readthedocs.io/en/latest/?badge=latest)
 [![documentation coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fmmore500.github.io%2Fdishtiny%2Fmaster%2Fdocumentation-coverage-badge.json)](https://dishtiny.readthedocs.io/en/latest/)
