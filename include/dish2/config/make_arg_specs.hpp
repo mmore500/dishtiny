@@ -19,6 +19,7 @@
 #include "../peripheral/readable_state/introspective_state/IntrospectiveState.hpp"
 #include "../peripheral/readable_state/ReadableState.hpp"
 #include "../peripheral/readable_state/writable_state/WritableState.hpp"
+#include "../utility/autoload.hpp"
 
 #include "cfg.hpp"
 #include "TemporaryThreadIdxOverride.hpp"
@@ -118,6 +119,45 @@ auto make_arg_specs() {
           }
         );
         std::cout << lowestroot_stintrootids.size() << '\n';
+        std::exit(0);
+      } }, // callback
+      false, // gobble_flags
+      false // flatten
+    )},
+    {"print_lowestroot_numstintroots", emp::ArgSpec(
+      1, // quota
+      "Should we load a population, " // description
+      "print the number of unique stint phylogenetic roots, and exit?",
+      {}, // aliases
+      [](const auto& args){ if ( args ) {
+        using population_t = emp::vector< dish2::Genome<Spec> >;
+        const auto pop = dish2::autoload< population_t >( args->front() );
+        const size_t lowest_root = dish2::get_lowest_root( pop );
+        std::set<size_t> lowestroot_stintrootids;
+        uitsl::transform_if(
+          std::begin( pop ), std::end( pop ),
+          std::inserter(
+            lowestroot_stintrootids, std::begin(lowestroot_stintrootids)
+          ),
+          [](const auto& genome){ return genome.stint_root_id.GetID(); },
+          [lowest_root](const auto& genome){
+            return genome.root_id.GetID() == lowest_root;
+          }
+        );
+        std::cout << lowestroot_stintrootids.size() << '\n';
+        std::exit(0);
+      } }, // callback
+      false, // gobble_flags
+      false // flatten
+    )},
+    {"print_lowestroot", emp::ArgSpec(
+      1, // quota
+      "Should we load a population, print the lowest root id, and exit?",// desc
+      {}, // aliases
+      [](const auto& args){ if ( args ) {
+        using population_t = emp::vector< dish2::Genome<Spec> >;
+        const auto pop = dish2::autoload< population_t >( args->front() );
+        std::cout << dish2::get_lowest_root( pop ) << '\n';
         std::exit(0);
       } }, // callback
       false, // gobble_flags
