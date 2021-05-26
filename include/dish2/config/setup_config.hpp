@@ -24,7 +24,9 @@ void setup_config( emp::ArgManager& arg_manager ) {
     "print_extrospective_state_size_minus_one",
     "print_readable_state_size_minus_one",
     "print_writable_state_size_minus_one",
-    "print_reconstituted_lowestroot_numstintroots"
+    "print_reconstituted_lowestroot_numstintroots",
+    "print_lowestroot_numstintroots",
+    "print_lowestroot"
   } ) while( arg_manager.CallbackArg(arg) );
 
   // std::filesystem::exists is failing inside Docker container
