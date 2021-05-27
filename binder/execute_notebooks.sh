@@ -40,22 +40,6 @@ shopt -u nullglob
 
 ################################################################################
 echo
-echo "stash metadata out of filenames"
-echo "-------------------------------"
-################################################################################
-
-if test -d "${script_dir}/teeplots"; then
-
-cd "${script_dir}/teeplots"
-
-for f in *; do
-  keyname stash --move --drop "${f}" _context _dfdigest _revision _timestamp
-done
-
-fi # if test -d "${script_dir}/teeplots"; then
-
-################################################################################
-echo
 echo "upload outplots in current directory"
 echo "--------------------------------------"
 ################################################################################
