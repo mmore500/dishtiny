@@ -8,6 +8,7 @@
 #include <string>
 
 #include "../../../third-party/Empirical/include/emp/base/optional.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
 #include "../debug/compare_files.hpp"
 #include "../polyfill/filesystem.hpp"
@@ -47,7 +48,7 @@ inline emp::optional<std::string> try_filename_from_url( const std::string& url 
   if (
     const std::filesystem::path as_path( url );
     as_path.has_extension()
-  ) return as_path.filename();
+  ) return emp::url_decode<false>(as_path.filename());
   else return std::nullopt;
 }
 

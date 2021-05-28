@@ -50,3 +50,11 @@ TEST_CASE("inflate zen.tar.gz", "[nproc:1]") {
   REQUIRE( uitsl::compare_files( "assets/zen.tar", temp_path ) );
 
 }
+
+TEST_CASE("inflate a=genome+criteria=arbitrary_over_all_roots+morph=wildtype+proc=0+series=16000+stint=0+thread=1+variation=master+ext=.json.gz", "[nproc:1]") {
+
+  const auto temp_path{ uitsl::inflate( "assets/a=genome+criteria=arbitrary_over_all_roots+morph=wildtype+proc=0+series=16000+stint=0+thread=1+variation=master+ext=.json.gz" ) };
+
+  REQUIRE( uitsl::compare_files( "assets/a=genome+criteria=arbitrary_over_all_roots+morph=wildtype+proc=0+series=16000+stint=0+thread=1+variation=master+ext=.json", temp_path ) );
+
+}

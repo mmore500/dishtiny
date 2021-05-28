@@ -15,7 +15,7 @@ namespace dish2 {
 template<typename Spec>
 struct KinGroupEpochStamps {
 
-  using buffer_t =  emp::array< size_t, Spec::NLEV >;
+  using buffer_t = std::array< uint64_t, Spec::NLEV >;
   buffer_t data{};
 
   KinGroupEpochStamps() = default;

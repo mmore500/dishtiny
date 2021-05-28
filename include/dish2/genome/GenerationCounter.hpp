@@ -14,7 +14,7 @@ namespace dish2 {
 template<typename Spec>
 struct GenerationCounter {
 
-  emp::array< size_t, Spec::NLEV + 1 > elapsed_generations{};
+  emp::array< uint64_t, Spec::NLEV + 1 > elapsed_generations{};
 
   void ElapseGeneration( const size_t lev ) {
     std::transform(

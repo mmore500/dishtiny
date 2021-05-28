@@ -7,10 +7,10 @@
 
 namespace uitsl {
 
-void list_cwd() {
-  std::cout << std::filesystem::absolute(".") << '\n';
+void list_cwd(std::ostream& os=std::cout) {
+  os << std::filesystem::absolute(".") << '\n';
   for (auto& p: std::filesystem::directory_iterator(".")) {
-    std::cout << p.path() << '\n';
+    os << p.path() << '\n';
   }
 }
 

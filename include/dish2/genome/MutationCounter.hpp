@@ -11,9 +11,9 @@ namespace dish2 {
 
 struct MutationCounter {
 
-  size_t point_mutation_counter{};
-  size_t insertion_deletion_counter{};
-  size_t mutation_occurrence_counter{};
+  uint64_t point_mutation_counter{};
+  uint64_t insertion_deletion_counter{};
+  uint64_t mutation_occurrence_counter{};
 
   void RecordPointMutation(const size_t num) { point_mutation_counter += num; }
 

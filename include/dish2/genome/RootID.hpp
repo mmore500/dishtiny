@@ -16,20 +16,20 @@ namespace dish2 {
 
 class RootID {
 
-  inline static std::atomic< size_t > root_id_counter{};
+  inline static std::atomic< uint64_t > root_id_counter{};
 
-  size_t root_id;
+  uint64_t root_id;
 
 public:
 
   RootID() = default;
 
   RootID(std::in_place_t) : root_id( uitsl::sidebyside_hash< std::ratio<3, 4> >(
-    uitsl::audit_cast<size_t>( uitsl::get_proc_id() ),
+    uitsl::audit_cast<uint64_t>( uitsl::get_proc_id() ),
     root_id_counter++
   ) ) {}
 
-  RootID(const size_t root_id_) : root_id( root_id_ ) {}
+  RootID(const uint64_t root_id_) : root_id( root_id_ ) {}
 
   bool operator<(const RootID& other) const {
     return root_id < other.root_id;

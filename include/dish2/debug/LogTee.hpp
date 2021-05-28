@@ -60,7 +60,7 @@ class LogTee : public std::ostream
     logfile_out = std::ofstream( out_path, std::ios_base::app );
 
     link_stream( logfile_out );
-    link_stream( std::cout );
+    link_stream( std::clog );
 
     *this << dish2::make_log_entry_boilerplate();
     *this << "setup logfile at " << out_path << '\n' << '\n';

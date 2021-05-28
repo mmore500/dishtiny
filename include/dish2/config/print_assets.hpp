@@ -27,7 +27,7 @@ void print_assets() {
       "find . -path ./dishtiny -prune -o -type f -exec md5sum {} +"
     ) );
   #else
-    uitsl::list_cwd();
+    uitsl::list_cwd(dish2::log_tee);
   #endif // #ifndef __EMSCRIPTEN__
 
   dish2::log_tee << "=======================================\n" << '\n';

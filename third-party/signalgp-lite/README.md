@@ -2,6 +2,7 @@
 # signalgp-lite
 
 [![version](https://img.shields.io/endpoint?url=https%3A%2F%2Fmmore500.github.io%2Fsignalgp-lite%2Fversion-badge.json)](https://github.com/mmore500/signalgp-lite/releases)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/d4ec421f786a4d00bd850bf0d1719d5d)](https://www.codacy.com/gh/mmore500/signalgp-lite/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mmore500/signalgp-lite&amp;utm_campaign=Badge_Grade)
 [![continuous integration](https://github.com/mmore500/signalgp-lite/workflows/CI/badge.svg)](https://github.com/mmore500/signalgp-lite/actions?query=workflow%3ACI)
 [![Documentation Status](https://readthedocs.org/projects/signalgp-lite/badge/?version=latest)](https://signalgp-lite.readthedocs.io/en/latest/?badge=latest)
 [![documentation coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fmmore500.github.io%2Fsignalgp-lite%2Fdocumentation-coverage-badge.json)](https://signalgp-lite.readthedocs.io/en/latest/)
