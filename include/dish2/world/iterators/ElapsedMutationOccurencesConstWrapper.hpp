@@ -22,7 +22,7 @@ public:
 
   ElapsedMutationOccurencesConstWrapper(const parent_t& in) : parent_t(in) {}
 
-  using value_type = const size_t;
+  using value_type = const uint64_t;
   using pointer = value_type*;
   using reference = value_type&;
 

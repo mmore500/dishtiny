@@ -20,7 +20,7 @@ void Cell<Spec>::MakeAliveRoutine() {
 
   const dish2::LogScope guard{ "make alive routine", "TODO", 3 };
 
-  const size_t epoch = *begin<dish2::EpochWrapper<Spec>>();
+  const uint64_t epoch = *begin<dish2::EpochWrapper<Spec>>();
 
   // check is alive consistency
   emp_assert(( std::set< typename dish2::IsAliveWrapper<Spec>::value_type >(
