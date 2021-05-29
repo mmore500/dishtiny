@@ -43,12 +43,18 @@ struct PushService {
           if ( res.has_value() ) std::for_each(
             cell.template begin< dish2::PushNodeOutputWrapper<spec_t> >(),
             cell.template end< dish2::PushNodeOutputWrapper<spec_t> >(),
-            [&res]( auto& output ){ output.Put( *res ); output.TryFlush(); }
+            [&res]( auto& output ){ output.Put( *res ); }
           );
 
         }
 
       }
+    );
+
+    std::for_each(
+      cell.template begin< dish2::PushNodeOutputWrapper<spec_t> >(),
+      cell.template end< dish2::PushNodeOutputWrapper<spec_t> >(),
+      []( auto& output ){ output.TryFlush(); }
     );
 
   }
