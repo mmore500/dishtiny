@@ -6,7 +6,6 @@
 #include "../../../third-party/conduit/include/uitsl/concurrent/ConcurrentBarrier.hpp"
 #include "../../../third-party/conduit/include/uitsl/countdown/Timer.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
-#include "../../../third-party/conduit/include/uitsl/parallel/ThreadIbarrierFactory.hpp"
 
 #include "../config/cfg.hpp"
 #include "../record/write_phylogenetic_root_abundances.hpp"
