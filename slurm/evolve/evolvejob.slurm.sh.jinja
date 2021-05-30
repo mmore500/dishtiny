@@ -250,6 +250,24 @@ for p in outdata/*a={demographic_phenotypic_phylogenetic_metrics,kin_conflict_st
 
 done
 
+echo "uploading any changeover files..."
+for p in outdata/*a=stint_root_id_changeover*; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
+  for retry in {1..20}; do
+    aws s3 cp --quiet \
+      "${p}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/evolve/stint-root-id-changeover/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+    && echo "  ${f} upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+  done & pids+=($!)
+
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
+
+done
+
 echo "uploading any asconfigured files..."
 for p in outmeta/*a=asconfigured*.csv*; do
   f="$(basename "${p}")"

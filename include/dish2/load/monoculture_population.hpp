@@ -40,7 +40,7 @@ void monoculture_population( dish2::ThreadWorld<Spec>& world ) {
 
   dish2::log_msg( " loaded monoculture from ", monoculture_paths.front() );
 
-  dish2::seed_genomes_into<Spec>( {monoculture}, world );
+  dish2::seed_genomes_into<Spec, true>( {monoculture}, world );
 
   dish2::log_msg( "applied monoculture" );
 

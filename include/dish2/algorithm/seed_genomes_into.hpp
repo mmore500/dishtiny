@@ -5,6 +5,7 @@
 #include <algorithm>
 
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
+#include "../../../third-party/Empirical/include/emp/base/optional.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/math/random_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
@@ -13,12 +14,13 @@
 #include "../cell/Cell.hpp"
 #include "../config/cfg.hpp"
 #include "../enum/CauseOfDeath.hpp"
+#include "../record/StintRootIDChangeoverRecorder.hpp"
 #include "../world/iterators/LiveCellIterator.hpp"
 #include "../world/ThreadWorld.hpp"
 
 namespace dish2 {
 
-template< typename Spec >
+template< typename Spec, bool record_stint_root_id_changeover=false >
 void seed_genomes_into(
   emp::vector< emp::vector<dish2::Genome<Spec>> > seed_buckets,
   dish2::ThreadWorld<Spec>& world
@@ -61,14 +63,26 @@ void seed_genomes_into(
     // shuffle incoming_population...
     emp::Shuffle( sgpl::tlrand.Get(), incoming_population );
 
+    emp::optional<dish2::StintRootIDChangeoverRecorder> recorder;
+    if constexpr ( record_stint_root_id_changeover ) recorder.emplace();
+
     // ... then inject into ThreadWorld's population
     uitsl::for_each(
       std::begin( incoming_population ), std::end( incoming_population ),
       std::begin( population ),
-      []( const auto& seed, auto& cell ){
+      [&recorder]( const auto& seed, auto& cell ){
         cell.genome = seed;
         cell.genome->SetupSeededGenotype();
         cell.MakeAliveRoutine();
+
+        if constexpr (
+          record_stint_root_id_changeover
+        ) recorder->record_changeover(
+          seed.root_id.GetID(),
+          seed.stint_root_id.GetID(),
+          cell.genome->stint_root_id.GetID()
+        );
+
       }
     );
 
@@ -76,7 +90,7 @@ void seed_genomes_into(
 
 }
 
-template< typename Spec >
+template< typename Spec, bool record_stint_root_id_changeover=false >
 void seed_genomes_into(
   const emp::vector< dish2::Genome<Spec> >& seeds,
   dish2::ThreadWorld<Spec>& world
@@ -90,7 +104,9 @@ void seed_genomes_into(
     []( const auto& seed ){ return emp::vector<dish2::Genome<Spec>>{ seed }; }
   );
 
-  dish2::seed_genomes_into<Spec>( seed_buckets, world );
+  dish2::seed_genomes_into<Spec, record_stint_root_id_changeover>(
+    seed_buckets, world
+  );
 
 }
 
