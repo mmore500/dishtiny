@@ -73,7 +73,7 @@ void innoculate_population( dish2::ThreadWorld<Spec>& world ) {
   }(), emp::to_string( innoculum_paths ));
 
 
-  dish2::seed_genomes_into<Spec>( innoculum_buckets, world );
+  dish2::seed_genomes_into<Spec, true>( innoculum_buckets, world );
 
   dish2::log_msg( "loaded ", innoculum_buckets.size(), " innoculum buckets" );
 

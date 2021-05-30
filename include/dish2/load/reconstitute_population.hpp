@@ -21,7 +21,7 @@ void reconstitute_population( dish2::ThreadWorld<Spec>& world ) {
 
   dish2::log_msg("reconstituted ", reconstituted.size(), " cells from ", src);
 
-  dish2::seed_genomes_into<Spec>( reconstituted, world );
+  dish2::seed_genomes_into<Spec, true>( reconstituted, world );
 
 }
 
