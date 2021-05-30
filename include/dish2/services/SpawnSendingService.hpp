@@ -13,7 +13,7 @@
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
-#include "../cell/cardinal_iterators/GenomeNodeOutputWrapper.hpp"
+#include "../cell/cardinal_iterators/IdentityWrapper.hpp"
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../cell/cardinal_iterators/SpawnArrestWrapper.hpp"
 #include "../cell/cardinal_iterators/SpawnCountWrapper.hpp"
@@ -71,13 +71,13 @@ struct SpawnSendingService {
     if ( available_resource < 1 ) return;
 
     thread_local emp::vector< std::reference_wrapper<
-      typename dish2::GenomeNodeOutputWrapper<spec_t>::value_type
+      typename dish2::IdentityWrapper<spec_t>::value_type
     > > requested_outputs;
     requested_outputs.clear();
 
     uitsl::copy_if(
-      cell.template begin<dish2::GenomeNodeOutputWrapper<spec_t>>(),
-      cell.template end<dish2::GenomeNodeOutputWrapper<spec_t>>(),
+      cell.template begin<dish2::IdentityWrapper<spec_t>>(),
+      cell.template end<dish2::IdentityWrapper<spec_t>>(),
       cell.template begin<dish2::SpawnArrestWrapper<spec_t>>(),
       cell.template begin<dish2::SpawnRequestWrapper<spec_t>>(),
       std::back_inserter( requested_outputs ),
@@ -92,7 +92,7 @@ struct SpawnSendingService {
       );
 
       // do the spawn send
-      requested_outputs[ idx ].get().Put( *cell.genome );
+      requested_outputs[ idx ].get().genome_node_output.Put( *cell.genome );
       available_resource -= 1;
 
       // record spawn send in spawn count
@@ -104,7 +104,7 @@ struct SpawnSendingService {
       );
 
       // record spawn event in running log
-      const auto& peripheral = cell.cardinals[idx].peripheral;
+      const auto& peripheral = requested_outputs[ idx ].get().peripheral;
       const size_t replev = peripheral.readable_state.template Get<
         dish2::RepLevRequest<spec_t>
       >().GetRepLev();
