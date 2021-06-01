@@ -13,9 +13,9 @@
 namespace dish2 {
 
 template< typename Spec >
-struct KinGroupIDAncestorView : public uitsl::PodLeafNode< size_t, Spec::NLEV > {
+struct KinGroupIDAncestorView : public uitsl::PodLeafNode< uint64_t, Spec::NLEV > {
   // inherit constructors
-  using parent_t = uitsl::PodLeafNode<size_t, Spec::NLEV>;
+  using parent_t = uitsl::PodLeafNode<uint64_t, Spec::NLEV>;
   using parent_t::parent_t;
 
 };
