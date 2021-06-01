@@ -25,8 +25,11 @@ void dump_config_csv() {
   auto keyname_attributes = emp::keyname::unpack_t{
     {"a", "asconfigured"},
     {"proc", emp::to_string( uitsl::get_proc_id() ) },
+    {"source", EMP_STRINGIFY(DISHTINY_HASH_)},
     {"ext", ".csv"}
   };
+
+  if ( dish2::get_repro() ) keyname_attributes[ "repro" ] = *dish2::get_repro();
 
   dish2::mkdir_exists_ok( "./outmeta" );
 
@@ -36,7 +39,6 @@ void dump_config_csv() {
   const std::string outpath = emp::to_string("outmeta/", outname);
 
   emp::DataFile df( outpath );
-  df.AddVal( EMP_STRINGIFY(DISHTINY_HASH_), "source" );
   if ( dish2::get_repro() ) df.AddVal( *dish2::get_repro(), "Repro" );
   if ( dish2::get_endeavor() ) df.AddVal( *dish2::get_endeavor(), "Endeavor" );
   if ( dish2::get_slurm_job_id() ) df.AddVal(
