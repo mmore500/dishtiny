@@ -1,0 +1,45 @@
+<div class="card">
+<div class="card-header">
+    <span data-toggle="collapse" href="#execution-log-panel-body">
+    <button
+        id="execution-log-panel-button"
+        class="btn btn-lg btn-block btn-primary text-left"
+        type="button"
+        data-toggle="button"
+        autocomplete="off"
+    >
+        Execution Log Readout
+    </button>
+    </span>
+</div>
+<div id="execution-log-panel-body" class="text-large collapse list-group list-group-flush">
+
+  <div class="list-group-item list-group-item-warning">
+    When this panel is open, you'll have to click the step button to advance the simulation.
+    If the simulation isn't running, you'll need to click the "Update" or "Start" button then come back here.
+  </div>
+
+  <div class="list-group-item list-group-item-info">
+    Click the 🤔 for details on any log entry!
+  </div>
+
+  <div class="list-group-item">
+    ⬇️ Stack Log --- tells you the nested set of tasks that the computer is working on right now.
+  </div>
+
+  <div id="execution-log-stack-panel"></div>
+
+  <div class="list-group-item">
+    ⬇️ Events Log --- gives you a play-by-play of what the computer has done.
+  </div>
+
+  <div id="execution-log-events-panel"></div>
+
+  <div class="list-group-item list-group-item-action list-group-item-success" style="cursor: pointer;" id="execution-log-panel-stepper">
+    <label for="execution-log-panel-step">Step by</label>
+
+    <input class="form-control" type="number" value="1" min="1" step="1" id="execution-log-panel-step">
+  </div>
+
+</div>
+</div>

@@ -1,0 +1,35 @@
+{% macro content(data, eval, make_badge, markdown) -%}
+    <div class="card my-3">
+    <div class="card-header">
+    <span data-toggle="collapse" href="#view_key-body">
+        <button
+        class="btn btn-lg btn-block btn-primary text-left"
+        type="button"
+        data-toggle="button"
+        aria-pressed="true"
+        autocomplete="off"
+        >
+        View Key
+        </button>
+    </span>
+    </div>
+    <div id="view_key-body" class="text-large collapse">
+    {% for (key, value) in data.items() %}
+    <div id="{{ key }}-key">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-dark">
+            {% for header in value.header %}
+                {{ markdown.convert(eval('f' '"' + header + '"', {'make_badge': make_badge})) }}
+            {% endfor %}
+            </li>
+            {% for item in value['items'] %}
+            <li class="list-group-item">
+            {{ markdown.convert(eval('f' '"' + item + '"', {'make_badge': make_badge})) }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endfor %}
+    </div>
+    </div>
+{%- endmacro %}
