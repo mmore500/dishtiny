@@ -7,9 +7,9 @@
 
 namespace dish2 {
 
-struct Epoch : public uitsl::PodLeafNode<size_t> {
+struct Epoch : public uitsl::PodLeafNode<uint64_t> {
   // inherit constructors
-  using parent_t = uitsl::PodLeafNode<size_t>;
+  using parent_t = uitsl::PodLeafNode<uint64_t>;
   using parent_t::parent_t;
 };
 
