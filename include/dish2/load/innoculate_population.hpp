@@ -16,6 +16,7 @@
 #include "../algorithm/seed_genomes_into.hpp"
 #include "../debug/log_msg.hpp"
 #include "../genome/Genome.hpp"
+#include "../utility/is_native.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "load_innoculum.hpp"
@@ -73,7 +74,7 @@ void innoculate_population( dish2::ThreadWorld<Spec>& world ) {
   }(), emp::to_string( innoculum_paths ));
 
 
-  dish2::seed_genomes_into<Spec, true>( innoculum_buckets, world );
+  dish2::seed_genomes_into<Spec, dish2::is_native()>(innoculum_buckets, world);
 
   dish2::log_msg( "loaded ", innoculum_buckets.size(), " innoculum buckets" );
 
