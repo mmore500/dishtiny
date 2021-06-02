@@ -10,9 +10,9 @@
 
 namespace dish2 {
 
-struct PhylogeneticRootView : public uitsl::PodLeafNode< size_t > {
+struct PhylogeneticRootView : public uitsl::PodLeafNode< uint64_t > {
   // inherit constructors
-  using parent_t = uitsl::PodLeafNode<size_t>;
+  using parent_t = uitsl::PodLeafNode<uint64_t>;
   using parent_t::parent_t;
 
 };
