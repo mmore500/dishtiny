@@ -7,8 +7,8 @@
 
 namespace dish2 {
 
-struct SpawnCount : public uitsl::PodLeafNode<uint64_t> {
-  using parent_t = uitsl::PodLeafNode<uint64_t>;
+struct SpawnCount : public uitsl::PodLeafNode<char> {
+  using parent_t = uitsl::PodLeafNode<char>;
   using parent_t::parent_t;
 };
 

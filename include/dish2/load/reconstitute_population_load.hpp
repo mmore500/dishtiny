@@ -16,6 +16,7 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 
+#include "../algorithm/seed_genomes_into.hpp"
 #include "../genome/Genome.hpp"
 #include "../utility/autoload.hpp"
 
