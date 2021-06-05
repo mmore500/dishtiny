@@ -103,6 +103,10 @@ image-slicer==2.1.1
 imagesize==1.2.0
     # via sphinx
 ipykernel==5.5.3
+    # via
+    #   -r requirements.in
+    #   ipynbname
+ipynbname==2021.3.2
     # via -r requirements.in
 ipython-genutils==0.2.0
     # via
