@@ -107,6 +107,16 @@ def tabulate_either_perturbation_fitness(
                     : np.median( wt_vs_perturbed_df['Fitness Differential'] ),
             })
 
+            for target_idx, group in wt_vs_perturbed_df.groupby(
+                f'{target_state} State Target Idx'
+            ):
+                res_by_series[series].update({
+                    f'Is More Fit Under {target_state} State {target_idx} Perturbation{suffix}'
+                        : group['Is Significantly More Fit'].any(),
+                    f'Is Less Fit Under {target_state} State {target_idx} Perturbation{suffix}'
+                        : group['Is Significantly Less Fit'].any(),
+                })
+
     return pd.concat([
         pd.DataFrame.from_records( [just_one_series] )
         for just_one_series in res_by_series.values()
