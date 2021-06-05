@@ -111,9 +111,9 @@ def tabulate_either_perturbation_fitness(
                 f'{target_state} State Target Idx'
             ):
                 res_by_series[series].update({
-                    f'Is More Fit Under {target_state} State {target_idx} Perturbation{suffix}'
+                    f'Is More Fit Under {target_state} State {int(target_idx)} Perturbation{suffix}'
                         : group['Is Significantly More Fit'].any(),
-                    f'Is Less Fit Under {target_state} State {target_idx} Perturbation{suffix}'
+                    f'Is Less Fit Under {target_state} State {int(target_idx)} Perturbation{suffix}'
                         : group['Is Significantly Less Fit'].any(),
                 })
 
