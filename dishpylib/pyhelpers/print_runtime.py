@@ -5,6 +5,8 @@ import types
 
 from . import get_env_context
 from . import get_git_revision_hash
+from . import get_notebook_name
+from . import get_notebook_path
 from . import make_timestamp
 
 def print_runtime():
@@ -12,6 +14,8 @@ def print_runtime():
     print( 'context:', get_env_context() )
     print( 'hostname:', socket.gethostname() )
     print( 'interpreter:', sys.version.replace('\n', ' ').strip() )
+    print( 'notebook name:', get_notebook_name() )
+    print( 'notebook path:', get_notebook_path() )
     print( 'revision:', get_git_revision_hash() )
     print( 'timestamp:', make_timestamp() )
 
