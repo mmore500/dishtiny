@@ -98,11 +98,11 @@ def tabulate_perturbation_fitness(
                 f'{target_state} State Target Idx'
             ):
                 res_by_series[series].update({
-                    f'Is More Fit Under {target_state} State {target_idx} {perturbation_type}s{suffix}'
+                    f'Is More Fit Under {target_state} State {int(target_idx)} {perturbation_type}s{suffix}'
                         : ip.popsingleton(group['p']) > 1 - p_thresh,
-                    f'Is Less Fit Under {target_state} State {target_idx} {perturbation_type}s{suffix}'
+                    f'Is Less Fit Under {target_state} State {int(target_idx)} {perturbation_type}s{suffix}'
                         : ip.popsingleton(group['p']) < p_thresh,
-                    f'{target_state} State {target_idx} {perturbation_type} Fitness Differential{suffix}'
+                    f'{target_state} State {int(target_idx)} {perturbation_type} Fitness Differential{suffix}'
                         : ip.popsingleton(group['Fitness Differential']) < p_thresh,
                 })
 
