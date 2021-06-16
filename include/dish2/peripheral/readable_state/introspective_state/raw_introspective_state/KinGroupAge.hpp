@@ -10,13 +10,13 @@
 namespace dish2 {
 
 template< typename Spec >
-struct KinGroupAge : public uitsl::PodLeafNode< size_t, Spec::NLEV > {
+struct KinGroupAge : public uitsl::PodLeafNode< uint64_t, Spec::NLEV > {
   // inherit constructors
-  using parent_t = uitsl::PodLeafNode<size_t, Spec::NLEV>;
+  using parent_t = uitsl::PodLeafNode<uint64_t, Spec::NLEV>;
   using parent_t::parent_t;
 
   void Refresh(
-    const size_t epoch, const dish2::KinGroupEpochStamps< Spec > stamps
+    const uint64_t epoch, const dish2::KinGroupEpochStamps< Spec > stamps
   ) {
     std::transform(
       std::begin( stamps.GetBuffer() ),

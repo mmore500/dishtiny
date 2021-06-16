@@ -5,12 +5,12 @@
 #include <algorithm>
 #include <string>
 
+#include "../../../third-party/bxzstr/include/bxzstr.hpp"
 #include "../../../third-party/conduit/include/uitsl/algorithm/for_each.hpp"
 #include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/data/DataFile.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
-#include "../../../third-party/header-only-gzstream/include/hogzstr/gzstream.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/CountingIterator.hpp"
 
 #include "../config/has_replicate.hpp"
@@ -30,12 +30,12 @@ void dump_spawn_log( const dish2::ThreadWorld< Spec >& world ) {
 
   const auto& population = world.population;
 
-  const thread_local std::string out_filename = dish2::pare_keyname_filename(
+  const std::string out_filename = dish2::pare_keyname_filename(
     dish2::make_spawn_log_filename(),
     dish2::make_data_path()
   );
 
-  thread_local bxz::ofstream out_stream(
+  bxz::ofstream out_stream(
     dish2::make_data_path( out_filename ), bxz::lzma, 6
   );
   emp::DataFile file( out_stream );

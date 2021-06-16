@@ -40,7 +40,8 @@ struct BirthSetupService {
     fresh_input_idxs.clear();
 
     for (size_t idx{}; idx < cell.cardinals.size(); ++idx) {
-      if ( cell.cardinals[idx].genome_node_input.Jump() ) {
+      const size_t num_entries = cell.cardinals[idx].genome_node_input.Jump();
+      for ( size_t ticket{}; ticket < num_entries; ++ticket ) {
         fresh_input_idxs.push_back( idx );
       }
     }
