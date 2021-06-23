@@ -1,6 +1,8 @@
 #!/bin/bash
 
-TARGETS=$(find . -type f ! -path "./third-party/*" ! -path "./.git/*" ! -path "*.tar.gz" ! -path "*.jpg" ! -path "*.png" ! -path "*/assets/*")
+# greq -qI tests if file is binary
+# adapted from https://stackoverflow.com/a/29689345
+TARGETS=$(find . -type f ! -path "./third-party/*" ! -path "./.git/*" ! -path "*.tar.gz" ! -path "*.jpg" ! -path "*.png" ! -path "*/assets/*" -exec grep -qI . {} ';' -print)
 
 for filename in $TARGETS
 do
