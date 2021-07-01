@@ -7,6 +7,7 @@
 self
 installation
 usage
+simulation
 data
 workflow
 development
