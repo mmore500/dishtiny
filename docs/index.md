@@ -7,7 +7,7 @@
 self
 installation
 usage
-simulation
+simulation_overview
 data
 workflow
 development
