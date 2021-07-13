@@ -29,6 +29,7 @@ class CollectiveHarvestingService {
     const size_t effective_count = std::min(
       optimum,
       // subtract 1 from quorum count for self, being cautious about overflow
+      // TODO only subtract if self has a quorum bit set
       quorum_count - static_cast<bool>( quorum_count )
     );
 
