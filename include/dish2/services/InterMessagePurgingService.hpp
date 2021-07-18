@@ -38,6 +38,8 @@ struct InterMessagePurgingService {
         message_counter += message_input.Jump();
       }
     );
+    
+    // self-send messages are purged in InterMessageLaunchingService
 
   }
 
