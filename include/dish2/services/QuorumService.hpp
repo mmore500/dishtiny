@@ -118,10 +118,20 @@ public:
 
     cell.cell_quorum_state.RefreshOwnBits();
 
+    // temporary blacklists prevent bits
+    // that the source /we/ learned them from
+    // has forgotten about
+    // from being reactivated by neighbors
+    // /we/ taught them to
+    // ... move the process of purging them
+    // forward
     ProgressBlacklists<Cell>( cell );
 
+    // add any quorum bits that neighbors
+    // have learned about to known bits
     UpdateKnownBits<Cell>( cell );
 
+    // share all our known bits with neighbors
     PushKnownBits<Cell>( cell );
 
     // so that cpus can sense num quorum bits
