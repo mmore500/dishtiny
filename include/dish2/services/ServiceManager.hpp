@@ -12,7 +12,20 @@ template<typename... Services> struct ServiceManager {
 
 };
 
-// adapted from https://stackoverflow.com/a/35284581
+/**
+ * Manages cellular service functors.
+ *
+ * Simulation logic is applied to each cell through a collection of distinct
+ * functors, referred to as services. All services specified to run on a
+ * particular update are applied in sequence to a single cell. (Some services
+ * run only every $n$th update.) Then, to another randomly-chosen cell in a
+ * `thread_local` population, and another until the entire population has been
+ * updated.
+ *
+ * @note All cellular services are defined in terms of a single cell.
+ * @note Dispatched by ThreadLocalServiceManager.
+ * @note adapted from https://stackoverflow.com/a/35284581
+ */
 template<typename FirstService, typename... SubsequentServices>
 struct ServiceManager<FirstService, SubsequentServices...> {
 

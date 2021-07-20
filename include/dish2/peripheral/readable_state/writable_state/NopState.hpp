@@ -7,6 +7,12 @@
 
 namespace dish2 {
 
+/**
+ * Writing to this state has no external effect.
+ *
+ * It can be used as global memory shared between cores of a cardinal's virtual
+ * CPU.
+ */
 template< typename Spec >
 struct NopState : public uitsl::PodLeafNode<float, Spec::AMT_NOP_MEMORY> {
   // inherit constructors

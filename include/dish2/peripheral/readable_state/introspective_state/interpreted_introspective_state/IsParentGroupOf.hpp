@@ -9,6 +9,13 @@
 
 namespace dish2 {
 
+/**
+ * Did this cell's kin group descend directly from the cardinal's neighbor
+ * cell's kin group?
+ *
+ * That is, is cell's kin group ancestor ID(s) equal to the cardinal's
+ * neighbor's current kin group ID(s).
+ */
 template< typename Spec >
 struct IsParentGroupOf : public uitsl::PodLeafNode< char, Spec::NLEV > {
   // inherit constructors

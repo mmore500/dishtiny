@@ -16,12 +16,22 @@
 namespace sgpl {
 namespace local {
 
+/**
+ * Marks a program location local jump instructions may route to.
+
+ * Local jump instructions enable conditionals and looping within modules. This
+ * program location is tagged with the instruction's tag.
+ *
+ * As described in `dish2::global::Anchor`'s docstring, this operation also
+ * plays a role in determining whether global anchor instructions close a
+ * module.
+ */
 struct Anchor {
 
   template<typename Spec>
   static void run(
-    sgpl::Core<Spec>& core,
-    const sgpl::Instruction<Spec>& inst,
+    sgpl::Core<Spec>&,
+    const sgpl::Instruction<Spec>&,
     const sgpl::Program<Spec>&,
     typename Spec::peripheral_t&
   ) noexcept { ; }

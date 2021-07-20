@@ -6,6 +6,12 @@
 
 namespace dish2 {
 
+/**
+ * Does this cell descend from the same originally-generated genome as its neighbor?
+ *
+ * Triggered if a cardinal's cell's root ID is equal to that cardinal's
+ * neighbor cell's root ID.
+ */
 struct PhylogeneticRootMatchEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

@@ -15,6 +15,9 @@
 
 namespace sgpl {
 
+/**
+ * Stores a randomly drawn float value to `reg[arg_0]`.
+ */
 class RandomDraw {
 
   template<typename Spec>

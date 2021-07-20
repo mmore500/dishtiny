@@ -16,6 +16,12 @@
 namespace sgpl {
 namespace global {
 
+/**
+ * Conditionally jumps core to execute a new module.
+ *
+ * Jumps the current core to a global anchor that matches the instruction tag
+ * if `reg[arg_0]` is zero. If `reg[arg_1]` is zero, resets registers.
+ */
 struct JumpIfNot {
 
   template<typename Spec>

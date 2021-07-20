@@ -14,6 +14,9 @@
 
 namespace dish2 {
 
+/**
+ * Launches new virtual cores to process incoming inter-cell messages.
+ */
 struct InterMessageLaunchingService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

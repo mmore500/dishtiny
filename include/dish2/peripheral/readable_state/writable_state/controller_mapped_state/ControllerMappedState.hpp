@@ -38,6 +38,11 @@ using controller_mapped_state_parent_t = uitsl::PodInternalNode<
 
 } // namespace internal
 
+/**
+ * Controller mapped state is a collection of simulation-controlling output
+ * values that evolving programs running within each cardinal can write to and
+ * read from.
+ */
 template< typename Spec >
 struct ControllerMappedState
 : public dish2::internal::controller_mapped_state_parent_t<Spec> {

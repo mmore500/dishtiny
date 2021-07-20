@@ -15,6 +15,12 @@
 
 namespace dish2 {
 
+/**
+ * Advances the cell age introspective state and refreshes kin group age
+ * introspective state.
+ *
+ * @todo Refactor out GroupAgeService.
+ */
 struct CellAgeService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

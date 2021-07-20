@@ -16,6 +16,12 @@
 namespace sgpl {
 namespace local {
 
+/**
+ * Gets the regulator value of the local jump table tag that best matches this
+ * instruction's tag.
+ *
+ * Stores the value in `reg[arg\_0]`. If no tag matches, a no-op is performed.
+ */
 struct RegulatorGet {
 
   template<typename Spec>

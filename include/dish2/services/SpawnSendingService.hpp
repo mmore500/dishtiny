@@ -24,6 +24,14 @@
 
 namespace dish2 {
 
+/**
+ * Dispatches cellular reproduction.
+ *
+ * If available resource is greater than or equal to 1.0, iterates randomly
+ * through every cardinal to determine whether it requested to spawn and has
+ * not arrested spawning. Then, one of these requests is dispatched at random
+ * and stockpile is decreased by 1.0.
+ */
 struct SpawnSendingService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

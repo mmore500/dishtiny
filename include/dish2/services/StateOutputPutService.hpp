@@ -15,6 +15,10 @@
 
 namespace dish2 {
 
+/**
+ * Dispatches a copy of each cardinal's current readable state to each
+ * cardinal's neighbor cell.
+ */
 struct StateOutputPutService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

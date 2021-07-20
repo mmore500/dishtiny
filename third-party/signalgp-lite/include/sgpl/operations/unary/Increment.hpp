@@ -14,6 +14,10 @@
 
 namespace sgpl {
 
+/**
+ * Takes `reg[arg_0]`, increments it by one, and stores the result in
+ * `reg[arg_0]`.
+ */
 struct Increment {
 
   template<typename Spec>

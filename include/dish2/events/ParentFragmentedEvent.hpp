@@ -6,6 +6,10 @@
 
 namespace dish2 {
 
+/**
+ * Triggered if a cell's parent died from fragmentation.
+ * That is, if the last cause of death on the current tile was fragmentation.
+ */
 struct ParentFragmentedEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

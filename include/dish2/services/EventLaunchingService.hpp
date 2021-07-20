@@ -14,6 +14,9 @@
 
 namespace dish2 {
 
+/**
+ * Dispatches environmentally-managed events for each cardinal.
+ */
 struct EventLaunchingService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

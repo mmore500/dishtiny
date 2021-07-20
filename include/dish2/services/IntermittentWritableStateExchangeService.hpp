@@ -20,6 +20,12 @@
 
 namespace dish2 {
 
+/**
+ * Used for experimental manipulations testing the fitness effect of
+ * writable state.
+ *
+ * (Not part of core simulation logic.)
+ */
 template<typename Spec>
 struct IntermittentWritableStateExchangeService {
 

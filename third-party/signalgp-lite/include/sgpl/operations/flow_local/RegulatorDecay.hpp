@@ -17,6 +17,13 @@
 namespace sgpl {
 namespace local {
 
+/**
+ * Ages the regulator decay countdown of local jump table tags matching this
+ * instruction's tag by the amount `reg[arg_0]`.
+ *
+ * When a regulator ages past a threshold, it is reset to default. If
+ * `reg[arg_0]` is negative, this operation can forestall decay.
+ */
 struct RegulatorDecay {
 
   template<typename Spec>

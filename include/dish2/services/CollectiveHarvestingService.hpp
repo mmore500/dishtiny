@@ -16,6 +16,14 @@
 
 namespace dish2 {
 
+/**
+ * Perform kin group collective resource harvest for single cell.
+ *
+ * Calculates the total amount of resource collectively harvested to this cell
+ * by the cell's kin group. This amount increases with quorum count and
+ * saturates at `OPTIMAL_QUORUM_COUNT`. Adds the harvested amount to the cell's
+ * resource stockpile.
+ */
 class CollectiveHarvestingService {
 
   template<typename Cell>

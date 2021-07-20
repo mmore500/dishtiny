@@ -14,6 +14,11 @@
 
 namespace sgpl {
 
+/**
+ * Divides `reg[arg_1]` by `reg[arg_2]` and stores the result in `reg[arg_0]`.
+ *
+ * Division by zero can result in an `Inf` or `NaN` value.
+ */
 struct Divide {
 
   template<typename Spec>

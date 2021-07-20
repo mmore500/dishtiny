@@ -27,6 +27,10 @@
 
 namespace dish2 {
 
+/**
+ * Based on writable state within each cardinal, calculates and dispatches
+ * resource that should be shared to each neighbor cell.
+ */
 struct ResourceSendingService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

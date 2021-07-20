@@ -13,6 +13,13 @@
 
 namespace dish2 {
 
+/**
+ * If `reg[arg_1]` is nonzero, stores `reg[arg_0]` into a target writable state.
+ *
+ * To determine the target writable state, interprets the first bits of the
+ * instruction tag as an unsigned integer then calculates the remainder of
+ * integer division by the number of writable states.
+ */
 template< typename DishSpec >
 class WriteOwnStateIf {
 
@@ -44,7 +51,7 @@ public:
 
   }
 
-  static std::string name() { return "Write Own State"; }
+  static std::string name() { return "Write Own State If"; }
 
   static size_t prevalence() { return 5; }
 

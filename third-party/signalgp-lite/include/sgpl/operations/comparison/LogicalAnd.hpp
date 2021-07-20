@@ -14,6 +14,10 @@
 
 namespace sgpl {
 
+/**
+ * Performs a logical AND of `reg[arg_1]` and `reg[arg_2]` then stores the
+ * result in `reg[arg_0]`.
+ */
 struct LogicalAnd {
 
   template<typename Spec>

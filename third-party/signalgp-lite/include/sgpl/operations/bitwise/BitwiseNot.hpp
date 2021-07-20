@@ -16,6 +16,10 @@
 
 namespace sgpl {
 
+/**
+ * Performs a bitwise NOT of `reg[arg_1]` and `reg[arg_2]` then stores the
+ * result in `reg[arg_0]`.
+ */
 struct BitwiseNot {
 
   template<typename Spec>

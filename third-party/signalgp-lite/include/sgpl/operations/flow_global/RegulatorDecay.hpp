@@ -17,6 +17,15 @@
 namespace sgpl {
 namespace global {
 
+/**
+ * Ages the regulator decay countdown of global jump table tags matching this
+ * instruction's tag by the amount `reg[arg_0]`.
+
+ * If `reg[arg_0]` is negative, this can forestall decay.
+ *
+ * This regulator value affects the outcome of tag lookup for module activation
+ * on global jump table `JUMP_TABLE_IDX`.
+ */
 template< size_t JUMP_TABLE_IDX=0 >
 struct RegulatorDecay {
 

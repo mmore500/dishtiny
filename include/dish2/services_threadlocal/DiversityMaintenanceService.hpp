@@ -19,6 +19,15 @@
 
 namespace dish2 {
 
+/**
+ * Prevents any one originally-generated ancestor from sweeping the population,
+ * preserving deep phylogenetic diversity.
+ *
+ * Counts cells that descend from each originally-generated ancestor. If more
+ * than `DIVERSITY_MAINTENANCE_PREVALENCE` of cells descend from a single
+ * originally-generated ancestor, decay their resource stockpiles. The
+ * magnitude of this effect increases with excess prevalence.
+ */
 struct DiversityMaintenanceService {
 
   static bool ShouldRun( const size_t update ) {

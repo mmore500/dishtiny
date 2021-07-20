@@ -16,6 +16,10 @@
 namespace sgpl {
 namespace local {
 
+/**
+ * Sets the regulator value of global jump table tags matching this
+ * instruction's tag to `reg[arg_0]`.
+ */
 struct RegulatorSet {
 
   template<typename Spec>

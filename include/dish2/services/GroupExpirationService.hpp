@@ -14,6 +14,13 @@
 
 namespace dish2 {
 
+/**
+ * As group age exceeds `GROUP_EXPIRATION_DURATIONS`, with increasing
+ * probability fragments cell from its kin group.
+ *
+ * This process kills the cell and replaces it inplace with a daughter without
+ * kin ID commonality.
+ */
 class GroupExpirationService {
 
   template<typename Cell>

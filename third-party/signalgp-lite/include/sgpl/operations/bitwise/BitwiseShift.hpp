@@ -17,6 +17,12 @@
 
 namespace sgpl {
 
+/**
+ * Shifts the bits of `reg[arg_1]` by `reg[arg_2]` positions.
+ *
+ * (If `reg[arg_2]` is negative, this is a right shift. Otherwise it is a left
+ * shift.) Stores the result in `reg[arg_0]`.
+ */
 struct BitwiseShift {
 
   template<typename Spec>

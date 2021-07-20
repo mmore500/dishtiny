@@ -34,6 +34,14 @@ namespace internal {
 
 } // namespace internal
 
+/**
+ * Writable state refers to the collection of output values that evolving
+ * programs running within each cardinal can write to and read from.
+ *
+ * Some of these outputs enable interaction with the simulation (i.e., control
+ * phenotypic characteristics). Each cardinal has an independent copy of each
+ * piece of writable state state.
+ */
 template< typename Spec >
 struct WritableState : public dish2::internal::writable_state_parent_t<Spec> {
 

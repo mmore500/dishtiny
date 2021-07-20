@@ -9,6 +9,9 @@
 
 namespace dish2 {
 
+/**
+ * Number of epochs elapsed since kin group formation.
+ */
 template< typename Spec >
 struct KinGroupAge : public uitsl::PodLeafNode< size_t, Spec::NLEV > {
   // inherit constructors

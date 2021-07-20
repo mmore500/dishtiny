@@ -14,6 +14,10 @@
 
 namespace sgpl {
 
+/**
+ * Multiplies `reg[arg_1]` by `reg[arg_2]` and stores the result in
+ * `reg[arg_0]}`.
+ */
 struct Multiply {
 
   template<typename Spec>

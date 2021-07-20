@@ -16,15 +16,37 @@
 namespace sgpl {
 namespace global {
 
+/**
+ * Marks a module-begin position.
+ *
+ * Based on tag-lookup, new cores or global jump instructions may set the
+ * program counter to this instruction's program position.
+ *
+ * This instruction can also mark a module-end position --- executing this
+ * instruction can terminate the executing core. If no local anchor instruction
+ * is present between the current global anchor instruction and the preceding
+ * global anchor instruction, this operation will not terminate the executing
+ * core. (This way, several global anchors may lead into the same module.)
+ *
+ * However, if a local anchor instruction is present between the current global
+ * anchor instruction and the preceding global anchor instruction, this
+ * operation will terminate the executing core. Local jump instructions will
+ * only consider local anchors between the preceding global anchor and the
+ * subsequent global anchor instruction.
+ */
 struct Anchor {
 
   template<typename Spec>
   static void run(
     sgpl::Core<Spec>& core,
-    const sgpl::Instruction<Spec>& inst,
+    const sgpl::Instruction<Spec>&,
     const sgpl::Program<Spec>& program,
     typename Spec::peripheral_t& peripheral
   ) noexcept {
+    // when launching a new core, local anchors won't be present
+    // when reaching a global anchor
+    // without encountering local anchors yet,
+    // local anchors will also still be empty
     if ( core.HasLocalAnchors() ) core.Terminate();
     else core.LoadLocalAnchors( program );
   }

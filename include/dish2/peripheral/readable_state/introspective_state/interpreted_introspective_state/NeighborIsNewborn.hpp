@@ -9,6 +9,9 @@
 
 namespace dish2 {
 
+/**
+ * Is the neighbor's cell age less than `EVENT_LAUNCHING_SERVICE_FREQUENCY`?
+ */
 struct NeighborIsNewborn : public uitsl::PodLeafNode<char> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

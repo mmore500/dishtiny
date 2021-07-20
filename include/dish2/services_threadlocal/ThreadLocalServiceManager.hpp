@@ -12,6 +12,18 @@ template<typename... Services> struct ThreadLocalServiceManager {
 
 };
 
+/**
+ * Manages thread_local service functors.
+ *
+ * Simulation logic arises from sequential application of functors to a
+ * thread_local population.
+ *
+ * @note All thread_local services are defined in terms of `ThreadWorld`, a
+ * thread-local of population of cells.
+ * @note Dispatches ServiceManager.
+ * @note adapted from https://stackoverflow.com/a/35284581
+ */
+
 // adapted from https://stackoverflow.com/a/35284581
 template<typename FirstService, typename... SubsequentServices>
 struct ThreadLocalServiceManager<FirstService, SubsequentServices...> {

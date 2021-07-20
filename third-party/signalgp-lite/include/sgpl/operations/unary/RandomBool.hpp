@@ -15,6 +15,12 @@
 
 namespace sgpl {
 
+/**
+ * With probability determined by this instruction's tag, stores 1.0f to
+ * `reg[arg_0]`.
+ *
+ * Otherwise, stores 0.0f to `reg[arg_0]`.
+ */
 class RandomBool {
 
   template<typename Spec>

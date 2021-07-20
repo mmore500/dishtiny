@@ -14,13 +14,16 @@
 
 namespace sgpl {
 
+/**
+ * Terminates current core if `reg[arg_0]` is nonzero.
+ */
 struct TerminateIf {
 
   template<typename Spec>
   static void run(
     sgpl::Core<Spec>& core,
     const sgpl::Instruction<Spec>& inst,
-    const sgpl::Program<Spec>& program,
+    const sgpl::Program<Spec>&,
     typename Spec::peripheral_t&
   ) noexcept {
     if ( core.registers[ inst.args[0] ] ) core.Terminate();

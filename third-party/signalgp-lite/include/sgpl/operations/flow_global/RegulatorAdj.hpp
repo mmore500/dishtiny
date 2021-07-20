@@ -16,6 +16,13 @@
 namespace sgpl {
 namespace global {
 
+/**
+ * Adjusts the regulator value of global jump table tags matching this
+ * instruction's tag by the amount `reg[arg_0]`.
+ *
+ * This regulator value affects the outcome of tag lookup for module activation
+ * on global jump table `JUMP_TABLE_IDX`.
+ */
 template< size_t JUMP_TABLE_IDX=0 >
 struct RegulatorAdj {
 

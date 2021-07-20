@@ -15,6 +15,13 @@
 
 namespace dish2 {
 
+/**
+ * Prevent excessive group growth.
+ *
+ * If the cell's quorum count exceeds `OPTIMAL_QUORUM_COUNT`, applies
+ * multiplicative decay to the cell's resource stockpile. This effect
+ * strengthens exponentially with excess cell quorum count.
+ */
 class CollectiveResourceDecayService {
 
   template<typename Cell>

@@ -14,6 +14,9 @@
 
 namespace sgpl {
 
+/**
+ * Negates `reg[arg_0]` and stores the result in `reg[arg_0]`.
+ */
 struct Negate {
 
   template<typename Spec>

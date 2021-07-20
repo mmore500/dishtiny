@@ -14,6 +14,9 @@
 
 namespace dish2 {
 
+/**
+ * If any cardinals have requested apoptosis, do death routine on the cell.
+ */
 struct ApoptosisService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

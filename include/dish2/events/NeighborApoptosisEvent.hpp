@@ -6,6 +6,10 @@
 
 namespace dish2 {
 
+/**
+ * Triggered if the most recent cell death in the cardinal's neighbor tile was
+ * apoptosis.
+ */
 struct NeighborApoptosisEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

@@ -8,6 +8,13 @@
 
 namespace dish2 {
 
+/**
+ * Is this cell's kin group a daughter group of the cardinal's neighbor cell's
+ * kin group?
+ *
+ * Triggered if a cell's kin group ancestor ID(s) are equal to the cardinal's
+ * neighbor's current kin group ID(s).
+ */
 struct IsChildGroupOfEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

@@ -7,6 +7,11 @@
 
 namespace dish2 {
 
+/**
+ * Setting this state initiates resource sharing to the cardinal's neighbor cell.
+ *
+ * The value stored controls the amount of resource shared.
+ */
 struct ResourceSendRequest : public uitsl::PodLeafNode<float> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<float>;

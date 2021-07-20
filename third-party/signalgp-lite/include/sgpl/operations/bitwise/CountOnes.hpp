@@ -17,6 +17,10 @@
 
 namespace sgpl {
 
+/**
+ * Counts the number of bits set in `reg[arg_1]` and stores the result in
+ * `reg[arg_0]`.
+ */
 struct CountOnes {
 
   template<typename Spec>

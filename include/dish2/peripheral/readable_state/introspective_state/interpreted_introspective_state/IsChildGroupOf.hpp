@@ -9,6 +9,10 @@
 
 namespace dish2 {
 
+/**
+ * Does this cell's kin group ID descend directly from the neighbor's kin group
+ * ID?
+ */
 template< typename Spec >
 struct IsChildGroupOf : public uitsl::PodLeafNode< char, Spec::NLEV > {
   // inherit constructors

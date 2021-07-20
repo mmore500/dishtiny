@@ -6,6 +6,9 @@
 
 namespace dish2 {
 
+/**
+ * Triggered if a cardinal's neighbor tile is occupied by a live cell.
+ */
 struct NeighborIsAliveEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

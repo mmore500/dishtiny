@@ -14,6 +14,10 @@
 
 namespace sgpl {
 
+/**
+ * Subtracts `reg[arg_2]` from `reg[arg_1]` and stores the result in
+ * `reg[arg_0]`.
+ */
 struct Subtract {
 
   template<typename Spec>

@@ -9,6 +9,10 @@
 
 namespace dish2 {
 
+/**
+ * Does this cell have enough resource stockpiled to fund spawning an offspring
+ * cell?
+ */
 struct StockpileFecund : public uitsl::PodLeafNode< char > {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

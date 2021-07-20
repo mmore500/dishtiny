@@ -13,6 +13,13 @@
 
 namespace dish2 {
 
+/**
+ * Reads a target readable state and stores it into `reg[arg_0]`.
+ *
+ * To determine the target readable state, interprets the first bits of the
+ * instruction tag as an unsigned integer then calculates the remainder of
+ * integer division by the number of readable states.
+ */
 template< typename DishSpec >
 class ReadOwnState {
 

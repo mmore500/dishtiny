@@ -21,6 +21,13 @@
 
 namespace dish2 {
 
+/**
+ * Calculates total amount of resource received across every cardinal, and then
+ * adds that total to resource stockpile.
+ *
+ * If the cell is not alive, it instead refunds all received resources back to
+ * each sending cell.
+ */
 struct ResourceReceivingService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

@@ -16,6 +16,10 @@
 
 namespace sgpl {
 
+/**
+ * Performs a bitwise OR of `reg[arg_1]` and `reg[arg_2]` then stores the
+ * result in `reg[arg_0]`.
+ */
 struct BitwiseOr {
 
   template<typename Spec>

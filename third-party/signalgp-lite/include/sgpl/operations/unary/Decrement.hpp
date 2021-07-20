@@ -14,6 +14,10 @@
 
 namespace sgpl {
 
+/**
+ * Takes `reg[arg_0]`, decrements it by one, and stores the result in
+ * `reg[arg_0]`.
+ */
 struct Decrement {
 
   template<typename Spec>

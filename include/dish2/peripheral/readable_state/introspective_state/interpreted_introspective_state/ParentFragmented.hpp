@@ -9,6 +9,11 @@
 
 namespace dish2 {
 
+/**
+ * Did the cell's parent die from fragmentation?
+ *
+ * That is, was the last cause of death on the current tile was fragmentation?
+ */
 struct ParentFragmented : public uitsl::PodLeafNode< char > {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

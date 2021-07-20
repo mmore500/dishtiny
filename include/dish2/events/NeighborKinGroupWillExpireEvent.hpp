@@ -8,6 +8,10 @@
 
 namespace dish2 {
 
+/**
+ * Triggered if the cardinal's cell neighbor's kin group age is less than or
+ * equal to 80% of the kin group expiration duration.
+ */
 struct NeighborKinGroupWillExpireEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

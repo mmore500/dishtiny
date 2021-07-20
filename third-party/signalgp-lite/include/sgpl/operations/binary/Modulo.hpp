@@ -14,6 +14,12 @@
 
 namespace sgpl {
 
+/**
+ * Calculates the modulus of `reg[arg_1]` by `reg[arg_2]` and stores the result
+ * in `reg[arg_0]`.
+ *
+ * Mod by zero can result in a `NaN` value.
+ */
 struct Modulo {
 
   template<typename Spec>

@@ -16,6 +16,15 @@
 namespace sgpl {
 namespace global {
 
+/**
+ * Gets the regulator value of the global jump table tag that best matches this
+ * instruction's tag.
+ *
+ * Stores the value in `reg[arg_0]`. If no tag matches, a no-op is performed.
+ *
+ * The regulator value gotten affects the outcome of tag lookup for module
+ * activation on global jump table `JUMP_TABLE_IDX`.
+ */
 template< size_t JUMP_TABLE_IDX=0 >
 struct RegulatorGet {
 

@@ -22,7 +22,18 @@ using introspective_state_parent_t = uitsl::PodInternalNode<
 
 } // namespace internal
 
-
+/**
+ * Introspective state refers to the collection of simulation-generated sensor
+ * values that evolving programs running within each cardinal can access via
+ * read-only operations.
+ *
+ * Each cardinal has an independent copy of each piece of introspective state
+ * state. (However, some introspective states representing cell state are set
+ * to identical values across cardinals within the same cell.)
+ *
+ * Each cardinal's introspective state regularly copied and dispatched to that
+ * cardinal's neighbor cell, where it serves as read-only extrospective state.
+ */
 template<typename Spec>
 struct IntrospectiveState : public internal::introspective_state_parent_t<Spec>{
 

@@ -12,6 +12,9 @@
 
 namespace dish2 {
 
+/**
+ * Kin group ID from which cell's kin group ID is descended.
+ */
 template< typename Spec >
 struct KinGroupIDAncestorView : public uitsl::PodLeafNode< size_t, Spec::NLEV > {
   // inherit constructors
