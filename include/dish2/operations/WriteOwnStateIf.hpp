@@ -51,7 +51,7 @@ public:
 
   }
 
-  static std::string name() { return "Write Own State If"; }
+  static std::string name() { return "Write Own State"; }
 
   static size_t prevalence() { return 5; }
 
