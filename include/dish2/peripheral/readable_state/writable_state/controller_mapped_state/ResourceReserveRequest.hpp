@@ -7,6 +7,10 @@
 
 namespace dish2 {
 
+/**
+ * Setting this state prevents that amount of stockpiled resource from being
+ * drawn from to be sent to the cardinal's neighbor cell.
+ */
 struct ResourceReserveRequest : public uitsl::PodLeafNode<float> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<float>;

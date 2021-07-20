@@ -16,6 +16,9 @@
 
 namespace dish2 {
 
+/**
+ * Decays cell resource stockpile multiplicatively by `RESOURCE_DECAY` constant.
+ */
 struct ResourceDecayService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

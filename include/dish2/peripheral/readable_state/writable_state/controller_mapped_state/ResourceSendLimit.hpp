@@ -7,6 +7,10 @@
 
 namespace dish2 {
 
+/**
+ * Setting this state caps the amount of resource that this cell can send to
+ * the cardinal's neighbor cell per update.
+ */
 struct ResourceSendLimit : public uitsl::PodLeafNode<float> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<float>;

@@ -6,6 +6,12 @@
 
 namespace dish2 {
 
+/**
+ * Does this cell have more resource stockpiled than its neighbor?
+ *
+ * Triggered if a cardinal's cell has more resource in its stockpile than that
+ * cardinal's neighbor cell.
+ */
 struct RicherThanNeighborEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

@@ -7,6 +7,14 @@
 
 namespace dish2 {
 
+/**
+ * Amount of resource this cell has.
+ *
+ * @note The canonical amount of resource the cell posesses is stored here.
+ * It is assumed that this value is kept in sync across cardinals.
+ * (This isn't a view of the amount resource posessed, it is the implementation
+ * of resource tracking.)
+ */
 struct ResourceStockpile : public uitsl::PodLeafNode<float> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<float>;

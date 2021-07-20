@@ -8,6 +8,13 @@
 
 namespace dish2 {
 
+/**
+ * Triggered if kin group age is greater than 80\% of the kin group expiration
+ * duration.
+ *
+ * (Depending on experiment configuration, the group may be force-fragmented
+ * after expiration.)
+ */
 struct KinGroupWillExpireEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

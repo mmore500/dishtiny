@@ -51,8 +51,10 @@
 
 namespace dish2 {
 
+/**
+ * Refreshes the interpreted introspective state of a cell.
+ */
 class InterpretedIntrospectiveStateRefreshService {
-
 
   template< typename Cell >
   static void RefreshIsChildCellOf( Cell& cell ) {

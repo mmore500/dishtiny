@@ -9,6 +9,9 @@
 
 namespace dish2 {
 
+/**
+ * Is this cell's age less than `EVENT_LAUNCHING_SERVICE_FREQUENCY`?
+ */
 struct IsNewborn : public uitsl::PodLeafNode< char > {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

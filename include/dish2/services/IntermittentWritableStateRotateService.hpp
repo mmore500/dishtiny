@@ -19,6 +19,12 @@
 
 namespace dish2 {
 
+/**
+ * Used for experimental manipulations testing the fitness effect of
+ * writable state.
+ *
+ * (Not part of core simulation logic.)
+ */
 struct IntermittentWritableStateRotateService {
 
   // for intermittent writable state rotation restoration

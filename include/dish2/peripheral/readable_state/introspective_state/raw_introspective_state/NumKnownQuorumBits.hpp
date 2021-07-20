@@ -12,6 +12,11 @@
 
 namespace dish2 {
 
+/**
+ * What is this cell's known quorum count?
+ *
+ * (How many unique quorum bits collected from kin group members are known?)
+ */
 template< typename Spec >
 struct NumKnownQuorumBits : public uitsl::PodLeafNode< size_t, Spec::NLEV > {
   // inherit constructors

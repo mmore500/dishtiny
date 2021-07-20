@@ -14,6 +14,9 @@
 
 namespace dish2 {
 
+/**
+ * Intermittently resets introspective message count state.
+ */
 struct MessageCounterClearService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

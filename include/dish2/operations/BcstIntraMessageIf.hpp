@@ -15,6 +15,13 @@
 
 namespace dish2 {
 
+/**
+ * Conditionally broadcast a message to co-cardinals.
+ *
+ * If `reg[arg_0]` is nonzero, generates a message tagged with the
+ * instruction's tag that contains the core's current register state.
+ * Broadcasts this message to every other cardinal within the cell.
+ */
 struct BcstIntraMessageIf {
 
   template<typename Spec>

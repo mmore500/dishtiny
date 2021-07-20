@@ -6,6 +6,11 @@
 
 namespace dish2 {
 
+/**
+ * Does this cell have enough stockpiled resource to fund cellular reproduction?
+ *
+ * Triggered if a cell's stockpile is greater than 1.0.
+ */
 struct StockpileFecundEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

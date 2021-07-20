@@ -48,6 +48,9 @@ using raw_introspective_state_parent_t = uitsl::PodInternalNode<
 } // namespace internal
 
 
+/**
+ * Raw introspective state directly exposes aspects of simulation state.
+ */
 template<typename Spec>
 struct RawIntrospectiveState
 : public internal::raw_introspective_state_parent_t<Spec>{

@@ -7,6 +7,9 @@
 
 namespace dish2 {
 
+/**
+ * Writing a nonzero value to this state causes cell death.
+ */
 struct ApoptosisRequest : public uitsl::PodLeafNode<char> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

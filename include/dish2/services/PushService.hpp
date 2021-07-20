@@ -15,6 +15,12 @@
 
 namespace dish2 {
 
+/**
+ * Checks for incoming "push" messages, applies their functors, and dispatches
+ * any resultant "push messages.
+ *
+ * See `push/`.
+ */
 struct PushService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

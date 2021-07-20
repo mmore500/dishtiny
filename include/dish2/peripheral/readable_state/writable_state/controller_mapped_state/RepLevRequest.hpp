@@ -8,6 +8,15 @@
 
 namespace dish2 {
 
+/**
+ * Controls kin group inheritance for daughter cells spawned to this cardinal's neighbor tile.
+ *
+ * If no copies of this state are set at cell spawn, the daughter cell will
+ * have no common kin group IDs. If one copy of this state is set at cell
+ * spawn, the daughter cell will have one common kin group ID. If $L$ copies of
+ * this state are set at cell spawn, the daughter cell will have $L$ common kin
+ * group IDs.
+ */
 template< typename Spec >
 struct RepLevRequest : public uitsl::PodLeafNode<char, Spec::NLEV> {
   // inherit constructors

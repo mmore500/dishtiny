@@ -7,6 +7,11 @@
 
 namespace dish2 {
 
+/**
+ * Current epoch.
+ *
+ * See `dish2::EpochAdvanceService`.
+ */
 struct Epoch : public uitsl::PodLeafNode<size_t> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<size_t>;

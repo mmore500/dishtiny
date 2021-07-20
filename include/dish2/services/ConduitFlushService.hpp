@@ -9,6 +9,12 @@
 
 namespace dish2 {
 
+/**
+ * Flushes each cardinals' output conduits.
+ *
+ * Depending on conduit implementation, this may dispatch inter-process and
+ * inter-thread communication.
+ */
 struct ConduitFlushService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

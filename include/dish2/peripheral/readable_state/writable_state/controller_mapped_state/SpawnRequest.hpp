@@ -7,6 +7,10 @@
 
 namespace dish2 {
 
+/**
+ * Setting this state attempts to initiate spawning offspring into this
+ * cardinal's neighbor tile.
+ */
 struct SpawnRequest : public uitsl::PodLeafNode<char> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

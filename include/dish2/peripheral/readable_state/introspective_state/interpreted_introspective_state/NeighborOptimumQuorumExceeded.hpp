@@ -9,6 +9,10 @@
 
 namespace dish2 {
 
+/**
+ * Is this cardinal's neighbor cell's kin group quorum count more than the
+ * simulation-defined target count `OPTIMAL_QUORUM_COUNT`?
+ */
 template< typename Spec >
 struct NeighborOptimumQuorumExceeded
 : public uitsl::PodLeafNode< char, Spec::NLEV > {

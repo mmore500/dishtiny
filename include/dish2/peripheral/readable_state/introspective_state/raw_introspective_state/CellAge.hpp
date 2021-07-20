@@ -7,6 +7,9 @@
 
 namespace dish2 {
 
+/**
+ * Number `dish2::CellAgeService` calls elapsed since cell was born.
+ */
 struct CellAge : public uitsl::PodLeafNode<size_t> {
   using parent_t = uitsl::PodLeafNode<size_t>;
   using parent_t::parent_t;

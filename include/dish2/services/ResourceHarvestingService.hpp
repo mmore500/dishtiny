@@ -16,6 +16,9 @@
 
 namespace dish2 {
 
+/**
+ * Adds a constant amount to cell's resource stockpile.
+ */
 struct ResourceHarvestingService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {
