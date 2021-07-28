@@ -48,6 +48,7 @@ The following schematic summarizes the class structure that organizes simulation
 
 This diagram was generated using [Lucidchart](https://www.lucidchart.com/).
 The source document can be accessed [here](https://lucid.app/lucidchart/invitations/accept/inv_04d6a5d1-75fe-4335-923d-9591ac93a707) and [here](https://lucid.app/documents/view/52847e06-54f0-428e-8181-87ab3caa353b).
+Vector-format versions are available in `docs/assets`.
 
 ## Simulation Update Loop
 
