@@ -12,6 +12,7 @@ data
 workflow
 development
 glossary
+citing
 publications
 api/library_root
 contributing
