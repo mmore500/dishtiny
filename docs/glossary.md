@@ -110,6 +110,8 @@ The highest level of hereditary grouping defined within a simulation.
 If one hereditary group level is defined, this is the L0 group.
 If two hierarchical group levels are defined, this is the L1 group.
 
+See [Hereditary Group](#hereditary-group) and [L0, L1, etc. Hereditary Groups](#l0-l1-etc-hereditary-group).
+
 ## Hereditary Group
 
 A heritable label that cells can use to mark and recognize kin.
@@ -120,7 +122,7 @@ The spatial layout of hereditary groups emerges via individual cell-level reprod
 Depending on run time and compile time settings, the size and shape of these hereditary groups may confer consequences (positive and/or negative) on constituent cells via simulation processes such as resource collection or resource decay.
 
 Depending on compile time settings, hereditary groups may be hierarchically nested.
-See L0, L1, etc. Hereditary Groups.
+See [L0, L1, etc. Hereditary Groups](#l0-l1-etc-hereditary-group).
 
 May be referred to in legacy code and earlier articles as same-channel signaling networks or signaling channel groups.
 
@@ -149,7 +151,7 @@ L1 groups are composed of L0 groups.
 
 This pattern may continue with the addition of L2, L3, etc. groupings.
 
-See Hereditary Group.
+See [Hereditary Group](#hereditary-group).
 
 ## Module
 
