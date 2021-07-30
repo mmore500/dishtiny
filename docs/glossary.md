@@ -232,11 +232,11 @@ Under this procedure, the resulting genome was not guaranteed to be phenotypical
 All cardinal state that the virtual CPU can read, including writable state and introspective state.
 Readable state is hosted within the cardinal's peripheral.
 
-## SignalGP
+## SignalGP / SignalGP-Lite
 
 The virtual hardware framework that powers cardinal's virtual CPUs.
 This hardware framework allows genetic programs to harness the event-driven computing paradigm.
-This project uses a variant of "vanilla" SignalGP called signalgp-lite.
+This project uses a variant of "vanilla" SignalGP called [SignalGP-Lite](https://github.com/mmore500/signalgp-lite).
 
 ## Self-send Perturbation
 
