@@ -257,7 +257,7 @@ A spec type specifies an ordered list of services to run at each update.
 
 A type specifying compile-time configuration options.
 Most simulation methods and objects are templated on this type.
-Which spec to compile with can be specified by passing `-CXXFLAGS="-DDISH2_SPEC=dish2::Spec_myspec` to the `make` command.
+Which spec to compile with can be specified by passing `-CXXFLAGS="-DDISH2_SPEC=dish2::Spec_myspec"` to the `make` command.
 
 ## State Exchange Perturbation
 
