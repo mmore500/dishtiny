@@ -94,6 +94,26 @@ A morph in which all instructions that are not critical sites are nopped out.
 Consists of a genetic program and an array of tags to identify events.
 Also contains bookkeeping information about elapsed mutations and elapsed updates.
 
+## Hierarch Hereditary Group
+
+The highest level of hereditary grouping defined within a simulation.
+If one hereditary group level is defined, this is the L0 group.
+If two hierarchical group levels are defined, this is the L1 group.
+
+## Hereditary Group
+
+A heritable label that cells can use to mark and recognize kin.
+As cells reproduce, they can choose to keep offspring cells in the parent's hereditary group or expel offspring to found a new hereditary group.
+During their lifetime, cells can condition their behavior on whether neighbor cells are members of the same hereditary group.
+
+The spatial layout of hereditary groups emerges via individual cell-level reproductive decisions.
+Depending on run time and compile time settings, the size and shape of these hereditary groups may confer consequences (positive and/or negative) on constituent cells via simulation processes such as resource collection or resource decay.
+
+Depending on compile time settings, hereditary groups may be hierarchically nested.
+See L0, L1, etc. Hereditary Groups.
+
+May be referred to in legacy code and earlier articles as same-channel signaling networks or signaling channel groups.
+
 ## Inter Messages
 
 Messages that are transmitted between cells.
@@ -107,6 +127,19 @@ These messages contain a tag used to induce computation in the target virtual CP
 ## Introspective State
 
 State describing a cardinal's environmental conditions that can be read, but not written, by the cardinal's virtual CPU.
+
+## L0, L1, etc. Hereditary Group
+
+Hierarchical levels of nested hereditary grouping.
+L0 referes to the lowest hierarchical level of hereditary grouping.
+L0 groups are composed of cells.
+
+If two hierarchical levels of hereditary grouping are defined, the L1 group is the next-highest grouping.
+L1 groups are composed of L0 groups.
+
+This pattern may continue with the addition of L2, L3, etc. groupings.
+
+See Hereditary Group.
 
 ## Module
 
