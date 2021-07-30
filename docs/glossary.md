@@ -3,6 +3,7 @@
 ## Actuator
 
 An output that a cell's genetic program can control to interact with the environment.
+Also referred to as an output register.
 
 ## Artifact
 
@@ -234,6 +235,7 @@ Used to assess the impact of messaging on fitness.
 ## Sensor
 
 An input that a cell's genetic program can read to observe environmental state.
+Also referred to as an input register.
 
 ## Service
 
