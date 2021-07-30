@@ -5,6 +5,14 @@
 An output that a cell's genetic program can control to interact with the environment.
 Also referred to as an output register.
 
+## Apex Hereditary Group
+
+The highest level of hereditary grouping defined within a simulation.
+If one hereditary group level is defined, this is the L0 group.
+If two hierarchical group levels are defined, this is the L1 group.
+
+See [Hereditary Group](#hereditary-group) and [L0, L1, etc. Hereditary Groups](#l0-l1-etc-hereditary-group).
+
 ## Artifact
 
 Serialized simulation objects, like a genome or a population.
@@ -103,14 +111,6 @@ A morph in which all instructions that are not critical sites are nopped out.
 
 Consists of a genetic program and an array of tags to identify events.
 Also contains bookkeeping information about elapsed mutations and elapsed updates.
-
-## Hierarch Hereditary Group
-
-The highest level of hereditary grouping defined within a simulation.
-If one hereditary group level is defined, this is the L0 group.
-If two hierarchical group levels are defined, this is the L1 group.
-
-See [Hereditary Group](#hereditary-group) and [L0, L1, etc. Hereditary Groups](#l0-l1-etc-hereditary-group).
 
 ## Hereditary Group
 
