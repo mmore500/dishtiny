@@ -241,7 +241,8 @@ This project uses a variant of "vanilla" SignalGP called [SignalGP-Lite](https:/
 ## Self-send Perturbation
 
 An experimental condition in which a subset of cells are induced to deliver messages (either intra or inter) back to the sending cardinal rather than to the original target.
-Used to assess the impact of messaging on fitness.
+Assess the impact of message passing on fitness.
+Used instead of simply deleting messages in order to minimize detection of contingent effects.
 
 ## Sensor
 
@@ -262,12 +263,18 @@ Which spec to compile with can be specified by passing `-CXXFLAGS="-DDISH2_SPEC=
 ## State Exchange Perturbation
 
 An experimental condition in which a subset of cells are manipulated so that their virtual CPU's perceive inputs meant for another cell or have output overwritten by those created by another cell.
-Used to test whether the spatial distribution of certain inputs or outputs affects fitness.
+Tests whether the spatial distribution of certain inputs or outputs affects fitness.
+Used instead of simply zeroing out inputs or outputs in order to minimize detection of contingent effects.
+
+You can think of this something like us "[Freaky Friday](https://en.wikipedia.org/wiki/Freaky_Friday_(2003_film))"-ing different cells.
 
 ## State Rotate Perturbation
 
 An experimental condition in which a subset of cells are manipulated so that their virtual CPU's perceive inputs meant for another cardinal within the cell or have output overwritten by those created by another cardinal within the cell.
-Used to test whether the directionality of certain inputs or outputs affects fitness.
+Tests whether the directionality of certain inputs or outputs affects fitness.
+Used instead of simply zeroing out inputs or outputs in order to minimize detection of contingent effects.
+
+You can think of this something like us "[Freaky Friday](https://en.wikipedia.org/wiki/Freaky_Friday_(2003_film))"-ing cardinals within a cell.
 
 ## Tag
 
