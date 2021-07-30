@@ -21,6 +21,15 @@ The smallest reproducing element of the simulation.
 Occupies a single tile on the two-dimensional toroidal grid.
 Contains a genome, which is run in parallel on each virtual CPU within the cell.
 
+## Conduit
+
+A one-way communication channel used in implementation to wire together simulation elements.
+May span between threads or processes.
+Designed to enable best-effort communication between hardware elements executing threads and/or processes.
+Can transmit discrete packets (e.g., messages) or continuous-valued quantities representing a conserved substance (i.e., resource).
+
+See the [Conduit C++ Library](https://github.com/mmore500/conduit) for more detail.
+
 ## Configuration
 
 Refers to settings that may be adjusted run-time (as opposed to compile-time).
