@@ -40,6 +40,9 @@ for notebook in "${script_dir}/"*.ipynb; do
   # strip trailing whitespace
   sed -i 's/\s*\\n",$/\\n",/g' "${notebook}"
   sed -i 's/\s*"$/"/g' "${notebook}"
+  # strip id fields
+  # adapted from https://stackoverflow.com/a/68037340
+  sed -i '/^ *"id": "[a-z0-9]\+",$/d' "${notebook}"
 done
 
 shopt -u nullglob
