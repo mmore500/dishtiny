@@ -9,6 +9,6 @@ if [ "${SOURCE_HASH}" == "$( find -path ./third-party -prune -false -o -type f |
 then
   exit 0 # success
 else
-  echo "missing newline at end of file detected, run ./binder/clear_notebooks.sh ./binder/clear_outplots.sh locally to find & fix"
+  echo "dirty notebooks detected, run ./binder/clear_notebooks.sh ./binder/clear_outplots.sh locally to find & fix"
   exit 1 # failure
 fi
