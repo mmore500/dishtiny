@@ -1,3 +1,4 @@
+import deprecation
 import inspect
 import socket
 import sys
@@ -9,6 +10,7 @@ from . import get_notebook_name
 from . import get_notebook_path
 from . import make_timestamp
 
+@deprecation.deprecated(details='use nbmetalog package instead')
 def print_runtime():
 
     print( 'context:', get_env_context() )
