@@ -1,3 +1,4 @@
+import deprecation
 from keyname import keyname as kn
 
 from . import get_env_context
@@ -7,6 +8,7 @@ from . import get_notebook_path
 from . import get_git_revision_hash
 from . import make_timestamp
 
+@deprecation.deprecated(details='use nbmetalog package instead')
 def make_outattr_metadata():
 
     return {
