@@ -13,3 +13,21 @@ from .make_outattr_metadata import make_outattr_metadata
 from .NumpyEncoder import NumpyEncoder
 from .preprocess_competition_fitnesses import preprocess_competition_fitnesses
 from .print_runtime import print_runtime
+
+# adapted from https://stackoverflow.com/a/31079085
+__all__ = [
+    'auto_tqdm',
+    'fit_control_t_distns',
+    'get_control_t_distns',
+    'get_env_context',
+    'get_git_revision_hash',
+    'get_notebook_cell_execution_count',
+    'get_notebook_name',
+    'get_notebook_path',
+    'in_ipynb',
+    'make_outattr_metadata',
+    'make_timestamp',
+    'NumpyEncoder',
+    'preprocess_competition_fitnesses',
+    'print_runtime',
+]
