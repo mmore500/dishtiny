@@ -8,6 +8,7 @@ Usage:
 """
 
 import boto3
+from functools import reduce
 from io import StringIO
 from iterdub import iterdub as ib
 import itertools
@@ -20,7 +21,6 @@ import re
 import sys
 import tempfile
 from tqdm.contrib.concurrent import process_map
-from functools import reduce
 
 ################################################################################
 print(                      )
