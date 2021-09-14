@@ -4,8 +4,8 @@ from .reshape_birth_log import reshape_birth_log
 from .reshape_dpp import reshape_dpp
 from .reshape_dpp_threadfirst import reshape_dpp_threadfirst
 from .reshape_dpp_threadmean import reshape_dpp_threadmean
-from .reshape_kin_conflict import reshape_kin_conflict
 from .reshape_kin_conflict_by_replev import reshape_kin_conflict_by_replev
+from .reshape_kin_conflict import reshape_kin_conflict
 from .tabulate_predecessor_fitness import tabulate_predecessor_fitness
 from .tabulate_strain_fitness import tabulate_strain_fitness
 from .tabulate_predecessor_battle_fitness \

@@ -1,6 +1,6 @@
-import toml
 import jinja2
 from markdown2 import Markdown
+import toml
 
 INPUT = 'keys.toml'
 OUTPUT = 'index.html'

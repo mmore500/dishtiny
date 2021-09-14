@@ -7,8 +7,8 @@ from .get_notebook_cell_execution_count import get_notebook_cell_execution_count
 from .get_notebook_name import get_notebook_name
 from .get_notebook_path import get_notebook_path
 from .in_ipynb import in_ipynb
-from .make_timestamp import make_timestamp
 from .make_outattr_metadata import make_outattr_metadata
+from .make_timestamp import make_timestamp
 from .NumpyEncoder import NumpyEncoder
 from .preprocess_competition_fitnesses import preprocess_competition_fitnesses
 from .print_runtime import print_runtime

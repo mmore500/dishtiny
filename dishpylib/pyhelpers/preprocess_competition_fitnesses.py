@@ -1,5 +1,5 @@
-from iterpop import iterpop as ip
 import functools
+from iterpop import iterpop as ip
 from scipy import stats
 
 def preprocess_competition_fitnesses(competitions_df, control_fits_df):
