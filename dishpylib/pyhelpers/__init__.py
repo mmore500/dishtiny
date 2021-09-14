@@ -6,9 +6,9 @@ from .get_notebook_path import get_notebook_path
 from .make_timestamp import make_timestamp
 
 from .auto_tqdm import auto_tqdm
-from .in_ipynb import in_ipynb
 from .fit_control_t_distns import fit_control_t_distns
 from .get_control_t_distns import get_control_t_distns
+from .in_ipynb import in_ipynb
 from .make_outattr_metadata import make_outattr_metadata
 from .NumpyEncoder import NumpyEncoder
 from .preprocess_competition_fitnesses import preprocess_competition_fitnesses
