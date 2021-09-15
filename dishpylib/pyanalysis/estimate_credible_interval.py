@@ -1,5 +1,5 @@
-import operator
 import math
+import operator
 
 def estimate_credible_interval(likelihoods):
 

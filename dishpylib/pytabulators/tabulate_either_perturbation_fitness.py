@@ -1,8 +1,8 @@
 from collections import defaultdict
 from iterpop import iterpop as ip
 import numpy as np
-from scipy import stats
 import pandas as pd
+from scipy import stats
 
 def tabulate_either_perturbation_fitness(
     exchange_df, rotate_df, control_fits_df, target_state
