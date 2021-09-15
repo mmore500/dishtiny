@@ -48,8 +48,8 @@ for notebook in "${script_dir}/"*.ipynb; do
   # in order for cleaner diffs
   # adapted from https://stackoverflow.com/a/1955555
   python3 -c "'';\
-  import sys; \
   import json; \
+  import sys; \
   notebook = json.load(open('${notebook}', 'r')); \
   notebook['cells'] = [ \
     { \
