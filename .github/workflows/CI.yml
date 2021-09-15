@@ -192,7 +192,7 @@ jobs:
       options: --user root
     steps:
       # Adapted from https://askubuntu.com/a/524368
-      - run: /opt/dishtiny/binder/execute_notebooks.sh
+      - run: cd /opt/dishtiny/binder && ./execute_notebooks.sh
       - run: git init
       - uses: fregante/setup-git-user@v1
       - run: git commit --allow-empty -m "Initial commit"
