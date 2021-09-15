@@ -215,15 +215,15 @@ jobs:
     runs-on: ubuntu-20.04
     if: github.ref == 'refs/heads/master'
     needs:
-      - docs
-      - py-unit
-      - cpp-unit
-      - source
+      - binder
       - coverage
+      - cpp-unit
+      - docs
       - fuzzing
       - microbenchmarks
-      - binder
-      - tidy      
+      - py-unit
+      - source
+      - tidy
     container:
       image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
       env:
@@ -252,14 +252,14 @@ jobs:
     name: Deploy to DockerHub
     runs-on: ubuntu-20.04
     needs:
-      - docs
-      - py-unit
-      - cpp-unit
-      - source
+      - binder
       - coverage
+      - cpp-unit
+      - docs
       - fuzzing
       - microbenchmarks
-      - binder
+      - py-unit
+      - source
       - tidy
     steps:
       - uses: actions/checkout@v2
