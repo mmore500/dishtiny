@@ -38,8 +38,8 @@ jobs:
           repository: mmore500/dishtiny
           add_git_labels: true
 
-  docs:
-    name: Docs, Miscellaneous
+  tidy:
+    name: Tidy
     runs-on: ubuntu-20.04
     needs:
       - docker-build
@@ -50,12 +50,21 @@ jobs:
     steps:
       - run: |
           cd /opt/dishtiny
-          ./ci/test_trailing_whitespace.sh
-          ./ci/test_tabs.sh
-          ./ci/test_missing_newlines.sh
+          ./ci/test_tidy.sh
+
+  docs:
+    name: Docs
+    runs-on: ubuntu-20.04
+    needs:
+      - docker-build
+    container:
+      image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
+      # github actions requires root to access mounted volumes
+      options: --user root
+    steps:
+      - run: |
+          cd /opt/dishtiny
           make docs
-          ./ci/test_headerguards.sh
-          ./ci/test_alphabetize_includes.sh
           python3 ci/test_readme_snippets.py
 
   py-unit:
@@ -214,6 +223,7 @@ jobs:
       - fuzzing
       - microbenchmarks
       - binder
+      - tidy      
     container:
       image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
       env:
@@ -250,6 +260,7 @@ jobs:
       - fuzzing
       - microbenchmarks
       - binder
+      - tidy
     steps:
       - uses: actions/checkout@v2
         with:
