@@ -68,11 +68,13 @@ for notebook in "${script_dir}/"*.ipynb; do
     } \
     for cell in notebook['cells'] \
   ]; \
+  fp = open('${notebook}', 'w'); \
   json.dump( \
     notebook, \
-    open('${notebook}', 'w'), \
+    fp, \
     indent=1, \
   ); \
+  fp.write('\n'); \
   "
 done
 
