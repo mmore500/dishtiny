@@ -48,8 +48,8 @@ for notebook in "${script_dir}/"*.ipynb; do
   # in order for cleaner diffs
   # adapted from https://stackoverflow.com/a/1955555
   python3 -c "'';\
-  import sys; \
   import json; \
+  import sys; \
   notebook = json.load(open('${notebook}', 'r')); \
   notebook['cells'] = [ \
     { \
@@ -68,11 +68,13 @@ for notebook in "${script_dir}/"*.ipynb; do
     } \
     for cell in notebook['cells'] \
   ]; \
+  fp = open('${notebook}', 'w'); \
   json.dump( \
     notebook, \
-    open('${notebook}', 'w'), \
+    fp, \
     indent=1, \
   ); \
+  fp.write('\n'); \
   "
 done
 
