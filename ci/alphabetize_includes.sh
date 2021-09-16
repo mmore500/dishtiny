@@ -18,7 +18,11 @@ do
     read start stop <<< $line
 
     # adapted from https://stackoverflow.com/a/46018238
-    echo "x" | ex -s -c "${start},${stop}!sort -fd" $filename
+    # and https://stackoverflow.com/a/32723119
+    # and https://unix.stackexchange.com/a/87748
+    export LC_ALL=en_US.UTF-8
+    echo "x" | ex -s -c "${start},${stop}!sort --stable --ignore-nonprinting --ignore-case --dictionary-order" $filename
+    # see also https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html
 
   done
 done
