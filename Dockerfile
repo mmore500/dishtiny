@@ -61,6 +61,8 @@ RUN \
     sshpass \
     tree \
     xauth \
+    locales \
+    locales-all \
     && \
   apt-get clean \
     && \
