@@ -61,12 +61,20 @@ RUN \
     sshpass \
     tree \
     xauth \
+    locales \
     && \
   apt-get clean \
     && \
   rm -rf /var/lib/apt/lists/* \
     && \
   echo "installed apt packages"
+
+# set up locale
+# adapted from https://stackoverflow.com/a/55077451
+RUN \
+  locale-gen en_US.UTF-8 \
+    && \
+  echo "generated en_US.UTF-8 locale"
 
 # install python3.8
 RUN \
