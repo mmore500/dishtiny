@@ -10,35 +10,35 @@ namespace dish2 {
 template< typename... Drawers >
 class PolymorphicDrawer {
 
-    std::variant<Drawers...> impl;
+  std::variant<Drawers...> impl;
 
 public:
-    PolymorphicDrawer() = delete;
+  PolymorphicDrawer() = delete;
 
-    PolymorphicDrawer(const PolymorphicDrawer&) = default;
+  PolymorphicDrawer(const PolymorphicDrawer&) = default;
 
-    PolymorphicDrawer& operator=(const PolymorphicDrawer&) = default;
+  PolymorphicDrawer& operator=(const PolymorphicDrawer&) = default;
 
-    template<typename Drawer, typename... Args>
-    PolymorphicDrawer( std::in_place_type_t<Drawer> tag, Args&&... args )
-    : impl( tag, std::forward<Args>( args )... )
-    { }
+  template<typename Drawer, typename... Args>
+  PolymorphicDrawer( std::in_place_type_t<Drawer> tag, Args&&... args )
+  : impl( tag, std::forward<Args>( args )... )
+  { }
 
-    void SaveToFileAsDrawing() {
-        // call Draw on the variant impl
-        std::visit(
-            [&](auto& drawer){ drawer.SaveToFileAsDrawing(); },
-            impl
-        );
-    }
+  void SaveToFileAsDrawing() {
+    // call Draw on the variant impl
+    std::visit(
+      [&](auto& drawer){ drawer.SaveToFileAsDrawing(); },
+      impl
+    );
+  }
 
-    void SaveToFileAsFrame() {
-        // call Draw on the variant impl
-        std::visit(
-            [&](auto& drawer){ drawer.SaveToFileAsFrame(); },
-            impl
-        );
-    }
+  void SaveToFileAsFrame() {
+    // call Draw on the variant impl
+    std::visit(
+      [&](auto& drawer){ drawer.SaveToFileAsFrame(); },
+      impl
+    );
+  }
 };
 
 } // namespace dish2
