@@ -1,7 +1,7 @@
 DISH_MPICXX ?= mpicxx.mpich
 DISH_MPIEXEC ?= mpiexec.mpich
 
-FLAGS = -std=c++17 -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -g -pipe -pthread -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/
+FLAGS = -std=c++17 -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -g -pipe -pthread -Wall -Wno-unused-function -Wno-unused-private-field -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -DCATCH_CONFIG_MAIN
 
 default: test
 
@@ -26,16 +26,16 @@ test: $(addprefix test-, $(TARGET_NAMES))
 	rm -rf test*.out
 
 # Test optimized version without debug features
-opt: FLAGS := -std=c++17 -pipe -pthread -DNDEBUG -O3 -ffast-math -flto -march=native -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/
+opt: FLAGS := -std=c++17 -pipe -pthread -DNDEBUG -O3 -ffast-math -flto -march=native -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -DCATCH_CONFIG_MAIN
 opt: $(addprefix test-, $(TARGET_NAMES))
 	rm -rf test*.out
 
 # Test in debug mode with pointer tracking
-fulldebug: FLAGS := -std=c++17 -pipe -pthread -g -Wall -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -pedantic -DEMP_TRACK_MEM -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -ftemplate-backtrace-limit=0 # -Wmisleading-indentation
+fulldebug: FLAGS := -std=c++17 -pipe -pthread -g -Wall -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -pedantic -DEMP_TRACK_MEM -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -ftemplate-backtrace-limit=0 -DCATCH_CONFIG_MAIN # -Wmisleading-indentation
 fulldebug: $(addprefix test-, $(TARGET_NAMES))
 	rm -rf test*.out
 
-cranky: FLAGS := -std=c++17 -pipe -pthread -g -Wall -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -pedantic -DEMP_TRACK_MEM -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -Wconversion -Weffc++
+cranky: FLAGS := -std=c++17 -pipe -pthread -g -Wall -Wno-unused-function -I$(TO_ROOT)/include/ -I$(TO_ROOT)/third-party/ -pedantic -DEMP_TRACK_MEM -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -Wconversion -Weffc++ -DCATCH_CONFIG_MAIN
 cranky: $(addprefix test-, $(TARGET_NAMES))
 	rm -rf test*.out
 
@@ -46,7 +46,7 @@ $(TO_ROOT)/third-party/Catch/single_include/catch2/catch.hpp:
 	git submodule init
 	git submodule update
 
-coverage: FLAGS := -std=c++17 -pthread -g -Wall -Wno-unused-function -I$(TO_ROOT)/coverage_include/ -I$(TO_ROOT)/third-party/ -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -ftemplate-backtrace-limit=0 -fprofile-instr-generate -fcoverage-mapping -fno-inline -fno-elide-constructors -O0
+coverage: FLAGS := -std=c++17 -pthread -g -Wall -Wno-unused-function -I$(TO_ROOT)/coverage_include/ -I$(TO_ROOT)/third-party/ -Wnon-virtual-dtor -Wcast-align -Woverloaded-virtual -ftemplate-backtrace-limit=0 -fprofile-instr-generate -fcoverage-mapping -fno-inline -fno-elide-constructors -O0 -DCATCH_CONFIG_MAIN
 coverage: $(TO_ROOT)/coverage_include $(addprefix cov-, $(TARGET_NAMES))
 
 clean:
