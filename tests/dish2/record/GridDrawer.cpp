@@ -1,6 +1,5 @@
-#define CATCH_CONFIG_MAIN
-
 #include "Catch/single_include/catch2/catch.hpp"
+#include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 
 #include "dish2/config/thread_idx.hpp"
 #include "dish2/record/drawings/GridDrawer.hpp"
@@ -8,8 +7,6 @@
 #include "dish2/viz/artists/DummyArtist.hpp"
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
-
-#include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 
 const uitsl::MpiGuard guard;
 

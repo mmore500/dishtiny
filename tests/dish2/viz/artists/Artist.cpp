@@ -1,5 +1,3 @@
-#define CATCH_CONFIG_MAIN
-
 #include "Catch/single_include/catch2/catch.hpp"
 #include "conduit/include/uitsl/debug/compare_files.hpp"
 #include "Empirical/include/emp/web/Canvas.hpp"
