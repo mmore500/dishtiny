@@ -1,5 +1,3 @@
-#define CATCH_CONFIG_MAIN
-
 #include <algorithm>
 #include <ratio>
 #include <sstream>

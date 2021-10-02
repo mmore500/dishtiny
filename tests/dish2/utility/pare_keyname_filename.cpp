@@ -1,5 +1,3 @@
-#define CATCH_CONFIG_MAIN
-
 #include <cstdio>
 #include <regex>
 #include <string>
