@@ -26,8 +26,6 @@ void print_config() {
 
   dish2::log_tee << "==============================\n" << '\n';
 
-  // todo print directory contents (with hashes?)
-
 }
 
 } // namespace dish2

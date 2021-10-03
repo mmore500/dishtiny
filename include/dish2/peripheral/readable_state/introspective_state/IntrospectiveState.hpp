@@ -96,6 +96,40 @@ struct IntrospectiveState : public internal::introspective_state_parent_t<Spec>{
 
   }
 
+  static std::string GetLeafTypeName( const size_t idx ) {
+
+    // can't use emp_assert due to obsucre macro error
+    #define DISH2_INTROSPECTIVE_STATE_NAME_CASE_PAYLOAD(N) \
+      case N: \
+        if constexpr ( N  < parent_t::GetSize() ) { \
+          return uitsl::TypeName< \
+            typename parent_t::template leaf_t<N> \
+          >::Get(); \
+        } else { \
+          assert( false && N ); \
+          __builtin_unreachable(); \
+        }
+
+    emp_assert( idx < parent_t::GetSize() );
+    static_assert( parent_t::GetSize() < 256 );
+
+    switch ( idx ) {
+
+      EMP_WRAP_EACH(
+        DISH2_INTROSPECTIVE_STATE_NAME_CASE_PAYLOAD, SGPL_BYTE_ENUMERATION
+      )
+
+      default:
+        emp_assert( false, idx );
+        __builtin_unreachable();
+
+    }
+
+    emp_assert( false, idx );
+    __builtin_unreachable();
+
+  }
+
 };
 
 } // namespace dish2

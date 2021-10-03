@@ -56,7 +56,9 @@ void do_main() {
 
 int main(int argc, char* argv[]) {
 
-  dish2::setup( emp::ArgManager{ argc, argv, dish2::make_arg_specs<Spec>() } );
+  dish2::setup<Spec>(
+    emp::ArgManager{ argc, argv, dish2::make_arg_specs<Spec>() }
+  );
 
   const bool res = dish2::try_with_timeout(
     do_main,
