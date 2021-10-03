@@ -21,13 +21,15 @@
 
 using Spec = DISH2_SPEC;
 
-// permanent in this case
-dish2::TemporaryThreadIdxOverride override{ 0 };
-
-// intentionally leaked
+// these ptrs intentionally leaked
+thread_local dish2::TemporaryThreadIdxOverride* override;
 thread_local dish2::WebInterface<Spec>* interface;
 
 void do_main() {
+
+  // TemporaryThreadIdxOverride is permanent in this case
+  // must be performed here due to initialization order issues
+  override = new dish2::TemporaryThreadIdxOverride(0);
 
   dish2::setup<Spec>( emp::ArgManager{
     emp::web::GetUrlParams(), dish2::make_arg_specs<Spec>()
@@ -38,9 +40,12 @@ void do_main() {
   interface = new dish2::WebInterface<Spec>;
   interface->Redraw();
 
+  // believe (?) this was added to prevent Emscripten from calling destructors
+  // on globals once main() exits... not sure if it actually does anything
   emscripten_set_main_loop([](){}, 1, true);
 
   // once we're done setting up, turn off the loading modal
+  // ... disabled until loading modal is reactivated
   // MAIN_THREAD_EM_ASM({ $('.modal').modal('hide'); });
 
 }
