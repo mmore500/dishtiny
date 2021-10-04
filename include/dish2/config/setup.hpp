@@ -16,12 +16,17 @@
 #include "dump_config.hpp"
 #include "print_assets.hpp"
 #include "print_config.hpp"
+#include "print_extrospective_states.hpp"
+#include "print_introspective_states.hpp"
 #include "print_pwd.hpp"
+#include "print_readable_states.hpp"
+#include "print_writable_states.hpp"
 #include "setup_assets.hpp"
 #include "setup_config.hpp"
 
 namespace dish2 {
 
+template< typename Spec >
 void setup( emp::ArgManager arg_manager ) {
 
   if (
@@ -38,6 +43,10 @@ void setup( emp::ArgManager arg_manager ) {
     print_pwd();
     print_assets();
     print_config();
+    print_extrospective_states<Spec>();
+    print_introspective_states<Spec>();
+    print_readable_states<Spec>();
+    print_writable_states<Spec>();
   }
 
   dump_config();
