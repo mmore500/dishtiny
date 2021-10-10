@@ -1,36 +1,27 @@
 [submodule "third-party/signalgp-lite"]
   path = third-party/signalgp-lite
-  url = https://github.com/mmore500/signalgp-lite.git
-  shallow = true
+  url = https://github.com/mmore500/signalgp-lite
 [submodule "third-party/header-only-pca"]
   path = third-party/header-only-pca
   url = https://github.com/rodsan0/header-only-pca.git
-  shallow = true
 [submodule "third-party/bats-core"]
   path = third-party/bats-core
-  url = https://github.com/bats-core/bats-core.git
-  shallow = true
+  url = https://github.com/bats-core/bats-core
 [submodule "third-party/PicoSHA2"]
   path = third-party/PicoSHA2
-  url = https://github.com/okdshin/PicoSHA2.git
-  shallow = true
+  url = https://github.com/okdshin/PicoSHA2
 [submodule "third-party/backward-cpp"]
   path = third-party/backward-cpp
-  url = https://github.com/bombela/backward-cpp.git
-  shallow = true
+  url = https://github.com/bombela/backward-cpp
 [submodule "third-party/magic_enum"]
   path = third-party/magic_enum
-  url = https://github.com/Neargye/magic_enum.git
-  shallow = true
+  url = https://github.com/Neargye/magic_enum
 [submodule "third-party/header-only-gzstream"]
   path = third-party/header-only-gzstream
   url = https://github.com/mmore500/header-only-gzstream.git
-  shallow = true
 [submodule "third-party/bxzstr"]
   path = third-party/bxzstr
   url = https://github.com/mmore500/bxzstr.git
-  shallow = true
 [submodule "third-party/lazy-iterators"]
   path = third-party/lazy-iterators
-  url = https://github.com/mmore500/lazy-iterators.git
-  shallow = true
+  url = https://github.com/mmore500/lazy-iterators
