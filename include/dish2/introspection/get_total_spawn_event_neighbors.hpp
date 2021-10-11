@@ -41,7 +41,7 @@ size_t get_total_spawn_event_neighbors(
 template< typename Spec >
 size_t get_total_spawn_event_neighbors(
   const dish2::ThreadWorld<Spec>& world,
-   const size_t replev
+  const size_t replev
 ) {
 
   const auto& population = world.population;

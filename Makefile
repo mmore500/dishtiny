@@ -6,16 +6,16 @@ EMP_DIR := third-party/Empirical/include/emp
 
 DISHTINY_HASH := $(shell git rev-parse --short HEAD)
 DISHTINY_DIRTY := $(shell \
-    ( git diff-index --quiet HEAD -- && echo "-clean" || echo "-dirty" ) \
-    | tr -d '\040\011\012\015' \
-  )
+		( git diff-index --quiet HEAD -- && echo "-clean" || echo "-dirty" ) \
+		| tr -d '\040\011\012\015' \
+	)
 DISHTINY_SOURCE_DIR := $(shell test -d /opt/dishtiny && echo /opt/dishtiny || pwd)
 # to compile different metrics/selecctors
 # make ARGS="-DMETRIC=streak -DSELECTOR=roulette"
 
 # Flags to use regardless of compiler
 CFLAGS_all := $(CXXFLAGS) -std=c++17 -Wall -Wno-unused-function -Wno-unused-private-field -Wno-empty-body \
-  -Iinclude -Ithird-party/ \
+	-Iinclude -Ithird-party/ \
 	-DDISHTINY_HASH_=$(DISHTINY_HASH)$(DISHTINY_DIRTY) \
 	-DDISHTINY_SOURCE_DIR_=$(DISHTINY_SOURCE_DIR)\
 	-fno-signaling-nans -fno-trapping-math \
