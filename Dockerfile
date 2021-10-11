@@ -50,19 +50,19 @@ RUN \
     && \
   apt-get install -y --allow-downgrades --no-install-recommends \
     ccache \
-    rdfind \
     imagemagick \
     ioping \
     libcurl4-openssl-dev \
-    libsfml-dev \
     libdw-dev \
     libomp-dev \
+    libsfml-dev \
+    locales \
+    rdfind \
+    rename \
     sharutils \
     sshpass \
     tree \
     xauth \
-    locales \
-    rename \
     && \
   apt-get clean \
     && \
