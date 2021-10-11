@@ -62,6 +62,7 @@ RUN \
     tree \
     xauth \
     locales \
+    rename \
     && \
   apt-get clean \
     && \
