@@ -42,7 +42,7 @@ struct DataPill {
       ) << emp::web::Div(
         emp::to_string("datapill-wrapper2-", emp::slugify( title ))
       ) << emp::web::Element(
-         "button", emp::to_string("datapill-button-", emp::slugify( title ))
+        "button", emp::to_string("datapill-button-", emp::slugify( title ))
       ).SetAttr(
         "class", "btn btn-block btn-primary p-0 border-0",
         "data-toggle", "button"
