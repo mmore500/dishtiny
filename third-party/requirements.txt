@@ -79,6 +79,8 @@ docutils==0.15.2
     #   breathe
     #   myst-parser
     #   sphinx
+editorconfig-checker==2.3.5
+    # via -r requirements.in
 entrypoints==0.3
     # via nbconvert
 exdown==0.7.0
@@ -288,6 +290,7 @@ requests-oauthlib==1.3.0
     # via tweepy
 requests[socks]==2.25.1
     # via
+    #   editorconfig-checker
     #   osfclient
     #   requests-oauthlib
     #   sphinx
