@@ -2,4 +2,4 @@
 
 git submodule update --init --recursive
 
-make -C force-cover/
+cd force-cover && make
