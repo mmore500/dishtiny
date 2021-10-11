@@ -121,6 +121,8 @@ badges: documentation-coverage-badge.json version-badge.json doto-badge.json
 clean:
 	rm -rf run$(PROJECT) web/$(PROJECT).js web/*.js.map web/*.js.map *~ source/*.o web/*.wasm web/*.wast coverage_include web/*.json native.o.ccache*
 	cd docs && make clean
+	cd fuzzing && make clean
+	cd microbenchmarks && make clean
 	cd tests && make clean
 
 # test: debug web
