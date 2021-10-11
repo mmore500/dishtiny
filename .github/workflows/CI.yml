@@ -142,7 +142,7 @@ jobs:
         DISH_MPICXX: mpicxx.openmpi
         OMPI_CXX: clang++
     steps:
-      - run: "cd /opt/dishtiny/tests/dish2 && make coverage"
+      - run: "make coverage -C /opt/dishtiny/tests/dish2/"
       - uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos

@@ -75,7 +75,7 @@ echo "Do Work"
 echo "-------"
 ################################################################################
 
-singularity run docker://mmore500/dishtiny /bin/bash -c "cp -r /opt/dishtiny/* . && cd microbenchmarks && make" > logfile.txt
+singularity run docker://mmore500/dishtiny /bin/bash -c "cp -r /opt/dishtiny/* . && make -C microbenchmarks/" > logfile.txt
 
 ################################################################################
 echo
