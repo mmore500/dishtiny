@@ -5,22 +5,22 @@ VERSION := $(shell git describe --dirty --always)
 default: bench
 
 bench-%: %
-	cd $< && make bench
+	$(MAKE) bench -C $<
 
 build-%: %
-	cd $< && make build
+	$(MAKE) build -C $<
 
 opt-%: %
-	cd $< && make opt
+	$(MAKE) opt -C $<
 
 fulldebug-%: %
-	cd $< && make fulldebug
+	$(MAKE) fulldebug -C $<
 
 cranky-%: %
-	cd $< && make cranky
+	$(MAKE) cranky -C $<
 
 clean-%: %
-	cd $< && make clean
+	$(MAKE) clean -C $<
 
 # Test in debug mode without pointer tracker
 bench: $(addprefix bench-, $(TARGET_NAMES))

@@ -15,3 +15,4 @@ set -e
 ./ci/test_filename_whitespace.sh && echo "✔ filename whitespace ok" || exit 1
 ./ci/test_modern_suffixes.sh && echo "✔ source file suffixes ok" || exit 1
 editorconfig-checker && echo "✔ editorconfig rules ok" || exit 1
+./ci/test_make_clean.sh && echo "✔ no compiled artifacts" || exit 1

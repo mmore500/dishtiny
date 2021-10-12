@@ -3,22 +3,22 @@ SHELL := /bin/bash
 default: test
 
 test-%: %
-	cd $< && make test
+	$(MAKE) test -C $<
 
 opt-%: %
-	cd $< && make opt
+	$(MAKE) opt -C $<
 
 fulldebug-%: %
-	cd $< && make fulldebug
+	$(MAKE) fulldebug -C $<
 
 cranky-%: %
-	cd $< && make cranky
+	$(MAKE) cranky -C $<
 
 clean-%: %
-	cd $< && make clean
+	$(MAKE) clean -C $<
 
 cov-%: % $(TO_ROOT)/coverage_include
-	cd $< && make coverage
+	$(MAKE) coverage -C $<
 
 $(TO_ROOT)/coverage_include:
 	cd $(TO_ROOT)/tests && ./convert_for_tests.sh
