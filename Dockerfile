@@ -94,18 +94,30 @@ COPY container/policy.xml /etc/ImageMagick-6/policy.xml
 COPY container/ccache.conf /etc/ccache.conf
 ENV CCACHE_CONFIGPATH=/etc/ccache.conf
 
-# need --ignore-installed for docutils
-# see https://stackoverflow.com/a/53807588
 RUN \
   python3 -m pip install --no-cache-dir --timeout 60 --retries 100 --upgrade pip==21.0.1 \
     && \
   python3.8 -m pip install --no-cache-dir --timeout 60 --retries 100 --upgrade pip==21.0.1 \
     && \
+  echo "upgraded pip"
+
+# need --ignore-installed for docutils
+# see https://stackoverflow.com/a/53807588
+RUN \
   python3 -m pip install --no-cache-dir --timeout 60 --retries 100 --ignore-installed -r /opt/dishtiny/third-party/requirements.txt \
     && \
   python3.8 -m pip install --no-cache-dir --timeout 60 --retries 100 --ignore-installed -r /opt/dishtiny/third-party/requirements.txt \
     && \
   echo "installed python requirements"
+
+# install scripts associated with Python packages to /usr/local/bin
+# (shouldn't show up on PYTHONPATH i.e., be "import"-able)
+RUN \
+  python3 -m pip install --target /usr/local --no-cache-dir --timeout 60 --retries 100 --ignore-installed -r /opt/dishtiny/third-party/requirements.txt \
+    && \
+  python3.8 -m pip install --target /usr/local --no-cache-dir --timeout 60 --retries 100 --ignore-installed -r /opt/dishtiny/third-party/requirements.txt \
+    && \
+  echo "installed Python package scripts"
 
 RUN \
   cd /opt/dishtiny/third-party \
