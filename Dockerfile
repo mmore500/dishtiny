@@ -50,19 +50,18 @@ RUN \
     && \
   apt-get install -y --allow-downgrades --no-install-recommends \
     ccache \
+    rdfind \
     imagemagick \
     ioping \
     libcurl4-openssl-dev \
+    libsfml-dev \
     libdw-dev \
     libomp-dev \
-    libsfml-dev \
-    locales \
-    rdfind \
-    rename \
     sharutils \
     sshpass \
     tree \
     xauth \
+    locales \
     && \
   apt-get clean \
     && \
@@ -94,16 +93,13 @@ COPY container/policy.xml /etc/ImageMagick-6/policy.xml
 COPY container/ccache.conf /etc/ccache.conf
 ENV CCACHE_CONFIGPATH=/etc/ccache.conf
 
+# need --ignore-installed for docutils
+# see https://stackoverflow.com/a/53807588
 RUN \
   python3 -m pip install --no-cache-dir --timeout 60 --retries 100 --upgrade pip==21.0.1 \
     && \
   python3.8 -m pip install --no-cache-dir --timeout 60 --retries 100 --upgrade pip==21.0.1 \
     && \
-  echo "upgraded pip"
-
-# need --ignore-installed for docutils
-# see https://stackoverflow.com/a/53807588
-RUN \
   python3 -m pip install --no-cache-dir --timeout 60 --retries 100 --ignore-installed -r /opt/dishtiny/third-party/requirements.txt \
     && \
   python3.8 -m pip install --no-cache-dir --timeout 60 --retries 100 --ignore-installed -r /opt/dishtiny/third-party/requirements.txt \
@@ -128,18 +124,6 @@ RUN \
   echo "user granted permissions to /opt/dishtiny"
 
 USER user
-
-# must be installed as user for executable to be available on PATH
-RUN \
-  pip3 install --timeout 60 --retries 100 editorconfig-checker==2.3.54 \
-    && \
-  ln -s /home/user/.local/bin/ec /home/user/.local/bin/editorconfig-checker \
-    && \
-  echo "installed editorconfig-checker"
-
-# adapted from https://askubuntu.com/a/799306
-# and https://stackoverflow.com/a/38905161
-ENV PATH "/home/user/.local/bin:$PATH"
 
 # python needs this
 ENV LC_ALL=C.UTF-8

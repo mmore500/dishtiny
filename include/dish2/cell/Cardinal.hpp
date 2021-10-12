@@ -116,8 +116,8 @@ struct Cardinal {
   bool IsNeighborKin( const size_t lev ) {
 
     return peripheral.readable_state.template Get<
-      dish2::KinGroupIDView< Spec >
-    >().Get( lev ) == std::as_const(state_node_input).Get().template Get<
+     dish2::KinGroupIDView< Spec >
+   >().Get( lev ) == std::as_const(state_node_input).Get().template Get<
       dish2::KinGroupIDView< Spec >
     >().Get( lev );
   }
