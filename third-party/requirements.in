@@ -35,7 +35,6 @@ teeplot==0.2.0
 nb-clean==2.0.2
 nbmetalog==0.2.6
 deprecation==2.1.0
-editorconfig-checker==2.3.5
 
 # docs
 sphinx==3.1.2

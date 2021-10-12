@@ -14,4 +14,4 @@ set -e
 ./ci/test_2space_indentation.sh && echo "✔ two-space indentation ok" || exit 1
 ./ci/test_filename_whitespace.sh && echo "✔ filename whitespace ok" || exit 1
 ./ci/test_modern_suffixes.sh && echo "✔ source file suffixes ok" || exit 1
-ec && echo "✔ editorconfig rules ok" || exit 1
+editorconfig-checker && echo "✔ editorconfig rules ok" || exit 1

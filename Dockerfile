@@ -110,15 +110,6 @@ RUN \
     && \
   echo "installed python requirements"
 
-# install scripts associated with Python packages to /usr/local/bin
-# (shouldn't show up on PYTHONPATH i.e., be "import"-able)
-RUN \
-  python3 -m pip install --target /usr/local --no-cache-dir --timeout 60 --retries 100 --ignore-installed -r /opt/dishtiny/third-party/requirements.txt \
-    && \
-  python3.8 -m pip install --target /usr/local --no-cache-dir --timeout 60 --retries 100 --ignore-installed -r /opt/dishtiny/third-party/requirements.txt \
-    && \
-  echo "installed Python package scripts"
-
 RUN \
   cd /opt/dishtiny/third-party \
     && \
@@ -137,6 +128,18 @@ RUN \
   echo "user granted permissions to /opt/dishtiny"
 
 USER user
+
+# must be installed as user for executable to be available on PATH
+RUN \
+  pip3 install --timeout 60 --retries 100 editorconfig-checker==2.3.54 \
+    && \
+  ln -s /home/user/.local/bin/ec /home/user/.local/bin/editorconfig-checker \
+    && \
+  echo "installed editorconfig-checker"
+
+# adapted from https://askubuntu.com/a/799306
+# and https://stackoverflow.com/a/38905161
+ENV PATH "/home/user/.local/bin:$PATH"
 
 # python needs this
 ENV LC_ALL=C.UTF-8
