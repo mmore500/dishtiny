@@ -142,7 +142,7 @@ class ControlPanel {
     ).SetAttr(
       "class", "input-group-append"
     ) << emp::web::Text().SetAttr(
-       "class", "input-group-text"
+      "class", "input-group-text"
     ) << "th update";
 
   }
