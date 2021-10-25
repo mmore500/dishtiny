@@ -78,6 +78,11 @@ debug-web: $(PROJECT).js web/index.html
 
 web-debug: debug-web
 
+debug-web-no-pthread: CFLAGS_web := $(CFLAGS_web_debug)
+debug-web-no-pthread: $(PROJECT)-no-pthread.js web/index.html
+
+web-debug-no-pthread: debug-web-no-pthread
+
 # see https://stackoverflow.com/a/57760267 RE: -lstdc++fs
 $(PROJECT): source/native.cpp include/
 	@echo DISH_MPICXX $(DISH_MPICXX)
