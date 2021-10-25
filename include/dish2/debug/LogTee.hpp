@@ -63,7 +63,7 @@ class LogTee : public std::ostream
     link_stream( std::clog );
 
     *this << dish2::make_log_entry_boilerplate();
-    *this << "setup logfile at " << out_path << '\n' << '\n';
+    *this << "set up logfile at " << out_path << '\n' << '\n';
 
   }
 
