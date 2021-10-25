@@ -117,17 +117,18 @@ jobs:
       fail-fast: false
     container:
       image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
-      # github actions requires root to access mounted volumes
-      options: --user root --cap-add=SYS_ADMIN
+      options: --user user --cap-add=SYS_ADMIN
       env:
         DISH_MPICXX: mpicxx.openmpi
         OMPI_CXX: ${{ matrix.cxx }}
     steps:
-        - run: |
-            set -x
-            cd /opt/dishtiny/tests/source
-            make
-            make ${{ matrix.mode }}
+      # undo github actions override of HOME to "/home/github/"
+      - run: |
+          export HOME="/home/user/"
+          set -x
+          make -C /opt/dishtiny/ test-source
+          make -C /opt/dishtiny/tests/source
+          make -C /opt/dishtiny/tests/source ${{ matrix.mode }}
 
   coverage:
     name: Coverage
