@@ -13,6 +13,7 @@
 #include "dish2/config/make_arg_specs.hpp"
 #include "dish2/config/setup.hpp"
 #include "dish2/config/TemporaryThreadIdxOverride.hpp"
+#include "dish2/debug/log_tee.hpp"
 #include "dish2/spec/print_spec.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/utility/print_js_stacktrace.hpp"
@@ -40,13 +41,18 @@ void do_main() {
   interface = new dish2::WebInterface<Spec>;
   interface->Redraw();
 
-  // believe (?) this was added to prevent Emscripten from calling destructors
-  // on globals once main() exits... not sure if it actually does anything
-  emscripten_set_main_loop([](){}, 1, true);
 
   // once we're done setting up, turn off the loading modal
   // ... disabled until loading modal is reactivated
   // MAIN_THREAD_EM_ASM({ $('.modal').modal('hide'); });
+
+  dish2::log_tee << "web viewer load complete" << '\n';
+
+  // believe (?) this was added to prevent Emscripten from calling destructors
+  // on globals once main() exits... not sure if it actually does anything
+  // @MAM 10-2021 looks like this is necessary
+  // ... at when using pthreads with puppeteer (didn't test w/o pthreads)
+  emscripten_set_main_loop([](){}, 1, true);
 
 }
 
