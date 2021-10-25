@@ -64,22 +64,27 @@ web-deploy: web web-no-pthread
 
 all: $(PROJECT) $(PROJECT).js web/index.html
 
-debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
-debug:	$(PROJECT)
+debug: CFLAGS_nat := $(CFLAGS_nat_debug)
+debug: $(PROJECT)
 
-production:	CFLAGS_nat := $(CFLAGS_nat_production)
-production:	$(PROJECT)
+production: CFLAGS_nat := $(CFLAGS_nat_production)
+production: $(PROJECT)
 
 sanitize: CFLAGS_nat := $(CFLAGS_nat_sanitize)
 sanitize: $(PROJECT)
 
-debug-web:	CFLAGS_web := $(CFLAGS_web_debug)
-debug-web:	$(PROJECT).js web/index.html
+debug-web: CFLAGS_web := $(CFLAGS_web_debug)
+debug-web: $(PROJECT).js web/index.html
 
-web-debug:	debug-web
+web-debug: debug-web
+
+debug-web-no-pthread: CFLAGS_web := $(CFLAGS_web_debug)
+debug-web-no-pthread: $(PROJECT)-no-pthread.js web/index.html
+
+web-debug-no-pthread: debug-web-no-pthread
 
 # see https://stackoverflow.com/a/57760267 RE: -lstdc++fs
-$(PROJECT):	source/native.cpp include/
+$(PROJECT): source/native.cpp include/
 	@echo DISH_MPICXX $(DISH_MPICXX)
 	@echo MPICH_CXX $(MPICH_CXX)
 	@echo OMPI_CXX $(OMPI_CXX)
@@ -147,21 +152,21 @@ install-test-dependencies:
 .PHONY: cleanall
 .PHONY: cleanlogs
 .PHONY: debug
-.PHONY:	debug-web
-.PHONY:	default
+.PHONY: debug-web
+.PHONY: default
 .PHONY: docs
-.PHONY:	documentation-coverage
-.PHONY:	documentation-coverage-badge.json
-.PHONY:	doto-badge.json
-.PHONY:	install-test-dependencies
-.PHONY:	native
-.PHONY:	ndata
-.PHONY:	profile
-.PHONY:	sanitize
-.PHONY:	serve
-.PHONY:	static
-.PHONY:	test
-.PHONY:	tests
-.PHONY:	version-badge.json
-.PHONY:	web
-.PHONY:	web-debug
+.PHONY: documentation-coverage
+.PHONY: documentation-coverage-badge.json
+.PHONY: doto-badge.json
+.PHONY: install-test-dependencies
+.PHONY: native
+.PHONY: ndata
+.PHONY: profile
+.PHONY: sanitize
+.PHONY: serve
+.PHONY: static
+.PHONY: test
+.PHONY: tests
+.PHONY: version-badge.json
+.PHONY: web
+.PHONY: web-debug
