@@ -123,11 +123,13 @@ jobs:
         DISH_MPICXX: mpicxx.openmpi
         OMPI_CXX: ${{ matrix.cxx }}
     steps:
-        - run: |
-            set -x
-            make -C /opt/dishtiny/ test-source
-            make -C /opt/dishtiny/tests/source
-            make -C /opt/dishtiny/tests/source ${{ matrix.mode }}
+      # undo github actions override of HOME to "/home/github/"
+      - run: |
+          export HOME="/home/user/"
+          set -x
+          make -C /opt/dishtiny/ test-source
+          make -C /opt/dishtiny/tests/source
+          make -C /opt/dishtiny/tests/source ${{ matrix.mode }}
 
   coverage:
     name: Coverage
