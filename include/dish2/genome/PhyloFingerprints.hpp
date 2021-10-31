@@ -127,6 +127,17 @@ public:
 
   }
 
+  [[deprecated("Temporary interface for Phylogenetic Fingerprints Demo.")]]
+  const std::vector<uint64_t>& GetGenerations() const { return generations; }
+
+  [[deprecated("Temporary interface for Phylogenetic Fingerprints Demo.")]]
+  const size_t GetGenerationCount() const { return generation_counter; }
+
+  [[deprecated("Temporary interface for Phylogenetic Fingerprints Demo.")]]
+  const size_t GetFingerprint(const size_t idx) const {
+    return fingerprints[idx];
+  }
+
 };
 
 } // namespace dish2
