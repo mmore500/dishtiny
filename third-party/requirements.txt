@@ -334,6 +334,7 @@ sphinx==3.1.2
     #   exhale
     #   myst-parser
     #   sphinx-rtd-theme
+    #   sphinxemoji
 sphinxcontrib-applehelp==1.0.2
     # via sphinx
 sphinxcontrib-devhelp==1.0.2
@@ -346,6 +347,8 @@ sphinxcontrib-qthelp==1.0.3
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.4
     # via sphinx
+sphinxemoji==0.1.8
+    # via -r requirements.in
 statsmodels==0.12.2
     # via -r requirements.in
 teeplot==0.2.0
