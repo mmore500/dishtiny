@@ -53,7 +53,6 @@ OFLAGS_web_debug := -g4 -Oz -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPP
 
 CFLAGS_web := $(CFLAGS_all) $(OFLAGS_web) $(OFLAGS_web_all)
 CFLAGS_web_pthread := $(CFLAGS_all) $(OFLAGS_web) $(OFLAGS_web_pthread) $(OFLAGS_web_all)
-CFLAGS_web_debug := $(CFLAGS_all) $(OFLAGS_web_debug) $(OFLAGS_web_pthread) $(OFLAGS_web_all)
 
 default: $(PROJECT)
 native: $(PROJECT)
@@ -73,7 +72,8 @@ production: $(PROJECT)
 sanitize: CFLAGS_nat := $(CFLAGS_nat_sanitize)
 sanitize: $(PROJECT)
 
-debug-web: CFLAGS_web := $(CFLAGS_web_debug)
+debug-web: CFLAGS_web := $(CFLAGS_web) $(OFLAGS_web_debug)
+debug-web: CFLAGS_web_pthread := $(CFLAGS_web_pthread) $(OFLAGS_web_debug)
 debug-web: $(PROJECT).js web/index.html
 
 web-debug: debug-web
