@@ -54,7 +54,7 @@ class Genome {
 
     // TODO perform the sloppy copy elsewhere for efficiency's sake?
     // do severe sequence mutation
-    auto [copy, num_muts] = sgpl::sloppy_copy<program_t, Scramble, 0>(
+    auto [copy, num_muts] = sgpl::sloppy_copy<program_t, Scramble>(
       program,
       defect_rate,
       { -defect_bound * do_insertion, defect_bound * do_deletion },

@@ -13,7 +13,7 @@
 #include "../../../third-party/conduit/include/uitsl/debug/audit_cast.hpp"
 #include "../../../third-party/conduit/include/uitsl/debug/safe_cast.hpp"
 #include "../../../third-party/conduit/include/uitsl/math/is_perfect_hypercube.hpp"
-#include "../../../third-party/conduit/include/uitsl/mpi/mpi_utils.hpp"
+#include "../../../third-party/conduit/include/uitsl/mpi/comm_utils.hpp"
 #include "../../../third-party/conduit/include/uitsl/nonce/ThreadUidNormalizer.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 
