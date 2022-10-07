@@ -2,8 +2,8 @@
 
 ################################################################################
 echo
-echo "running lowestroot-immediatepredecessorbattlekickoff.sh"
-echo "-----------------------------------"
+echo "running immediatepredecessorcompetition-nobioticbackground-nomutkickofff.sh"
+echo "-------------------------------------------------------------------------"
 ################################################################################
 
 # fail on error
@@ -74,8 +74,8 @@ trap 'printerr \$LINENO' ERR
 
 ################################################################################
 echo
-echo "running predecessorbattlekickoff.sh"
-echo "-----------------------------------"
+echo "running predecessorcompetitionkickoff.sh"
+echo "----------------------------------------"
 ################################################################################
 
 echo "BUCKET ${BUCKET}"
@@ -111,7 +111,7 @@ for JUST_ONE_SERIES in ${SERIES}; do
     echo "FIRST_COMPETITOR \${FIRST_COMPETITOR}"
     echo "SECOND_COMPETITOR \${SECOND_COMPETITOR}"
 
-    j2 --format=yaml -o "a=battle+series=\${JUST_ONE_SERIES}+stint=${STINT}+replicate=\${REPLICATE}+ext=.slurm.sh" "dishtiny/slurm/competition/competitionjob.slurm.sh.jinja" << J2_HEREDOC_EOF
+    j2 --format=yaml -o "a=competition+series=\${JUST_ONE_SERIES}+stint=${STINT}+replicate=\${REPLICATE}+ext=.slurm.sh" "dishtiny/slurm/competition/competitionjob.slurm.sh.jinja" << J2_HEREDOC_EOF
 bucket: ${BUCKET}
 configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
@@ -151,7 +151,7 @@ done
 
 else
 
-dishtiny/script/slurm_stoker_containerized_kickoff.sh "${BUCKET}" "${CONTAINER_TAG}" "${REPO_SHA}" "predecessor-battle~configpack%${CONFIGPACK}~series%${SERIES%% *}...~stint%${STINT}"
+dishtiny/script/slurm_stoker_containerized_kickoff.sh "${BUCKET}" "${CONTAINER_TAG}" "${REPO_SHA}" "predecessor-competition~configpack%${CONFIGPACK}~series%${SERIES%% *}...~stint%${STINT}"
 
 fi
 
