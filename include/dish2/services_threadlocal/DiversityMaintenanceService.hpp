@@ -40,7 +40,19 @@ struct DiversityMaintenanceService {
 
     auto& population = thread_world.population;
 
-    const auto root_id_counts = dish2::get_root_id_counts( thread_world );
+    auto root_id_counts = dish2::get_root_id_counts( thread_world );
+
+    const size_t pool_count_sum = std::accumulate(
+      std::begin(cfg.DIVERSITY_MAINTENANCE_ROOT_ID_POOL()),
+      std::end(cfg.DIVERSITY_MAINTENANCE_ROOT_ID_POOL()),
+      size_t{},
+      [&root_id_counts](const auto cumsum, const auto root_id){
+        return cumsum + root_id_counts[root_id];
+      }
+    );
+    for (const auto& root_id : cfg.DIVERSITY_MAINTENANCE_ROOT_ID_POOL()) {
+      root_id_counts[root_id] = pool_count_sum;
+    }
 
     const size_t threshold_count = (
       dish2::cfg.DIVERSITY_MAINTENANCE_PREVALENCE()
