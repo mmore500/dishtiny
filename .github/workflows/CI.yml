@@ -11,7 +11,7 @@ jobs:
 
   deploy-assets:
     name: Deploy Assets
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     env:
       PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
     steps:
@@ -22,7 +22,7 @@ jobs:
 
   docker-build:
     name: Docker Build
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
         with:
@@ -40,7 +40,7 @@ jobs:
 
   docs:
     name: Docs, Miscellaneous
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     needs:
       - docker-build
     container:
@@ -60,7 +60,7 @@ jobs:
 
   py-unit:
     name: Python Unit Tests
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     needs:
       - docker-build
     container:
@@ -75,7 +75,7 @@ jobs:
 
   cpp-unit:
     name: C++ Unit Tests
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     needs:
       - docker-build
     strategy:
@@ -98,7 +98,7 @@ jobs:
 
   source:
     name: Source
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     needs:
       - docker-build
     strategy:
@@ -122,7 +122,7 @@ jobs:
 
   coverage:
     name: Coverage
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     needs:
       - docker-build
     container:
@@ -141,7 +141,7 @@ jobs:
           directory: /opt/dishtiny
   fuzzing:
     name: Fuzzing
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     needs:
       - docker-build
     container:
@@ -156,7 +156,7 @@ jobs:
 
   microbenchmarks:
     name: Microbenchmarks
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     needs:
       - docker-build
     container:
@@ -176,7 +176,7 @@ jobs:
 
   binder:
     name: Notebooks
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     needs:
       - docker-build
     container:
@@ -202,7 +202,7 @@ jobs:
           folder: deploy # The folder the action should deploy.
   deploy-pages:
     name: Deploy to GitHub Pages
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     if: github.ref == 'refs/heads/master'
     needs:
       - docs
@@ -239,7 +239,7 @@ jobs:
 
   deploy-dockerhub:
     name: Deploy to DockerHub
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
     needs:
       - docs
       - py-unit
