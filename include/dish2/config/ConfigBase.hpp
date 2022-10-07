@@ -7,9 +7,12 @@
 
 #include "../../../third-party/conduit/include/uitsl/utility/UITSL_IF_WEB_ELSE.hpp"
 #include "../../../third-party/Empirical/include/emp/base/array.hpp"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/config/config.hpp"
 
 #include "../spec/_NLEV.hpp"
+
+#include "vector_stream_ops.hpp"
 
 namespace dish2 {
 
@@ -18,6 +21,7 @@ namespace internal {
 using nlev_float_t = emp::array<float, DISH2_NLEV>;
 using nreplev_float_t = emp::array<float, DISH2_NLEV + 1>;
 using nlev_size_t_t = emp::array<size_t, DISH2_NLEV>;
+using vector_size_t_t = emp::vector<size_t>;
 
 } // namespace internal
 
@@ -76,6 +80,12 @@ EMP_BUILD_CONFIG(
   VALUE(
     GENESIS, std::string, "generate",
     "generate, reconstitute, monoculture, or innoculate"
+  ),
+  VALUE(
+    DIVERSITY_MAINTENANCE_ROOT_ID_POOL,
+    internal::vector_size_t_t,
+    (internal::vector_size_t_t{}),
+    "What root IDs should be considered equivalent for diversity maintenance?"
   ),
   // VALUE(SEED_POP, bool, 0, "Should we seed the population?"),
   // VALUE(SEED_POP_ID, size_t, 0, "Should we seed the population with all seedpop IDs (0) or with a specific ID (>0)?"),
