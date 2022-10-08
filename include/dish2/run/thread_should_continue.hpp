@@ -11,7 +11,7 @@
 #include "../config/cfg.hpp"
 #include "../debug/log_msg.hpp"
 #include "../introspection/get_fraction_live_cells.hpp"
-#include "../introspection/has_coalesced.hpp"
+#include "../introspection/have_focal_root_ids_coalesced.hpp"
 #include "../introspection/is_extinct.hpp"
 #include "../world/ThreadWorld.hpp"
 
@@ -28,7 +28,7 @@ bool thread_should_contine(
   if (
     cfg.ABORT_IF_COALESCENT_FREQ()
     && uitsl::shift_mod(update, cfg.ABORT_IF_COALESCENT_FREQ()) == 0
-    && dish2::has_coalesced<Spec>( thread_world )
+    && dish2::have_focal_root_ids_coalesced<Spec>( thread_world )
   ) {
     emp_always_assert( !uitsl::is_multiprocess() );
     emp_always_assert( cfg.N_THREADS() == 1 );

@@ -87,6 +87,12 @@ EMP_BUILD_CONFIG(
     (internal::vector_size_t_t{}),
     "What root IDs should be considered equivalent for diversity maintenance?"
   ),
+  VALUE(
+    COALESCENCE_EXCLUDE_ROOT_IDS,
+    internal::vector_size_t_t,
+    (internal::vector_size_t_t{}),
+    "What root IDs should be excluded from coalescence calculations for competitions?"
+  ),
   // VALUE(SEED_POP, bool, 0, "Should we seed the population?"),
   // VALUE(SEED_POP_ID, size_t, 0, "Should we seed the population with all seedpop IDs (0) or with a specific ID (>0)?"),
   // VALUE(SEED_MUTATIONS_P, float, 0.0, "With what probability should we apply mutations to seeded cells??"),
