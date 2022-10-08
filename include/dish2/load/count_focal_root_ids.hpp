@@ -11,9 +11,10 @@
 namespace dish2 {
 
 size_t count_focal_root_ids() {
+  const auto root_ids = dish2::get_root_ids();
   return std::count_if(
-    std::begin(dish2::get_root_ids()),
-    std::end(dish2::get_root_ids()),
+    std::begin(root_ids),
+    std::end(root_ids),
     dish2::is_focal_root_id
   );
 }
