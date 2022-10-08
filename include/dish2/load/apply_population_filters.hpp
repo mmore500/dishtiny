@@ -39,6 +39,25 @@ emp::vector< dish2::Genome<Spec> > apply_population_filters(
     );
   }
 
+  if ( attrs.count("filter_except_lowest_root") ) {
+    emp_always_assert(
+      attrs.at("filter_except_lowest_root") == "",
+      attrs.at("filter_except_lowest_root"), filename
+    );
+
+    const size_t lowest_root = dish2::get_lowest_root( population );
+    const size_t num_erased = std::erase_if(
+      population,
+      [lowest_root]( const auto& genome ){
+        return genome.root_id.GetID() == lowest_root;
+      }
+    );
+    dish2::log_msg(
+      "applied except_lowest_root filter to population from ", filename,
+      ", ", num_erased, " genomes eliminated"
+    );
+  }
+
   return population;
 
 }
