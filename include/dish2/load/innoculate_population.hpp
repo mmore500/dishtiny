@@ -18,7 +18,9 @@
 #include "../genome/Genome.hpp"
 #include "../world/ThreadWorld.hpp"
 
+#include "dose_innoculum_buckets.hpp"
 #include "load_innoculum.hpp"
+#include "read_innoculum_doses.hpp"
 
 namespace dish2 {
 
@@ -72,6 +74,27 @@ void innoculate_population( dish2::ThreadWorld<Spec>& world ) {
     return root_ids.size() == innoculum_buckets.size();
   }(), emp::to_string( innoculum_paths ));
 
+  const emp::vector<size_t> innoculum_doses = dish2::read_innoculum_doses(
+    innoculum_paths
+  );
+
+  // don't run subroutine if no innoculum doses adjusted
+  // to minimize subtle runtime effects on existing code
+  if (std::any_of(
+    std::begin(innoculum_doses), std::end(innoculum_doses),
+    [](const size_t dose) { return dose != 1; }
+  )) {
+    dish2::log_msg(
+      innoculum_buckets.size(), " innoculum buckets before dosing"
+    );
+    innoculum_buckets = dish2::dose_innoculum_buckets(
+      innoculum_buckets,
+      innoculum_doses
+    );
+    dish2::log_msg(
+      innoculum_buckets.size(), " innoculum buckets after dosing"
+    );
+  }
 
   dish2::seed_genomes_into<Spec, true>( innoculum_buckets, world );
 
