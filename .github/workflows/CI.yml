@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [ prq49, master, dev ]
+    branches: [ prq49-debug, prq49, master, dev ]
   pull_request:
     branches:
       - '**'
