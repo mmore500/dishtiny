@@ -11,6 +11,7 @@
 #include "../cell/cardinal_iterators/ResourceStockpileWrapper.hpp"
 #include "../config/cfg.hpp"
 #include "../debug/LogScope.hpp"
+#include "../debug/log_msg.hpp"
 #include "../enum/CauseOfDeath.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_root_id_counts.hpp"
@@ -77,6 +78,13 @@ struct DiversityMaintenanceService {
           emp_assert( std::isfinite(excess_frac), excess_frac );
 
           const double decay = std::max( 1.0 - excess_frac, 0.0 );
+
+          dish2::log_msg(
+            "DiversityMaintenanceService: ",
+            "root_id ", root_id, ", ",
+            "count ", count, ", ",
+            "decay ", decay
+          );
 
           emp_assert( std::isfinite(decay), decay );
 
