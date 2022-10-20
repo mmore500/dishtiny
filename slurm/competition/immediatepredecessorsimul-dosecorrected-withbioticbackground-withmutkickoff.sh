@@ -121,8 +121,8 @@ configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
 first_competitor_url: "\${FIRST_COMPETITOR}"
+first_competitor_attrs: "filter_lowest_root+"
 second_competitor_url: "\${SECOND_COMPETITOR}"
-second_competitor_attrs: "filter_lowest_root+"
 first_background_url: "\${FIRST_BACKGROUND}"
 first_background_attrs: "dose=2+filter_except_lowest_root+"
 output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/immediatepredecessor-simuls-dosecorrected-withbioticbackground-withmut/stage=1+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/"
