@@ -105,8 +105,8 @@ echo "------------------------------"
 for JUST_ONE_SERIES in ${SERIES}; do
   for REPLICATE in {0..19}; do
 
-    FIRST_COMPETITOR="s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=\${PREDECESSOR_STINT}/series=\${JUST_ONE_SERIES}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${JUST_ONE_SERIES}+stint=\${PREDECESSOR_STINT}+thread=0+variation=master+ext=.json.gz"
-    SECOND_COMPETITOR="s3://${BUCKET}/endeavor=\${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/a=population+proc=0+series=\${JUST_ONE_SERIES}+stint=${STINT}+thread=0+variation=master+ext=.bin.xz"
+    FIRST_COMPETITOR="s3://${BUCKET}/endeavor=\${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=\${PREDECESSOR_STINT}/series=\${JUST_ONE_SERIES}/a=population+proc=0+series=\${JUST_ONE_SERIES}+stint=\${PREDECESSOR_STINT}+thread=0+variation=master+ext=.bin.xz"
+    SECOND_COMPETITOR="s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=${STINT}/series=\${JUST_ONE_SERIES}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${JUST_ONE_SERIES}+stint=${STINT}+thread=0+variation=master+ext=.json.gz"
 
     FIRST_BACKGROUND="s3://${BUCKET}/endeavor=\${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=\${PREDECESSOR_STINT}/series=\${JUST_ONE_SERIES}/a=population+proc=0+series=\${JUST_ONE_SERIES}+stint=\${PREDECESSOR_STINT}+thread=0+variation=master+ext=.bin.xz"
 
