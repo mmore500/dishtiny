@@ -26,8 +26,14 @@ struct DiversityMaintenanceService {
     return
       freq > 0
       && uitsl::shift_mod( update, freq ) == 0
-      && dish2::cfg.GENESIS() != "innoculate"
-      && dish2::cfg.GENESIS() != "monoculture"
+      && (
+        dish2::cfg.GENESIS() != "innoculate"
+        || dish2::cfg.DIVERSITY_MAINTENANCE_INNOCULATE_GENESIS_ENABLE()
+        )
+      && (
+        dish2::cfg.GENESIS() != "monoculture"
+        || dish2::cfg.DIVERSITY_MAINTENANCE_MONOCULTURE_GENESIS_ENABLE()
+      )
     ;
   }
 
