@@ -87,7 +87,7 @@ echo "CONFIGPACK ${CONFIGPACK}"
 echo "CONTAINER_TAG ${CONTAINER_TAG}"
 echo "REPO_SHA ${REPO_SHA}"
 echo "FOLLOWUP_FREQ ${FOLLOWUP_FREQ}"
-echo "STINT ${STINT}"
+echo "STINTS ${STINTS}"
 echo "SERIES ${SERIES}"
 
 source ~/.secrets.sh || :
