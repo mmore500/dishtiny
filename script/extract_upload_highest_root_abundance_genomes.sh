@@ -49,7 +49,7 @@ for STINT in ${STINTS}; do
   POPULATION_URI="s3://${BUCKET}/endeavor=${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=${STINT}/series=${SERIES}/a=population+proc=0+series=${SERIES}+stint=${STINT}+thread=0+variation=master+ext=.bin.xz"
   aws s3 cp "${POPULATION_URI}" .
 
-  "${SCRIPT_DIR}/../rundishtiny" -RUN 0 -GENESIS "reconstitute" -ARTIFACTS_DUMP 1
+  "${SCRIPT_DIR}/../rundishtiny" -RUN 0 -GENESIS "reconstitute" -ARTIFACTS_DUMP 1 -SERIES "${SERIES}" -STINT "${STINT}"
 
   shopt -s nullglob
 
