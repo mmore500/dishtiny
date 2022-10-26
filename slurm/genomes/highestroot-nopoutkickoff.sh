@@ -16,7 +16,7 @@ printerr() {
 trap 'printerr $LINENO' ERR
 
 if (( "$#" < 7 )); then
-  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [followup_freq] [stint] [series...]"
+  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [followup_freq] [series] [stints...]"
   exit 1
 fi
 
@@ -106,7 +106,7 @@ configpack: "${CONFIGPACK}"
 container_tag: "${CONTAINER_TAG}"
 repo_sha: "${REPO_SHA}"
 series: "${SERIES}"
-stint: "${STINT}"
+stint: "\${STINT}"
 target_genome_url: "s3://${BUCKET}/endeavor=\$(( ${SERIES} / 1000 ))/genomes/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/a=genome+criteria=abundance_highest_root+morph=wildtype+proc=0+series=${SERIES}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
 followup_freq: "${FOLLOWUP_FREQ}"
 J2_HEREDOC_EOF
