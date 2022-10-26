@@ -9,6 +9,7 @@
 #include "../config/cfg.hpp"
 #include "../config/thread_idx.hpp"
 #include "../record/dump_abundance_genome.hpp"
+#include "../record/dump_abundance_highest_root_genome.hpp"
 #include "../record/dump_abundance_over_all_roots_genome.hpp"
 #include "../record/dump_arbitrary_genome.hpp"
 #include "../record/dump_arbitrary_over_all_roots_genome.hpp"
@@ -24,6 +25,9 @@ void thread_artifacts_dump( const dish2::ThreadWorld<Spec>& thread_world ) {
 
   uitsl_err_audit(!
     dish2::dump_abundance_genome<Spec>( thread_world )
+  );
+  uitsl_err_audit(!
+    dish2::dump_abundance_highest_root_genome<Spec>( thread_world )
   );
   uitsl_err_audit(!
     dish2::dump_abundance_over_all_roots_genome<Spec>( thread_world )
