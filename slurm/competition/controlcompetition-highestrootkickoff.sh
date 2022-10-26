@@ -87,12 +87,11 @@ echo "SERIES ${SERIES}"
 
 source ~/.secrets.sh || :
 
-FIRST_STINT=${STINTS%% *}
-ENDEAVOR="\$(( FIRST_SERIES / 1000 ))"
+ENDEAVOR="$(( SERIES / 1000 ))"
 NUM_STINTS="$( echo ${STINTS} | wc -w )"
 
 echo "ENDEAVOR \${ENDEAVOR}"
-echo "NUM_SERIES \${NUM_SERIES}"
+echo "NUM_STINTS \${NUM_STINTS}"
 
 ################################################################################
 echo
