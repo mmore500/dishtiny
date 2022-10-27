@@ -5,7 +5,7 @@ osfclient==0.0.5
 keyname==0.4.1
 exdown==0.7.0
 pandas==1.1.2
-seaborn==0.11.0
+seaborn==0.11.2
 frozendict==1.2
 matplotlib==3.3.2
 iterpop==0.3.4

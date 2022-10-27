@@ -289,7 +289,7 @@ scipy==1.5.4
     #   -r requirements.in
     #   seaborn
     #   statsmodels
-seaborn==0.11.0
+seaborn==0.11.2
     # via -r requirements.in
 six==1.15.0
     # via
