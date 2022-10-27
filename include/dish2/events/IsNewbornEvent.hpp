@@ -6,11 +6,6 @@
 
 namespace dish2 {
 
-/**
- * This event is dispatched once when a cell is first born.
- *
- * Triggered if cell age is less than frequency at which events are launched.
- */
 struct IsNewbornEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

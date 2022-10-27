@@ -7,11 +7,6 @@
 
 namespace dish2 {
 
-/**
- * Counter tracking incoming messages from cardinal's neighbor cell.
- *
- * Intermittently reset to zero.
- */
 struct IncomingInterMessageCounter : public uitsl::PodLeafNode<size_t> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<size_t>;

@@ -10,11 +10,6 @@
 
 namespace dish2 {
 
-/**
- * What is this cell's phylogenetic root ID?
- *
- * (Which initially-generated ancestor is this cell descended from?)
- */
 struct PhylogeneticRootView : public uitsl::PodLeafNode< size_t > {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<size_t>;

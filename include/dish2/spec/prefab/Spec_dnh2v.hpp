@@ -37,18 +37,12 @@ struct Spec_dnh2v {
 
   using this_t = Spec_dnh2v;
 
-  /// How many hierarchical kin group levels should be simulated?
   constexpr inline static size_t NLEV{ DISH2_NLEV };
 
-  /// How many nop and transient nop states should exist in the peripheral?
   constexpr inline static size_t AMT_NOP_MEMORY = 4;
 
-  /// How many callees should we displace state by in state exchange
-  /// experiments?
   constexpr inline static size_t STATE_EXCHANGE_CHAIN_LENGTH = 128;
 
-  /// Should higher-level kin group quorum counts be based on cell count or sub-
-  /// kin group count?
   constexpr inline static bool SET_QUORUM_BITS_BY_KIN_GROUP = false;
 
   using op_library_t = sgpl::OpLibraryCoupler<
@@ -102,6 +96,7 @@ struct Spec_dnh2v {
 
   using program_t = sgpl::Program< sgpl_spec_t >;
 
+  // TODO put these in order
   using service_manager_t = dish2::ServiceManager<
     dish2::DecayToBaselineService, // should run before cpu execution service
     dish2::RunningLogPurgeService, // should run before cpu execution service

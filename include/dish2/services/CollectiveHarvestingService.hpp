@@ -16,14 +16,6 @@
 
 namespace dish2 {
 
-/**
- * Perform kin group collective resource harvest for single cell.
- *
- * Calculates the total amount of resource collectively harvested to this cell
- * by the cell's kin group. This amount increases with quorum count and
- * saturates at `OPTIMAL_QUORUM_COUNT`. Adds the harvested amount to the cell's
- * resource stockpile.
- */
 class CollectiveHarvestingService {
 
   template<typename Cell>
@@ -37,7 +29,6 @@ class CollectiveHarvestingService {
     const size_t effective_count = std::min(
       optimum,
       // subtract 1 from quorum count for self, being cautious about overflow
-      // TODO only subtract if self has a quorum bit set
       quorum_count - static_cast<bool>( quorum_count )
     );
 

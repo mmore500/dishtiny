@@ -6,7 +6,6 @@
 
 #include "../algorithm/seed_genomes_into.hpp"
 #include "../debug/log_msg.hpp"
-#include "../utility/is_native.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "apply_population_filters.hpp"
@@ -22,7 +21,7 @@ void reconstitute_population( dish2::ThreadWorld<Spec>& world ) {
 
   dish2::log_msg("reconstituted ", reconstituted.size(), " cells from ", src);
 
-  dish2::seed_genomes_into<Spec, dish2::is_native()>( reconstituted, world );
+  dish2::seed_genomes_into<Spec, true>( reconstituted, world );
 
 }
 

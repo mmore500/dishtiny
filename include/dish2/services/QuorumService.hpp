@@ -16,24 +16,6 @@
 
 namespace dish2 {
 
-/**
- * Performs a distributed estimation of kin group size.
- *
- * Each cell has a single randomly-chosen index set within a fixed-length
- * bitstring. (Depending in parameter settings, some cells may may have index
- * set --- all positions within the bitstring are zeroed out.)
- *
- * Broadcasts bits known to be set are to all neighbor cells within the same
- * kin group. Incoming bitstrings from neighbors are ORed with known bits.
- *
- * The original neighbor each non-self bit was first learned from is recorded
- * alongside that bit. If that neighbor no longer broadcasts that bit, it is
- * erased from the cell's known bits.
- *
- * Updates latest quorum count into introspective state.
- *
- * This scheme is replicated independently for each kin group level simulated.
- */
 class QuorumService {
 
   template<typename Cell>
@@ -136,20 +118,10 @@ public:
 
     cell.cell_quorum_state.RefreshOwnBits();
 
-    // temporary blacklists prevent bits
-    // that the source /we/ learned them from
-    // has forgotten about
-    // from being reactivated by neighbors
-    // /we/ taught them to
-    // ... move the process of purging them
-    // forward
     ProgressBlacklists<Cell>( cell );
 
-    // add any quorum bits that neighbors
-    // have learned about to known bits
     UpdateKnownBits<Cell>( cell );
 
-    // share all our known bits with neighbors
     PushKnownBits<Cell>( cell );
 
     // so that cpus can sense num quorum bits

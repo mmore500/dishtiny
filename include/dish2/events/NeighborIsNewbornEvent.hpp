@@ -6,13 +6,6 @@
 
 namespace dish2 {
 
-/**
- * Triggered once for each time a newborn spawns into the cardinal's
- * neighboring tile.
- *
- * Triggered if the cardinal's neighbor's age is less than the frequency at
- * which events are launched.
- */
 struct NeighborIsNewbornEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

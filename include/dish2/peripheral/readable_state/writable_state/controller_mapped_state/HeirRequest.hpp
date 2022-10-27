@@ -7,10 +7,6 @@
 
 namespace dish2 {
 
-/**
- * If this state is set when cell death occurs, the cardinal's neighbor cell
- * will inherit leftover resource from the cell's stockpile.
- */
 struct HeirRequest : public uitsl::PodLeafNode<char> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

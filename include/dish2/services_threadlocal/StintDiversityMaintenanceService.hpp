@@ -19,17 +19,6 @@
 
 namespace dish2 {
 
-/**
- * Prevents any one seeded or reconstituted stint-originating ancestor from
- * sweeping the population, preserving phylogenetic diversity within a single
- * stint.
- *
- * Counts cells that descend from each seeded or reconstituted
- * stint-originating ancestor. If more than
- * `STINT_DIVERSITY_MAINTENANCE_PREVALENCE` of cells descend from a single
- * seeded or reconstituted ancestor, decay their resource stockpiles. The
- * magnitude of this effect increases with excess prevalence.
- */
 struct StintDiversityMaintenanceService {
 
   static bool ShouldRun( const size_t update ) {

@@ -53,10 +53,7 @@ using interpreted_introspective_state_parent_t = uitsl::PodInternalNode<
 
 } // namespace internal
 
-/**
- * Interpreted introspective state is filled with truthy values that are
- * interpreted as booleans to dispatch environmentally-managed events.
- */
+
 template<typename Spec>
 struct InterpretedIntrospectiveState
 : public internal::interpreted_introspective_state_parent_t<Spec>{

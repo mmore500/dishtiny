@@ -7,10 +7,6 @@
 
 namespace dish2 {
 
-/**
- * Setting this state reduces the amount of resource received from the
- * cardinal's neighbor cell.
- */
 struct ResourceReceiveResistance : public uitsl::PodLeafNode<float> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<float>;

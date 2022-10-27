@@ -9,9 +9,6 @@
 
 namespace dish2 {
 
-/**
- * Does this cell's stockpile more resource than the cardinal's cell neighbor?
- */
 struct RicherThanNeighbor : public uitsl::PodLeafNode< char > {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

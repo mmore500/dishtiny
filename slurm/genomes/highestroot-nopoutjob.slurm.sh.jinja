@@ -1,0 +1,628 @@
+#!/bin/bash -login
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time=4:00:00
+#SBATCH --job-name a=nopout+series={{ series }}+stint={{ stint }}+target_genome_url={{ target_genome_url }}
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/scratch/%u/slurmlogs/a=nopout+job=%j+series={{ series }}+stint={{ stint }}+ext.log"
+#SBATCH --mem=24G
+#SBATCH --ntasks 1
+#SBATCH --cpus-per-task 4
+#SBATCH --mail-type=FAIL
+# No --mail-user, the default value is the submitting user
+#SBATCH --exclude=csn-002,amr-250
+# Send interrupt when within 5 minutes of end time.
+#SBATCH --signal=SIGINT@300
+# Job may be requeued after node failure.
+#SBATCH --requeue
+
+################################################################################
+echo
+echo "running highestroot-nopoutjob.slurm.sh"
+echo "--------------------------"
+################################################################################
+
+# fail on error
+set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
+
+# specify display, start the Xvfb server, and save the process ID
+# adapted from https://wiki.hpcc.msu.edu/display/~colbrydi@msu.edu/2013/10
+export DISPLAY=":${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X11-unix/X${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X${SLURM_JOB_ID-1}-lock"
+Xvfb "${DISPLAY}" -auth /dev/null/ &
+export XVFB_PID=$!
+
+# set up and jump into temporary work directory
+cd "$(mktemp -d)"
+pwd
+
+# curl repro_runner.sh script into to a temporary file
+REPRO_RUNNER="$(mktemp)"
+for retry in {1..20}; do
+  curl \
+    -o "${REPRO_RUNNER}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh" \
+  && echo "  repro_runner curl success" && break \
+  || (echo "retrying repro_runner curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "repro_runner curl fail" && exit 123123; fi
+done
+chmod +x "${REPRO_RUNNER}"
+
+################################################################################
+echo
+echo "Run Job with repro_runner.sh"
+echo "--------------------------------"
+################################################################################
+
+"${REPRO_RUNNER}" \
+  -p "{{ bucket }}" -u mmore500 -s dishtiny \
+  --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
+  << 'REPRO_RUNNER_HEREDOC_EOF'
+
+# fail on error
+set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
+
+################################################################################
+echo
+echo "running highestroot-nopoutjob.slurm.sh"
+echo "--------------------------"
+################################################################################
+
+################################################################################
+echo
+echo "Initialize and Log Config"
+echo "-------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# load secrets into environment variables, if available
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
+
+ENDEAVOR={{ series | int // 1000 }}
+N_PROCS=1
+N_THREADS=4
+
+echo "ENDEAVOR ${ENDEAVOR}"
+echo "N_PROCS ${N_PROCS}"
+echo "N_THREADS ${N_THREADS}"
+echo "series {{ series }}"
+echo "stint {{ stint }}"
+echo "bucket {{ bucket }}"
+echo "configpack {{ configpack }}"
+echo "container_tag {{ container_tag }}"
+echo "repo_sha {{ repo_sha }}"
+echo "target_genome_url {{ target_genome_url }}"
+echo "followup_freq {{ followup_freq | default('10') }}"
+
+################################################################################
+echo
+echo "Set Up Work Directory"
+echo "-------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+mkdir work
+cd work
+
+WORK_DIRECTORY="$(pwd)"
+echo "WORK_DIRECTORY ${WORK_DIRECTORY}"
+
+echo "downloading genome from target stint and series..."
+
+echo "downloading ${f}"
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "{{ target_genome_url }}" \
+    "$(basename "{{ target_genome_url }}")" \
+    && echo "  ${f} download success" && break \
+    || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
+done & pids+=($!)
+
+bash -c "cd ../dishtiny && ./configpacks/{{ configpack }}/build_native.sh"
+cp ../dishtiny/rundishtiny .
+
+# compile and download concurrently!
+for pid in "${pids[@]}"; do
+  # if child process fails, we fail
+  wait "${pid}"
+done
+
+unset pids
+
+# double check that all downloads are complete
+wait
+
+ls
+
+# an attempt to address intermittent failure where downloaded files aren't found
+# when running the executable
+sshpass -p "${HOST_PASSWORD}" \
+  scp -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+    * "${HOST_USERNAME}@$(hostname):$(pwd)" \
+&& echo "  local asset copy success" || echo "  local asset copy fail"
+
+ls
+
+
+################################################################################
+echo
+echo "Run Simulation"
+echo "------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# note:
+# we have to cut off stdin, stdout, stderr on mpiexec
+# for compatibility with repro_runner.sh and prevent a funky
+# tee: read error: Resource temporarily unavailable
+# ssh accomplishes this right now, but otherwise something else would be needed
+
+# use ssh to access host then launch mpi jobs there (e.g., "hybrid approach")
+# see https://sylabs.io/guides/3.3/user-guide/mpi.html
+
+# have to use login shell so module command loads correctly
+
+if (( N_PROCS == 1 )); then bash -login /dev/stdin; else sshpass -p "${HOST_PASSWORD}" \
+ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+  "${HOST_USERNAME}@$(hostname)" -X 'bash -login'\
+; fi \
+<< MPIEXEC_HEREDOC_EOF
+  [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
+  module load --ignore-cache GCC/7.2.0-2.29 MPICH/3.2.1|| :
+  module list || :
+  echo "modules loaded..."
+  export DISPLAY="${DISPLAY}"
+  export XVFB_PID="${XVFB_PID}"
+  export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_WORK_DIRECTORY}/dishtiny/"
+  export REPRO_ID="${REPRO_ID}"
+  mpiexec.hydra --version
+  $( (( N_PROCS > 1 )) && echo mpiexec.hydra -n "${N_PROCS}" singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" ) \
+    ./rundishtiny \
+    -RUN 0 -GENESIS "monoculture" -ARTIFACTS_DUMP 1 -PHENOTYPE_EQUIVALENT_NOPOUT 1 -STINT {{ stint }} -SERIES {{ series }} -THROW_ON_EXTINCTION 0 {{ "-PHENOTYPIC_DIVERGENCE_N_CELLS 16 -PHENOTYPIC_DIVERGENCE_N_UPDATES 16" if series | int < 1000 else "-PHENOTYPIC_DIVERGENCE_N_CELLS 64 -PHENOTYPIC_DIVERGENCE_N_UPDATES 256" if series | int < 10000 else "" }} -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/nopoutjob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
+  && echo "simulation exit success" \
+  || ( echo "simulation error code $?" && exit 1 )
+MPIEXEC_HEREDOC_EOF
+
+################################################################################
+echo
+echo "Handling in-progress nopout"
+echo "-------------------------------------------------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# test for in-progress dump
+if ls outartifacts/*a=genome*morph=in_progress_jenga_nopout* 2>&1 >/dev/null; then
+
+# upload in-progress genome
+s3_dir="s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=2+what=generated/stint={{ stint }}/series={{ series }}"
+
+for p in outartifacts/*a=genome*morph=in_progress_jenga_nopout*; do
+
+f="$(basename "${p}")"
+echo "uploading ${p} -> ${f}"
+
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "${p}" \
+    "${s3_dir}/${f}" \
+  && echo "  $f upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+done
+
+done
+
+# run jinja on template
+JOB_TEMPLATE="${REPRO_WORK_DIRECTORY}/dishtiny/slurm/genomes/highestroot-nopoutjob.slurm.sh.jinja"
+JOB_SCRIPT="$(mktemp)"
+
+echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
+echo "JOB_SCRIPT ${JOB_SCRIPT}"
+
+target_genome_url="${s3_dir}/$(basename outartifacts/*a=genome*morph=in_progress_jenga_nopout*.json.gz)"
+echo "target_genome_url ${target_genome_url}"
+
+j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+bucket: {{ bucket }}
+configpack: {{ configpack }}
+container_tag: {{ container_tag }}
+repo_sha: {{ repo_sha }}
+series: {{ series }}
+stint: {{ stint | int }}
+target_genome_url: "${target_genome_url}"
+followup_freq: {{ followup_freq | default('10') }}
+J2_HEREDOC_EOF
+
+chmod +x "${JOB_SCRIPT}"
+
+"${REPRO_WORK_DIRECTORY}/dishtiny/script/host_sbatch.sh" "${JOB_SCRIPT}"
+
+echo "in-progress nopout continuation complete, exiting"
+
+exit 0
+
+else
+
+echo "no in-progress nopout detected, continuing"
+
+fi
+
+################################################################################
+echo
+echo "Upload Data"
+echo "--------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+echo "uploading any genome files..."
+for p in \
+  outartifacts/*a=genome*morph=phenotype_equivalent_nopout* \
+  outdata/*a=genome_statistics*morph=phenotype_equivalent_nopout* \
+  outartifacts/*a=genome*morph=jenga_phenotype_equivalent_nopout* \
+  outdata/*a=genome_statistics*morph=jenga_phenotype_equivalent_nopout* \
+  outdata/*a=jenga_nopout_divergence_updates* \
+; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
+  for retry in {1..20}; do
+    aws s3 cp --quiet \
+      "${p}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=2+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+    && echo "  $f upload success" && break \
+      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+  done & pids+=($!)
+
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
+
+done
+
+# wait on all forked upload jobs
+for pid in "${pids[@]}"; do
+  # if child process fails, we fail
+  wait "${pid}"
+done
+
+unset pids
+
+################################################################################
+echo
+echo "Download Wildtype Genome"
+echo "-------------------------------------------------------------------------"
+################################################################################
+
+# we need it to dispatch fitness complexity competitions
+# and may not have it if this is a nop-out continuation
+# working with an in_progress_jenga_nopout morph
+
+
+f="a=genome+criteria=abundance_highest_root+morph=wildtype+proc=0+series={{ series }}+stint={{ stint }}+thread=0+variation=master+ext=.json.gz"
+
+rm -f "${f}"
+
+echo "downloading ${f}"
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=extracted/stint={{ stint }}/series={{ series }}/${f}" \
+    "${f}" \
+    && echo "  ${f} download success" && break \
+    || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
+done & pids+=($!)
+
+# wait on all forked upload jobs
+for pid in "${pids[@]}"; do
+  # if child process fails, we fail
+  wait "${pid}"
+done
+
+unset pids
+
+#===============================================================================
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#===============================================================================
+# dispatch fitness complexity competitions only every tenth stint
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
+echo
+echo "Dispatching Fitness Complexity Competitions"
+echo "==========================================="
+
+(
+cd "$(mktemp -d)"
+pwd
+
+#===============================================================================
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#===============================================================================
+
+PHENOTYPE_EQUIVALENT_GENOME="$(ls "${WORK_DIRECTORY}"/outartifacts/*a=genome*criteria=abundance_highest_root*morph=phenotype_equivalent_nopout*.json.gz)"
+WILDTYPE_GENOME="$(ls "${WORK_DIRECTORY}"/*a=genome*morph=wildtype*.json.gz)"
+
+echo "PHENOTYPE_EQUIVALENT_GENOME ${PHENOTYPE_EQUIVALENT_GENOME}"
+echo "WILDTYPE_GENOME ${WILDTYPE_GENOME}"
+
+################################################################################
+echo
+echo "Generate Nopped Op Variants of phenotype_equivalent_nopout"
+echo "----------------------------------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+python3 "${REPRO_WORK_DIRECTORY}/dishtiny/script/make_nopped_op_variants.py" "${WILDTYPE_GENOME}" "${PHENOTYPE_EQUIVALENT_GENOME}"
+
+################################################################################
+echo
+echo "Upload Nopped Op Variants of phenotype_equivalent_nopout"
+echo "--------------------------------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+shopt -s nullglob
+
+echo "uploading any genome files..."
+for p in *a=genome*morph=wildtype*variation=* ; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
+  for retry in {1..20}; do
+    aws s3 cp --quiet \
+      "${p}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=2+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+    && echo "  $f upload success" && break \
+      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+  done & pids+=($!)
+
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
+
+done
+
+# wait on all forked upload jobs
+for pid in "${pids[@]}"; do
+  # if child process fails, we fail
+  wait "${pid}"
+done
+
+unset pids
+
+shopt -u nullglob
+
+################################################################################
+echo
+echo "Get Runscript Template"
+echo "----------------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# run jinja on template
+JOB_TEMPLATE="$(mktemp)"
+echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
+
+for retry in {1..20}; do
+  curl \
+    -o "${JOB_TEMPLATE}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/competitionjob.slurm.sh.jinja" \
+  && echo "  job template curl success" && break \
+  || (echo "retrying job template curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "job template curl fail" && exit 123123; fi
+done
+
+################################################################################
+echo
+echo "Generate WT vs Variant Competition Runscripts"
+echo "---------------------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+shopt -s nullglob
+
+wt=$(basename "${WILDTYPE_GENOME}")
+
+for variant in *a=genome*morph=wildtype*variation=* ; do
+
+echo "variant ${variant}"
+
+variation="$(echo "${variant}" | keyname extract variation)"
+echo "variation ${variation}"
+
+JOB_SCRIPT="$( keyname pack \
+  --a "wt_vs_variant" --variation "${variation}" --ext ".slurm.sh" \
+)"
+
+j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+bucket: {{ bucket }}
+configpack: {{ configpack }}
+container_tag: {{ container_tag }}
+repo_sha: {{ repo_sha }}
+first_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=extracted/stint={{ stint }}/series={{ series }}/${wt}"
+second_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=2+what=generated/stint={{ stint }}/series={{ series }}/${variant}"
+output_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/variant-competitions-highestroot/stage=3+what=generated/stint={{ stint }}/series={{ series }}/"
+replicate: 0
+endeavor: "${ENDEAVOR}"
+stint: {{ stint }}
+series: {{ series }}
+J2_HEREDOC_EOF
+
+chmod +x "${JOB_SCRIPT}"
+
+done
+
+shopt -u nullglob
+
+################################################################################
+echo
+echo "Bundle and Submit Generated Runscripts"
+echo "--------------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+echo "num generated runscripts $(ls *.slurm.sh | wc -l)"
+
+# uses slurm stoker script, which zips all runscripts in the current directory
+# inside itself, then submits itself as a job to gradually feed runscripts onto
+# the queue
+
+# if there are any .slurm.sh files
+if ls *.slurm.sh 1> /dev/null 2>&1; then
+
+# adapted from https://superuser.com/a/689340
+# and https://stackoverflow.com/a/4642975
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh | bash -s "{{ bucket }}" "{{ container_tag }}" "{{ repo_sha }}" "variant-competition~configpack%{{ configpack }}~series%{{ series }}~stint%{{ stint }}"
+
+else
+
+echo "WARNING no variant competition runscripts generated"
+echo "skipping slurm_stoker kickoff"
+ls
+
+fi
+
+#===============================================================================
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#===============================================================================
+) # leave temporary work directory
+fi # run fitness complexity competitions only every Xth stint
+#===============================================================================
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#===============================================================================
+
+################################################################################
+echo
+echo "Create SLURM_STOKER_CONSOLIDATION_DIR"
+echo "-----------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# so that we can consolidate subsequent kickoffs into one slurm stoker job
+
+export SLURM_STOKER_CONSOLIDATION_DIR="$(mktemp -d)"
+echo "SLURM_STOKER_CONSOLIDATION_DIR ${SLURM_STOKER_CONSOLIDATION_DIR}"
+
+################################################################################
+echo
+echo "Submit phenotype-neutral-nopout Competition Jobs"
+echo "-----------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# run phenotype-neutral-nopout competition job every tenth stint
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
+
+for retry in {1..20}; do
+  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
+  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/competition/phenotype-neutral-nopoutcompetition-highestrootkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+    "${HOST_USERNAME}@$(hostname)" -X \
+    'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
+    && echo "  phenotype-neutral-nopout competition kickoff success" && break \
+    || (echo "retrying phenotype-neutral-nopout competition kickoff (${retry})" && sleep $((RANDOM % 10)))
+
+  if ((${retry}==20)); then
+    echo "phenotype-neutral-nopout competition kickoff fail" && exit 123123
+  fi
+done
+
+fi
+
+################################################################################
+echo
+echo "Submit phenotype-neutral-nopout phenotype differentiation Jobs"
+echo "-----------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# run phenotype-neutral-nopout phenotype-differentiation job every tenth stint
+if (( {{ stint }} % {{ followup_freq | default('10') }} == 0 )); then
+
+for retry in {1..20}; do
+  # adapted from https://backreference.org/2011/08/10/running-local-script-remotely-with-arguments/
+  ( echo "export SLURM_STOKER_CONSOLIDATION_DIR=\"${SLURM_STOKER_CONSOLIDATION_DIR}\""; echo "export REPRO_ID=\"${REPRO_ID}\""; wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/slurm/phenotype-differentiation/phenotype-neutral-nopoutphenotype-differentiation-highestrootkickoff.sh" ) | sshpass -p "${HOST_PASSWORD}" ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+    "${HOST_USERNAME}@$(hostname)" -X \
+    'cat | bash -login /dev/stdin "{{ bucket }}" "{{ configpack }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ stint }}" "{{ series }}"' \
+    && echo "  phenotype-neutral-nopout phenotype-differentiation kickoff success" && break \
+    || (echo "retrying phenotype-neutral-nopout phenotype-differentiation kickoff (${retry})" && sleep $((RANDOM % 10)))
+
+  if ((${retry}==20)); then
+    echo "phenotype-neutral-nopout phenotype-differentiation kickoff fail" && exit 123123
+  fi
+done
+
+fi
+
+################################################################################
+echo
+echo "Submit slurm scripts from SLURM_STOKER_CONSOLIDATION_DIR"
+echo "-----------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+cd "${SLURM_STOKER_CONSOLIDATION_DIR}"
+
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh" | bash -s "{{ bucket }}" "{{ container_tag }}" "{{ repo_sha }}" "nopoutjob-consolidated-followups~series%{{ series }}~stint%{{ stint }}"
+
+cd -
+
+################################################################################
+echo
+echo "Running watch me evolve integration"
+echo "-----------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/watch_me_evolve.py" && \
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 "https://raw.githubusercontent.com/mmore500/dishtiny/master/twitterbot/wme_nopoutjob.py" && \
+python3 wme_nopoutjob.py "{{ series }}" "{{ stint }}" || :
+
+################################################################################
+echo
+echo "Done! (SUCCESS)"
+echo "---------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+REPRO_RUNNER_HEREDOC_EOF

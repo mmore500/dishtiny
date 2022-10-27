@@ -15,13 +15,6 @@
 
 namespace dish2 {
 
-/**
- * Conditionally send a message to this cardinal's neighbor cell.
- *
- * If `reg[arg_0]` is nonzero, generates a message tagged with the
- * instruction's tag that contains the core's current register state.
- * Sends this message to the neighboring cell.
- */
 struct SendInterMessageIf {
 
   template<typename Spec>

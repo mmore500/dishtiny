@@ -284,12 +284,6 @@ df['Critical Fitness Complexity'] = df['Fitness Complexity']
 df['Interpolated Fitness Complexity'] = df['a=most_credible_idx+set_size=1']
 df['Composite Fitness Complexity'] \
     = df['Critical Fitness Complexity'] + df['Interpolated Fitness Complexity']
-df['Composite Fitness Complexity Lower Bound'] \
-    = df['Critical Fitness Complexity'] \
-    + df['a=credible_interval_lower_bound_idx+set_size=1']
-df['Composite Fitness Complexity Upper Bound'] \
-    = df['Critical Fitness Complexity'] \
-    + df['a=credible_interval_upper_bound_idx+set_size=1']
 
 ################################################################################
 

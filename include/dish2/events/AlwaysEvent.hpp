@@ -6,9 +6,6 @@
 
 namespace dish2 {
 
-/**
- * This event is always dispatched.
- */
 struct AlwaysEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

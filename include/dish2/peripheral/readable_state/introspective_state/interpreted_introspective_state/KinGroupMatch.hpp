@@ -9,9 +9,6 @@
 
 namespace dish2 {
 
-/**
- * Does this cell's kin group ID match the neighbor's kin group ID?
- */
 template< typename Spec >
 struct KinGroupMatch : public uitsl::PodLeafNode< char, Spec::NLEV > {
   // inherit constructors

@@ -1,9 +1,9 @@
-from collections import defaultdict
-from frozendict import frozendict
+import sys
 import json
 from keyname import keyname as kn
 import pandas as pd
-import sys
+from collections import defaultdict
+from frozendict import frozendict
 
 def load_json(filename):
     with open(filename) as json_file:

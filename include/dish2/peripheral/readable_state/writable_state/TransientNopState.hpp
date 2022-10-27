@@ -8,12 +8,8 @@
 namespace dish2 {
 
 
-/**
- * Writing to this state has no external effect.
- *
- * It is cleared regularly by `dish2::DecayToBaselineService`. It can be used
- * as temporary global memory shared between cores of a cardinal's virtual CPU.
- */
+/// Like NopState, but this gets reset to baseline as part of
+/// DecayToBaselineService.
 template< typename Spec >
 struct TransientNopState
 : public uitsl::PodLeafNode<float, Spec::AMT_NOP_MEMORY> {

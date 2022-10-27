@@ -9,10 +9,6 @@
 
 namespace dish2 {
 
-/**
- * Was group fragmentation the most recent cause of death in the cardinal's
- * neighbor cell?
- */
 struct NeighborFragmented : public uitsl::PodLeafNode< char > {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

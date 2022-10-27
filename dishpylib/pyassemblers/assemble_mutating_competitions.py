@@ -1,9 +1,10 @@
 import boto3
 import pandas as pd
 
-from dishpylib.pydecorators import announce_job_decorator_factory
-from dishpylib.pydecorators import only_every_nth_stint_decorator_factory
-from dishpylib.pydecorators import try_except_missing_data_decorator_factory
+from dishpylib.pydecorators import \
+    announce_job_decorator_factory, \
+    only_every_nth_stint_decorator_factory, \
+    try_except_missing_data_decorator_factory
 from dishpylib.pyhelpers import get_control_t_distns
 from dishpylib.pytabulators import tabulate_mutant_fitness
 

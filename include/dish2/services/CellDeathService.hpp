@@ -16,9 +16,6 @@
 
 namespace dish2 {
 
-/**
- * If cell age exceeds CELL_AGE_DURATION, cull it.
- */
 class CellDeathService {
 
   template<typename Cell>

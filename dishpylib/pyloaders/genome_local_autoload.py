@@ -20,4 +20,6 @@ def genome_local_autoload(target):
         except Exception:
             pass
 
+    print(target)
+    print(f.read())
     raise ValueError

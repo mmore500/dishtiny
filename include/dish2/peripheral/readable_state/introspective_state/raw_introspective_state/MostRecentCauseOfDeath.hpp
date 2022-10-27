@@ -7,11 +7,6 @@
 
 namespace dish2 {
 
-/**
- * What was this the most recent cause of death on this tile?
- *
- * Encoded using the `dish2::CauseOfDeath` enum.
- */
 struct MostRecentCauseOfDeath : public uitsl::PodLeafNode<char> {
   using parent_t = uitsl::PodLeafNode<char>;
   using parent_t::parent_t;

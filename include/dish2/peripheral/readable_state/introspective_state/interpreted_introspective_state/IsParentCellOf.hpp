@@ -9,12 +9,6 @@
 
 namespace dish2 {
 
-/**
- * Did this cardinal's neighbor cell spawn from this cell?
- *
- * That is, was neighbor was spawned from this cell and is this cell older than
- * neighbor?
- */
 struct IsParentCellOf : public uitsl::PodLeafNode< char > {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

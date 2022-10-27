@@ -6,9 +6,6 @@
 
 namespace dish2 {
 
-/**
- * Triggered if the cardinal's neighboring tile is not occupied.
- */
 struct NeighborIsNotAliveEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

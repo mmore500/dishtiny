@@ -9,10 +9,6 @@
 
 namespace dish2 {
 
-/**
- * Is this cell's kin group age greater than 80% of this level's
- * `GROUP_EXPIRATION_DURATIONS`?
- */
 template< typename Spec >
 struct KinGroupWillExpire : public uitsl::PodLeafNode< char, Spec::NLEV > {
   // inherit constructors

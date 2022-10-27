@@ -14,10 +14,6 @@
 
 namespace sgpl {
 
-/**
- * Checks whether `reg[arg_1]` is not equal to `reg[arg_2]` and stores the
- * result in `reg[arg_0]`.
- */
 struct NotEqual {
 
   template<typename Spec>

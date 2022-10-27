@@ -12,10 +12,6 @@
 
 namespace dish2 {
 
-/**
- * Decays a cell's global regulators, resets its controller-mapped peripheral
- * states, and resets its transient NOP states.
- */
 struct DecayToBaselineService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

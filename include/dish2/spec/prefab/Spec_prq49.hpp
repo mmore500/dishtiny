@@ -39,18 +39,12 @@ struct Spec_prq49 {
 
   using this_t = Spec_prq49;
 
-  /// How many hierarchical kin group levels should be simulated?
   constexpr inline static size_t NLEV{ DISH2_NLEV };
 
-  /// How many nop and transient nop states should exist in the peripheral?
   constexpr inline static size_t AMT_NOP_MEMORY = 4;
 
-  /// How many callees should we displace state by in state exchange
-  /// experiments?
   constexpr inline static size_t STATE_EXCHANGE_CHAIN_LENGTH = 128;
 
-  /// Should higher-level kin group quorum counts be based on cell count or sub-
-  /// kin group count?
   constexpr inline static bool SET_QUORUM_BITS_BY_KIN_GROUP = true;
 
   using op_library_t = sgpl::OpLibraryCoupler<
@@ -73,8 +67,6 @@ struct Spec_prq49 {
     op_library_t,
     dish2::Peripheral<this_t>
   > {
-    /// How many virtual cores should each cardinal's virtual CPU be able to
-    /// support?
     static constexpr inline size_t num_cores{ 32 };
   };
 
@@ -131,6 +123,7 @@ struct Spec_prq49 {
 
   using program_t = sgpl::Program< sgpl_spec_t >;
 
+  // TODO put these in order
   using service_manager_t = dish2::ServiceManager<
     dish2::DecayToBaselineService, // should run before cpu execution service
     dish2::RunningLogPurgeService, // should run before cpu execution service

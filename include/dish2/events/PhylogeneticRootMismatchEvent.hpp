@@ -6,12 +6,6 @@
 
 namespace dish2 {
 
-/**
- * Does this cell and its neighbor descend from a different originally-generated genomes?
- *
- * Triggered if a cardinal's cell's root ID is not equal to that cardinal's
- * neighbor cell's Root ID.
- */
 struct PhylogeneticRootMismatchEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

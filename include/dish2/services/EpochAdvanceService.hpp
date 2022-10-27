@@ -15,11 +15,6 @@
 
 namespace dish2 {
 
-/**
- * The cell's current-known epoch count is advanced by one then set to the
- * maximum of the cell's current-known epoch count and neighbor cells' current-
- * known epoch count.
- */
 struct EpochAdvanceService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

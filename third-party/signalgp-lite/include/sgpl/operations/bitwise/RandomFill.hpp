@@ -15,10 +15,6 @@
 
 namespace sgpl {
 
-/**
- * Fills register pointed to by `reg[arg_0]` with random bits chosen from a
- * uniform distribution.
- */
 struct RandomFill {
 
   template<typename Spec>

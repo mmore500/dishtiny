@@ -13,9 +13,6 @@
 
 namespace dish2 {
 
-/**
- * Pulls a fresh copy of each neighbor cardinal's current readable state.
- */
 struct StateInputJumpService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

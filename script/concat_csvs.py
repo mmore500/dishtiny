@@ -14,8 +14,8 @@ from iterdub import iterdub as ib
 from iterpop import iterpop as ip
 from keyname import keyname as kn
 import os
-import pandas as pd
 import pathlib
+import pandas as pd
 import sys
 
 def make_output_filename():

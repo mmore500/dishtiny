@@ -6,11 +6,6 @@
 
 namespace dish2 {
 
-/**
- * Is this cell's stockpile empty?
- *
- * Triggered if a cell's stockpile is less than twice the base harvest rate.
- */
 struct StockpileDepletedEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

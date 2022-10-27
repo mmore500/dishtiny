@@ -15,11 +15,6 @@
 
 namespace dish2 {
 
-/**
- * Purges a cell's running logs.
- *
- * (Only affects data collection, not simulation logic.)
- */
 struct RunningLogPurgeService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

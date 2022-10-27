@@ -16,10 +16,6 @@
 namespace sgpl {
 namespace local {
 
-/**
- * Jumps to a local anchor that matches the instruction tag if `reg[arg_0]` is
- * nonzero.
- */
 struct JumpIf {
 
   template<typename Spec>

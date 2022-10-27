@@ -10,9 +10,6 @@
 
 namespace dish2 {
 
-/**
- * How much resource is being received from the cardinal's cell neighbor?
- */
 struct ReceivedResourceFrom : public uitsl::PodLeafNode< float > {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<float>;

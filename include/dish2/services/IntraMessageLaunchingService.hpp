@@ -16,9 +16,6 @@
 
 namespace dish2 {
 
-/**
- * Launches new virtual cores to process incoming messages from co-cardinals.
- */
 struct IntraMessageLaunchingService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

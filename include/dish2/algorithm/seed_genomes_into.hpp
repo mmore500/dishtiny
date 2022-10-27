@@ -82,9 +82,6 @@ void seed_genomes_into(
           seed.stint_root_id.GetID(),
           cell.genome->stint_root_id.GetID()
         );
-        // suppress unused capture compiler warning
-        // adapted from https://stackoverflow.com/a/65595121
-        else (void)recorder;
 
       }
     );

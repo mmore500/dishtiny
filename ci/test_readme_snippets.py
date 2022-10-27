@@ -1,6 +1,6 @@
 import exdown
-import os
 import tempfile
+import os
 
 def audited_execute(command):
     assert os.EX_OK == os.system(command)

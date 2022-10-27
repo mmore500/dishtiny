@@ -1,3 +1,5 @@
+#define CATCH_CONFIG_MAIN
+
 #include "Catch/single_include/catch2/catch.hpp"
 #include "conduit/include/uitsl/polyfill/ompi_mpi_comm_world.hpp"
 #include "Empirical/include/emp/web/Document.hpp"

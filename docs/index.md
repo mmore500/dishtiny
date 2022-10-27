@@ -7,12 +7,10 @@
 self
 installation
 usage
-simulation
 data
 workflow
 development
 glossary
-citing
 publications
 api/library_root
 contributing

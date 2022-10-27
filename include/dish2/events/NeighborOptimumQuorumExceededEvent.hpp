@@ -8,9 +8,6 @@
 
 namespace dish2 {
 
-/**
- * Triggered if the cardinal's cell neighbor's number of known quorum bits exceed the target quorum count.
- */
 struct NeighborOptimumQuorumExceededEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

@@ -20,17 +20,6 @@
 
 namespace dish2 {
 
-/**
- * Births a new cell into the current cell.
- *
- * This occurs by first iterating through the cell's cardinals' birth request
- * inputs in random order. While the cell's resource stockpile is greater than
- * the `SPAWN_DEFENSE_COST`, the requests are ignored and the stockpile
- * depleted by that cost. The first request that cannot be defended against is
- * then acted upon. The current cell's death routine is called, the old genome
- * is replaced by the incoming genome, and the cell's make-alive routine is
- * called.
- */
 struct BirthSetupService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

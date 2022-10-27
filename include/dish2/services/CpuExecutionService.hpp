@@ -14,12 +14,6 @@
 
 namespace dish2 {
 
-/**
- * Executes a cell's genome on its cardinals' virtual CPUs for `HARDWARE_EXECUTION_CYCLES` virtual cycles.
- *
- * The order of cardinal evaluation is randomized. This is repeated
- * `HARDWARE_EXECUTION_ROUNDS` times.
- */
 struct CpuExecutionService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

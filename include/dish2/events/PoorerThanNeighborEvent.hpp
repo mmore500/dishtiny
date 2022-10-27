@@ -6,12 +6,6 @@
 
 namespace dish2 {
 
-/**
- * Does this cell have less resource stockpiled than its neighbor?
- *
- * Triggered if a cardinal's cell has less resource than that cardinal's
- * neighbor cell.
- */
 struct PoorerThanNeighborEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

@@ -7,10 +7,6 @@
 
 namespace dish2 {
 
-/**
- * Setting this state prevents this cell from spawning offspring into this
- * cardinal's neighbor tile, even if sufficient resource is available.
- */
 struct SpawnArrest : public uitsl::PodLeafNode<char> {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

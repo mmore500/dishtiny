@@ -18,9 +18,6 @@
 
 namespace dish2 {
 
-/**
- * State that SignalGP-Lite operations can interact with.
- */
 template<typename Spec>
 struct Peripheral {
 

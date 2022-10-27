@@ -19,13 +19,18 @@
 #include "../config/has_replicate.hpp"
 #include "../config/has_series.hpp"
 #include "../config/has_stint.hpp"
+#include "../config/is_focal_root_id.hpp"
 #include "../config/thread_idx.hpp"
 #include "../debug/log_msg.hpp"
 #include "../introspection/any_live_cells.hpp"
+#include "../introspection/any_live_cells_with_focal_root_ids.hpp"
 #include "../introspection/count_live_cells.hpp"
+#include "../introspection/count_live_cells_with_focal_root_ids.hpp"
 #include "../introspection/get_root_id_abundance.hpp"
 #include "../introspection/get_root_id_count.hpp"
+#include "../introspection/get_root_id_focal_prevalence.hpp"
 #include "../introspection/get_root_id_prevalence.hpp"
+#include "../load/count_focal_root_ids.hpp"
 #include "../load/count_root_ids.hpp"
 #include "../load/get_innoculum_filename.hpp"
 #include "../load/get_innoculum_filenames.hpp"
@@ -79,20 +84,40 @@ void dump_coalescence_result( const dish2::ThreadWorld< Spec >& world ) {
   file.AddVal(dish2::count_live_cells<Spec>( world ), "Num Live Cells");
   file.AddVal(!dish2::any_live_cells<Spec>( world ), "Population Extinct");
 
+  file.AddVal(
+    dish2::count_live_cells_with_focal_root_ids<Spec>( world ),
+    "Num Live Cells with Focal Root ID"
+  );
+  file.AddVal(
+    !dish2::any_live_cells_with_focal_root_ids<Spec>( world ),
+    "Focal Root ID Cells Extinct"
+  );
+
+  bool is_focal;
   std::string filename;
   std::string slug;
   size_t root_id;
   double fitness_differential;
+  double fitness_differential_focal;
   double abundance;
   double prevalence;
+  double prevalence_focal;
   size_t root_id_count;
 
+  file.AddVar(is_focal,
+    "Is Focal Root ID", "Is this root ID not excluded?"
+  );
   file.AddVar(abundance, "Abundance", "Fraction of available slots.");
   file.AddVar(prevalence, "Prevalence", "Fraction of live cells.");
+  file.AddVar(
+    prevalence_focal,
+    "Focal Prevalence", "Fraction of live cells with focal root IDs."
+  );
   file.AddVar(root_id, "Root ID");
   file.AddVar(slug, "Genome Slug");
   file.AddVar(filename, "Genome Filename");
   file.AddVar(fitness_differential, "Fitness Differential");
+  file.AddVar(fitness_differential_focal, "Fitness Differential Focal");
   file.AddVar(root_id_count, "Count");
 
   // add columns for root id configuration
@@ -118,15 +143,22 @@ void dump_coalescence_result( const dish2::ThreadWorld< Spec >& world ) {
 
   for ( const size_t root_id_ : dish2::get_root_ids() ) {
 
+    is_focal = dish2::is_focal_root_id( root_id_ );
     filename = dish2::get_innoculum_filename( root_id_ );
     slug = dish2::get_innoculum_slug( root_id_ );
     root_id = root_id_;
     prevalence =  dish2::get_root_id_prevalence< Spec >( root_id_, world );
+    prevalence_focal =  dish2::get_root_id_focal_prevalence<Spec>(
+      root_id_, world
+    );
     abundance =  dish2::get_root_id_abundance< Spec >( root_id_, world );
     root_id_count =  dish2::get_root_id_count< Spec >( root_id_, world );
 
     fitness_differential = dish2::calc_fitness_differential(
       world.GetUpdate(), prevalence, dish2::count_root_ids()
+    );
+    fitness_differential_focal = dish2::calc_fitness_differential(
+      world.GetUpdate(), prevalence_focal, dish2::count_focal_root_ids()
     );
 
     file.Update();

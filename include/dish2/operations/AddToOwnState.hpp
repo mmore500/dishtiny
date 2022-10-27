@@ -13,14 +13,6 @@
 
 namespace dish2 {
 
-/**
- * Adds `reg[arg_0]` to the current value in a target writable state then
- * stores the sum back in to that target writable state.
- *
- * To determine the target writable state, interprets the first bits of the
- * instruction tag as an unsigned integer then calculates the remainder of
- * integer division by the number of writable states.
- */
 template< typename DishSpec >
 class AddToOwnState {
 

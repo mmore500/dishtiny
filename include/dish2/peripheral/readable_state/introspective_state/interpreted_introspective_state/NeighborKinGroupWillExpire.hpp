@@ -9,10 +9,6 @@
 
 namespace dish2 {
 
-/**
- * Is this cell's kin group age greater than 80% of the this level's
- * `GROUP_EXPIRATION_DURATIONS`?
- */
 template< typename Spec >
 struct NeighborKinGroupWillExpire
   : public uitsl::PodLeafNode< char, Spec::NLEV > {

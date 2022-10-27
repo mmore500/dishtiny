@@ -6,16 +6,16 @@ EMP_DIR := third-party/Empirical/include/emp
 
 DISHTINY_HASH := $(shell git rev-parse --short HEAD)
 DISHTINY_DIRTY := $(shell \
-		( git diff-index --quiet HEAD -- && echo "-clean" || echo "-dirty" ) \
-		| tr -d '\040\011\012\015' \
-	)
+    ( git diff-index --quiet HEAD -- && echo "-clean" || echo "-dirty" ) \
+    | tr -d '\040\011\012\015' \
+  )
 DISHTINY_SOURCE_DIR := $(shell test -d /opt/dishtiny && echo /opt/dishtiny || pwd)
 # to compile different metrics/selecctors
 # make ARGS="-DMETRIC=streak -DSELECTOR=roulette"
 
 # Flags to use regardless of compiler
 CFLAGS_all := $(CXXFLAGS) -std=c++17 -Wall -Wno-unused-function -Wno-unused-private-field -Wno-empty-body \
-	-Iinclude -Ithird-party/ \
+  -Iinclude -Ithird-party/ \
 	-DDISHTINY_HASH_=$(DISHTINY_HASH)$(DISHTINY_DIRTY) \
 	-DDISHTINY_SOURCE_DIR_=$(DISHTINY_SOURCE_DIR)\
 	-fno-signaling-nans -fno-trapping-math \
@@ -64,27 +64,22 @@ web-deploy: web web-no-pthread
 
 all: $(PROJECT) $(PROJECT).js web/index.html
 
-debug: CFLAGS_nat := $(CFLAGS_nat_debug)
-debug: $(PROJECT)
+debug:	CFLAGS_nat := $(CFLAGS_nat_debug)
+debug:	$(PROJECT)
 
-production: CFLAGS_nat := $(CFLAGS_nat_production)
-production: $(PROJECT)
+production:	CFLAGS_nat := $(CFLAGS_nat_production)
+production:	$(PROJECT)
 
 sanitize: CFLAGS_nat := $(CFLAGS_nat_sanitize)
 sanitize: $(PROJECT)
 
-debug-web: CFLAGS_web := $(CFLAGS_web_debug)
-debug-web: $(PROJECT).js web/index.html
+debug-web:	CFLAGS_web := $(CFLAGS_web_debug)
+debug-web:	$(PROJECT).js web/index.html
 
-web-debug: debug-web
-
-debug-web-no-pthread: CFLAGS_web := $(CFLAGS_web_debug)
-debug-web-no-pthread: $(PROJECT)-no-pthread.js web/index.html
-
-web-debug-no-pthread: debug-web-no-pthread
+web-debug:	debug-web
 
 # see https://stackoverflow.com/a/57760267 RE: -lstdc++fs
-$(PROJECT): source/native.cpp include/
+$(PROJECT):	source/native.cpp include/
 	@echo DISH_MPICXX $(DISH_MPICXX)
 	@echo MPICH_CXX $(MPICH_CXX)
 	@echo OMPI_CXX $(OMPI_CXX)
@@ -104,13 +99,13 @@ web/index.html: web/includes
 	python3 web/make_html.py
 
 docs:
-	$(MAKE) html -C docs/
+	cd docs && make html
 
 serve:
 	python3 -m http.server
 
 docs/_build/doc-coverage.json:
-	$(MAKE) coverage -C docs/
+	cd docs && make coverage
 
 documentation-coverage-badge.json: docs/_build/doc-coverage.json
 	python3 ci/parse_documentation_coverage.py docs/_build/doc-coverage.json > web/documentation-coverage-badge.json
@@ -125,24 +120,22 @@ badges: documentation-coverage-badge.json version-badge.json doto-badge.json
 
 clean:
 	rm -rf run$(PROJECT) web/$(PROJECT).js web/*.js.map web/*.js.map *~ source/*.o web/*.wasm web/*.wast coverage_include web/*.json native.o.ccache*
-	$(MAKE) clean -C docs/
-	$(MAKE) clean -C fuzzing/
-	$(MAKE) clean -C microbenchmarks/
-	$(MAKE) clean -C tests/
+	cd docs && make clean
+	cd tests && make clean
 
-test-source: debug web
-	timeout 90 ./rundishtiny -N_CELLS 100 2>&1 >/dev/null | tee /dev/stderr | grep -q '>> update ' && echo 'matched!' || exit 1
-	npm install .
-	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch({ headless: true, args: [ '--disable-gpu', '--disable-dev-shm-usage', '--disable-setuid-sandbox', '--no-sandbox' ] }); const page = await browser.newPage(); page.on('console', msg => console.log(msg.text())); await page.goto('http://localhost:3000/index.html'); await sleep(30000); await page.content(); browser.close(); process.exit(0); } run();" | node | tee /dev/stderr | grep -q "web viewer load complete" && echo "matched!"|| exit 1
-	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch({ headless: true, args: [ '--disable-gpu', '--disable-dev-shm-usage', '--disable-setuid-sandbox', '--no-sandbox' ] }); const page = await browser.newPage(); await page.goto('http://localhost:3000/index.html'); await sleep(30000); const html = await page.content(); console.log(html); browser.close(); process.exit(0); } run();" | node | tee /dev/stderr | grep -q "Kin Group ID" && echo "matched!" ||  exit 1
+# test: debug web
+# 	timeout 30 ./rundishtiny | grep -q "^32$$" && echo 'matched!' || exit 1
+# 	npm install
+# 	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch(); const page = await browser.newPage(); await page.goto('http://localhost:3000/index.html'); await sleep(30000); const html = await page.content(); console.log(html); browser.close(); process.exit(0); } run();" | node | grep -q "Update 0" && echo "matched!" ||  exit 1
+# 	echo "const puppeteer = require('puppeteer'); var express = require('express'); var app = express(); app.use(express.static('web')); app.listen(3000); express.static.mime.types['wasm'] = 'application/wasm'; function sleep(millis) { return new Promise(resolve => setTimeout(resolve, millis)); } async function run() { const browser = await puppeteer.launch(); const page = await browser.newPage(); page.on('console', msg => console.log(msg.text())); await page.goto('http://localhost:3000/index.html'); await sleep(30000); await page.content(); browser.close(); process.exit(0); } run();" | node | grep -q "web viewer load SUCCESS" && echo "matched!"|| exit 1
 
-tests:
-	$(MAKE) -C tests/
-	$(MAKE) opt -C tests/
-	$(MAKE) fulldebug -C tests/
+# tests:
+# 	cd tests && make
+# 	cd tests && make opt
+# 	cd tests && make fulldebug
 
 coverage:
-	$(MAKE) coverage -C tests/
+	cd tests && make coverage
 
 install-test-dependencies:
 	git submodule update --init && cd third-party && bash ./install_emsdk.sh && bash ./install_force_cover.sh
@@ -152,21 +145,21 @@ install-test-dependencies:
 .PHONY: cleanall
 .PHONY: cleanlogs
 .PHONY: debug
-.PHONY: debug-web
-.PHONY: default
+.PHONY:	debug-web
+.PHONY:	default
 .PHONY: docs
-.PHONY: documentation-coverage
-.PHONY: documentation-coverage-badge.json
-.PHONY: doto-badge.json
-.PHONY: install-test-dependencies
-.PHONY: native
-.PHONY: ndata
-.PHONY: profile
-.PHONY: sanitize
-.PHONY: serve
-.PHONY: static
-.PHONY: test-source
-.PHONY: tests
-.PHONY: version-badge.json
-.PHONY: web
-.PHONY: web-debug
+.PHONY:	documentation-coverage
+.PHONY:	documentation-coverage-badge.json
+.PHONY:	doto-badge.json
+.PHONY:	install-test-dependencies
+.PHONY:	native
+.PHONY:	ndata
+.PHONY:	profile
+.PHONY:	sanitize
+.PHONY:	serve
+.PHONY:	static
+.PHONY:	test
+.PHONY:	tests
+.PHONY:	version-badge.json
+.PHONY:	web
+.PHONY:	web-debug

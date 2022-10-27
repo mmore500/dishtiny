@@ -24,7 +24,6 @@
 #include "../base/Ptr.hpp"
 #include "../base/vector.hpp"
 #include "../base/optional.hpp"
-#include "../tools/string_utils.hpp"
 #include "command_line.hpp"
 #include "config.hpp"
 
@@ -394,12 +393,7 @@ namespace emp {
           res.insert({
             entry->GetName(),
             ArgSpec(
-              #ifdef __EMSCRIPTEN__
-               // allow unlimited quota in web mode, we'll concatenate
-              std::numeric_limits<size_t>::max(), 1,
-              #else
               1,
-              #endif
               emp::to_string(
                 entry->GetDescription(),
                 " (type=", entry->GetType(),
@@ -408,10 +402,7 @@ namespace emp {
               {},
               [config, entry](emp::optional<pack_t> res){
                 if (res && config) {
-                  config->Set(
-                    entry->GetName(),
-                    emp::join(*res, " ")
-                  );
+                  config->Set(entry->GetName(), res->front());
                 }
               }
             )

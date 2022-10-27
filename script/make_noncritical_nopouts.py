@@ -11,8 +11,8 @@ Usage:
 import boto3
 from collections import defaultdict
 from functools import reduce
-import gzip
 from iterpop import iterpop as ip
+import gzip
 import itertools
 import json
 from keyname import keyname as kn
@@ -20,12 +20,12 @@ import numpy as np
 import os
 import pandas as pd
 import re
-import re
-from scipy import stats
 import seaborn as sns
+import re
 import sys
 import tempfile
 from tqdm import tqdm
+from scipy import stats
 
 from dishpylib.pyhelpers import get_control_t_distns
 from dishpylib.pyloaders import genome_s3_autoload

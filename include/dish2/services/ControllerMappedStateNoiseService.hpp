@@ -16,14 +16,6 @@
 
 namespace dish2 {
 
-/**
- * Introduce noise to cardinals' outputs.
- *
- * Picks a random number $n$ from a Poisson distribution parameterized by
- * `CONTROLLER_MAPPED_STATE_DEFECT_RATE`. Then, it introduces $n$ defects to a
- * cell's controller-mapped writable state. Half of these defects zero out the
- * state and half randomize it.
- */
 struct ControllerMappedStateNoiseService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

@@ -14,9 +14,6 @@
 
 namespace sgpl {
 
-/**
- * Adds `reg[arg_1]` to `reg[arg_2]` and stores the result in `reg[arg_0]`.
- */
 struct Add {
 
   template<typename Spec>

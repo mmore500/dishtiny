@@ -7,12 +7,6 @@
 
 namespace dish2 {
 
-/**
- * Whether the cell is alive.
- *
- * Although trivial as introspective state, this state is useful for neighbor
- * cell's extrospective state.
- */
 struct IsAlive : public uitsl::PodLeafNode<char> {
   using parent_t = uitsl::PodLeafNode<char>;
   using parent_t::parent_t;

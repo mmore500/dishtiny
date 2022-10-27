@@ -2,8 +2,8 @@ import boto3
 import gzip
 import json
 from keyname import keyname as kn
-import re
 import tempfile
+import re
 
 def genome_s3_autoload( s3_url ):
 

@@ -9,9 +9,6 @@
 
 namespace dish2 {
 
-/**
- * Is this cell's stockpile less than twice the base harvest rate?
- */
 struct StockpileDepleted : public uitsl::PodLeafNode< char > {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

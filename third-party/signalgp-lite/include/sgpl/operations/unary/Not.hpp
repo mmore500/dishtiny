@@ -14,9 +14,6 @@
 
 namespace sgpl {
 
-/**
- * Performs a logical not on `reg[arg_0]` and stores the result in `reg[arg_0]`.
- */
 struct Not {
 
   template<typename Spec>

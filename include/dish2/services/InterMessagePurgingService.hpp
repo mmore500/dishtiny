@@ -13,10 +13,6 @@
 
 namespace dish2 {
 
-/**
- * Purges excess incoming inter-cell messages that couldn't be handled due to
- * virtual core availability.
- */
 struct InterMessagePurgingService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {
@@ -42,8 +38,6 @@ struct InterMessagePurgingService {
         message_counter += message_input.Jump();
       }
     );
-
-    // self-send messages are purged in InterMessageLaunchingService
 
   }
 

@@ -9,9 +9,6 @@
 
 namespace dish2 {
 
-/**
- * Was the neighbor tile's most recent death apoptosis?
- */
 struct NeighborApoptosis : public uitsl::PodLeafNode< char > {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

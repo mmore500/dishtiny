@@ -19,15 +19,6 @@
 
 namespace dish2 {
 
-/**
- * Prevents any one originally-generated ancestor from sweeping the population,
- * preserving deep phylogenetic diversity.
- *
- * Counts cells that descend from each originally-generated ancestor. If more
- * than `DIVERSITY_MAINTENANCE_PREVALENCE` of cells descend from a single
- * originally-generated ancestor, decay their resource stockpiles. The
- * magnitude of this effect increases with excess prevalence.
- */
 struct DiversityMaintenanceService {
 
   static bool ShouldRun( const size_t update ) {
@@ -35,8 +26,14 @@ struct DiversityMaintenanceService {
     return
       freq > 0
       && uitsl::shift_mod( update, freq ) == 0
-      && dish2::cfg.GENESIS() != "innoculate"
-      && dish2::cfg.GENESIS() != "monoculture"
+      && (
+        dish2::cfg.GENESIS() != "innoculate"
+        || dish2::cfg.DIVERSITY_MAINTENANCE_INNOCULATE_GENESIS_ENABLE()
+        )
+      && (
+        dish2::cfg.GENESIS() != "monoculture"
+        || dish2::cfg.DIVERSITY_MAINTENANCE_MONOCULTURE_GENESIS_ENABLE()
+      )
     ;
   }
 
@@ -49,7 +46,19 @@ struct DiversityMaintenanceService {
 
     auto& population = thread_world.population;
 
-    const auto root_id_counts = dish2::get_root_id_counts( thread_world );
+    auto root_id_counts = dish2::get_root_id_counts( thread_world );
+
+    const size_t pool_count_sum = std::accumulate(
+      std::begin(cfg.DIVERSITY_MAINTENANCE_ROOT_ID_POOL()),
+      std::end(cfg.DIVERSITY_MAINTENANCE_ROOT_ID_POOL()),
+      size_t{},
+      [&root_id_counts](const auto cumsum, const auto root_id){
+        return cumsum + root_id_counts[root_id];
+      }
+    );
+    for (const auto& root_id : cfg.DIVERSITY_MAINTENANCE_ROOT_ID_POOL()) {
+      root_id_counts[root_id] = pool_count_sum;
+    }
 
     const size_t threshold_count = (
       dish2::cfg.DIVERSITY_MAINTENANCE_PREVALENCE()

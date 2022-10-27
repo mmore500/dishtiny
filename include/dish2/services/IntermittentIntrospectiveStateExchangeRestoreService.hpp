@@ -22,12 +22,6 @@
 
 namespace dish2 {
 
-/**
- * Used for experimental manipulations testing the fitness effect of
- * introspective state.
- *
- * (Not part of core simulation logic.)
- */
 struct IntermittentIntrospectiveStateExchangeRestoreService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

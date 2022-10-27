@@ -8,12 +8,6 @@
 
 namespace dish2 {
 
-/**
- * Is this cell part of the same kin group as the cardinal's neighbor?
- *
- * Triggered if a cell's kin group ID(s) are equal to the cardinal's neighbors'
- * current kin group ID(s).
- */
 struct KinGroupMatchEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

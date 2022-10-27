@@ -15,20 +15,14 @@
 
 namespace sgpl {
 
-/**
- * Performs no operation for one virtual CPU cycle.
- *
- * Advances the RNG engine `NumRngTouches` times. (Important to nop-out
- * operations that perform one RNG touch without causing side effects.)
- */
 template< size_t NumRngTouches=0, size_t Prevalence=1 >
 struct Nop {
 
   template<typename Spec>
   static void run(
-    sgpl::Core<Spec>&,
-    const sgpl::Instruction<Spec>&,
-    const sgpl::Program<Spec>&,
+    sgpl::Core<Spec>& core,
+    const sgpl::Instruction<Spec>& inst,
+    const sgpl::Program<Spec>& program,
     typename Spec::peripheral_t&
   ) noexcept {
     for (size_t i{}; i < NumRngTouches; ++i ) {

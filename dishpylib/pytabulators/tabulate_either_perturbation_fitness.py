@@ -1,8 +1,8 @@
 from collections import defaultdict
 from iterpop import iterpop as ip
 import numpy as np
-import pandas as pd
 from scipy import stats
+import pandas as pd
 
 def tabulate_either_perturbation_fitness(
     exchange_df, rotate_df, control_fits_df, target_state
@@ -106,16 +106,6 @@ def tabulate_either_perturbation_fitness(
                 f'Median {target_state} State Perturbation Fitness Differential{suffix}'
                     : np.median( wt_vs_perturbed_df['Fitness Differential'] ),
             })
-
-            for target_idx, group in wt_vs_perturbed_df.groupby(
-                f'{target_state} State Target Idx'
-            ):
-                res_by_series[series].update({
-                    f'Is More Fit Under {target_state} State {int(target_idx)} Perturbation{suffix}'
-                        : group['Is Significantly More Fit'].any(),
-                    f'Is Less Fit Under {target_state} State {int(target_idx)} Perturbation{suffix}'
-                        : group['Is Significantly Less Fit'].any(),
-                })
 
     return pd.concat([
         pd.DataFrame.from_records( [just_one_series] )

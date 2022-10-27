@@ -14,11 +14,6 @@
 
 namespace sgpl {
 
-/**
- * Stores a genetically-encoded value to `reg[arg_0]`.
- *
- * This value is determined deterministically using the instruction's tag.
- */
 class Terminal {
 
   template<typename Spec>

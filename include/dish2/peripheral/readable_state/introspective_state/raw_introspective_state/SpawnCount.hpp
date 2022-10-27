@@ -7,12 +7,6 @@
 
 namespace dish2 {
 
-/**
- * Number of offspring generated from this cell.
- *
- * Includes offspring that do not successfully take into the cardinal's
- * neighbor tile or have not survived.
- */
 struct SpawnCount : public uitsl::PodLeafNode<char> {
   using parent_t = uitsl::PodLeafNode<char>;
   using parent_t::parent_t;

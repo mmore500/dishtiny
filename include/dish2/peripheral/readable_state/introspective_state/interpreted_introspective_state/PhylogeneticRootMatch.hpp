@@ -9,11 +9,6 @@
 
 namespace dish2 {
 
-/**
- * Does this cell's root ID equal the cardinal's cell neighbor's root ID?
- *
- * (This means they originate from the same seed ancestor.)
- */
 struct PhylogeneticRootMatch : public uitsl::PodLeafNode< char > {
   // inherit constructors
   using parent_t = uitsl::PodLeafNode<char>;

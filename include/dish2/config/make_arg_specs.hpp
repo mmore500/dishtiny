@@ -47,7 +47,7 @@ auto make_arg_specs() {
     )},
     {"print_introspective_state_size_minus_one", emp::ArgSpec(
       0, // quota
-      // description
+       // description
       "Should we print the number of introspective states and exit?",
       {}, // aliases
       [](const auto& args){ if ( args ) {
@@ -61,7 +61,7 @@ auto make_arg_specs() {
     )},
     {"print_extrospective_state_size_minus_one", emp::ArgSpec(
       0, // quota
-      // description
+       // description
       "Should we print the number of extrospective states and exit?",
       {}, // aliases
       [](const auto& args){ if ( args ) {

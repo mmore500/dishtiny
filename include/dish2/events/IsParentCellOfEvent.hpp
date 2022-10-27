@@ -6,12 +6,6 @@
 
 namespace dish2 {
 
-/**
- * Is this cardinal's cell the parent cell of the cardinal's neighbor?
- *
- * Triggered if neighbor was spawned from cell and cell age is greater than
- * neighbor age.
- */
 struct IsParentCellOfEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

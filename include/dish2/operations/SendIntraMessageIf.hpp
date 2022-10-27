@@ -14,16 +14,6 @@
 
 namespace dish2 {
 
-/**
- * Conditionally send a message to a co-cardinal.
- *
- * If `reg[arg_0]` is nonzero, generates a message tagged with the
- * instruction's tag that contains the core's current register state. Sends
- * this message to a target cardinal within the cell.
- *
- * To determine the target cardinal, sums instruction arguments then calculates
- * the remainder of integer division by the number of co-cardinals.
- */
 struct SendIntraMessageIf {
 
   template<typename Spec>

@@ -1,3 +1,5 @@
+#define CATCH_CONFIG_MAIN
+
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -6,9 +8,9 @@
 #include "conduit/include/uitsl/countdown/Timer.hpp"
 #include "conduit/include/uitsl/mpi/MpiGuard.hpp"
 
-#include "dish2/utility/try_with_timeout.hpp"
-
 const uitsl::MpiGuard guard;
+
+#include "dish2/utility/try_with_timeout.hpp"
 
 TEST_CASE("try_with_timeout completes") {
 

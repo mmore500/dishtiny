@@ -1,3 +1,5 @@
+#define CATCH_CONFIG_MAIN
+
 #include <chrono>
 #include <thread>
 

@@ -13,12 +13,6 @@
 
 namespace dish2 {
 
-/**
- * Enforces a hard cap on kin group size.
- *
- * Probabilistically kills cells in kin groups where quorum count exceeds
- * `QUORUM_CAP`, preferentially killing cells at the group periphery.
- */
 struct QuorumCapService {
 
   static bool ShouldRun( const size_t update, const bool alive ) {

@@ -14,13 +14,11 @@
 
 namespace dish2 {
 
-/**
- * Performs each cell's simulation services, iterating over cells in randomized
- * order.
- */
 struct CellUpdateService {
 
-  static bool ShouldRun( const size_t ) { return true; }
+  static bool ShouldRun( const size_t update ) {
+    return true;
+  }
 
   template<typename ThreadWorld>
   static void DoService( ThreadWorld& thread_world, const size_t update ) {

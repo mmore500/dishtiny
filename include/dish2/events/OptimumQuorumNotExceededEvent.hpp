@@ -6,10 +6,6 @@
 
 namespace dish2 {
 
-/**
- * Triggered if the cell's number of known quorum bits is less than or equal to
- * than the target quorum count.
- */
 struct OptimumQuorumNotExceededEvent {
 
   template< typename Cardinal, size_t SeriesIdx >

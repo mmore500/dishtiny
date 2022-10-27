@@ -6,10 +6,6 @@
 
 namespace dish2 {
 
-/**
- * Triggered if a cardinal's cell has received resource from that cardinal's
- * neighbor cell.
- */
 struct ReceivedResourceFromEvent {
 
   template< typename Cardinal, size_t SeriesIdx >
