@@ -48,9 +48,7 @@ breathe==4.19.2
 bs4==0.0.1
     # via exhale
 certifi==2020.12.5
-    # via
-    #   matplotlib
-    #   requests
+    # via requests
 chardet==3.0.4
     # via
     #   aiohttp
@@ -83,6 +81,8 @@ exdown==0.7.0
     # via -r requirements.in
 exhale==0.2.3
     # via -r requirements.in
+fonttools==4.38.0
+    # via matplotlib
 frozendict==1.2
     # via -r requirements.in
 fsspec==0.8.5
@@ -159,7 +159,7 @@ markdown2==2.3.9
     # via -r requirements.in
 markupsafe==1.1.1
     # via jinja2
-matplotlib==3.3.2
+matplotlib==3.5.2
     # via
     #   -r requirements.in
     #   seaborn
@@ -208,6 +208,7 @@ osfclient==0.0.5
 packaging==20.9
     # via
     #   bleach
+    #   matplotlib
     #   sphinx
 pandas==1.1.2
     # via
