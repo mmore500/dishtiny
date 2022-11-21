@@ -198,7 +198,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   mpiexec.hydra --version
   $( (( N_PROCS > 1 )) && echo mpiexec.hydra -n "${N_PROCS}" singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" ) \
     ./rundishtiny \
-    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series | int < 1000 else 600 if series | int < 10000 else 10800 }} -GENESIS "${GENESIS}" -ARTIFACTS_DUMP 1 -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT 0 -STINT {{ stint }} -SERIES {{ series }} -ALL_DRAWINGS_WRITE {{ 1 if stint | int % 10 == 0 else 0 }} -RUNNINGLOGS_DUMP {{ 1 if stint | int % 10 == 0 else 0 }} -CENSUS_WRITE {{ 1 if stint | int % 10 == 0 else 0 }} -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/evolvejob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
+    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if series | int < 1000 else 600 if series | int < 10000 else 10800 }} -GENESIS "${GENESIS}" -ARTIFACTS_DUMP 1 -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT_LOWEST_ROOT 0 -STINT {{ stint }} -SERIES {{ series }} -ALL_DRAWINGS_WRITE {{ 1 if stint | int % 10 == 0 else 0 }} -RUNNINGLOGS_DUMP {{ 1 if stint | int % 10 == 0 else 0 }} -CENSUS_WRITE {{ 1 if stint | int % 10 == 0 else 0 }} -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/evolvejob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
 MPIEXEC_HEREDOC_EOF
