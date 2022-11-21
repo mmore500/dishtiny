@@ -125,7 +125,10 @@ void dump_coalescence_result( const dish2::ThreadWorld< Spec >& world ) {
     const auto& [key, value] : dish2::summarize_root_config( 0 )
   ) file.AddFun( uitsl::function_cast( [&root_id, key=key](){
     // gets value for /current/ root id
-    return dish2::summarize_root_config( root_id ).at( key );
+    const auto root_config = dish2::summarize_root_config( root_id );
+    if (root_config.count(key)) {
+      return root_config.at( key );
+    } else return std::string{};
   } ), key );
 
   // add columns for genome attributes
