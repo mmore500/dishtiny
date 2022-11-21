@@ -5,15 +5,17 @@
 #include <fstream>
 #include <string>
 
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+
 #include "../algorithm/make_battleship_phenotype_equivalent_nopout.hpp"
 #include "../algorithm/make_jenga_phenotype_equivalent_nopout.hpp"
+#include "../debug/log_msg.hpp"
+#include "../genome/Genome.hpp"
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_lowest_root_prevalent_coding_genotype_genome.hpp"
 #include "../introspection/no_live_cells.hpp"
 #include "../world/iterators/GenotypeConstWrapper.hpp"
 #include "../world/iterators/LiveCellExceptFocalRootIDIterator.hpp"
-
-#include "../debug/log_msg.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "dump_genome.hpp"
