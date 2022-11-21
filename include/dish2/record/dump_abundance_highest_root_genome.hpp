@@ -62,7 +62,7 @@ bool dump_abundance_highest_root_genome(const dish2::ThreadWorld<Spec>& world) {
     wrapper_t{ lcefrit_t::make_begin(population, focal_root_id) },
     wrapper_t{ lcefrit_t::make_end(population, focal_root_id) }
   };
-  dish2::log_msg( "background population size", background_population.size() );
+  dish2::log_msg( "background population size ", background_population.size() );
 
 
   if (
