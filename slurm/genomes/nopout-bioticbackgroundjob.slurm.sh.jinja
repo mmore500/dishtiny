@@ -248,7 +248,7 @@ done
 done
 
 # run jinja on template
-JOB_TEMPLATE="${REPRO_WORK_DIRECTORY}/dishtiny/slurm/genomes/nopoutjob.slurm.sh.jinja"
+JOB_TEMPLATE="${REPRO_WORK_DIRECTORY}/dishtiny/slurm/genomes/nopout-bioticbackgroundjob.slurm.sh.jinja"
 JOB_SCRIPT="$(mktemp)"
 
 echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
@@ -264,7 +264,9 @@ container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
 series: {{ series }}
 stint: {{ stint | int }}
-target_genome_url: "${target_genome_url}"
+target_genome_url: {{ target_genome_url }}
+background_population_attrs: {{ background_population_attrs | default('') }}
+background_population_url: {{ background_population_url }}
 followup_freq: {{ followup_freq | default('10') }}
 J2_HEREDOC_EOF
 
