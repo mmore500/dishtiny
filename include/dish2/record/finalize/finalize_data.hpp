@@ -18,7 +18,7 @@ void finalize_data() {
     "shopt -s nullglob; "
     "cd outdata && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
-    "    a criteria morph proc stint series thread ext"
+    "    a bgpop criteria morph proc stint series thread ext"
     "    nopout_coarseness nopout_target replicate variation root_id"
     "    $(echo \"$f\" | grep -o \"root_id:[[:digit:]]\\+\")"
     "; done"

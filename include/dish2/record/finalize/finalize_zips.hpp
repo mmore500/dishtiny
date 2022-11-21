@@ -17,7 +17,7 @@ void finalize_zips() {
     "shopt -s nullglob; "
     "cd outzips && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
-    "    a proc replicate stint series thread treatment ext"
+    "    a bgpop proc replicate stint series thread treatment ext"
     "; done"
   "'" ) );
   dish2::log_msg( "finalize_zips complete" );
