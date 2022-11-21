@@ -20,7 +20,7 @@
 
 #include "dump_genome.hpp"
 
-#include "make_filename/make_dump_abundance_genome_filename.hpp"
+#include "make_filename/make_dump_abundance_lowest_root_genome_filename.hpp"
 
 namespace dish2 {
 
@@ -44,7 +44,7 @@ bool dump_abundance_lowest_root_genome(const dish2::ThreadWorld<Spec>& world) {
 
   dish2::dump_genome< Spec >(
     genome,
-    dish2::make_dump_abundance_genome_filename(
+    dish2::make_dump_abundance_lowest_root_genome_filename(
       count, abundance, prevalence, "wildtype"
     )
   );
@@ -73,7 +73,7 @@ bool dump_abundance_lowest_root_genome(const dish2::ThreadWorld<Spec>& world) {
       dish2::make_battleship_phenotype_equivalent_nopout< Spec >(
         genome, "abundance", background_population
       ),
-      dish2::make_dump_abundance_genome_filename(
+      dish2::make_dump_abundance_lowest_root_genome_filename(
         count, abundance, prevalence,
         background_population.size()
           ? "battleship_phenotype_equivalent_nopout_with_biotic_background"
@@ -99,7 +99,7 @@ bool dump_abundance_lowest_root_genome(const dish2::ThreadWorld<Spec>& world) {
 
     dish2::dump_genome< Spec >(
       res,
-      dish2::make_dump_abundance_genome_filename(
+      dish2::make_dump_abundance_lowest_root_genome_filename(
         count, abundance, prevalence,
         background_population.size()
           ? "jenga_phenotype_equivalent_nopout_with_biotic_background"
@@ -109,7 +109,7 @@ bool dump_abundance_lowest_root_genome(const dish2::ThreadWorld<Spec>& world) {
     );
     dish2::dump_genome< Spec >(
       res,
-      dish2::make_dump_abundance_genome_filename(
+      dish2::make_dump_abundance_lowest_root_genome_filename(
         count, abundance, prevalence,
         background_population.size()
           ? "phenotype_equivalent_nopout_with_biotic_background"
