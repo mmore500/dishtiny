@@ -7,6 +7,7 @@
 namespace dish2 {
 
 template< typename Spec >
+[[deprecated]]
 bool dump_arbitrary_genome( const dish2::ThreadWorld< Spec >& world ) {
   return dish2::dump_arbitrary_lowest_root_genome(world);
 }

@@ -8,6 +8,7 @@ namespace dish2 {
 
 // dumps most abundant genome from the lowest phylogenetic root
 template< typename Spec >
+[[deprecated]]
 bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
   return dish2::dump_abundance_lowest_root_genome<Spec>(world);
 }
