@@ -343,13 +343,27 @@ EMP_BUILD_CONFIG(
 
 
   GROUP(DATA, "DATA"),
-  VALUE(PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
+  VALUE(PHENOTYPE_EQUIVALENT_NOPOUT_LOWEST_ROOT, bool, false,
     "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
   ),
-  VALUE(BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
+  ALIAS(PHENOTYPE_EQUIVALENT_NOPOUT), // alias for backwards compatibility
+  VALUE(BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT_LOWEST_ROOT, bool, false,
     "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
   ),
-  VALUE(JENGA_PHENOTYPE_EQUIVALENT_NOPOUT, bool, false,
+  // alias, for backwards compatibility
+  ALIAS(BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT),
+  VALUE(JENGA_PHENOTYPE_EQUIVALENT_NOPOUT_LOWEST_ROOT, bool, false,
+    "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
+  ),
+  // alias for backwards compatibility
+  ALIAS(JENGA_PHENOTYPE_EQUIVALENT_NOPOUT),
+  VALUE(PHENOTYPE_EQUIVALENT_NOPOUT_HIGHEST_ROOT, bool, false,
+    "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
+  ),
+  VALUE(BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT_HIGHEST_ROOT, bool, false,
+    "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
+  ),
+  VALUE(JENGA_PHENOTYPE_EQUIVALENT_NOPOUT_HIGHEST_ROOT, bool, false,
     "[NATIVE] Should we make and record a phenotype equivalent nopout strain at the end of the run? Must also enable ARTIFACTS_DUMP."
   ),
   VALUE(JENGA_NOP_OUT_SAVE_PROGRESS_AND_QUIT_SECONDS, size_t, 10800,

@@ -64,7 +64,7 @@ bool dump_abundance_highest_root_genome(const dish2::ThreadWorld<Spec>& world) {
 
 
   if (
-    cfg.BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT()
+    cfg.BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT_HIGHEST_ROOT()
     && dish2::thread_idx == 0
     && uitsl::is_root()
   ) {
@@ -82,8 +82,8 @@ bool dump_abundance_highest_root_genome(const dish2::ThreadWorld<Spec>& world) {
 
   if (
     (
-      cfg.PHENOTYPE_EQUIVALENT_NOPOUT()
-      || cfg.JENGA_PHENOTYPE_EQUIVALENT_NOPOUT()
+      cfg.PHENOTYPE_EQUIVALENT_NOPOUT_HIGHEST_ROOT()
+      || cfg.JENGA_PHENOTYPE_EQUIVALENT_NOPOUT_HIGHEST_ROOT()
     )
     && dish2::thread_idx == 0
     && uitsl::is_root()
