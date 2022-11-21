@@ -62,7 +62,7 @@ bool dump_abundance_lowest_root_genome(const dish2::ThreadWorld<Spec>& world) {
   dish2::log_msg( "background population size", background_population.size() );
 
   if (
-    cfg.BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT()
+    cfg.BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT_LOWEST_ROOT()
     && dish2::thread_idx == 0
     && uitsl::is_root()
   ) {
@@ -80,8 +80,8 @@ bool dump_abundance_lowest_root_genome(const dish2::ThreadWorld<Spec>& world) {
 
   if (
     (
-      cfg.PHENOTYPE_EQUIVALENT_NOPOUT()
-      || cfg.JENGA_PHENOTYPE_EQUIVALENT_NOPOUT()
+      cfg.PHENOTYPE_EQUIVALENT_NOPOUT_LOWEST_ROOT()
+      || cfg.JENGA_PHENOTYPE_EQUIVALENT_NOPOUT_LOWEST_ROOT()
     )
     && dish2::thread_idx == 0
     && uitsl::is_root()
