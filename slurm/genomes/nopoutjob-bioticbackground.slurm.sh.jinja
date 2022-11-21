@@ -1,0 +1,335 @@
+#!/bin/bash -login
+########## Define Resources Needed with SBATCH Lines ##########
+#SBATCH --time=4:00:00
+#SBATCH --job-name a=nopout+series={{ series }}+stint={{ stint }}+target_genome_url={{ target_genome_url }}
+#SBATCH --account=devolab
+#SBATCH --output="/mnt/scratch/%u/slurmlogs/a=nopout+job=%j+series={{ series }}+stint={{ stint }}+ext.log"
+#SBATCH --mem=24G
+#SBATCH --ntasks 1
+#SBATCH --cpus-per-task 4
+#SBATCH --mail-type=FAIL
+# No --mail-user, the default value is the submitting user
+#SBATCH --exclude=csn-002,amr-250
+# Send interrupt when within 5 minutes of end time.
+#SBATCH --signal=SIGINT@300
+# Job may be requeued after node failure.
+#SBATCH --requeue
+
+################################################################################
+echo
+echo "running nopoutjob.slurm.sh"
+echo "--------------------------"
+################################################################################
+
+# fail on error
+set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
+
+# specify display, start the Xvfb server, and save the process ID
+# adapted from https://wiki.hpcc.msu.edu/display/~colbrydi@msu.edu/2013/10
+export DISPLAY=":${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X11-unix/X${SLURM_JOB_ID-1}"
+rm -f "/tmp/.X${SLURM_JOB_ID-1}-lock"
+Xvfb "${DISPLAY}" -auth /dev/null/ &
+export XVFB_PID=$!
+
+# set up and jump into temporary work directory
+cd "$(mktemp -d)"
+pwd
+
+# curl repro_runner.sh script into to a temporary file
+REPRO_RUNNER="$(mktemp)"
+for retry in {1..20}; do
+  curl \
+    -o "${REPRO_RUNNER}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/repro_runner.sh" \
+  && echo "  repro_runner curl success" && break \
+  || (echo "retrying repro_runner curl (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "repro_runner curl fail" && exit 123123; fi
+done
+chmod +x "${REPRO_RUNNER}"
+
+################################################################################
+echo
+echo "Run Job with repro_runner.sh"
+echo "--------------------------------"
+################################################################################
+
+"${REPRO_RUNNER}" \
+  -p "{{ bucket }}" -u mmore500 -s dishtiny \
+  --repo_sha "{{ repo_sha }}" --container_tag "{{ container_tag }}" \
+  << 'REPRO_RUNNER_HEREDOC_EOF'
+
+# fail on error
+set -e
+# adapted from https://unix.stackexchange.com/a/504829
+printerr() {
+    echo "Error occurred:"
+    awk 'NR>L-4 && NR<L+4 { printf "%-5d%3s%s\n",NR,(NR==L?">>>":""),$0 }' L=$1 $0
+}
+trap 'printerr $LINENO' ERR
+
+################################################################################
+echo
+echo "running nopoutjob.slurm.sh"
+echo "--------------------------"
+################################################################################
+
+################################################################################
+echo
+echo "Initialize and Log Config"
+echo "-------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# load secrets into environment variables, if available
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
+
+ENDEAVOR={{ series | int // 1000 }}
+N_PROCS=1
+N_THREADS=4
+
+echo "ENDEAVOR ${ENDEAVOR}"
+echo "N_PROCS ${N_PROCS}"
+echo "N_THREADS ${N_THREADS}"
+echo "series {{ series }}"
+echo "stint {{ stint }}"
+echo "bucket {{ bucket }}"
+echo "configpack {{ configpack }}"
+echo "container_tag {{ container_tag }}"
+echo "repo_sha {{ repo_sha }}"
+echo "target_genome_url {{ target_genome_url }}"
+echo "background_population_attrs {{ background_population_attrs | | default('') }}"
+echo "background_population_url {{ background_population_url }}"
+echo "followup_freq {{ followup_freq | default('10') }}"
+
+################################################################################
+echo
+echo "Set Up Work Directory"
+echo "-------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+mkdir work
+cd work
+
+WORK_DIRECTORY="$(pwd)"
+echo "WORK_DIRECTORY ${WORK_DIRECTORY}"
+
+echo "downloading genome from target stint and series..."
+
+f="{{ target_genome_url }}"
+echo "downloading ${f}"
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "{{ target_genome_url }}" \
+    "root_id=0+$(basename {{ target_genome_url }})" \
+    && echo "  ${f} download success" && break \
+    || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
+done & pids+=($!)
+
+f="{{ background_population_url }}"
+echo "downloading ${f}"
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "{{ background_population_url }}" \
+    "{{ background_population_attrs | | default('') }}root_id=1+$(basename {{ background_population_url }})" \
+    && echo "  ${f} download success" && break \
+    || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
+done & pids+=($!)
+
+bash -c "cd ../dishtiny && ./configpacks/{{ configpack }}/build_native.sh"
+cp ../dishtiny/rundishtiny .
+
+# compile and download concurrently!
+for pid in "${pids[@]}"; do
+  # if child process fails, we fail
+  wait "${pid}"
+done
+
+unset pids
+
+# double check that all downloads are complete
+wait
+
+ls
+
+# an attempt to address intermittent failure where downloaded files aren't found
+# when running the executable
+sshpass -p "${HOST_PASSWORD}" \
+  scp -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+    * "${HOST_USERNAME}@$(hostname):$(pwd)" \
+&& echo "  local asset copy success" || echo "  local asset copy fail"
+
+ls
+
+
+################################################################################
+echo
+echo "Run Simulation"
+echo "------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# note:
+# we have to cut off stdin, stdout, stderr on mpiexec
+# for compatibility with repro_runner.sh and prevent a funky
+# tee: read error: Resource temporarily unavailable
+# ssh accomplishes this right now, but otherwise something else would be needed
+
+# use ssh to access host then launch mpi jobs there (e.g., "hybrid approach")
+# see https://sylabs.io/guides/3.3/user-guide/mpi.html
+
+# have to use login shell so module command loads correctly
+
+if (( N_PROCS == 1 )); then bash -login /dev/stdin; else sshpass -p "${HOST_PASSWORD}" \
+ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
+  "${HOST_USERNAME}@$(hostname)" -X 'bash -login'\
+; fi \
+<< MPIEXEC_HEREDOC_EOF
+  [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
+  module load --ignore-cache GCC/7.2.0-2.29 MPICH/3.2.1|| :
+  module list || :
+  echo "modules loaded..."
+  export DISPLAY="${DISPLAY}"
+  export XVFB_PID="${XVFB_PID}"
+  export BACKWARD_CXX_SOURCE_PREFIXES="${REPRO_WORK_DIRECTORY}/dishtiny/"
+  export REPRO_ID="${REPRO_ID}"
+  mpiexec.hydra --version
+  $( (( N_PROCS > 1 )) && echo mpiexec.hydra -n "${N_PROCS}" singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" ) \
+    ./rundishtiny \
+    -RUN 0 -GENESIS "innoculate" -ARTIFACTS_DUMP 1 -PHENOTYPE_EQUIVALENT_NOPOUT 1 -STINT {{ stint }} -SERIES {{ series }} -THROW_ON_EXTINCTION 0 {{ "-PHENOTYPIC_DIVERGENCE_N_CELLS 16 -PHENOTYPIC_DIVERGENCE_N_UPDATES 16" if series | int < 1000 else "-PHENOTYPIC_DIVERGENCE_N_CELLS 64 -PHENOTYPIC_DIVERGENCE_N_UPDATES 256" if series | int < 10000 else "" }} -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/nopoutjob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
+  && echo "simulation exit success" \
+  || ( echo "simulation error code $?" && exit 1 )
+MPIEXEC_HEREDOC_EOF
+
+################################################################################
+echo
+echo "Handling in-progress nopout"
+echo "-------------------------------------------------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# test for in-progress dump
+if ls outartifacts/*a=genome*morph=in_progress_jenga_nopout* 2>&1 >/dev/null; then
+
+# upload in-progress genome
+s3_dir="s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}"
+
+for p in outartifacts/*a=genome*morph=in_progress_jenga_nopout*; do
+
+f="$(basename "${p}")"
+echo "uploading ${p} -> ${f}"
+
+for retry in {1..20}; do
+  aws s3 cp --quiet \
+    "${p}" \
+    "${s3_dir}/${f}" \
+  && echo "  $f upload success" && break \
+    || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+  if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+done
+
+done
+
+# run jinja on template
+JOB_TEMPLATE="${REPRO_WORK_DIRECTORY}/dishtiny/slurm/genomes/nopoutjob.slurm.sh.jinja"
+JOB_SCRIPT="$(mktemp)"
+
+echo "JOB_TEMPLATE ${JOB_TEMPLATE}"
+echo "JOB_SCRIPT ${JOB_SCRIPT}"
+
+target_genome_url="${s3_dir}/$(basename outartifacts/*a=genome*morph=in_progress_jenga_nopout*.json.gz)"
+echo "target_genome_url ${target_genome_url}"
+
+j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+bucket: {{ bucket }}
+configpack: {{ configpack }}
+container_tag: {{ container_tag }}
+repo_sha: {{ repo_sha }}
+series: {{ series }}
+stint: {{ stint | int }}
+target_genome_url: "${target_genome_url}"
+followup_freq: {{ followup_freq | default('10') }}
+J2_HEREDOC_EOF
+
+chmod +x "${JOB_SCRIPT}"
+
+"${REPRO_WORK_DIRECTORY}/dishtiny/script/host_sbatch.sh" "${JOB_SCRIPT}"
+
+echo "in-progress nopout continuation complete, exiting"
+
+exit 0
+
+else
+
+echo "no in-progress nopout detected, continuing"
+
+fi
+
+################################################################################
+echo
+echo "Upload Data"
+echo "--------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+echo "uploading any genome files..."
+for p in \
+  outartifacts/*a=genome*morph=phenotype_equivalent_nopout* \
+  outdata/*a=genome_statistics*morph=phenotype_equivalent_nopout* \
+  outartifacts/*a=genome*morph=jenga_phenotype_equivalent_nopout* \
+  outdata/*a=genome_statistics*morph=jenga_phenotype_equivalent_nopout* \
+  outdata/*a=jenga_nopout_divergence_updates* \
+; do
+  f="$(basename "${p}")"
+  echo "uploading ${p} -> ${f}"
+  for retry in {1..20}; do
+    aws s3 cp --quiet \
+      "${p}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+    && echo "  $f upload success" && break \
+      || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
+    if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi
+  done & pids+=($!)
+
+  # limit to twenty concurrent upload jobs
+  while (( $(jobs -p | wc -l) > 20 )); do sleep 1; done
+
+done
+
+# wait on all forked upload jobs
+for pid in "${pids[@]}"; do
+  # if child process fails, we fail
+  wait "${pid}"
+done
+
+unset pids
+
+################################################################################
+echo
+echo "Done! (SUCCESS)"
+echo "---------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+REPRO_RUNNER_HEREDOC_EOF
