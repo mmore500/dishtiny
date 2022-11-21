@@ -107,7 +107,7 @@ series: "\${just_one_series}"
 stint: "${STINT}"
 target_genome_url: "s3://${BUCKET}/endeavor=\$(( just_one_series / 1000 ))/genomes/stage=0+what=generated/stint=${STINT}/series=\${just_one_series}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${just_one_series}+stint=${STINT}+thread=0+variation=master+ext=.json.gz"
 background_population_attrs: "filter_except_lowest_root+"
-background_population_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=${STINT}/series=\${just_one_series}/a=population+proc=0+series=\${just_one_series}+stint=${STINT}+thread=0+variation=master+ext=.bin.xz"
+background_population_url: "s3://${BUCKET}/endeavor=\$(( just_one_series / 1000 ))/evolve/populations/stage=0+what=generated/stint=${STINT}/series=\${just_one_series}/a=population+proc=0+series=\${just_one_series}+stint=${STINT}+thread=0+variation=master+ext=.bin.xz"
 followup_freq: "${FOLLOWUP_FREQ}"
 J2_HEREDOC_EOF
 
