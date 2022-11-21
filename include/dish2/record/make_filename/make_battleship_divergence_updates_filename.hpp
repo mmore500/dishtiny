@@ -2,6 +2,7 @@
 #ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_BATTLESHIP_DIVERGENCE_UPDATES_FILENAME_HPP_INCLUDE
 #define DISH2_RECORD_MAKE_FILENAME_MAKE_BATTLESHIP_DIVERGENCE_UPDATES_FILENAME_HPP_INCLUDE
 
+#include <cstddef>
 #include <cstdlib>
 #include <string>
 
@@ -23,7 +24,8 @@ namespace dish2 {
 std::string make_battleship_divergence_updates_filename(
   const std::string& criteria,
   const size_t nopout_coarseness,
-  const std::string& nopout_target
+  const std::string& nopout_target,
+  const size_t background_population_size=0
 ) {
 
   auto keyname_attributes = emp::keyname::unpack_t{
@@ -39,6 +41,8 @@ std::string make_battleship_divergence_updates_filename(
     {"treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".txt"}
   };
+
+  if ( background_population_size ) keyname_attributes["bgpop"] = "1";
 
   if ( dish2::get_repro() ) {
     keyname_attributes[ "_repro" ] = *dish2::get_repro();
