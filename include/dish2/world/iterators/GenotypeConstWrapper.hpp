@@ -10,10 +10,10 @@
 
 namespace dish2 {
 
-template<typename Spec>
-class GenotypeConstWrapper : public dish2::LiveCellIterator<Spec> {
+template<typename Spec, typename ParentIterator=dish2::LiveCellIterator<Spec>>
+class GenotypeConstWrapper : public ParentIterator {
 
-  using parent_t = dish2::LiveCellIterator<Spec>;
+  using parent_t = ParentIterator;
 
 public:
 

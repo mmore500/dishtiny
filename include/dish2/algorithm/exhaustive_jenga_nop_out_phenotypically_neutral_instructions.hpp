@@ -29,7 +29,8 @@ namespace dish2 {
 template< typename Spec >
 auto exhaustive_try_jenga_nop_out_phenotypically_neutral_instructions(
   const dish2::Genome<Spec>& genome,
-  const dish2::Genome<Spec>& reference_genome
+  const dish2::Genome<Spec>& reference_genome,
+  const emp::vector<dish2::Genome<Spec>>& background_population={}
 ) {
 
   using genome_t = dish2::Genome<Spec>;
@@ -75,7 +76,9 @@ auto exhaustive_try_jenga_nop_out_phenotypically_neutral_instructions(
       genome.program, target
     );
     const auto res = dish2::run_until_phenotypic_divergence<Spec>(
-      test_genome, reference_genome
+      test_genome,
+      reference_genome,
+      background_population
     );
     divergence_updates[ target ] = res;
     const bool is_neutral = (res == cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES());
@@ -111,7 +114,8 @@ auto exhaustive_try_jenga_nop_out_phenotypically_neutral_instructions(
 template< typename Spec >
 auto exhaustive_jenga_nop_out_phenotypically_neutral_instructions(
   dish2::Genome<Spec> genome,
-  const dish2::Genome<Spec>& reference_genome
+  const dish2::Genome<Spec>& reference_genome,
+  const std::vector<dish2::Genome<Spec>>& background_population
 ) {
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
@@ -124,7 +128,8 @@ auto exhaustive_jenga_nop_out_phenotypically_neutral_instructions(
 
     const auto res = exhaustive_try_jenga_nop_out_phenotypically_neutral_instructions(
       genome,
-      reference_genome
+      reference_genome,
+      background_population
     );
     const auto& [ neutral_nopped_genome, cur_divergence_updates ] = res;
 

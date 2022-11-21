@@ -2,6 +2,7 @@
 #ifndef DISH2_CELL_CELL_HPP_INCLUDE
 #define DISH2_CELL_CELL_HPP_INCLUDE
 
+#include <cstddef>
 #include <utility>
 
 #include "../../../third-party/conduit/include/netuit/assign/AssignIntegrated.hpp"
@@ -185,6 +186,11 @@ struct Cell {
       dish2::IsAlive
     >().Get() == genome.has_value() );
     return genome.has_value();
+  }
+
+  emp::optional<size_t> GetRootID() const {
+    if (!IsAlive()) return {};
+    else return {GetGenome().root_id};
   }
 
   size_t GetPeripherality( const size_t lev ) const {

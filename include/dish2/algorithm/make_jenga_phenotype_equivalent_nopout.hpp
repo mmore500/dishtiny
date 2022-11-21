@@ -30,7 +30,9 @@ namespace dish2 {
 
 template< typename Spec >
 dish2::Genome<Spec> make_jenga_phenotype_equivalent_nopout(
-  dish2::Genome<Spec> genome, const std::string& criteria=""
+  dish2::Genome<Spec> genome,
+  const std::string& criteria="",
+  const emp::vector<dish2::Genome<Spec>>& background_population={}
 ) {
 
   // store old config values, temporarily overwrite them
@@ -43,6 +45,9 @@ dish2::Genome<Spec> make_jenga_phenotype_equivalent_nopout(
   const dish2::TemporaryConfigOverride diversity_maintentance(
     "DIVERSITY_MAINTENANCE_SERVICE_FREQUENCY", 0
   );
+  if (background_population.size()) {
+    diversity_maintentance.~TemporaryConfigOverride();
+  }
   const dish2::TemporaryConfigOverride stint_diversity_maintentance(
     "STINT_DIVERSITY_MAINTENANCE_SERVICE_FREQUENCY", 0
   );
@@ -61,6 +66,9 @@ dish2::Genome<Spec> make_jenga_phenotype_equivalent_nopout(
   const dish2::LogScope guard1{
     "jenga noping out phenotypically neutral sites"
   };
+  dish2::log_msg(
+    "background population size ", background_population.size()
+  );
 
   const dish2::Genome<Spec> reference_genome = genome;
 
@@ -74,7 +82,9 @@ dish2::Genome<Spec> make_jenga_phenotype_equivalent_nopout(
     coarseness /= 2
   ) {
     const auto [nopped_genome, divergence_updates]
-      = dish2::jenga_nop_out_phenotypically_neutral_instructions< Spec >(genome, coarseness, reference_genome);
+      = dish2::jenga_nop_out_phenotypically_neutral_instructions<Spec>(
+        genome, coarseness, reference_genome, background_population
+      );
 
     genome = nopped_genome;
 
@@ -107,7 +117,7 @@ dish2::Genome<Spec> make_jenga_phenotype_equivalent_nopout(
     const auto [nopped_genome, divergence_updates]
       = dish2::exhaustive_jenga_nop_out_phenotypically_neutral_instructions<
         Spec
-      >( genome, reference_genome );
+      >( genome, reference_genome, background_population );
 
     genome = nopped_genome;
 

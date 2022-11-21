@@ -22,7 +22,8 @@ namespace dish2 {
 
 template< typename Spec >
 auto battleship_nop_out_phenotypically_neutral_modules(
-  dish2::Genome<Spec> genome
+  dish2::Genome<Spec> genome,
+  const emp::vector<dish2::Genome<Spec>>& background_population={}
 ) {
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
@@ -48,7 +49,9 @@ auto battleship_nop_out_phenotypically_neutral_modules(
     #endif // #ifdef __EMSCRITPEN__
 
     const auto res = dish2::assess_module_for_phenotypic_divergence<Spec>(
-      genome, module_idx
+      genome,
+      module_idx,
+      background_population
     );
 
     should_nop[module_idx] = ( res == cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES() );

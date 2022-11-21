@@ -2,6 +2,9 @@
 #ifndef DISH2_ALGORITHM_ASSESS_INSTRUCTIONS_FOR_PHENOTYPIC_DIVERGENCE_HPP_INCLUDE
 #define DISH2_ALGORITHM_ASSESS_INSTRUCTIONS_FOR_PHENOTYPIC_DIVERGENCE_HPP_INCLUDE
 
+#include <algorithm>
+
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_instructions.hpp"
 
@@ -20,7 +23,8 @@ template< typename Spec >
 size_t assess_instructions_for_phenotypic_divergence(
   const dish2::Genome<Spec>& genome,
   const size_t inst_idx,
-  const size_t nop_length=1
+  const size_t nop_length=1,
+  const emp::vector<dish2::Genome<Spec>>& background_population={}
 ) {
 
   const dish2::LogScope guard( emp::to_string("evaluating inst ", inst_idx) );
@@ -32,7 +36,11 @@ size_t assess_instructions_for_phenotypic_divergence(
     ++idx
   ) nopout.program[ idx ].NopOut();
 
-  return dish2::run_until_phenotypic_divergence<Spec>( genome, nopout );
+  return dish2::run_until_phenotypic_divergence<Spec>(
+    genome,
+    nopout,
+    background_population
+  );
 
 }
 
@@ -40,7 +48,8 @@ template< typename Spec >
 size_t assess_instructions_for_phenotypic_divergence(
   const dish2::Genome<Spec>& genome,
   const emp::vector<char>& inst_mask,
-  const dish2::Genome<Spec>& reference_genome
+  const dish2::Genome<Spec>& reference_genome,
+  const emp::vector<dish2::Genome<Spec>>& background_population={}
 ) {
 
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
@@ -50,7 +59,9 @@ size_t assess_instructions_for_phenotypic_divergence(
   );
 
   return dish2::run_until_phenotypic_divergence<Spec>(
-    reference_genome, nopout
+    reference_genome,
+    nopout,
+    background_population
   );
 
 }

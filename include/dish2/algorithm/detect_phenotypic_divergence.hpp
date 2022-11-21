@@ -2,6 +2,8 @@
 #ifndef DISH2_ALGORITHM_DETECT_PHENOTYPIC_DIVERGENCE_HPP_INCLUDE
 #define DISH2_ALGORITHM_DETECT_PHENOTYPIC_DIVERGENCE_HPP_INCLUDE
 
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+
 #include "run_until_phenotypic_divergence.hpp"
 
 namespace dish2 {
@@ -21,11 +23,12 @@ bool detect_phenotypic_divergence(
 template< typename Spec >
 bool detect_phenotypic_divergence(
   const dish2::Genome<Spec>& genome1,
-  const dish2::Genome<Spec>& genome2
+  const dish2::Genome<Spec>& genome2,
+  const emp::vector<dish2::Genome<Spec>>& background_population={}
 ) {
 
   const auto res = dish2::run_until_phenotypic_divergence<Spec>(
-    genome1, genome2
+    genome1, genome2, background_population
   );
 
   return res != dish2::cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES();

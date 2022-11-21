@@ -41,6 +41,8 @@ public:
 
   bool operator!=(const RootID& other) const { return !operator==(other); }
 
+  operator size_t() const { return root_id; }
+
   template <class Archive>
   void serialize( Archive & ar ) { ar( CEREAL_NVP( root_id ) ); }
 

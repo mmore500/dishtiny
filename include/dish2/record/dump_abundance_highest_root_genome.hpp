@@ -2,6 +2,7 @@
 #ifndef DISH2_RECORD_DUMP_ABUNDANCE_HIGHEST_ROOT_GENOME_HPP_INCLUDE
 #define DISH2_RECORD_DUMP_ABUNDANCE_HIGHEST_ROOT_GENOME_HPP_INCLUDE
 
+#include <cstddef>
 #include <fstream>
 #include <string>
 
@@ -10,6 +11,8 @@
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_highest_root_prevalent_coding_genotype_genome.hpp"
 #include "../introspection/no_live_cells.hpp"
+#include "../world/iterators/GenotypeConstWrapper.hpp"
+#include "../world/iterators/LiveCellExceptFocalRootIDIterator.hpp"
 
 #include "../debug/log_msg.hpp"
 #include "../world/ThreadWorld.hpp"
@@ -22,7 +25,7 @@ namespace dish2 {
 
 // dumps most abundant genome from the highest phylogenetic root
 template< typename Spec >
-bool dump_abundance_highest_root_genome( const dish2::ThreadWorld< Spec >& world ) {
+bool dump_abundance_highest_root_genome(const dish2::ThreadWorld<Spec>& world) {
 
   // abort if no live cells
   if ( dish2::no_live_cells<Spec>(world) ) return false;
@@ -45,6 +48,21 @@ bool dump_abundance_highest_root_genome( const dish2::ThreadWorld< Spec >& world
     )
   );
 
+  const auto& population = world.population;
+  using lcefrit_t = dish2::LiveCellExceptFocalRootIDIterator<Spec>;
+  using wrapper_t = dish2::GenotypeConstWrapper<
+    Spec,
+    lcefrit_t
+  >;
+  const size_t focal_root_id = genome.root_id;
+
+  const emp::vector<dish2::Genome<Spec>> background_population{
+    wrapper_t{ lcefrit_t::make_begin(population, focal_root_id) },
+    wrapper_t{ lcefrit_t::make_end(population, focal_root_id) }
+  };
+  dish2::log_msg( "background population size", background_population.size() );
+
+
   if (
     cfg.BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT()
     && dish2::thread_idx == 0
@@ -53,7 +71,7 @@ bool dump_abundance_highest_root_genome( const dish2::ThreadWorld< Spec >& world
     dish2::log_msg( "recording battleship phenotype equivalent nopout" );
     dish2::dump_genome< Spec >(
       dish2::make_battleship_phenotype_equivalent_nopout< Spec >(
-        genome, "abundance"
+        genome, "abundance", background_population
       ),
       dish2::make_dump_abundance_highest_root_genome_filename(
         count, abundance, prevalence,
@@ -73,7 +91,7 @@ bool dump_abundance_highest_root_genome( const dish2::ThreadWorld< Spec >& world
     dish2::log_msg( "recording jenga phenotype equivalent nopout" );
 
     const auto res = dish2::make_jenga_phenotype_equivalent_nopout< Spec >(
-      genome, "abundance"
+      genome, "abundance", background_population
     );
 
     dish2::dump_genome< Spec >(
