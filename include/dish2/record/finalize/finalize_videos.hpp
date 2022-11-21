@@ -17,7 +17,7 @@ void finalize_videos() {
     "shopt -s nullglob; "
     "cd outvideos && for f in *a=*; do"
     "  keyname stash --move \"${f}\""
-    "  a proc idx replicate thread update stint series treatment variation ext"
+    "  a bgpop proc idx replicate thread update stint series treatment variation ext"
     "; done"
   "'" ) );
   dish2::log_msg( "finalize_videos complete" );
