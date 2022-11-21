@@ -77,7 +77,7 @@ trap 'printerr \$LINENO' ERR
 
 ################################################################################
 echo
-echo "running nopoutkickoff.sh"
+echo "running nopout-bioticbackgroundkickoff.sh"
 echo "------------------------"
 ################################################################################
 
@@ -98,7 +98,7 @@ for just_one_series in ${SERIES}; do
   echo "series \${just_one_series}"
   echo "JOB_SCRIPT \${JOB_SCRIPT}"
 
-  j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/genomes/nopoutjob.slurm.sh.jinja" << J2_HEREDOC_EOF
+  j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/genomes/nopout-bioticbackgroundjob.slurm.sh.jinja" << J2_HEREDOC_EOF
 bucket: "${BUCKET}"
 configpack: "${CONFIGPACK}"
 container_tag: "${CONTAINER_TAG}"
