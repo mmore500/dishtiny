@@ -78,7 +78,7 @@ bool dump_abundance_lowest_root_genome(const dish2::ThreadWorld<Spec>& world) {
         background_population.size()
           ? "battleship_phenotype_equivalent_nopout_with_biotic_background"
           : "battleship_phenotype_equivalent_nopout",
-          background_population.size()
+        background_population.size()
       )
     );
   }
@@ -101,7 +101,9 @@ bool dump_abundance_lowest_root_genome(const dish2::ThreadWorld<Spec>& world) {
       res,
       dish2::make_dump_abundance_genome_filename(
         count, abundance, prevalence,
-        "jenga_phenotype_equivalent_nopout",
+        background_population.size()
+          ? "jenga_phenotype_equivalent_nopout_with_biotic_background"
+          : "jenga_phenotype_equivalent_nopout",
         background_population.size()
       )
     );
@@ -109,7 +111,9 @@ bool dump_abundance_lowest_root_genome(const dish2::ThreadWorld<Spec>& world) {
       res,
       dish2::make_dump_abundance_genome_filename(
         count, abundance, prevalence,
-        "phenotype_equivalent_nopout",
+        background_population.size()
+          ? "phenotype_equivalent_nopout_with_biotic_background"
+          : "phenotype_equivalent_nopout",
         background_population.size()
       )
     );

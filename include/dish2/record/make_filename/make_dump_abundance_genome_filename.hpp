@@ -19,6 +19,7 @@
 #include "../../config/has_series.hpp"
 #include "../../config/has_stint.hpp"
 #include "../../config/thread_idx.hpp"
+#include "../../debug/log_msg.hpp"
 
 namespace dish2 {
 
@@ -45,6 +46,10 @@ std::string make_dump_abundance_genome_filename(
     {"ext", ".json.gz"}
   };
 
+
+  dish2::log_msg(
+    morph, " background population size ", background_population_size
+  );
   if ( background_population_size ) keyname_attributes["bgpop"] = "1";
 
   if ( dish2::get_repro() ) {

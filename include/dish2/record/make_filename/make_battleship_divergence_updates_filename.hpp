@@ -18,6 +18,7 @@
 #include "../../config/has_replicate.hpp"
 #include "../../config/has_series.hpp"
 #include "../../config/has_stint.hpp"
+#include "../../debug/log_msg.hpp"
 
 namespace dish2 {
 
@@ -42,6 +43,9 @@ std::string make_battleship_divergence_updates_filename(
     {"ext", ".txt"}
   };
 
+  dish2::log_msg(
+    criteria, " background population size ", background_population_size
+  );
   if ( background_population_size ) keyname_attributes["bgpop"] = "1";
 
   if ( dish2::get_repro() ) {

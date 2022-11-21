@@ -78,7 +78,9 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_battleship_divergence_updates_filename(criteria, 1, "module"),
+      dish2::make_battleship_divergence_updates_filename(
+        criteria, 1, "module", background_population.size()
+      ),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -106,7 +108,9 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_battleship_divergence_updates_filename(criteria, 8, "inst"),
+      dish2::make_battleship_divergence_updates_filename(
+        criteria, 8, "inst", background_population.size()
+      ),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -130,7 +134,9 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_battleship_divergence_updates_filename(criteria, 4, "inst"),
+      dish2::make_battleship_divergence_updates_filename(
+        criteria, 4, "inst", background_population.size()
+      ),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -154,7 +160,9 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_battleship_divergence_updates_filename(criteria, 2, "inst"),
+      dish2::make_battleship_divergence_updates_filename(
+        criteria, 2, "inst", background_population.size()
+      ),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -178,7 +186,9 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_battleship_divergence_updates_filename(criteria, 1, "inst"),
+      dish2::make_battleship_divergence_updates_filename(
+        criteria, 1, "inst", background_population.size()
+      ),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );

@@ -90,7 +90,7 @@ dish2::Genome<Spec> make_jenga_phenotype_equivalent_nopout(
 
     const auto out_filename = dish2::pare_keyname_filename(
       dish2::make_jenga_divergence_updates_filename(
-        criteria, coarseness, "inst"
+        criteria, coarseness, "inst", background_population.size()
       ),
       dish2::make_data_path()
     );
@@ -122,7 +122,9 @@ dish2::Genome<Spec> make_jenga_phenotype_equivalent_nopout(
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_jenga_divergence_updates_filename( criteria, 1, "inst" ),
+      dish2::make_jenga_divergence_updates_filename(
+        criteria, 1, "inst", background_population.size()
+      ),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
