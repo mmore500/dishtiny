@@ -2,6 +2,7 @@
 #ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_IN_PROGRESS_JENGA_NOPOUT_GENOME_FILENAME_HPP_INCLUDE
 #define DISH2_RECORD_MAKE_FILENAME_MAKE_IN_PROGRESS_JENGA_NOPOUT_GENOME_FILENAME_HPP_INCLUDE
 
+#include <cstddef>
 #include <cstdlib>
 #include <string>
 
@@ -22,7 +23,7 @@
 namespace dish2 {
 
 std::string make_in_progress_jenga_nopout_genome_filename(
-  const size_t num_ops
+  const size_t num_ops, const size_t background_population_size=0
 ) {
 
   auto keyname_attributes = emp::keyname::unpack_t{
@@ -35,6 +36,8 @@ std::string make_in_progress_jenga_nopout_genome_filename(
     {"_treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".json.gz"}
   };
+
+  if ( background_population_size ) keyname_attributes[ "bgpop" ] = "1";
 
   if ( dish2::get_repro() ) {
     keyname_attributes[ "_repro" ] = *dish2::get_repro();

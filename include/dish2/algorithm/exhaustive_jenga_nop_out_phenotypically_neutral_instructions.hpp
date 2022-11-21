@@ -156,7 +156,10 @@ auto exhaustive_jenga_nop_out_phenotypically_neutral_instructions(
 
       dish2::log_msg("jenga nopout timeout, saving progress and quitting");
 
-      dish2::dump_in_progress_jenga_nopout_genome<Spec>( genome );
+      dish2::dump_in_progress_jenga_nopout_genome<Spec>(
+        genome,
+        background_population.size()
+      );
       dish2::finalize_artifacts();
 
       dish2::log_msg("in progress genome dump complete");

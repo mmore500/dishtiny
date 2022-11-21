@@ -2,6 +2,7 @@
 #ifndef DISH2_RECORD_MAKE_FILENAME_MAKE_DUMP_ABUNDANCE_OVER_ALL_ROOTS_GENOME_FILENAME_HPP_INCLUDE
 #define DISH2_RECORD_MAKE_FILENAME_MAKE_DUMP_ABUNDANCE_OVER_ALL_ROOTS_GENOME_FILENAME_HPP_INCLUDE
 
+#include <cstddef>
 #include <cstdlib>
 #include <string>
 
@@ -25,7 +26,8 @@ std::string make_dump_abundance_over_all_roots_genome_filename(
   const size_t count,
   const double abundance,
   const double prevalence,
-  const std::string& morph
+  const std::string& morph,
+  const size_t background_population_size=0
 ) {
 
   auto keyname_attributes = emp::keyname::unpack_t{
@@ -42,6 +44,8 @@ std::string make_dump_abundance_over_all_roots_genome_filename(
     {"_treatment", emp::keyname::demote( dish2::cfg.TREATMENT() )},
     {"ext", ".json.gz"}
   };
+
+  if ( background_population_size ) keyname_attributes["bgpop"] = "1";
 
   if ( dish2::get_repro() ) {
     keyname_attributes[ "_repro" ] = *dish2::get_repro();
