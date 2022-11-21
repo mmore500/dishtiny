@@ -10,6 +10,8 @@
 #include "../introspection/count_live_cells.hpp"
 #include "../introspection/get_lowest_root_prevalent_coding_genotype_genome.hpp"
 #include "../introspection/no_live_cells.hpp"
+#include "../world/iterators/GenotypeConstWrapper.hpp"
+#include "../world/iterators/LiveCellExceptFocalRootIDIterator.hpp"
 
 #include "../debug/log_msg.hpp"
 #include "../world/ThreadWorld.hpp"
@@ -45,6 +47,20 @@ bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
     )
   );
 
+  const auto& population = world.population;
+  using lcefrit_t = dish2::LiveCellExceptFocalRootIDIterator<Spec>;
+  using wrapper_t = dish2::GenotypeConstWrapper<
+    Spec,
+    lcefrit_t
+  >;
+  const size_t focal_root_id = genome.root_id;
+
+  const emp::vector<dish2::Genome<Spec>> background_population{
+    wrapper_t{ lcefrit_t::make_begin(population, focal_root_id) },
+    wrapper_t{ lcefrit_t::make_end(population, focal_root_id) }
+  };
+  dish2::log_msg( "background population size", background_population.size() );
+
   if (
     cfg.BATTLESHIP_PHENOTYPE_EQUIVALENT_NOPOUT()
     && dish2::thread_idx == 0
@@ -53,7 +69,7 @@ bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
     dish2::log_msg( "recording battleship phenotype equivalent nopout" );
     dish2::dump_genome< Spec >(
       dish2::make_battleship_phenotype_equivalent_nopout< Spec >(
-        genome, "abundance"
+        genome, "abundance", background_population
       ),
       dish2::make_dump_abundance_genome_filename(
         count, abundance, prevalence,
@@ -73,7 +89,7 @@ bool dump_abundance_genome( const dish2::ThreadWorld< Spec >& world ) {
     dish2::log_msg( "recording jenga phenotype equivalent nopout" );
 
     const auto res = dish2::make_jenga_phenotype_equivalent_nopout< Spec >(
-      genome, "abundance"
+      genome, "abundance", background_population
     );
 
     dish2::dump_genome< Spec >(

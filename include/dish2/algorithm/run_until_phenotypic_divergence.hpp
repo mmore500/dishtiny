@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <iterator>
 #include <type_traits>
-#include <vector>
 
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/utility/ThreadLocalRandom.hpp"
 
@@ -73,8 +73,12 @@ size_t run_until_phenotypic_divergence(
 template< typename Spec >
 size_t run_until_phenotypic_divergence(
   const dish2::Genome<Spec>& genome1,
-  const dish2::Genome<Spec>& genome2
+  const dish2::Genome<Spec>& genome2,
+  const emp::vector<dish2::Genome<Spec>>& background_population={}
 ) {
+
+  using vec_genome_t =  emp::vector<dish2::Genome<Spec>>;
+  using vec_vec_genome_t =  emp::vector<vec_genome_t>;
 
   // if genomes are equivalent, no need to test
   if ( genome1 == genome2 ) return cfg.PHENOTYPIC_DIVERGENCE_N_UPDATES();
@@ -85,16 +89,36 @@ size_t run_until_phenotypic_divergence(
 
   const emp::Random rng_bak = sgpl::tlrand.Get();
 
+  // set consistent rng state
+  sgpl::tlrand.Get() = emp::Random(1);
+
   auto world1 = dish2::ProcWorld<Spec>{}.MakeThreadWorld();
-  dish2::seed_genomes_into<Spec>( {genome1}, world1 );
+  dish2::seed_genomes_into<Spec>(
+    background_population.size()
+      ? vec_vec_genome_t{vec_genome_t{genome1}, background_population}
+      : vec_vec_genome_t{vec_genome_t{genome1}},
+    world1
+  );
 
   // roll back rng state
-  sgpl::tlrand.Get() = rng_bak;
+  sgpl::tlrand.Get() = emp::Random(1);
 
   auto world2 = dish2::ProcWorld<Spec>{}.MakeThreadWorld();
-  dish2::seed_genomes_into<Spec>( {genome2}, world2 );
+  dish2::seed_genomes_into<Spec>(
+    background_population.size()
+      ? vec_vec_genome_t{vec_genome_t{genome2}, background_population}
+      : vec_vec_genome_t{vec_genome_t{genome2}},
+    world2
+  );
 
-  return run_until_phenotypic_divergence<Spec>( world1, world2 );
+  sgpl::tlrand.Get() = emp::Random(1);
+
+  const auto res = run_until_phenotypic_divergence<Spec>( world1, world2 );
+
+  // restore RNG state
+  sgpl::tlrand.Get() = rng_bak;
+
+  return res;
 
 }
 

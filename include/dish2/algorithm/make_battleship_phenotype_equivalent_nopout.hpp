@@ -29,7 +29,9 @@ namespace dish2 {
 
 template< typename Spec >
 dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
-  dish2::Genome<Spec> genome, const std::string& criteria=""
+  dish2::Genome<Spec> genome,
+  const std::string& criteria="",
+  const emp::vector<dish2::Genome<Spec>> background_population={}
 ) {
 
   // store old config values, temporarily overwrite them
@@ -42,6 +44,9 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
   const dish2::TemporaryConfigOverride diversity_maintentance(
     "DIVERSITY_MAINTENANCE_SERVICE_FREQUENCY", 0
   );
+  if (background_population.size()) {
+    diversity_maintentance.~TemporaryConfigOverride();
+  }
   const dish2::TemporaryConfigOverride stint_diversity_maintentance(
     "STINT_DIVERSITY_MAINTENANCE_SERVICE_FREQUENCY", 0
   );
@@ -60,10 +65,15 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
   const dish2::LogScope guard1{
     "battleship noping out phenotypically neutral sites"
   };
+  dish2::log_msg(
+    "background population size ", background_population.size()
+  );
 
   {
     const auto [nopped_genome, divergence_updates]
-      = dish2::battleship_nop_out_phenotypically_neutral_modules< Spec >( genome );
+      = dish2::battleship_nop_out_phenotypically_neutral_modules<Spec>(
+        genome, background_population
+      );
 
     genome = nopped_genome;
 
@@ -89,12 +99,14 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
   // at low cost
   {
     const auto [nopped_genome, divergence_updates]
-      = dish2::battleship_nop_out_phenotypically_neutral_instructions< Spec >(genome, 8);
+      = dish2::battleship_nop_out_phenotypically_neutral_instructions<Spec>(
+        genome, 8, background_population
+      );
 
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_battleship_divergence_updates_filename( criteria, 8, "inst" ),
+      dish2::make_battleship_divergence_updates_filename(criteria, 8, "inst"),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -111,12 +123,14 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
 
   {
     const auto [nopped_genome, divergence_updates]
-      = dish2::battleship_nop_out_phenotypically_neutral_instructions< Spec >(genome, 4);
+      = dish2::battleship_nop_out_phenotypically_neutral_instructions<Spec>(
+        genome, 4, background_population
+      );
 
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_battleship_divergence_updates_filename( criteria, 4, "inst" ),
+      dish2::make_battleship_divergence_updates_filename(criteria, 4, "inst"),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -133,12 +147,14 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
 
   {
     const auto [nopped_genome, divergence_updates]
-      = dish2::battleship_nop_out_phenotypically_neutral_instructions< Spec >(genome, 2);
+      = dish2::battleship_nop_out_phenotypically_neutral_instructions<Spec>(
+        genome, 2, background_population
+      );
 
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_battleship_divergence_updates_filename( criteria, 2, "inst" ),
+      dish2::make_battleship_divergence_updates_filename(criteria, 2, "inst"),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );
@@ -155,12 +171,14 @@ dish2::Genome<Spec> make_battleship_phenotype_equivalent_nopout(
 
   {
     const auto [nopped_genome, divergence_updates]
-      = dish2::battleship_nop_out_phenotypically_neutral_instructions< Spec >(genome, 1);
+      = dish2::battleship_nop_out_phenotypically_neutral_instructions<Spec>(
+        genome, 1, background_population
+      );
 
     genome = nopped_genome;
 
     const auto out_filename = dish2::pare_keyname_filename(
-      dish2::make_battleship_divergence_updates_filename( criteria, 1, "inst" ),
+      dish2::make_battleship_divergence_updates_filename(criteria, 1, "inst"),
       dish2::make_data_path()
     );
     const auto out_path = dish2::make_data_path( out_filename );

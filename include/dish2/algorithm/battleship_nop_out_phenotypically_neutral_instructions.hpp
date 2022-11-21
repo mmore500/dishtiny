@@ -7,6 +7,7 @@
 #include <tuple>
 
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_instructions.hpp"
 
 #include "../debug/log_msg.hpp"
@@ -22,7 +23,9 @@ namespace dish2 {
 
 template< typename Spec >
 auto battleship_nop_out_phenotypically_neutral_instructions(
-  dish2::Genome<Spec> genome, const size_t nop_length=1
+  dish2::Genome<Spec> genome,
+  const size_t nop_length=1,
+  const emp::vector<dish2::Genome<Spec>>& background_population={}
 ) {
 
   const dish2::LogScope guard{ "evaluating instruction-by-instruction" };
@@ -46,7 +49,7 @@ auto battleship_nop_out_phenotypically_neutral_instructions(
     #endif // #ifdef __EMSCRIPTEN__
 
     const auto res = dish2::assess_instructions_for_phenotypic_divergence<Spec>(
-        genome, idx, nop_length
+        genome, idx, nop_length, background_population
       );
 
     dish2::log_tee << dish2::make_log_entry_boilerplate();

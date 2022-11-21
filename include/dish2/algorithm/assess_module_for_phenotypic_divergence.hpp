@@ -2,6 +2,7 @@
 #ifndef DISH2_ALGORITHM_ASSESS_MODULE_FOR_PHENOTYPIC_DIVERGENCE_HPP_INCLUDE
 #define DISH2_ALGORITHM_ASSESS_MODULE_FOR_PHENOTYPIC_DIVERGENCE_HPP_INCLUDE
 
+#include "../../../third-party/Empirical/include/emp/base/vector.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/signalgp-lite/include/sgpl/morph/nop_out_module.hpp"
 
@@ -18,7 +19,9 @@ namespace dish2 {
 
 template< typename Spec >
 size_t assess_module_for_phenotypic_divergence(
-  const dish2::Genome<Spec>& genome, const size_t module_idx
+  const dish2::Genome<Spec>& genome,
+  const size_t module_idx,
+  const emp::vector<dish2::Genome<Spec>>& background_population={}
 ) {
 
   const dish2::LogScope guard(emp::to_string("evaluating module ", module_idx));
@@ -27,10 +30,15 @@ size_t assess_module_for_phenotypic_divergence(
 
   auto nopout = genome;
   nopout.program = sgpl::nop_out_module<sgpl_spec_t>(
-    nopout.program, module_idx
+    nopout.program,
+    module_idx
   );
 
-  return dish2::run_until_phenotypic_divergence<Spec>( genome, nopout );
+  return dish2::run_until_phenotypic_divergence<Spec>(
+    genome,
+    nopout,
+    background_population
+  );
 
 }
 
