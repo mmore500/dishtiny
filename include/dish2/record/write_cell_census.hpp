@@ -23,6 +23,7 @@
 #include "cell_census/write_kin_group_age.hpp"
 #include "cell_census/write_kin_group_id.hpp"
 #include "cell_census/write_peripheral_count.hpp"
+#include "cell_census/write_root_id.hpp"
 #include "cell_census/write_resource_stockpile.hpp"
 #include "cell_census/write_spawn_count.hpp"
 #include "make_filename/make_cell_census_filename.hpp"
@@ -89,6 +90,9 @@ void write_cell_census( const dish2::ThreadWorld< Spec >& world ) {
 
   dish2::write_resource_stockpile<Spec>( world, file, metric, value, cell_idx );
   dish2::log_msg( "write_resource_stockpile complete" );
+
+  dish2::write_root_id<Spec>( world, file, metric, value, cell_idx );
+  dish2::log_msg( "write_root_id complete" );
 
   dish2::write_spawn_count<Spec>( world, file, metric, value, cell_idx );
   dish2::log_msg( "write_spawn_count complete" );
