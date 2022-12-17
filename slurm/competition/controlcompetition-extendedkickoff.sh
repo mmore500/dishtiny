@@ -87,7 +87,7 @@ echo "STINTS ${STINTS}"
 
 source ~/.secrets.sh || :
 
-ENDEAVOR="\$(( SERIES / 1000 ))"
+ENDEAVOR="$(( SERIES / 1000 ))"
 NUM_STINTS="$( echo ${STINTS} | wc -w )"
 
 echo "ENDEAVOR \${ENDEAVOR}"
