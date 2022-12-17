@@ -79,7 +79,7 @@ EMP_BUILD_CONFIG(
   ),
   VALUE(
     GENESIS, std::string, "generate",
-    "generate, reconstitute, monoculture, or innoculate"
+    "generate, reconstitute, monoculture, multiculture, or innoculate"
   ),
   VALUE(
     DIVERSITY_MAINTENANCE_ROOT_ID_POOL,
