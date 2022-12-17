@@ -2,7 +2,7 @@
 
 ################################################################################
 echo
-echo "running lowestandhighestroot-multiculturekickoff.sh"
+echo "running lowestandhighestroot-monoculturekickoff.sh"
 echo "------------------------"
 ################################################################################
 
@@ -74,7 +74,7 @@ trap 'printerr \$LINENO' ERR
 
 ################################################################################
 echo
-echo "running lowestandhighestroot-multiculturekickoff.sh"
+echo "running lowestandhighestroot-monoculturekickoff.sh"
 echo "------------------------"
 ################################################################################
 
@@ -94,7 +94,7 @@ for STINT in ${STINTS}; do
   echo "stint \${STINT}"
   echo "JOB_SCRIPT \${JOB_SCRIPT}"
 
-  j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/multicultures/lowestandhighestroot-multiculturejob.slurm.sh.jinja" << J2_HEREDOC_EOF
+  j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/monocultures/lowestandhighestroot-monoculturejob.slurm.sh.jinja" << J2_HEREDOC_EOF
 bucket: "${BUCKET}"
 configpack: "${CONFIGPACK}"
 container_tag: "${CONTAINER_TAG}"
