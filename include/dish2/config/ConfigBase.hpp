@@ -391,6 +391,9 @@ EMP_BUILD_CONFIG(
   VALUE(BENCHMARKING_DUMP, bool, false,
     "[NATIVE] Should we record data for benchmarking the simulation?"
   ),
+  VALUE(CELL_CENSUS_FREQ, size_t, 0,
+    "[NATIVE] How many updates should elapse between recording cell census? If 0, don't record cell censuses before end of simulation. Must be power of two."
+  ),
   VALUE(ROOT_ABUNDANCES_FREQ, size_t, 0,
     "[NATIVE] How many updates should elapse between recording phylogenetic root abundances? If 0, never record phylogenetic root abundances. Must be power of two."
   ),

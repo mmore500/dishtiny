@@ -225,7 +225,7 @@ for p in outdata/*a={demographic_phenotypic_phylogenetic_metrics,kin_conflict_st
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "${p}" \
-      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/multicultures/metrics/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
+      "s3://{{ bucket }}/endeavor=${ENDEAVOR}/multicultures-lowestandhightestroot/metrics/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${f}" \
     && echo "  ${f} upload success" && break \
     || (echo "retrying ${f} upload (${retry})" && sleep $((RANDOM % 10)))
     if ((${retry}==20)); then echo "$f upload fail" && exit 123123; fi

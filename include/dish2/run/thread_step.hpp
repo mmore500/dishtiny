@@ -8,6 +8,7 @@
 #include "../../../third-party/conduit/include/uitsl/math/shift_mod.hpp"
 
 #include "../config/cfg.hpp"
+#include "../record/write_cell_census.hpp"
 #include "../record/write_phylogenetic_root_abundances.hpp"
 #include "../record/write_selected_frames.hpp"
 
@@ -33,6 +34,12 @@ void thread_step(
     && uitsl::shift_mod( thread_world.GetUpdate(), cfg.ROOT_ABUNDANCES_FREQ() )
       == 0
   ) dish2::write_phylogenetic_root_abundances<Spec>( thread_world );
+
+  if (
+    cfg.CELL_CENSUS_FREQ()
+    && uitsl::shift_mod( thread_world.GetUpdate(), cfg.CELL_CENSUS_FREQ() )
+      == 0
+  ) dish2::write_cell_census<Spec>( thread_world );
 
   // update the simulation
   thread_world.Update();
