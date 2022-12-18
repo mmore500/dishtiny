@@ -132,7 +132,7 @@ echo "Download biotic background phenotype_equivalent_nopout genome"
 echo "----------------------------------------------------------"
 ################################################################################
 
-BB_PE_NOPOUT_URI="s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=1+what=generated/stint=${STINT}/series=${SERIES}/a=genome+bgpop=1+criteria=abundance+morph=jenga_phenotype_equivalent_nopout_with_biotic_background+proc=0+series=${SERIES}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
+BB_PE_NOPOUT_URI="s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=1+what=generated/stint=\${STINT}/series=${SERIES}/a=genome+bgpop=1+criteria=abundance+morph=jenga_phenotype_equivalent_nopout_with_biotic_background+proc=0+series=${SERIES}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
 PHENOTYPE_EQUIVALENT_GENOME="\$(mktemp -d)/\$(basename \${BB_PE_NOPOUT_URI})"
 
 echo "downloading \${BB_PE_NOPOUT_URI} to \${PHENOTYPE_EQUIVALENT_GENOME}"
