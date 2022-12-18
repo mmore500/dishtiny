@@ -186,7 +186,7 @@ Configpacks also specify how to build the DISHTINY executable (allowing for comp
 Ideally, a configpack might also specify which follow-up jobs to run or what process count to run simulations with, but this hasn't been implemented.
 
 Configpacks are stored in an unarchived (i.e., folders n' files) format inside of the `configpacks/` directory.
-This repository's GitHub Actions integration zips up configpacks corresponding to every commit and pushes them over to <https://github.com/mmore500/dishtiny-assets> where they can be curled from a programatically-generable url.
+This repository's GitHub Actions integration zips up configpacks corresponding to every commit and pushes them over to <https://github.com/mmore500/dishtiny-assets-2022-12-18> where they can be curled from a programatically-generable url.
 
 The rationale behind fetching configuration assets from a url is to enable straightforward integration with the DISHTINY web viewer.
 

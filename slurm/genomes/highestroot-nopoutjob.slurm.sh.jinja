@@ -197,7 +197,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   mpiexec.hydra --version
   $( (( N_PROCS > 1 )) && echo mpiexec.hydra -n "${N_PROCS}" singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" ) \
     ./rundishtiny \
-    -RUN 0 -GENESIS "monoculture" -ARTIFACTS_DUMP 1 -PHENOTYPE_EQUIVALENT_NOPOUT_LOWEST_ROOT 1 -STINT {{ stint }} -SERIES {{ series }} -THROW_ON_EXTINCTION 0 {{ "-PHENOTYPIC_DIVERGENCE_N_CELLS 16 -PHENOTYPIC_DIVERGENCE_N_UPDATES 16" if series | int < 1000 else "-PHENOTYPIC_DIVERGENCE_N_CELLS 64 -PHENOTYPIC_DIVERGENCE_N_UPDATES 256" if series | int < 10000 else "" }} -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/nopoutjob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
+    -RUN 0 -GENESIS "monoculture" -ARTIFACTS_DUMP 1 -PHENOTYPE_EQUIVALENT_NOPOUT_LOWEST_ROOT 1 -STINT {{ stint }} -SERIES {{ series }} -THROW_ON_EXTINCTION 0 {{ "-PHENOTYPIC_DIVERGENCE_N_CELLS 16 -PHENOTYPIC_DIVERGENCE_N_UPDATES 16" if series | int < 1000 else "-PHENOTYPIC_DIVERGENCE_N_CELLS 64 -PHENOTYPIC_DIVERGENCE_N_UPDATES 256" if series | int < 10000 else "" }} -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets-2022-12-18/configpacks/{{ configpack }}/nopoutjob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
 MPIEXEC_HEREDOC_EOF
