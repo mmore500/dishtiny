@@ -243,7 +243,7 @@ bucket: ${BUCKET}
 configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
-first_competitor_url: "s3://${BUCKET}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/\${wt}"
+first_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/\${wt}"
 second_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes-bb/stage=2+what=generated/stint=\${STINT}/series=${SERIES}/\${variant}"
 first_background_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/a=population+proc=0+series=${SERIES}+stint=\${STINT}+thread=0+variation=master+ext=.bin.xz"
 first_background_attrs: "dose=2+filter_except_lowest_root+"
@@ -330,8 +330,8 @@ bucket: ${BUCKET}
 configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
-first_competitor_url: "s3://${BUCKET}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/\${wt}"
-second_competitor_url: "s3://${BUCKET}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/\${wt}"
+first_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/\${wt}"
+second_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/\${wt}"
 first_background_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/a=population+proc=0+series=${SERIES}+stint=\${STINT}+thread=0+variation=master+ext=.bin.xz"
 first_background_attrs: "dose=2+filter_except_lowest_root+"
 output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/control-competitions-extended-backgroundbb/stage=3+what=generated/stint=\${STINT}/series=${SERIES}/"
