@@ -147,7 +147,7 @@ unset pids
 wait
 
 # get assets now so they don't conflict inside of the run loop
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -c "https://raw.githubusercontent.com/mmore500/dishtiny-assets/configpacks/{{ configpack }}/doubling-timejob/@{{ repo_sha }}/assets.tar.gz" -O - | tar -xvz
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -c "https://raw.githubusercontent.com/mmore500/dishtiny-assets-2022-12-18/configpacks/{{ configpack }}/doubling-timejob/@{{ repo_sha }}/assets.tar.gz" -O - | tar -xvz
 
 ls
 # an attempt to address intermittent failure where downloaded files aren't found
