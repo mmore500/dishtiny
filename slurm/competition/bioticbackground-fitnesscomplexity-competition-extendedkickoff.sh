@@ -238,7 +238,7 @@ JOB_SCRIPT="\$( keyname pack \
   --a "wt_vs_variant_backgroundbb" --variation "\${variation}" --ext ".slurm.sh" \
 )"
 
-j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+j2 --format=yaml -o "\${JOB_SCRIPT}" "\${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 bucket: ${BUCKET}
 configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
@@ -325,7 +325,7 @@ JOB_SCRIPT="\$( keyname pack \
   --a "wt_vs_wt_backgroundbb" --replicate "\${replicate}" --ext ".slurm.sh" \
 )"
 
-j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
+j2 --format=yaml -o "\${JOB_SCRIPT}" "\${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 bucket: ${BUCKET}
 configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
