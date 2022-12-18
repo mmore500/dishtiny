@@ -2,7 +2,7 @@
 
 ################################################################################
 echo
-echo "running monoculturekickoff.sh"
+echo "running monoculture-extendedkickoff.sh"
 echo "------------------------"
 ################################################################################
 
@@ -16,7 +16,7 @@ printerr() {
 trap 'printerr $LINENO' ERR
 
 if (( "$#" < 6 )); then
-  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [stint] [series...]"
+  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [series] [stints...]"
   exit 1
 fi
 
@@ -36,12 +36,12 @@ REPO_SHA="${1}"
 echo "REPO_SHA ${REPO_SHA}"
 shift
 
-STINT="${1}"
-echo "STINT ${STINT}"
+SERIES="${1}"
+echo "SERIES ${SERIES}"
 shift
 
-SERIES="${@}"
-echo "SERIES ${SERIES}"
+STINTS="${@}"
+echo "STINTS ${STINTS}"
 
 # set up and jump into temporary work directory
 cd "$(mktemp -d)"
@@ -73,7 +73,7 @@ trap 'printerr \$LINENO' ERR
 
 ################################################################################
 echo
-echo "running monoculturekickoff.sh"
+echo "running monoculture-extendedkickoff.sh"
 echo "------------------------"
 ################################################################################
 
@@ -81,16 +81,16 @@ echo "BUCKET ${BUCKET}"
 echo "CONFIGPACK ${CONFIGPACK}"
 echo "CONTAINER_TAG ${CONTAINER_TAG}"
 echo "REPO_SHA ${REPO_SHA}"
-echo "STINT ${STINT}"
+echo "STINTS ${STINTS}"
 echo "SERIES ${SERIES}"
 
 source ~/.secrets.sh || :
 
-for just_one_series in ${SERIES}; do
+for STINT in ${STINTS}; do
 
   JOB_SCRIPT="\$(mktemp)"
 
-  echo "series \${just_one_series}"
+  echo "series ${SERIES}"
   echo "JOB_SCRIPT \${JOB_SCRIPT}"
 
   j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/monocultures/monoculture-extendedjob.slurm.sh.jinja" << J2_HEREDOC_EOF
@@ -98,8 +98,8 @@ bucket: "${BUCKET}"
 configpack: "${CONFIGPACK}"
 container_tag: "${CONTAINER_TAG}"
 repo_sha: "${REPO_SHA}"
-series: "\${just_one_series}"
-stint: "${STINT}"
+series: "${SERIES}"
+stint: "\${STINT}"
 J2_HEREDOC_EOF
 
   # adapted from https://superuser.com/a/689340
