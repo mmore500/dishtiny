@@ -112,8 +112,8 @@ echo "Download wildtype genome"
 echo "----------------------------------------------------------"
 ################################################################################
 
-WILDTYPE_URI="s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=1+what=extracted/stint=\${STINT}/series=${SERIES}/a=genome+criteria=abundance_highest_root+morph=wildtype+proc=0+series=${SER
-WILDTYPE_GENOME="\$(mktemp -d)/\$(basename "\${WILDTYPE_URI}")"
+WILDTYPE_URI="s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=${SERIES}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
+WILDTYPE_GENOME="\$(mktemp -d)/\$(basename \${WILDTYPE_URI})"
 
 echo "downloading \${WILDTYPE_URI} to \${WILDTYPE_GENOME}"
 for retry in {1..20}; do
@@ -133,7 +133,7 @@ echo "----------------------------------------------------------"
 ################################################################################
 
 BB_PE_NOPOUT_URI="s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=1+what=generated/stint=${STINT}/series=${SERIES}/a=genome+bgpop=1+criteria=abundance+morph=jenga_phenotype_equivalent_nopout_with_biotic_background+proc=0+series=${SERIES}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
-PHENOTYPE_EQUIVALENT_GENOME="\$(mktemp -d)/\$(basename z\${BB_PE_NOPOUT_URI}")"
+PHENOTYPE_EQUIVALENT_GENOME="\$(mktemp -d)/\$(basename \${BB_PE_NOPOUT_URI})"
 
 echo "downloading \${BB_PE_NOPOUT_URI} to \${PHENOTYPE_EQUIVALENT_GENOME}"
 for retry in {1..20}; do
