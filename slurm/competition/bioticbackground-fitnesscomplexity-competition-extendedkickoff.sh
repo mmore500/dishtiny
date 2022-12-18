@@ -157,7 +157,7 @@ echo "Generate Nopped Op Variants of phenotype_equivalent_nopout"
 echo "----------------------------------------------------------"
 ################################################################################
 
-python3 "${REPRO_WORK_DIRECTORY}/dishtiny/script/make_nopped_op_variants.py" "\${WILDTYPE_GENOME}" "\${PHENOTYPE_EQUIVALENT_GENOME}"
+python3 "\${REPRO_WORK_DIRECTORY}/dishtiny/script/make_nopped_op_variants.py" "\${WILDTYPE_GENOME}" "\${PHENOTYPE_EQUIVALENT_GENOME}"
 
 ################################################################################
 echo
