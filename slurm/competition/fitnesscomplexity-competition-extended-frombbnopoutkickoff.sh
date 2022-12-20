@@ -102,7 +102,7 @@ echo "Dispatching Fitness Complexity Competitions"
 echo "==========================================="
 
 (
-cd "$(mktemp -d)"
+cd "\$(mktemp -d)"
 pwd
 
 ################################################################################
