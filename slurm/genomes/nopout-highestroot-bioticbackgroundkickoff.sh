@@ -109,6 +109,7 @@ target_genome_url: "s3://${BUCKET}/endeavor=\$(( just_one_series / 1000 ))/genom
 background_population_attrs: "filter_lowest_root+"
 background_population_url: "s3://${BUCKET}/endeavor=\$(( just_one_series / 1000 ))/evolve/populations/stage=0+what=generated/stint=${STINT}/series=\${just_one_series}/a=population+proc=0+series=\${just_one_series}+stint=${STINT}+thread=0+variation=master+ext=.bin.xz"
 followup_freq: "${FOLLOWUP_FREQ}"
+flag: "PHENOTYPE_EQUIVALENT_NOPOUT_HIGHEST_ROOT"
 J2_HEREDOC_EOF
 
   # adapted from https://superuser.com/a/689340
