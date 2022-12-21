@@ -132,7 +132,7 @@ echo "downloading ${f}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
     "{{ target_genome_url }}" \
-    "root_id=0+$(basename {{ target_genome_url }})" \
+    "root_id={{ focal_root_id | default(0) }}+$(basename {{ target_genome_url }})" \
     && echo "  ${f} download success" && break \
     || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
@@ -143,7 +143,7 @@ echo "downloading ${f}"
 for retry in {1..20}; do
   aws s3 cp --quiet \
     "{{ background_population_url }}" \
-    "{{ background_population_attrs | default('') }}root_id=1+$(basename {{ background_population_url }})" \
+    "{{ background_population_attrs | default('') }}root_id={{ background_root_id | default(1) }}+$(basename {{ background_population_url }})" \
     && echo "  ${f} download success" && break \
     || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
   if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
