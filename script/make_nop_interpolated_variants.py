@@ -37,7 +37,10 @@ more_ops_data = genome_local_autoload( more_ops )
 less_ops_num_insts = len( less_ops_data['value0']['program'] )
 more_ops_num_insts = len( more_ops_data['value0']['program'] )
 
-assert less_ops_num_insts == more_ops_num_insts
+assert less_ops_num_insts == more_ops_num_insts, (
+    less_ops_num_insts,
+    more_ops_num_insts,
+)
 
 less_ops_num_ops = sum(
     'Nop-' not in inst['operation']
@@ -48,7 +51,10 @@ more_ops_num_ops = sum(
     for inst in more_ops_data["value0"]["program"]
 )
 
-assert less_ops_num_ops <= more_ops_num_ops
+assert less_ops_num_ops <= more_ops_num_ops, (
+    less_ops_num_ops,
+    more_ops_num_ops,
+)
 
 target_op_idxs = [
     idx
