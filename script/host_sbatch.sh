@@ -18,6 +18,7 @@ echo "-------------------------------"
 JOB_SCRIPT="${1}"
 echo "JOB_SCRIPT ${JOB_SCRIPT}"
 echo "realpath JOB_SCRIPT $(realpath "${JOB_SCRIPT}")"
+echo "hostname $(hostname)"
 
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
