@@ -34,6 +34,11 @@ basedondata = genome_local_autoload( basedon )
 assert (
     len( applytodata['value0']['program'] )
     == len( basedondata['value0']['program'] )
+), (
+    len( applytodata['value0']['program'] ),
+    len( basedondata['value0']['program'] ),
+    applytodata['value0']['program'][:1],
+    basedondata['value0']['program'][:1],
 )
 
 
