@@ -23,7 +23,6 @@ echo "hostname $(hostname)"
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
 
-mkdir -p "/mnt/scratch/\$(whoami)/slurmscripts/"
 tmptarget="/tmp/$(uuid)"
 echo "tmptarget ${tmptarget}"
 
