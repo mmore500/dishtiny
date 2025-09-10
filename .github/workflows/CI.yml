@@ -12,7 +12,7 @@ jobs:
 
   deploy-assets:
     name: Deploy Assets
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
     steps:
