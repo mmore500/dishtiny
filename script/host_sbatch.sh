@@ -23,7 +23,7 @@ echo "hostname $(hostname)"
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
 
-tmptarget="/tmp/$(uuid)"
+tmptarget="/tmp/$(date +%Y-%m-%d-%H-%M-%S)-$RANDOM-$RANDOM-$RANDOM-$$"
 echo "tmptarget ${tmptarget}"
 
 for retry in {0..20}; do
