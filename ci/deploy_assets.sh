@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # fail on error
-set -e
+set 
 
 git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
 git config --global user.name 'github-actions'
@@ -20,7 +20,7 @@ for folder in $(realpath configpacks/*/*); do
   ref_tag="$(git rev-parse --show-prefix)@${GITHUB_REF}"
 
   git init
-  git remote add origin https://x-access-token:${{ PERSONAL_ACCESS_TOKEN }}@github.com/mmore500/dishtiny-assets-2022-12-18.git
+  git remote add origin https://x-access-token:${PERSONAL_ACCESS_TOKEN}@github.com/mmore500/dishtiny-assets-2022-12-18.git
 
   git -c commit.gpgsign=false commit --allow-empty --message "Initial commit"
   git checkout --quiet $(git rev-parse HEAD)
