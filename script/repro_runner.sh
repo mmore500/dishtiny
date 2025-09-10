@@ -280,16 +280,16 @@ END_OF_HEREDOC" >> "${rerun}"
   # done &
 
   xz -c -9e "${log}" > "${logzip}"
-  echo "uploading log"
-  for retry in {1..3}; do
-    aws s3 cp --quiet \
-      "${logzip}" \
-      "s3://${arg_project}/repro/a=log+repro=${REPRO_ID}+ext=.txt.xz" \
-    && echo "  log upload success" \
-    && break \
-      || (echo "retrying log upload (${retry})" && sleep $((RANDOM % 10)))
-    if ((${retry}==3)); then echo "upload log fail"; fi
-  done &
+  # echo "uploading log"
+  # for retry in {1..3}; do
+  #   aws s3 cp --quiet \
+  #     "${logzip}" \
+  #     "s3://${arg_project}/repro/a=log+repro=${REPRO_ID}+ext=.txt.xz" \
+  #   && echo "  log upload success" \
+  #   && break \
+  #     || (echo "retrying log upload (${retry})" && sleep $((RANDOM % 10)))
+  #   if ((${retry}==3)); then echo "upload log fail"; fi
+  # done &
 
   # if user has created an output directory, upload it
   # if [ -d "${WORK_DIRECTORY}/output" ]; then
