@@ -25,6 +25,7 @@ echo "hostname $(hostname)"
 
 mkdir -p "/mnt/scratch/\$(whoami)/slurmscripts/"
 tmptarget="/tmp/$(uuid)"
+echo "tmptarget ${tmptarget}"
 
 for retry in {0..20}; do
 
