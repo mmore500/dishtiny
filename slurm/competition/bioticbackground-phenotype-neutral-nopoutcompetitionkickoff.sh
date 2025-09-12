@@ -108,7 +108,7 @@ for JUST_ONE_SERIES in ${SERIES}; do
     echo "FIRST_COMPETITOR \${FIRST_COMPETITOR}"
     echo "SECOND_COMPETITOR \${SECOND_COMPETITOR}"
 
-    j2 --format=yaml -o "a=competition+series=\${JUST_ONE_SERIES}+stint=${STINT}+replicate=\${REPLICATE}+ext=.slurm.sh" "dishtiny/slurm/competition/competitionjob.slurm.sh.jinja" << J2_HEREDOC_EOF
+    j2 --format=yaml -o "a=competition+series=\${JUST_ONE_SERIES}+stint=${STINT}+replicate=\${REPLICATE}+ext=.slurm.sh" "dishtiny/slurm/competition/ition/bioticbackgroundcompetitionjob.slurm.sh.jinja" << J2_HEREDOC_EOF
 bucket: ${BUCKET}
 configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
