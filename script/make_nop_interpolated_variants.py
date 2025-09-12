@@ -24,9 +24,15 @@ random.seed(1)
 try:
     __, less_ops, more_ops, num_interpolation_steps = sys.argv
     num_interpolation_steps = int( num_interpolation_steps )
+    max_dose = None
 except:
-    print( __doc__ )
-    sys.exit(1)
+    try:
+        __, less_ops, more_ops, num_interpolation_steps, max_dose = sys.argv
+        num_interpolation_steps = int( num_interpolation_steps )
+        max_dose = int( max_dose )
+    except:
+        print( __doc__ )
+        sys.exit(1)
 
 assert 'ext' in kn.unpack( less_ops )
 assert 'ext' in kn.unpack( more_ops )
@@ -77,10 +83,17 @@ print(
 )
 print( f'{len(target_op_idxs)} target op indexes' )
 
+if max_dose is None:
+    max_dose = len(target_op_idxs)
+else:
+    max_dose = min( max_dose, len(target_op_idxs) )
+
+print( f'using max_dose={max_dose}' )
+
 sampled_nop_counts = [
     round(count)
     for count in np.linspace(
-        0, len(target_op_idxs), num_interpolation_steps
+        0, max_dose, num_interpolation_steps
     )
 ]
 
