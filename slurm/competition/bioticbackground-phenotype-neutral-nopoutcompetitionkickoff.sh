@@ -95,6 +95,25 @@ echo "NUM_SERIES \${NUM_SERIES}"
 
 ################################################################################
 echo
+echo "Get Runscript Template"
+echo "----------------------------------------"
+################################################################################
+
+# run jinja on template
+JOB_TEMPLATE="\$(mktemp)"
+echo "JOB_TEMPLATE \${JOB_TEMPLATE}"
+
+for retry in {1..20}; do
+  curl \
+    -o "\${JOB_TEMPLATE}" \
+    "https://raw.githubusercontent.com/mmore500/dishtiny/${REPO_SHA}/slurm/competition/bioticbackgroundcompetitionjob.slurm.sh.jinja" \
+  && echo "  job template curl success" && break \
+  || (echo "retrying job template curl (\${retry})" && sleep \$((RANDOM % 10)))
+  if ((\${retry}==20)); then echo "job template curl fail" && exit 123123; fi
+done
+
+################################################################################
+echo
 echo "Generate Tournament Runscripts"
 echo "------------------------------"
 ################################################################################
@@ -108,7 +127,7 @@ for JUST_ONE_SERIES in ${SERIES}; do
     echo "FIRST_COMPETITOR \${FIRST_COMPETITOR}"
     echo "SECOND_COMPETITOR \${SECOND_COMPETITOR}"
 
-    j2 --format=yaml -o "a=competition+series=\${JUST_ONE_SERIES}+stint=${STINT}+replicate=\${REPLICATE}+ext=.slurm.sh" "dishtiny/slurm/competition/ition/bioticbackgroundcompetitionjob.slurm.sh.jinja" << J2_HEREDOC_EOF
+    j2 --format=yaml -o "a=competition+series=\${JUST_ONE_SERIES}+stint=${STINT}+replicate=\${REPLICATE}+ext=.slurm.sh" "\${JOB_TEMPLATE}" << J2_HEREDOC_EOF
 bucket: ${BUCKET}
 configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
