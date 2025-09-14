@@ -98,7 +98,7 @@ echo "NUM_SERIES \${NUM_SERIES}"
 
 ################################################################################
 echo
-echo "Generate Nop-Interpolated Variants"
+echo "Generate Nop-Interspersed Variants"
 echo "------------------------------"
 ################################################################################
 
@@ -132,13 +132,13 @@ for JUST_ONE_SERIES in ${SERIES}; do
     if ((\${retry}==20)); then echo "\${LESS_OPS_URL} download fail" && exit 123123; fi
   done
 
-  python3 \${REPRO_WORK_DIRECTORY}/dishtiny/script/make_nop_interpolated_variants.py "\${LESS_OPS_PATH}" "\${MORE_OPS_PATH}"
+  python3 \${REPRO_WORK_DIRECTORY}/dishtiny/script/make_nop_interspersed_variants.py "\${LESS_OPS_PATH}" "\${MORE_OPS_PATH}"
 
 done
 
 ################################################################################
 echo
-echo "Upload Nop-Interpolated Variants"
+echo "Upload Nop-Interspersed Variants"
 echo "--------------------------------"
 ################################################################################
 
@@ -175,7 +175,7 @@ echo "Generate interspersion Competition Runscripts"
 echo "---------------------------------------------"
 ################################################################################
 
-# each interpolated genome needs to be competed against
+# each interspersed genome needs to be competed against
 # phenotype-equivalent nopout
 # (could be against wildtype, but this is the more conservative choice)
 
