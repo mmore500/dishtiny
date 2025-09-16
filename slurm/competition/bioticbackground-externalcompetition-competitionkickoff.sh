@@ -135,8 +135,8 @@ echo "-------------------------------------------------------------------------"
 shopt -s nullglob
 
 counter=0
-for comparator_series in {16000..160039}; do
-for replicate in {0..4} ; do
+for comparator_series in {16000..16039}; do
+for replicate in {0..4}; do
 
 echo "counter \${counter}"
 echo "replicate \${replicate}"
