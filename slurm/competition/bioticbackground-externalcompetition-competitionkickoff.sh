@@ -136,7 +136,7 @@ shopt -s nullglob
 
 counter=0
 for comparator_series in {16000..16039}; do
-for replicate in {0..4}; do
+for replicate in {0..1}; do
 
 echo "counter \${counter}"
 echo "replicate \${replicate}"
