@@ -93,6 +93,8 @@ source ~/.secrets.sh || :
 
 TEMPLATE_PATH="\$(mktemp)"
 echo "TEMPLATE_PATH \${TEMPLATE_PATH}"
+echo "which wget: \$(which wget)"
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/${REPO_SHA}/slurm/restint/restintjob.slurm.sh.jinja" | head
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/${REPO_SHA}/slurm/restint/restintjob.slurm.sh.jinja" > "\${TEMPLATE_PATH}"
 echo "template downloaded"
 
