@@ -94,6 +94,7 @@ source ~/.secrets.sh || :
 TEMPLATE_PATH="\$(mktemp)"
 echo "TEMPLATE_PATH \${TEMPLATE_PATH}"
 wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/${REPO_SHA}/slurm/restint/restintjob.slurm.sh.jinja" > "\${TEMPLATE_PATH}"
+echo "template downloaded"
 
 for just_one_series in ${SERIES}; do
 
@@ -101,6 +102,9 @@ for just_one_series in ${SERIES}; do
 
   echo "series \${just_one_series}"
   echo "JOB_SCRIPT \${JOB_SCRIPT}"
+
+  echo "running j2"
+  echo "which j2: \$(which j2)"
 
   j2 --format=yaml -o "\${JOB_SCRIPT}" "\${TEMPLATE_PATH}" << J2_HEREDOC_EOF
 read_bucket: "${READ_BUCKET}"
