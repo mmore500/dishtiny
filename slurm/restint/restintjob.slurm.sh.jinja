@@ -120,10 +120,19 @@ wait # ignores exit code of time log step
 mkdir work
 cd work
 
+bash -c "cd ../dishtiny && ./configpacks/{{ configpack }}/build_native.sh"
+cp ../dishtiny/rundishtiny .
+
 {% if stint | int > 0 %}
 echo "downloading populations from last stint..."
 for ((proc=0;proc<N_PROCS;++proc)); do
   for ((thread=0;thread<N_THREADS;++thread)); do
+    pwd
+    TMPDIR="$(mktemp -d)"
+    cp rundishtiny "${TMPDIR}"
+    pushd "${TMPDIR}"
+    pwd
+
     f="a=population+proc=${proc}+series={{ series }}+stint={{ stint | int - 1 }}+thread=${thread}+variation=master+ext=.bin.xz"
     echo "downloading ${f}"
     for retry in {1..20}; do
@@ -133,14 +142,8 @@ for ((proc=0;proc<N_PROCS;++proc)); do
       && echo "  ${f} download success" && break \
       || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
       if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
-    done & pids+=($!)
-  done
-done
+    done
 
-echo "downloading populations from last stint..."
-for ((proc=0;proc<N_PROCS;++proc)); do
-  for ((thread=0;thread<N_THREADS;++thread)); do
-    f="a=population+proc=${proc}+series={{ series }}+stint={{ stint | int - 1 }}+thread=${thread}+variation=master+ext=.bin.xz"
     echo "downloading ${f}"
     for retry in {1..20}; do
       aws s3 cp --quiet \
@@ -149,24 +152,19 @@ for ((proc=0;proc<N_PROCS;++proc)); do
       && echo "  ${f} download success" && break \
       || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
       if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
-    done & pids+=($!)
+    done
+
+    ./rundishtiny -RUN false -N_THREADS 1 -ARTIFACTS_DUMP 1 -GENESIS innoculate
+    ls
+    ls outartifacts
+    popd
+    pwd
+
+    ls ${TMPDIR}/outartifacts/*a=population*
+    mv ${TMPDIR}/outartifacts/*a=population* "${f}"
   done
 done
 {% endif %}
-
-bash -c "cd ../dishtiny && ./configpacks/{{ configpack }}/build_native.sh"
-cp ../dishtiny/rundishtiny .
-
-# compile and download concurrently!
-for pid in "${pids[@]}"; do
-  # if child process fails, we fail
-  wait "${pid}"
-done
-
-unset pids
-
-# double check that all downloads are complete
-wait
 
 ls
 
