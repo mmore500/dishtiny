@@ -129,14 +129,13 @@ for ((proc=0;proc<N_PROCS;++proc)); do
     for retry in {1..20}; do
       aws s3 cp --quiet \
         "s3://{{ read_bucket }}/endeavor=${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint={{ stint | int - 1 }}/series={{ series }}/${f}" \
-        "${f}" \
+        "filter_lowest_root+root_id=0+${f}" \
       && echo "  ${f} download success" && break \
       || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
       if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
     done & pids+=($!)
   done
 done
-mv "${f}" "filter_lowest_root+root_id=0+${f}"
 
 echo "downloading populations from last stint..."
 for ((proc=0;proc<N_PROCS;++proc)); do
@@ -146,14 +145,13 @@ for ((proc=0;proc<N_PROCS;++proc)); do
     for retry in {1..20}; do
       aws s3 cp --quiet \
         "s3://{{ read_bucket }}/endeavor=${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint={{ stint | int - 1 }}/series={{ series }}/${f}" \
-        "${f}" \
+        "filter_lowest_root+root_id=1+${f}" \
       && echo "  ${f} download success" && break \
       || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
       if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
     done & pids+=($!)
   done
 done
-mv "${f}" "filter_lowest_root+root_id=1+${f}"
 {% endif %}
 
 bash -c "cd ../dishtiny && ./configpacks/{{ configpack }}/build_native.sh"
