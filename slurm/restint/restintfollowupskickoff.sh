@@ -91,6 +91,10 @@ echo "STINTS ${STINTS}"
 
 source ~/.secrets.sh || :
 
+TEMPLATE_PATH="\$(mktemp)"
+echo "TEMPLATE_PATH \${TEMPLATE_PATH}"
+wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "https://raw.githubusercontent.com/mmore500/dishtiny/${REPO_SHA}/slurm/restint/restintfollowupsjob.slurm.sh.jinja" > "\${TEMPLATE_PATH}"
+
 for just_one_stint in ${STINTS}; do
 
   JOB_SCRIPT="\$(mktemp)"
@@ -98,7 +102,7 @@ for just_one_stint in ${STINTS}; do
   echo "series \${just_one_stint}"
   echo "JOB_SCRIPT \${JOB_SCRIPT}"
 
-  j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/evolve/evolvefollowupsjob.slurm.sh.jinja" << J2_HEREDOC_EOF
+  j2 --format=yaml -o "\${JOB_SCRIPT}" "\${TEMPLATE_PATH}" << J2_HEREDOC_EOF
 bucket: "${BUCKET}"
 configpack: "${CONFIGPACK}"
 container_tag: "${CONTAINER_TAG}"
