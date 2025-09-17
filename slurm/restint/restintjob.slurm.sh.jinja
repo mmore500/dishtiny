@@ -140,7 +140,7 @@ done
 echo "downloading populations from last stint..."
 for ((proc=0;proc<N_PROCS;++proc)); do
   for ((thread=0;thread<N_THREADS;++thread)); do
-    f="filter_except_lowest_root+root_id=1+a=population+proc=${proc}+series={{ series }}+stint={{ stint | int - 1 }}+thread=${thread}+variation=master+ext=.bin.xz"
+    f="filter_lowest_root+root_id=1+a=population+proc=${proc}+series={{ series }}+stint={{ stint | int - 1 }}+thread=${thread}+variation=master+ext=.bin.xz"
     echo "downloading ${f}"
     for retry in {1..20}; do
       aws s3 cp --quiet \
