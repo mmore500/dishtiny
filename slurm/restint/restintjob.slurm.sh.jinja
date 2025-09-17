@@ -160,8 +160,8 @@ for ((proc=0;proc<N_PROCS;++proc)); do
     popd
     pwd
 
-    ls ${TMPDIR}/outartifacts/*a=population*
-    mv ${TMPDIR}/outartifacts/*a=population* "${f}"
+    ls ${TMPDIR}/outartifacts/*a=population*.bin.xz
+    mv ${TMPDIR}/outartifacts/*a=population*.bin.xz "${f}"
   done
 done
 {% endif %}
