@@ -124,7 +124,7 @@ cd work
 echo "downloading populations from last stint..."
 for ((proc=0;proc<N_PROCS;++proc)); do
   for ((thread=0;thread<N_THREADS;++thread)); do
-    f="filter_lowest_root+root_id=0+a=population+proc=${proc}+series={{ series }}+stint={{ stint | int - 1 }}+thread=${thread}+variation=master+ext=.bin.xz"
+    f="a=population+proc=${proc}+series={{ series }}+stint={{ stint | int - 1 }}+thread=${thread}+variation=master+ext=.bin.xz"
     echo "downloading ${f}"
     for retry in {1..20}; do
       aws s3 cp --quiet \
@@ -136,11 +136,12 @@ for ((proc=0;proc<N_PROCS;++proc)); do
     done & pids+=($!)
   done
 done
+mv "${f}" "filter_lowest_root+root_id=0+${f}"
 
 echo "downloading populations from last stint..."
 for ((proc=0;proc<N_PROCS;++proc)); do
   for ((thread=0;thread<N_THREADS;++thread)); do
-    f="filter_lowest_root+root_id=1+a=population+proc=${proc}+series={{ series }}+stint={{ stint | int - 1 }}+thread=${thread}+variation=master+ext=.bin.xz"
+    f="a=population+proc=${proc}+series={{ series }}+stint={{ stint | int - 1 }}+thread=${thread}+variation=master+ext=.bin.xz"
     echo "downloading ${f}"
     for retry in {1..20}; do
       aws s3 cp --quiet \
@@ -152,7 +153,7 @@ for ((proc=0;proc<N_PROCS;++proc)); do
     done & pids+=($!)
   done
 done
-
+mv "${f}" "filter_lowest_root+root_id=1+${f}"
 {% endif %}
 
 bash -c "cd ../dishtiny && ./configpacks/{{ configpack }}/build_native.sh"
