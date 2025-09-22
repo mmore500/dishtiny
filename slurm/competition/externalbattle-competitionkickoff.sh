@@ -150,8 +150,8 @@ bucket: ${BUCKET}
 configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
-first_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/populations/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/a=population+proc=0+series=${SERIES}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
-second_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/populations/stage=0+what=generated/stint=\${STINT}/series=\${comparator_series}/a=population+proc=0+series=\${comparator_series}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
+first_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/populations/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/a=population+proc=0+series=${SERIES}+stint=\${STINT}+thread=0+variation=master+ext=.bin.xz"
+second_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/populations/stage=0+what=generated/stint=\${STINT}/series=\${comparator_series}/a=population+proc=0+series=\${comparator_series}+stint=\${STINT}+thread=0+variation=master+ext=.bin.xz"
 output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/external-battles/stage=1+what=generated/stint=\${STINT}/series=${SERIES}/"
 replicate: \${replicate}
 endeavor: \${ENDEAVOR}
