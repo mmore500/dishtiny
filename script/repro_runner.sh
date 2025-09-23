@@ -514,7 +514,7 @@ if [ -n "${repo_sha}" ]; then
   [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
   gitget_path="$(mktemp)"
   echo "gitget_path ${gitget_path}"
-  wget -O "${gitget_path}" "https://raw.githubusercontent.com/mmore500/dishtiny/${repo_sha}/script/gitget.sh"
+  curl --fail --show-error --silent --location --retry 10 --retry-delay 1 --max-time 15 --connect-timeout 20 "https://raw.githubusercontent.com/mmore500/dishtiny/${repo_sha}/script/gitget.sh" -o "${gitget_path}"
   echo "wget success"
   chmod +x "${gitget_path}"
   echo "${gitget_path} ready"
