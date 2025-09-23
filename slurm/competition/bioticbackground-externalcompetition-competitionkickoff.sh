@@ -6,6 +6,8 @@ echo "running bioticbackground-externalcompetition-competitionkickoff.sh"
 echo "-------------------------------------------------------------------------"
 ################################################################################
 
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
+
 # fail on error
 set -e
 # adapted from https://unix.stackexchange.com/a/504829
