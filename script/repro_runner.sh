@@ -509,11 +509,17 @@ echo "repo_sha before asset get ${repo_sha}"
 
 if [ -n "${repo_sha}" ]; then
 
+  gitget_path="$(mktemp)"
+  echo "gitget_path ${gitget_path}"
   wget \
     --retry-connrefused --waitretry=1 --read-timeout=20 \
     --timeout=15 -t 10 -qO- \
     "https://raw.githubusercontent.com/mmore500/dishtiny/${repo_sha}/script/gitget.sh" \
-  | bash --norc --noprofile -s -- \
+  > "${gitget_path}"
+  chmod +x "${gitget_path}"
+  echo "${gitget_path} ready"
+  
+  bash "${gitget_path}" \
     "https://github.com/${arg_username}/${arg_slug}.git" \
     "${arg_slug}" \
     "${repo_sha}"
