@@ -102,8 +102,7 @@ echo "--------------------------------"
 # and https://stackoverflow.com/a/4642975
 host_sbatch_url="https://raw.githubusercontent.com/mmore500/dishtiny/${repo_sha}/script/host_sbatch.sh"
 echo "host_sbatch_url ${host_sbatch_url}"
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "${host_sbatch_url}" \
-  | bash -s "${JOB_SCRIPT}" \
+curl --fail --show-error --silent --location --retry 10 --retry-delay 1 --max-time 15 --connect-timeout 20 "${host_sbatch_url}" | bash -s "${JOB_SCRIPT}" \
   && rm -f "${JOB_SCRIPT}" \
   && echo "${JOB_SCRIPT} submitted"
 
