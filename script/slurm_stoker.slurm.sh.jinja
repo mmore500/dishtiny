@@ -121,13 +121,13 @@ echo "$(ls *.slurm.sh | wc -l) jobs to submit"
 host_squeue_url="https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_squeue.sh"
 echo "host_squeue_url ${host_squeue_url}"
 host_squeue_script="$(mktemp)"
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "${host_squeue_url}" > "${host_squeue_script}"
+curl --fail --show-error --silent --location --retry 10 --retry-delay 1 --max-time 15 --connect-timeout 20 "${host_squeue_url}" -o "${host_squeue_script}"
 chmod +x "${host_squeue_script}"
 
 host_sbatch_url="https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/host_sbatch.sh"
 echo "host_sbatch_url ${host_sbatch_url}"
 host_sbatch_script="$(mktemp)"
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "${host_sbatch_url}" > "${host_sbatch_script}"
+curl --fail --show-error --silent --location --retry 10 --retry-delay 1 --max-time 15 --connect-timeout 20 "${host_sbatch_url}" -o "${host_sbatch_script}"
 chmod +x "${host_sbatch_script}"
 
 for JOB_SCRIPT in *.slurm.sh; do
@@ -183,8 +183,7 @@ fi
 
 host_kickoff_url="https://raw.githubusercontent.com/mmore500/dishtiny/{{ repo_sha }}/script/slurm_stoker_containerized_kickoff.sh"
 echo "host_kickoff_url ${host_kickoff_url}"
-wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 -qO- "${host_kickoff_url}" \
-| bash -s "{{ bucket }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ title }}"
+curl --fail --show-error --silent --location --retry 10 --retry-delay 1 --max-time 15 --connect-timeout 20 "${host_kickoff_url}" | bash -s "{{ bucket }}" "{{ container_tag }}" "{{ repo_sha }}" "{{ title }}"
 
 ################################################################################
 echo
