@@ -21,6 +21,8 @@ echo "running slurm_stoker.slurm.sh"
 echo "-----------------------------"
 ################################################################################
 
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
+
 # print message on exit (for debugging)
 trap 'echo exiting slurm_stoker.slurm.sh' EXIT
 
