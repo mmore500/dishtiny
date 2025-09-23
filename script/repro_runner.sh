@@ -498,7 +498,7 @@ container_file="$(mktemp)"
 retry=0
 time until singularity pull --force "${container_file}" "docker://${arg_username}/${arg_slug}@${container_tag#*@}"; do
   (( retry++ >= 5 )) && echo "too many singularity pull retries" && exit 1
-  echo "failed singularity pull ${retry}, trying agian" && sleep $(( retry * retry * 60 ))
+  echo "failed singularity pull ${retry}, trying again" && sleep $(( retry * retry * 60 ))
 done
 
 # setup output folder
@@ -513,7 +513,7 @@ if [ -n "${repo_sha}" ]; then
     --retry-connrefused --waitretry=1 --read-timeout=20 \
     --timeout=15 -t 10 -qO- \
     "https://raw.githubusercontent.com/mmore500/dishtiny/${repo_sha}/script/gitget.sh" \
-  | bash -s \
+  | bash --norc --noprofile -s -- \
     "https://github.com/${arg_username}/${arg_slug}.git" \
     "${arg_slug}" \
     "${repo_sha}"
