@@ -515,10 +515,14 @@ if [ -n "${repo_sha}" ]; then
   gitget_path="$(mktemp)"
   echo "gitget_path ${gitget_path}"
   wget \
-    --retry-connrefused --waitretry=1 --read-timeout=20 \
-    --timeout=15 -t 10 -qO- \
-    "https://raw.githubusercontent.com/mmore500/dishtiny/${repo_sha}/script/gitget.sh" \
-  > "${gitget_path}"
+    --retry-connrefused \        # Retry if the connection is refused
+    --waitretry=1 \              # Wait 1 second before retrying
+    --read-timeout=20 \          # Stop waiting if no data is received for 20 seconds
+    --timeout=15 \               # Maximum time allowed for the connection attempt
+    -t 10 \                      # Try up to 10 times before failing
+    -O "${gitget_path}" \        # Save output directly to the specified file
+    "https://raw.githubusercontent.com/mmore500/dishtiny/${repo_sha}/script/gitget.sh"
+  echo "wget success"
   chmod +x "${gitget_path}"
   echo "${gitget_path} ready"
   
