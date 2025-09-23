@@ -23,20 +23,17 @@ echo "hostname $(hostname)"
 # load secrets into environment variables, if available
 [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh || echo "~/secrets.sh not found"
 
-tmptarget="/tmp/$(date +%Y-%m-%d-%H-%M-%S)-$RANDOM-$RANDOM-$RANDOM-$$"
-echo "tmptarget ${tmptarget}"
-
 for retry in {0..20}; do
 
   if ((${retry}==20)); then echo "  job submit fail" && exit 123123; fi
 
   sshpass -p "${HOST_PASSWORD}" \
     scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
-      "${JOB_SCRIPT}" "${HOST_USERNAME}@$(hostname):$tmptarget" \
+      "${JOB_SCRIPT}" "${HOST_USERNAME}@$(hostname):$(realpath "${JOB_SCRIPT}")" \
   && echo "  job script copy success" \
   || (echo "retrying job script copy (${retry})" && sleep $((RANDOM % 10)) && continue)
 
-  echo "JOB_ID=\"\$(sbatch --parsable \"$tmptarget\")\"; mkdir -p \"/mnt/scratch/\$(whoami)/slurmscripts/\"; cp \"$tmptarget\" \"/mnt/scratch/\$(whoami)/slurmscripts/slurm-\${JOB_ID}.sh\" && echo \"submitted batch job \${JOB_ID}\"" \
+  echo "JOB_ID=\"\$(sbatch --parsable \"$(realpath "${JOB_SCRIPT}")\")\"; mkdir -p \"/mnt/scratch/\$(whoami)/slurmscripts/\"; cp \"$(realpath "${JOB_SCRIPT}")\" \"/mnt/scratch/\$(whoami)/slurmscripts/slurm-\${JOB_ID}.sh\" && echo \"submitted batch job \${JOB_ID}\"" \
   | sshpass -p "${HOST_PASSWORD}" \
     ssh -q -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${HOST_USERNAME}@$(hostname)" -X \
