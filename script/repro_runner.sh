@@ -509,7 +509,7 @@ echo "repo_sha before asset get ${repo_sha}"
 
 if [ -n "${repo_sha}" ]; then
 
-  time wget \
+  wget \
     --retry-connrefused --waitretry=1 --read-timeout=20 \
     --timeout=15 -t 10 -qO- \
     "https://raw.githubusercontent.com/mmore500/dishtiny/${repo_sha}/script/gitget.sh" \
@@ -520,7 +520,7 @@ if [ -n "${repo_sha}" ]; then
 
 else
   echo "setting up latest project source..."
-  time for retry in {1..20}; do
+  for retry in {1..20}; do
     rm -rf "${arg_slug}" \
     && git clone "https://github.com/${arg_username}/${arg_slug}.git" \
       --quiet --depth 1 --jobs 16 --recursive --shallow-submodules \
