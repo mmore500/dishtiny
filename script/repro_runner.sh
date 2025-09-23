@@ -518,6 +518,8 @@ if [ -n "${repo_sha}" ]; then
     "${arg_slug}" \
     "${repo_sha}"
 
+  echo "gitget.sh complete"
+
 else
   echo "setting up latest project source..."
   for retry in {1..20}; do
