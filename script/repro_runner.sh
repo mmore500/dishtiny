@@ -68,6 +68,7 @@ echo
 echo "Setup Temporary Files"
 echo "--------------------------------------"
 ################################################################################
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
 
 stdin=$(mktemp)
 log=$(mktemp)
@@ -494,6 +495,7 @@ echo "--------------------------------------"
 ################################################################################
 
 # use several retries to fix intermittent TLS handshake timeout
+[[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
 container_file="$(mktemp)"
 retry=0
 time until singularity pull --force "${container_file}" "docker://${arg_username}/${arg_slug}@${container_tag#*@}"; do
@@ -509,6 +511,7 @@ echo "repo_sha before asset get ${repo_sha}"
 
 if [ -n "${repo_sha}" ]; then
 
+  [[ -f ~/.secrets.sh ]] && source ~/.secrets.sh
   gitget_path="$(mktemp)"
   echo "gitget_path ${gitget_path}"
   wget \
