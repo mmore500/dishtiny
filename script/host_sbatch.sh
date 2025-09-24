@@ -27,7 +27,7 @@ for retry in {0..20}; do
 
   if ((${retry}==20)); then echo "  job submit fail" && exit 123123; fi
 
-  sshpass -p "${HOST_PASSWORD}" \
+  sshpass -p "${HOST_PASSWORD}" -vvv \
     scp -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${JOB_SCRIPT}" "${HOST_USERNAME}@$(hostname):$(realpath "${JOB_SCRIPT}")" \
   && echo "  job script copy success" \

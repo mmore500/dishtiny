@@ -7,7 +7,7 @@ for retry in {0..20}; do
 
   if ((${retry}==20)); then echo "host_squeue.sh failed" && exit 1; fi
 
-  sshpass -p "${HOST_PASSWORD}" \
+  sshpass -p "${HOST_PASSWORD}" -vvv \
     ssh -q -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
       "${HOST_USERNAME}@$(hostname)" \
       "squeue $@" \
