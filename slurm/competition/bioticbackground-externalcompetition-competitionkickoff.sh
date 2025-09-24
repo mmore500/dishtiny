@@ -203,6 +203,9 @@ fi
 )
 done
 
+echo "removing REPRO_WORK_DIRECTORY \${REPRO_WORK_DIRECTORY}"
+rm -rf "\${REPRO_WORK_DIRECTORY}"
+
 ################################################################################
 echo
 echo "Done! (SUCCESS)"
