@@ -150,8 +150,8 @@ bucket: ${BUCKET}
 configpack: ${CONFIGPACK}
 container_tag: ${CONTAINER_TAG}
 repo_sha: ${REPO_SHA}
-first_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=\${STINT}/series=${SERIES}/a=genome+criteria=abundance_highest_root+morph=wildtype+proc=0+series=${SERIES}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
-second_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=\${STINT}/series=\${comparator_series}/a=genome+criteria=abundance_highest_root+morph=wildtype+proc=0+series=\${comparator_series}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
+first_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=1+what=extracted/stint=\${STINT}/series=${SERIES}/a=genome+criteria=abundance_highest_root+morph=wildtype+proc=0+series=${SERIES}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
+second_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=1+what=extracted/stint=\${STINT}/series=\${comparator_series}/a=genome+criteria=abundance_highest_root+morph=wildtype+proc=0+series=\${comparator_series}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
 output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/swap-external-competitions/stage=1+what=generated/stint=\${STINT}/series=${SERIES}/"
 replicate: \${replicate}
 endeavor: \${ENDEAVOR}
