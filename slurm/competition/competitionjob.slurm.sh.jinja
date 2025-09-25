@@ -284,6 +284,17 @@ python3 wme_competitionjob.py "{{ series | default('-1') }}" "{{ replicate }}" "
 
 ################################################################################
 echo
+echo "Cleanup"
+echo "---------------"
+################################################################################
+
+echo "REPRO_WORK_DIRECTORY ${REPRO_WORK_DIRECTORY}"
+rm -rf "${REPRO_WORK_DIRECTORY}"
+find /tmp -maxdepth 1 -type d -name 'uitsl_temp_dir*' -mmin +5 -exec rm -rf {} +
+
+
+################################################################################
+echo
 echo "Done! (SUCCESS)"
 echo "---------------"
 ################################################################################
