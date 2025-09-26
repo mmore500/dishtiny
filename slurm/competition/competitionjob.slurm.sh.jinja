@@ -147,6 +147,11 @@ done & pids+=($!)
 
 bash -c "cd ../dishtiny && ./configpacks/{{ configpack }}/build_native.sh"
 cp ../dishtiny/rundishtiny .
+echo "build_native complete"
+echo "cleaning up dishtiny directory..."
+find ../dishtiny/ -type f -not -name '*.sh' -delete
+echo "cleaning up empty folders..."
+find ../dishtiny/ -type d -empty -delete
 
 # compile and download concurrently!
 for pid in "${pids[@]}"; do
