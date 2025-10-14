@@ -328,7 +328,7 @@ function on_exit {
   #
   # fi
 
-  wait
+  # wait
 
   test -v SLURM_JOB_ID && command -v scontrol \
     && mkdir -p "/mnt/scratch/$(whoami)/slurmscripts/" \
