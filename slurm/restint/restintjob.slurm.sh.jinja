@@ -214,7 +214,7 @@ ssh -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" \
   mpiexec.hydra --version
   $( (( N_PROCS > 1 )) && echo mpiexec.hydra -n "${N_PROCS}" singularity exec --pwd "$(pwd)" "${SINGULARITY_CONTAINER}" ) \
     ./rundishtiny \
-    -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if 'test' in write_bucket else 10800 }} -GENESIS "${GENESIS}" -ARTIFACTS_DUMP 1 -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT_LOWEST_ROOT 0 -STINT {{ stint }} -SERIES {{ series }} -ALL_DRAWINGS_WRITE {{ 0 }} -RUNNINGLOGS_DUMP {{ 0 }} -CENSUS_WRITE {{ 0 }} -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets-2022-12-18/configpacks/{{ configpack }}/evolvejob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
+    -REPLICATE "{{ write_bucket }}" -N_THREADS "${N_THREADS}" -RUN_SECONDS {{ 60 if 'test' in write_bucket else 10800 }} -GENESIS "${GENESIS}" -ARTIFACTS_DUMP 1 -DATA_DUMP 1 -WEAK_SCALING 1 -N_CELLS 3600 -PHENOTYPE_EQUIVALENT_NOPOUT_LOWEST_ROOT 0 -STINT {{ stint }} -SERIES {{ series }} -ALL_DRAWINGS_WRITE {{ 0 }} -RUNNINGLOGS_DUMP {{ 0 }} -CENSUS_WRITE {{ 0 }} -autoinstall "https://raw.githubusercontent.com/mmore500/dishtiny-assets-2022-12-18/configpacks/{{ configpack }}/evolvejob/@{{ repo_sha }}/assets.tar.gz" -TREATMENT "{{ configpack }}" \
   && echo "simulation exit success" \
   || ( echo "simulation error code $?" && exit 1 )
 MPIEXEC_HEREDOC_EOF
