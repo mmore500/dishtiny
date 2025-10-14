@@ -577,4 +577,8 @@ cat "-" | timeout "${TIMEOUT_SECONDS}s" tee "${stdin}" | \
     "${container_file}"
 
 # not critical clean up, so not bothering with exit trap
+echo 'rm -f "${container_file}"'
 rm -f "${container_file}"
+
+echo 'rm -rf "${WORK_DIRECTORY}"'
+rm -rf "${WORK_DIRECTORY}"
