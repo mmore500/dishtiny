@@ -235,6 +235,9 @@ function on_exit {
   echo "Run Exit Trap"
   echo "-------------"
 
+  echo 'rm -r ""${WORK_DIRECTORY}"'
+  rm -r ""${WORK_DIRECTORY}"
+
   echo "SLURM_RESTART_COUNT ${SLURM_RESTART_COUNT}"
 
   echo "log job duration..."
