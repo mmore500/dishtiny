@@ -284,7 +284,7 @@ echo "---------------"
 
 echo "REPRO_WORK_DIRECTORY ${REPRO_WORK_DIRECTORY}"
 rm -rf "${REPRO_WORK_DIRECTORY}"
-find /tmp -maxdepth 1 -type d -name 'uitsl_temp_dir*' -mmin +5 -exec rm -rf {} +
+find /tmp -maxdepth 1 -type d -name 'uitsl_temp_dir*' -mmin +2880 -exec rm -rf {} +
 
 
 ################################################################################
