@@ -521,7 +521,7 @@ if [ -n "${repo_sha}" ]; then
   echo "wget success"
   chmod +x "${gitget_path}"
   echo "${gitget_path} ready"
-  
+
   bash "${gitget_path}" \
     "https://github.com/${arg_username}/${arg_slug}.git" \
     "${arg_slug}" \
