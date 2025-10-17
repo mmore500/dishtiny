@@ -588,12 +588,6 @@ echo "-----------"
 echo "removing generated temporary files..."
 rm -f "${stdin}" "${logzip}" "${context}" "${rerun}" "${manifest}" "${output}" || :
 
-echo "removing temporary files older than 24 hours..."
-find /tmp -user "$(whoami)" -type f -mmin +1440 -exec rm -f {} + || :
-
-echo "removing empty temporary directories older than 24 hours..."
-find /tmp -user "$(whoami)" -type d -empty -mmin +1440 -exec rmdir {} + || :
-
 # not critical clean up, so not bothering with exit trap
 echo 'rm -f "${container_file}"'
 rm -f "${container_file}"
