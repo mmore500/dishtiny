@@ -2,7 +2,7 @@
 ########## Define Resources Needed with SBATCH Lines ##########
 #SBATCH --time=4:00:00
 #SBATCH --job-name a=nopout+series={{ series }}+stint={{ stint }}+target_genome_url={{ target_genome_url }}
-#SBATCH --account=devolab
+#
 #SBATCH --output="/mnt/scratch/%u/slurmlogs/a=nopout+job=%j+series={{ series }}+stint={{ stint }}+ext.log"
 #SBATCH --mem=24G
 #SBATCH --ntasks 1

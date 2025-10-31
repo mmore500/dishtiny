@@ -6,7 +6,7 @@
 #SBATCH --ntasks=8
 #SBATCH --cpus-per-task=1
 #SBATCH --job-name dishtiny-internode
-#SBATCH --account=devolab
+#
 #SBATCH --output="/mnt/scratch/%u/slurmlogs/slurm-%A.out"
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=mawni4ah2o@pomail.net

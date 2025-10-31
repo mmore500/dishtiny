@@ -5,7 +5,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=8
 #SBATCH --job-name dishtiny-intranode
-#SBATCH --account=devolab
+#
 #SBATCH --output="/mnt/scratch/%u/slurmlogs/slurm-%A.out"
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=mawni4ah2o@pomail.net
