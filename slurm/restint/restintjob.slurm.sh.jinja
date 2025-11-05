@@ -140,7 +140,7 @@ for ((proc=0;proc<N_PROCS;++proc)); do
     for retry in {1..20}; do
       aws s3 cp --quiet \
         "s3://{{ read_bucket }}/endeavor=${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint={{ stint | int - 1 }}/series={{ series }}/${f}" \
-        "filter_lowest_root+root_id=0+${f}" \
+        "mutate_on_load={{ mutate_on_load_root0 | default(0) }}+filter_lowest_root+root_id=0+${f}" \
       && echo "  ${f} download success" && break \
       || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
       if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
@@ -150,7 +150,7 @@ for ((proc=0;proc<N_PROCS;++proc)); do
     for retry in {1..20}; do
       aws s3 cp --quiet \
         "s3://{{ read_bucket }}/endeavor=${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint={{ stint | int - 1 }}/series={{ series }}/${f}" \
-        "filter_lowest_root+root_id=1+${f}" \
+        "mutate_on_load={{ mutate_on_load_root1 | default(0) }}+filter_lowest_root+root_id=1+${f}" \
       && echo "  ${f} download success" && break \
       || (echo "retrying ${f} download (${retry})" && sleep $((RANDOM % 10)))
       if ((${retry}==20)); then echo "${f} download fail" && exit 123123; fi
