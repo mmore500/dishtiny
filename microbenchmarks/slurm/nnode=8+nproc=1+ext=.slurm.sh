@@ -10,6 +10,7 @@
 #SBATCH --output="/mnt/scratch/%u/slurmlogs/slurm-%A.out"
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=mawni4ah2o@pomail.net
+#SBATCH --account=ecode
 # No --mail-user, the default value is the submitting user
 
 export CONTEXT=icer
