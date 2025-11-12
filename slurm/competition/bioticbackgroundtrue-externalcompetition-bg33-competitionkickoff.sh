@@ -156,7 +156,7 @@ first_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what
 second_competitor_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes/stage=0+what=generated/stint=\${STINT}/series=\${comparator_series}/a=genome+criteria=abundance+morph=wildtype+proc=0+series=\${comparator_series}+stint=\${STINT}+thread=0+variation=master+ext=.json.gz"
 first_background_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/evolve/populations/stage=0+what=generated/stint=33/series=${SERIES}/a=population+proc=0+series=${SERIES}+stint=33+thread=0+variation=master+ext=.bin.xz"
 first_background_attrs: "dose=2+filter_except_lowest_root+"
-output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/external-competitions-focalbb-true/stage=1+what=generated/stint=\${STINT}/series=${SERIES}/"
+output_url: "s3://${BUCKET}/endeavor=\${ENDEAVOR}/external-competitions-bg33-focalbb-true/stage=1+what=generated/stint=\${STINT}/series=${SERIES}/"
 replicate: \${replicate}
 endeavor: \${ENDEAVOR}
 stint: \${STINT}
