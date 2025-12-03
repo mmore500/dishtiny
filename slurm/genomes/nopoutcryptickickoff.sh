@@ -15,7 +15,7 @@ printerr() {
 }
 trap 'printerr $LINENO' ERR
 
-if (( "$#" < 7 )); then
+if (( "$#" < 6 )); then
   echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [followup_freq] [stint] [series...]"
   exit 1
 fi
@@ -46,6 +46,10 @@ shift
 
 SERIES="${@}"
 echo "SERIES ${SERIES}"
+
+echo "waiting..."
+sleep 5
+echo "...continuing"
 
 # set up and jump into temporary work directory
 cd "$(mktemp -d)"
