@@ -476,7 +476,7 @@ bucket: {{ bucket }}
 configpack: {{ configpack }}
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
-first_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+first_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
 second_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/cryptic-genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${variant}"
 output_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/cryptic-variant-competitions/stage=2+what=generated/stint={{ stint }}/series={{ series }}/"
 replicate: 0
@@ -517,8 +517,8 @@ bucket: {{ bucket }}
 configpack: {{ configpack }}
 container_tag: {{ container_tag }}
 repo_sha: {{ repo_sha }}
-first_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
-second_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=0+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+first_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
+second_competitor_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/genomes/stage=1+what=generated/stint={{ stint }}/series={{ series }}/${wt}"
 output_url: "s3://{{ bucket }}/endeavor=${ENDEAVOR}/cryptic-control-competitions/stage=2+what=generated/stint={{ stint }}/series={{ series }}/"
 replicate: ${replicate}
 endeavor: "${ENDEAVOR}"
