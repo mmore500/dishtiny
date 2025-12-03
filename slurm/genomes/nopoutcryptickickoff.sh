@@ -15,7 +15,7 @@ printerr() {
 }
 trap 'printerr $LINENO' ERR
 
-if (( "$#" < 6 )); then
+if (( "$#" < 7 )); then
   echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [followup_freq] [stint] [series...]"
   exit 1
 fi
