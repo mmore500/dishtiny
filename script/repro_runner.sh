@@ -212,7 +212,7 @@ echo "REPRO_ID ${REPRO_ID}"
 echo "date $(date)"
 echo "hostname $(hostname)"
 echo "pwd $(pwd)"
-command -v qstat >/dev/null && test ${SLURM_JOB_ID} && bash -c "qstat -f \"${SLURM_JOB_ID}\""
+command -v qstat >/dev/null && test ${SLURM_JOB_ID} && bash -c "qstat -f \"${SLURM_JOB_ID}\"" || :
 
 echo "stdin ${stdin}"
 echo "log ${log}"
