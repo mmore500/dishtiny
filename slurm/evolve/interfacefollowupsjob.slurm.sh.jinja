@@ -137,6 +137,21 @@ ls
 
 ################################################################################
 echo
+echo "Create SLURM_STOKER_CONSOLIDATION_DIR"
+echo "-----------------------------------"
+################################################################################
+
+timeout 30s "${REPRO_WORK_DIRECTORY}/dishtiny/script/host_squeue.sh" -j "${SLURM_JOB_ID}" --format \"time: %M, time left: %L\" --noheader || echo "time log failed" &
+wait # ignores exit code of time log step
+
+# so that we can consolidate subsequent kickoffs into one slurm stoker job
+
+export SLURM_STOKER_CONSOLIDATION_DIR="$(mktemp -d)"
+echo "SLURM_STOKER_CONSOLIDATION_DIR ${SLURM_STOKER_CONSOLIDATION_DIR}"
+
+
+################################################################################
+echo
 echo "Submit Perturbation Competition Jobs"
 echo "-----------------------------------"
 ################################################################################
