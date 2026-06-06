@@ -15,8 +15,8 @@ printerr() {
 }
 trap 'printerr $LINENO' ERR
 
-if (( "$#" < 6 )); then
-  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [stint] [series...]"
+if (( "$#" < 7 )); then
+  echo "USAGE: [bucket] [configpack] [container_tag] [repo_sha] [run_stints] [stint] [series...]"
   exit 1
 fi
 
@@ -34,6 +34,10 @@ shift
 
 REPO_SHA="${1}"
 echo "REPO_SHA ${REPO_SHA}"
+shift
+
+RUN_STINTS="${1}"
+echo "RUN_STINTS ${RUN_STINTS}"
 shift
 
 STINT="${1}"
@@ -81,6 +85,7 @@ echo "BUCKET ${BUCKET}"
 echo "CONFIGPACK ${CONFIGPACK}"
 echo "CONTAINER_TAG ${CONTAINER_TAG}"
 echo "REPO_SHA ${REPO_SHA}"
+echo "RUN_STINTS ${RUN_STINTS}"
 echo "STINT ${STINT}"
 echo "SERIES ${SERIES}"
 
@@ -93,13 +98,14 @@ for just_one_series in ${SERIES}; do
   echo "series \${just_one_series}"
   echo "JOB_SCRIPT \${JOB_SCRIPT}"
 
-  j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/evolve/evolvejob.slurm.sh.jinja" << J2_HEREDOC_EOF
+  j2 --format=yaml -o "\${JOB_SCRIPT}" "dishtiny/slurm/evolve/longevolvejob.slurm.sh.jinja" << J2_HEREDOC_EOF
 bucket: "${BUCKET}"
 configpack: "${CONFIGPACK}"
 container_tag: "${CONTAINER_TAG}"
 repo_sha: "${REPO_SHA}"
 series: "\${just_one_series}"
 stint: "${STINT}"
+run_stints: "${RUN_STINTS}"
 J2_HEREDOC_EOF
 
   # adapted from https://superuser.com/a/689340
