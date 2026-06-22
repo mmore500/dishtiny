@@ -175,7 +175,7 @@ for p in *a=genome*morph=wildtype*variation=* ; do
   for retry in {1..20}; do
     aws s3 cp --quiet \
       "\${p}" \
-      "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes-fromwtasphenequivkickoff/stage=2+what=generated/stint=\${STINT}/series=${SERIES}/\${f}" \
+      "s3://${BUCKET}/endeavor=\${ENDEAVOR}/genomes-fromwtasphenequiv/stage=2+what=generated/stint=\${STINT}/series=${SERIES}/\${f}" \
     && echo "  \$f upload success" && break \
       || (echo "retrying \${f} upload (\${retry})" && sleep \$((RANDOM % 10)))
     if ((\${retry}==20)); then echo "\$f upload fail" && exit 123123; fi
