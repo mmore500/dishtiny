@@ -137,7 +137,8 @@ echo "-------------------------------------------------------------------------"
 shopt -s nullglob
 
 counter=0
-for comparator_series in {16000..16039}; do
+for comparator_series in "\${ENDEAVOR}"{000..039}; do
+echo "comparator_series=\${comparator_series}"
 for replicate in {0..1}; do
 
 echo "counter \${counter}"
