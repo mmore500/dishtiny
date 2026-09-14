@@ -66,7 +66,7 @@ echo "--------------------------------"
 ################################################################################
 
 "${REPRO_RUNNER}" \
-  -p "${BUCKET}" -u mmore500 -s dishtiny \
+  -p "${BUCKET_WRITE}" -u mmore500 -s dishtiny \
   --repo_sha "${REPO_SHA}" --container_tag "${CONTAINER_TAG}" \
   << REPRO_RUNNER_HEREDOC_EOF
 
