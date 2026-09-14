@@ -443,7 +443,7 @@ for retry in {1..20}; do
 done
 
 j2 --format=yaml -o "${JOB_SCRIPT}" "${JOB_TEMPLATE}" << J2_HEREDOC_EOF
-bucket_read: {{ bucket_read }}
+bucket_read: {{ bucket_write }}
 bucket_write: {{ bucket_write }}
 configpack: {{ configpack }}
 container_tag: {{ container_tag }}
