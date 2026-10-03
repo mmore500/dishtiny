@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-git submodule update --init --recursive
+cd "$(dirname "$0")"
 
+./submodules.sh
 ./install_emsdk.sh
 ./install_force-cover.sh

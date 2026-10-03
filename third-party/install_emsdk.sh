@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+cd "$(dirname "$0")"
 
 # Get the emsdk repo
 git clone --recursive https://github.com/emscripten-core/emsdk

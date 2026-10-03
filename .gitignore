@@ -39,3 +39,6 @@ temp*
 package-lock.json
 node_modules/
 coverage_include/
+
+.env
+third-party/emsdk

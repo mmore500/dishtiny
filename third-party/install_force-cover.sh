@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-git submodule update --init --recursive
+cd "$(dirname "$0")"
+
+./submodules.sh
 
 make -C force-cover/
