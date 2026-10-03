@@ -34,3 +34,7 @@
   path = third-party/lazy-iterators
   url = https://github.com/mmore500/lazy-iterators.git
   shallow = true
+[submodule "third-party/mpi-abi-stubs"]
+	path = third-party/mpi-abi-stubs
+	url = https://github.com/mpi-forum/mpi-abi-stubs.git
+	shallow = true
