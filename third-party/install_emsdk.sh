@@ -7,11 +7,18 @@ git clone --recursive https://github.com/emscripten-core/emsdk
 cd emsdk
 git reset --hard e899a6fd5afab39de6d3947d52ed60fa6ed225ad
 
+if [ "$(uname -s)" = "Darwin" ] && [ "$(uname -m)" = "arm64" ]; then
+  # force mac to use rosetta, as emsdk 2.0.5 has no apple silicon support
+  EMSDK_ENV="EMSDK_PYTHON=/usr/bin/python3 arch -x86_64"
+else
+  EMSDK_ENV=""
+fi
+
 # Download and install the latest SDK tools.
-./emsdk install 2.0.5
+env ${EMSDK_ENV} ./emsdk install 2.0.5
 
 # Make the "latest" SDK "active" for the current user. (writes ~/.emscripten file)
-./emsdk activate 2.0.5
+env ${EMSDK_ENV} ./emsdk activate 2.0.5
 
 # Activate PATH and other environment variables in the current terminal
 source ./emsdk_env.sh
