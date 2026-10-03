@@ -24,6 +24,13 @@ Check out the live in-browser web app at <https://mmore500.com/dishtiny>.
 
 ## Local Setup
 
+For mac users, you will need
+```bash
+softwareupdate --install-rosetta --agree-to-license
+xcode-select --install
+```
+
+Then, for all users,
 ```bash
 git clone https://github.com/mmore500/dishtiny.git --single-branch --depth 1
 
