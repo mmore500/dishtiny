@@ -5,13 +5,13 @@ cd "$(dirname "$0")"
 # Get the emsdk repo
 git clone --recursive https://github.com/emscripten-core/emsdk
 cd emsdk
-git reset --hard c9157a9a54df9acf73ac6dd41ee0f9782f55496d
+git reset --hard e899a6fd5afab39de6d3947d52ed60fa6ed225ad
 
 # Download and install the latest SDK tools.
-./emsdk install 2.0.5 || ./emsdk install 2.0.22
+./emsdk install 2.0.5
 
 # Make the "latest" SDK "active" for the current user. (writes ~/.emscripten file)
-./emsdk activate 2.0.5 || ./emsdk activate 2.0.22
+./emsdk activate 2.0.5
 
 # Activate PATH and other environment variables in the current terminal
 source ./emsdk_env.sh
