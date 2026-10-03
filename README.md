@@ -44,6 +44,11 @@ python3 -m uv pip install -r dishtiny/third-party/requirements.in --no-build-iso
 
 make -C dishtiny web-no-pthread
 make -C dishtiny serve
+```
 
+and navigate to <http://localhost:8000/web>.
+
+To build the native executable (requires MPI),
+```
 make -C dishtiny native
 ```
