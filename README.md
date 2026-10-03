@@ -32,7 +32,7 @@ git clone https://github.com/mmore500/dishtiny.git --single-branch --depth 1
 
 python3 -m venv dishtiny/.env
 source dishtiny/.env/bin/activate
-python3 -m pip install uv wheel
+python3 -m pip install uv wheel "setuptools<82"
 python3 -m uv pip install -r dishtiny/third-party/requirements.in --no-build-isolation
 
 make -C dishtiny web-no-pthread
