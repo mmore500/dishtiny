@@ -11,7 +11,7 @@ jobs:
 
   deploy-assets:
     name: Deploy Assets
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
     steps:
@@ -22,7 +22,7 @@ jobs:
 
   docker-build:
     name: Docker Build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -40,7 +40,7 @@ jobs:
 
   tidy:
     name: Tidy
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - docker-build
     container:
@@ -54,7 +54,7 @@ jobs:
 
   docs:
     name: Docs
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - docker-build
     container:
@@ -69,7 +69,7 @@ jobs:
 
   py-unit:
     name: Python Unit Tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - docker-build
     container:
@@ -84,7 +84,7 @@ jobs:
 
   cpp-unit:
     name: C++ Unit Tests
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - docker-build
     strategy:
@@ -107,7 +107,7 @@ jobs:
 
   source:
     name: Source
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - docker-build
     strategy:
@@ -132,7 +132,7 @@ jobs:
 
   coverage:
     name: Coverage
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - docker-build
     container:
@@ -152,7 +152,7 @@ jobs:
           directory: /opt/dishtiny
   fuzzing:
     name: Fuzzing
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - docker-build
     container:
@@ -167,7 +167,7 @@ jobs:
 
   microbenchmarks:
     name: Microbenchmarks
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - docker-build
     container:
@@ -187,7 +187,7 @@ jobs:
 
   binder:
     name: Notebooks
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - docker-build
     container:
@@ -213,7 +213,7 @@ jobs:
           folder: deploy # The folder the action should deploy.
   deploy-pages:
     name: Deploy to GitHub Pages
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     needs:
       - binder
@@ -251,7 +251,7 @@ jobs:
 
   deploy-dockerhub:
     name: Deploy to DockerHub
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs:
       - binder
       - coverage
