@@ -20,6 +20,7 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "DocumentHandles.hpp"
+#include "toggle_view_key.hpp"
 
 namespace dish2 {
 
@@ -32,7 +33,6 @@ class GridViewer {
   Artist artist;
 
   bool is_active{ InitiallyActivated };
-  // emp::web::DocuExtras description;
 
   emp::web::Canvas canvas{
     static_cast<double>( std::min(emp::GetViewPortSize() - 100, 500) ),
@@ -50,7 +50,6 @@ public:
 
   GridViewer( const dish2::ThreadWorld<Spec>& thread_world )
   : artist( thread_world )
-  // , description( MakeID("key") )
   {
 
     *document_handles.at( "grid_viewer" ) << emp::web::Div(
@@ -110,7 +109,9 @@ public:
     ).SetAttr(
       "class", "collapse"
     );
-    // description.SetCSS("display", "none");
+    dish2::toggle_view_key(
+      emp::slugify( std::string{ Artist::GetName() } ), false
+    );
     document_handles.at( Category::GetID() )->Div(
       MakeID( "selector" )
     ).SetAttr(
@@ -133,7 +134,9 @@ public:
         double, std::milli
       > >.GetElapsed().count() )
     );
-    // description.SetCSS("display", "initial");
+    dish2::toggle_view_key(
+      emp::slugify( std::string{ Artist::GetName() } ), true
+    );
     document_handles.at( Category::GetID() )->Div(
       MakeID( "selector" )
     ).SetAttr(

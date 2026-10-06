@@ -1,35 +1,20 @@
-{% macro content(data, eval, make_badge, markdown) -%}
-    <div class="card my-3">
-    <div class="card-header">
-    <span data-toggle="collapse" href="#view_key-body">
-        <button
-        class="btn btn-lg btn-block btn-primary text-left"
-        type="button"
-        data-toggle="button"
-        aria-pressed="true"
-        autocomplete="off"
-        >
-        View Key
-        </button>
-    </span>
-    </div>
-    <div id="view_key-body" class="text-large collapse">
+{% macro content(data, eval, make_badge, make_colorbar, make_rep_lev_legend, markdown) -%}
+    <div id="view-key-holder" style="display: none;">
     {% for (key, value) in data.items() %}
-    <div id="{{ key }}-key">
+    <div id="{{ key }}-key" class="text-large" style="display: none;">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
             {% for header in value.header %}
-                {{ markdown.convert(eval('f' '"' + header + '"', {'make_badge': make_badge})) }}
+                {{ markdown.convert(eval('f' '"' + header + '"', {'make_badge': make_badge, 'make_colorbar': make_colorbar, 'make_rep_lev_legend': make_rep_lev_legend})) }}
             {% endfor %}
             </li>
             {% for item in value['items'] %}
             <li class="list-group-item">
-            {{ markdown.convert(eval('f' '"' + item + '"', {'make_badge': make_badge})) }}
+            {{ markdown.convert(eval('f' '"' + item + '"', {'make_badge': make_badge, 'make_colorbar': make_colorbar, 'make_rep_lev_legend': make_rep_lev_legend})) }}
             </li>
             {% endfor %}
         </ul>
     </div>
     {% endfor %}
-    </div>
     </div>
 {%- endmacro %}
