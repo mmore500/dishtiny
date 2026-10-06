@@ -216,14 +216,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     needs:
-      - binder
-      - coverage
       - cpp-unit
-      - docs
       - fuzzing
-      - microbenchmarks
-      - py-unit
-      - source
       - tidy
     container:
       image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
