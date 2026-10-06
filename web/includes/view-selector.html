@@ -1,3 +1,9 @@
+<style>
+  /* bootstrap only spaces adjacent block buttons, so space across categories */
+  div[id$="_category"] + div[id$="_category"] > .btn-block:first-child {
+    margin-top: .5rem;
+  }
+</style>
 <div class="card my-3">
 <div class="card-header">
     <span data-toggle="collapse" href="#view_selector-body">
@@ -160,6 +166,48 @@
         <li class="list-group-item">
         <div id="reproduction_category"></div>
         <div id="apoptosis_category"></div>
+        </li>
+        </div>
+
+      </div>
+    </div>
+
+      <span data-toggle="collapse" href="#cell_control-body">
+      <li
+        id="cell_control-toggle"
+        class="list-group-item btn-lg btn-block btn-flip  text-center"
+        style="border-radius: 0; border-top: 1px solid black;"
+      >
+          Cell Control
+      </li>
+      <script>
+        document.getElementById('cell_control-toggle').onclick = function() {
+            this.classList.toggle('btn-primary');
+            this.classList.toggle('btn-flip');
+        }
+      </script>
+      </span>
+      <div id="cell_control-body" class="collapse show">
+      <div id="cell_control_category">
+
+        <span data-toggle="collapse" href="#expression-body">
+        <li
+          id="expression-toggle"
+          class="list-group-item btn-lg btn-block btn-flip  text-center"
+          style="border-radius: 0; border-top: 1px solid black;"
+        >
+            Expression
+        </li>
+        <script>
+          document.getElementById('expression-toggle').onclick = function() {
+              this.classList.toggle('btn-primary');
+              this.classList.toggle('btn-flip');
+          }
+        </script>
+        </span>
+        <div id="expression-body" class="collapse show">
+        <li class="list-group-item">
+        <div id="expression_category"></div>
         </li>
         </div>
 

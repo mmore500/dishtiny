@@ -63,6 +63,7 @@ public:
   //   {"sharing_category", UI::Document("sharing_category")},
   //   {"reproduction_category", UI::Document("reproduction_category")},
   //   {"apoptosis_category", UI::Document("apoptosis_category")},
+  //   {"expression_category", UI::Document("expression_category")},
   //   {"regulation_category", UI::Document("regulation_category")},
   //   {"messaging_category", UI::Document("messaging_category")}
   // };

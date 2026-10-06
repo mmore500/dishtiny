@@ -4,6 +4,7 @@
 
 #include "ApoptosisCategory.hpp"
 #include "DemographicsCategory.hpp"
+#include "ExpressionCategory.hpp"
 #include "GroupStructureCategory.hpp"
 #include "MessagingCategory.hpp"
 #include "RegulationCategory.hpp"
