@@ -45,6 +45,7 @@
 #include "QuorumCapArtist.hpp"
 #include "RegulationByModuleArtist.hpp"
 #include "RegulationExposedByModuleArtist.hpp"
+#include "RepLevRequestArtist.hpp"
 #include "ResourceInputPeekArtist.hpp"
 #include "ResourceStockpileArtist.hpp"
 #include "SpawnArrestArtist.hpp"
