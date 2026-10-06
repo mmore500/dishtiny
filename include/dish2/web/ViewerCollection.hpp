@@ -25,11 +25,11 @@ using ViewerCollection = dish2::ViewerManager<
     dish2::CellBirthArtist<Spec>,
     dish2::ApoptosisCategory
   >,
-  dish2::GridViewer<
-    Spec,
-    dish2::DistanceToGraphCenterArtist<Spec>,
-    dish2::ApoptosisCategory
-  >,
+  // dish2::GridViewer<
+  //   Spec,
+  //   dish2::DistanceToGraphCenterArtist<Spec>,
+  //   dish2::ApoptosisCategory
+  // >,
   dish2::GridViewer<
     Spec,
     dish2::EpochArtist<Spec>,
