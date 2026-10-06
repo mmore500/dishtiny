@@ -1,7 +1,7 @@
 import colorsys
 import jinja2
-import re
 from markdown2 import Markdown
+import re
 import toml
 
 INPUT = 'keys.toml'
