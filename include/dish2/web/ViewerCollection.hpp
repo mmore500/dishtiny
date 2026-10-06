@@ -139,8 +139,30 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::GridViewer<
     Spec,
+    dish2::PcaBinaryExpressionByRootArtist<Spec>,
+    dish2::ExpressionCategory
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::PcaBinaryExpressionByKinGroupArtist<Spec>,
+    dish2::ExpressionCategory,
+    Spec::NLEV
+  >,
+  dish2::GridViewer<
+    Spec,
     dish2::PcaExpressionArtist<Spec>,
     dish2::ExpressionCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaExpressionByRootArtist<Spec>,
+    dish2::ExpressionCategory
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::PcaExpressionByKinGroupArtist<Spec>,
+    dish2::ExpressionCategory,
+    Spec::NLEV
   >,
   dish2::GridViewer<
     Spec,
@@ -149,8 +171,30 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::GridViewer<
     Spec,
+    dish2::PcaRegulationByRootArtist<Spec>,
+    dish2::RegulationCategory
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::PcaRegulationByKinGroupArtist<Spec>,
+    dish2::RegulationCategory,
+    Spec::NLEV
+  >,
+  dish2::GridViewer<
+    Spec,
     dish2::PcaTrinaryRegulationArtist<Spec>,
     dish2::RegulationCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaTrinaryRegulationByRootArtist<Spec>,
+    dish2::RegulationCategory
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::PcaTrinaryRegulationByKinGroupArtist<Spec>,
+    dish2::RegulationCategory,
+    Spec::NLEV
   >,
   dish2::GridViewer<
     Spec,
