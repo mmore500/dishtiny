@@ -5,11 +5,11 @@
 #include <string_view>
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
-#include "../fill_colormaps/RepLevRequestColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
-#include "../getters/RepLevRequestGetter.hpp"
+#include "../fill_colormaps/RepLevRequestColorMap.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
+#include "../getters/RepLevRequestGetter.hpp"
 #include "../renderers/CardinalFillRenderer.hpp"
 #include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"

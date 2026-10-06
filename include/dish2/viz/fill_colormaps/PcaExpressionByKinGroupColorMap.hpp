@@ -20,8 +20,8 @@
 #include "../../introspection/get_live_cardinal_kin_group_ids.hpp"
 #include "../../introspection/make_cardi_coord_to_live_cardi_idx_translator.hpp"
 #include "../../introspection/summarize_module_expression.hpp"
-#include "../../world/ThreadWorld.hpp"
 #include "../util/pca_by_group.hpp"
+#include "../../world/ThreadWorld.hpp"
 
 namespace dish2 {
 
