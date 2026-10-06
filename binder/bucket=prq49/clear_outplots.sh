@@ -1,1 +1,0 @@
-../clear_outplots.sh

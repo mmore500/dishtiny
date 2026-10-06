@@ -185,32 +185,6 @@ jobs:
           cd /opt/dishtiny/microbenchmarks
           make
 
-  binder:
-    name: Notebooks
-    runs-on: ubuntu-latest
-    needs:
-      - docker-build
-    container:
-      image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        OSF_PASSWORD: ${{ secrets.OSF_PASSWORD }}
-        OSF_USERNAME: ${{ secrets.OSF_USERNAME }}
-      # github actions requires root to access mounted volumes
-      options: --user root
-    steps:
-      # Adapted from https://askubuntu.com/a/524368
-      - run: cd /opt/dishtiny/binder && ./execute_notebooks.sh
-      - run: git init
-      - uses: fregante/setup-git-user@v1
-      - run: git commit --allow-empty -m "Initial commit"
-      - run: cp -r /opt/dishtiny/ deploy/
-      - uses: JamesIves/github-pages-deploy-action@4.0.0
-        with:
-          branch: binder # The branch the action should deploy to.
-          folder: deploy # The folder the action should deploy.
   deploy-pages:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
@@ -247,7 +221,6 @@ jobs:
     name: Deploy to DockerHub
     runs-on: ubuntu-latest
     needs:
-      - binder
       - coverage
       - cpp-unit
       - docs
