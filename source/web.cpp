@@ -1,7 +1,9 @@
 #define DISH2_LOG_ENABLE
 
+#include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <new>
 #include <stdexcept>
 
 #include "conduit/include/uitsl/polyfill/ompi_mpi_comm_world.hpp"
@@ -59,6 +61,12 @@ void do_main() {
 int main() {
 
   emp::Initialize();
+
+  // set_new_handler is specific to failed allocation
+  std::set_new_handler( [](){
+    std::fputs( "out of memory: wasm heap exhausted\n", stderr );
+    std::abort();
+  } );
 
   // called when exception handling fails
   std::set_terminate( dish2::print_js_stacktrace );
