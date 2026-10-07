@@ -9,13 +9,14 @@
 namespace dish2 {
 
 // shows the key (if any) for a view just below its selector button
-inline void toggle_view_key(
+// returns false if the view has no key
+inline bool toggle_view_key(
   const std::string& slug, const bool show
 ) {
-  MAIN_THREAD_EM_ASM({
+  return MAIN_THREAD_EM_ASM_INT({
     const slug = UTF8ToString($0);
     const key = document.getElementById( slug + '-key' );
-    if ( key === null ) return;
+    if ( key === null ) return 0;
 
     // cancel any wait for the selector to be added
     if ( key.observer ) key.observer.disconnect();
@@ -25,7 +26,7 @@ inline void toggle_view_key(
     if ( !$1 ) {
       document.getElementById( 'view-key-holder' ).appendChild( key );
       key.style.display = 'none';
-      return;
+      return 1;
     }
 
     // returns false if the selector is not in the document yet
@@ -38,13 +39,14 @@ inline void toggle_view_key(
       return true;
     };
 
-    if ( show() ) return;
+    if ( show() ) return 1;
 
     // otherwise, show the key once the selector is added
     key.observer = new MutationObserver( function() {
       if ( show() ) key.observer.disconnect();
     } );
     key.observer.observe( document.body, { childList: true, subtree: true } );
+    return 1;
   }, slug.c_str(), show );
 }
 

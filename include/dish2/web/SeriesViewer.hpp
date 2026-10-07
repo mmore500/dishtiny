@@ -38,6 +38,7 @@ class SeriesViewer {
   > > artists;
 
   bool is_active{ InitiallyActivated };
+  bool key_is_shown{ true };
 
   emp::web::Canvas canvas{
   };
@@ -140,6 +141,7 @@ public:
   void Deactivate() {
 
     is_active = false;
+    key_is_shown = false;
 
     document_handles.at( "grid_viewer" )->Div(
       MakeID( "card-holder" )
@@ -160,6 +162,7 @@ public:
   void Activate() {
 
     is_active = true;
+    key_is_shown = true;
 
     document_handles.at( "grid_viewer" )->Div(
       MakeID( "card-holder" )
@@ -221,9 +224,15 @@ public:
     return one_is_active;
   }
 
+  // selector clicks cycle: open view with key -> hide key -> close view
   void Toggle() {
-    if ( IsActivated() ) Deactivate();
-    else Activate();
+    if ( !IsActivated() ) Activate();
+    else if (
+      key_is_shown && dish2::toggle_view_key(
+        emp::slugify( std::string{ Artist::GetName() } ), false
+      )
+    ) key_is_shown = false;
+    else Deactivate();
   }
 
   void Toggle( const size_t i ) {
