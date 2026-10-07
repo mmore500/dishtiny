@@ -216,7 +216,7 @@ class ControlPanel {
     ) << emp::web::Button(
       [this](){ clear_callback(); },
       "Clear Views",
-      "clear-button"
+      "clear-views"
     ).SetAttr(
       "class", "btn btn-primary btn-block btn-lg"
     ).SetCSS(
