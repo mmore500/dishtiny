@@ -49,9 +49,11 @@ CXX_web := emcc
 OFLAGS_web_all := $(CXXFLAGS) -Wno-mismatched-tags -Wno-empty-body -s USE_ZLIB=1 -s USE_LIBLZMA=1 -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall', 'cwrap']" -s TOTAL_MEMORY=671088640 --js-library $(EMP_DIR)/web/library_emp.js -s EXPORTED_FUNCTIONS="['_main', '_empCppCallback', '_empDoCppCallback']" -s NO_EXIT_RUNTIME=1 -s ABORTING_MALLOC=0 -idirafter third-party/mpi-abi-stubs/
 OFLAGS_web_pthread := -s USE_PTHREADS=1 -s PROXY_TO_PTHREAD=1
 OFLAGS_web := -O3 -DNDEBUG -s DISABLE_EXCEPTION_CATCHING=1
+# allow up to 2GB mem, nopthread only (growable shared memory is slow)
+OFLAGS_web_nopthread := -s ALLOW_MEMORY_GROWTH=1 -s MAXIMUM_MEMORY=2147483648
 OFLAGS_web_debug := -g4 -Oz -Wno-dollar-in-identifier-extension -s DEMANGLE_SUPPORT=1 -s ASSERTIONS=2 -s SAFE_HEAP=1 -s STACK_OVERFLOW_CHECK=2 -D_GLIBCXX_DEBUG -D_LIBCPP_DEBUG -fexceptions
 
-CFLAGS_web := $(CFLAGS_all) $(OFLAGS_web) $(OFLAGS_web_all)
+CFLAGS_web := $(CFLAGS_all) $(OFLAGS_web) $(OFLAGS_web_all) $(OFLAGS_web_nopthread)
 CFLAGS_web_pthread := $(CFLAGS_all) $(OFLAGS_web) $(OFLAGS_web_pthread) $(OFLAGS_web_all)
 
 default: $(PROJECT)
