@@ -3,8 +3,11 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 #include <new>
 #include <stdexcept>
+#include <string>
+#include <unordered_map>
 
 #include "conduit/include/uitsl/polyfill/ompi_mpi_comm_world.hpp"
 #include "Empirical/include/emp/config/ArgManager.hpp"
@@ -19,6 +22,7 @@
 #include "dish2/spec/print_spec.hpp"
 #include "dish2/spec/Spec.hpp"
 #include "dish2/utility/print_js_stacktrace.hpp"
+#include "dish2/web/click_elements.hpp"
 #include "dish2/web/WebInterface.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
@@ -34,14 +38,33 @@ void do_main() {
   // must be performed here due to initialization order issues
   override = new dish2::TemporaryThreadIdxOverride(0);
 
-  dish2::setup<Spec>( emp::ArgManager{
-    emp::web::GetUrlParams(), dish2::make_arg_specs<Spec>()
+  // web-only argument: ids of elements to click once the page is set up
+  emp::vector<std::string> click_ids;
+  auto specs = dish2::make_arg_specs<Spec>();
+  specs.merge( std::unordered_map<std::string,emp::ArgSpec>{
+    {"click", emp::ArgSpec(
+      std::numeric_limits<size_t>::max(), // most quota
+      1, // least quota
+      "ids of elements to click after setup", // description
+      {}, // aliases
+      [&click_ids](const emp::optional<emp::vector<std::string>>& args){
+        if ( args ) click_ids.insert(
+          click_ids.end(), args->begin(), args->end()
+        );
+      }, // callback
+      false, // gobble_flags
+      true // flatten
+    )}
   } );
+
+  dish2::setup<Spec>( emp::ArgManager{ emp::web::GetUrlParams(), specs } );
   dish2::print_spec<Spec>();
 
   // set up web interface
   interface = new dish2::WebInterface<Spec>;
   interface->Redraw();
+
+  dish2::click_elements( click_ids );
 
 
   // once we're done setting up, turn off the loading modal
