@@ -4,6 +4,7 @@
 
 #include "ApoptosisRequestArtist.hpp"
 #include "CardinalOrderArtist.hpp"
+#include "CellAgeArtist.hpp"
 #include "CellBirthArtist.hpp"
 #include "DistanceToGraphCenterArtist.hpp"
 #include "DummyArtist.hpp"

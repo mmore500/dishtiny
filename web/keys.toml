@@ -98,6 +98,14 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
+[cell-age]
+header = ["The **Cell Age Viewer** shows the age of each cell."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF8080', '#FFFF80', '#80FF80', '#80FFFF', '#8080FF', '#FF80FF', '#FF8080'], ['0', '', '', '', '', '', 'high (mod 360)'], '**Color hue** indicates cell age.', (), None)}",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
 [cell-birth]
 header = ["The **Cell Birth Viewer** shows cells that were just born."]
 items = [

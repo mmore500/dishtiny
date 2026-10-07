@@ -43,6 +43,11 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::GridViewer<
     Spec,
+    dish2::CellAgeArtist<Spec>,
+    dish2::DemographicsCategory
+  >,
+  dish2::GridViewer<
+    Spec,
     dish2::CellBirthArtist<Spec>,
     dish2::ApoptosisCategory
   >,
