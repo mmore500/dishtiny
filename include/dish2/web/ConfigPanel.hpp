@@ -39,15 +39,20 @@ public:
       if ( entry->GetDescription().find( "[NATIVE]" ) != std::string::npos ) {
         continue;
       }
-      dynamic_config << dish2::SnippetPill(
+      dish2::DataPill pill(
         name,
         // structured bindings can't be captured in C++17, so copy
+        [entry = entry](){ return entry->GetValue(); },
+        entry->GetDescription()
+      );
+      pill << dish2::SnippetPill(
+        name,
         [name = name, entry = entry](){
           return dish2::url_encode( name )
             + "=" + dish2::url_encode( entry->GetValue() );
-        },
-        entry->GetDescription()
+        }
       );
+      dynamic_config << pill.pill;
     }
 
     // parameters that are locked in at compile time
