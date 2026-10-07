@@ -36,7 +36,7 @@ inline void click_elements( const emp::vector<std::string>& ids ) {
       if ( element !== null ) {
         element.click();
         click_next( i + 1, 0 );
-      } else if ( num_tries < 100 ) {
+      } else if ( num_tries < 5 ) {
         setTimeout( function() { click_next( i, num_tries + 1 ); }, 50 );
       } else {
         console.warn( 'no element to click with id "' + ids[i] + '"' );
