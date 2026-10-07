@@ -12,9 +12,9 @@ RUN \
     && \
   git -C /opt/dishtiny submodule update --init --recursive \
     && \
-  git -C /opt/dishtiny fetch --recurse-submodules --jobs 16 \
+  (git -C /opt/dishtiny fetch --recurse-submodules --jobs 16 || true) \
     && \
-  echo "unshallowed source for use as cache"
+  echo "attempted unshallowed source for use as cache"
 
 RUN \
   echo "deb http://archive.ubuntu.com/ubuntu focal main restricted universe multiverse" >> "/etc/apt/sources.list" \

@@ -8,7 +8,7 @@ namespace dish2 {
 
 struct RegulationCategory {
 
-  static std::string GetID() { return "reculation_category"; }
+  static std::string GetID() { return "regulation_category"; }
 
 };
 

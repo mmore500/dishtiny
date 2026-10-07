@@ -5,6 +5,7 @@ osfclient==0.0.5
 keyname==0.4.1
 exdown==0.7.0
 setuptools<82
+packaging>21
 pandas
 seaborn
 frozendict==1.2

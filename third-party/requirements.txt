@@ -217,7 +217,7 @@ opencv-python==4.5.1.48
     # via -r requirements.in
 osfclient==0.0.5
     # via -r requirements.in
-packaging==20.9
+packaging==24.2
     # via
     #   bleach
     #   deprecation
@@ -395,4 +395,4 @@ wrapt==1.12.1
 yarl==1.6.3
     # via aiohttp
 
-setuptools==81.0.0
+setuptools==75.3.4

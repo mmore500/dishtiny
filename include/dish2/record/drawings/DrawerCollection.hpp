@@ -98,7 +98,15 @@ using DrawerCollection = dish2::DrawerManager<
   >,
   dish2::GridDrawer<
     Spec,
+    dish2::PcaBinaryExpressionByRootArtist<Spec>
+  >,
+  dish2::GridDrawer<
+    Spec,
     dish2::PcaExpressionArtist<Spec>
+  >,
+  dish2::GridDrawer<
+    Spec,
+    dish2::PcaExpressionByRootArtist<Spec>
   >,
   dish2::GridDrawer<
     Spec,
@@ -106,7 +114,15 @@ using DrawerCollection = dish2::DrawerManager<
   >,
   dish2::GridDrawer<
     Spec,
+    dish2::PcaRegulationByRootArtist<Spec>
+  >,
+  dish2::GridDrawer<
+    Spec,
     dish2::PcaTrinaryRegulationArtist<Spec>
+  >,
+  dish2::GridDrawer<
+    Spec,
+    dish2::PcaTrinaryRegulationByRootArtist<Spec>
   >,
   dish2::GridDrawer<
     Spec,

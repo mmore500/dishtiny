@@ -22,6 +22,7 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "DocumentHandles.hpp"
+#include "toggle_view_key.hpp"
 
 namespace dish2 {
 
@@ -37,7 +38,6 @@ class SeriesViewer {
   > > artists;
 
   bool is_active{ InitiallyActivated };
-  // emp::web::DocuExtras description;
 
   emp::web::Canvas canvas{
   };
@@ -83,7 +83,6 @@ class SeriesViewer {
 public:
 
   SeriesViewer( const dish2::ThreadWorld<Spec>& thread_world )
-  // , description( MakeID("key") )
   {
 
     *document_handles.at( "grid_viewer" ) << emp::web::Div(
@@ -147,7 +146,9 @@ public:
     ).SetAttr(
       "class", "collapse"
     );
-    // description.SetCSS("display", "none");
+    dish2::toggle_view_key(
+      emp::slugify( std::string{ Artist::GetName() } ), false
+    );
     document_handles.at( Category::GetID() )->Div(
       MakeID( "selector" )
     ).SetAttr(
@@ -170,7 +171,9 @@ public:
         double, std::milli
       > >.GetElapsed().count() )
     );
-    // description.SetCSS("display", "initial");
+    dish2::toggle_view_key(
+      emp::slugify( std::string{ Artist::GetName() } ), true
+    );
     document_handles.at( Category::GetID() )->Div(
       MakeID( "selector" )
     ).SetAttr(

@@ -30,6 +30,7 @@ docs/.Rhistory
 
 microbenchmarks/**/*.json
 
+web/dishtiny-no-pthread.js
 web/dishtiny.js
 web/dishtiny.worker.js
 web/index.html
