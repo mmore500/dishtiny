@@ -190,9 +190,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     needs:
-      - cpp-unit
-      - fuzzing
-      - tidy
+      - docker-build
     container:
       image: mmore500/dishtiny:GITHUB_ACTION_${{ github.run_number }}
       env:
