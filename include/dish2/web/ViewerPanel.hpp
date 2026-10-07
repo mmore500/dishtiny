@@ -53,6 +53,9 @@ public:
 
   void Redraw() { viewer_collection.Redraw(); }
 
+  // closes every activated viewer
+  void Clear() { viewer_collection.Close(); }
+
   // downloads each activated viewer as a PNG
   void Download( const size_t update ) {
     viewer_collection.Redraw();

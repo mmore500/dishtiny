@@ -29,7 +29,8 @@ class WebInterface {
       return thread_world.GetUpdate();
     },
     [this](){ Redraw(); },
-    [this](){ view_panel.Download( thread_world.GetUpdate() ); }
+    [this](){ view_panel.Download( thread_world.GetUpdate() ); },
+    [this](){ view_panel.Clear(); }
   };
   dish2::ConfigPanel config_panel;
   dish2::ExecutionLogPanel execution_log_panel;

@@ -23,6 +23,7 @@ class ControlPanel {
   std::function<size_t()> update_callback;
   std::function<void()> render_callback;
   std::function<void()> download_callback;
+  std::function<void()> clear_callback;
 
   // render and download can only be selected while every is selected
   bool every_toggle{ true };
@@ -207,6 +208,22 @@ class ControlPanel {
 
   }
 
+  void SetupClearButton() {
+    button_dash.Div("button_row") << emp::web::Div(
+      "clear_col"
+    ).SetAttr(
+      "class", "col-lg-auto p-2"
+    ) << emp::web::Button(
+      [this](){ clear_callback(); },
+      "Clear Views",
+      "clear-button"
+    ).SetAttr(
+      "class", "btn btn-primary btn-block btn-lg"
+    ).SetCSS(
+      "box-shadow", "none"
+    );
+  }
+
   size_t GetEveryFreq() {
     return uitsl::stoszt(
       button_dash.Input("render_frequency").GetCurrValue()
@@ -225,7 +242,8 @@ public:
   ControlPanel(
     std::function<size_t()> update_callback_,
     std::function<void()> render_callback_,
-    std::function<void()> download_callback_
+    std::function<void()> download_callback_,
+    std::function<void()> clear_callback_
   ) : animator(
     [this](){
       const size_t cur_update = update_callback();
@@ -238,6 +256,7 @@ public:
   ), update_callback( update_callback_ )
   , render_callback( render_callback_ )
   , download_callback( download_callback_ )
+  , clear_callback( clear_callback_ )
   {
 
     button_dash << emp::web::Div(
@@ -249,6 +268,7 @@ public:
     SetupStepButton();
     SetupRunButton();
     SetupRenderDownloadEveryButtons();
+    SetupClearButton();
 
     RefreshUpdateButton( 0 );
 
