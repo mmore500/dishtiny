@@ -156,7 +156,8 @@ using ViewerCollection = dish2::ViewerManager<
   dish2::GridViewer<
     Spec,
     dish2::PcaExpressionByRootArtist<Spec>,
-    dish2::ExpressionCategory
+    dish2::ExpressionCategory,
+    true
   >,
   dish2::SeriesViewer<
     Spec,
@@ -199,7 +200,8 @@ using ViewerCollection = dish2::ViewerManager<
   dish2::GridViewer<
     Spec,
     dish2::PhylogeneticRootArtist<Spec>,
-    dish2::DemographicsCategory
+    dish2::DemographicsCategory,
+    true
   >,
   dish2::SeriesViewer<
     Spec,
@@ -245,7 +247,8 @@ using ViewerCollection = dish2::ViewerManager<
   dish2::GridViewer<
     Spec,
     dish2::ResourceStockpileArtist<Spec>,
-    dish2::SharingCategory
+    dish2::SharingCategory,
+    true
   >,
   dish2::GridViewer<
     Spec,
