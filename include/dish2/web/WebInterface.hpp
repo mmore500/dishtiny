@@ -24,11 +24,12 @@ class WebInterface {
   };
 
   dish2::ControlPanel control_panel{
-    [this](const bool render_toggle, const size_t render_freq){
+    [this](){
       thread_world.template Update<false>();
-      Redraw( render_toggle, render_freq );
       return thread_world.GetUpdate();
-    }
+    },
+    [this](){ Redraw(); },
+    [this](){ view_panel.Download( thread_world.GetUpdate() ); }
   };
   dish2::ConfigPanel config_panel;
   dish2::ExecutionLogPanel execution_log_panel;

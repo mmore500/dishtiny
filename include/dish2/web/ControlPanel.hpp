@@ -20,6 +20,15 @@ class ControlPanel {
 
   dish2::Animator animator;
 
+  std::function<size_t()> update_callback;
+  std::function<void()> render_callback;
+  std::function<void()> download_callback;
+
+  // render and download can only be selected while every is selected
+  bool every_toggle{ true };
+  bool render_toggle{ true };
+  bool download_toggle{ false };
+
   size_t update{};
 
   void SetupStepButton() {
@@ -27,6 +36,8 @@ class ControlPanel {
       "step_col"
     ).SetAttr(
       "class", "col-lg-auto p-2"
+    ).SetCSS(
+      "margin-right", "0.5rem"
     ) << emp::web::Div(
       "step_button"
     ).SetAttr(
@@ -52,6 +63,8 @@ class ControlPanel {
       "run_col"
     ).SetAttr(
       "class", "col-lg-auto p-2"
+    ).SetCSS(
+      "margin-right", "0.5rem"
     ) << emp::web::Button(
       [this](){
         animator.ToggleActive();
@@ -88,7 +101,41 @@ class ControlPanel {
 
   }
 
-  void SetupRenderButton() {
+  void SetButtonActive( const std::string& id, const bool active ) {
+    button_dash.Button( id ).SetAttr(
+      "class", active ? "btn btn-primary active" : "btn btn-primary",
+      "aria-pressed", active ? "true" : "false"
+    );
+  }
+
+  void RefreshToggleButtons() {
+    SetButtonActive( "render-button", render_toggle );
+    SetButtonActive( "download-button", download_toggle );
+    SetButtonActive( "every-button", every_toggle );
+  }
+
+  // if every is selected, render and download toggle; otherwise, they act once
+  void ClickRender() {
+    if ( every_toggle ) render_toggle = !render_toggle;
+    else render_callback();
+    RefreshToggleButtons();
+  }
+
+  void ClickDownload() {
+    if ( every_toggle ) download_toggle = !download_toggle;
+    else download_callback();
+    RefreshToggleButtons();
+  }
+
+  // unselecting every unselects render and download, selecting every does not
+  // reselect them
+  void ClickEvery() {
+    every_toggle = !every_toggle;
+    if ( !every_toggle ) render_toggle = download_toggle = false;
+    RefreshToggleButtons();
+  }
+
+  void SetupRenderDownloadEveryButtons() {
     button_dash.Div("button_row") << emp::web::Div(
       "render_col"
     ).SetAttr(
@@ -101,17 +148,28 @@ class ControlPanel {
       "render_input-prepend"
     ).SetAttr(
       "class", "input-group-prepend"
-    ) << emp::web::Button(
-      [this](){ animator.ToggleRender(); },
-      "Render every"
-    ).SetAttr(
-      "aria-pressed", "true"
-    ).SetAttr(
-      "class", "btn active btn-primary"
-    ).SetAttr(
-      "data-toggle", "button"
-    ).SetAttr(
-      "autocomplete", "off"
+    );
+
+    // no box-shadow, so a clicked button doesn't keep a focus box around it
+    button_dash.Div("render_input-prepend") << emp::web::Button(
+      [this](){ ClickRender(); }, "Render", "render-button"
+    ).SetCSS(
+      "box-shadow", "none"
+    );
+    // small gaps between the buttons, which stay square-edged
+    button_dash.Div("render_input-prepend") << emp::web::Button(
+      [this](){ ClickDownload(); }, "Download", "download-button"
+    ).SetCSS(
+      "margin-left", "2px",
+      "border-radius", "0",
+      "box-shadow", "none"
+    );
+    button_dash.Div("render_input-prepend") << emp::web::Button(
+      [this](){ ClickEvery(); }, "Every", "every-button"
+    ).SetCSS(
+      "margin-left", "2px",
+      "border-radius", "0",
+      "box-shadow", "none"
     );
 
     button_dash.Div("render-wrapper") << emp::web::Input(
@@ -145,9 +203,11 @@ class ControlPanel {
       "class", "input-group-text"
     ) << "th update";
 
+    RefreshToggleButtons();
+
   }
 
-  size_t GetRenderFreq() {
+  size_t GetEveryFreq() {
     return uitsl::stoszt(
       button_dash.Input("render_frequency").GetCurrValue()
     );
@@ -163,15 +223,22 @@ class ControlPanel {
 public:
 
   ControlPanel(
-    std::function<size_t(const bool, const size_t)> update_and_render_callback
+    std::function<size_t()> update_callback_,
+    std::function<void()> render_callback_,
+    std::function<void()> download_callback_
   ) : animator(
-    [this, update_and_render_callback](const bool render_toggle){
-      const size_t cur_update = update_and_render_callback(
-        render_toggle, GetRenderFreq()
-      );
+    [this](){
+      const size_t cur_update = update_callback();
+      if ( cur_update % GetEveryFreq() == 0 ) {
+        if ( render_toggle ) render_callback();
+        if ( download_toggle ) download_callback();
+      }
       RefreshUpdateButton( cur_update );
     }
-  ) {
+  ), update_callback( update_callback_ )
+  , render_callback( render_callback_ )
+  , download_callback( download_callback_ )
+  {
 
     button_dash << emp::web::Div(
       "button_row"
@@ -181,7 +248,7 @@ public:
 
     SetupStepButton();
     SetupRunButton();
-    SetupRenderButton();
+    SetupRenderDownloadEveryButtons();
 
     RefreshUpdateButton( 0 );
 

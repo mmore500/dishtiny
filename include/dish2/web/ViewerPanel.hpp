@@ -53,6 +53,12 @@ public:
 
   void Redraw() { viewer_collection.Redraw(); }
 
+  // downloads each activated viewer as a PNG
+  void Download( const size_t update ) {
+    viewer_collection.Redraw();
+    viewer_collection.Download( update );
+  }
+
 
 
   // std::unordered_map<std::string, UI::Document> view_subselectors{
