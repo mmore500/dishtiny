@@ -17,8 +17,29 @@ template<typename Spec>
 using ViewerCollection = dish2::ViewerManager<
   dish2::GridViewer<
     Spec,
+    dish2::IsAliveArtist<Spec>,
+    dish2::DemographicsCategory
+  >,
+  dish2::GridViewer<
+    Spec,
     dish2::ApoptosisRequestArtist<Spec>,
     dish2::ApoptosisCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaBinaryExpressionArtist<Spec>,
+    dish2::ExpressionCategory
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::PcaBinaryExpressionByKinGroupArtist<Spec>,
+    dish2::ExpressionCategory,
+    Spec::NLEV
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaBinaryExpressionByRootArtist<Spec>,
+    dish2::ExpressionCategory
   >,
   dish2::GridViewer<
     Spec,
@@ -30,6 +51,11 @@ using ViewerCollection = dish2::ViewerManager<
   //   dish2::DistanceToGraphCenterArtist<Spec>,
   //   dish2::ApoptosisCategory
   // >,
+  dish2::GridViewer<
+    Spec,
+    dish2::EligibleSpawnRequestArtist<Spec>,
+    dish2::ReproductionCategory
+  >,
   dish2::GridViewer<
     Spec,
     dish2::EpochArtist<Spec>,
@@ -55,17 +81,6 @@ using ViewerCollection = dish2::ViewerManager<
     Spec,
     dish2::IncomingIntraMessageCounterArtist<Spec>,
     dish2::MessagingCategory
-  >,
-  dish2::GridViewer<
-    Spec,
-    dish2::IsAliveArtist<Spec>,
-    dish2::DemographicsCategory
-  >,
-  dish2::SeriesViewer<
-    Spec,
-    dish2::PeripheralityLevArtist<Spec>,
-    dish2::GroupStructureCategory,
-    Spec::NLEV
   >,
   dish2::SeriesViewer<
     Spec,
@@ -109,6 +124,39 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::GridViewer<
     Spec,
+    dish2::PcaExpressionArtist<Spec>,
+    dish2::ExpressionCategory
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::PcaExpressionByKinGroupArtist<Spec>,
+    dish2::ExpressionCategory,
+    Spec::NLEV
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaExpressionByRootArtist<Spec>,
+    dish2::ExpressionCategory,
+    true
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaRegulationArtist<Spec>,
+    dish2::RegulationCategory
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::PcaRegulationByKinGroupArtist<Spec>,
+    dish2::RegulationCategory,
+    Spec::NLEV
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaRegulationByRootArtist<Spec>,
+    dish2::RegulationCategory
+  >,
+  dish2::GridViewer<
+    Spec,
     dish2::MostRecentCauseOfDeathArtist<Spec>,
     dish2::DemographicsCategory
   >,
@@ -132,69 +180,16 @@ using ViewerCollection = dish2::ViewerManager<
     dish2::NumModulesArtist<Spec>,
     dish2::DemographicsCategory
   >,
-  dish2::GridViewer<
-    Spec,
-    dish2::PcaBinaryExpressionArtist<Spec>,
-    dish2::ExpressionCategory
-  >,
-  dish2::GridViewer<
-    Spec,
-    dish2::PcaBinaryExpressionByRootArtist<Spec>,
-    dish2::ExpressionCategory
-  >,
   dish2::SeriesViewer<
     Spec,
-    dish2::PcaBinaryExpressionByKinGroupArtist<Spec>,
-    dish2::ExpressionCategory,
+    dish2::QuorumBitOwnArtist<Spec>,
+    dish2::ResourceCollectionCategory,
     Spec::NLEV
   >,
-  dish2::GridViewer<
-    Spec,
-    dish2::PcaExpressionArtist<Spec>,
-    dish2::ExpressionCategory
-  >,
-  dish2::GridViewer<
-    Spec,
-    dish2::PcaExpressionByRootArtist<Spec>,
-    dish2::ExpressionCategory,
-    true
-  >,
   dish2::SeriesViewer<
     Spec,
-    dish2::PcaExpressionByKinGroupArtist<Spec>,
-    dish2::ExpressionCategory,
-    Spec::NLEV
-  >,
-  dish2::GridViewer<
-    Spec,
-    dish2::PcaRegulationArtist<Spec>,
-    dish2::RegulationCategory
-  >,
-  dish2::GridViewer<
-    Spec,
-    dish2::PcaRegulationByRootArtist<Spec>,
-    dish2::RegulationCategory
-  >,
-  dish2::SeriesViewer<
-    Spec,
-    dish2::PcaRegulationByKinGroupArtist<Spec>,
-    dish2::RegulationCategory,
-    Spec::NLEV
-  >,
-  dish2::GridViewer<
-    Spec,
-    dish2::PcaTrinaryRegulationArtist<Spec>,
-    dish2::RegulationCategory
-  >,
-  dish2::GridViewer<
-    Spec,
-    dish2::PcaTrinaryRegulationByRootArtist<Spec>,
-    dish2::RegulationCategory
-  >,
-  dish2::SeriesViewer<
-    Spec,
-    dish2::PcaTrinaryRegulationByKinGroupArtist<Spec>,
-    dish2::RegulationCategory,
+    dish2::PeripheralityLevArtist<Spec>,
+    dish2::GroupStructureCategory,
     Spec::NLEV
   >,
   dish2::GridViewer<
@@ -211,12 +206,6 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::SeriesViewer<
     Spec,
-    dish2::QuorumBitOwnArtist<Spec>,
-    dish2::ResourceCollectionCategory,
-    Spec::NLEV
-  >,
-  dish2::SeriesViewer<
-    Spec,
     dish2::QuorumBitsArtist<Spec>,
     dish2::ResourceCollectionCategory,
     Spec::NLEV
@@ -226,6 +215,11 @@ using ViewerCollection = dish2::ViewerManager<
     dish2::QuorumCapArtist<Spec>,
     dish2::ResourceCollectionCategory,
     Spec::NLEV
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::ResourceInputPeekArtist<Spec>,
+    dish2::SharingCategory
   >,
   dish2::SeriesViewer<
     Spec,
@@ -241,8 +235,8 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::GridViewer<
     Spec,
-    dish2::ResourceInputPeekArtist<Spec>,
-    dish2::SharingCategory
+    dish2::RepLevRequestArtist<Spec>,
+    dish2::ReproductionCategory
   >,
   dish2::GridViewer<
     Spec,
@@ -252,22 +246,7 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::GridViewer<
     Spec,
-    dish2::EligibleSpawnRequestArtist<Spec>,
-    dish2::ReproductionCategory
-  >,
-  dish2::GridViewer<
-    Spec,
     dish2::SpawnArrestArtist<Spec>,
-    dish2::ReproductionCategory
-  >,
-  dish2::GridViewer<
-    Spec,
-    dish2::SpawnedFromArtist<Spec>,
-    dish2::DemographicsCategory
-  >,
-  dish2::GridViewer<
-    Spec,
-    dish2::RepLevRequestArtist<Spec>,
     dish2::ReproductionCategory
   >,
   dish2::GridViewer<
@@ -277,8 +256,29 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::GridViewer<
     Spec,
+    dish2::SpawnedFromArtist<Spec>,
+    dish2::DemographicsCategory
+  >,
+  dish2::GridViewer<
+    Spec,
     dish2::TaxaArtist<Spec>,
     dish2::DemographicsCategory
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaTrinaryRegulationArtist<Spec>,
+    dish2::RegulationCategory
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::PcaTrinaryRegulationByKinGroupArtist<Spec>,
+    dish2::RegulationCategory,
+    Spec::NLEV
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::PcaTrinaryRegulationByRootArtist<Spec>,
+    dish2::RegulationCategory
   >
 >;
 
