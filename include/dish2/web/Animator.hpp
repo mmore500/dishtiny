@@ -14,7 +14,7 @@ class Animator : public emp::web::Animate {
 
 public:
 
-  Animator( std::function<void()> update_and_render_callback_ )
+  explicit Animator( std::function<void()> update_and_render_callback_ )
   : update_and_render_callback( update_and_render_callback_ )
   {}
 

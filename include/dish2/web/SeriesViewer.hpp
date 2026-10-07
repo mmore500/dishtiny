@@ -84,7 +84,7 @@ class SeriesViewer {
 
 public:
 
-  SeriesViewer( const dish2::ThreadWorld<Spec>& thread_world )
+  explicit SeriesViewer( const dish2::ThreadWorld<Spec>& thread_world )
   {
 
     *document_handles.at( "grid_viewer" ) << emp::web::Div(

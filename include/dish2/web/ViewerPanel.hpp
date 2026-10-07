@@ -28,7 +28,7 @@ public:
 
   // adapted from https://stackoverflow.com/a/22561209
   template <typename... TupElem>
-  ViewerPanel(const dish2::ThreadWorld<Spec>& thread_world)
+  explicit ViewerPanel(const dish2::ThreadWorld<Spec>& thread_world)
   : viewer_collection( thread_world ) {
 
     dish2::document_handles.at("grid_viewer")->SetAttr(

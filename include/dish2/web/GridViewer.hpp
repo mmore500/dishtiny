@@ -50,7 +50,7 @@ class GridViewer {
 
 public:
 
-  GridViewer( const dish2::ThreadWorld<Spec>& thread_world )
+  explicit GridViewer( const dish2::ThreadWorld<Spec>& thread_world )
   : artist( thread_world )
   {
 
