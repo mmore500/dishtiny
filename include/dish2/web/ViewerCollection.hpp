@@ -252,6 +252,11 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::GridViewer<
     Spec,
+    dish2::EligibleSpawnRequestArtist<Spec>,
+    dish2::ReproductionCategory
+  >,
+  dish2::GridViewer<
+    Spec,
     dish2::SpawnArrestArtist<Spec>,
     dish2::ReproductionCategory
   >,

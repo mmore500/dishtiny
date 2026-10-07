@@ -143,6 +143,17 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
+[eligible-spawn-request]
+header = ["The **Eligible Spawn Request Viewer** depicts interaction between cell spawn requests and arrests."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Blue', '#0000FF')} indicates a cell with an **eligible spawn request**.",
+    "{make_badge('Purple', '#FF00FF')} indicates a cell with an **arrested spawn request**.",
+    "{make_badge('Red', '#FF0000')} indicates a cell with **spawn arrest**, but **no request**.",
+    "{make_badge('White', '#FFFFFF')} indicates a cell with **no spawn request or arrest**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
 [spawn-arrest]
 header = ["The **Spawn Arrest Viewer** depicts reproductive cooperation."]
 items = [
