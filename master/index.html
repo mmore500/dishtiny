@@ -3,6 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="custom.css">
 <meta charset="utf-8">
 <title>dishtiny</title>
@@ -741,6 +742,39 @@ $('.modal').modal('hide');
         </ul>
     </div>
     
+    <div id="cell-age-key" class="text-large" style="display: none;">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-dark">
+            
+                <p>The <strong>Cell Age Viewer</strong> shows the age of each cell.</p>
+
+            
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
+
+            </li>
+            
+            <li class="list-group-item">
+            <div class="my-1"><p><strong>Color hue</strong> indicates cell age.</p>
+<div style="height: 1.25em; border: 1px solid black; background: linear-gradient(to right, #FF8080 0.0%, #FFFF80 16.666666666666668%, #80FF80 33.333333333333336%, #80FFFF 50.0%, #8080FF 66.66666666666667%, #FF80FF 83.33333333333333%, #FF8080 100.0%);"></div><div class="small" style="position: relative; height: 1.5em;"><span style="position: absolute; white-space: nowrap; left: 0%; transform: translateX(0);">0</span><span style="position: absolute; white-space: nowrap; left: 16.666666666666668%; transform: translateX(-50%);"></span><span style="position: absolute; white-space: nowrap; left: 33.333333333333336%; transform: translateX(-50%);"></span><span style="position: absolute; white-space: nowrap; left: 50.0%; transform: translateX(-50%);"></span><span style="position: absolute; white-space: nowrap; left: 66.66666666666667%; transform: translateX(-50%);"></span><span style="position: absolute; white-space: nowrap; left: 83.33333333333333%; transform: translateX(-50%);"></span><span style="position: absolute; white-space: nowrap; left: 100%; transform: translateX(-100%);">high (mod 360)</span></div></div>
+
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-light" style="background-color: #FFFFFF; color: #000000;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
+
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
+
+            </li>
+            
+        </ul>
+    </div>
+    
     <div id="cell-birth-key" class="text-large" style="display: none;">
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
@@ -911,6 +945,53 @@ $('.modal').modal('hide');
             
             <li class="list-group-item">
             <p><span class="badge badge-light" style="background-color: #FFFFFF; color: #000000;">White</span> indicates <strong>no</strong> reproduction attempt.</p>
+
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-light" style="background-color: #FFFFFF; color: #000000;">White</span> borders divide <strong>low-level groups</strong> that are part of the same high-level group. </p>
+
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
+
+            </li>
+            
+        </ul>
+    </div>
+    
+    <div id="eligible-spawn-request-key" class="text-large" style="display: none;">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-dark">
+            
+                <p>The <strong>Eligible Spawn Request Viewer</strong> depicts interaction between cell spawn requests and arrests.</p>
+
+            
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
+
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-dark" style="background-color: #0000FF;">Blue</span> indicates a cell with an <strong>eligible spawn request</strong>.</p>
+
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-dark" style="background-color: #FF00FF;">Purple</span> indicates a cell with an <strong>arrested spawn request</strong>.</p>
+
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-dark" style="background-color: #FF0000;">Red</span> indicates a cell with <strong>spawn arrest</strong>, but <strong>no request</strong>.</p>
+
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-light" style="background-color: #FFFFFF; color: #000000;">White</span> indicates a cell with <strong>no spawn request or arrest</strong>.</p>
 
             </li>
             
