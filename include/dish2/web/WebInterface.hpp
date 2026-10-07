@@ -6,6 +6,7 @@
 #include "../world/ProcWorld.hpp"
 #include "../world/ThreadWorld.hpp"
 
+#include "ConfigPanel.hpp"
 #include "ControlPanel.hpp"
 #include "ExecutionLogPanel.hpp"
 #include "ModalLogReadoutPanel.hpp"
@@ -29,6 +30,7 @@ class WebInterface {
       return thread_world.GetUpdate();
     }
   };
+  dish2::ConfigPanel config_panel;
   dish2::ExecutionLogPanel execution_log_panel;
   dish2::ModalLogReadoutPanel modal_log_readout_panel;
   dish2::PrevalentGenotypePanel<Spec> prevalent_genotype_panel{ thread_world };
