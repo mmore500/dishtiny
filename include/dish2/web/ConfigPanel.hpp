@@ -39,12 +39,12 @@ public:
       if ( entry->GetDescription().find( "[NATIVE]" ) != std::string::npos ) {
         continue;
       }
-      const std::string prefix = dish2::url_encode( name ) + "=";
       dynamic_config << dish2::SnippetPill(
         name,
         // structured bindings can't be captured in C++17, so copy
-        [prefix, entry = entry](){
-          return prefix + dish2::url_encode( entry->GetValue() );
+        [name = name, entry = entry](){
+          return dish2::url_encode( name )
+            + "=" + dish2::url_encode( entry->GetValue() );
         },
         entry->GetDescription()
       );
