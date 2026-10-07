@@ -4,6 +4,7 @@
 
 #include <functional>
 #include <string>
+#include <utility>
 
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/commands.hpp"
@@ -16,12 +17,24 @@ struct DataPill {
 
   emp::web::Div pill;
 
+private:
+
+  // dropdown contents, added to with operator<<
+  emp::web::Div body;
+
+public:
+
   DataPill(
     const std::string & title,
     const std::function<std::string()> value,
     const std::string & description,
     const bool split=true
+  ) : body(
+    emp::to_string("datapill-collapse-", emp::slugify( title ))
   ) {
+
+    body.SetAttr( "class", "card-body collapse" );
+    body << description;
 
     pill.SetAttr(
       "class", split ? "col-md-6 p-3" : "col-md-6 col-lg-4 col-xl-3 p-3"
@@ -77,12 +90,15 @@ struct DataPill {
         emp::to_string("datapill-wrapper-", emp::slugify( title ))
       ) << emp::web::Close(
         emp::to_string("datapill-header-", emp::slugify( title ))
-      ) << emp::web::Div(
-        emp::to_string("datapill-collapse-", emp::slugify( title ))
-      ).SetAttr(
-        "class", "card-body collapse"
-      ) << description;
+      ) << body;
 
+  }
+
+  // streams into the dropdown below the description
+  template<typename T>
+  DataPill& operator<<( T&& content ) {
+    body << std::forward<T>( content );
+    return *this;
   }
 
   operator emp::web::Div&() { return pill; }

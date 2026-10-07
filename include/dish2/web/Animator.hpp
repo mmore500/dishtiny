@@ -10,19 +10,15 @@ namespace dish2 {
 
 class Animator : public emp::web::Animate {
 
-  std::function<void(const bool)> update_and_render_callback;
-
-  bool render_toggle{ true };
+  std::function<void()> update_and_render_callback;
 
 public:
 
-  Animator( std::function<void(const bool)> update_and_render_callback_ )
+  explicit Animator( std::function<void()> update_and_render_callback_ )
   : update_and_render_callback( update_and_render_callback_ )
   {}
 
-  void ToggleRender() { render_toggle = !render_toggle; }
-
-  void DoFrame() override { update_and_render_callback( render_toggle ); }
+  void DoFrame() override { update_and_render_callback(); }
 
 };
 

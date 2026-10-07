@@ -2,6 +2,8 @@
 #ifndef DISH2_WEB_VIEWERMANAGER_HPP_INCLUDE
 #define DISH2_WEB_VIEWERMANAGER_HPP_INCLUDE
 
+#include <string>
+
 namespace dish2 {
 
 // base case
@@ -10,6 +12,8 @@ template<typename... SubsequentViewers> struct ViewerManager {
   template<typename... Args> ViewerManager( Args&&... args ) {}
 
   void Redraw() {}
+  void Download( const size_t update ) {}
+  void Close() {}
 
 };
 
@@ -31,6 +35,17 @@ struct ViewerManager<FirstViewer, SubsequentViewers...> {
   void Redraw() {
     if ( first_viewer.IsActivated() ) first_viewer.Redraw();
     subsequent_viewers.Redraw();
+  }
+
+  void Download( const size_t update ) {
+    if ( first_viewer.IsActivated() ) first_viewer.Download( update );
+    subsequent_viewers.Download( update );
+  }
+
+  // closes every activated viewer
+  void Close() {
+    if ( first_viewer.IsActivated() ) first_viewer.Deactivate();
+    subsequent_viewers.Close();
   }
 
 };

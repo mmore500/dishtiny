@@ -11,6 +11,7 @@
 #include "../../../third-party/conduit/include/uitsl/countdown/runtime.hpp"
 #include "../../../third-party/Empirical/include/emp/base/optional.hpp"
 #include "../../../third-party/Empirical/include/emp/base/vector.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 #include "../../../third-party/Empirical/include/emp/web/commands.hpp"
@@ -83,7 +84,7 @@ class SeriesViewer {
 
 public:
 
-  SeriesViewer( const dish2::ThreadWorld<Spec>& thread_world )
+  explicit SeriesViewer( const dish2::ThreadWorld<Spec>& thread_world )
   {
 
     *document_handles.at( "grid_viewer" ) << emp::web::Div(
@@ -243,6 +244,18 @@ public:
   void Redraw() {
     for ( auto& [artist, canvas, one_is_active] : artists ) {
       if (one_is_active) artist.Draw( canvas );
+    }
+  }
+
+  void Download( const size_t update ) {
+    for ( size_t i{}; i < artists.size(); ++i ) {
+      const auto& [artist, canvas, one_is_active] = artists[i];
+      if ( one_is_active ) canvas.DownloadPNG( emp::keyname::pack({
+        {"title", emp::slugify( std::string{ Artist::GetName() } )},
+        {"series", emp::to_string( i )},
+        {"update", emp::to_string( update )},
+        {"ext", ".png"}
+      }) );
     }
   }
 

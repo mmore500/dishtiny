@@ -9,6 +9,7 @@
 
 #include "../../../third-party/conduit/include/uitsl/countdown/runtime.hpp"
 #include "../../../third-party/Empirical/include/emp/base/optional.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 #include "../../../third-party/Empirical/include/emp/web/commands.hpp"
@@ -49,7 +50,7 @@ class GridViewer {
 
 public:
 
-  GridViewer( const dish2::ThreadWorld<Spec>& thread_world )
+  explicit GridViewer( const dish2::ThreadWorld<Spec>& thread_world )
   : artist( thread_world )
   {
 
@@ -163,6 +164,14 @@ public:
   }
 
   void Redraw() { artist.Draw( canvas ); }
+
+  void Download( const size_t update ) {
+    canvas.DownloadPNG( emp::keyname::pack({
+      {"title", emp::slugify( std::string{ Artist::GetName() } )},
+      {"update", emp::to_string( update )},
+      {"ext", ".png"}
+    }) );
+  }
 
 };
 

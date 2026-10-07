@@ -6,6 +6,7 @@
 #include "../world/ProcWorld.hpp"
 #include "../world/ThreadWorld.hpp"
 
+#include "ConfigPanel.hpp"
 #include "ControlPanel.hpp"
 #include "ExecutionLogPanel.hpp"
 #include "ModalLogReadoutPanel.hpp"
@@ -23,12 +24,15 @@ class WebInterface {
   };
 
   dish2::ControlPanel control_panel{
-    [this](const bool render_toggle, const size_t render_freq){
+    [this](){
       thread_world.template Update<false>();
-      Redraw( render_toggle, render_freq );
       return thread_world.GetUpdate();
-    }
+    },
+    [this](){ Redraw(); },
+    [this](){ view_panel.Download( thread_world.GetUpdate() ); },
+    [this](){ view_panel.Clear(); }
   };
+  dish2::ConfigPanel config_panel;
   dish2::ExecutionLogPanel execution_log_panel;
   dish2::ModalLogReadoutPanel modal_log_readout_panel;
   dish2::PrevalentGenotypePanel<Spec> prevalent_genotype_panel{ thread_world };

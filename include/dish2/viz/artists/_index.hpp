@@ -4,9 +4,11 @@
 
 #include "ApoptosisRequestArtist.hpp"
 #include "CardinalOrderArtist.hpp"
+#include "CellAgeArtist.hpp"
 #include "CellBirthArtist.hpp"
 #include "DistanceToGraphCenterArtist.hpp"
 #include "DummyArtist.hpp"
+#include "EligibleSpawnRequestArtist.hpp"
 #include "EpochArtist.hpp"
 #include "ExpressionByModuleArtist.hpp"
 #include "HeirRequestArtist.hpp"
