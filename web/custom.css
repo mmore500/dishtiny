@@ -9841,3 +9841,7 @@ a.text-dark:hover {
   background-color: #68737c;
   border-color: #818d96
 }
+
+.jumbotron .lead b {
+  font-weight: 700;
+}
