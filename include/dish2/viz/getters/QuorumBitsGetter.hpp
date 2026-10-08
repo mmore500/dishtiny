@@ -3,6 +3,7 @@
 #define DISH2_VIZ_GETTERS_QUORUMBITSGETTER_HPP_INCLUDE
 
 #include <functional>
+#include <string_view>
 
 #include "../../cell/Cell.hpp"
 #include "../../config/cfg.hpp"
@@ -20,6 +21,8 @@ class QuorumBitsGetter {
   size_t lev;
 
 public:
+
+  static constexpr std::string_view GetName() { return "QuorumBits"; }
 
   using value_type = size_t;
 

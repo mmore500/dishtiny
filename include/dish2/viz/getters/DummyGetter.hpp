@@ -2,6 +2,8 @@
 #ifndef DISH2_VIZ_GETTERS_DUMMYGETTER_HPP_INCLUDE
 #define DISH2_VIZ_GETTERS_DUMMYGETTER_HPP_INCLUDE
 
+#include <string_view>
+
 #include "../../config/cfg.hpp"
 #include "../../config/num_cells_local.hpp"
 
@@ -13,6 +15,8 @@ class DummyGetter {
   T val;
 
 public:
+
+  static constexpr std::string_view GetName() { return "Dummy"; }
 
   using value_type = T;
 

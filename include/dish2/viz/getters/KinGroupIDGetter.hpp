@@ -3,6 +3,7 @@
 #define DISH2_VIZ_GETTERS_KINGROUPIDGETTER_HPP_INCLUDE
 
 #include <functional>
+#include <string_view>
 
 #include "../../cell/Cell.hpp"
 #include "../../config/cfg.hpp"
@@ -18,6 +19,8 @@ class KinGroupIDGetter {
   std::reference_wrapper<const dish2::ThreadWorld<Spec>> thread_world;
 
 public:
+
+  static constexpr std::string_view GetName() { return "KinGroupID"; }
 
   using value_type = dish2::KinGroupID<Spec>;
 

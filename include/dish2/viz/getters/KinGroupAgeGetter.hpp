@@ -2,6 +2,8 @@
 #ifndef DISH2_VIZ_GETTERS_KINGROUPAGEGETTER_HPP_INCLUDE
 #define DISH2_VIZ_GETTERS_KINGROUPAGEGETTER_HPP_INCLUDE
 
+#include <string_view>
+
 #include "../../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
@@ -21,6 +23,8 @@ class KinGroupAgeGetter {
   size_t lev;
 
 public:
+
+  static constexpr std::string_view GetName() { return "KinGroupAge"; }
 
   using value_type = size_t;
 

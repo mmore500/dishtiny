@@ -2,6 +2,8 @@
 #ifndef DISH2_VIZ_ARTISTS_ARTIST_HPP_INCLUDE
 #define DISH2_VIZ_ARTISTS_ARTIST_HPP_INCLUDE
 
+#include <ostream>
+#include <string>
 #include <utility>
 
 #include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
@@ -41,6 +43,19 @@ public:
     first_renderer.Render( canvas );
     if constexpr ( sizeof...(SubsequentRenderers) > 0 ) {
       subsequent_artist.template Draw<false>( canvas );
+    }
+
+  }
+
+  // writes the data, with the fields of the provided json dict
+  // added to each entry
+  void Tabulate(
+    std::ostream& out, const std::string& label_fields_json
+  ) {
+
+    first_renderer.Tabulate( out, label_fields_json );
+    if constexpr ( sizeof...(SubsequentRenderers) > 0 ) {
+      subsequent_artist.Tabulate( out, label_fields_json );
     }
 
   }

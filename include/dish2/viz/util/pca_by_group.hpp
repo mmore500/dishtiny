@@ -48,9 +48,11 @@ inline std::vector< std::vector<double> > pca_by_group(
     uitsl::for_each(
       first, last, sgpl::CountingIterator{},
       [&]( const auto& entry, const size_t i ){
-        hola::matrix_copy_vector_into_row(
-          group_summary, hola::matrix_row_copy( summary, entry.second ), i
+        // wrapped so the copy is freed, the raw pointer would be leaked
+        const hopca::Vector row = hola::matrix_row_copy(
+          summary, entry.second
         );
+        hola::matrix_copy_vector_into_row( group_summary, row, i );
       }
     );
 

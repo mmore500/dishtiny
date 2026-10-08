@@ -3,6 +3,7 @@
 #define DISH2_VIZ_GETTERS_QUORUMBITOWNGETTER_HPP_INCLUDE
 
 #include <functional>
+#include <string_view>
 
 #include "../../cell/Cell.hpp"
 #include "../../config/cfg.hpp"
@@ -20,6 +21,8 @@ class QuorumBitOwnGetter {
   size_t lev;
 
 public:
+
+  static constexpr std::string_view GetName() { return "QuorumBitOwn"; }
 
   using value_type = bool;
 

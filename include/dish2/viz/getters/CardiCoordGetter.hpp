@@ -3,6 +3,7 @@
 #define DISH2_VIZ_GETTERS_CARDICOORDGETTER_HPP_INCLUDE
 
 #include <functional>
+#include <string_view>
 #include <tuple>
 
 #include "../../cell/Cell.hpp"
@@ -19,6 +20,8 @@ class CardiCoordGetter {
   std::reference_wrapper<const dish2::ThreadWorld<Spec>> thread_world;
 
 public:
+
+  static constexpr std::string_view GetName() { return "CardiCoord"; }
 
   using value_type = std::tuple<size_t, size_t>;
 

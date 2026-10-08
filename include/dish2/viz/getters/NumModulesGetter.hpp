@@ -3,6 +3,7 @@
 #define DISH2_VIZ_GETTERS_NUMMODULESGETTER_HPP_INCLUDE
 
 #include <functional>
+#include <string_view>
 
 #include "../../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 
@@ -18,6 +19,8 @@ class NumModulesGetter {
   using sgpl_spec_t = typename Spec::sgpl_spec_t;
 
 public:
+
+  static constexpr std::string_view GetName() { return "NumModules"; }
 
   using value_type = size_t;
 

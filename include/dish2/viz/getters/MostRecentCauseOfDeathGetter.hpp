@@ -3,6 +3,7 @@
 #define DISH2_VIZ_GETTERS_MOSTRECENTCAUSEOFDEATHGETTER_HPP_INCLUDE
 
 #include <functional>
+#include <string_view>
 
 #include "../../../../third-party/Empirical/include/emp/base/optional.hpp"
 
@@ -19,6 +20,8 @@ class MostRecentCauseOfDeathGetter {
   std::reference_wrapper<const dish2::ThreadWorld<Spec>> thread_world;
 
 public:
+
+  static constexpr std::string_view GetName() { return "MostRecentCauseOfDeath"; }
 
   using value_type = emp::optional<dish2::CauseOfDeath>;
 
