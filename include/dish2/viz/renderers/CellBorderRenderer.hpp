@@ -2,12 +2,16 @@
 #ifndef DISH2_VIZ_RENDERERS_CELLBORDERRENDERER_HPP_INCLUDE
 #define DISH2_VIZ_RENDERERS_CELLBORDERRENDERER_HPP_INCLUDE
 
+#include <optional>
+#include <ostream>
+#include <string>
 #include <utility>
 
 #include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
 
 #include "../util/CanvasMathHelper.hpp"
+#include "../util/write_jsonl_record.hpp"
 
 namespace dish2 {
 
@@ -67,6 +71,9 @@ public:
 
   }
 
+  void Tabulate( std::ostream&, const std::string& ) {
+    // pass
+  }
 
 };
 

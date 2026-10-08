@@ -3,6 +3,7 @@
 #define DISH2_VIZ_GETTERS_EXPRESSIONBYMODULEGETTER_HPP_INCLUDE
 
 #include <functional>
+#include <string_view>
 
 #include "../../../../third-party/signalgp-lite/include/sgpl/introspection/count_cores_with_module_idx.hpp"
 
@@ -26,6 +27,8 @@ class ExpressionByModuleGetter {
   size_t module_idx;
 
 public:
+
+  static constexpr std::string_view GetName() { return "ExpressionByModule"; }
 
   using value_type = size_t;
 

@@ -2,6 +2,8 @@
 #ifndef DISH2_VIZ_GETTERS_APOPTOSISREQUESTGETTER_HPP_INCLUDE
 #define DISH2_VIZ_GETTERS_APOPTOSISREQUESTGETTER_HPP_INCLUDE
 
+#include <string_view>
+
 #include "../../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
@@ -21,6 +23,9 @@ class ApoptosisRequestGetter
     = dish2::CardinalIteratorAdapter<Spec, dish2::ApoptosisRequestWrapper>;
 
 public:
+
+  static constexpr std::string_view GetName() { return "ApoptosisRequest"; }
+
   // inherit constructors
   using parent_t::parent_t;
 

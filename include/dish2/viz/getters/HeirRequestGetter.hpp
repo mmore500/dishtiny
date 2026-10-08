@@ -2,6 +2,8 @@
 #ifndef DISH2_VIZ_GETTERS_HEIRREQUESTGETTER_HPP_INCLUDE
 #define DISH2_VIZ_GETTERS_HEIRREQUESTGETTER_HPP_INCLUDE
 
+#include <string_view>
+
 #include "../../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
@@ -24,6 +26,9 @@ class HeirRequestGetter
   >;
 
 public:
+
+  static constexpr std::string_view GetName() { return "HeirRequest"; }
+
   // inherit constructors
   using parent_t::parent_t;
 

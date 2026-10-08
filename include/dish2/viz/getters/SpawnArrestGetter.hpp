@@ -2,6 +2,8 @@
 #ifndef DISH2_VIZ_GETTERS_SPAWNARRESTGETTER_HPP_INCLUDE
 #define DISH2_VIZ_GETTERS_SPAWNARRESTGETTER_HPP_INCLUDE
 
+#include <string_view>
+
 #include "../../../../third-party/Empirical/include/emp/datastructs/hash_utils.hpp"
 #include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
@@ -23,6 +25,9 @@ class SpawnArrestGetter
     = dish2::CardinalIteratorAdapter<Spec, dish2::SpawnArrestWrapper>;
 
 public:
+
+  static constexpr std::string_view GetName() { return "SpawnArrest"; }
+
   // inherit constructors
   using parent_t::parent_t;
 

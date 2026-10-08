@@ -56,10 +56,10 @@ public:
   // closes every activated viewer
   void Clear() { viewer_collection.Close(); }
 
-  // downloads each activated viewer as a PNG
-  void Download( const size_t update ) {
+  // saves each activated viewer as a PNG with its data
+  void Save( const size_t update ) {
     viewer_collection.Redraw();
-    viewer_collection.Download( update );
+    viewer_collection.Save( update );
   }
 
 

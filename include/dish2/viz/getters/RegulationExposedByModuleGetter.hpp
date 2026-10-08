@@ -3,6 +3,7 @@
 #define DISH2_VIZ_GETTERS_REGULATIONEXPOSEDBYMODULEGETTER_HPP_INCLUDE
 
 #include <functional>
+#include <string_view>
 
 #include "../../../../third-party/signalgp-lite/include/sgpl/introspection/count_modules.hpp"
 #include "../../../../third-party/signalgp-lite/include/sgpl/introspection/get_module_regulator.hpp"
@@ -27,6 +28,8 @@ class RegulationExposedByModuleGetter {
   size_t module_idx;
 
 public:
+
+  static constexpr std::string_view GetName() { return "RegulationExposedByModule"; }
 
   using value_type = emp::optional<float>;
 

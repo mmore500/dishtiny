@@ -2,11 +2,16 @@
 #ifndef DISH2_VIZ_RENDERERS_CARDINALFILLRENDERER_HPP_INCLUDE
 #define DISH2_VIZ_RENDERERS_CARDINALFILLRENDERER_HPP_INCLUDE
 
+#include <optional>
+#include <ostream>
+#include <string>
 #include <utility>
 
 #include "../../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
 #include "../util/CanvasMathHelper.hpp"
+#include "../util/parse_label_fields_json.hpp"
+#include "../util/write_jsonl_record.hpp"
 
 namespace dish2 {
 
@@ -110,6 +115,24 @@ public:
 
   }
 
+  void Tabulate(
+    std::ostream& out, const std::string& label_fields_json
+  ) {
+
+    const std::string name{ Getter::GetName() };
+    const auto label_fields = dish2::parse_label_fields_json(
+      label_fields_json
+    );
+
+    for (size_t pos{}; pos < getter.GetNumCells(); ++pos) {
+      for (size_t dir{}; dir < getter.GetNumCardinals( pos ); ++dir) {
+        dish2::write_jsonl_record(
+          out, label_fields, pos, dir, name, getter.Get( pos, dir )
+        );
+      }
+    }
+
+  }
 };
 
 } // namespace dish2

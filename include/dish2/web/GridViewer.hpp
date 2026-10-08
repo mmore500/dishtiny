@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <ostream>
 #include <ratio>
 #include <string>
 
@@ -21,6 +22,7 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "DocumentHandles.hpp"
+#include "saved_folder.hpp"
 #include "toggle_view_key.hpp"
 
 namespace dish2 {
@@ -165,12 +167,21 @@ public:
 
   void Redraw() { artist.Draw( canvas ); }
 
-  void Download( const size_t update ) {
-    canvas.DownloadPNG( emp::keyname::pack({
+  // saves a png and appends the underlying data to the saved folder
+  void Save( const size_t update ) {
+    emp::keyname::unpack_t attrs{
       {"title", emp::slugify( std::string{ Artist::GetName() } )},
       {"update", emp::to_string( update )},
       {"ext", ".png"}
-    }) );
+    };
+    dish2::saved_folder::save_png( canvas, emp::keyname::pack( attrs ) );
+    dish2::saved_folder::save_data(
+      [this, update]( std::ostream& out ){
+        artist.Tabulate( out, emp::to_string(
+          "{\"update\": ", update, ", \"artist\": \"", Artist::GetName(), "\"}"
+        ) );
+      }
+    );
   }
 
 };

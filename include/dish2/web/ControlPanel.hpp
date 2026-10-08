@@ -2,15 +2,18 @@
 #ifndef DISH2_WEB_CONTROLPANEL_HPP_INCLUDE
 #define DISH2_WEB_CONTROLPANEL_HPP_INCLUDE
 
+#include <cstdio>
 #include <functional>
 
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Button.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Div.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Document.hpp"
 #include "../../../third-party/Empirical/include/emp/web/emfunctions.hpp"
 
 #include "Animator.hpp"
+#include "saved_folder.hpp"
 
 namespace dish2 {
 
@@ -22,13 +25,13 @@ class ControlPanel {
 
   std::function<size_t()> update_callback;
   std::function<void()> render_callback;
-  std::function<void()> download_callback;
+  std::function<void()> save_callback;
   std::function<void()> clear_callback;
 
-  // render and download can only be selected while every is selected
+  // render and save can only be selected while every is selected
   bool every_toggle{ true };
   bool render_toggle{ true };
-  bool download_toggle{ false };
+  bool save_toggle{ false };
 
   size_t update{};
 
@@ -111,32 +114,35 @@ class ControlPanel {
 
   void RefreshToggleButtons() {
     SetButtonActive( "render-button", render_toggle );
-    SetButtonActive( "download-button", download_toggle );
+    SetButtonActive( "save-button", save_toggle );
     SetButtonActive( "every-button", every_toggle );
   }
 
-  // if every is selected, render and download toggle; otherwise, they act once
+  // if every is selected, render and save toggle; otherwise, they act once
   void ClickRender() {
     if ( every_toggle ) render_toggle = !render_toggle;
     else render_callback();
     RefreshToggleButtons();
   }
 
-  void ClickDownload() {
-    if ( every_toggle ) download_toggle = !download_toggle;
-    else download_callback();
+  void ClickSave() {
+    if ( every_toggle ) save_toggle = !save_toggle;
+    else {
+      save_callback();
+      RefreshSavedLabel();
+    }
     RefreshToggleButtons();
   }
 
-  // unselecting every unselects render and download, selecting every does not
+  // unselecting every unselects render and save, selecting every does not
   // reselect them
   void ClickEvery() {
     every_toggle = !every_toggle;
-    if ( !every_toggle ) render_toggle = download_toggle = false;
+    if ( !every_toggle ) render_toggle = save_toggle = false;
     RefreshToggleButtons();
   }
 
-  void SetupRenderDownloadEveryButtons() {
+  void SetupRenderSaveEveryButtons() {
     button_dash.Div("button_row") << emp::web::Div(
       "render_col"
     ).SetAttr(
@@ -159,7 +165,7 @@ class ControlPanel {
     );
     // small gaps between the buttons, which stay square-edged
     button_dash.Div("render_input-prepend") << emp::web::Button(
-      [this](){ ClickDownload(); }, "Download", "download-button"
+      [this](){ ClickSave(); }, "Save", "save-button"
     ).SetCSS(
       "margin-left", "2px",
       "border-radius", "0",
@@ -208,6 +214,62 @@ class ControlPanel {
 
   }
 
+  // shows how much has been saved
+  void RefreshSavedLabel() {
+    char label[ 64 ];
+    std::snprintf(
+      label, sizeof( label ), "Download Saved (%.1f MB)",
+      dish2::saved_folder::get_num_bytes() / 1e6
+    );
+    button_dash.Button( "download-saved-button" ).SetLabel( label );
+  }
+
+  void SetupSavedButtons() {
+    button_dash.Div("button_row") << emp::web::Div(
+      "saved_col"
+    ).SetAttr(
+      "class", "col-lg-auto p-2"
+    ) << emp::web::Div(
+      "saved-wrapper"
+    ).SetAttr(
+      "class", "input-group input-group-lg btn-block"
+    ) << emp::web::Div(
+      "saved_input-prepend"
+    ).SetAttr(
+      "class", "input-group-prepend"
+    );
+
+    // same styling as the render, save, and every buttons
+    button_dash.Div("saved_input-prepend") << emp::web::Button(
+      [this](){
+        dish2::saved_folder::download( emp::keyname::pack({
+          {"a", "saved"},
+          {"update", emp::to_string( update )},
+          {"what", "dishtiny"},
+          {"ext", ".zip"}
+        }) );
+      }, "Download Saved", "download-saved-button"
+    ).SetAttr(
+      "class", "btn btn-primary"
+    ).SetCSS(
+      "box-shadow", "none"
+    );
+    button_dash.Div("saved_input-prepend") << emp::web::Button(
+      [this](){
+        dish2::saved_folder::clear();
+        RefreshSavedLabel();
+      }, "Clear Saved", "clear-saved-button"
+    ).SetAttr(
+      "class", "btn btn-primary"
+    ).SetCSS(
+      "margin-left", "2px",
+      "border-radius", "0",
+      "box-shadow", "none"
+    );
+
+    RefreshSavedLabel();
+  }
+
   void SetupClearButton() {
     button_dash.Div("button_row") << emp::web::Div(
       "clear_col"
@@ -242,20 +304,24 @@ public:
   ControlPanel(
     std::function<size_t()> update_callback_,
     std::function<void()> render_callback_,
-    std::function<void()> download_callback_,
+    std::function<void()> save_callback_,
     std::function<void()> clear_callback_
   ) : animator(
     [this](){
       const size_t cur_update = update_callback();
+      update = cur_update;
       if ( cur_update % GetEveryFreq() == 0 ) {
         if ( render_toggle ) render_callback();
-        if ( download_toggle ) download_callback();
+        if ( save_toggle ) {
+          save_callback();
+          RefreshSavedLabel();
+        }
       }
       RefreshUpdateButton( cur_update );
     }
   ), update_callback( update_callback_ )
   , render_callback( render_callback_ )
-  , download_callback( download_callback_ )
+  , save_callback( save_callback_ )
   , clear_callback( clear_callback_ )
   {
 
@@ -267,7 +333,8 @@ public:
 
     SetupStepButton();
     SetupRunButton();
-    SetupRenderDownloadEveryButtons();
+    SetupRenderSaveEveryButtons();
+    SetupSavedButtons();
     SetupClearButton();
 
     RefreshUpdateButton( 0 );

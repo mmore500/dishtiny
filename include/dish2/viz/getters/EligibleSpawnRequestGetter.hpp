@@ -3,6 +3,7 @@
 #define DISH2_VIZ_GETTERS_ELIGIBLESPAWNREQUESTGETTER_HPP_INCLUDE
 
 #include <cstddef>
+#include <string_view>
 #include <tuple>
 
 #include "../../world/ThreadWorld.hpp"
@@ -23,6 +24,8 @@ class EligibleSpawnRequestGetter {
   dish2::SpawnArrestGetter<Spec> arrest_getter;
 
 public:
+
+  static constexpr std::string_view GetName() { return "EligibleSpawnRequest"; }
 
   using value_type = std::tuple<bool, bool>;
 
