@@ -9845,3 +9845,8 @@ a.text-dark:hover {
 .jumbotron .lead b {
   font-weight: 700;
 }
+
+/* global shrink */
+html {
+  zoom: 0.67;
+}
