@@ -263,7 +263,7 @@ class ControlPanel {
       "class", "btn btn-primary"
     ).SetCSS(
       "margin-left", "2px",
-      "border-radius", "0",
+      "border-radius", "0 0.3rem 0.3rem 0",
       "box-shadow", "none"
     );
 
