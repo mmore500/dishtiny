@@ -1,4 +1,3 @@
-
 # dishtiny
 
 [![version](https://img.shields.io/endpoint?url=https%3A%2F%2Fmmore500.github.io%2Fdishtiny%2Fmaster%2Fversion-badge.json)](https://github.com/mmore500/dishtiny/releases)
@@ -52,3 +51,29 @@ To build the native executable (requires MPI),
 ```
 make -C dishtiny native
 ```
+
+## Citing
+
+If dishtiny contributes to a scientific publication, please cite it as
+
+> Moreno, M. A., & Ofria, C. (2019). Toward open-ended fraternal transitions in individuality. Artificial life, 25(2), 117-133. <https://doi.org/10.1162/artl_a_00284>
+
+```bibtex
+@article{moreno2019toward,
+    author = {Moreno, Matthew Andres and Ofria, Charles},
+    title = "{Toward Open-Ended Fraternal Transitions in Individuality}",
+    journal = {Artificial Life},
+    volume = {25},
+    number = {2},
+    pages = {117-133},
+    year = {2019},
+    month = {05},
+    issn = {1064-5462},
+    doi = {10.1162/artl_a_00284},
+    url = {https://doi.org/10.1162/artl\_a\_00284},
+    eprint = {https://direct.mit.edu/artl/article-pdf/25/2/117/1896700/artl\_a\_00284.pdf},
+}
+```
+
+Please also cite core dependencies [Empirical](https://github.com/devosoft/Empirical) and [signalgp-lite](https://github.com/mmore500/signalgp-lite).
+And don't forget to leave a [star on GitHub](https://github.com/mmore500/dishtiny/stargazers)!
