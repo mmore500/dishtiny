@@ -20,6 +20,7 @@
 #include "KinGroupIDLevArtist.hpp"
 #include "KinGroupIDViewArtist.hpp"
 #include "KinMatchArtist.hpp"
+#include "KinMatchByLevArtist.hpp"
 #include "LearnedQuorumBitArtist.hpp"
 #include "LearnedQuorumBitsArtist.hpp"
 #include "MostRecentCauseOfDeathArtist.hpp"
