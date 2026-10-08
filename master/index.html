@@ -534,7 +534,7 @@ $('.modal').modal('hide');
         <ul class="list-group list-group-flush">
             <li class="list-group-item list-group-item-dark">
             
-                <p>The <strong>Kin Match Viewer</strong> shows whether each neighbor belongs to the same low-level group.</p>
+                <p>The <strong>Kin Match Viewer</strong> shows whether each neighbor has identical kin group IDs at the lowest group level.</p>
 
             
             </li>
@@ -545,12 +545,12 @@ $('.modal').modal('hide');
             </li>
             
             <li class="list-group-item">
-            <p><span class="badge badge-light" style="background-color: #00FF00; color: #000000;">Green</span> indicates the neighbor is a <strong>group member</strong>.</p>
+            <p><span class="badge badge-light" style="background-color: #00FF00; color: #000000;">Green</span> indicates the neighbor <strong>has identical kin group IDs</strong>.</p>
 
             </li>
             
             <li class="list-group-item">
-            <p><span class="badge badge-light" style="background-color: #FFFFFF; color: #000000;">White</span> indicates the neighbor is <strong>not</strong> a group member.</p>
+            <p><span class="badge badge-light" style="background-color: #FFFFFF; color: #000000;">White</span> indicates the neighbor <strong>does not have identical kin group IDs</strong>.</p>
 
             </li>
             
@@ -561,6 +561,38 @@ $('.modal').modal('hide');
             
             <li class="list-group-item">
             <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide <strong>high-level groups</strong>.</p>
+
+            </li>
+            
+        </ul>
+    </div>
+    
+    <div id="kin-match-by-lev-key" class="text-large" style="display: none;">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-dark">
+            
+                <p>The <strong>Kin Match by Lev Viewer</strong> shows whether each neighbor has identical kin group IDs at a given group level. Subview selectors show each group level.</p>
+
+            
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> grid tiles are <strong>dead cells</strong>.</p>
+
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-light" style="background-color: #00FF00; color: #000000;">Green</span> indicates the neighbor <strong>has identical kin group IDs</strong>.</p>
+
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-light" style="background-color: #FFFFFF; color: #000000;">White</span> indicates the neighbor <strong>does not have identical kin group IDs</strong>.</p>
+
+            </li>
+            
+            <li class="list-group-item">
+            <p><span class="badge badge-dark" style="background-color: #000000;">Black</span> borders divide cells with <strong>different group IDs</strong>.</p>
 
             </li>
             

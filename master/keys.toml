@@ -47,13 +47,21 @@ items = [
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
 [kin-match]
-header = ["The **Kin Match Viewer** shows whether each neighbor belongs to the same low-level group."]
+header = ["The **Kin Match Viewer** shows whether each neighbor has identical kin group IDs at the lowest group level."]
 items = [
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
-    "{make_badge('Green', '#00FF00')} indicates the neighbor is a **group member**.",
-    "{make_badge('White', '#FFFFFF')} indicates the neighbor is **not** a group member.",
+    "{make_badge('Green', '#00FF00')} indicates the neighbor **has identical kin group IDs**.",
+    "{make_badge('White', '#FFFFFF')} indicates the neighbor **does not have identical kin group IDs**.",
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[kin-match-by-lev]
+header = ["The **Kin Match by Lev Viewer** shows whether each neighbor has identical kin group IDs at a given group level. Subview selectors show each group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} indicates the neighbor **has identical kin group IDs**.",
+    "{make_badge('White', '#FFFFFF')} indicates the neighbor **does not have identical kin group IDs**.",
+    "{make_badge('Black', '#000000')} borders divide cells with **different group IDs**."
 ]
 [peripherality-by-lev]
 header = ["The **Peripherality by Lev Viewer** shows cells at the edge of their group. Subview selectors show one group level."]
