@@ -5,11 +5,13 @@
 #include <string_view>
 
 #include "../border_colormaps/TaxaBorderColorMap.hpp"
+#include "../fill_colormaps/BooleanColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/KinGroupIDGrayscaleFillColorMap.hpp"
 #include "../getters/GenomeGetter.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
+#include "../getters/TaxonMatchGetter.hpp"
 #include "../renderers/CellBorderRenderer.hpp"
 #include "../renderers/CellFillRenderer.hpp"
 
@@ -22,9 +24,14 @@ namespace internal::taxa_artist {
   template<
     typename GenomeGetter,
     typename IsAliveGetter,
-    typename KinGroupIDGetter
+    typename KinGroupIDGetter,
+    typename TaxonMatchGetter
   >
   using parent_t = dish2::Artist<
+    dish2::CardinalFillRenderer<
+      dish2::BooleanColorMap,
+      TaxonMatchGetter
+    >,
     dish2::CellFillRenderer<
       dish2::IsAliveColorMap,
       IsAliveGetter
@@ -41,19 +48,22 @@ template<
   typename Spec,
   typename GenomeGetter=dish2::GenomeGetter<Spec>,
   typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
-  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
+  typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>,
+  typename TaxonMatchGetter=dish2::TaxonMatchGetter<Spec>
 >
 class TaxaArtist
 : public internal::taxa_artist::parent_t<
   GenomeGetter,
   IsAliveGetter,
-  KinGroupIDGetter
+  KinGroupIDGetter,
+  TaxonMatchGetter
 > {
 
   using parent_t = internal::taxa_artist::parent_t<
     GenomeGetter,
     IsAliveGetter,
-    KinGroupIDGetter
+    KinGroupIDGetter,
+    TaxonMatchGetter
   >;
 
 public:
