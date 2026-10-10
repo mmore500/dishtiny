@@ -85,9 +85,9 @@ items = [
 [taxa]
 header = ["The **Taxa Viewer** depicts the distribution of groups of genetically-identical cells."]
 items = [
+    "{make_badge('Green', '#00FF00')} indicates the neighbor has **identical genome content**.",
+    "{make_badge('White', '#FFFFFF')} indicates the heighbor does not have **identical genome content**.",
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
-    "{make_badge('White', '#FFFFFF')} grid tiles are **live cells**.",
-    "{make_badge('White', '#FFFFFF')} lines divide cells with **identical genotypes**.",
     "{make_badge('Red', '#FF0000')} lines divide cells with **different genotypes**."
 ]
 [neighbor-pos]
