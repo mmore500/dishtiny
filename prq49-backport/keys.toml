@@ -1,0 +1,463 @@
+[alive]
+header = ["The **Alive Viewer** shows which grid tiles hold live cells."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} grid tiles are **live cells**."
+]
+[kin-group-id]
+header = ["The **Kin Group ID Viewer** shows the arrangement of hereditarily-defined cell groups."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "**Color saturation** (e.g., {make_badge('light green', '#BFFFBF')} vs. {make_badge('intense green', '#00FF00')} ) differentiates **low-level groups**.",
+    "**Color hue** (e.g., {make_badge('blue', '#0000FF')} vs. {make_badge('purple', '#FF00FF')}) differentiates **high-level groups**, which are groups of low-level groups. ",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[kin-group-id-view]
+header = ["The **Kin Group ID View Viewer** shows the group ID that each cell's virtual cores can read from their own cell."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "**Color saturation** differentiates **low-level groups**.",
+    "**Color hue** differentiates **high-level groups**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[neighbor-kin-group-id]
+header = ["The **Neighbor Kin Group ID Viewer** shows the group ID that each cell's virtual cores can read from their neighbor."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "**Color saturation** differentiates **low-level groups**.",
+    "**Color hue** differentiates **high-level groups**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[kin-group-id-by-lev]
+header = ["The **Kin Group ID by Lev Viewer** shows cell group IDs at a single group level. Subview selectors show one group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "Arbitrary colors differentiate **group IDs**.",
+    "{make_badge('Black', '#000000')} borders divide cells with **different group IDs**."
+]
+[kin-group-age]
+header = ["The **Kin Group Age Viewer** shows the age of each cell's group at a single group level. Subview selectors show one group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF8080', '#FFFF80', '#80FF80', '#80FFFF', '#8080FF', '#FF80FF', '#FF8080'], ['0', '', '', '', '', '', 'high (mod 360)'], '**Color hue** indicates group age.', (), None)}",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[kin-match]
+header = ["The **Kin Match Viewer** shows whether each neighbor has identical kin group IDs at the lowest group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} indicates the neighbor **has identical kin group IDs**.",
+    "{make_badge('White', '#FFFFFF')} indicates the neighbor **does not have identical kin group IDs**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[kin-match-by-lev]
+header = ["The **Kin Match by Lev Viewer** shows whether each neighbor has identical kin group IDs at a given group level. Subview selectors show each group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} indicates the neighbor **has identical kin group IDs**.",
+    "{make_badge('White', '#FFFFFF')} indicates the neighbor **does not have identical kin group IDs**.",
+    "{make_badge('Black', '#000000')} borders divide cells with **different group IDs**."
+]
+[peripherality-by-lev]
+header = ["The **Peripherality by Lev Viewer** shows cells at the edge of their group. Subview selectors show one group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} cells are **peripheral**.",
+    "{make_badge('White', '#FFFFFF')} cells are **interior**.",
+    "{make_badge('Black', '#000000')} borders divide cells with **different group IDs**."
+]
+[phylogenetic-root]
+header = ["The **Phylogenetic Root Viewer** represents the identity of each cell's ancestor at simulation outset."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Red', '#FF0000')} indicates **ancestor ID one**.",
+    "{make_badge('Green', '#00FF00')} indicates **ancestor ID two**.",
+    "{make_badge('Blue', '#0000FF')} indicates **ancestor ID three**.",
+    "{make_badge('Arbitrarily', '#FF00FF')} {make_badge('generated', '#BFBFFF')} {make_badge('colors', '#BFBFFF')} represent other ancestor IDs.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[taxa]
+header = ["The **Taxa Viewer** depicts the distribution of groups of genetically-identical cells."]
+items = [
+    "{make_badge('Green', '#00FF00')} indicates the neighbor has **identical genome content**.",
+    "{make_badge('White', '#FFFFFF')} indicates the heighbor does not have **identical genome content**.",
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Red', '#FF0000')} lines divide cells with **different genotypes**."
+]
+[neighbor-pos]
+header = ["The **Neighbor Pos Viewer** shows the grid position of each cell's neighbor. Cells cannot read this value."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "Arbitrarily generated colors differentiate **neighbor positions**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[epoch]
+header = ["The **Epoch Viewer** shows the epoch of each cell."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF8080', '#FFFF80', '#80FF80', '#80FFFF', '#8080FF', '#FF80FF', '#FF8080'], ['0', '', '', '', '', '', 'high (mod 360)'], '**Color hue** indicates epoch.', (), None)}",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[cell-age]
+header = ["The **Cell Age Viewer** shows the age of each cell."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF8080', '#FFFF80', '#80FF80', '#80FFFF', '#8080FF', '#FF80FF', '#FF8080'], ['0', '', '', '', '', '', 'high (mod 360)'], '**Color hue** indicates cell age.', (), None)}",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[cell-birth]
+header = ["The **Cell Birth Viewer** shows cells that were just born."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} cells are **newborn**.",
+    "{make_badge('White', '#FFFFFF')} cells are **not** newborn.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[spawned-from]
+header = ["The **Spawned From Viewer** depicts cell kinship relationships."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} highlighting indicates a cell is the **child of** its neighbor.",
+    "{make_badge('White', '#FFFFFF')} indicates a cell is **not** the child of its neighbor.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[num-program-modules]
+header = ["The **Num Program Modules Viewer** shows the number of SignalGP modules in each cell's program."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FFFFFF', '#FF8080', '#FFFF80', '#80FF80', '#80FFFF', '#8080FF', '#FF80FF', '#FF8080'], ['zero', 'low', '', '', '', '', '', 'high (mod 18)'], '**Color hue** indicates the **number of modules**.', (1,), None)}",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[most-recent-cause-of-death]
+header = ["The **Most Recent Cause of Death Viewer** shows how the previous occupant of each tile died."]
+items = [
+    "{make_badge('White', '#FFFFFF')} indicates **no recorded death**.",
+    "{make_badge('Red', '#FF0000')} indicates death by **age**.",
+    "{make_badge('Green', '#00FF00')} indicates **apoptosis**.",
+    "{make_badge('Blue', '#0000FF')} indicates **elimination**.",
+    "{make_badge('Yellow', '#FFFF00')} indicates **fragmentation**.",
+    "{make_badge('Purple', '#FF00FF')} indicates **quorum**."
+]
+[spawn-request]
+header = ["The **Spawn Request Viewer** depicts attempted cellular reproductions."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} indicates a cell **attempting to place offspring** in that direction.",
+    "{make_badge('White', '#FFFFFF')} indicates **no** reproduction attempt.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[eligible-spawn-request]
+header = ["The **Eligible Spawn Request Viewer** depicts interaction between cell spawn requests and arrests."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Blue', '#0000FF')} indicates a cell with an **eligible spawn request**.",
+    "{make_badge('Purple', '#FF00FF')} indicates a cell with an **arrested spawn request**.",
+    "{make_badge('Red', '#FF0000')} indicates a cell with **spawn arrest**, but **no request**.",
+    "{make_badge('White', '#FFFFFF')} indicates a cell with **no spawn request or arrest**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[spawn-arrest]
+header = ["The **Spawn Arrest Viewer** depicts reproductive cooperation."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} indicates a cell has temporarily registered to **pause reproduction** in that direction.",
+    "{make_badge('White', '#FFFFFF')} indicates **no** registered reproductive forbearance.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[apoptosis-request]
+header = ["The **Apoptosis Request Viewer** shows cells that have registered themselves for imminent cellular suicide."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} indicates a cell registered for **apoptosis**.",
+    "{make_badge('White', '#FFFFFF')} indicates a cell **not** registered for apoptosis.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[heir-request]
+header = ["The **Heir Request Viewer** depicts leftover-resource inheritance."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} indicates a cell has registered its neighbor as its **heir**.",
+    "{make_badge('White', '#FFFFFF')} indicates **no** registered heir.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[rep-lev-request]
+header = ["The **Rep Lev Request Viewer** shows the group level at which a cell requests offspring to inherit kin group IDs."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('White', '#FFFFFF')} indicates **no** request.",
+    "{make_rep_lev_legend()}",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[resource-stockpile]
+header = ["The **Stockpile Viewer** depicts the resource that each cell-like organism has accumulated."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF0000', '#FFFFFF', '#0000FF', '#00FF00', '#FFFF00'], ['deficit', 'zero', '', '', 'excess'], '', (3,), {3: 'threshold'})}",
+    "{make_badge('Red', '#FF0000')} indicates a **resource defecit** (which, if it becomes too extreme, will result in that cell's death).",
+    "{make_badge('White', '#FFFFFF')} indicates **zero resource**.",
+    "{make_badge('Blue', '#0000FF')} indicates **positive resource**, but below the threshold required for reproduction.",
+    "{make_badge('Green', '#00FF00')} indicates **enough resource to reproduce**.",
+    "{make_badge('Yellow', '#FFFF00')} indicates an **excess of resource**, more than enough to reproduce.",
+    "{make_badge('Purple', '#FF00FF')} indicates **invalid resource** (debugging only).",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[received-resource]
+header = ["The **Received Resource Viewer** depicts the amount of resource received from each neighbor during the previous update."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FFFFFF', '#0000FF', '#00FFFF', '#00FF00', '#FFFF00'], ['zero', 'small', '', '', 'large'], '', (1,), None)}",
+    "{make_badge('White', '#FFFFFF')} indicates **zero resource** was received.",
+    "{make_badge('Blue', '#0000FF')} indicates a **small amount** of resource was received.",
+    "{make_badge('Green', '#00FF00')} indicates an **intermediate amount** of resource was received.",
+    "{make_badge('Yellow', '#FFFF00')} indicates a **large amount** of resource was received.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[incoming-inter-message-counter]
+header = ["The **Incoming Inter Message Counter Viewer** depicts recent incoming message traffic from neighbors."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FFFFFF', '#FF8080', '#FFFF80', '#80FF80', '#80FFFF', '#8080FF', '#FF80FF', '#FF8080'], ['zero', 'low', '', '', '', '', '', 'high (mod 18)'], '**Color hue** indicates the **number of incoming messages**.', (1,), None)}",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[incoming-intra-message-counter]
+header = ["The **Incoming Intra Message Counter Viewer** depicts recent incoming message traffic within the cell."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FFFFFF', '#FF8080', '#FFFF80', '#80FF80', '#80FFFF', '#8080FF', '#FF80FF', '#FF8080'], ['zero', 'low', '', '', '', '', '', 'high (mod 18)'], '**Color hue** indicates the **number of incoming messages**.', (1,), None)}",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[quorum-bit]
+header = ["The **Quorum Bit Viewer** shows whether a cell has detected a quorum bit at a single group level. Subview selectors show one group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} indicates a **set** bit.",
+    "{make_badge('White', '#FFFFFF')} indicates an **unset** bit.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[own-quorum-bit]
+header = ["The **Own Quorum Bit Viewer** shows whether a cell has set its own quorum bit at a single group level. Subview selectors show one group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} indicates a **set** bit.",
+    "{make_badge('White', '#FFFFFF')} indicates an **unset** bit.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[quorum-bits]
+header = ["The **Quorum Bits Viewer** shows the number of quorum bits known to each cell at a single group level. Subview selectors show one group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Red', '#FF0000')} indicates **one** bit.",
+    "{make_badge('Green', '#00FF00')} indicates **two** bits.",
+    "{make_badge('Blue', '#0000FF')} indicates **three** bits.",
+    "Arbitrarily generated colors represent other counts.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[learned-quorum-bit]
+header = ["The **Learned Quorum Bit Viewer** shows whether a cardinal has learned a quorum bit at a single group level. Subview selectors show one group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} indicates a **learned** bit.",
+    "{make_badge('White', '#FFFFFF')} indicates **no** learned bit.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[learned-quorum-bits]
+header = ["The **Learned Quorum Bits Viewer** shows the number of quorum bits learned by each cardinal at a single group level. Subview selectors show one group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Red', '#FF0000')} indicates **one** bit.",
+    "{make_badge('Green', '#00FF00')} indicates **two** bits.",
+    "{make_badge('Blue', '#0000FF')} indicates **three** bits.",
+    "Arbitrarily generated colors represent other counts.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[quorum-cap]
+header = ["The **Quorum Cap Viewer** shows cells whose known quorum bits exceed the quorum cap at a single group level. Subview selectors show one group level."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Green', '#00FF00')} cells are **over the cap**.",
+    "{make_badge('White', '#FFFFFF')} cells are **under the cap**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[num-busy-cores]
+header = ["The **Num Busy Cores Viewer** shows the number of virtual cores executing in each cell."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FFFFFF', '#FF8080', '#FFFF80', '#80FF80', '#80FFFF', '#8080FF', '#FF80FF', '#FF8080'], ['zero', 'low', '', '', '', '', '', 'high (mod 18)'], '**Color hue** indicates the **number of active virtual cores**.', (1,), None)}",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[expression-by-module]
+header = ["The **Expression by Module Viewer** shows the number of virtual cores executing a SignalGP module. Subview selectors show one module."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FFFFFF', '#FF8080', '#FFFF80', '#80FF80', '#80FFFF', '#8080FF', '#FF80FF', '#FF8080'], ['zero', 'low', '', '', '', '', '', 'high (mod 18)'], '**Color hue** indicates the **number of active virtual cores executing the module**.', (1,), None)}",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[regulation-by-module]
+header = ["The **Regulation by Module Viewer** shows the protected regulation of a SignalGP module. Subview selectors show one module."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Red', '#FF0000')} indicates **down-regulation**.",
+    "{make_badge('Green', '#00FF00')} indicates **up-regulation**.",
+    "{make_badge('White', '#FFFFFF')} indicates **no** regulation, or no such module.",
+    "{make_badge('Blue', '#0000FF')} indicates **invalid** (NaN) regulation.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[regulation-exposed-by-module]
+header = ["The **Regulation Exposed by Module Viewer** shows the exposed regulation of a SignalGP module. Subview selectors show one module."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Red', '#FF0000')} indicates **down-regulation**.",
+    "{make_badge('Green', '#00FF00')} indicates **up-regulation**.",
+    "{make_badge('White', '#FFFFFF')} indicates **no** regulation, or no such module.",
+    "{make_badge('Blue', '#0000FF')} indicates **invalid** (NaN) regulation.",
+    "{make_badge('Gray', '#808080')} indicates the module is **not in the exposed jump table**.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[module-expression]
+header = ["The **Module Expression Viewer** depicts a dimension reduction (PCA) of each virtual core's module expression."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of executing modules.",
+    "{make_badge('Black', '#000000')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **high-level groups**."
+]
+[binary-module-expression]
+header = ["The **Binary Module Expression Viewer** depicts a dimension reduction (PCA) of whether each virtual core expresses each module."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of executing modules.",
+    "{make_badge('Black', '#000000')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **high-level groups**."
+]
+[module-regulation]
+header = ["The **Module Regulation Viewer** depicts a dimension reduction (PCA) of each virtual core's module regulation."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of module regulation.",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Gray', '#808080')} borders divide **high-level groups**."
+]
+[trinary-module-regulation]
+header = ["The **Trinary Module Regulation Viewer** depicts a dimension reduction (PCA) of the sign of each virtual core's module regulation."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of module regulation.",
+    "{make_badge('Black', '#000000')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **high-level groups**."
+]
+[module-expression-by-root]
+header = ["The **Module Expression by Root Viewer** depicts a dimension reduction (PCA) of each virtual core's module expression."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of executing modules.",
+    "A **separate PCA** is performed for each **phylogenetic root**, so colors are not comparable between roots.",
+    "{make_badge('Black', '#000000')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **high-level groups**."
+]
+[binary-module-expression-by-root]
+header = ["The **Binary Module Expression by Root Viewer** depicts a dimension reduction (PCA) of whether each virtual core expresses each module."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of executing modules.",
+    "A **separate PCA** is performed for each **phylogenetic root**, so colors are not comparable between roots.",
+    "{make_badge('Black', '#000000')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **high-level groups**."
+]
+[module-regulation-by-root]
+header = ["The **Module Regulation by Root Viewer** depicts a dimension reduction (PCA) of each virtual core's module regulation."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of module regulation.",
+    "A **separate PCA** is performed for each **phylogenetic root**, so colors are not comparable between roots.",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Gray', '#808080')} borders divide **high-level groups**."
+]
+[trinary-module-regulation-by-root]
+header = ["The **Trinary Module Regulation by Root Viewer** depicts a dimension reduction (PCA) of the sign of each virtual core's module regulation."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of module regulation.",
+    "A **separate PCA** is performed for each **phylogenetic root**, so colors are not comparable between roots.",
+    "{make_badge('Black', '#000000')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **high-level groups**."
+]
+[module-expression-by-kin-group]
+header = ["The **Module Expression by Kin Group Viewer** depicts a dimension reduction (PCA) of each virtual core's module expression."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of executing modules.",
+    "A **separate PCA** is performed for each **kin group**, so colors are not comparable between groups. Subview selectors show one group level.",
+    "{make_badge('Black', '#000000')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **high-level groups**."
+]
+[binary-module-expression-by-kin-group]
+header = ["The **Binary Module Expression by Kin Group Viewer** depicts a dimension reduction (PCA) of whether each virtual core expresses each module."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of executing modules.",
+    "A **separate PCA** is performed for each **kin group**, so colors are not comparable between groups. Subview selectors show one group level.",
+    "{make_badge('Black', '#000000')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **high-level groups**."
+]
+[module-regulation-by-kin-group]
+header = ["The **Module Regulation by Kin Group Viewer** depicts a dimension reduction (PCA) of each virtual core's module regulation."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of module regulation.",
+    "A **separate PCA** is performed for each **kin group**, so colors are not comparable between groups. Subview selectors show one group level.",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Gray', '#808080')} borders divide **high-level groups**."
+]
+[trinary-module-regulation-by-kin-group]
+header = ["The **Trinary Module Regulation by Kin Group Viewer** depicts a dimension reduction (PCA) of the sign of each virtual core's module regulation."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "The first three principal components are shown in the {make_badge('Red', '#FF0000')}, {make_badge('Green', '#00FF00')}, and {make_badge('Blue', '#0000FF')} color channels.",
+    "**Similar colors** indicate **similar** profiles of module regulation.",
+    "A **separate PCA** is performed for each **kin group**, so colors are not comparable between groups. Subview selectors show one group level.",
+    "{make_badge('Black', '#000000')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Light gray', '#D3D3D3')} borders divide **high-level groups**."
+]
