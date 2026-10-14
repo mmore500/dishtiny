@@ -1,0 +1,173 @@
+<div class="card">
+    <div class="card-header">
+      <span data-toggle="collapse" href="#readme-body">
+        <button
+          class="btn btn-lg btn-block btn-primary text-left"
+          type="button"
+          data-toggle="button"
+          autocomplete="off"
+        >
+          What am I looking at?
+        </button>
+      </span>
+    </div>
+    <div class="text-large card-body collapse" id="readme-body">
+
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="6"></li>
+        </ol>
+        <div class="carousel-inner">
+
+          <div class="carousel-item active">
+            <div class="row">
+              <div class="col-lg-6">
+               <img src="cpus.jpg" class="img-fluid" />
+              </div>
+              <div class="col-lg-6">
+              <b>It's an evolution experiment where computer programs are evolving!</b>
+              <br> <br>
+              Each little grid title --- something like a biological cell --- is controlled by four virtual CPUs working in tandem (one for each side of the tile).
+              Depending on the program loaded into the cell, different decisions are made in response to environmental events and messages from neighboring cells.
+              <br> <br>
+              For those in the know, virtual CPUs are being implemented using SignalGP [Lalejini and Ofria, 2018].
+              </div>
+              <div class="col-12" style="height: 50px;"> </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-lg-6">
+               <img src="football.jpg" class="img-fluid" />
+              </div>
+              <div class="col-lg-6">
+              These cells are presented with a <b>cooperative resource collection task</b>.
+              <br> <br>
+              In order to maximize their resource-collection rate, they need to organize into family resource-collecting groups  (which we call "channels") that are <i>just</i> the right size... not too big and not too small!
+              <br> <br>
+              Better-configured resource-collecting groups will tend to outcompete other groups for space on the grid.
+              </div>
+              <div class="col-12" style="height: 50px;"> </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-lg-6">
+               <img src="stork.jpg" class="img-fluid" />
+              </div>
+              <div class="col-lg-6">
+              Cells use resource they collect to <b>reproduce</b>.
+              When a cell has enough resource, it can copy its program into a neighboring cell.
+              <br> <br>
+              The copy isn't perfect, though... usually, the program changes slightly (mutates) during this process.
+              My Darwin fanboys out there are probably onto it already, but
+              <br> <br>
+              <b>heritable variation</b> + <b>differential reproductive success</b> (some programs are better at competing for space in the population) = ... <b>evolution</b>!
+              </div>
+              <div class="col-12" style="height: 50px;"> </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-lg-6">
+               <img src="mirror.jpg" class="img-fluid" />
+              </div>
+              <div class="col-lg-6">
+              In previous work [Moreno and Ofria, 2019], we found that in response to this particular resource-collection task, strategies built on
+              <ol>
+                <li> reproductive division of labor, </li>
+                <li> resource sharing between cells, and</li>
+                <li> parental care for offspring </li>
+              </ol>
+              tend to evolve.
+              <br> <br>
+              Such traits are suggestive of multicellularity... or, in fancy science-speak a <b>fraternal transition in  individuality</b> [Smith and Szathmary, 1997].
+
+              </div>
+              <div class="col-12" style="height: 50px;"> </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-lg-6">
+               <img src="lightbulb.jpg" class="img-fluid" />
+              </div>
+              <div class="col-lg-6">
+              So, why do this type of thing at all?
+              <br> <br>
+              On one hand, we're using this model to <b>ask and answer scientific questions</b> about the evolution of multicellularity in order to better understand the processes at play behind life on Earth.
+              <br> <br>
+              On the other, we hope that transitions in individuality --- which were key to the complexification and diversification of life on Earth --- can help us <b>evolve sophisticated</b> --- and perhaps <b>useful</b> --- <b>computational systems</b>, like reinforcement-learning agents.
+              </div>
+              <div class="col-12" style="height: 50px;"> </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-lg-6">
+               <img src="binoculars.jpg" class="img-fluid" />
+              </div>
+              <div class="col-lg-6">
+               But this web viewer is here so <b>you</b> can get a peek at <b>evolution in action</b>!
+               <br> <br>
+               We reccomend loading pre-evolved strains using the <b>Population Loader</b>.
+               You can also just let the simulation run maybe 10,000 updates with rendering off (so it runs faster).
+               <br><br>
+               Then, render every update and look at
+               <ul>
+                 <li> resource sharing in the <b>Resource Sharing Viewer</b> and </li>
+                 <li> signs of reproductive cooperation in the <b>Reproductive Pause Viewer</b> and <b>Resource Stockpile Viewer</b>. </li>
+               </ul>
+               You might need to go get a cup of coffee before there's anything interesting to look at.
+               <br><br>
+               Pressed for time?
+               Watch a pre-rendered timelapse on YouTube <a href="https://www.youtube.com/watch?v=yOhryHORQxE"><b>here</b></a>.
+              </div>
+              <div class="col-12" style="height: 50px;"> </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-lg-6">
+               <img src="desk.jpg" class="img-fluid" />
+              </div>
+              <div class="col-lg-6">
+              And, for extra credit be sure to
+              <ul>
+                <li>twiddle parameters in <b>Configuration</b>,</li>
+                <li> look at a program in the <b>Dominant Genotype</b> viewer (... can you figure out what it evolved to do?),</li>
+                <li>check out how the software is put together in <b>Source & Ingredients</b>,</li>
+                <li>give the neat-o papers and resources listed in <b>References</b> a peep,</li>
+                <li>toss us a <b>star</b> on GitHub using the button in the header, and</li>
+                <li>click over to <b>Let's Chat</b> and let us know what you think!</li>
+              </ul>
+              </div>
+            </div>
+            <div class="col-12" style="height: 50px;"> </div>
+          </div>
+
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
