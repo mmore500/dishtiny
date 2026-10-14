@@ -4,6 +4,9 @@ The page (`index.html`, `includes/`, `keys.toml`, `custom.css`, `make_html.py`) 
 
 The compiled executable (`dishtiny*.js`, `dishtiny*.wasm`, `dishtiny.worker.js`) is built from the `prq49` branch (`978abb3e`) with the viewer code taken from `master` (`acbb8994`).
 `source.patch` is the full source diff against `prq49`; apply it with `git apply` on a `prq49` checkout to reproduce the build.
+`source.tar.gz` is the complete source tree used for the build, including all third-party submodule sources, without `.git` metadata or the emsdk toolchain.
+To rebuild from it, install emsdk 2.0.5 with the liblzma port patch at `third-party/emsdk` (see `third-party/install_emsdk.sh`), then run `make dishtiny.js dishtiny-no-pthread.js CXXFLAGS="-DDISH2_SPEC=dish2::Spec_prq49 -DDISH2_NLEV=2"`.
+Without `.git` metadata, the embedded source hash string differs from the shipped build.
 The patch:
 
 * replaces `include/dish2/web/`, `include/dish2/viz/`, `source/web.cpp`, and `web/` with their `master` versions;
