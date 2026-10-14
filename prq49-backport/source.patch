@@ -1,5 +1,5 @@
 diff --git a/Makefile b/Makefile
-index 8b7e96a3..4285deea 100644
+index 8b7e96a3b..4285deea7 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -6,16 +6,16 @@ EMP_DIR := third-party/Empirical/include/emp
@@ -174,7 +174,7 @@ index 8b7e96a3..4285deea 100644
 +.PHONY: web
 +.PHONY: web-debug
 diff --git a/include/dish2/algorithm/seed_genomes_into.hpp b/include/dish2/algorithm/seed_genomes_into.hpp
-index d256b66e..5cb9ed3f 100644
+index d256b66e2..5cb9ed3fe 100644
 --- a/include/dish2/algorithm/seed_genomes_into.hpp
 +++ b/include/dish2/algorithm/seed_genomes_into.hpp
 @@ -82,6 +82,9 @@ void seed_genomes_into(
@@ -189,7 +189,7 @@ index d256b66e..5cb9ed3f 100644
      );
 diff --git a/include/dish2/cell/cardinal_iterators/RepLevRequestWrapper.hpp b/include/dish2/cell/cardinal_iterators/RepLevRequestWrapper.hpp
 new file mode 100644
-index 00000000..dc4980a4
+index 000000000..dc4980a49
 --- /dev/null
 +++ b/include/dish2/cell/cardinal_iterators/RepLevRequestWrapper.hpp
 @@ -0,0 +1,89 @@
@@ -284,7 +284,7 @@ index 00000000..dc4980a4
 +#endif // #ifndef DISH2_CELL_CARDINAL_ITERATORS_REPLEVREQUESTWRAPPER_HPP_INCLUDE
 diff --git a/include/dish2/introspection/get_live_cardinal_kin_group_ids.hpp b/include/dish2/introspection/get_live_cardinal_kin_group_ids.hpp
 new file mode 100644
-index 00000000..518b15c3
+index 000000000..518b15c3b
 --- /dev/null
 +++ b/include/dish2/introspection/get_live_cardinal_kin_group_ids.hpp
 @@ -0,0 +1,46 @@
@@ -336,7 +336,7 @@ index 00000000..518b15c3
 +#endif // #ifndef DISH2_INTROSPECTION_GET_LIVE_CARDINAL_KIN_GROUP_IDS_HPP_INCLUDE
 diff --git a/include/dish2/introspection/get_live_cardinal_root_ids.hpp b/include/dish2/introspection/get_live_cardinal_root_ids.hpp
 new file mode 100644
-index 00000000..107a9724
+index 000000000..107a97241
 --- /dev/null
 +++ b/include/dish2/introspection/get_live_cardinal_root_ids.hpp
 @@ -0,0 +1,46 @@
@@ -387,7 +387,7 @@ index 00000000..107a9724
 +
 +#endif // #ifndef DISH2_INTROSPECTION_GET_LIVE_CARDINAL_ROOT_IDS_HPP_INCLUDE
 diff --git a/include/dish2/load/innoculate_population.hpp b/include/dish2/load/innoculate_population.hpp
-index 94edc7b2..88025d04 100644
+index 94edc7b25..88025d041 100644
 --- a/include/dish2/load/innoculate_population.hpp
 +++ b/include/dish2/load/innoculate_population.hpp
 @@ -16,6 +16,7 @@
@@ -408,7 +408,7 @@ index 94edc7b2..88025d04 100644
    dish2::log_msg( "loaded ", innoculum_buckets.size(), " innoculum buckets" );
  
 diff --git a/include/dish2/load/monoculture_population.hpp b/include/dish2/load/monoculture_population.hpp
-index 8eb383c4..7657066b 100644
+index 8eb383c43..7657066be 100644
 --- a/include/dish2/load/monoculture_population.hpp
 +++ b/include/dish2/load/monoculture_population.hpp
 @@ -17,6 +17,7 @@
@@ -429,7 +429,7 @@ index 8eb383c4..7657066b 100644
    dish2::log_msg( "applied monoculture" );
  
 diff --git a/include/dish2/load/multiculture_population.hpp b/include/dish2/load/multiculture_population.hpp
-index a041ba0a..755ba41e 100644
+index a041ba0ab..755ba41e4 100644
 --- a/include/dish2/load/multiculture_population.hpp
 +++ b/include/dish2/load/multiculture_population.hpp
 @@ -17,6 +17,7 @@
@@ -452,7 +452,7 @@ index a041ba0a..755ba41e 100644
    dish2::log_msg( "applied multiculture" );
  
 diff --git a/include/dish2/load/reconstitute_population.hpp b/include/dish2/load/reconstitute_population.hpp
-index 31993f8b..fca1bcfd 100644
+index 31993f8b8..fca1bcfd6 100644
 --- a/include/dish2/load/reconstitute_population.hpp
 +++ b/include/dish2/load/reconstitute_population.hpp
 @@ -6,6 +6,7 @@
@@ -474,7 +474,7 @@ index 31993f8b..fca1bcfd 100644
  
 diff --git a/include/dish2/utility/is_native.hpp b/include/dish2/utility/is_native.hpp
 new file mode 100644
-index 00000000..9b34bbc2
+index 000000000..9b34bbc2b
 --- /dev/null
 +++ b/include/dish2/utility/is_native.hpp
 @@ -0,0 +1,17 @@
@@ -497,7 +497,7 @@ index 00000000..9b34bbc2
 +#endif // #ifndef DISH2_UTILITY_IS_NATIVE_HPP_INCLUDE
 diff --git a/include/dish2/utility/is_web.hpp b/include/dish2/utility/is_web.hpp
 new file mode 100644
-index 00000000..d30b47dc
+index 000000000..d30b47dc1
 --- /dev/null
 +++ b/include/dish2/utility/is_web.hpp
 @@ -0,0 +1,17 @@
@@ -520,7 +520,7 @@ index 00000000..d30b47dc
 +#endif // #ifndef DISH2_UTILITY_IS_WEB_HPP_INCLUDE
 diff --git a/include/dish2/utility/print_js_stacktrace.hpp b/include/dish2/utility/print_js_stacktrace.hpp
 new file mode 100644
-index 00000000..17b4409a
+index 000000000..17b4409a7
 --- /dev/null
 +++ b/include/dish2/utility/print_js_stacktrace.hpp
 @@ -0,0 +1,19 @@
@@ -544,7 +544,7 @@ index 00000000..17b4409a
 +
 +#endif // #ifndef DISH2_UTILITY_PRINT_JS_STACKTRACE_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/Artist.hpp b/include/dish2/viz/artists/Artist.hpp
-index f49077bb..098c36a2 100644
+index f49077bb4..098c36a23 100644
 --- a/include/dish2/viz/artists/Artist.hpp
 +++ b/include/dish2/viz/artists/Artist.hpp
 @@ -2,6 +2,8 @@
@@ -578,7 +578,7 @@ index f49077bb..098c36a2 100644
      return 1;
 diff --git a/include/dish2/viz/artists/CellAgeArtist.hpp b/include/dish2/viz/artists/CellAgeArtist.hpp
 new file mode 100644
-index 00000000..b92c24b3
+index 000000000..b92c24b39
 --- /dev/null
 +++ b/include/dish2/viz/artists/CellAgeArtist.hpp
 @@ -0,0 +1,74 @@
@@ -658,7 +658,7 @@ index 00000000..b92c24b3
 +#endif // #ifndef DISH2_VIZ_ARTISTS_CELLAGEARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/EligibleSpawnRequestArtist.hpp b/include/dish2/viz/artists/EligibleSpawnRequestArtist.hpp
 new file mode 100644
-index 00000000..d7101b89
+index 000000000..d7101b898
 --- /dev/null
 +++ b/include/dish2/viz/artists/EligibleSpawnRequestArtist.hpp
 @@ -0,0 +1,75 @@
@@ -739,7 +739,7 @@ index 00000000..d7101b89
 +#endif // #ifndef DISH2_VIZ_ARTISTS_ELIGIBLESPAWNREQUESTARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/KinMatchByLevArtist.hpp b/include/dish2/viz/artists/KinMatchByLevArtist.hpp
 new file mode 100644
-index 00000000..d7713702
+index 000000000..d77137029
 --- /dev/null
 +++ b/include/dish2/viz/artists/KinMatchByLevArtist.hpp
 @@ -0,0 +1,81 @@
@@ -826,7 +826,7 @@ index 00000000..d7713702
 +#endif // #ifndef DISH2_VIZ_ARTISTS_KINMATCHBYLEVARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/PcaBinaryExpressionByKinGroupArtist.hpp b/include/dish2/viz/artists/PcaBinaryExpressionByKinGroupArtist.hpp
 new file mode 100644
-index 00000000..a0f65203
+index 000000000..a0f652035
 --- /dev/null
 +++ b/include/dish2/viz/artists/PcaBinaryExpressionByKinGroupArtist.hpp
 @@ -0,0 +1,78 @@
@@ -910,7 +910,7 @@ index 00000000..a0f65203
 +#endif // #ifndef DISH2_VIZ_ARTISTS_PCABINARYEXPRESSIONBYKINGROUPARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/PcaBinaryExpressionByRootArtist.hpp b/include/dish2/viz/artists/PcaBinaryExpressionByRootArtist.hpp
 new file mode 100644
-index 00000000..d50faba1
+index 000000000..d50faba14
 --- /dev/null
 +++ b/include/dish2/viz/artists/PcaBinaryExpressionByRootArtist.hpp
 @@ -0,0 +1,78 @@
@@ -994,7 +994,7 @@ index 00000000..d50faba1
 +#endif // #ifndef DISH2_VIZ_ARTISTS_PCABINARYEXPRESSIONBYROOTARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/PcaExpressionByKinGroupArtist.hpp b/include/dish2/viz/artists/PcaExpressionByKinGroupArtist.hpp
 new file mode 100644
-index 00000000..5eadcd72
+index 000000000..5eadcd727
 --- /dev/null
 +++ b/include/dish2/viz/artists/PcaExpressionByKinGroupArtist.hpp
 @@ -0,0 +1,78 @@
@@ -1078,7 +1078,7 @@ index 00000000..5eadcd72
 +#endif // #ifndef DISH2_VIZ_ARTISTS_PCAEXPRESSIONBYKINGROUPARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/PcaExpressionByRootArtist.hpp b/include/dish2/viz/artists/PcaExpressionByRootArtist.hpp
 new file mode 100644
-index 00000000..b1455aa3
+index 000000000..b1455aa33
 --- /dev/null
 +++ b/include/dish2/viz/artists/PcaExpressionByRootArtist.hpp
 @@ -0,0 +1,78 @@
@@ -1162,7 +1162,7 @@ index 00000000..b1455aa3
 +#endif // #ifndef DISH2_VIZ_ARTISTS_PCAEXPRESSIONBYROOTARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/PcaRegulationByKinGroupArtist.hpp b/include/dish2/viz/artists/PcaRegulationByKinGroupArtist.hpp
 new file mode 100644
-index 00000000..ade610e4
+index 000000000..ade610e43
 --- /dev/null
 +++ b/include/dish2/viz/artists/PcaRegulationByKinGroupArtist.hpp
 @@ -0,0 +1,78 @@
@@ -1246,7 +1246,7 @@ index 00000000..ade610e4
 +#endif // #ifndef DISH2_VIZ_ARTISTS_PCAREGULATIONBYKINGROUPARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/PcaRegulationByRootArtist.hpp b/include/dish2/viz/artists/PcaRegulationByRootArtist.hpp
 new file mode 100644
-index 00000000..0c4bffad
+index 000000000..0c4bffad0
 --- /dev/null
 +++ b/include/dish2/viz/artists/PcaRegulationByRootArtist.hpp
 @@ -0,0 +1,78 @@
@@ -1330,7 +1330,7 @@ index 00000000..0c4bffad
 +#endif // #ifndef DISH2_VIZ_ARTISTS_PCAREGULATIONBYROOTARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/PcaTrinaryRegulationByKinGroupArtist.hpp b/include/dish2/viz/artists/PcaTrinaryRegulationByKinGroupArtist.hpp
 new file mode 100644
-index 00000000..017da2a6
+index 000000000..017da2a62
 --- /dev/null
 +++ b/include/dish2/viz/artists/PcaTrinaryRegulationByKinGroupArtist.hpp
 @@ -0,0 +1,78 @@
@@ -1414,7 +1414,7 @@ index 00000000..017da2a6
 +#endif // #ifndef DISH2_VIZ_ARTISTS_PCATRINARYREGULATIONBYKINGROUPARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/PcaTrinaryRegulationByRootArtist.hpp b/include/dish2/viz/artists/PcaTrinaryRegulationByRootArtist.hpp
 new file mode 100644
-index 00000000..3b6d1768
+index 000000000..3b6d1768c
 --- /dev/null
 +++ b/include/dish2/viz/artists/PcaTrinaryRegulationByRootArtist.hpp
 @@ -0,0 +1,78 @@
@@ -1498,7 +1498,7 @@ index 00000000..3b6d1768
 +#endif // #ifndef DISH2_VIZ_ARTISTS_PCATRINARYREGULATIONBYROOTARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/RepLevRequestArtist.hpp b/include/dish2/viz/artists/RepLevRequestArtist.hpp
 new file mode 100644
-index 00000000..82dbf4a5
+index 000000000..82dbf4a58
 --- /dev/null
 +++ b/include/dish2/viz/artists/RepLevRequestArtist.hpp
 @@ -0,0 +1,75 @@
@@ -1578,7 +1578,7 @@ index 00000000..82dbf4a5
 +
 +#endif // #ifndef DISH2_VIZ_ARTISTS_REPLEVREQUESTARTIST_HPP_INCLUDE
 diff --git a/include/dish2/viz/artists/TaxaArtist.hpp b/include/dish2/viz/artists/TaxaArtist.hpp
-index 436df000..fa7c2e2a 100644
+index 436df000e..fa7c2e2a9 100644
 --- a/include/dish2/viz/artists/TaxaArtist.hpp
 +++ b/include/dish2/viz/artists/TaxaArtist.hpp
 @@ -5,11 +5,13 @@
@@ -1638,7 +1638,7 @@ index 436df000..fa7c2e2a 100644
  
  public:
 diff --git a/include/dish2/viz/artists/_index.hpp b/include/dish2/viz/artists/_index.hpp
-index d90f93a6..b759b03c 100644
+index d90f93a6a..b759b03c0 100644
 --- a/include/dish2/viz/artists/_index.hpp
 +++ b/include/dish2/viz/artists/_index.hpp
 @@ -4,9 +4,11 @@
@@ -1688,7 +1688,7 @@ index d90f93a6..b759b03c 100644
  #include "ResourceStockpileArtist.hpp"
  #include "SpawnArrestArtist.hpp"
 diff --git a/include/dish2/viz/border_colormaps/KinGroupIDBorderInvertColorMap.hpp b/include/dish2/viz/border_colormaps/KinGroupIDBorderInvertColorMap.hpp
-index 4a440139..d620e60f 100644
+index 4a4401396..d620e60ff 100644
 --- a/include/dish2/viz/border_colormaps/KinGroupIDBorderInvertColorMap.hpp
 +++ b/include/dish2/viz/border_colormaps/KinGroupIDBorderInvertColorMap.hpp
 @@ -22,7 +22,7 @@ struct KinGroupIDBorderInvertColorMap {
@@ -1702,7 +1702,7 @@ index 4a440139..d620e60f 100644
  };
 diff --git a/include/dish2/viz/fill_colormaps/CellAgeColorMap.hpp b/include/dish2/viz/fill_colormaps/CellAgeColorMap.hpp
 new file mode 100644
-index 00000000..09e3089f
+index 000000000..09e3089f0
 --- /dev/null
 +++ b/include/dish2/viz/fill_colormaps/CellAgeColorMap.hpp
 @@ -0,0 +1,33 @@
@@ -1741,7 +1741,7 @@ index 00000000..09e3089f
 +#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_CELLAGECOLORMAP_HPP_INCLUDE
 diff --git a/include/dish2/viz/fill_colormaps/EligibleSpawnRequestColorMap.hpp b/include/dish2/viz/fill_colormaps/EligibleSpawnRequestColorMap.hpp
 new file mode 100644
-index 00000000..a06ee833
+index 000000000..a06ee833b
 --- /dev/null
 +++ b/include/dish2/viz/fill_colormaps/EligibleSpawnRequestColorMap.hpp
 @@ -0,0 +1,30 @@
@@ -1776,7 +1776,7 @@ index 00000000..a06ee833
 +
 +#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_ELIGIBLESPAWNREQUESTCOLORMAP_HPP_INCLUDE
 diff --git a/include/dish2/viz/fill_colormaps/KinMatchColorMap.hpp b/include/dish2/viz/fill_colormaps/KinMatchColorMap.hpp
-index e8636330..55efe0c1 100644
+index e8636330d..55efe0c1e 100644
 --- a/include/dish2/viz/fill_colormaps/KinMatchColorMap.hpp
 +++ b/include/dish2/viz/fill_colormaps/KinMatchColorMap.hpp
 @@ -2,6 +2,11 @@
@@ -1806,7 +1806,7 @@ index e8636330..55efe0c1 100644
  
 diff --git a/include/dish2/viz/fill_colormaps/PcaBinaryExpressionByKinGroupColorMap.hpp b/include/dish2/viz/fill_colormaps/PcaBinaryExpressionByKinGroupColorMap.hpp
 new file mode 100644
-index 00000000..06d6f48c
+index 000000000..06d6f48ca
 --- /dev/null
 +++ b/include/dish2/viz/fill_colormaps/PcaBinaryExpressionByKinGroupColorMap.hpp
 @@ -0,0 +1,101 @@
@@ -1913,7 +1913,7 @@ index 00000000..06d6f48c
 +#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_PCABINARYEXPRESSIONBYKINGROUPCOLORMAP_HPP_INCLUDE
 diff --git a/include/dish2/viz/fill_colormaps/PcaBinaryExpressionByRootColorMap.hpp b/include/dish2/viz/fill_colormaps/PcaBinaryExpressionByRootColorMap.hpp
 new file mode 100644
-index 00000000..55c2d884
+index 000000000..55c2d8843
 --- /dev/null
 +++ b/include/dish2/viz/fill_colormaps/PcaBinaryExpressionByRootColorMap.hpp
 @@ -0,0 +1,99 @@
@@ -2018,7 +2018,7 @@ index 00000000..55c2d884
 +#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_PCABINARYEXPRESSIONBYROOTCOLORMAP_HPP_INCLUDE
 diff --git a/include/dish2/viz/fill_colormaps/PcaExpressionByKinGroupColorMap.hpp b/include/dish2/viz/fill_colormaps/PcaExpressionByKinGroupColorMap.hpp
 new file mode 100644
-index 00000000..94848844
+index 000000000..948488441
 --- /dev/null
 +++ b/include/dish2/viz/fill_colormaps/PcaExpressionByKinGroupColorMap.hpp
 @@ -0,0 +1,95 @@
@@ -2119,7 +2119,7 @@ index 00000000..94848844
 +#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_PCAEXPRESSIONBYKINGROUPCOLORMAP_HPP_INCLUDE
 diff --git a/include/dish2/viz/fill_colormaps/PcaExpressionByRootColorMap.hpp b/include/dish2/viz/fill_colormaps/PcaExpressionByRootColorMap.hpp
 new file mode 100644
-index 00000000..53bb6196
+index 000000000..53bb6196d
 --- /dev/null
 +++ b/include/dish2/viz/fill_colormaps/PcaExpressionByRootColorMap.hpp
 @@ -0,0 +1,93 @@
@@ -2218,7 +2218,7 @@ index 00000000..53bb6196
 +#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_PCAEXPRESSIONBYROOTCOLORMAP_HPP_INCLUDE
 diff --git a/include/dish2/viz/fill_colormaps/PcaRegulationByKinGroupColorMap.hpp b/include/dish2/viz/fill_colormaps/PcaRegulationByKinGroupColorMap.hpp
 new file mode 100644
-index 00000000..e06d6900
+index 000000000..e06d69002
 --- /dev/null
 +++ b/include/dish2/viz/fill_colormaps/PcaRegulationByKinGroupColorMap.hpp
 @@ -0,0 +1,108 @@
@@ -2332,7 +2332,7 @@ index 00000000..e06d6900
 +#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_PCAREGULATIONBYKINGROUPCOLORMAP_HPP_INCLUDE
 diff --git a/include/dish2/viz/fill_colormaps/PcaRegulationByRootColorMap.hpp b/include/dish2/viz/fill_colormaps/PcaRegulationByRootColorMap.hpp
 new file mode 100644
-index 00000000..e32d29c7
+index 000000000..e32d29c7b
 --- /dev/null
 +++ b/include/dish2/viz/fill_colormaps/PcaRegulationByRootColorMap.hpp
 @@ -0,0 +1,106 @@
@@ -2444,7 +2444,7 @@ index 00000000..e32d29c7
 +#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_PCAREGULATIONBYROOTCOLORMAP_HPP_INCLUDE
 diff --git a/include/dish2/viz/fill_colormaps/PcaTrinaryRegulationByKinGroupColorMap.hpp b/include/dish2/viz/fill_colormaps/PcaTrinaryRegulationByKinGroupColorMap.hpp
 new file mode 100644
-index 00000000..4fc02310
+index 000000000..4fc023108
 --- /dev/null
 +++ b/include/dish2/viz/fill_colormaps/PcaTrinaryRegulationByKinGroupColorMap.hpp
 @@ -0,0 +1,104 @@
@@ -2554,7 +2554,7 @@ index 00000000..4fc02310
 +#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_PCATRINARYREGULATIONBYKINGROUPCOLORMAP_HPP_INCLUDE
 diff --git a/include/dish2/viz/fill_colormaps/PcaTrinaryRegulationByRootColorMap.hpp b/include/dish2/viz/fill_colormaps/PcaTrinaryRegulationByRootColorMap.hpp
 new file mode 100644
-index 00000000..6e226ca8
+index 000000000..6e226ca8a
 --- /dev/null
 +++ b/include/dish2/viz/fill_colormaps/PcaTrinaryRegulationByRootColorMap.hpp
 @@ -0,0 +1,102 @@
@@ -2662,7 +2662,7 @@ index 00000000..6e226ca8
 +#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_PCATRINARYREGULATIONBYROOTCOLORMAP_HPP_INCLUDE
 diff --git a/include/dish2/viz/fill_colormaps/RepLevRequestColorMap.hpp b/include/dish2/viz/fill_colormaps/RepLevRequestColorMap.hpp
 new file mode 100644
-index 00000000..c70558b8
+index 000000000..c70558b8a
 --- /dev/null
 +++ b/include/dish2/viz/fill_colormaps/RepLevRequestColorMap.hpp
 @@ -0,0 +1,36 @@
@@ -2703,7 +2703,7 @@ index 00000000..c70558b8
 +
 +#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_REPLEVREQUESTCOLORMAP_HPP_INCLUDE
 diff --git a/include/dish2/viz/getters/ApoptosisRequestGetter.hpp b/include/dish2/viz/getters/ApoptosisRequestGetter.hpp
-index 31b00674..bc6e1f3f 100644
+index 31b006746..bc6e1f3fc 100644
 --- a/include/dish2/viz/getters/ApoptosisRequestGetter.hpp
 +++ b/include/dish2/viz/getters/ApoptosisRequestGetter.hpp
 @@ -2,6 +2,8 @@
@@ -2726,7 +2726,7 @@ index 31b00674..bc6e1f3f 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/CardiCoordGetter.hpp b/include/dish2/viz/getters/CardiCoordGetter.hpp
-index f5632c05..95b5f387 100644
+index f5632c055..95b5f3870 100644
 --- a/include/dish2/viz/getters/CardiCoordGetter.hpp
 +++ b/include/dish2/viz/getters/CardiCoordGetter.hpp
 @@ -3,6 +3,7 @@
@@ -2747,7 +2747,7 @@ index f5632c05..95b5f387 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/CardinalOrderGetter.hpp b/include/dish2/viz/getters/CardinalOrderGetter.hpp
-index fc55e468..70da410f 100644
+index fc55e468b..70da410f5 100644
 --- a/include/dish2/viz/getters/CardinalOrderGetter.hpp
 +++ b/include/dish2/viz/getters/CardinalOrderGetter.hpp
 @@ -3,6 +3,7 @@
@@ -2768,7 +2768,7 @@ index fc55e468..70da410f 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/CellAgeGetter.hpp b/include/dish2/viz/getters/CellAgeGetter.hpp
-index 713553e6..105377f2 100644
+index 713553e65..105377f2c 100644
 --- a/include/dish2/viz/getters/CellAgeGetter.hpp
 +++ b/include/dish2/viz/getters/CellAgeGetter.hpp
 @@ -2,6 +2,8 @@
@@ -2791,7 +2791,7 @@ index 713553e6..105377f2 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/DistanceToGraphCenterGetter.hpp b/include/dish2/viz/getters/DistanceToGraphCenterGetter.hpp
-index 88c90478..75de1a59 100644
+index 88c90478a..75de1a59c 100644
 --- a/include/dish2/viz/getters/DistanceToGraphCenterGetter.hpp
 +++ b/include/dish2/viz/getters/DistanceToGraphCenterGetter.hpp
 @@ -3,6 +3,7 @@
@@ -2812,7 +2812,7 @@ index 88c90478..75de1a59 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/DummyGetter.hpp b/include/dish2/viz/getters/DummyGetter.hpp
-index d9cf32fa..4e5e5ec3 100644
+index d9cf32fa5..4e5e5ec34 100644
 --- a/include/dish2/viz/getters/DummyGetter.hpp
 +++ b/include/dish2/viz/getters/DummyGetter.hpp
 @@ -2,6 +2,8 @@
@@ -2835,7 +2835,7 @@ index d9cf32fa..4e5e5ec3 100644
    DummyGetter(const T& val_=T{}) : val(val_) {}
 diff --git a/include/dish2/viz/getters/EligibleSpawnRequestGetter.hpp b/include/dish2/viz/getters/EligibleSpawnRequestGetter.hpp
 new file mode 100644
-index 00000000..61d47cc7
+index 000000000..61d47cc7f
 --- /dev/null
 +++ b/include/dish2/viz/getters/EligibleSpawnRequestGetter.hpp
 @@ -0,0 +1,55 @@
@@ -2895,7 +2895,7 @@ index 00000000..61d47cc7
 +
 +#endif // #ifndef DISH2_VIZ_GETTERS_ELIGIBLESPAWNREQUESTGETTER_HPP_INCLUDE
 diff --git a/include/dish2/viz/getters/EpochGetter.hpp b/include/dish2/viz/getters/EpochGetter.hpp
-index 7b0dd60e..0763e898 100644
+index 7b0dd60eb..0763e898e 100644
 --- a/include/dish2/viz/getters/EpochGetter.hpp
 +++ b/include/dish2/viz/getters/EpochGetter.hpp
 @@ -2,6 +2,8 @@
@@ -2918,7 +2918,7 @@ index 7b0dd60e..0763e898 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/ExpressionByModuleGetter.hpp b/include/dish2/viz/getters/ExpressionByModuleGetter.hpp
-index d4cc4145..8e8877c3 100644
+index d4cc41455..8e8877c36 100644
 --- a/include/dish2/viz/getters/ExpressionByModuleGetter.hpp
 +++ b/include/dish2/viz/getters/ExpressionByModuleGetter.hpp
 @@ -3,6 +3,7 @@
@@ -2939,7 +2939,7 @@ index d4cc4145..8e8877c3 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/GenomeGetter.hpp b/include/dish2/viz/getters/GenomeGetter.hpp
-index 963a643c..f1055f14 100644
+index 963a643c6..f1055f14b 100644
 --- a/include/dish2/viz/getters/GenomeGetter.hpp
 +++ b/include/dish2/viz/getters/GenomeGetter.hpp
 @@ -3,6 +3,7 @@
@@ -2960,7 +2960,7 @@ index 963a643c..f1055f14 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/HeirRequestGetter.hpp b/include/dish2/viz/getters/HeirRequestGetter.hpp
-index 466d4bc8..a827c1af 100644
+index 466d4bc81..a827c1af9 100644
 --- a/include/dish2/viz/getters/HeirRequestGetter.hpp
 +++ b/include/dish2/viz/getters/HeirRequestGetter.hpp
 @@ -2,6 +2,8 @@
@@ -2983,7 +2983,7 @@ index 466d4bc8..a827c1af 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/IncomingInterMessageCounterGetter.hpp b/include/dish2/viz/getters/IncomingInterMessageCounterGetter.hpp
-index dd867eb4..8832ee8f 100644
+index dd867eb45..8832ee8f8 100644
 --- a/include/dish2/viz/getters/IncomingInterMessageCounterGetter.hpp
 +++ b/include/dish2/viz/getters/IncomingInterMessageCounterGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3006,7 +3006,7 @@ index dd867eb4..8832ee8f 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/IncomingIntraMessageCounterGetter.hpp b/include/dish2/viz/getters/IncomingIntraMessageCounterGetter.hpp
-index 1ea29715..a41fa716 100644
+index 1ea297157..a41fa716b 100644
 --- a/include/dish2/viz/getters/IncomingIntraMessageCounterGetter.hpp
 +++ b/include/dish2/viz/getters/IncomingIntraMessageCounterGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3029,7 +3029,7 @@ index 1ea29715..a41fa716 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/IsAliveGetter.hpp b/include/dish2/viz/getters/IsAliveGetter.hpp
-index 734459da..9f1e016b 100644
+index 734459daa..9f1e016bc 100644
 --- a/include/dish2/viz/getters/IsAliveGetter.hpp
 +++ b/include/dish2/viz/getters/IsAliveGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3052,7 +3052,7 @@ index 734459da..9f1e016b 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/KinGroupAgeGetter.hpp b/include/dish2/viz/getters/KinGroupAgeGetter.hpp
-index 84ad0348..6ff769bf 100644
+index 84ad03489..6ff769bfa 100644
 --- a/include/dish2/viz/getters/KinGroupAgeGetter.hpp
 +++ b/include/dish2/viz/getters/KinGroupAgeGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3074,7 +3074,7 @@ index 84ad0348..6ff769bf 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/KinGroupIDGetter.hpp b/include/dish2/viz/getters/KinGroupIDGetter.hpp
-index 1bfccc7b..1395d2f3 100644
+index 1bfccc7bc..1395d2f34 100644
 --- a/include/dish2/viz/getters/KinGroupIDGetter.hpp
 +++ b/include/dish2/viz/getters/KinGroupIDGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3095,7 +3095,7 @@ index 1bfccc7b..1395d2f3 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/KinGroupIDLevGetter.hpp b/include/dish2/viz/getters/KinGroupIDLevGetter.hpp
-index 781ea181..82e5f42e 100644
+index 781ea1815..82e5f42ef 100644
 --- a/include/dish2/viz/getters/KinGroupIDLevGetter.hpp
 +++ b/include/dish2/viz/getters/KinGroupIDLevGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3116,7 +3116,7 @@ index 781ea181..82e5f42e 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/KinGroupIDViewGetter.hpp b/include/dish2/viz/getters/KinGroupIDViewGetter.hpp
-index da68988e..9baa11b9 100644
+index da68988e7..9baa11b96 100644
 --- a/include/dish2/viz/getters/KinGroupIDViewGetter.hpp
 +++ b/include/dish2/viz/getters/KinGroupIDViewGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3139,7 +3139,7 @@ index da68988e..9baa11b9 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/KinMatchGetter.hpp b/include/dish2/viz/getters/KinMatchGetter.hpp
-index 23d120bc..322a9420 100644
+index 23d120bcb..322a94209 100644
 --- a/include/dish2/viz/getters/KinMatchGetter.hpp
 +++ b/include/dish2/viz/getters/KinMatchGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3163,7 +3163,7 @@ index 23d120bc..322a9420 100644
  
 diff --git a/include/dish2/viz/getters/KinMatchLevGetter.hpp b/include/dish2/viz/getters/KinMatchLevGetter.hpp
 new file mode 100644
-index 00000000..ca9668df
+index 000000000..ca9668df1
 --- /dev/null
 +++ b/include/dish2/viz/getters/KinMatchLevGetter.hpp
 @@ -0,0 +1,56 @@
@@ -3224,7 +3224,7 @@ index 00000000..ca9668df
 +
 +#endif // #ifndef DISH2_VIZ_GETTERS_KINMATCHLEVGETTER_HPP_INCLUDE
 diff --git a/include/dish2/viz/getters/LearnedQuorumBitGetter.hpp b/include/dish2/viz/getters/LearnedQuorumBitGetter.hpp
-index 4929e7a6..867f7b21 100644
+index 4929e7a63..867f7b217 100644
 --- a/include/dish2/viz/getters/LearnedQuorumBitGetter.hpp
 +++ b/include/dish2/viz/getters/LearnedQuorumBitGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3245,7 +3245,7 @@ index 4929e7a6..867f7b21 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/LearnedQuorumBitsGetter.hpp b/include/dish2/viz/getters/LearnedQuorumBitsGetter.hpp
-index c1beace6..f320a48f 100644
+index c1beace68..f320a48f3 100644
 --- a/include/dish2/viz/getters/LearnedQuorumBitsGetter.hpp
 +++ b/include/dish2/viz/getters/LearnedQuorumBitsGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3266,7 +3266,7 @@ index c1beace6..f320a48f 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/MostRecentCauseOfDeathGetter.hpp b/include/dish2/viz/getters/MostRecentCauseOfDeathGetter.hpp
-index 8e9d6759..4cec3640 100644
+index 8e9d6759c..4cec36409 100644
 --- a/include/dish2/viz/getters/MostRecentCauseOfDeathGetter.hpp
 +++ b/include/dish2/viz/getters/MostRecentCauseOfDeathGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3287,7 +3287,7 @@ index 8e9d6759..4cec3640 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/NeighborKinGroupIDViewGetter.hpp b/include/dish2/viz/getters/NeighborKinGroupIDViewGetter.hpp
-index 88e7592e..6c7a6b56 100644
+index 88e7592e9..6c7a6b565 100644
 --- a/include/dish2/viz/getters/NeighborKinGroupIDViewGetter.hpp
 +++ b/include/dish2/viz/getters/NeighborKinGroupIDViewGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3310,7 +3310,7 @@ index 88e7592e..6c7a6b56 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/NeighborPosGetter.hpp b/include/dish2/viz/getters/NeighborPosGetter.hpp
-index 2a289043..4c4d6d6d 100644
+index 2a289043b..4c4d6d6d9 100644
 --- a/include/dish2/viz/getters/NeighborPosGetter.hpp
 +++ b/include/dish2/viz/getters/NeighborPosGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3331,7 +3331,7 @@ index 2a289043..4c4d6d6d 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/NumBusyCoresGetter.hpp b/include/dish2/viz/getters/NumBusyCoresGetter.hpp
-index 2a649517..0826da2b 100644
+index 2a6495173..0826da2b7 100644
 --- a/include/dish2/viz/getters/NumBusyCoresGetter.hpp
 +++ b/include/dish2/viz/getters/NumBusyCoresGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3354,7 +3354,7 @@ index 2a649517..0826da2b 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/NumModulesGetter.hpp b/include/dish2/viz/getters/NumModulesGetter.hpp
-index 1de06fd7..131cd0c0 100644
+index 1de06fd71..131cd0c0e 100644
 --- a/include/dish2/viz/getters/NumModulesGetter.hpp
 +++ b/include/dish2/viz/getters/NumModulesGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3375,7 +3375,7 @@ index 1de06fd7..131cd0c0 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/PeripheralityLevGetter.hpp b/include/dish2/viz/getters/PeripheralityLevGetter.hpp
-index fd7d3037..e9f8d550 100644
+index fd7d30372..e9f8d5502 100644
 --- a/include/dish2/viz/getters/PeripheralityLevGetter.hpp
 +++ b/include/dish2/viz/getters/PeripheralityLevGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3396,7 +3396,7 @@ index fd7d3037..e9f8d550 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/PhylogeneticRootGetter.hpp b/include/dish2/viz/getters/PhylogeneticRootGetter.hpp
-index b033ac83..1593e710 100644
+index b033ac834..1593e7107 100644
 --- a/include/dish2/viz/getters/PhylogeneticRootGetter.hpp
 +++ b/include/dish2/viz/getters/PhylogeneticRootGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3417,7 +3417,7 @@ index b033ac83..1593e710 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/QuorumBitGetter.hpp b/include/dish2/viz/getters/QuorumBitGetter.hpp
-index 66672179..536df4ff 100644
+index 666721798..536df4ff2 100644
 --- a/include/dish2/viz/getters/QuorumBitGetter.hpp
 +++ b/include/dish2/viz/getters/QuorumBitGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3438,7 +3438,7 @@ index 66672179..536df4ff 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/QuorumBitOwnGetter.hpp b/include/dish2/viz/getters/QuorumBitOwnGetter.hpp
-index b0d38522..00a89e5e 100644
+index b0d38522a..00a89e5e2 100644
 --- a/include/dish2/viz/getters/QuorumBitOwnGetter.hpp
 +++ b/include/dish2/viz/getters/QuorumBitOwnGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3459,7 +3459,7 @@ index b0d38522..00a89e5e 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/QuorumBitsGetter.hpp b/include/dish2/viz/getters/QuorumBitsGetter.hpp
-index 4d867007..796fe349 100644
+index 4d8670078..796fe3491 100644
 --- a/include/dish2/viz/getters/QuorumBitsGetter.hpp
 +++ b/include/dish2/viz/getters/QuorumBitsGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3480,7 +3480,7 @@ index 4d867007..796fe349 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/QuorumCapGetter.hpp b/include/dish2/viz/getters/QuorumCapGetter.hpp
-index 2a51d60d..3a789cfc 100644
+index 2a51d60d2..3a789cfc5 100644
 --- a/include/dish2/viz/getters/QuorumCapGetter.hpp
 +++ b/include/dish2/viz/getters/QuorumCapGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3501,7 +3501,7 @@ index 2a51d60d..3a789cfc 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/RegulationByModuleGetter.hpp b/include/dish2/viz/getters/RegulationByModuleGetter.hpp
-index 039ad23f..1881c129 100644
+index 039ad23f3..1881c129a 100644
 --- a/include/dish2/viz/getters/RegulationByModuleGetter.hpp
 +++ b/include/dish2/viz/getters/RegulationByModuleGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3522,7 +3522,7 @@ index 039ad23f..1881c129 100644
  
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/RegulationExposedByModuleGetter.hpp b/include/dish2/viz/getters/RegulationExposedByModuleGetter.hpp
-index f890bef2..966930e6 100644
+index f890bef22..966930e67 100644
 --- a/include/dish2/viz/getters/RegulationExposedByModuleGetter.hpp
 +++ b/include/dish2/viz/getters/RegulationExposedByModuleGetter.hpp
 @@ -3,6 +3,7 @@
@@ -3544,7 +3544,7 @@ index f890bef2..966930e6 100644
    template< typename... Args >
 diff --git a/include/dish2/viz/getters/RepLevRequestGetter.hpp b/include/dish2/viz/getters/RepLevRequestGetter.hpp
 new file mode 100644
-index 00000000..7a764673
+index 000000000..7a7646731
 --- /dev/null
 +++ b/include/dish2/viz/getters/RepLevRequestGetter.hpp
 @@ -0,0 +1,39 @@
@@ -3588,7 +3588,7 @@ index 00000000..7a764673
 +
 +#endif // #ifndef DISH2_VIZ_GETTERS_REPLEVREQUESTGETTER_HPP_INCLUDE
 diff --git a/include/dish2/viz/getters/ResourceInputPeekGetter.hpp b/include/dish2/viz/getters/ResourceInputPeekGetter.hpp
-index ec4fd21f..a5a5ba9a 100644
+index ec4fd21ff..a5a5ba9ae 100644
 --- a/include/dish2/viz/getters/ResourceInputPeekGetter.hpp
 +++ b/include/dish2/viz/getters/ResourceInputPeekGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3611,7 +3611,7 @@ index ec4fd21f..a5a5ba9a 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/ResourceStockpileGetter.hpp b/include/dish2/viz/getters/ResourceStockpileGetter.hpp
-index a4cdf9bd..dc06f2b7 100644
+index a4cdf9bda..dc06f2b79 100644
 --- a/include/dish2/viz/getters/ResourceStockpileGetter.hpp
 +++ b/include/dish2/viz/getters/ResourceStockpileGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3634,7 +3634,7 @@ index a4cdf9bd..dc06f2b7 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/SpawnArrestGetter.hpp b/include/dish2/viz/getters/SpawnArrestGetter.hpp
-index dcfebcbb..32c1843f 100644
+index dcfebcbb5..32c1843f6 100644
 --- a/include/dish2/viz/getters/SpawnArrestGetter.hpp
 +++ b/include/dish2/viz/getters/SpawnArrestGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3657,7 +3657,7 @@ index dcfebcbb..32c1843f 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/SpawnRequestGetter.hpp b/include/dish2/viz/getters/SpawnRequestGetter.hpp
-index f5fe12a5..b06150a9 100644
+index f5fe12a53..b06150a9f 100644
 --- a/include/dish2/viz/getters/SpawnRequestGetter.hpp
 +++ b/include/dish2/viz/getters/SpawnRequestGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3680,7 +3680,7 @@ index f5fe12a5..b06150a9 100644
    using parent_t::parent_t;
  
 diff --git a/include/dish2/viz/getters/SpawnedFromGetter.hpp b/include/dish2/viz/getters/SpawnedFromGetter.hpp
-index be5e1f94..fb45ec58 100644
+index be5e1f943..fb45ec583 100644
 --- a/include/dish2/viz/getters/SpawnedFromGetter.hpp
 +++ b/include/dish2/viz/getters/SpawnedFromGetter.hpp
 @@ -2,6 +2,8 @@
@@ -3704,7 +3704,7 @@ index be5e1f94..fb45ec58 100644
  
 diff --git a/include/dish2/viz/getters/TaxonMatchGetter.hpp b/include/dish2/viz/getters/TaxonMatchGetter.hpp
 new file mode 100644
-index 00000000..f32c2a8a
+index 000000000..f32c2a8a9
 --- /dev/null
 +++ b/include/dish2/viz/getters/TaxonMatchGetter.hpp
 @@ -0,0 +1,59 @@
@@ -3768,7 +3768,7 @@ index 00000000..f32c2a8a
 +
 +#endif // #ifndef DISH2_VIZ_GETTERS_TAXONMATCHGETTER_HPP_INCLUDE
 diff --git a/include/dish2/viz/renderers/CardinalFillRenderer.hpp b/include/dish2/viz/renderers/CardinalFillRenderer.hpp
-index 96d3f390..5e59bef8 100644
+index 96d3f390c..5e59bef8a 100644
 --- a/include/dish2/viz/renderers/CardinalFillRenderer.hpp
 +++ b/include/dish2/viz/renderers/CardinalFillRenderer.hpp
 @@ -2,11 +2,16 @@
@@ -3814,7 +3814,7 @@ index 96d3f390..5e59bef8 100644
  
  } // namespace dish2
 diff --git a/include/dish2/viz/renderers/CellBorderRenderer.hpp b/include/dish2/viz/renderers/CellBorderRenderer.hpp
-index 797561dc..c61dbb73 100644
+index 797561dc8..c61dbb736 100644
 --- a/include/dish2/viz/renderers/CellBorderRenderer.hpp
 +++ b/include/dish2/viz/renderers/CellBorderRenderer.hpp
 @@ -2,12 +2,16 @@
@@ -3845,7 +3845,7 @@ index 797561dc..c61dbb73 100644
  };
  
 diff --git a/include/dish2/viz/renderers/CellFillRenderer.hpp b/include/dish2/viz/renderers/CellFillRenderer.hpp
-index 98644905..2a62feab 100644
+index 986449059..2a62feabf 100644
 --- a/include/dish2/viz/renderers/CellFillRenderer.hpp
 +++ b/include/dish2/viz/renderers/CellFillRenderer.hpp
 @@ -2,12 +2,17 @@
@@ -3892,7 +3892,7 @@ index 98644905..2a62feab 100644
  } // namespace dish2
 diff --git a/include/dish2/viz/util/parse_label_fields_json.hpp b/include/dish2/viz/util/parse_label_fields_json.hpp
 new file mode 100644
-index 00000000..2aa98042
+index 000000000..2aa98042e
 --- /dev/null
 +++ b/include/dish2/viz/util/parse_label_fields_json.hpp
 @@ -0,0 +1,30 @@
@@ -3928,7 +3928,7 @@ index 00000000..2aa98042
 +#endif // #ifndef DISH2_VIZ_UTIL_PARSE_LABEL_FIELDS_JSON_HPP_INCLUDE
 diff --git a/include/dish2/viz/util/pca_by_group.hpp b/include/dish2/viz/util/pca_by_group.hpp
 new file mode 100644
-index 00000000..2e2502cb
+index 000000000..2e2502cb1
 --- /dev/null
 +++ b/include/dish2/viz/util/pca_by_group.hpp
 @@ -0,0 +1,89 @@
@@ -4023,7 +4023,7 @@ index 00000000..2e2502cb
 +#endif // #ifndef DISH2_VIZ_UTIL_PCA_BY_GROUP_HPP_INCLUDE
 diff --git a/include/dish2/viz/util/write_jsonl_record.hpp b/include/dish2/viz/util/write_jsonl_record.hpp
 new file mode 100644
-index 00000000..c1ed602d
+index 000000000..c1ed602d6
 --- /dev/null
 +++ b/include/dish2/viz/util/write_jsonl_record.hpp
 @@ -0,0 +1,182 @@
@@ -4210,7 +4210,7 @@ index 00000000..c1ed602d
 +
 +#endif // #ifndef DISH2_VIZ_UTIL_WRITE_JSONL_RECORD_HPP_INCLUDE
 diff --git a/include/dish2/web/Animator.hpp b/include/dish2/web/Animator.hpp
-index 49358812..523dc66b 100644
+index 493588124..523dc66bb 100644
 --- a/include/dish2/web/Animator.hpp
 +++ b/include/dish2/web/Animator.hpp
 @@ -10,19 +10,15 @@ namespace dish2 {
@@ -4238,7 +4238,7 @@ index 49358812..523dc66b 100644
  
 diff --git a/include/dish2/web/ConfigPanel.hpp b/include/dish2/web/ConfigPanel.hpp
 new file mode 100644
-index 00000000..4aa2c0a7
+index 000000000..4aa2c0a7a
 --- /dev/null
 +++ b/include/dish2/web/ConfigPanel.hpp
 @@ -0,0 +1,78 @@
@@ -4321,7 +4321,7 @@ index 00000000..4aa2c0a7
 +
 +#endif // #ifndef DISH2_WEB_CONFIGPANEL_HPP_INCLUDE
 diff --git a/include/dish2/web/ControlPanel.hpp b/include/dish2/web/ControlPanel.hpp
-index 1e9de846..14212aea 100644
+index 1e9de8469..14212aeac 100644
 --- a/include/dish2/web/ControlPanel.hpp
 +++ b/include/dish2/web/ControlPanel.hpp
 @@ -2,15 +2,18 @@
@@ -4600,7 +4600,7 @@ index 1e9de846..14212aea 100644
      RefreshUpdateButton( 0 );
  
 diff --git a/include/dish2/web/DataPill.hpp b/include/dish2/web/DataPill.hpp
-index a5a2e1e0..1a53510a 100644
+index a5a2e1e0e..1a53510a7 100644
 --- a/include/dish2/web/DataPill.hpp
 +++ b/include/dish2/web/DataPill.hpp
 @@ -4,6 +4,7 @@
@@ -4668,7 +4668,7 @@ index a5a2e1e0..1a53510a 100644
  
    operator emp::web::Div&() { return pill; }
 diff --git a/include/dish2/web/GridViewer.hpp b/include/dish2/web/GridViewer.hpp
-index 5ae925e1..e32057c5 100644
+index 5ae925e19..e32057c59 100644
 --- a/include/dish2/web/GridViewer.hpp
 +++ b/include/dish2/web/GridViewer.hpp
 @@ -4,11 +4,13 @@
@@ -4791,7 +4791,7 @@ index 5ae925e1..e32057c5 100644
  
  } // namespace dish2
 diff --git a/include/dish2/web/SeriesViewer.hpp b/include/dish2/web/SeriesViewer.hpp
-index 0a4bf3cd..219f2f5c 100644
+index 0a4bf3cdc..219f2f5c3 100644
 --- a/include/dish2/web/SeriesViewer.hpp
 +++ b/include/dish2/web/SeriesViewer.hpp
 @@ -4,6 +4,7 @@
@@ -4927,7 +4927,7 @@ index 0a4bf3cd..219f2f5c 100644
  } // namespace dish2
 diff --git a/include/dish2/web/SnippetPill.hpp b/include/dish2/web/SnippetPill.hpp
 new file mode 100644
-index 00000000..bac3e1e9
+index 000000000..bac3e1e92
 --- /dev/null
 +++ b/include/dish2/web/SnippetPill.hpp
 @@ -0,0 +1,81 @@
@@ -5013,7 +5013,7 @@ index 00000000..bac3e1e9
 +
 +#endif // #ifndef DISH2_WEB_SNIPPETPILL_HPP_INCLUDE
 diff --git a/include/dish2/web/ViewerCollection.hpp b/include/dish2/web/ViewerCollection.hpp
-index a45f7eb0..80c12602 100644
+index a45f7eb08..80c126027 100644
 --- a/include/dish2/web/ViewerCollection.hpp
 +++ b/include/dish2/web/ViewerCollection.hpp
 @@ -15,20 +15,51 @@ namespace dish2 {
@@ -5320,7 +5320,7 @@ index a45f7eb0..80c12602 100644
  >;
  
 diff --git a/include/dish2/web/ViewerManager.hpp b/include/dish2/web/ViewerManager.hpp
-index 8ccbf67b..dc943910 100644
+index 8ccbf67b5..dc9439104 100644
 --- a/include/dish2/web/ViewerManager.hpp
 +++ b/include/dish2/web/ViewerManager.hpp
 @@ -2,6 +2,8 @@
@@ -5360,7 +5360,7 @@ index 8ccbf67b..dc943910 100644
  
  } // namespace dish2
 diff --git a/include/dish2/web/ViewerPanel.hpp b/include/dish2/web/ViewerPanel.hpp
-index b1cf03c1..9b21ce8b 100644
+index b1cf03c1e..9b21ce8bc 100644
 --- a/include/dish2/web/ViewerPanel.hpp
 +++ b/include/dish2/web/ViewerPanel.hpp
 @@ -28,7 +28,7 @@ public:
@@ -5397,7 +5397,7 @@ index b1cf03c1..9b21ce8b 100644
    //   {"messaging_category", UI::Document("messaging_category")}
    // };
 diff --git a/include/dish2/web/WebInterface.hpp b/include/dish2/web/WebInterface.hpp
-index 6db5f473..124873e1 100644
+index 6db5f4732..124873e1d 100644
 --- a/include/dish2/web/WebInterface.hpp
 +++ b/include/dish2/web/WebInterface.hpp
 @@ -6,6 +6,7 @@
@@ -5429,7 +5429,7 @@ index 6db5f473..124873e1 100644
    dish2::PrevalentGenotypePanel<Spec> prevalent_genotype_panel{ thread_world };
 diff --git a/include/dish2/web/click_elements.hpp b/include/dish2/web/click_elements.hpp
 new file mode 100644
-index 00000000..24bdf657
+index 000000000..24bdf6575
 --- /dev/null
 +++ b/include/dish2/web/click_elements.hpp
 @@ -0,0 +1,53 @@
@@ -5488,7 +5488,7 @@ index 00000000..24bdf657
 +#endif // #ifndef DISH2_WEB_CLICK_ELEMENTS_HPP_INCLUDE
 diff --git a/include/dish2/web/saved_folder.hpp b/include/dish2/web/saved_folder.hpp
 new file mode 100644
-index 00000000..cd9d12cd
+index 000000000..cd9d12cda
 --- /dev/null
 +++ b/include/dish2/web/saved_folder.hpp
 @@ -0,0 +1,147 @@
@@ -5641,7 +5641,7 @@ index 00000000..cd9d12cd
 +#endif // #ifndef DISH2_WEB_SAVED_FOLDER_HPP_INCLUDE
 diff --git a/include/dish2/web/toggle_view_key.hpp b/include/dish2/web/toggle_view_key.hpp
 new file mode 100644
-index 00000000..558d304d
+index 000000000..558d304d9
 --- /dev/null
 +++ b/include/dish2/web/toggle_view_key.hpp
 @@ -0,0 +1,55 @@
@@ -5702,7 +5702,7 @@ index 00000000..558d304d
 +#endif // #ifndef DISH2_WEB_TOGGLE_VIEW_KEY_HPP_INCLUDE
 diff --git a/include/dish2/web/url_encode.hpp b/include/dish2/web/url_encode.hpp
 new file mode 100644
-index 00000000..a7887163
+index 000000000..a7887163d
 --- /dev/null
 +++ b/include/dish2/web/url_encode.hpp
 @@ -0,0 +1,34 @@
@@ -5742,7 +5742,7 @@ index 00000000..a7887163
 +#endif // #ifndef DISH2_WEB_URL_ENCODE_HPP_INCLUDE
 diff --git a/include/dish2/web/viewer_categories/ExpressionCategory.hpp b/include/dish2/web/viewer_categories/ExpressionCategory.hpp
 new file mode 100644
-index 00000000..8fed9364
+index 000000000..8fed93641
 --- /dev/null
 +++ b/include/dish2/web/viewer_categories/ExpressionCategory.hpp
 @@ -0,0 +1,17 @@
@@ -5764,7 +5764,7 @@ index 00000000..8fed9364
 +
 +#endif // #ifndef DISH2_WEB_VIEWER_CATEGORIES_EXPRESSIONCATEGORY_HPP_INCLUDE
 diff --git a/include/dish2/web/viewer_categories/RegulationCategory.hpp b/include/dish2/web/viewer_categories/RegulationCategory.hpp
-index 59c18510..5e32c0fd 100644
+index 59c18510a..5e32c0fdb 100644
 --- a/include/dish2/web/viewer_categories/RegulationCategory.hpp
 +++ b/include/dish2/web/viewer_categories/RegulationCategory.hpp
 @@ -8,7 +8,7 @@ namespace dish2 {
@@ -5777,7 +5777,7 @@ index 59c18510..5e32c0fd 100644
  };
  
 diff --git a/include/dish2/web/viewer_categories/_index.hpp b/include/dish2/web/viewer_categories/_index.hpp
-index aeabc600..f253a4a6 100644
+index aeabc6007..f253a4a6c 100644
 --- a/include/dish2/web/viewer_categories/_index.hpp
 +++ b/include/dish2/web/viewer_categories/_index.hpp
 @@ -4,6 +4,7 @@
@@ -5789,7 +5789,7 @@ index aeabc600..f253a4a6 100644
  #include "MessagingCategory.hpp"
  #include "RegulationCategory.hpp"
 diff --git a/source/web.cpp b/source/web.cpp
-index 34de4a3a..3ca61626 100644
+index 34de4a3a3..3ca616267 100644
 --- a/source/web.cpp
 +++ b/source/web.cpp
 @@ -1,42 +1,107 @@
@@ -5910,7 +5910,7 @@ index 34de4a3a..3ca61626 100644
 +
  }
 diff --git a/web/custom.css b/web/custom.css
-index cf8705c6..42f34d7b 100644
+index cf8705c6b..42f34d7bc 100644
 --- a/web/custom.css
 +++ b/web/custom.css
 @@ -9841,3 +9841,12 @@ a.text-dark:hover {
@@ -5927,7 +5927,7 @@ index cf8705c6..42f34d7b 100644
 +  zoom: 0.67;
 +}
 diff --git a/web/includes/config.html b/web/includes/config.html
-index dbcdbdda..0565c726 100644
+index dbcdbdda1..0565c7260 100644
 --- a/web/includes/config.html
 +++ b/web/includes/config.html
 @@ -17,8 +17,8 @@
@@ -5942,7 +5942,7 @@ index dbcdbdda..0565c726 100644
      in your web browser's URL bar and refreshing will change the random number generator seed and mutation rate.
  </li>
 diff --git a/web/includes/controls.html b/web/includes/controls.html
-index 552eb1d6..61852c51 100644
+index 552eb1d6c..61852c513 100644
 --- a/web/includes/controls.html
 +++ b/web/includes/controls.html
 @@ -1,4 +1,4 @@
@@ -5952,7 +5952,7 @@ index 552eb1d6..61852c51 100644
            <span data-toggle="collapse" href="#emp_button_dash-body">
              <button
 diff --git a/web/includes/header.html b/web/includes/header.html
-index 1dc68c7b..5d6760e1 100644
+index 1dc68c7b8..5d6760e1c 100644
 --- a/web/includes/header.html
 +++ b/web/includes/header.html
 @@ -1,5 +1,6 @@
@@ -5971,7 +5971,7 @@ index 1dc68c7b..5d6760e1 100644
    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 diff --git a/web/includes/jumbotron.html b/web/includes/jumbotron.html
-index cdec60c4..41fbe297 100644
+index cdec60c42..41fbe2972 100644
 --- a/web/includes/jumbotron.html
 +++ b/web/includes/jumbotron.html
 @@ -1,7 +1,16 @@
@@ -5993,8 +5993,76 @@ index cdec60c4..41fbe297 100644
    </h1>
    <p class="lead">
      <b>dis</b>tributed
+diff --git a/web/includes/population-loader.html b/web/includes/population-loader.html
+index 91b3f10e2..2da5e9600 100644
+--- a/web/includes/population-loader.html
++++ b/web/includes/population-loader.html
+@@ -14,56 +14,15 @@
+ <div id="population-loader-body" class="text-large collapse">
+ <ul class="list-group list-group-flush">
+ <li class="list-group-item list-group-item-success">
+-  Click a link to restart the viewer and seed the population with pre-evolved strains.
++  Click a link to restart the viewer and seed the population with a pre-evolved strain.
++</li>
++<li class="list-group-item list-group-item-info">
++  Bundled genome: loads from a file hosted alongside this page, with no dependency on AWS S3.
++  This is the wildtype genome (abundance criterion, series 16005, thread 0) from stint 100 of endeavor 16.
+ </li>
+ <li class="list-group-item">
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~wt" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~wt
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m15_i0" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m15_i0
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m24_i0" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m24_i0
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i18" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i18
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstexternal" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstfwdspiker" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstinternal" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_call" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_call
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_fork" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_fork
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_sendexternal" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_send
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_sendinternal" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_send
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~sm0_i1" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~sm0_i1
++  <a href="?GENESIS=monoculture&autoinstall=genomes/a%3Dgenome%2Bext%3D.json.gz" role="button" class="btn btn-light btn-lg">
++    stint 100 genome (bundled)
+   </a>
+ </li>
+ </ul>
 diff --git a/web/includes/references-body.html b/web/includes/references-body.html
-index 85a732c5..82cf6fbb 100644
+index 85a732c52..82cf6fbbc 100644
 --- a/web/includes/references-body.html
 +++ b/web/includes/references-body.html
 @@ -14,16 +14,28 @@
@@ -6030,7 +6098,7 @@ index 85a732c5..82cf6fbb 100644
      </ul>
  </div>
 diff --git a/web/includes/source-body.html b/web/includes/source-body.html
-index d54003cb..86b261c0 100644
+index d54003cbe..86b261c0f 100644
 --- a/web/includes/source-body.html
 +++ b/web/includes/source-body.html
 @@ -29,6 +29,12 @@
@@ -6047,7 +6115,7 @@ index d54003cb..86b261c0 100644
          <a href="https://emscripten.org/">
          <b> Emscripten </b>
 diff --git a/web/includes/view-key.html.jinja b/web/includes/view-key.html.jinja
-index 6beb91a4..698fd4bf 100644
+index 6beb91a49..698fd4bf6 100644
 --- a/web/includes/view-key.html.jinja
 +++ b/web/includes/view-key.html.jinja
 @@ -1,35 +1,20 @@
@@ -6092,7 +6160,7 @@ index 6beb91a4..698fd4bf 100644
 -    </div>
  {%- endmacro %}
 diff --git a/web/includes/view-selector.html b/web/includes/view-selector.html
-index 7535f7f3..40c54f24 100644
+index 7535f7f30..40c54f242 100644
 --- a/web/includes/view-selector.html
 +++ b/web/includes/view-selector.html
 @@ -1,3 +1,9 @@
@@ -6155,7 +6223,7 @@ index 7535f7f3..40c54f24 100644
          <li
            id="regulation-toggle"
 diff --git a/web/keys.toml b/web/keys.toml
-index 14c04b4c..fc187882 100644
+index 14c04b4cc..fc1878824 100644
 --- a/web/keys.toml
 +++ b/web/keys.toml
 @@ -1,208 +1,230 @@
@@ -6817,7 +6885,7 @@ index 14c04b4c..fc187882 100644
 +    "{make_badge('Light gray', '#D3D3D3')} borders divide **high-level groups**."
 +]
 diff --git a/web/make_html.py b/web/make_html.py
-index 15b37ecb..251c56b0 100644
+index 15b37ecba..251c56b02 100644
 --- a/web/make_html.py
 +++ b/web/make_html.py
 @@ -1,6 +1,8 @@
@@ -6935,7 +7003,7 @@ index 15b37ecb..251c56b0 100644
  # output to file
  with open(DIR + OUTPUT, 'wb+') as out:
 diff --git a/web/template.html.jinja b/web/template.html.jinja
-index 9d75b812..db082b13 100644
+index 9d75b812b..0b6d03801 100644
 --- a/web/template.html.jinja
 +++ b/web/template.html.jinja
 @@ -60,16 +60,16 @@
@@ -6958,21 +7026,7 @@ index 9d75b812..db082b13 100644
          {% include 'includes/view-selector.html' %}
        </div>
      </div>
-@@ -83,11 +83,13 @@
-       </div>
-     </div>
- 
-+    <!--
-     <div class="row p-3 container-fluid">
-       <div class="col-lg-12 p-3">
-         {% include 'includes/population-loader.html' %}
-       </div>
-     </div>
-+    -->
- 
-     <div class="row p-3 container-fluid">
-       <div class="col-lg-12 p-3">
-@@ -95,11 +97,13 @@
+@@ -95,11 +95,13 @@
        </div>
      </div>
  
