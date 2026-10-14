@@ -12,6 +12,7 @@ The patch:
 * replaces `include/dish2/web/`, `include/dish2/viz/`, `source/web.cpp`, and `web/` with their `master` versions;
 * adds four `master`-only helper headers the viewer needs (`utility/print_js_stacktrace.hpp`, `introspection/get_live_cardinal_kin_group_ids.hpp`, `introspection/get_live_cardinal_root_ids.hpp`, `cell/cardinal_iterators/RepLevRequestWrapper.hpp`);
 * calls `prq49`'s non-template `dish2::setup` from `source/web.cpp`;
+* re-enables the Population Loader panel (commented out on `master`), listing only the bundled genome;
 * ports `master` commit `1f5f3699` ("Disable RootIDChangeoverRecorder for web"), also applied to `prq49`'s `multiculture_population.hpp`, since the recorder aborts when seeding a population in the browser (it only logs root ID changeovers and does not affect simulation dynamics);
 * uses `master`'s `Makefile` for its web build flags (`-idirafter third-party/mpi-abi-stubs/`, growable memory for the no-pthread build).
 
