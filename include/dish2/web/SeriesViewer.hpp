@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <filesystem>
 #include <ostream>
 #include <ratio>
 #include <string>
@@ -262,7 +263,13 @@ public:
         {"update", emp::to_string( update )},
         {"ext", ".png"}
       };
-      dish2::saved_folder::save_png( canvas, emp::keyname::pack( attrs ) );
+      dish2::saved_folder::save_png(
+        canvas,
+        std::filesystem::path{
+          emp::slugify( std::string{ Artist::GetName() } )
+        } / emp::to_string( i ),
+        emp::keyname::pack( attrs )
+      );
       dish2::saved_folder::note_saved(
         std::string{ Artist::GetName() },
         emp::slugify( std::string{ Artist::GetName() } ), update, i

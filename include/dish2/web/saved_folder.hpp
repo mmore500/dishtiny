@@ -34,12 +34,16 @@ inline void make() {
   std::filesystem::create_directories( dish2::saved_folder::directory );
 }
 
-// writes a canvas to the folder as a png
+// writes a canvas to a subfolder as a png
 inline void save_png(
-  const emp::web::Canvas& canvas, const std::string& name
+  const emp::web::Canvas& canvas,
+  const std::filesystem::path& subdirectory,
+  const std::string& name
 ) {
 
-  dish2::saved_folder::make();
+  std::filesystem::create_directories(
+    dish2::saved_folder::directory / subdirectory
+  );
 
   MAIN_THREAD_EM_ASM({
     const url = document.getElementById( UTF8ToString( $0 ) ).toDataURL(
@@ -50,7 +54,7 @@ inline void save_png(
     FS.writeFile( UTF8ToString( $1 ), bytes );
   },
     canvas.GetID().c_str(),
-    ( dish2::saved_folder::directory / name ).c_str()
+    ( dish2::saved_folder::directory / subdirectory / name ).c_str()
   );
 
 }
@@ -354,10 +358,16 @@ inline void download( const std::string& name ) {
     setTimeout( function() {
       try {
         const zip = new JSZip();
-        for ( const name of FS.readdir( directory ) ) {
-          if ( name === '.' || name === '..' ) continue;
-          zip.file( name, FS.readFile( directory + '/' + name ) );
-        }
+        // folders are kept in the zip as paths
+        const add = function( path, prefix ) {
+          for ( const name of FS.readdir( path ) ) {
+            if ( name === '.' || name === '..' ) continue;
+            const full = path + '/' + name;
+            if ( FS.isDir( FS.stat( full ).mode ) ) add( full, prefix + name + '/' );
+            else zip.file( prefix + name, FS.readFile( full ) );
+          }
+        };
+        add( directory, '' );
         zip.generateAsync(
           { type: 'blob' },
           function( metadata ) {
