@@ -260,7 +260,7 @@ public:
       emp::keyname::unpack_t attrs{
         {"title", emp::slugify( std::string{ Artist::GetName() } )},
         {"series", emp::to_string( i )},
-        {"update", emp::to_string( update )},
+        {"update", dish2::saved_folder::pad_update( update )},
         {"ext", ".png"}
       };
       dish2::saved_folder::save_png(

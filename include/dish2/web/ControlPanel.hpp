@@ -244,7 +244,7 @@ class ControlPanel {
       [this](){
         dish2::saved_folder::download( emp::keyname::pack({
           {"a", "saved"},
-          {"update", emp::to_string( update )},
+          {"update", dish2::saved_folder::pad_update( update )},
           {"what", "dishtiny"},
           {"ext", ".zip"}
         }) );

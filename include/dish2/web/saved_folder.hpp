@@ -2,6 +2,7 @@
 #ifndef DISH2_WEB_SAVED_FOLDER_HPP_INCLUDE
 #define DISH2_WEB_SAVED_FOLDER_HPP_INCLUDE
 
+#include <cstdio>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
@@ -32,6 +33,13 @@ inline const std::filesystem::path directory{ "/saved" };
 
 inline void make() {
   std::filesystem::create_directories( dish2::saved_folder::directory );
+}
+
+// update zero-padded to seven places so file names alphabetize chronologically
+inline std::string pad_update( const size_t update ) {
+  char buffer[ 32 ];
+  std::snprintf( buffer, sizeof( buffer ), "%07zu", update );
+  return buffer;
 }
 
 // writes a canvas to a subfolder as a png
