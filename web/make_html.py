@@ -111,7 +111,9 @@ markdown = Markdown()
 # 'view key' -> plain text description, embedded in the page so that saved
 # data can be accompanied by a schema
 def strip_tags(markup):
-    return html.unescape(re.sub(r"<[^>]*>", " ", markup))
+    text = html.unescape(re.sub(r"<[^>]*>", " ", markup))
+    # tags leave a space before the punctuation that follows them
+    return re.sub(r"\s+([.,;:!?])", r"\1", text)
 
 def make_view_key_descriptions():
     context = {
