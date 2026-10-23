@@ -18,9 +18,11 @@
 #include "../../../third-party/bxzstr/include/bxzstr.hpp"
 #include "../../../third-party/cereal/include/cereal/external/rapidjson/ostreamwrapper.h"
 #include "../../../third-party/cereal/include/cereal/external/rapidjson/prettywriter.h"
+#include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
+#include "../config/cfg.hpp"
 #include "../spec/_NLEV.hpp"
 
 namespace dish2::saved_folder {
@@ -62,13 +64,13 @@ inline std::string data_name() {
 
 inline std::string schema_name() {
   return emp::keyname::pack({
-    {"a", "saved"}, {"what", "dishtiny-schema"}, {"ext", ".json"}
+    {"a", "saved"}, {"what", "schema"}, {"ext", ".json"}
   });
 }
 
 inline std::string metadata_name() {
   return emp::keyname::pack({
-    {"a", "saved"}, {"what", "dishtiny-metadata"}, {"ext", ".json"}
+    {"a", "saved"}, {"what", "metadata"}, {"ext", ".json"}
   });
 }
 
@@ -119,6 +121,29 @@ inline std::string get_utc_timestamp() {
 
   char* const buffer = reinterpret_cast<char*>( MAIN_THREAD_EM_ASM_INT({
     const text = new Date().toISOString();
+    const num_bytes = lengthBytesUTF8( text ) + 1;
+    const buffer = Module._malloc( num_bytes );
+    stringToUTF8( text, buffer, num_bytes );
+    return buffer;
+  }) );
+
+  const std::string res( buffer );
+  std::free( buffer );
+  return res;
+
+}
+
+// information about the browser the simulation is running in, as JSON
+inline std::string get_browser_info_json() {
+
+  char* const buffer = reinterpret_cast<char*>( MAIN_THREAD_EM_ASM_INT({
+    const text = JSON.stringify({
+      user_agent: navigator.userAgent,
+      language: navigator.language,
+      platform: navigator.platform,
+      hardware_concurrency: navigator.hardwareConcurrency,
+      url: window.location.href
+    });
     const num_bytes = lengthBytesUTF8( text ) + 1;
     const buffer = Module._malloc( num_bytes );
     stringToUTF8( text, buffer, num_bytes );
@@ -220,8 +245,23 @@ inline void write_schema_and_metadata() {
 
     writer.Key( "software" );
     write_string( writer, "dishtiny" );
+    writer.Key( "software_version" );
+    write_string( writer, EMP_STRINGIFY(DISHTINY_HASH_) );
     writer.Key( "nlev" );
     writer.Uint( DISH2_NLEV );
+    writer.Key( "config" );
+    writer.StartObject();
+    const std::map<
+      std::string, decltype( dish2::cfg.begin()->second )
+    > alph( dish2::cfg.begin(), dish2::cfg.end() );
+    for ( const auto& [name, entry] : alph ) {
+      writer.Key( name.c_str() );
+      write_string( writer, entry->GetValue() );
+    }
+    writer.EndObject();
+    writer.Key( "browser" );
+    const std::string browser = dish2::saved_folder::get_browser_info_json();
+    writer.RawValue( browser.c_str(), browser.size(), rapidjson::kObjectType );
     writer.Key( "timestamp" );
     write_string( writer, dish2::saved_folder::get_utc_timestamp() );
     writer.Key( "data_file" );
