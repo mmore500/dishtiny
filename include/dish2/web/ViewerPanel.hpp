@@ -61,7 +61,9 @@ public:
   void Save( const size_t update ) {
     viewer_collection.Redraw();
     viewer_collection.Save( update );
-    dish2::saved_folder::write_schema_and_metadata();
+    dish2::saved_folder::write_schema_and_metadata(
+      viewer_collection.GetNames()
+    );
   }
 
 
