@@ -188,15 +188,27 @@ using ViewerCollection = dish2::ViewerManager<
   >,
   dish2::SeriesViewer<
     Spec,
-    dish2::InputRegisterByAddrArtist<Spec>,
+    dish2::ExtrospectiveStateByAddrArtist<Spec>,
     dish2::ExpressionCategory,
-    dish2::InputRegisterByAddrGetter<Spec>::GetNumAddrs()
+    dish2::ExtrospectiveStateByAddrGetter<Spec>::GetNumAddrs()
   >,
   dish2::SeriesViewer<
     Spec,
-    dish2::OutputRegisterByAddrArtist<Spec>,
+    dish2::IntrospectiveStateByAddrArtist<Spec>,
     dish2::ExpressionCategory,
-    dish2::OutputRegisterByAddrGetter<Spec>::GetNumAddrs()
+    dish2::IntrospectiveStateByAddrGetter<Spec>::GetNumAddrs()
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::ReadableStateByAddrArtist<Spec>,
+    dish2::ExpressionCategory,
+    dish2::ReadableStateByAddrGetter<Spec>::GetNumAddrs()
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::WritableStateByAddrArtist<Spec>,
+    dish2::ExpressionCategory,
+    dish2::WritableStateByAddrGetter<Spec>::GetNumAddrs()
   >,
   dish2::GridViewer<
     Spec,

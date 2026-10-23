@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_VIZ_FILL_COLORMAPS_STATEREGISTERCOLORMAP_HPP_INCLUDE
-#define DISH2_VIZ_FILL_COLORMAPS_STATEREGISTERCOLORMAP_HPP_INCLUDE
+#ifndef DISH2_VIZ_FILL_COLORMAPS_SIGNEDCONTINUOUSCOLORMAP_HPP_INCLUDE
+#define DISH2_VIZ_FILL_COLORMAPS_SIGNEDCONTINUOUSCOLORMAP_HPP_INCLUDE
 
 #include <cmath>
 #include <string>
@@ -10,10 +10,10 @@
 
 namespace dish2 {
 
-struct StateRegisterColorMap {
+struct SignedContinuousColorMap {
 
   template<typename... Args>
-  StateRegisterColorMap( Args&&... ){}
+  SignedContinuousColorMap( Args&&... ){}
 
   template<typename ValueType>
   std::string Paint(const ValueType& val) const {
@@ -41,4 +41,4 @@ struct StateRegisterColorMap {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_STATEREGISTERCOLORMAP_HPP_INCLUDE
+#endif // #ifndef DISH2_VIZ_FILL_COLORMAPS_SIGNEDCONTINUOUSCOLORMAP_HPP_INCLUDE

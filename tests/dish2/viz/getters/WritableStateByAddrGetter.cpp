@@ -4,7 +4,7 @@
 #include "dish2/config/TemporaryThreadIdxOverride.hpp"
 #include "dish2/peripheral/readable_state/ReadableState.hpp"
 #include "dish2/spec/Spec.hpp"
-#include "dish2/viz/getters/OutputRegisterByAddrGetter.hpp"
+#include "dish2/viz/getters/WritableStateByAddrGetter.hpp"
 #include "dish2/world/ProcWorld.hpp"
 #include "dish2/world/ThreadWorld.hpp"
 
@@ -14,9 +14,9 @@ const dish2::TemporaryThreadIdxOverride override{ 0 };
 
 const uitsl::MpiGuard guard;
 
-using getter_t = dish2::OutputRegisterByAddrGetter<Spec>;
+using getter_t = dish2::WritableStateByAddrGetter<Spec>;
 
-TEST_CASE("Test OutputRegisterByAddrGetter address mapping") {
+TEST_CASE("Test WritableStateByAddrGetter address mapping") {
   REQUIRE( getter_t::GetNumAddrs() == dish2::WritableState<Spec>::GetSize() );
   for (size_t addr{}; addr < getter_t::GetNumAddrs(); ++addr) {
     REQUIRE(
@@ -28,7 +28,7 @@ TEST_CASE("Test OutputRegisterByAddrGetter address mapping") {
   }
 }
 
-TEST_CASE("Test OutputRegisterByAddrGetter") {
+TEST_CASE("Test WritableStateByAddrGetter") {
   auto tw = dish2::ProcWorld<Spec>{}.MakeThreadWorld();
 
   for (size_t addr{}; addr < getter_t::GetNumAddrs(); ++addr) {

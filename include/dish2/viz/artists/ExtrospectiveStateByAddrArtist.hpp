@@ -1,13 +1,13 @@
 #pragma once
-#ifndef DISH2_VIZ_ARTISTS_OUTPUTREGISTERBYADDRARTIST_HPP_INCLUDE
-#define DISH2_VIZ_ARTISTS_OUTPUTREGISTERBYADDRARTIST_HPP_INCLUDE
+#ifndef DISH2_VIZ_ARTISTS_EXTROSPECTIVESTATEBYADDRARTIST_HPP_INCLUDE
+#define DISH2_VIZ_ARTISTS_EXTROSPECTIVESTATEBYADDRARTIST_HPP_INCLUDE
 
 #include <string_view>
 
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
-#include "../fill_colormaps/StateRegisterColorMap.hpp"
-#include "../getters/OutputRegisterByAddrGetter.hpp"
+#include "../fill_colormaps/SignedContinuousColorMap.hpp"
+#include "../getters/ExtrospectiveStateByAddrGetter.hpp"
 #include "../getters/IsAliveGetter.hpp"
 #include "../getters/KinGroupIDGetter.hpp"
 #include "../renderers/CardinalFillRenderer.hpp"
@@ -18,17 +18,17 @@
 
 namespace dish2 {
 
-namespace internal::output_register_by_addr_artist {
+namespace internal::extrospective_state_by_addr_artist {
 
   template<
-    typename OutputRegisterByAddrGetter,
+    typename ExtrospectiveStateByAddrGetter,
     typename IsAliveGetter,
     typename KinGroupIDGetter
   >
   using parent_t = dish2::Artist<
     dish2::CardinalFillRenderer<
-      dish2::StateRegisterColorMap,
-      OutputRegisterByAddrGetter
+      dish2::SignedContinuousColorMap,
+      ExtrospectiveStateByAddrGetter
     >,
     dish2::CellFillRenderer<
       dish2::IsAliveColorMap,
@@ -40,23 +40,23 @@ namespace internal::output_register_by_addr_artist {
     >
   >;
 
-} // namespace internal::output_register_by_addr_artist
+} // namespace internal::extrospective_state_by_addr_artist
 
 template<
   typename Spec,
-  typename OutputRegisterByAddrGetter=dish2::OutputRegisterByAddrGetter<Spec>,
+  typename ExtrospectiveStateByAddrGetter=dish2::ExtrospectiveStateByAddrGetter<Spec>,
   typename IsAliveGetter=dish2::IsAliveGetter<Spec>,
   typename KinGroupIDGetter=dish2::KinGroupIDGetter<Spec>
 >
-class OutputRegisterByAddrArtist
-: public internal::output_register_by_addr_artist::parent_t<
-  OutputRegisterByAddrGetter,
+class ExtrospectiveStateByAddrArtist
+: public internal::extrospective_state_by_addr_artist::parent_t<
+  ExtrospectiveStateByAddrGetter,
   IsAliveGetter,
   KinGroupIDGetter
 > {
 
-  using parent_t = internal::output_register_by_addr_artist::parent_t<
-    OutputRegisterByAddrGetter,
+  using parent_t = internal::extrospective_state_by_addr_artist::parent_t<
+    ExtrospectiveStateByAddrGetter,
     IsAliveGetter,
     KinGroupIDGetter
   >;
@@ -67,15 +67,15 @@ public:
   using parent_t::parent_t;
 
   static constexpr std::string_view GetName() {
-    return "Output Register by Address";
+    return "Extrospective State by Address";
   }
 
   static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>&) {
-    return dish2::OutputRegisterByAddrGetter<Spec>::GetNumAddrs();
+    return dish2::ExtrospectiveStateByAddrGetter<Spec>::GetNumAddrs();
   }
 
 };
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_VIZ_ARTISTS_OUTPUTREGISTERBYADDRARTIST_HPP_INCLUDE
+#endif // #ifndef DISH2_VIZ_ARTISTS_EXTROSPECTIVESTATEBYADDRARTIST_HPP_INCLUDE

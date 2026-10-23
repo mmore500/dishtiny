@@ -1,13 +1,12 @@
 #pragma once
-#ifndef DISH2_VIZ_GETTERS_OUTPUTREGISTERBYADDRGETTER_HPP_INCLUDE
-#define DISH2_VIZ_GETTERS_OUTPUTREGISTERBYADDRGETTER_HPP_INCLUDE
+#ifndef DISH2_VIZ_GETTERS_INTROSPECTIVESTATEBYADDRGETTER_HPP_INCLUDE
+#define DISH2_VIZ_GETTERS_INTROSPECTIVESTATEBYADDRGETTER_HPP_INCLUDE
 
 #include <cstddef>
 #include <string_view>
 
 #include "../../cell/cardinal_iterators/ReadableStateWrapper.hpp"
 #include "../../peripheral/readable_state/introspective_state/IntrospectiveState.hpp"
-#include "../../peripheral/readable_state/writable_state/WritableState.hpp"
 #include "../../world/ThreadWorld.hpp"
 
 #include "CardinalIteratorAdapter.hpp"
@@ -15,12 +14,10 @@
 namespace dish2 {
 
 /**
- * Value of a single output register (i.e., writable state) of a cardinal,
- * as read by evolving programs. Addresses correspond to those targeted by
- * write operations.
+ * Value of a single introspective state register of a cardinal.
  */
 template<typename Spec>
-class OutputRegisterByAddrGetter {
+class IntrospectiveStateByAddrGetter {
 
   dish2::CardinalIteratorAdapter<
     Spec, dish2::ReadableStateWrapper
@@ -30,16 +27,18 @@ class OutputRegisterByAddrGetter {
 
 public:
 
-  static constexpr std::string_view GetName() { return "OutputRegisterByAddr"; }
+  static constexpr std::string_view GetName() {
+    return "IntrospectiveStateByAddr";
+  }
 
   static constexpr size_t GetNumAddrs() {
-    return dish2::WritableState<Spec>::GetSize();
+    return dish2::IntrospectiveState<Spec>::GetSize();
   }
 
   using value_type = double;
 
   template< typename... Args >
-  OutputRegisterByAddrGetter(
+  IntrospectiveStateByAddrGetter(
     const dish2::ThreadWorld<Spec>& thread_world_,
     const size_t idx,
     Args&&...
@@ -51,11 +50,7 @@ public:
   value_type Get(
     const size_t cell_idx, const size_t cardinal_idx=0
   ) const {
-    // writable state follows introspective state in the readable state
-    // address space
-    return readable_state_getter.Get( cell_idx, cardinal_idx ).Read(
-      dish2::IntrospectiveState<Spec>::GetSize() + addr
-    );
+    return readable_state_getter.Get( cell_idx, cardinal_idx ).Read( addr );
   }
 
   size_t GetNumCells() const { return readable_state_getter.GetNumCells(); }
@@ -68,4 +63,4 @@ public:
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_VIZ_GETTERS_OUTPUTREGISTERBYADDRGETTER_HPP_INCLUDE
+#endif // #ifndef DISH2_VIZ_GETTERS_INTROSPECTIVESTATEBYADDRGETTER_HPP_INCLUDE

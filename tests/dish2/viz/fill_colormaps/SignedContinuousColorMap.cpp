@@ -2,10 +2,10 @@
 
 #include "Catch/single_include/catch2/catch.hpp"
 
-#include "dish2/viz/fill_colormaps/StateRegisterColorMap.hpp"
+#include "dish2/viz/fill_colormaps/SignedContinuousColorMap.hpp"
 
-TEST_CASE("Test StateRegisterColorMap") {
-  const dish2::StateRegisterColorMap cmap{};
+TEST_CASE("Test SignedContinuousColorMap") {
+  const dish2::SignedContinuousColorMap cmap{};
 
   REQUIRE( cmap.Paint( 0.0f ) == "white" );
   REQUIRE( cmap.Paint( std::numeric_limits<float>::quiet_NaN() ) == "purple" );

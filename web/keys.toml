@@ -314,8 +314,8 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[input-register-by-address]
-header = ["The **Input Register by Address Viewer** shows the value of each cardinal's input registers, the read-only sensor values (introspective state) that evolving programs can read. Subview selectors show one register address."]
+[introspective-state-by-address]
+header = ["The **Introspective State by Address Viewer** shows the read-only sensor values that evolving programs can read about the cardinal itself. Subview selectors show one register address."]
 items = [
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
     "{make_colorbar(['#FF0000', '#FFCCCC', '#FFFFFF', '#CCCCFF', '#0000FF'], ['negative', '', 'zero', '', 'positive'], '**Red** indicates **negative** and **blue** indicates **positive** values.', (2, 3), None)}",
@@ -323,8 +323,26 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
-[output-register-by-address]
-header = ["The **Output Register by Address Viewer** shows the value of each cardinal's output registers, the values (writable state) that evolving programs write to control phenotype or use as memory. Subview selectors show one register address."]
+[extrospective-state-by-address]
+header = ["The **Extrospective State by Address Viewer** shows the read-only sensor values that evolving programs can read about the neighboring cardinal. Subview selectors show one register address."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF0000', '#FFCCCC', '#FFFFFF', '#CCCCFF', '#0000FF'], ['negative', '', 'zero', '', 'positive'], '**Red** indicates **negative** and **blue** indicates **positive** values.', (2, 3), None)}",
+    "{make_badge('Purple', '#800080')} indicates **invalid** (NaN) register value.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[readable-state-by-address]
+header = ["The **Readable State by Address Viewer** shows all values that evolving programs can read, introspective and writable. Subview selectors show one register address."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF0000', '#FFCCCC', '#FFFFFF', '#CCCCFF', '#0000FF'], ['negative', '', 'zero', '', 'positive'], '**Red** indicates **negative** and **blue** indicates **positive** values.', (2, 3), None)}",
+    "{make_badge('Purple', '#800080')} indicates **invalid** (NaN) register value.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[writable-state-by-address]
+header = ["The **Writable State by Address Viewer** shows the values that evolving programs can write, which control phenotype or serve as memory. Subview selectors show one register address."]
 items = [
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
     "{make_colorbar(['#FF0000', '#FFCCCC', '#FFFFFF', '#CCCCFF', '#0000FF'], ['negative', '', 'zero', '', 'positive'], '**Red** indicates **negative** and **blue** indicates **positive** values.', (2, 3), None)}",
