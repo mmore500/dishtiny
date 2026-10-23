@@ -82,19 +82,16 @@ struct SavedViewer {
   std::set<size_t> series;
 };
 inline std::map<std::string, SavedViewer> saved_viewers;
-inline std::set<size_t> saved_updates;
 
-// records that a viewer (and series, if it has them) was saved at an update
+// records that a viewer (and series, if it has them) was saved
 inline void note_saved(
   const std::string& artist_name,
   const std::string& slug,
-  const size_t update,
   const std::optional<size_t> series=std::nullopt
 ) {
   auto& viewer = dish2::saved_folder::saved_viewers[ artist_name ];
   viewer.slug = slug;
   if ( series ) viewer.series.insert( *series );
-  dish2::saved_folder::saved_updates.insert( update );
 }
 
 // the description of a view from the page's view keys, or empty if none
@@ -276,20 +273,6 @@ inline void write_schema_and_metadata(
     writer.Key( "schema_file" );
     write_string( writer, dish2::saved_folder::schema_name() );
 
-    writer.Key( "saved_updates" );
-    writer.StartArray();
-    for ( const size_t update : dish2::saved_folder::saved_updates ) {
-      writer.Uint64( update );
-    }
-    writer.EndArray();
-
-    writer.Key( "saved_viewers" );
-    writer.StartArray();
-    for ( const auto& [name, viewer] : dish2::saved_folder::saved_viewers ) {
-      write_string( writer, name );
-    }
-    writer.EndArray();
-
     writer.EndObject();
   }
 
@@ -336,7 +319,6 @@ inline void clear() {
   std::filesystem::remove_all( dish2::saved_folder::directory );
   dish2::saved_folder::make();
   dish2::saved_folder::saved_viewers.clear();
-  dish2::saved_folder::saved_updates.clear();
 
 }
 
