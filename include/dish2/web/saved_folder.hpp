@@ -70,7 +70,7 @@ inline void save_png(
 // file names for the data file and the files that describe it
 inline std::string data_name() {
   return emp::keyname::pack({
-    {"a", "saved"}, {"what", "dishtiny"}, {"ext", ".jsonl.gz"}
+    {"a", "saved"}, {"what", "views"}, {"ext", ".jsonl.gz"}
   });
 }
 
