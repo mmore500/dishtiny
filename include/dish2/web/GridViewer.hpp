@@ -184,7 +184,7 @@ public:
     );
     dish2::saved_folder::note_saved(
       std::string{ Artist::GetName() },
-      emp::slugify( std::string{ Artist::GetName() } ), update
+      emp::slugify( std::string{ Artist::GetName() } )
     );
     dish2::saved_folder::save_data(
       [this, update]( std::ostream& out ){
