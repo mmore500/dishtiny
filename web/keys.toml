@@ -314,6 +314,24 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
+[input-register-by-address]
+header = ["The **Input Register by Address Viewer** shows the value of each cardinal's input registers, the read-only sensor values (introspective state) that evolving programs can read. Subview selectors show one register address."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF0000', '#FFCCCC', '#FFFFFF', '#CCCCFF', '#0000FF'], ['negative', '', 'zero', '', 'positive'], '**Red** indicates **negative** and **blue** indicates **positive** values.', (2, 3), None)}",
+    "{make_badge('Purple', '#800080')} indicates **invalid** (NaN) register value.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[output-register-by-address]
+header = ["The **Output Register by Address Viewer** shows the value of each cardinal's output registers, the values (writable state) that evolving programs write to control phenotype or use as memory. Subview selectors show one register address."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF0000', '#FFCCCC', '#FFFFFF', '#CCCCFF', '#0000FF'], ['negative', '', 'zero', '', 'positive'], '**Red** indicates **negative** and **blue** indicates **positive** values.', (2, 3), None)}",
+    "{make_badge('Purple', '#800080')} indicates **invalid** (NaN) register value.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
 [expression-by-module]
 header = ["The **Expression by Module Viewer** shows the number of virtual cores executing a SignalGP module. Subview selectors show one module."]
 items = [

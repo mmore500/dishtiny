@@ -186,6 +186,18 @@ using ViewerCollection = dish2::ViewerManager<
     dish2::NumBusyCoresArtist<Spec>,
     dish2::ExpressionCategory
   >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::InputRegisterByAddrArtist<Spec>,
+    dish2::ExpressionCategory,
+    dish2::InputRegisterByAddrGetter<Spec>::GetNumAddrs()
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::OutputRegisterByAddrArtist<Spec>,
+    dish2::ExpressionCategory,
+    dish2::OutputRegisterByAddrGetter<Spec>::GetNumAddrs()
+  >,
   dish2::GridViewer<
     Spec,
     dish2::NumModulesArtist<Spec>,
