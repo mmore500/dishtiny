@@ -12,6 +12,7 @@
 #include <ostream>
 #include <set>
 #include <string>
+#include <vector>
 
 #include <emscripten.h>
 
@@ -20,6 +21,7 @@
 #include "../../../third-party/cereal/include/cereal/external/rapidjson/prettywriter.h"
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
 #include "../config/cfg.hpp"
@@ -157,7 +159,9 @@ inline std::string get_browser_info_json() {
 }
 
 // (re)writes the schema and metadata files that describe the data file
-inline void write_schema_and_metadata() {
+inline void write_schema_and_metadata(
+  const std::vector<std::string>& viewer_names
+) {
 
   dish2::saved_folder::make();
 
@@ -210,20 +214,23 @@ inline void write_schema_and_metadata() {
     write_field( writer, "value", "The value that was measured." );
     writer.EndObject();
 
-    // each viewer that was saved is described using its view key
+    // every viewer is described using its view key
     writer.Key( "viewers" );
     writer.StartObject();
-    for ( const auto& [name, viewer] : dish2::saved_folder::saved_viewers ) {
+    for ( const std::string& name : viewer_names ) {
       writer.Key( name.c_str() );
       writer.StartObject();
       writer.Key( "description" );
-      write_string(
-        writer, dish2::saved_folder::get_view_key_description( viewer.slug )
-      );
-      if ( !viewer.series.empty() ) {
+      write_string( writer, dish2::saved_folder::get_view_key_description(
+        emp::slugify( name )
+      ) );
+      // series that have been saved, for viewers with multiple series
+      const auto saved = dish2::saved_folder::saved_viewers.find( name );
+      if ( saved != std::end( dish2::saved_folder::saved_viewers )
+        && !saved->second.series.empty() ) {
         writer.Key( "series" );
         writer.StartArray();
-        for ( const size_t i : viewer.series ) writer.Uint64( i );
+        for ( const size_t i : saved->second.series ) writer.Uint64( i );
         writer.EndArray();
       }
       writer.EndObject();
