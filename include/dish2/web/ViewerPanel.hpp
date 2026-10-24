@@ -13,8 +13,8 @@
 #include "../world/ThreadWorld.hpp"
 
 #include "DocumentHandles.hpp"
-#include "ViewerCollection.hpp"
 #include "saved_folder.hpp"
+#include "ViewerCollection.hpp"
 
 namespace dish2 {
 
