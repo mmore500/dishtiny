@@ -8,9 +8,7 @@
 #include <functional>
 #include <map>
 #include <numeric>
-#include <optional>
 #include <ostream>
-#include <set>
 #include <string>
 #include <vector>
 
@@ -74,24 +72,6 @@ inline std::string metadata_name() {
   return emp::keyname::pack({
     {"a", "saved"}, {"what", "metadata"}, {"ext", ".json"}
   });
-}
-
-// what has been saved to the data file, for the schema and metadata
-struct SavedViewer {
-  std::string slug;
-  std::set<size_t> series;
-};
-inline std::map<std::string, SavedViewer> saved_viewers;
-
-// records that a viewer (and series, if it has them) was saved
-inline void note_saved(
-  const std::string& artist_name,
-  const std::string& slug,
-  const std::optional<size_t> series=std::nullopt
-) {
-  auto& viewer = dish2::saved_folder::saved_viewers[ artist_name ];
-  viewer.slug = slug;
-  if ( series ) viewer.series.insert( *series );
 }
 
 // the description of a view from the page's view keys, or empty if none
@@ -221,15 +201,6 @@ inline void write_schema_and_metadata(
       write_string( writer, dish2::saved_folder::get_view_key_description(
         emp::slugify( name )
       ) );
-      // series that have been saved, for viewers with multiple series
-      const auto saved = dish2::saved_folder::saved_viewers.find( name );
-      if ( saved != std::end( dish2::saved_folder::saved_viewers )
-        && !saved->second.series.empty() ) {
-        writer.Key( "series" );
-        writer.StartArray();
-        for ( const size_t i : saved->second.series ) writer.Uint64( i );
-        writer.EndArray();
-      }
       writer.EndObject();
     }
     writer.EndObject();
@@ -318,7 +289,6 @@ inline void clear() {
 
   std::filesystem::remove_all( dish2::saved_folder::directory );
   dish2::saved_folder::make();
-  dish2::saved_folder::saved_viewers.clear();
 
 }
 

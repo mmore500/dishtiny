@@ -265,10 +265,6 @@ public:
         {"ext", ".png"}
       };
       dish2::saved_folder::save_png( canvas, emp::keyname::pack( attrs ) );
-      dish2::saved_folder::note_saved(
-        std::string{ Artist::GetName() },
-        emp::slugify( std::string{ Artist::GetName() } ), i
-      );
       dish2::saved_folder::save_data(
         [&series_artist, update, i]( std::ostream& out ){
           series_artist.Tabulate( out, emp::to_string(
