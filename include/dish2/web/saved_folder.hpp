@@ -66,14 +66,12 @@ inline std::string metadata_name() {
 }
 
 // (over)writes a file in the saved folder
-inline void save_text(
-  const std::string& name, const std::function<void( std::ostream& )>& write
-) {
+inline void save_text( const std::string& name, const std::string& text ) {
 
   dish2::saved_folder::make();
 
   std::ofstream out( ( dish2::saved_folder::directory / name ).string() );
-  write( out );
+  out << text;
 
 }
 

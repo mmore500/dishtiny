@@ -1,25 +1,22 @@
 #pragma once
-#ifndef DISH2_WEB_WRITE_SCHEMA_HPP_INCLUDE
-#define DISH2_WEB_WRITE_SCHEMA_HPP_INCLUDE
+#ifndef DISH2_WEB_MAKE_SCHEMA_HPP_INCLUDE
+#define DISH2_WEB_MAKE_SCHEMA_HPP_INCLUDE
 
-#include <ostream>
 #include <string>
 
-#include "../../../third-party/cereal/include/cereal/external/rapidjson/ostreamwrapper.h"
 #include "../../../third-party/cereal/include/cereal/external/rapidjson/prettywriter.h"
+#include "../../../third-party/cereal/include/cereal/external/rapidjson/stringbuffer.h"
 
 #include "get_view_keys_json.hpp"
 #include "saved_folder.hpp"
 
 namespace dish2 {
 
-// describes the records in the saved data file and the views they come from
-inline void write_schema( std::ostream& out ) {
+// makes JSON that describes the records in the saved data file and the views they come from
+inline std::string make_schema() {
 
-  using writer_t = rapidjson::PrettyWriter<rapidjson::OStreamWrapper>;
-
-  rapidjson::OStreamWrapper wrapper{ out };
-  writer_t writer{ wrapper };
+  rapidjson::StringBuffer buffer;
+  rapidjson::PrettyWriter<rapidjson::StringBuffer> writer{ buffer };
 
   const auto write_string = [&writer]( const std::string& str ){
     writer.String( str.c_str(), str.size() );
@@ -71,8 +68,10 @@ inline void write_schema( std::ostream& out ) {
 
   writer.EndObject();
 
+  return buffer.GetString();
+
 }
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WEB_WRITE_SCHEMA_HPP_INCLUDE
+#endif // #ifndef DISH2_WEB_MAKE_SCHEMA_HPP_INCLUDE

@@ -1,14 +1,13 @@
 #pragma once
-#ifndef DISH2_WEB_WRITE_METADATA_HPP_INCLUDE
-#define DISH2_WEB_WRITE_METADATA_HPP_INCLUDE
+#ifndef DISH2_WEB_MAKE_METADATA_HPP_INCLUDE
+#define DISH2_WEB_MAKE_METADATA_HPP_INCLUDE
 
 #include <chrono>
 #include <map>
-#include <ostream>
 #include <string>
 
-#include "../../../third-party/cereal/include/cereal/external/rapidjson/ostreamwrapper.h"
 #include "../../../third-party/cereal/include/cereal/external/rapidjson/prettywriter.h"
+#include "../../../third-party/cereal/include/cereal/external/rapidjson/stringbuffer.h"
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 
 #include "../config/cfg.hpp"
@@ -19,13 +18,11 @@
 
 namespace dish2 {
 
-// describes the software, configuration, and browser that made the saved data
-inline void write_metadata( std::ostream& out ) {
+// makes JSON that describes the software, configuration, and browser that made the saved data
+inline std::string make_metadata() {
 
-  using writer_t = rapidjson::PrettyWriter<rapidjson::OStreamWrapper>;
-
-  rapidjson::OStreamWrapper wrapper{ out };
-  writer_t writer{ wrapper };
+  rapidjson::StringBuffer buffer;
+  rapidjson::PrettyWriter<rapidjson::StringBuffer> writer{ buffer };
 
   const auto write_string = [&writer]( const std::string& str ){
     writer.String( str.c_str(), str.size() );
@@ -67,8 +64,10 @@ inline void write_metadata( std::ostream& out ) {
 
   writer.EndObject();
 
+  return buffer.GetString();
+
 }
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WEB_WRITE_METADATA_HPP_INCLUDE
+#endif // #ifndef DISH2_WEB_MAKE_METADATA_HPP_INCLUDE
