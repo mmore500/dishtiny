@@ -5,7 +5,6 @@
 #include <cmath>
 #include <string>
 
-#include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
 
 namespace dish2 {
@@ -19,7 +18,7 @@ struct SignedContinuousColorMap {
   std::string Paint(const ValueType& val) const {
 
     if ( std::isnan( val ) ) return "purple";
-    else if ( val == 0 ) return "white";
+    if ( val == 0 ) return "white";
 
     // squash magnitude into [0, 1) so that large values remain distinguishable
     const double mag = std::abs( static_cast<double>( val ) );
