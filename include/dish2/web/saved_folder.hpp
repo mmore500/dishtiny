@@ -14,7 +14,6 @@
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
-
 namespace dish2::saved_folder {
 
 // in-memory folder (Emscripten MEMFS) that saved files are written to
