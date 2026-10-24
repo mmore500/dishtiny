@@ -86,8 +86,12 @@ def make_colorbar(colors, labels, text="", hard=(), threshold_labels=None):
 
 
 # number of kin group levels, as compiled
-with open("include/dish2/spec/_NLEV.hpp", "r") as file:
-    NLEV = int(re.search(r"define DISH2_NLEV (\d+)", file.read()).group(1))
+# (the archive has no source tree, so fall back to the prq49 build's value)
+try:
+    with open("include/dish2/spec/_NLEV.hpp", "r") as file:
+        NLEV = int(re.search(r"define DISH2_NLEV (\d+)", file.read()).group(1))
+except FileNotFoundError:
+    NLEV = 2
 
 
 # categorical legend for each requestable replication level, up to NLEV
