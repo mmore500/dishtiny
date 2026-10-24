@@ -116,7 +116,7 @@ inline void download( const std::string& name ) {
 
   dish2::saved_folder::make();
 
-  // paths of the files in the folder, relative to it, one per line
+  // relative paths of contained files, one per line
   std::string files;
   for ( const auto& entry : std::filesystem::recursive_directory_iterator(
     dish2::saved_folder::directory
