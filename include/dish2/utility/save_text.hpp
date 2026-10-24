@@ -15,8 +15,7 @@ inline void save_text(
 
   std::filesystem::create_directories( path.parent_path() );
 
-  std::ofstream out( path );
-  out << text;
+  std::ofstream( path ) << text;
 
 }
 
