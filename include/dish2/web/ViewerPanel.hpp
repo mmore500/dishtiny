@@ -15,6 +15,8 @@
 #include "DocumentHandles.hpp"
 #include "saved_folder.hpp"
 #include "ViewerCollection.hpp"
+#include "write_metadata.hpp"
+#include "write_schema.hpp"
 
 namespace dish2 {
 
@@ -61,7 +63,12 @@ public:
   void Save( const size_t update ) {
     viewer_collection.Redraw();
     viewer_collection.Save( update );
-    dish2::saved_folder::write_schema_and_metadata();
+    dish2::saved_folder::save_text(
+      dish2::saved_folder::schema_name(), dish2::write_schema
+    );
+    dish2::saved_folder::save_text(
+      dish2::saved_folder::metadata_name(), dish2::write_metadata
+    );
   }
 
 
