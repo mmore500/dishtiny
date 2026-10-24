@@ -21,8 +21,8 @@
 #include "dish2/debug/log_tee.hpp"
 #include "dish2/spec/print_spec.hpp"
 #include "dish2/spec/Spec.hpp"
-#include "dish2/utility/print_js_stacktrace.hpp"
-#include "dish2/web/click_elements.hpp"
+#include "dish2/web_utility/click_elements.hpp"
+#include "dish2/web_utility/print_js_stacktrace.hpp"
 #include "dish2/web/WebInterface.hpp"
 #include "dish2/world/ProcWorld.hpp"
 
