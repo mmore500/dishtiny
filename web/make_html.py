@@ -1,6 +1,6 @@
 import colorsys
-import json
 import jinja2
+import json
 from markdown2 import Markdown
 import re
 import toml
