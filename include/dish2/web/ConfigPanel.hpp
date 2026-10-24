@@ -14,6 +14,7 @@
 
 #include "DataPill.hpp"
 #include "SnippetPill.hpp"
+
 #include "../web_utility/url_encode.hpp"
 
 namespace dish2 {

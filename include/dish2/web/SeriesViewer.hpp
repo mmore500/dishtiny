@@ -25,6 +25,7 @@
 
 #include "DocumentHandles.hpp"
 #include "saved_folder.hpp"
+
 #include "../web_utility/toggle_view_key.hpp"
 
 namespace dish2 {
