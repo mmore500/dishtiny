@@ -4,6 +4,8 @@
 
 #include <string_view>
 
+#include "../../peripheral/readable_state/introspective_state/IntrospectiveState.hpp"
+
 #include "../border_colormaps/KinGroupIDBorderColorMap.hpp"
 #include "../fill_colormaps/IsAliveColorMap.hpp"
 #include "../fill_colormaps/SignedContinuousColorMap.hpp"
@@ -71,7 +73,7 @@ public:
   }
 
   static size_t GetSeriesLength(const dish2::ThreadWorld<Spec>&) {
-    return dish2::IntrospectiveStateByAddrGetter<Spec>::GetNumAddrs();
+    return dish2::IntrospectiveState<Spec>::GetSize();
   }
 
 };

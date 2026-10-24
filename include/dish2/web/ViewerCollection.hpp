@@ -4,6 +4,9 @@
 
 #include <tuple>
 
+#include "../peripheral/readable_state/ReadableState.hpp"
+#include "../peripheral/readable_state/introspective_state/IntrospectiveState.hpp"
+#include "../peripheral/readable_state/writable_state/WritableState.hpp"
 #include "../viz/artists/_index.hpp"
 
 #include "GridViewer.hpp"
@@ -190,25 +193,25 @@ using ViewerCollection = dish2::ViewerManager<
     Spec,
     dish2::ExtrospectiveStateByAddrArtist<Spec>,
     dish2::ExpressionCategory,
-    dish2::ExtrospectiveStateByAddrGetter<Spec>::GetNumAddrs()
+    dish2::IntrospectiveState<Spec>::GetSize()
   >,
   dish2::SeriesViewer<
     Spec,
     dish2::IntrospectiveStateByAddrArtist<Spec>,
     dish2::ExpressionCategory,
-    dish2::IntrospectiveStateByAddrGetter<Spec>::GetNumAddrs()
+    dish2::IntrospectiveState<Spec>::GetSize()
   >,
   dish2::SeriesViewer<
     Spec,
     dish2::ReadableStateByAddrArtist<Spec>,
     dish2::ExpressionCategory,
-    dish2::ReadableStateByAddrGetter<Spec>::GetNumAddrs()
+    dish2::ReadableState<Spec>::GetSize()
   >,
   dish2::SeriesViewer<
     Spec,
     dish2::WritableStateByAddrArtist<Spec>,
     dish2::ExpressionCategory,
-    dish2::WritableStateByAddrGetter<Spec>::GetNumAddrs()
+    dish2::WritableState<Spec>::GetSize()
   >,
   dish2::GridViewer<
     Spec,

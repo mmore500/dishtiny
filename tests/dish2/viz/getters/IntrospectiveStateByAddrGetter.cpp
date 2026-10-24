@@ -17,8 +17,7 @@ const uitsl::MpiGuard guard;
 using getter_t = dish2::IntrospectiveStateByAddrGetter<Spec>;
 
 TEST_CASE("Test IntrospectiveStateByAddrGetter address mapping") {
-  REQUIRE( getter_t::GetNumAddrs() == dish2::IntrospectiveState<Spec>::GetSize() );
-  for (size_t addr{}; addr < getter_t::GetNumAddrs(); ++addr) {
+  for (size_t addr{}; addr < dish2::IntrospectiveState<Spec>::GetSize(); ++addr) {
     REQUIRE(
       dish2::ReadableState<Spec>::GetLeafTypeName( addr )
       == dish2::IntrospectiveState<Spec>::GetLeafTypeName( addr )
@@ -29,7 +28,7 @@ TEST_CASE("Test IntrospectiveStateByAddrGetter address mapping") {
 TEST_CASE("Test IntrospectiveStateByAddrGetter") {
   auto tw = dish2::ProcWorld<Spec>{}.MakeThreadWorld();
 
-  for (size_t addr{}; addr < getter_t::GetNumAddrs(); ++addr) {
+  for (size_t addr{}; addr < dish2::IntrospectiveState<Spec>::GetSize(); ++addr) {
     const getter_t getter{ tw, addr };
     REQUIRE( getter.GetNumCells() == tw.GetSize() );
     for (size_t cell{}; cell < getter.GetNumCells(); ++cell) {

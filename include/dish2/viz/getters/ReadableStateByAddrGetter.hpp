@@ -31,10 +31,6 @@ public:
     return "ReadableStateByAddr";
   }
 
-  static constexpr size_t GetNumAddrs() {
-    return dish2::ReadableState<Spec>::GetSize();
-  }
-
   using value_type = double;
 
   template< typename... Args >

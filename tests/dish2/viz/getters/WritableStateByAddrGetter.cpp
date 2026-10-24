@@ -17,8 +17,7 @@ const uitsl::MpiGuard guard;
 using getter_t = dish2::WritableStateByAddrGetter<Spec>;
 
 TEST_CASE("Test WritableStateByAddrGetter address mapping") {
-  REQUIRE( getter_t::GetNumAddrs() == dish2::WritableState<Spec>::GetSize() );
-  for (size_t addr{}; addr < getter_t::GetNumAddrs(); ++addr) {
+  for (size_t addr{}; addr < dish2::WritableState<Spec>::GetSize(); ++addr) {
     REQUIRE(
       dish2::ReadableState<Spec>::GetLeafTypeName(
         dish2::IntrospectiveState<Spec>::GetSize() + addr
@@ -31,7 +30,7 @@ TEST_CASE("Test WritableStateByAddrGetter address mapping") {
 TEST_CASE("Test WritableStateByAddrGetter") {
   auto tw = dish2::ProcWorld<Spec>{}.MakeThreadWorld();
 
-  for (size_t addr{}; addr < getter_t::GetNumAddrs(); ++addr) {
+  for (size_t addr{}; addr < dish2::WritableState<Spec>::GetSize(); ++addr) {
     const getter_t getter{ tw, addr };
     REQUIRE( getter.GetNumCells() == tw.GetSize() );
     for (size_t cell{}; cell < getter.GetNumCells(); ++cell) {
@@ -46,7 +45,7 @@ TEST_CASE("Test WritableStateByAddrGetter") {
   }
 
   // values written by evolving programs are visible through the getter
-  for (size_t addr{}; addr < getter_t::GetNumAddrs(); ++addr) {
+  for (size_t addr{}; addr < dish2::WritableState<Spec>::GetSize(); ++addr) {
     const getter_t getter{ tw, addr };
     auto& writable_state = tw.population[ 0 ].cardinals[ 0 ].peripheral
       .readable_state.template Get< dish2::WritableState<Spec> >();

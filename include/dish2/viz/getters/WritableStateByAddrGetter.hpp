@@ -32,10 +32,6 @@ public:
     return "WritableStateByAddr";
   }
 
-  static constexpr size_t GetNumAddrs() {
-    return dish2::WritableState<Spec>::GetSize();
-  }
-
   using value_type = double;
 
   template< typename... Args >

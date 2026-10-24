@@ -31,10 +31,6 @@ public:
     return "ExtrospectiveStateByAddr";
   }
 
-  static constexpr size_t GetNumAddrs() {
-    return dish2::IntrospectiveState<Spec>::GetSize();
-  }
-
   using value_type = double;
 
   template< typename... Args >
