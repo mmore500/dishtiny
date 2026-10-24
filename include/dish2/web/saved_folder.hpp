@@ -3,7 +3,6 @@
 #define DISH2_WEB_SAVED_FOLDER_HPP_INCLUDE
 
 #include <filesystem>
-#include <fstream>
 #include <functional>
 #include <numeric>
 #include <ostream>
@@ -63,16 +62,6 @@ inline std::string metadata_name() {
   return emp::keyname::pack({
     {"a", "saved"}, {"what", "metadata"}, {"ext", ".json"}
   });
-}
-
-// (over)writes a file in the saved folder
-inline void save_text( const std::string& name, const std::string& text ) {
-
-  dish2::saved_folder::make();
-
-  std::ofstream out( ( dish2::saved_folder::directory / name ).string() );
-  out << text;
-
 }
 
 // calls write to appends to the data file in the saved folder
