@@ -56,10 +56,15 @@ public:
   // closes every activated viewer
   void Clear() { viewer_collection.Close(); }
 
-  // saves each activated viewer as a PNG with its data
-  void Save( const size_t update ) {
+  // saves each activated viewer as a PNG
+  void SaveRenders( const size_t update ) {
     viewer_collection.Redraw();
-    viewer_collection.Save( update );
+    viewer_collection.SaveRenders( update );
+  }
+
+  // saves the data of each activated viewer
+  void SaveTabulations( const size_t update ) {
+    viewer_collection.SaveTabulations( update );
   }
 
 

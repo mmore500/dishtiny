@@ -12,7 +12,8 @@ template<typename... SubsequentViewers> struct ViewerManager {
   template<typename... Args> ViewerManager( Args&&... args ) {}
 
   void Redraw() {}
-  void Save( const size_t update ) {}
+  void SaveRenders( const size_t update ) {}
+  void SaveTabulations( const size_t update ) {}
   void Close() {}
 
 };
@@ -37,9 +38,14 @@ struct ViewerManager<FirstViewer, SubsequentViewers...> {
     subsequent_viewers.Redraw();
   }
 
-  void Save( const size_t update ) {
-    if ( first_viewer.IsActivated() ) first_viewer.Save( update );
-    subsequent_viewers.Save( update );
+  void SaveRenders( const size_t update ) {
+    if ( first_viewer.IsActivated() ) first_viewer.SaveRenders( update );
+    subsequent_viewers.SaveRenders( update );
+  }
+
+  void SaveTabulations( const size_t update ) {
+    if ( first_viewer.IsActivated() ) first_viewer.SaveTabulations( update );
+    subsequent_viewers.SaveTabulations( update );
   }
 
   // closes every activated viewer
