@@ -121,7 +121,7 @@ outputText = template.render(
     make_badge=make_badge,
     make_colorbar=make_colorbar,
     make_rep_lev_legend=make_rep_lev_legend,
-    view_keys=data,
+    view_keys_data=data,
 )
 
 # output to file
