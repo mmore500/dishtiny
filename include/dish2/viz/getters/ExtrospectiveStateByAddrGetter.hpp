@@ -50,10 +50,14 @@ public:
   value_type Get(
     const size_t cell_idx, const size_t cardinal_idx=0
   ) const {
-    return extrospective_state_getter.Get( cell_idx, cardinal_idx ).Read( addr );
+    return extrospective_state_getter.Get(
+      cell_idx, cardinal_idx
+    ).Read( addr );
   }
 
-  size_t GetNumCells() const { return extrospective_state_getter.GetNumCells(); }
+  size_t GetNumCells() const {
+    return extrospective_state_getter.GetNumCells();
+  }
 
   size_t GetNumCardinals( const size_t cell_idx=0 ) const {
     return extrospective_state_getter.GetNumCardinals( cell_idx );

@@ -5,7 +5,6 @@
 #include <cmath>
 #include <string>
 
-#include "../../../../third-party/Empirical/include/emp/math/math.hpp"
 #include "../../../../third-party/Empirical/include/emp/web/color_map.hpp"
 
 namespace dish2 {
