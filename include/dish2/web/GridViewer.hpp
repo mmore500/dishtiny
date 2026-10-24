@@ -172,7 +172,7 @@ public:
   void Save( const size_t update ) {
     emp::keyname::unpack_t attrs{
       {"title", emp::slugify( std::string{ Artist::GetName() } )},
-      {"update", dish2::saved_folder::pad_update( update )},
+      {"update", emp::format_string( "%07zu", update )},
       {"ext", ".png"}
     };
     dish2::saved_folder::save_png(

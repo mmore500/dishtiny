@@ -2,7 +2,6 @@
 #ifndef DISH2_WEB_SAVED_FOLDER_HPP_INCLUDE
 #define DISH2_WEB_SAVED_FOLDER_HPP_INCLUDE
 
-#include <cstdio>
 #include <filesystem>
 #include <functional>
 #include <numeric>
@@ -22,13 +21,6 @@ inline const std::filesystem::path directory{ "/saved" };
 
 inline void make() {
   std::filesystem::create_directories( dish2::saved_folder::directory );
-}
-
-// update zero-padded to seven places so file names alphabetize chronologically
-inline std::string pad_update( const size_t update ) {
-  char buffer[ 32 ];
-  std::snprintf( buffer, sizeof( buffer ), "%07zu", update );
-  return buffer;
 }
 
 // writes a canvas to a subfolder as a png
@@ -124,9 +116,22 @@ inline void download( const std::string& name ) {
 
   dish2::saved_folder::make();
 
+  // paths of the files in the folder, relative to it, one per line
+  std::string files;
+  for ( const auto& entry : std::filesystem::recursive_directory_iterator(
+    dish2::saved_folder::directory
+  ) ) {
+    if ( entry.is_regular_file() ) {
+      files += entry.path().lexically_relative(
+        dish2::saved_folder::directory
+      ).string() + '\n';
+    }
+  }
+
   MAIN_THREAD_EM_ASM({
     const filename = UTF8ToString( $0 );
     const directory = UTF8ToString( $1 );
+    const paths = UTF8ToString( $2 ).split( '\n' );
     const button = document.getElementById( 'download-saved-button' );
     const label = button.textContent;
     button.disabled = true;
@@ -140,15 +145,9 @@ inline void download( const std::string& name ) {
       try {
         const zip = new JSZip();
         // folders are kept in the zip as paths
-        const add = function( path, prefix ) {
-          for ( const name of FS.readdir( path ) ) {
-            if ( name === '.' || name === '..' ) continue;
-            const full = path + '/' + name;
-            if ( FS.isDir( FS.stat( full ).mode ) ) add( full, prefix + name + '/' );
-            else zip.file( prefix + name, FS.readFile( full ) );
-          }
-        };
-        add( directory, '' );
+        for ( const path of paths ) {
+          if ( path ) zip.file( path, FS.readFile( directory + '/' + path ) );
+        }
         zip.generateAsync(
           { type: 'blob' },
           function( metadata ) {
@@ -173,7 +172,7 @@ inline void download( const std::string& name ) {
         restore();
       }
     }, 50 );
-  }, name.c_str(), dish2::saved_folder::directory.c_str() );
+  }, name.c_str(), dish2::saved_folder::directory.c_str(), files.c_str() );
 
 }
 

@@ -7,6 +7,7 @@
 
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Button.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Div.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Document.hpp"
@@ -247,7 +248,7 @@ class ControlPanel {
       [this](){
         dish2::saved_folder::download( emp::keyname::pack({
           {"a", "saved"},
-          {"update", dish2::saved_folder::pad_update( update )},
+          {"update", emp::format_string( "%07zu", update )},
           {"what", "dishtiny"},
           {"ext", ".zip"}
         }) );
