@@ -60,10 +60,15 @@ public:
   // closes every activated viewer
   void Clear() { viewer_collection.Close(); }
 
-  // saves each activated viewer as a PNG with its data
-  void Save( const size_t update ) {
+  // saves each activated viewer as a PNG
+  void SaveRenders( const size_t update ) {
     viewer_collection.Redraw();
-    viewer_collection.Save( update );
+    viewer_collection.SaveRenders( update );
+  }
+
+  // saves the data of each activated viewer, and files that describe the data
+  void SaveTabulations( const size_t update ) {
+    viewer_collection.SaveTabulations( update );
     dish2::save_text(
       dish2::saved_folder::directory / dish2::saved_folder::schema_name(),
       dish2::make_schema()

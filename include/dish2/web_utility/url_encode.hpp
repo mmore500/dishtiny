@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_WEB_URL_ENCODE_HPP_INCLUDE
-#define DISH2_WEB_URL_ENCODE_HPP_INCLUDE
+#ifndef DISH2_WEB_UTILITY_URL_ENCODE_HPP_INCLUDE
+#define DISH2_WEB_UTILITY_URL_ENCODE_HPP_INCLUDE
 
 #include <cstdlib>
 #include <string>
@@ -31,4 +31,4 @@ inline std::string url_encode( const std::string& in ) {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WEB_URL_ENCODE_HPP_INCLUDE
+#endif // #ifndef DISH2_WEB_UTILITY_URL_ENCODE_HPP_INCLUDE

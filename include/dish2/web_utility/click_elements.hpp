@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_WEB_CLICK_ELEMENTS_HPP_INCLUDE
-#define DISH2_WEB_CLICK_ELEMENTS_HPP_INCLUDE
+#ifndef DISH2_WEB_UTILITY_CLICK_ELEMENTS_HPP_INCLUDE
+#define DISH2_WEB_UTILITY_CLICK_ELEMENTS_HPP_INCLUDE
 
 #include <algorithm>
 #include <string>
@@ -50,4 +50,4 @@ inline void click_elements( const emp::vector<std::string>& ids ) {
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WEB_CLICK_ELEMENTS_HPP_INCLUDE
+#endif // #ifndef DISH2_WEB_UTILITY_CLICK_ELEMENTS_HPP_INCLUDE
