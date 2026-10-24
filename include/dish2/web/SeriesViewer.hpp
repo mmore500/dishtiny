@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <filesystem>
 #include <ostream>
 #include <ratio>
 #include <string>
@@ -259,10 +260,16 @@ public:
       emp::keyname::unpack_t attrs{
         {"title", emp::slugify( std::string{ Artist::GetName() } )},
         {"series", emp::to_string( i )},
-        {"update", emp::to_string( update )},
+        {"update", emp::format_string( "%07zu", update )},
         {"ext", ".png"}
       };
-      dish2::saved_folder::save_png( canvas, emp::keyname::pack( attrs ) );
+      dish2::saved_folder::save_png(
+        canvas,
+        std::filesystem::path{
+          emp::slugify( std::string{ Artist::GetName() } )
+        } / emp::to_string( i ),
+        emp::keyname::pack( attrs )
+      );
       dish2::saved_folder::save_data(
         [&series_artist, update, i]( std::ostream& out ){
           series_artist.Tabulate( out, emp::to_string(
