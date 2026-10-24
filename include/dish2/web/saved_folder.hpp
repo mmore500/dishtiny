@@ -10,7 +10,6 @@
 #include <numeric>
 #include <ostream>
 #include <string>
-#include <vector>
 
 #include <emscripten.h>
 
@@ -19,7 +18,6 @@
 #include "../../../third-party/cereal/include/cereal/external/rapidjson/prettywriter.h"
 #include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
-#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Canvas.hpp"
 
 #include "../config/cfg.hpp"
@@ -74,22 +72,17 @@ inline std::string metadata_name() {
   });
 }
 
-// the view key of a view from the page's view keys, as JSON ("{}" if none)
-inline std::string get_view_key_json( const std::string& slug ) {
+// the page's view keys (i.e., keys.toml) as JSON, keyed by view slug
+inline std::string get_view_keys_json() {
 
   char* const buffer = reinterpret_cast<char*>( MAIN_THREAD_EM_ASM_INT({
-    let text = '{}';
     const element = document.getElementById( 'view-keys-json' );
-    if ( element !== null ) {
-      text = JSON.stringify(
-        JSON.parse( element.textContent )[ UTF8ToString( $0 ) ] || {}
-      );
-    }
+    const text = element === null ? '{}' : element.textContent;
     const num_bytes = lengthBytesUTF8( text ) + 1;
     const buffer = Module._malloc( num_bytes );
     stringToUTF8( text, buffer, num_bytes );
     return buffer;
-  }, slug.c_str() ) );
+  }) );
 
   const std::string res( buffer );
   std::free( buffer );
@@ -138,9 +131,7 @@ inline std::string get_browser_info_json() {
 }
 
 // (re)writes the schema and metadata files that describe the data file
-inline void write_schema_and_metadata(
-  const std::vector<std::string>& viewer_names
-) {
+inline void write_schema_and_metadata() {
 
   dish2::saved_folder::make();
 
@@ -184,7 +175,7 @@ inline void write_schema_and_metadata(
     write_field( writer, "series",
       "Which series of the viewer was saved, for viewers with multiple series."
     );
-    write_field( writer, "artist", "Name of the viewer, as a key in viewers." );
+    write_field( writer, "artist", "Name of the viewer, whose slug is a key in view_keys." );
     write_field( writer, "cell", "Index of the cell the value is from." );
     write_field( writer, "cardinal",
       "Index of the cardinal the value is from, for per-cardinal values."
@@ -193,22 +184,13 @@ inline void write_schema_and_metadata(
     write_field( writer, "value", "The value that was measured." );
     writer.EndObject();
 
-    // every viewer is described using its view key from keys.toml
-    writer.Key( "viewers" );
-    writer.StartObject();
-    for ( const std::string& name : viewer_names ) {
-      writer.Key( name.c_str() );
-      writer.StartObject();
-      writer.Key( "view_key" );
-      const std::string view_key = dish2::saved_folder::get_view_key_json(
-        emp::slugify( name )
-      );
-      writer.RawValue(
-        view_key.c_str(), view_key.size(), rapidjson::kObjectType
-      );
-      writer.EndObject();
-    }
-    writer.EndObject();
+    // views are described by their view keys, which are keyed by the slug of
+    // the viewer name given in the artist field
+    writer.Key( "view_keys" );
+    const std::string view_keys = dish2::saved_folder::get_view_keys_json();
+    writer.RawValue(
+      view_keys.c_str(), view_keys.size(), rapidjson::kObjectType
+    );
 
     writer.EndObject();
   }

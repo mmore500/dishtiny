@@ -152,8 +152,6 @@ public:
     Redraw();
   }
 
-  static std::string GetName() { return std::string{ Artist::GetName() }; }
-
   bool IsActivated() const { return is_active; }
 
   // selector clicks cycle: open view with key -> hide key -> close view

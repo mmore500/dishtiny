@@ -220,8 +220,6 @@ public:
     one_is_active = false;
   }
 
-  static std::string GetName() { return std::string{ Artist::GetName() }; }
-
   bool IsActivated() const { return is_active; }
 
   bool IsActivated( const size_t i ) const {
