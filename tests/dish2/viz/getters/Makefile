@@ -8,6 +8,7 @@ TARGET_NAMES += PhylogeneticRootGetter
 TARGET_NAMES += QuorumBitsGetter
 TARGET_NAMES += ReadableStateByAddrGetter
 TARGET_NAMES += ResourceStockpileGetter
+TARGET_NAMES += StintRootGetter
 TARGET_NAMES += WritableStateByAddrGetter
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
