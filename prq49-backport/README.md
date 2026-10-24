@@ -27,7 +27,7 @@ Features carried over from `master` include the newer viewers (including the reg
 Focal strain genomes (`criteria=abundance`, from `genomes/stage=0+what=generated/`) cover stints 0 through 100.
 Coevolved background strain genomes (`criteria=abundance_highest_root`, from `genomes/stage=1+what=extracted/`) cover stints 0 through 100.
 These are the same genome pairs the `prq49` `lowestandhighestroot-multiculture` jobs seed together.
-The Population Loader links each genome in a monoculture, and each same-stint pair in a multiculture, which autoinstalls both genomes.
+The Population Loader has three sections of per-stint buttons: focal strain monocultures, background strain monocultures, and multicultures that autoinstall both same-stint genomes.
 `genomes/a=genome+ext=.json.gz` is the stint 100 focal strain genome, kept so earlier links keep working.
 
 All links to this viewer pass the config overrides `COLLECTIVE_HARVEST_RATE=0%090.25&GROUP_EXPIRATION_DURATIONS=0%091024&OPTIMAL_QUORUM_COUNT=0%0912&P_QUORUM_CAP_KILL=0%090.0825&P_SET_QUORUM_BIT=0%091&QUORUM_CAP=0%0936&N_CELLS=900`.

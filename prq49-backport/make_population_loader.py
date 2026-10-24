@@ -56,38 +56,60 @@ def link(genesis, *filenames):
 
 def button(href, label):
     return (
-        f'<a href="{href}" role="button" class="btn btn-light btn-sm">' f"{label}</a>"
+        f'<a href="{href}" role="button" class="btn btn-light btn-sm m-1">'
+        f"{label}</a>"
     )
 
 
-def make_row(stint, focal_stints, background_stints):
-    focal = FOCAL.format(stint=stint)
-    background = BACKGROUND.format(stint=stint)
-    has_focal = stint in focal_stints
-    has_background = stint in background_stints
-    cells = [
-        str(stint),
-        button(link("monoculture", focal), "monoculture") if has_focal else "",
-        (
-            button(link("monoculture", background), "monoculture")
-            if has_background
-            else ""
-        ),
-        (
-            button(link("multiculture", focal, background), "multiculture")
-            if has_focal and has_background
-            else ""
-        ),
-    ]
-    return "<tr>" + "".join(f"<td>{cell}</td>" for cell in cells) + "</tr>"
+def make_section(title, buttons):
+    return f"""<li class="list-group-item">
+<h5>{title}</h5>
+<div class="d-flex flex-wrap">
+{chr(10).join(buttons)}
+</div>
+</li>"""
 
 
 def make_html(genomes_dir):
     focal_stints = available_stints(FOCAL, genomes_dir)
     background_stints = available_stints(BACKGROUND, genomes_dir)
-    stints = sorted(set(focal_stints) | set(background_stints))
-    rows = "\n".join(
-        make_row(stint, focal_stints, background_stints) for stint in stints
+    both_stints = sorted(set(focal_stints) & set(background_stints))
+    sections = "\n".join(
+        [
+            make_section(
+                "Monoculture: focal strain, series 16005 (case study)",
+                [
+                    button(
+                        link("monoculture", FOCAL.format(stint=stint)), f"stint {stint}"
+                    )
+                    for stint in focal_stints
+                ],
+            ),
+            make_section(
+                "Monoculture: background strain, series 16005",
+                [
+                    button(
+                        link("monoculture", BACKGROUND.format(stint=stint)),
+                        f"stint {stint}",
+                    )
+                    for stint in background_stints
+                ],
+            ),
+            make_section(
+                "Multiculture: focal and background strains, series 16005",
+                [
+                    button(
+                        link(
+                            "multiculture",
+                            FOCAL.format(stint=stint),
+                            BACKGROUND.format(stint=stint),
+                        ),
+                        f"stint {stint}",
+                    )
+                    for stint in both_stints
+                ],
+            ),
+        ]
     )
     return f"""<div class="card">
 <div class="card-header">
@@ -107,23 +129,7 @@ def make_html(genomes_dir):
 <li class="list-group-item list-group-item-success">
   Click a link to restart the viewer and seed the population with pre-evolved strains.
 </li>
-<li class="list-group-item list-group-item-info">
-  Bundled genomes: load from files hosted alongside this page, with no dependency on AWS S3.
-  All are wildtype genomes from series 16005 (thread 0) of endeavor 16, one per stint.
-  <strong>Focal strain</strong> is the most abundant genome (abundance criterion), available for stints {focal_stints[0]} through {focal_stints[-1]}.
-  <strong>Coevolved background strain</strong> is the most abundant genome of the highest phylogenetic root (abundance_highest_root criterion), available for stints {background_stints[0]} through {background_stints[-1]}.
-  <strong>Multiculture</strong> seeds both strains from the same stint together.
-</li>
-<li class="list-group-item" style="max-height: 32em; overflow-y: auto;">
-<table class="table table-sm table-striped">
-<thead>
-<tr><th>Stint</th><th>Focal Strain</th><th>Coevolved Background Strain</th><th>Both Strains</th></tr>
-</thead>
-<tbody>
-{rows}
-</tbody>
-</table>
-</li>
+{sections}
 </ul>
 </div>
 </div>
