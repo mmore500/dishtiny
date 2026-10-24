@@ -30,7 +30,8 @@ class WebInterface {
     },
     [this](){ Redraw(); },
     [this]( const bool with_png ){
-      view_panel.Save( thread_world.GetUpdate(), with_png );
+      if ( with_png ) view_panel.SaveViewRenders( thread_world.GetUpdate() );
+      view_panel.SaveViewTabulations( thread_world.GetUpdate() );
     },
     [this](){ view_panel.Clear(); }
   };
