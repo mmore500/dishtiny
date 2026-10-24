@@ -11,7 +11,7 @@ DIR = "web/"
 
 # load our TOML file
 with open(DIR + INPUT, 'r') as file:
-    data = toml.load(file)
+    view_keys_data = toml.load(file)
 
 # process and generate badge
 def make_badge(str, color):
@@ -86,12 +86,8 @@ def make_colorbar(colors, labels, text="", hard=(), threshold_labels=None):
 
 
 # number of kin group levels, as compiled
-# (the archive has no source tree, so fall back to the prq49 build's value)
-try:
-    with open("include/dish2/spec/_NLEV.hpp", "r") as file:
-        NLEV = int(re.search(r"define DISH2_NLEV (\d+)", file.read()).group(1))
-except FileNotFoundError:
-    NLEV = 2
+with open("include/dish2/spec/_NLEV.hpp", "r") as file:
+    NLEV = int(re.search(r"define DISH2_NLEV (\d+)", file.read()).group(1))
 
 
 # categorical legend for each requestable replication level, up to NLEV
@@ -119,12 +115,13 @@ template = template_env.get_template(TEMPLATE)
 # we pass it our data, our markdown instance, and eval() and make_badge(),
 # since they are all used by it
 outputText = template.render(
-    data=data,
+    data=view_keys_data,
     markdown=markdown,
     eval=eval,
     make_badge=make_badge,
     make_colorbar=make_colorbar,
     make_rep_lev_legend=make_rep_lev_legend,
+    view_keys_data=view_keys_data,
 )
 
 # output to file
