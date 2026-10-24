@@ -1,6 +1,6 @@
 #pragma once
-#ifndef DISH2_WEB_TOGGLE_VIEW_KEY_HPP_INCLUDE
-#define DISH2_WEB_TOGGLE_VIEW_KEY_HPP_INCLUDE
+#ifndef DISH2_WEB_UTILITY_TOGGLE_VIEW_KEY_HPP_INCLUDE
+#define DISH2_WEB_UTILITY_TOGGLE_VIEW_KEY_HPP_INCLUDE
 
 #include <string>
 
@@ -52,4 +52,4 @@ inline bool toggle_view_key(
 
 } // namespace dish2
 
-#endif // #ifndef DISH2_WEB_TOGGLE_VIEW_KEY_HPP_INCLUDE
+#endif // #ifndef DISH2_WEB_UTILITY_TOGGLE_VIEW_KEY_HPP_INCLUDE
