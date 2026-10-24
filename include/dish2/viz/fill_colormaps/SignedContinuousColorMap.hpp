@@ -18,7 +18,7 @@ struct SignedContinuousColorMap {
   std::string Paint(const ValueType& val) const {
 
     if ( std::isnan( val ) ) return "purple";
-    if ( val == 0 ) return "white";
+    else if ( val == 0 ) return "white";
 
     // squash magnitude into [0, 1) so that large values remain distinguishable
     const double mag = std::abs( static_cast<double>( val ) );
