@@ -233,6 +233,11 @@ using ViewerCollection = dish2::ViewerManager<
     dish2::DemographicsCategory,
     true
   >,
+  dish2::GridViewer<
+    Spec,
+    dish2::StintRootArtist<Spec>,
+    dish2::DemographicsCategory
+  >,
   dish2::SeriesViewer<
     Spec,
     dish2::QuorumBitArtist<Spec>,
