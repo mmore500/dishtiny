@@ -62,8 +62,6 @@ inline std::string make_schema() {
   write_field( "value", "The value that was measured." );
   writer.EndObject();
 
-  // views are described by their view keys, which are keyed by the slug of
-  // the viewer name given in the artist field
   writer.Key( "view_keys_data" );
   const std::string view_keys_data = dish2::get_view_keys_json();
   writer.RawValue(
