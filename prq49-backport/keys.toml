@@ -82,6 +82,14 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
+[stint-root]
+header = ["The **Stint Root Viewer** represents the identity of each cell's ancestor at the outset of the current session. Unlike the phylogenetic root, the stint root is reassigned each time genomes are seeded into the population."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Arbitrarily', '#FF00FF')} {make_badge('generated', '#BFBFFF')} {make_badge('colors', '#BFBFFF')} represent stint ancestor IDs.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
 [taxa]
 header = ["The **Taxa Viewer** depicts the distribution of groups of genetically-identical cells."]
 items = [
@@ -311,6 +319,42 @@ header = ["The **Num Busy Cores Viewer** shows the number of virtual cores execu
 items = [
     "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
     "{make_colorbar(['#FFFFFF', '#FF8080', '#FFFF80', '#80FF80', '#80FFFF', '#8080FF', '#FF80FF', '#FF8080'], ['zero', 'low', '', '', '', '', '', 'high (mod 18)'], '**Color hue** indicates the **number of active virtual cores**.', (1,), None)}",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[introspective-state-by-address]
+header = ["The **Introspective State by Address Viewer** shows the cardinal's own read-only I/O state, the sensor values that programs can read about the cardinal itself. Subview selectors show one register address."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF0000', '#FFCCCC', '#FFFFFF', '#CCCCFF', '#0000FF'], ['negative', '', 'zero', '', 'positive'], '**Red** indicates **negative** and **blue** indicates **positive** values.', (2, 3), None)}",
+    "{make_badge('Purple', '#800080')} indicates **invalid** (NaN) register value.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[extrospective-state-by-address]
+header = ["The **Extrospective State by Address Viewer** shows the neighboring cardinal's read-only I/O state, the sensor values that programs can read about the neighbor. Subview selectors show one register address."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF0000', '#FFCCCC', '#FFFFFF', '#CCCCFF', '#0000FF'], ['negative', '', 'zero', '', 'positive'], '**Red** indicates **negative** and **blue** indicates **positive** values.', (2, 3), None)}",
+    "{make_badge('Purple', '#800080')} indicates **invalid** (NaN) register value.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[readable-state-by-address]
+header = ["The **Readable State by Address Viewer** shows the cardinal's full I/O state, all values that programs can read, both read-only sensor values and writable values. Subview selectors show one register address."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF0000', '#FFCCCC', '#FFFFFF', '#CCCCFF', '#0000FF'], ['negative', '', 'zero', '', 'positive'], '**Red** indicates **negative** and **blue** indicates **positive** values.', (2, 3), None)}",
+    "{make_badge('Purple', '#800080')} indicates **invalid** (NaN) register value.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
+[writable-state-by-address]
+header = ["The **Writable State by Address Viewer** shows the cardinal's writable I/O state, the values that programs can write, which control phenotype or serve as memory. Subview selectors show one register address."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_colorbar(['#FF0000', '#FFCCCC', '#FFFFFF', '#CCCCFF', '#0000FF'], ['negative', '', 'zero', '', 'positive'], '**Red** indicates **negative** and **blue** indicates **positive** values.', (2, 3), None)}",
+    "{make_badge('Purple', '#800080')} indicates **invalid** (NaN) register value.",
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
