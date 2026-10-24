@@ -3,11 +3,9 @@
 #define DISH2_WEB_SAVED_FOLDER_HPP_INCLUDE
 
 #include <cstdio>
-#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <functional>
-#include <map>
 #include <numeric>
 #include <ostream>
 #include <string>
@@ -15,14 +13,8 @@
 #include <emscripten.h>
 
 #include "../../../third-party/bxzstr/include/bxzstr.hpp"
-#include "../../../third-party/cereal/include/cereal/external/rapidjson/ostreamwrapper.h"
-#include "../../../third-party/cereal/include/cereal/external/rapidjson/prettywriter.h"
-#include "../../../third-party/Empirical/include/emp/base/macros.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Canvas.hpp"
-
-#include "../config/cfg.hpp"
-#include "../spec/_NLEV.hpp"
 
 namespace dish2::saved_folder {
 
@@ -84,167 +76,15 @@ inline std::string metadata_name() {
   });
 }
 
-// the page's view keys (i.e., keys.toml) as JSON, keyed by view slug
-inline std::string get_view_keys_json() {
-
-  char* const buffer = reinterpret_cast<char*>( MAIN_THREAD_EM_ASM_INT({
-    const element = document.getElementById( 'view-keys-json' );
-    const text = element === null ? '{}' : element.textContent;
-    const num_bytes = lengthBytesUTF8( text ) + 1;
-    const buffer = Module._malloc( num_bytes );
-    stringToUTF8( text, buffer, num_bytes );
-    return buffer;
-  }) );
-
-  const std::string res( buffer );
-  std::free( buffer );
-  return res;
-
-}
-
-// current time as an ISO 8601 string
-inline std::string get_utc_timestamp() {
-
-  char* const buffer = reinterpret_cast<char*>( MAIN_THREAD_EM_ASM_INT({
-    const text = new Date().toISOString();
-    const num_bytes = lengthBytesUTF8( text ) + 1;
-    const buffer = Module._malloc( num_bytes );
-    stringToUTF8( text, buffer, num_bytes );
-    return buffer;
-  }) );
-
-  const std::string res( buffer );
-  std::free( buffer );
-  return res;
-
-}
-
-// information about the browser the simulation is running in, as JSON
-inline std::string get_browser_info_json() {
-
-  char* const buffer = reinterpret_cast<char*>( MAIN_THREAD_EM_ASM_INT({
-    const text = JSON.stringify({
-      user_agent: navigator.userAgent,
-      language: navigator.language,
-      platform: navigator.platform,
-      hardware_concurrency: navigator.hardwareConcurrency,
-      url: window.location.href
-    });
-    const num_bytes = lengthBytesUTF8( text ) + 1;
-    const buffer = Module._malloc( num_bytes );
-    stringToUTF8( text, buffer, num_bytes );
-    return buffer;
-  }) );
-
-  const std::string res( buffer );
-  std::free( buffer );
-  return res;
-
-}
-
-// (re)writes the schema and metadata files that describe the data file
-inline void write_schema_and_metadata() {
+// (over)writes a file in the saved folder
+inline void save_text(
+  const std::string& name, const std::function<void( std::ostream& )>& write
+) {
 
   dish2::saved_folder::make();
 
-  using writer_t = rapidjson::PrettyWriter<rapidjson::OStreamWrapper>;
-
-  const auto write_string = []( writer_t& writer, const std::string& str ){
-    writer.String( str.c_str(), str.size() );
-  };
-
-  const auto write_field = [&](
-    writer_t& writer, const std::string& name, const std::string& description
-  ){
-    writer.Key( name.c_str() );
-    writer.StartObject();
-    writer.Key( "description" );
-    write_string( writer, description );
-    writer.EndObject();
-  };
-
-  {
-    std::ofstream file(
-      ( dish2::saved_folder::directory / dish2::saved_folder::schema_name()
-      ).string()
-    );
-    rapidjson::OStreamWrapper wrapper{ file };
-    writer_t writer{ wrapper };
-
-    writer.StartObject();
-
-    writer.Key( "data_file" );
-    write_string( writer, dish2::saved_folder::data_name() );
-    writer.Key( "format" );
-    write_string( writer,
-      "gzip-compressed JSON Lines, with one record per line"
-    );
-
-    // each record has these fields
-    writer.Key( "fields" );
-    writer.StartObject();
-    write_field( writer, "update", "Simulation update the view was saved at." );
-    write_field( writer, "series",
-      "Which series of the viewer was saved, for viewers with multiple series."
-    );
-    write_field( writer, "artist", "Name of the viewer, whose slug is a key in view_keys." );
-    write_field( writer, "cell", "Index of the cell the value is from." );
-    write_field( writer, "cardinal",
-      "Index of the cardinal the value is from, for per-cardinal values."
-    );
-    write_field( writer, "attribute", "What the value is a measurement of." );
-    write_field( writer, "value", "The value that was measured." );
-    writer.EndObject();
-
-    // views are described by their view keys, which are keyed by the slug of
-    // the viewer name given in the artist field
-    writer.Key( "view_keys" );
-    const std::string view_keys = dish2::saved_folder::get_view_keys_json();
-    writer.RawValue(
-      view_keys.c_str(), view_keys.size(), rapidjson::kObjectType
-    );
-
-    writer.EndObject();
-  }
-
-  {
-    std::ofstream file(
-      ( dish2::saved_folder::directory / dish2::saved_folder::metadata_name()
-      ).string()
-    );
-    rapidjson::OStreamWrapper wrapper{ file };
-    writer_t writer{ wrapper };
-
-    writer.StartObject();
-
-    writer.Key( "software" );
-    write_string( writer, "dishtiny" );
-    writer.Key( "software_version" );
-    write_string( writer, EMP_STRINGIFY(DISHTINY_HASH_) );
-    writer.Key( "nlev" );
-    writer.Uint( DISH2_NLEV );
-    writer.Key( "config" );
-    writer.StartObject();
-    const std::map<
-      std::string, decltype( dish2::cfg.begin()->second )
-    > alph( dish2::cfg.begin(), dish2::cfg.end() );
-    for ( const auto& [name, entry] : alph ) {
-      writer.Key( name.c_str() );
-      write_string( writer, entry->GetValue() );
-    }
-    writer.EndObject();
-    writer.Key( "browser" );
-    const std::string browser = dish2::saved_folder::get_browser_info_json();
-    writer.RawValue( browser.c_str(), browser.size(), rapidjson::kObjectType );
-    writer.Key( "timestamp" );
-    write_string( writer, dish2::saved_folder::get_utc_timestamp() );
-    writer.Key( "data_file" );
-    write_string( writer, dish2::saved_folder::data_name() );
-    writer.Key( "schema_file" );
-    write_string( writer, dish2::saved_folder::schema_name() );
-
-    writer.EndObject();
-  }
+  std::ofstream out( ( dish2::saved_folder::directory / name ).string() );
+  write( out );
 
 }
 

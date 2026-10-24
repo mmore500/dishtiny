@@ -1,6 +1,5 @@
 import colorsys
 import jinja2
-import json
 from markdown2 import Markdown
 import re
 import toml
@@ -123,7 +122,7 @@ outputText = template.render(
     make_colorbar=make_colorbar,
     make_rep_lev_legend=make_rep_lev_legend,
     # embedded in the page so that saved data can be accompanied by a schema
-    view_keys_json=json.dumps(data).replace('<', '\\u003c'),
+    view_keys=data,
 )
 
 # output to file
