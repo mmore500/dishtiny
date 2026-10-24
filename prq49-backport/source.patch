@@ -7269,62 +7269,17 @@ index cdec60c4..41fbe297 100644
    <p class="lead">
      <b>dis</b>tributed
 diff --git a/web/includes/population-loader.html b/web/includes/population-loader.html
-index 91b3f10e..533ac006 100644
+index 91b3f10e..2a7237e7 100644
 --- a/web/includes/population-loader.html
 +++ b/web/includes/population-loader.html
-@@ -17,54 +17,322 @@
+@@ -16,55 +16,329 @@
+ <li class="list-group-item list-group-item-success">
    Click a link to restart the viewer and seed the population with pre-evolved strains.
  </li>
- <li class="list-group-item">
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~wt" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~wt
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m15_i0" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m15_i0
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m24_i0" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m24_i0
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i18" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i18
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstexternal" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstfwdspiker" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstinternal" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_call" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_call
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_fork" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_fork
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_sendexternal" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_send
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_sendinternal" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_send
--  </a>
--  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~sm0_i1" role="button" class="btn btn-light btn-lg">
--    batch~2032,step~1018,pop~1,id1~wt,id2~sm0_i1
--  </a>
-+<h5>Monoculture: focal strain, series 16005 (case study)</h5>
++<li class="list-group-item list-group-item-secondary font-weight-bold">
++Monoculture: focal strain, series 16005 (case study)
++</li>
++<li class="list-group-item">
 +<div class="d-flex flex-wrap">
 +<a href="?GENESIS=monoculture&autoinstall=genomes/a%3Dgenome%2Bcriteria%3Dabundance%2Bmorph%3Dwildtype%2Bproc%3D0%2Bseries%3D16005%2Bstint%3D0%2Bthread%3D0%2Bvariation%3Dmaster%2Bext%3D.json.gz&COLLECTIVE_HARVEST_RATE=0%090.25&GROUP_EXPIRATION_DURATIONS=0%091024&OPTIMAL_QUORUM_COUNT=0%0912&P_QUORUM_CAP_KILL=0%090.0825&P_SET_QUORUM_BIT=0%091&QUORUM_CAP=0%0936&N_CELLS=900" role="button" class="btn btn-light btn-sm m-1">stint 0</a>
 +<a href="?GENESIS=monoculture&autoinstall=genomes/a%3Dgenome%2Bcriteria%3Dabundance%2Bmorph%3Dwildtype%2Bproc%3D0%2Bseries%3D16005%2Bstint%3D1%2Bthread%3D0%2Bvariation%3Dmaster%2Bext%3D.json.gz&COLLECTIVE_HARVEST_RATE=0%090.25&GROUP_EXPIRATION_DURATIONS=0%091024&OPTIMAL_QUORUM_COUNT=0%0912&P_QUORUM_CAP_KILL=0%090.0825&P_SET_QUORUM_BIT=0%091&QUORUM_CAP=0%0936&N_CELLS=900" role="button" class="btn btn-light btn-sm m-1">stint 1</a>
@@ -7429,8 +7384,58 @@ index 91b3f10e..533ac006 100644
 +<a href="?GENESIS=monoculture&autoinstall=genomes/a%3Dgenome%2Bcriteria%3Dabundance%2Bmorph%3Dwildtype%2Bproc%3D0%2Bseries%3D16005%2Bstint%3D100%2Bthread%3D0%2Bvariation%3Dmaster%2Bext%3D.json.gz&COLLECTIVE_HARVEST_RATE=0%090.25&GROUP_EXPIRATION_DURATIONS=0%091024&OPTIMAL_QUORUM_COUNT=0%0912&P_QUORUM_CAP_KILL=0%090.0825&P_SET_QUORUM_BIT=0%091&QUORUM_CAP=0%0936&N_CELLS=900" role="button" class="btn btn-light btn-sm m-1">stint 100</a>
 +</div>
 +</li>
-+<li class="list-group-item">
-+<h5>Monoculture: background strain, series 16005</h5>
++<li class="list-group-item list-group-item-secondary font-weight-bold">
++Monoculture: background strain, series 16005
++</li>
+ <li class="list-group-item">
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~wt" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~wt
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m14_i0
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m15_i0" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m15_i0
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m24_i0" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m24_i0
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i18" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i18
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstexternal" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstfwdspiker" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcstinternal" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_bcst
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_call" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_call
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_fork" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_fork
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_sendexternal" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_send
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_sendinternal" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~m5_i8_send
+-  </a>
+-  <a href="?TREATMENT_DESCRIPTOR=batch~2032,step~1018,pop~1,id1~wt,id2~sm0_i1" role="button" class="btn btn-light btn-lg">
+-    batch~2032,step~1018,pop~1,id1~wt,id2~sm0_i1
+-  </a>
 +<div class="d-flex flex-wrap">
 +<a href="?GENESIS=monoculture&autoinstall=genomes/a%3Dgenome%2Bcriteria%3Dabundance_highest_root%2Bmorph%3Dwildtype%2Bproc%3D0%2Bseries%3D16005%2Bstint%3D0%2Bthread%3D0%2Bvariation%3Dmaster%2Bext%3D.json.gz&COLLECTIVE_HARVEST_RATE=0%090.25&GROUP_EXPIRATION_DURATIONS=0%091024&OPTIMAL_QUORUM_COUNT=0%0912&P_QUORUM_CAP_KILL=0%090.0825&P_SET_QUORUM_BIT=0%091&QUORUM_CAP=0%0936&N_CELLS=900" role="button" class="btn btn-light btn-sm m-1">stint 0</a>
 +<a href="?GENESIS=monoculture&autoinstall=genomes/a%3Dgenome%2Bcriteria%3Dabundance_highest_root%2Bmorph%3Dwildtype%2Bproc%3D0%2Bseries%3D16005%2Bstint%3D1%2Bthread%3D0%2Bvariation%3Dmaster%2Bext%3D.json.gz&COLLECTIVE_HARVEST_RATE=0%090.25&GROUP_EXPIRATION_DURATIONS=0%091024&OPTIMAL_QUORUM_COUNT=0%0912&P_QUORUM_CAP_KILL=0%090.0825&P_SET_QUORUM_BIT=0%091&QUORUM_CAP=0%0936&N_CELLS=900" role="button" class="btn btn-light btn-sm m-1">stint 1</a>
@@ -7535,8 +7540,10 @@ index 91b3f10e..533ac006 100644
 +<a href="?GENESIS=monoculture&autoinstall=genomes/a%3Dgenome%2Bcriteria%3Dabundance_highest_root%2Bmorph%3Dwildtype%2Bproc%3D0%2Bseries%3D16005%2Bstint%3D100%2Bthread%3D0%2Bvariation%3Dmaster%2Bext%3D.json.gz&COLLECTIVE_HARVEST_RATE=0%090.25&GROUP_EXPIRATION_DURATIONS=0%091024&OPTIMAL_QUORUM_COUNT=0%0912&P_QUORUM_CAP_KILL=0%090.0825&P_SET_QUORUM_BIT=0%091&QUORUM_CAP=0%0936&N_CELLS=900" role="button" class="btn btn-light btn-sm m-1">stint 100</a>
 +</div>
 +</li>
++<li class="list-group-item list-group-item-secondary font-weight-bold">
++Multiculture: focal and background strains, series 16005
++</li>
 +<li class="list-group-item">
-+<h5>Multiculture: focal and background strains, series 16005</h5>
 +<div class="d-flex flex-wrap">
 +<a href="?GENESIS=multiculture&autoinstall=genomes/a%3Dgenome%2Bcriteria%3Dabundance%2Bmorph%3Dwildtype%2Bproc%3D0%2Bseries%3D16005%2Bstint%3D0%2Bthread%3D0%2Bvariation%3Dmaster%2Bext%3D.json.gz&autoinstall=genomes/a%3Dgenome%2Bcriteria%3Dabundance_highest_root%2Bmorph%3Dwildtype%2Bproc%3D0%2Bseries%3D16005%2Bstint%3D0%2Bthread%3D0%2Bvariation%3Dmaster%2Bext%3D.json.gz&COLLECTIVE_HARVEST_RATE=0%090.25&GROUP_EXPIRATION_DURATIONS=0%091024&OPTIMAL_QUORUM_COUNT=0%0912&P_QUORUM_CAP_KILL=0%090.0825&P_SET_QUORUM_BIT=0%091&QUORUM_CAP=0%0936&N_CELLS=900" role="button" class="btn btn-light btn-sm m-1">stint 0</a>
 +<a href="?GENESIS=multiculture&autoinstall=genomes/a%3Dgenome%2Bcriteria%3Dabundance%2Bmorph%3Dwildtype%2Bproc%3D0%2Bseries%3D16005%2Bstint%3D1%2Bthread%3D0%2Bvariation%3Dmaster%2Bext%3D.json.gz&autoinstall=genomes/a%3Dgenome%2Bcriteria%3Dabundance_highest_root%2Bmorph%3Dwildtype%2Bproc%3D0%2Bseries%3D16005%2Bstint%3D1%2Bthread%3D0%2Bvariation%3Dmaster%2Bext%3D.json.gz&COLLECTIVE_HARVEST_RATE=0%090.25&GROUP_EXPIRATION_DURATIONS=0%091024&OPTIMAL_QUORUM_COUNT=0%0912&P_QUORUM_CAP_KILL=0%090.0825&P_SET_QUORUM_BIT=0%091&QUORUM_CAP=0%0936&N_CELLS=900" role="button" class="btn btn-light btn-sm m-1">stint 1</a>
@@ -8639,10 +8646,10 @@ index 15b37ecb..4c68b2bf 100644
  with open(DIR + OUTPUT, 'wb+') as out:
 diff --git a/web/make_population_loader.py b/web/make_population_loader.py
 new file mode 100644
-index 00000000..228cc5fc
+index 00000000..6031364b
 --- /dev/null
 +++ b/web/make_population_loader.py
-@@ -0,0 +1,141 @@
+@@ -0,0 +1,143 @@
 +"""Generate web/includes/population-loader.html for prq49-backport.
 +
 +Lists bundled series 16005 genomes from every available stint.
@@ -8707,8 +8714,10 @@ index 00000000..228cc5fc
 +
 +
 +def make_section(title, buttons):
-+    return f"""<li class="list-group-item">
-+<h5>{title}</h5>
++    return f"""<li class="list-group-item list-group-item-secondary font-weight-bold">
++{title}
++</li>
++<li class="list-group-item">
 +<div class="d-flex flex-wrap">
 +{chr(10).join(buttons)}
 +</div>

@@ -62,8 +62,10 @@ def button(href, label):
 
 
 def make_section(title, buttons):
-    return f"""<li class="list-group-item">
-<h5>{title}</h5>
+    return f"""<li class="list-group-item list-group-item-secondary font-weight-bold">
+{title}
+</li>
+<li class="list-group-item">
 <div class="d-flex flex-wrap">
 {chr(10).join(buttons)}
 </div>
