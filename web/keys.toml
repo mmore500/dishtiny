@@ -82,6 +82,14 @@ items = [
     "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
     "{make_badge('Black', '#000000')} borders divide **high-level groups**."
 ]
+[stint-root]
+header = ["The **Stint Root Viewer** represents the identity of each cell's ancestor at the outset of the current session. Unlike the phylogenetic root, the stint root is reassigned each time genomes are seeded into the population."]
+items = [
+    "{make_badge('Black', '#000000')} grid tiles are **dead cells**.",
+    "{make_badge('Arbitrarily', '#FF00FF')} {make_badge('generated', '#BFBFFF')} {make_badge('colors', '#BFBFFF')} represent stint ancestor IDs.",
+    "{make_badge('White', '#FFFFFF')} borders divide **low-level groups** that are part of the same high-level group. ",
+    "{make_badge('Black', '#000000')} borders divide **high-level groups**."
+]
 [taxa]
 header = ["The **Taxa Viewer** depicts the distribution of groups of genetically-identical cells."]
 items = [

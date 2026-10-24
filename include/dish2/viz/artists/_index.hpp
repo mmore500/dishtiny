@@ -57,6 +57,7 @@
 #include "SpawnArrestArtist.hpp"
 #include "SpawnedFromArtist.hpp"
 #include "SpawnRequestArtist.hpp"
+#include "StintRootArtist.hpp"
 #include "TaxaArtist.hpp"
 #include "WritableStateByAddrArtist.hpp"
 
