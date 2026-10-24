@@ -57,14 +57,14 @@ public:
   void Clear() { viewer_collection.Close(); }
 
   // saves each activated viewer as a PNG
-  void SaveViewRenders( const size_t update ) {
+  void SaveRenders( const size_t update ) {
     viewer_collection.Redraw();
-    viewer_collection.SaveViewRenders( update );
+    viewer_collection.SaveRenders( update );
   }
 
   // saves the data of each activated viewer
-  void SaveViewTabulations( const size_t update ) {
-    viewer_collection.SaveViewTabulations( update );
+  void SaveTabulations( const size_t update ) {
+    viewer_collection.SaveTabulations( update );
   }
 
 

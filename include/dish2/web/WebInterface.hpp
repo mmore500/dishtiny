@@ -29,8 +29,8 @@ class WebInterface {
       return thread_world.GetUpdate();
     },
     [this](){ Redraw(); },
-    [this](){ view_panel.SaveViewRenders( thread_world.GetUpdate() ); },
-    [this](){ view_panel.SaveViewTabulations( thread_world.GetUpdate() ); },
+    [this](){ view_panel.SaveRenders( thread_world.GetUpdate() ); },
+    [this](){ view_panel.SaveTabulations( thread_world.GetUpdate() ); },
     [this](){ view_panel.Clear(); }
   };
   dish2::ConfigPanel config_panel;

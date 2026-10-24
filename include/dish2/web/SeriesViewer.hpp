@@ -250,7 +250,7 @@ public:
   }
 
   // saves a png of each activated view
-  void SaveViewRenders( const size_t update ) {
+  void SaveRenders( const size_t update ) {
     for ( size_t i{}; i < artists.size(); ++i ) {
       auto& [artist, canvas, one_is_active] = artists[i];
       if ( !one_is_active ) continue;
@@ -265,7 +265,7 @@ public:
   }
 
   // saves the underlying data of each activated view
-  void SaveViewTabulations( const size_t update ) {
+  void SaveTabulations( const size_t update ) {
     for ( size_t i{}; i < artists.size(); ++i ) {
       auto& [artist, canvas, one_is_active] = artists[i];
       if ( !one_is_active ) continue;
