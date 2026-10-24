@@ -10,9 +10,13 @@
 #include "../../../third-party/Empirical/include/emp/web/Document.hpp"
 #include "../../../third-party/Empirical/include/emp/web/js_utils.hpp"
 
+#include "../utility/save_text.hpp"
 #include "../world/ThreadWorld.hpp"
 
 #include "DocumentHandles.hpp"
+#include "make_metadata.hpp"
+#include "make_schema.hpp"
+#include "saved_folder.hpp"
 #include "ViewerCollection.hpp"
 
 namespace dish2 {
@@ -62,9 +66,17 @@ public:
     viewer_collection.SaveRenders( update );
   }
 
-  // saves the data of each activated viewer
+  // saves the data of each activated viewer, and files that describe the data
   void SaveTabulations( const size_t update ) {
     viewer_collection.SaveTabulations( update );
+    dish2::save_text(
+      dish2::saved_folder::directory / dish2::saved_folder::schema_name(),
+      dish2::make_schema()
+    );
+    dish2::save_text(
+      dish2::saved_folder::directory / dish2::saved_folder::metadata_name(),
+      dish2::make_metadata()
+    );
   }
 
 

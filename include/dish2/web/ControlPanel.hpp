@@ -7,6 +7,7 @@
 
 #include "../../../third-party/conduit/include/uitsl/math/math_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/tools/keyname_utils.hpp"
+#include "../../../third-party/Empirical/include/emp/tools/string_utils.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Button.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Div.hpp"
 #include "../../../third-party/Empirical/include/emp/web/Document.hpp"
@@ -171,6 +172,10 @@ class ControlPanel {
     // small gaps between the buttons, which stay square-edged
     button_dash.Div("render_input-prepend") << emp::web::Button(
       [this](){ ClickSave(); }, "Save", "save-button"
+    ).OnDoubleClick(
+      // the two clicks have already saved the data, so a double click also
+      // saves the pngs, which are otherwise only saved while render is selected
+      [this](){ if ( !every_toggle ) save_renders_callback(); }
     ).SetCSS(
       "margin-left", "2px",
       "border-radius", "0",
@@ -249,7 +254,7 @@ class ControlPanel {
       [this](){
         dish2::saved_folder::download( emp::keyname::pack({
           {"a", "saved"},
-          {"update", emp::to_string( update )},
+          {"update", emp::format_string( "%07zu", update )},
           {"what", "dishtiny"},
           {"ext", ".zip"}
         }) );

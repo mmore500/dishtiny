@@ -3,6 +3,7 @@ TARGET_NAMES += IsAliveColorMap
 TARGET_NAMES += KinGroupIDFillColorMap
 TARGET_NAMES += PhylogeneticRootColorMap
 TARGET_NAMES += ResourceStockpileColorMap
+TARGET_NAMES += SignedContinuousColorMap
 
 TO_ROOT := $(shell git rev-parse --show-cdup)
 

@@ -11,9 +11,11 @@
 #include "EligibleSpawnRequestArtist.hpp"
 #include "EpochArtist.hpp"
 #include "ExpressionByModuleArtist.hpp"
+#include "ExtrospectiveStateByAddrArtist.hpp"
 #include "HeirRequestArtist.hpp"
 #include "IncomingInterMessageCounterArtist.hpp"
 #include "IncomingIntraMessageCounterArtist.hpp"
+#include "IntrospectiveStateByAddrArtist.hpp"
 #include "IsAliveArtist.hpp"
 #include "KinGroupAgeArtist.hpp"
 #include "KinGroupIDArtist.hpp"
@@ -46,6 +48,7 @@
 #include "QuorumBitOwnArtist.hpp"
 #include "QuorumBitsArtist.hpp"
 #include "QuorumCapArtist.hpp"
+#include "ReadableStateByAddrArtist.hpp"
 #include "RegulationByModuleArtist.hpp"
 #include "RegulationExposedByModuleArtist.hpp"
 #include "RepLevRequestArtist.hpp"
@@ -54,6 +57,8 @@
 #include "SpawnArrestArtist.hpp"
 #include "SpawnedFromArtist.hpp"
 #include "SpawnRequestArtist.hpp"
+#include "StintRootArtist.hpp"
 #include "TaxaArtist.hpp"
+#include "WritableStateByAddrArtist.hpp"
 
 #endif // #ifndef DISH2_VIZ_ARTISTS__INDEX_HPP_INCLUDE

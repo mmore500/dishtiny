@@ -4,6 +4,9 @@
 
 #include <tuple>
 
+#include "../peripheral/readable_state/ReadableState.hpp"
+#include "../peripheral/readable_state/introspective_state/IntrospectiveState.hpp"
+#include "../peripheral/readable_state/writable_state/WritableState.hpp"
 #include "../viz/artists/_index.hpp"
 
 #include "GridViewer.hpp"
@@ -186,6 +189,30 @@ using ViewerCollection = dish2::ViewerManager<
     dish2::NumBusyCoresArtist<Spec>,
     dish2::ExpressionCategory
   >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::ExtrospectiveStateByAddrArtist<Spec>,
+    dish2::ExpressionCategory,
+    dish2::IntrospectiveState<Spec>::GetSize()
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::IntrospectiveStateByAddrArtist<Spec>,
+    dish2::ExpressionCategory,
+    dish2::IntrospectiveState<Spec>::GetSize()
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::ReadableStateByAddrArtist<Spec>,
+    dish2::ExpressionCategory,
+    dish2::ReadableState<Spec>::GetSize()
+  >,
+  dish2::SeriesViewer<
+    Spec,
+    dish2::WritableStateByAddrArtist<Spec>,
+    dish2::ExpressionCategory,
+    dish2::WritableState<Spec>::GetSize()
+  >,
   dish2::GridViewer<
     Spec,
     dish2::NumModulesArtist<Spec>,
@@ -208,6 +235,11 @@ using ViewerCollection = dish2::ViewerManager<
     dish2::PhylogeneticRootArtist<Spec>,
     dish2::DemographicsCategory,
     true
+  >,
+  dish2::GridViewer<
+    Spec,
+    dish2::StintRootArtist<Spec>,
+    dish2::DemographicsCategory
   >,
   dish2::SeriesViewer<
     Spec,
