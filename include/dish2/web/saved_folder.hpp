@@ -86,14 +86,16 @@ inline std::string metadata_name() {
   });
 }
 
-// the description of a view from the page's view keys, or empty if none
-inline std::string get_view_key_description( const std::string& slug ) {
+// the view key of a view from the page's view keys, as JSON ("{}" if none)
+inline std::string get_view_key_json( const std::string& slug ) {
 
   char* const buffer = reinterpret_cast<char*>( MAIN_THREAD_EM_ASM_INT({
-    let text = '';
-    const element = document.getElementById( 'view-key-descriptions' );
+    let text = '{}';
+    const element = document.getElementById( 'view-keys-json' );
     if ( element !== null ) {
-      text = JSON.parse( element.textContent )[ UTF8ToString( $0 ) ] || '';
+      text = JSON.stringify(
+        JSON.parse( element.textContent )[ UTF8ToString( $0 ) ] || {}
+      );
     }
     const num_bytes = lengthBytesUTF8( text ) + 1;
     const buffer = Module._malloc( num_bytes );
@@ -203,16 +205,19 @@ inline void write_schema_and_metadata(
     write_field( writer, "value", "The value that was measured." );
     writer.EndObject();
 
-    // every viewer is described using its view key
+    // every viewer is described using its view key from keys.toml
     writer.Key( "viewers" );
     writer.StartObject();
     for ( const std::string& name : viewer_names ) {
       writer.Key( name.c_str() );
       writer.StartObject();
-      writer.Key( "description" );
-      write_string( writer, dish2::saved_folder::get_view_key_description(
+      writer.Key( "view_key" );
+      const std::string view_key = dish2::saved_folder::get_view_key_json(
         emp::slugify( name )
-      ) );
+      );
+      writer.RawValue(
+        view_key.c_str(), view_key.size(), rapidjson::kObjectType
+      );
       writer.EndObject();
     }
     writer.EndObject();
