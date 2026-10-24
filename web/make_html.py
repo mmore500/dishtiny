@@ -121,7 +121,6 @@ outputText = template.render(
     make_badge=make_badge,
     make_colorbar=make_colorbar,
     make_rep_lev_legend=make_rep_lev_legend,
-    # embedded in the page so that saved data can be accompanied by a schema
     view_keys=data,
 )
 
