@@ -13,7 +13,7 @@ namespace dish2 {
 inline std::string get_view_keys_json() {
 
   char* const buffer = reinterpret_cast<char*>( MAIN_THREAD_EM_ASM_INT({
-    const element = document.getElementById( 'view-keys-data' );
+    const element = document.getElementById( 'view-keys-json' );
     const text = element === null ? '{}' : element.textContent;
     const num_bytes = lengthBytesUTF8( text ) + 1;
     const buffer = Module._malloc( num_bytes );

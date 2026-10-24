@@ -51,7 +51,7 @@ inline std::string make_schema() {
     "e.g., a register address or a module."
   );
   write_field(
-    "artist", "Name of the viewer, whose slug is a key in view_keys."
+    "artist", "Name of the viewer, whose slug is a key in view_keys_data."
   );
   write_field( "cell", "Index of the cell the value is from." );
   write_field(
@@ -64,10 +64,10 @@ inline std::string make_schema() {
 
   // views are described by their view keys, which are keyed by the slug of
   // the viewer name given in the artist field
-  writer.Key( "view_keys" );
-  const std::string view_keys = dish2::get_view_keys_json();
+  writer.Key( "view_keys_data" );
+  const std::string view_keys_data = dish2::get_view_keys_json();
   writer.RawValue(
-    view_keys.c_str(), view_keys.size(), rapidjson::kObjectType
+    view_keys_data.c_str(), view_keys_data.size(), rapidjson::kObjectType
   );
 
   writer.EndObject();
