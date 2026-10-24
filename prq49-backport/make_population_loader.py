@@ -49,8 +49,15 @@ def autoinstall(filename):
     return "autoinstall=" + quote(GENOMES + filename, safe="/")
 
 
+# disable mutation in seeded populations, as in the prq49
+# monoculture and multiculture jobs
+NO_MUTATION = "MUTATION_RATE=0%090%090"
+
+
 def link(genesis, *filenames):
-    query = "&".join([f"GENESIS={genesis}", *map(autoinstall, filenames), PARAMS])
+    query = "&".join(
+        [f"GENESIS={genesis}", *map(autoinstall, filenames), NO_MUTATION, PARAMS]
+    )
     return f"?{query}"
 
 
