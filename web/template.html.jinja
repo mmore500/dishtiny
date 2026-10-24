@@ -70,7 +70,7 @@
       <div class="col-lg-4 p-3 mx-auto">
         {% import "includes/view-key.html.jinja" as view_key %}
         {{ view_key.content(data, eval, make_badge, make_colorbar, make_rep_lev_legend, markdown) }}
-        <script id="view-keys-json" type="application/json">{{ view_keys_data | tojson }}</script>
+        <script id="view-keys-json" type="application/json">{{ view_keys | tojson }}</script>
         {% include 'includes/view-selector.html' %}
       </div>
     </div>
