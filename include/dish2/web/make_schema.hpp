@@ -12,7 +12,8 @@
 
 namespace dish2 {
 
-// makes JSON that describes the records in the saved data file and the views they come from
+// makes JSON that describes the records in the saved data file and the views
+// they come from
 inline std::string make_schema() {
 
   rapidjson::StringBuffer buffer;
@@ -64,7 +65,9 @@ inline std::string make_schema() {
   // the viewer name given in the artist field
   writer.Key( "view_keys" );
   const std::string view_keys = dish2::get_view_keys_json();
-  writer.RawValue( view_keys.c_str(), view_keys.size(), rapidjson::kObjectType );
+  writer.RawValue(
+    view_keys.c_str(), view_keys.size(), rapidjson::kObjectType
+  );
 
   writer.EndObject();
 

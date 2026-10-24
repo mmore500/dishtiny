@@ -18,7 +18,8 @@
 
 namespace dish2 {
 
-// makes JSON that describes the software, configuration, and browser that made the saved data
+// makes JSON that describes the software, configuration, and browser that
+// made the saved data
 inline std::string make_metadata() {
 
   rapidjson::StringBuffer buffer;
