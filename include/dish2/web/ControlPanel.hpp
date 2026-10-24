@@ -166,20 +166,16 @@ class ControlPanel {
     // no box-shadow, so a clicked button doesn't keep a focus box around it
     button_dash.Div("render_input-prepend") << emp::web::Button(
       [this](){ ClickRender(); }, "Render", "render-button"
-    ).OnDoubleClick(
-      // the two clicks have already rendered, so a double click also saves
-      // (pngs are saved explicitly because render is not selected)
-      [this](){
-        if ( every_toggle ) return;
-        save_renders_callback();
-        DoSave();
-      }
     ).SetCSS(
       "box-shadow", "none"
     );
     // small gaps between the buttons, which stay square-edged
     button_dash.Div("render_input-prepend") << emp::web::Button(
       [this](){ ClickSave(); }, "Save", "save-button"
+    ).OnDoubleClick(
+      // the two clicks have already saved the data, so a double click also
+      // saves the pngs, which are otherwise only saved while render is selected
+      [this](){ if ( !every_toggle ) save_renders_callback(); }
     ).SetCSS(
       "margin-left", "2px",
       "border-radius", "0",

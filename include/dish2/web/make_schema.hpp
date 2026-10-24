@@ -4,6 +4,7 @@
 
 #include <string>
 
+#include "../../../third-party/cereal/include/cereal/archives/json.hpp"
 #include "../../../third-party/cereal/include/cereal/external/rapidjson/prettywriter.h"
 #include "../../../third-party/cereal/include/cereal/external/rapidjson/stringbuffer.h"
 
