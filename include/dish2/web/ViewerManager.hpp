@@ -3,7 +3,6 @@
 #define DISH2_WEB_VIEWERMANAGER_HPP_INCLUDE
 
 #include <string>
-#include <vector>
 
 namespace dish2 {
 
@@ -15,7 +14,6 @@ template<typename... SubsequentViewers> struct ViewerManager {
   void Redraw() {}
   void Save( const size_t update ) {}
   void Close() {}
-  void AppendNames( std::vector<std::string>& ) const {}
 
 };
 
@@ -48,18 +46,6 @@ struct ViewerManager<FirstViewer, SubsequentViewers...> {
   void Close() {
     if ( first_viewer.IsActivated() ) first_viewer.Deactivate();
     subsequent_viewers.Close();
-  }
-
-  // names of every viewer, whether or not it is activated
-  std::vector<std::string> GetNames() const {
-    std::vector<std::string> res;
-    AppendNames( res );
-    return res;
-  }
-
-  void AppendNames( std::vector<std::string>& out ) const {
-    out.push_back( FirstViewer::GetName() );
-    subsequent_viewers.AppendNames( out );
   }
 
 };
