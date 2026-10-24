@@ -249,20 +249,22 @@ public:
     }
   }
 
-  // saves a png and the underlying data of each activated view
-  void Save( const size_t update ) {
+  // saves the underlying data, and optionally a png, of each activated view
+  void Save( const size_t update, const bool with_png ) {
     for ( size_t i{}; i < artists.size(); ++i ) {
       auto& [artist, canvas, one_is_active] = artists[i];
       if ( !one_is_active ) continue;
       // structured bindings can't be captured in C++17, so use a reference
       auto& series_artist = artist;
-      emp::keyname::unpack_t attrs{
-        {"title", emp::slugify( std::string{ Artist::GetName() } )},
-        {"series", emp::to_string( i )},
-        {"update", emp::to_string( update )},
-        {"ext", ".png"}
-      };
-      dish2::saved_folder::save_png( canvas, emp::keyname::pack( attrs ) );
+      if ( with_png ) {
+        emp::keyname::unpack_t attrs{
+          {"title", emp::slugify( std::string{ Artist::GetName() } )},
+          {"series", emp::to_string( i )},
+          {"update", emp::to_string( update )},
+          {"ext", ".png"}
+        };
+        dish2::saved_folder::save_png( canvas, emp::keyname::pack( attrs ) );
+      }
       dish2::saved_folder::save_data(
         [&series_artist, update, i]( std::ostream& out ){
           series_artist.Tabulate( out, emp::to_string(

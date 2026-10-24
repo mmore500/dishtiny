@@ -167,14 +167,16 @@ public:
 
   void Redraw() { artist.Draw( canvas ); }
 
-  // saves a png and appends the underlying data to the saved folder
-  void Save( const size_t update ) {
-    emp::keyname::unpack_t attrs{
-      {"title", emp::slugify( std::string{ Artist::GetName() } )},
-      {"update", emp::to_string( update )},
-      {"ext", ".png"}
-    };
-    dish2::saved_folder::save_png( canvas, emp::keyname::pack( attrs ) );
+  // appends the underlying data to the saved folder, optionally saving a png
+  void Save( const size_t update, const bool with_png ) {
+    if ( with_png ) {
+      emp::keyname::unpack_t attrs{
+        {"title", emp::slugify( std::string{ Artist::GetName() } )},
+        {"update", emp::to_string( update )},
+        {"ext", ".png"}
+      };
+      dish2::saved_folder::save_png( canvas, emp::keyname::pack( attrs ) );
+    }
     dish2::saved_folder::save_data(
       [this, update]( std::ostream& out ){
         artist.Tabulate( out, emp::to_string(

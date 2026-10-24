@@ -25,7 +25,8 @@ class ControlPanel {
 
   std::function<size_t()> update_callback;
   std::function<void()> render_callback;
-  std::function<void()> save_callback;
+  // takes whether to save PNGs, which are only saved while render is selected
+  std::function<void( bool )> save_callback;
   std::function<void()> clear_callback;
 
   // render and save can only be selected while every is selected
@@ -128,7 +129,7 @@ class ControlPanel {
   void ClickSave() {
     if ( every_toggle ) save_toggle = !save_toggle;
     else {
-      save_callback();
+      save_callback( render_toggle );
       RefreshSavedLabel();
     }
     RefreshToggleButtons();
@@ -304,7 +305,7 @@ public:
   ControlPanel(
     std::function<size_t()> update_callback_,
     std::function<void()> render_callback_,
-    std::function<void()> save_callback_,
+    std::function<void( bool )> save_callback_,
     std::function<void()> clear_callback_
   ) : animator(
     [this](){
@@ -313,7 +314,7 @@ public:
       if ( cur_update % GetEveryFreq() == 0 ) {
         if ( render_toggle ) render_callback();
         if ( save_toggle ) {
-          save_callback();
+          save_callback( render_toggle );
           RefreshSavedLabel();
         }
       }
