@@ -160,6 +160,9 @@ class ControlPanel {
     // no box-shadow, so a clicked button doesn't keep a focus box around it
     button_dash.Div("render_input-prepend") << emp::web::Button(
       [this](){ ClickRender(); }, "Render", "render-button"
+    ).OnDoubleClick(
+      // the two clicks have already rendered, so a double click also saves
+      [this](){ if ( !every_toggle ) ClickSave(); }
     ).SetCSS(
       "box-shadow", "none"
     );
