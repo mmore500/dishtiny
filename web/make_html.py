@@ -1,5 +1,4 @@
 import colorsys
-import html
 import json
 import jinja2
 from markdown2 import Markdown
@@ -108,28 +107,6 @@ def make_rep_lev_legend():
 # instantiate Markdown
 markdown = Markdown()
 
-# 'view key' -> plain text description, embedded in the page so that saved
-# data can be accompanied by a schema
-def strip_tags(markup):
-    text = html.unescape(re.sub(r"<[^>]*>", " ", markup))
-    # tags leave a space before the punctuation that follows them
-    return re.sub(r"\s+([.,;:!?])", r"\1", text)
-
-def make_view_key_descriptions():
-    context = {
-        'make_badge': make_badge,
-        'make_colorbar': make_colorbar,
-        'make_rep_lev_legend': make_rep_lev_legend,
-    }
-    res = {}
-    for key, value in data.items():
-        lines = [
-            strip_tags(markdown.convert(eval('f"' + line + '"', context)))
-            for line in value['header'] + value['items']
-        ]
-        res[key] = "\n".join(" ".join(line.split()) for line in lines)
-    return res
-
 # find template, adapted from https://stackoverflow.com/a/38642558
 template_loader = jinja2.FileSystemLoader(searchpath=DIR)
 template_env = jinja2.Environment(loader=template_loader)
@@ -145,7 +122,8 @@ outputText = template.render(
     make_badge=make_badge,
     make_colorbar=make_colorbar,
     make_rep_lev_legend=make_rep_lev_legend,
-    view_key_descriptions=json.dumps(make_view_key_descriptions()).replace('<', '\\u003c'),
+    # embedded in the page so that saved data can be accompanied by a schema
+    view_keys_json=json.dumps(data).replace('<', '\\u003c'),
 )
 
 # output to file
