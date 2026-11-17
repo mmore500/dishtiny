@@ -223,7 +223,7 @@ echo "SLURM_STOKER_CONSOLIDATION_DIR \${SLURM_STOKER_CONSOLIDATION_DIR}"
 
 mkdir -p "\${SLURM_STOKER_CONSOLIDATION_DIR}"
 for target in *slurm.sh; do
-  cp "\${target}" "\${SLURM_STOKER_CONSOLIDATION_DIR}/\${RANDOM}_\${target}"
+  cp "\${target}" "\${SLURM_STOKER_CONSOLIDATION_DIR}/\${RANDOM}\${RANDOM}\${RANDOM}\${RANDOM}\${RANDOM}\${RANDOM}\${RANDOM}\${RANDOM}\${RANDOM}_\${target}"
 done
 
 else
